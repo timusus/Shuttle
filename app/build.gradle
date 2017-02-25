@@ -27,10 +27,10 @@ apply plugin: 'com.google.gms.google-services'
 
 @Nullable
 def getProperties(String fileName) {
-    final def properties = new Properties()
+    final def Properties properties = new Properties()
     def file = file(fileName)
     if (file.exists()) {
-        properties.load(new FileInputStream(file))
+        file.withInputStream { stream -> properties.load(stream) }
     }
     return properties
 }
