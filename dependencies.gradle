@@ -77,7 +77,8 @@ ext.versions = [
         // Testing
         // /////////////////////////////////////////////////////////////////////////
 
-        junit                  : "4.12"
+        junit                  : "4.12",
+        espressoCore           : "2.2.2"
 ]
 
 ext.gradlePlugins = [
@@ -174,5 +175,6 @@ ext.libs = [
         // /////////////////////////////////////////////////////////////////////////
 
         //Junit
-        junit              : "junit:junit:$versions.junit"
+        junit              : "junit:junit:$versions.junit",
+        espresso           : "com.android.support.test.espresso:espresso-core:$versions.espressoCore"
 ]

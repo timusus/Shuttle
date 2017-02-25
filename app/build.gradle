@@ -274,6 +274,9 @@ dependencies {
     // /////////////////////////////////////////////////////////////////////////
 
     testCompile libs.junit
+    androidTestCompile(libs.espresso) {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
 }
 
 def gitInfo() {
