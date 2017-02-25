@@ -56,3 +56,7 @@ proguard/
 
 # Keystore
 /shuttle.jks
+
+# Onesky ruby files
+/onesky_download.rb
+/onesky_upload.rb
