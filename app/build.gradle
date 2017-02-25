@@ -25,25 +25,18 @@ repositories {
 //For some reason this needs to be placed below the dependencies in order for gms services to work..
 apply plugin: 'com.google.gms.google-services'
 
-
-def getPropertiesFile(String fileName) {
-    File propertiesFile = file(fileName)
-    if (propertiesFile.exists()) {
-        return propertiesFile
+@Nullable
+def getProperties(String fileName) {
+    final def properties = new Properties()
+    def file = file(fileName)
+    if (file.exists()) {
+        properties.load(new FileInputStream(file))
     }
-    return null
+    return properties
 }
 
-def getProperty(@Nullable File propertiesFile, String name) {
-    String value = "${name} not found"
-    if (propertiesFile != null && propertiesFile.exists()) {
-        def props = new Properties()
-        props.load(new FileInputStream(propertiesFile))
-        if (props.hasProperty(name)) {
-            value = props.property(name)
-        }
-    }
-    return value
+def getProperty(@Nullable Properties properties, String name) {
+    return properties.getProperty(name) ?: "$name missing";
 }
 
 android {
@@ -71,17 +64,16 @@ android {
         buildConfigField "boolean", "MULTIDEX_ENABLED", "false"
 
         // This API key is provided for convenience. Please go to https://www.last.fm/api/account/create and create your own.
-        buildConfigField("String", "LASTFM_API_KEY", "\"${getProperty(getPropertiesFile('../public.properties'), 'LASTFM_API_KEY')}\"")
+        buildConfigField("String", "LASTFM_API_KEY", "\"${getProperty(getProperties('../public.properties'), 'LASTFM_API_KEY')}\"")
     }
 
     signingConfigs {
         release {
-            File keystoreFile = getPropertiesFile(System.properties['user.home'].toString() + "/.android/keystore-props/shuttle.properties")
-
-            storeFile file(getProperty(keystoreFile, 'store'))
-            keyAlias getProperty(keystoreFile, 'alias')
-            storePassword getProperty(keystoreFile, 'storePass')
-            keyPassword getProperty(keystoreFile, 'pass')
+            Properties properties = getProperties(System.properties['user.home'].toString() + "/.android/keystore-props/shuttle.properties")
+            storeFile file(getProperty(properties, 'store'))
+            keyAlias getProperty(properties, 'alias')
+            storePassword getProperty(properties, 'storePass')
+            keyPassword getProperty(properties, 'pass')
         }
     }
 
@@ -97,7 +89,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), file('proguard-project.txt')
             signingConfig signingConfigs.release
 
-            buildConfigField("String", "LASTFM_API_KEY", "\"${getProperty(getPropertiesFile('../private.properties'), 'LASTFM_API_KEY')}\"")
+            buildConfigField("String", "LASTFM_API_KEY", "\"${getProperty(getProperties('../private.properties'), 'LASTFM_API_KEY')}\"")
         }
 
         applicationVariants.all { variant ->
