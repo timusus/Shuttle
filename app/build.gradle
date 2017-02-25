@@ -133,11 +133,14 @@ android {
         def names = variant.flavors*.name
         def buildTypes = variant.buildType*.name
 
-        if (buildTypes.contains("debug") && ((names.contains("paid") || names.contains("free") || names.contains("amazonPaid") || names.contains("amazonFree")))
-                || buildTypes.contains("release") && ((names.contains("dev") || names.contains("devPre21")))) {
+        def debugFilters = ["paid", "free", 'amazonPaid', "amazonFree"];
+        def relFilters = ["dev", "devPre21"];
 
-            setIgnore(true)
-        }
+        def filter = { name -> names.contains(name) }
+        def debugIgnore = buildTypes.contains("debug") && debugFilters.stream().anyMatch(filter)
+        def releaseIgnore = buildTypes.contains("release") && relFilters.stream().anyMatch(filter)
+
+        setIgnore(debugIgnore || releaseIgnore)
     }
 
     // Used to enable Java8 features (via RetroLambda)
