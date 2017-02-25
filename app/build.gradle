@@ -127,6 +127,19 @@ android {
         }
     }
 
+    //Ignore useless variants, such as devRelease.
+    variantFilter { variant ->
+
+        def names = variant.flavors*.name
+        def buildTypes = variant.buildType*.name
+
+        if (buildTypes.contains("debug") && ((names.contains("paid") || names.contains("free") || names.contains("amazonPaid") || names.contains("amazonFree")))
+                || buildTypes.contains("release") && ((names.contains("dev") || names.contains("devPre21")))) {
+
+            setIgnore(true)
+        }
+    }
+
     // Used to enable Java8 features (via RetroLambda)
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
