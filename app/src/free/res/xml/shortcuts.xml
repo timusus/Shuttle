@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android"
+           xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!--<shortcut-->
+        <!--android:enabled="true"-->
+        <!--android:icon="@drawable/shortcut_playlist"-->
+        <!--android:shortcutDisabledMessage="@string/shortcut_playlist_disabled"-->
+        <!--android:shortcutId="playlist"-->
+        <!--android:shortcutLongLabel="@string/shortcut_playlist_long_label"-->
+        <!--android:shortcutShortLabel="@string/shortcut_playlist_short_label"-->
+        <!--app:shortcutDisabledMessage="@string/shortcut_playlist_disabled"-->
+        <!--app:shortcutId="playlist"-->
+        <!--app:shortcutLongLabel="@string/shortcut_playlist_long_label"-->
+        <!--app:shortcutShortLabel="@string/shortcut_playlist_short_label">-->
+        <!--<intent-->
+            <!--android:action="com.simplecity.amp_library.shortcuts.PLAYLIST"-->
+            <!--android:targetClass="com.simplecity.amp_library.ui.activities.ShortcutTrampolineActivity"-->
+            <!--android:targetPackage="{applicationId}"/>-->
+    <!--</shortcut>-->
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/shortcut_shuffle"
+        android:shortcutDisabledMessage="@string/shortcut_shuffle_disabled"
+        android:shortcutId="shuffle"
+        android:shortcutLongLabel="@string/shortcut_shuffle_long_label"
+        android:shortcutShortLabel="@string/shortcut_shuffle_short_label"
+        app:shortcutDisabledMessage="@string/shortcut_shuffle_disabled"
+        app:shortcutId="shuffle"
+        app:shortcutLongLabel="@string/shortcut_shuffle_long_label"
+        app:shortcutShortLabel="@string/shortcut_shuffle_short_label">
+        <intent
+            android:action="com.simplecity.amp_library.shortcuts.SHUFFLE"
+            android:targetClass="com.simplecity.amp_library.ui.activities.ShortcutTrampolineActivity"
+            android:targetPackage="{applicationId}"/>
+    </shortcut>
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/shortcut_play"
+        android:shortcutDisabledMessage="@string/shortcut_play_disabled"
+        android:shortcutId="play"
+        android:shortcutLongLabel="@string/shortcut_play_long_label"
+        android:shortcutShortLabel="@string/shortcut_play_short_label"
+        app:shortcutDisabledMessage="@string/shortcut_play_disabled"
+        app:shortcutId="play"
+        app:shortcutLongLabel="@string/shortcut_play_long_label"
+        app:shortcutShortLabel="@string/shortcut_play_short_label">
+        <intent
+            android:action="com.simplecity.amp_library.shortcuts.PLAY"
+            android:targetClass="com.simplecity.amp_library.ui.activities.ShortcutTrampolineActivity"
+            android:targetPackage="{applicationId}"/>
+    </shortcut>
+</shortcuts>

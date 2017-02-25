@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/artist_sort"
+        android:icon="?attr/btn_sort"
+        android:title="@string/sorting"
+        app:showAsAction="ifRoom">
+
+        <menu>
+            <item
+                android:enabled="false"
+                android:title="@string/albums_title"/>
+
+            <group
+                android:id="@+id/group1"
+                android:checkableBehavior="single">
+                <item
+                    android:id="@+id/sort_album_default"
+                    android:title="@string/sort_default"/>
+                <item
+                    android:id="@+id/sort_album_name"
+                    android:title="@string/sort_album_name"/>
+                <item
+                    android:id="@+id/sort_album_year"
+                    android:title="@string/sort_album_year"/>
+            </group>
+
+            <item
+                android:id="@+id/sort_albums_ascending"
+                android:checkable="true"
+                android:checked="true"
+                android:title="@string/sort_ascending"/>
+
+            <item
+                android:enabled="false"
+                android:title="@string/tracks_title"/>
+
+            <group
+                android:id="@+id/group2"
+                android:checkableBehavior="single">
+                <item
+                    android:id="@+id/sort_song_default"
+                    android:title="@string/sort_default"/>
+                <item
+                    android:id="@+id/sort_song_name"
+                    android:title="@string/sort_song_name"/>
+                <item
+                    android:id="@+id/sort_song_track_number"
+                    android:title="@string/sort_song_track_number"/>
+                <item
+                    android:id="@+id/sort_song_duration"
+                    android:title="@string/sort_song_duration"/>
+                <item
+                    android:id="@+id/sort_song_year"
+                    android:title="@string/sort_song_year"/>
+                <item
+                    android:id="@+id/sort_song_date"
+                    android:title="@string/sort_song_date_added"/>
+                <item
+                    android:id="@+id/sort_song_album_name"
+                    android:title="@string/sort_album_name"/>
+            </group>
+
+            <item
+                android:id="@+id/sort_songs_ascending"
+                android:checkable="true"
+                android:checked="true"
+                android:title="@string/sort_ascending"/>
+        </menu>
+    </item>
+</menu>

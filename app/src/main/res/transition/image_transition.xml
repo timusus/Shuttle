@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transitionSet xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@android:interpolator/decelerate_quad">
+    <changeImageTransform />
+    <changeBounds />
+    <arcMotion
+        android:minimumHorizontalAngle="90"
+        android:minimumVerticalAngle="90" />
+    <changeTransform />
+</transitionSet>

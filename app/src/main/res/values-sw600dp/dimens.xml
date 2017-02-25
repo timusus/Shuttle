@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="grid_item_horizontal_width">148dp</dimen>
+
+    <dimen name="drawer_horizontal_margin">24dp</dimen>
+
+    <dimen name="equalizer_activity_top_padding">64dp</dimen>
+    <dimen name="equalizer_activity_edge_padding">64dp</dimen>
+
+    <dimen name="player_activity_top_padding">128dp</dimen>
+    <dimen name="player_activity_edge_padding">32dp</dimen>
+
+    <dimen name="mini_player_height">72dp</dimen>
+
+    <dimen name="header_view_height">420dp</dimen>
+
+    <!-- Better Pickers Dimens -->
+    <dimen name="medium_font_padding">24dp</dimen>
+    <dimen name="medium_font_size">100dp</dimen>
+    <dimen name="medium_font_size_hms">100dp</dimen>
+    <dimen name="medium_date_font_size">80dp</dimen>
+    <dimen name="label_font_size">18sp</dimen>
+
+</resources>

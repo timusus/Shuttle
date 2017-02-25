@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:icon="?attr/btn_sort"
+        android:title="@string/sorting"
+        app:showAsAction="ifRoom">
+
+        <menu>
+            <item
+                android:enabled="false"
+                android:title="@string/folders_title" />
+
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/sort_folder_default"
+                    android:title="@string/sort_folders_default" />
+
+                <item
+                    android:id="@+id/sort_folder_count"
+                    android:title="@string/sort_folders_count" />
+            </group>
+            <item
+                android:id="@+id/folders_ascending"
+                android:checkable="true"
+                android:checked="true"
+                android:title="@string/sort_ascending" />
+
+            <item
+                android:enabled="false"
+                android:title="@string/files_title" />
+
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/sort_files_default"
+                    android:title="@string/sort_files_default" />
+
+                <item
+                    android:id="@+id/sort_files_filename"
+                    android:title="@string/sort_files_file_name" />
+
+                <item
+                    android:id="@+id/sort_files_size"
+                    android:title="@string/sort_files_size" />
+
+                <item
+                    android:id="@+id/sort_files_artist_name"
+                    android:title="@string/sort_files_song_artist_name" />
+
+                <item
+                    android:id="@+id/sort_files_album_name"
+                    android:title="@string/sort_files_album_name" />
+
+                <item
+                    android:id="@+id/sort_files_track_name"
+                    android:title="@string/sort_files_track_name" />
+            </group>
+            <item
+                android:id="@+id/files_ascending"
+                android:checkable="true"
+                android:checked="true"
+                android:title="@string/sort_ascending" />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/whitelist"
+        android:title="@string/whitelist_title" />
+
+    <item
+        android:id="@+id/show_filenames"
+        android:checkable="true"
+        android:title="@string/show_filenames" />
+
+</menu>

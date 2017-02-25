@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.simplecity.amp_library.ui.views.CustomPreferenceCategory
+        android:key="pref_key_simple_lastfm_scrobble_settings"
+        android:layout="@layout/preference_category"
+        android:title="@string/pref_title_simple_scrobbler">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_simple_lastfm_scrobbler"
+            android:layout="@layout/preference"
+            android:summary="@string/pref_summary_simple_enable"
+            android:title="@string/pref_title_simple_enable"
+            android:widgetLayout="@layout/preference_widget_checkbox"/>
+        <Preference
+            android:key="pref_download_simple_lastfm_scrobbler"
+            android:layout="@layout/preference"
+            android:summary="@string/pref_summary_simple_download"
+            android:title="@string/download"/>
+    </com.simplecity.amp_library.ui.views.CustomPreferenceCategory>
+</PreferenceScreen>

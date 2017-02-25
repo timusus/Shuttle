@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.simplecity.amp_library.ui.views.CustomPreferenceCategory
+        android:layout="@layout/preference_category"
+        android:title="@string/pref_string_title_themes">
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/baseThemeArray"
+            android:entryValues="@array/baseThemeValues"
+            android:key="pref_theme_base"
+            android:layout="@layout/preference"
+            android:summary="@string/pref_summary_base_theme"
+            android:title="@string/pref_title_base_theme" />
+
+        <Preference
+            android:defaultValue="-12607520"
+            android:key="pref_theme_highlight_color"
+            android:layout="@layout/preference"
+            android:summary="@string/pref_summary_theme_pick_color"
+            android:title="@string/pref_title_theme_pick_color" />
+
+        <Preference
+            android:defaultValue="-16728193"
+            android:key="pref_theme_accent_color"
+            android:layout="@layout/preference"
+            android:summary="@string/pref_summary_theme_pick_accent_color"
+            android:title="@string/pref_title_theme_pick_accent_color" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_theme_white_accent"
+            android:layout="@layout/preference"
+            android:summary="@string/pref_summary_theme_white_accent"
+            android:title="@string/pref_title_theme_white_accent"
+            android:widgetLayout="@layout/preference_widget_checkbox" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_nav_bar"
+            android:layout="@layout/preference"
+            android:summary="@string/pref_summary_tinted_nav"
+            android:title="@string/pref_title_tinted_nav"
+            android:widgetLayout="@layout/preference_widget_checkbox" />
+    </com.simplecity.amp_library.ui.views.CustomPreferenceCategory>
+</PreferenceScreen>

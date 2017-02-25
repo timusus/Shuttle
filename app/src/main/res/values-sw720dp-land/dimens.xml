@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <dimen name="drawer_horizontal_margin">24dp</dimen>
+
+    <dimen name="equalizer_activity_top_padding">64dp</dimen>
+    <dimen name="equalizer_activity_edge_padding">196dp</dimen>
+
+    <dimen name="player_activity_top_padding">0dp</dimen>
+    <dimen name="player_activity_edge_padding">236dp</dimen>
+
+    <dimen name="mini_player_height">72dp</dimen>
+
+    <dimen name="header_view_height">300dp</dimen>
+
+</resources>

@@ -1,0 +1,178 @@
+ext.versions = [
+
+        // //////////////////////////////////////////////////////////////////////////
+        // App versions
+        // /////////////////////////////////////////////////////////////////////////
+
+        name                   : "1.6.4",
+
+        // //////////////////////////////////////////////////////////////////////////
+        // Compile versions
+        // /////////////////////////////////////////////////////////////////////////
+
+        minSdk                 : 16,
+        targetSdk              : 25,
+        compileSdk             : 25,
+        buildTools             : "25.0.2",
+
+        // //////////////////////////////////////////////////////////////////////////
+        // Plugin versions
+        // /////////////////////////////////////////////////////////////////////////
+
+        androidGradlePlugin    : "2.3.0-rc1",
+        dexcountGradlePlugin   : "0.6.1",
+        retrolambdaGradlePlugin: "3.4.0",
+        fabricGradlePlugin     : "1.+",
+        googleServicesPlugin   : "3.0.0",
+
+        // //////////////////////////////////////////////////////////////////////////
+        // Google lib versions
+        // /////////////////////////////////////////////////////////////////////////
+
+        supportLib             : "25.0.1",
+        firebaseCore           : "10.0.0",
+        chromecast             : "10.0.0",
+        constraintLayout       : "1.0.0-beta4",
+
+        // //////////////////////////////////////////////////////////////////////////
+        // Square lib versions
+        // /////////////////////////////////////////////////////////////////////////
+
+        haha                   : "2.0.3",
+        leakCanary             : "1.5",
+        okio                   : "1.11.0",
+        okhttp                 : "3.5.0",
+        retrofit               : "2.1.0",
+        retrofitGson           : "2.1.0",
+        sqlBrite               : "1.1.1",
+
+        // //////////////////////////////////////////////////////////////////////////
+        // Third party lib versions
+        // /////////////////////////////////////////////////////////////////////////
+
+        nanoHttp               : "2.3.1",
+        crashlytics            : "2.6.4@aar",
+        dashClockApi           : "2.0.0",
+        fastScroll             : "1.0.11",
+        glide                  : "3.8.0-SNAPSHOT",
+        glideOkhttp            : "1.4.0@aar",
+        lambdaBackport         : "2.3.0",
+        materialDialogs        : "0.9.1.0@aar",
+        multiSelViewHolder     : "0.2",
+        permiso                : "0.3.0",
+        rxAndroid              : "1.2.1",
+        rxBindings             : "0.4.0",
+        rxBindingsAppCompat    : "0.4.0",
+        rxImageSel             : "1.3.1",
+        rxJava                 : "1.2.0",
+        rxRelay                : "1.2.0",
+        streams                : "1.1.3",
+
+        // //////////////////////////////////////////////////////////////////////////
+        // MultiDex
+        // /////////////////////////////////////////////////////////////////////////
+        multiDex               : "1.0.1",
+
+        // //////////////////////////////////////////////////////////////////////////
+        // Testing
+        // /////////////////////////////////////////////////////////////////////////
+
+        junit                  : "4.12"
+]
+
+ext.gradlePlugins = [
+        android       : "com.android.tools.build:gradle:$versions.androidGradlePlugin",
+        dexcount      : "com.getkeepsafe.dexcount:dexcount-gradle-plugin:$versions.dexcountGradlePlugin",
+        fabric        : "io.fabric.tools:gradle:$versions.fabricGradlePlugin",
+        retrolambda   : "me.tatarka:gradle-retrolambda:$versions.retrolambdaGradlePlugin",
+        googleServices: "com.google.gms:google-services:$versions.googleServicesPlugin"
+]
+
+ext.libs = [
+
+        // //////////////////////////////////////////////////////////////////////////
+        // Google libs
+        // /////////////////////////////////////////////////////////////////////////
+
+        ccl                : project(':libraries/:ccl'),
+        cardView           : "com.android.support:cardview-v7:$versions.supportLib",
+        design             : "com.android.support:design:$versions.supportLib",
+        palette            : "com.android.support:palette-v7:$versions.supportLib",
+        recyclerView       : "com.android.support:recyclerview-v7:$versions.supportLib",
+        supportv4          : "com.android.support:support-v4:$versions.supportLib",
+        firebaseCore       : "com.google.firebase:firebase-core:$versions.firebaseCore",
+        appcompat          : "com.android.support:appcompat-v7:${versions.supportLib}",
+        mediarouter        : "com.android.support:mediarouter-v7:${versions.supportLib}",
+        chromecast         : "com.google.android.gms:play-services-cast:${versions.chromecast}",
+        constraintLayout   : "com.android.support.constraint:constraint-layout:${versions.constraintLayout}",
+
+        // //////////////////////////////////////////////////////////////////////////
+        // Square libs https://github.com/square
+        // /////////////////////////////////////////////////////////////////////////
+
+        haha               : "com.squareup.haha:haha:$versions.haha",
+        leakCanaryDebug    : "com.squareup.leakcanary:leakcanary-android:$versions.leakCanary",
+        leakCanaryRel      : "com.squareup.leakcanary:leakcanary-android-no-op:$versions.leakCanary",
+        okio               : "com.squareup.okio:okio:$versions.okio",
+        okhttp             : "com.squareup.okhttp3:okhttp:$versions.okhttp",
+        retrofit           : "com.squareup.retrofit2:retrofit:$versions.retrofit",
+        retrofitGson       : "com.squareup.retrofit2:converter-gson:$versions.retrofitGson",
+        sqlBrite           : "com.squareup.sqlbrite:sqlbrite:$versions.sqlBrite",
+
+        // //////////////////////////////////////////////////////////////////////////
+        // Third party libs
+        // /////////////////////////////////////////////////////////////////////////
+
+        // NanoHttp - https://github.com/NanoHttpd/nanohttpd (Various)
+        nanoHttp           : "org.nanohttpd:nanohttpd-webserver:$versions.nanoHttp",
+        // Crashlytics - https://fabric.io/kits/android/crashlytics
+        crashlytics        : "com.crashlytics.sdk.android:crashlytics:$versions.crashlytics",
+        // Dashclock - https://git.io/vix9g (Roman Nurik)
+        dashClockApi       : "com.google.android.apps.dashclock:dashclock-api:$versions.dashClockApi",
+        // RecyclerView-FastScroll - https://git.io/vix5z (dumb fuck)
+        fastScroll         : project(':libraries/:recyclerview-fastscroll'),
+        // Glide - https://git.io/vtn9K (Bump)
+        glide              : "com.github.bumptech.glide:glide:$versions.glide",
+        // Glide - OkHttp  integration - https://git.io/vihvW (Bump)
+        glideOkhttp        : "com.github.bumptech.glide:okhttp3-integration:$versions.glideOkhttp",
+        // Change RetroLambda version - https://git.io/ve2N9 (Esko Luontola)
+        lambdaBackport     : "net.orfjackal.retrolambda:retrolambda:$versions.lambdaBackport",
+        // Material Dialogs - https://git.io/vixHf (Aidan Follestad)
+        materialDialogs    : "com.afollestad.material-dialogs:core:$versions.materialDialogs",
+        // Multiselect ViewHolder - https://git.io/vix5l (Big Nerd Ranch)
+        multiSelViewHolder : "com.bignerdranch.android:recyclerview-multiselect:$versions.multiSelViewHolder",
+        // Permiso - https://git.io/vixQ4 (Greyson Parrelli)
+        permiso            : "com.greysonparrelli.permiso:permiso:$versions.permiso",
+        // RxJava - https://git.io/vihv0 (ReactiveX)
+        rxAndroid          : "io.reactivex:rxandroid:$versions.rxAndroid",
+        // RxBindings - https://git.io/vix5y (Jake Wharton)
+        rxBindings         : "com.jakewharton.rxbinding:rxbinding:$versions.rxBindings",
+        // RxBindings AppCompat - https://git.io/vix5y (Jake Wharton)
+        rxBindingsAppCompat: "com.jakewharton.rxbinding:rxbinding-appcompat-v7:$versions.rxBindingsAppCompat",
+        // RxJava - https://git.io/rxjava (ReactiveX)
+        rxJava             : "io.reactivex:rxjava:$versions.rxJava",
+        // RX Image Picker - https://git.io/vix5H (MLSDev )
+        rxImageSel         : "com.mlsdev.rximagepicker:library:$versions.rxImageSel",
+        // RX Relay - https://github.com/JakeWharton/RxRelay
+        rxRelay            : "com.jakewharton.rxrelay:rxrelay:$versions.rxRelay",
+        // Streams Backport - https://git.io/vCazA (Victor Melnik)
+        streams            : "com.annimon:stream:$versions.streams",
+        // Glide Palette - https://git.io/vix57 (Florent Champigny)
+        glidePalette       : project(":libraries/:glidepalette"),
+        // Sliding up panel - https://git.io/vUruG (Umano)
+        slidingUpPanel     : project(":libraries/:AndroidSlidingUpPanel"),
+        // Preferences Compat
+        prefCompat         : project(':libraries/:android-support-v4-preferencefragment'),
+
+        // //////////////////////////////////////////////////////////////////////////
+        // MultiDex
+        // /////////////////////////////////////////////////////////////////////////
+        multiDex           : "com.android.support:multidex:$versions.multiDex",
+
+        // //////////////////////////////////////////////////////////////////////////
+        // Testing
+        // /////////////////////////////////////////////////////////////////////////
+
+        //Junit
+        junit              : "junit:junit:$versions.junit"
+]

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.simplecity.amp_library.ui.views.ForegroundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:descendantFocusability="blocksDescendants"
+    android:foreground="?attr/list_selector">
+
+    <ImageView
+        android:id="@+id/drag_handle"
+        android:layout_width="32dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:alpha="0.5"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:src="@drawable/ic_drag_grip" />
+
+    <TextView
+        android:id="@+id/line_one"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:paddingLeft="4dp"
+        android:paddingRight="8dp"
+        android:singleLine="true"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/line_two"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:singleLine="true"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/line_three"
+        android:layout_width="56dp"
+        android:layout_height="match_parent"
+        android:ellipsize="marquee"
+        android:fadingEdge="horizontal"
+        android:gravity="center"
+        android:singleLine="true"
+        android:textSize="12sp" />
+
+    <com.simplecity.amp_library.ui.views.NonScrollImageButton
+        android:id="@+id/btn_overflow"
+        android:layout_width="40dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center_vertical|right"
+        android:layout_marginLeft="-16dp"
+        android:layout_marginRight="4dp"
+        android:alpha="0.8"
+        android:background="@null"
+        android:src="@drawable/ic_overflow_white" />
+</com.simplecity.amp_library.ui.views.ForegroundLinearLayout>

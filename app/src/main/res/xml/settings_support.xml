@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.simplecity.amp_library.ui.views.CustomPreferenceCategory
+        android:key="support_group"
+        android:layout="@layout/preference_category"
+        android:title="@string/pref_title_support">
+
+        <Preference
+            android:key="pref_version"
+            android:layout="@layout/preference"
+            android:title="@string/pref_title_version"/>
+
+        <Preference
+            android:key="pref_faq"
+            android:layout="@layout/preference"
+            android:summary="@string/pref_summary_faq"
+            android:title="@string/pref_title_faq"/>
+
+        <Preference
+            android:key="pref_gplus"
+            android:layout="@layout/preference"
+            android:summary="@string/pref_summary_gplus"
+            android:title="@string/pref_title_gplus"/>
+
+        <Preference
+            android:key="pref_rate"
+            android:layout="@layout/preference"
+            android:summary="@string/pref_summary_rate"
+            android:title="@string/pref_title_rate"/>
+
+        <Preference
+            android:key="pref_restore_purchases"
+            android:layout="@layout/preference"
+            android:summary="@string/pref_summary_restore_purchases"
+            android:title="@string/pref_title_restore_purchases"/>
+
+    </com.simplecity.amp_library.ui.views.CustomPreferenceCategory>
+</PreferenceScreen>

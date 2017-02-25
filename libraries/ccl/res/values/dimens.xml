@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2015 Google Inc. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="ccl_mini_controller_font_size_line1">15sp</dimen>
+    <dimen name="ccl_mini_controller_font_size_line2">13sp</dimen>
+    <dimen name="ccl_mini_controller_icon_width">64dp</dimen>
+    <dimen name="ccl_mini_controller_icon_height">64dp</dimen>
+
+    <!-- Captions Related -->
+    <dimen name="ccl_captions_dialog_no_message_text_size">18sp</dimen>
+    <dimen name="ccl_captions_dialog_row_text_size">18sp</dimen>
+    <dimen name="ccl_notification_image_size">75dp</dimen>
+
+    <dimen name="ccl_pageview_width">300dp</dimen>
+    <dimen name="ccl_mini_upcoming_play_margin">8dp</dimen>
+
+    <!-- Introductory Overlay -->
+    <dimen name="ccl_intro_text_margin">16dp</dimen>
+    <dimen name="ccl_intro_button_margin_right">12dp</dimen>
+    <dimen name="ccl_intro_button_margin_bottom">10dp</dimen>
+    <dimen name="ccl_intro_overlay_focus_radius">35dp</dimen>
+
+</resources>

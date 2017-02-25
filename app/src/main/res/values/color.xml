@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="list_divider_dark">#1EFFFFFF</color>
+    <color name="list_divider_light">#1E000000</color>
+
+    <color name="notification_control_tint">#ffffffff</color>
+    <color name="notification_control_tint_inverse">#45000000</color>
+
+    <color name="pressed_material_light">#15000000</color>
+    <color name="selected_material_light">#45000000</color>
+    <color name="pressed_material_dark">#15ffffff</color>
+    <color name="selected_material_dark">#40ffffff</color>
+
+    <color name="drawable_base_color_light">#333333</color>
+    <color name="drawable_base_color_dark">#ffffff</color>
+
+    <color name="transparent_white">#75ffffff</color>
+
+    <color name="tab_underline_white">#65ffffff</color>
+
+    <color name="transparent">#00000000</color>
+
+    <color name="bg_dark">#303030</color>
+    <color name="bg_light">#FAFAFA</color>
+    <color name="bg_black">#000000</color>
+    <color name="bg_card_dark">#424242</color>
+    <color name="bg_card_light">#FFFFFF</color>
+    <color name="bg_card_black">#151515</color>
+    <color name="bg_drawer_light">#F5F5F5</color>
+    <color name="bg_drawer_dark">#212121</color>
+    <color name="bg_drawer_black">#151515</color>
+
+    <color name="semitransparent">#2533b5e5</color>
+
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="color_filter">#60000000</color>
+
+    <drawable name="notification_template_icon_bg">#3333B5E5</drawable>
+
+    <color name="default_text_color_holo_dark">#ffffffff</color>
+    <color name="default_text_color_holo_dark_disabled">#ff4c4c4c</color>
+    <color name="default_divider_color_dark">#20ffffff</color>
+    <color name="default_button_background_dark">#00000000</color>
+    <color name="default_button_background_pressed_dark">#46c5c1ff</color>
+    <color name="default_keyboard_indicator_color_dark">#ff33b5e5</color>
+    <color name="default_text_color_holo_light">#ff000000</color>
+    <color name="default_text_color_holo_light_disabled">#ffb2b2b2</color>
+    <color name="default_divider_color_light">#20000000</color>
+    <color name="default_button_background_light">#00000000</color>
+    <color name="default_button_background_pressed_light">#ff00ddff</color>
+    <color name="default_keyboard_indicator_color_light">#ff00ddff</color>
+
+    <color name="primary_text_dark">#ffffff</color>
+    <color name="primary_text_light">#000000</color>
+
+</resources>

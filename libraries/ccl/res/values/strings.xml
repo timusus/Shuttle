@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2015 Google Inc. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+<resources>
+
+    <string name="ccl_version">2.9.1</string>
+    <string name="ccl_media_route_menu_title">Play on&#8230;</string>
+    <string name="ccl_live">Live</string>
+    <string name="ccl_cancel">Cancel</string>
+    <string name="ccl_on">On</string>
+    <string name="ccl_off">Off</string>
+    <string name="ccl_info_na">Information Not Available</string>
+    <string name="ccl_pause">Pause</string>
+    <string name="ccl_play">Play</string>
+    <string name="ccl_disconnect">Disconnect</string>
+    <string name="ccl_none">None</string>
+
+    <!-- Used in Error Dialog -->
+    <string name="ccl_ok">OK</string>
+
+    <!-- Title of the Error Dialog -->
+    <string name="ccl_error">Error</string>
+
+    <!-- Shown in VideoCastController Activity -->
+    <string name="ccl_casting_to_device">Casting to %1$s</string>
+    <string name="ccl_loading">Loading&#8230;</string>
+
+    <!-- Used in Router Controller Dialog -->
+    <string name="ccl_no_media_info">No media information available</string>
+
+    <!-- onApplicationConnectionFailed() errors -->
+    <string name="ccl_failed_to_launch_app">Failed to launch application</string>
+    <string name="ccl_failed_app_launch_timeout">The request to launch the application has timed out!</string>
+    <string name="ccl_failed_to_find_app">The application you are trying to launch is not available on your Cast device</string>
+
+    <!-- Error messages for the play.pause in mini player -->
+    <string name="ccl_failed_to_play">Failed to start the playback of media</string>
+    <string name="ccl_failed_to_stop">Failed to stop the playback of media</string>
+    <string name="ccl_failed_to_pause">Failed to pause the playback of media</string>
+
+    <!-- Failures -->
+    <string name="ccl_failed_to_connect">Could not connect to the device</string>
+    <string name="ccl_failed_setting_volume">Failed to set the volume</string>
+    <string name="ccl_failed_no_connection">No connection to the cast device is present</string>
+    <string name="ccl_failed_no_connection_short">No connection</string>
+    <string name="ccl_failed_no_connection_trans">Connection to the cast device has been lost. Application is trying to re-establish the connection, if possible. Please wait for a few seconds and try again.</string>
+    <string name="ccl_failed_perform_action">Failed to perform the action</string>
+    <string name="ccl_failed_status_request">Failed to sync up with the cast device</string>
+    <string name="ccl_failed_seek">Failed to seek to the new position on the cast device</string>
+    <string name="ccl_failed_receiver_player_error">Receiver player has encountered a severe error</string>
+    <string name="ccl_failed_authorization_timeout">Authorization timed out</string>
+    <string name="ccl_failed_to_set_track_style">Failed to update the captions style.</string>
+    <string name="ccl_failed_to_load_media">Failed to load the media</string>
+
+    <!-- Upcoming item in a queue with autoplay/preload -->
+    <string name="ccl_mini_upnext">Up Next</string>
+
+    <!-- Notification Actions -->
+    <string name="ccl_skip_next">Skip Next</string>
+    <string name="ccl_skip_previous">Skip Previous</string>
+    <string name="ccl_forward">Forward</string>
+    <string name="ccl_rewind">Rewind</string>
+
+    <!-- Introductory Overlay -->
+    <string name="ccl_intro_overlay_button_text">@android:string/ok</string>
+
+</resources>

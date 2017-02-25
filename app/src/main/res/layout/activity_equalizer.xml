@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:minHeight="?attr/actionBarSize"
+        app:popupTheme="?attr/toolbar_popup_theme"
+        app:theme="?attr/toolbar_theme"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/equalizer_activity_top_padding"
+        android:paddingLeft="@dimen/equalizer_activity_edge_padding"
+        android:paddingRight="@dimen/equalizer_activity_edge_padding"
+        android:paddingTop="@dimen/equalizer_activity_top_padding">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/select_preset"
+            android:textSize="18sp"/>
+
+        <Spinner
+            android:id="@+id/eqSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="48dp" />
+
+        <ScrollView
+            android:id="@+id/scrollview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/eqContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginTop="4dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@+id/EqBand0TopTextView">
+
+                        <com.simplecity.amp_library.ui.views.SizableSeekBar
+                            android:id="@+id/EqBand0SeekBar"
+                            style="@style/SeekBar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toLeftOf="@+id/EqBand0RightTextView"
+                            android:layout_toRightOf="@+id/EqBand0LeftTextView"
+                            android:indeterminate="false"/>
+
+                        <TextView
+                            android:id="@+id/EqBand0LeftTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:text="-15db"
+                            android:textSize="14sp"
+                            />
+
+                        <TextView
+                            android:id="@+id/EqBand0RightTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:text="+15db"
+                            android:textSize="14sp"/>
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/EqBand0TopTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:textSize="14sp"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginTop="4dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@+id/EqBand1TopTextView">
+
+                        <com.simplecity.amp_library.ui.views.SizableSeekBar
+                            android:id="@+id/EqBand1SeekBar"
+                            style="@style/SeekBar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toLeftOf="@+id/EqBand1RightTextView"
+                            android:layout_toRightOf="@+id/EqBand1LeftTextView"/>
+
+                        <TextView
+                            android:id="@+id/EqBand1LeftTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:text="-15db"
+                            android:textSize="14sp"
+
+                            />
+
+                        <TextView
+                            android:id="@+id/EqBand1RightTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:text="+15db"
+                            android:textSize="14sp"
+
+                            />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/EqBand1TopTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:textSize="14sp"
+
+                        />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginTop="4dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@+id/EqBand2TopTextView">
+
+                        <com.simplecity.amp_library.ui.views.SizableSeekBar
+                            android:id="@+id/EqBand2SeekBar"
+                            style="@style/SeekBar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toLeftOf="@+id/EqBand2RightTextView"
+                            android:layout_toRightOf="@+id/EqBand2LeftTextView"/>
+
+                        <TextView
+                            android:id="@+id/EqBand2LeftTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:text="-15db"
+                            android:textSize="14sp"
+
+                            />
+
+                        <TextView
+                            android:id="@+id/EqBand2RightTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:text="+15db"
+                            android:textSize="14sp"
+
+                            />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/EqBand2TopTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:textSize="14sp"
+
+                        />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginTop="4dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@+id/EqBand3TopTextView">
+
+                        <com.simplecity.amp_library.ui.views.SizableSeekBar
+                            android:id="@+id/EqBand3SeekBar"
+                            style="@style/SeekBar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toLeftOf="@+id/EqBand3RightTextView"
+                            android:layout_toRightOf="@+id/EqBand3LeftTextView"/>
+
+                        <TextView
+                            android:id="@+id/EqBand3LeftTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:text="-15db"
+                            android:textSize="14sp"
+
+                            />
+
+                        <TextView
+                            android:id="@+id/EqBand3RightTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:text="+15db"
+                            android:textSize="14sp"
+
+                            />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/EqBand3TopTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:textSize="14sp"
+
+                        />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginTop="4dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@+id/EqBand4TopTextView">
+
+                        <com.simplecity.amp_library.ui.views.SizableSeekBar
+                            android:id="@+id/EqBand4SeekBar"
+                            style="@style/SeekBar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toLeftOf="@+id/EqBand4RightTextView"
+                            android:layout_toRightOf="@+id/EqBand4LeftTextView"/>
+
+                        <TextView
+                            android:id="@+id/EqBand4LeftTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:text="-15db"
+                            android:textSize="14sp"
+
+                            />
+
+                        <TextView
+                            android:id="@+id/EqBand4RightTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:text="+15db"
+                            android:textSize="14sp"
+
+                            />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/EqBand4TopTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:textSize="14sp"
+
+                        />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginTop="4dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@+id/EqBand5TopTextView">
+
+                        <com.simplecity.amp_library.ui.views.SizableSeekBar
+                            android:id="@+id/EqBand5SeekBar"
+                            style="@style/SeekBar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toLeftOf="@+id/EqBand5RightTextView"
+                            android:layout_toRightOf="@+id/EqBand5LeftTextView"
+                            android:visibility="gone"/>
+
+                        <TextView
+                            android:id="@+id/EqBand5LeftTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:text="-15db"
+                            android:textSize="14sp"
+
+                            android:visibility="gone"
+                            />
+
+                        <TextView
+                            android:id="@+id/EqBand5RightTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:text="+15db"
+                            android:textSize="14sp"
+
+                            android:visibility="gone"
+                            />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/EqBand5TopTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:textSize="14sp"
+
+                        android:visibility="gone"
+                        />
+                </RelativeLayout>
+            </LinearLayout>
+        </ScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minEms="8"
+                android:text="@string/virtualizer_strength"
+                android:textSize="14sp"
+
+                />
+
+            <com.simplecity.amp_library.ui.views.SizableSeekBar
+                android:id="@+id/virtualizer_strength"
+                style="@style/SeekBar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minEms="8"
+                android:text="@string/bass_boost_strength"
+                android:textSize="14sp"
+
+                />
+
+            <com.simplecity.amp_library.ui.views.SizableSeekBar
+                android:id="@+id/bb_strength"
+                style="@style/SeekBar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

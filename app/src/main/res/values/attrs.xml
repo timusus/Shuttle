@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="shortcutDisabledMessage">reference</attr>
+    <attr name="shortcutId">reference</attr>
+    <attr name="shortcutLongLabel">reference</attr>
+    <attr name="shortcutShortLabel">reference</attr>
+
+    <!-- Used for ForegroundLinearLayout -->
+    <!-- Refer to https://gist.github.com/chrisbanes/9091754 for original code -->
+    <declare-styleable name="ForegroundLinearLayout">
+        <attr name="android:foreground" />
+        <attr name="android:foregroundInsidePadding" />
+        <attr name="android:foregroundGravity" />
+    </declare-styleable>
+
+    <attr name="notification_control_tint">reference|color</attr>
+
+    <declare-styleable name="ScrimInsetsView">
+        <attr name="scrimInsetForeground" format="reference|color" />
+    </declare-styleable>
+
+    <attr name="circle_border" format="reference" />
+
+    <attr name="circular_ripple" format="reference" />
+
+    <attr name="ic_placeholder_large" format="reference" />
+    <attr name="ic_placeholder_medium" format="reference" />
+
+    <attr name="bg_card" format="color" />
+    <attr name="bg_list" format="color" />
+    <attr name="bg_drawer" format="reference|color" />
+    <attr name="list_selector" format="reference" />
+
+    <attr name="btn_search" format="reference" />
+    <attr name="btn_settings" format="reference" />
+    <attr name="btn_fav" format="reference" />
+    <attr name="btn_fav_pressed" format="reference" />
+    <attr name="btn_tags" format="reference" />
+    <attr name="btn_add" format="reference" />
+    <attr name="btn_queue" format="reference" />
+    <attr name="btn_toggle_queue" format="reference" />
+    <attr name="btn_delete" format="reference" />
+    <attr name="btn_remove" format="reference" />
+    <attr name="btn_share" format="reference" />
+    <attr name="btn_sort" format="reference" />
+    <attr name="btn_dialog_alert" format="reference" />
+
+    <attr name="drag_grip" format="reference" />
+    <attr name="listDividerColor" format="reference|color" />
+    <attr name="breadcrumb_divider" format="reference" />
+
+    <attr name="secondaryTextViewStyle" format="reference" />
+
+    <attr name="grid_view_vertical_spacing" format="reference|dimension" />
+    <attr name="grid_list_view_vertical_spacing" format="reference|dimension" />
+    <attr name="list_item_height" format="reference|dimension" />
+
+    <attr name="toolbar_theme" format="reference" />
+    <attr name="toolbar_popup_theme" format="reference" />
+
+    <!-- Better Pickers -->
+
+    <declare-styleable name="BetterPickersDialogFragment">
+        <attr name="bpTextColor" format="reference" />
+        <attr name="bpTitleColor" format="reference" />
+        <attr name="bpDeleteIcon" format="reference" />
+        <attr name="bpCheckIcon" format="reference" />
+        <attr name="bpKeyBackground" format="reference" />
+        <attr name="bpButtonBackground" format="reference" />
+        <attr name="bpTitleDividerColor" format="color" />
+        <attr name="bpDividerColor" format="color" />
+        <attr name="bpKeyboardIndicatorColor" format="color" />
+        <attr name="bpDialogBackground" format="reference" />
+    </declare-styleable>
+
+    <!-- Holo Color Picker Attrs -->
+    <declare-styleable name="ColorPicker">
+        <attr name="color_wheel_radius" format="dimension" />
+        <attr name="color_wheel_thickness" format="dimension" />
+        <attr name="color_center_radius" format="dimension" />
+        <attr name="color_center_halo_radius" format="dimension" />
+        <attr name="color_pointer_radius" format="dimension" />
+        <attr name="color_pointer_halo_radius" format="dimension" />
+    </declare-styleable>
+    <declare-styleable name="ColorBars">
+        <attr name="bar_thickness" format="dimension" />
+        <attr name="bar_length" format="dimension" />
+        <attr name="bar_pointer_radius" format="dimension" />
+        <attr name="bar_pointer_halo_radius" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="PagerSlidingTabStrip">
+        <attr name="indicatorColor" format="color" />
+        <attr name="underlineColor" format="color" />
+        <attr name="dividerColor" format="color" />
+        <attr name="indicatorHeight" format="dimension" />
+        <attr name="underlineHeight" format="dimension" />
+        <attr name="pstsDividerPadding" format="dimension" />
+        <attr name="tabPaddingLeftRight" format="dimension" />
+        <attr name="scrollOffset" format="dimension" />
+        <attr name="pstsTabBackground" format="reference" />
+        <attr name="shouldExpand" format="boolean" />
+        <attr name="pstsTextAllCaps" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="SwitchPreference">
+
+        <!--
+             The summary for the Preference in a PreferenceActivity screen when the
+             SwitchPreference is checked. If separate on/off summaries are not
+             needed, the summary attribute can be used instead.
+        -->
+        <attr name="summaryOn" format="reference" />
+        <!--
+             The summary for the Preference in a PreferenceActivity screen when the
+             SwitchPreference is unchecked. If separate on/off summaries are not
+             needed, the summary attribute can be used instead.
+        -->
+        <attr name="summaryOff" format="reference" />
+        <!--
+             The text used on the switch itself when in the "on" state.
+             This should be a very SHORT string, as it appears in a small space.
+        -->
+        <attr name="switchTextOn" format="reference" />
+        <!--
+             The text used on the switch itself when in the "off" state.
+             This should be a very SHORT string, as it appears in a small space.
+        -->
+        <attr name="switchTextOff" format="reference" />
+        <!--
+             The state (true for on, or false for off) that causes dependents to be disabled. By default,
+             dependents will be disabled when this is unchecked, so the value of this preference is false.
+        -->
+        <attr name="disableDependentsState" format="boolean" />
+    </declare-styleable>
+    <!--<declare-styleable name="Switch">-->
+
+    <!--&lt;!&ndash; Drawable to use as the "thumb" that switches back and forth. &ndash;&gt;-->
+    <!--<attr name="thumb" format="reference" />-->
+    <!--&lt;!&ndash; Drawable to use as the "track" that the switch thumb slides within. &ndash;&gt;-->
+    <!--<attr name="track" format="reference" />-->
+    <!--&lt;!&ndash; Text to use when the switch is in the checked/"on" state. &ndash;&gt;-->
+    <!--<attr name="textOn" format="reference" />-->
+    <!--&lt;!&ndash; Text to use when the switch is in the unchecked/"off" state. &ndash;&gt;-->
+    <!--<attr name="textOff" format="reference" />-->
+    <!--&lt;!&ndash; Amount of padding on either side of text within the switch thumb. &ndash;&gt;-->
+    <!--<attr name="thumbTextPadding" format="dimension" />-->
+    <!--&lt;!&ndash; TextAppearance style for text displayed on the switch thumb. &ndash;&gt;-->
+    <!--<attr name="switchTextAppearance" format="reference" />-->
+    <!--&lt;!&ndash; Minimum width for the switch component &ndash;&gt;-->
+    <!--<attr name="switchMinWidth" format="dimension" />-->
+    <!--&lt;!&ndash; Minimum space between the switch and caption text &ndash;&gt;-->
+    <!--<attr name="switchPadding" format="dimension" />-->
+    <!--</declare-styleable>-->
+    <!--<declare-styleable name="Switchy">-->
+    <!--<attr name="switchStyle" format="reference" />-->
+    <!--<attr name="switchPreferenceStyle" format="reference" />-->
+    <!--</declare-styleable>-->
+    <declare-styleable name="Android">
+
+        <!-- Text color. -->
+        <attr name="android:textColor" />
+        <!-- Size of the text. Recommended dimension type for text is "sp" for scaled-pixels (example: 15sp). -->
+        <attr name="android:textSize" />
+        <!-- Style (bold, italic, bolditalic) for the text. -->
+        <attr name="android:textStyle" />
+        <!-- Typeface (normal, sans, serif, monospace) for the text. -->
+        <attr name="android:typeface" />
+        <!-- Color of the text selection highlight. -->
+        <attr name="android:textColorHighlight" />
+        <!-- Color of the hint text. -->
+        <attr name="android:textColorHint" />
+        <!-- Color of the links. -->
+        <attr name="android:textColorLink" />
+    </declare-styleable>
+
+    <attr name="switch_bg" format="reference" />
+    <attr name="switch_thumb" format="reference" />
+
+    <declare-styleable name="SlidingUpPanelLayout">
+        <attr name="panelHeight" format="dimension" />
+        <attr name="slidePanelOffset" format="dimension" />
+        <attr name="shadowHeight" format="dimension" />
+        <attr name="paralaxOffset" format="dimension" />
+        <attr name="fadeColor" format="color" />
+        <attr name="flingVelocity" format="integer" />
+        <attr name="dragView" format="reference" />
+        <attr name="overlay" format="boolean" />
+        <attr name="anchorPoint" format="float" />
+        <attr name="initialState" format="enum">
+            <enum name="expanded" value="0" />
+            <enum name="collapsed" value="1" />
+            <enum name="anchored" value="2" />
+            <enum name="hidden" value="3" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="CircleImageView">
+        <attr name="border_width" format="dimension" />
+        <attr name="border_color" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="FloatingActionButton">
+        <attr name="fab_colorPressed" format="color" />
+        <attr name="fab_colorNormal" format="color" />
+        <attr name="fab_icon" format="reference" />
+        <attr name="fab_size" format="enum">
+            <enum name="normal" value="0" />
+            <enum name="mini" value="1" />
+        </attr>
+    </declare-styleable>
+    <declare-styleable name="AddFloatingActionButton">
+        <attr name="fab_plusIconColor" format="color" />
+    </declare-styleable>
+    <declare-styleable name="FloatingActionsMenu">
+        <attr name="fab_addButtonColorPressed" format="color" />
+        <attr name="fab_addButtonColorNormal" format="color" />
+        <attr name="fab_addButtonPlusIconColor" format="color" />
+        <attr name="fab_expandDirection" format="enum">
+            <enum name="up" value="0" />
+            <enum name="down" value="1" />
+            <enum name="left" value="2" />
+            <enum name="right" value="3" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="SquareFrameLayout">
+        <attr name="dominant_measurement" format="enum">
+            <enum name="width" value="0" />
+            <enum name="height" value="1" />
+        </attr>
+    </declare-styleable>
+
+</resources>

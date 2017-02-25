@@ -1,0 +1,6 @@
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+android:id/title"
+    style="?android:attr/listSeparatorTextViewStyle"
+    android:paddingEnd="@dimen/preference_item_padding_side"
+    android:paddingStart="@dimen/preference_item_padding_side"
+    android:paddingTop="8dp" />

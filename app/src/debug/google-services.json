@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "0"
+  },
+  "client": [
+    {
+      "client_info": {
+        "android_client_info": {
+          "package_name": "another.music.player"
+        }
+      },
+      "api_key": [
+        {
+          "current_key": ""
+        }
+      ]
+    },
+    {
+      "client_info": {
+        "android_client_info": {
+          "package_name": "com.simplecity.amp_pro"
+        }
+      },
+      "api_key": [
+        {
+          "current_key": ""
+        }
+      ]
+    },
+    {
+      "client_info": {
+        "android_client_info": {
+          "package_name": "com.simplecity.amp_pro.debug"
+        }
+      },
+      "api_key": [
+        {
+          "current_key": ""
+        }
+      ]
+    },
+    {
+      "client_info": {
+        "android_client_info": {
+          "package_name": "another.music.player.debug"
+        }
+      },
+      "api_key": [
+        {
+          "current_key": ""
+        }
+      ]
+    }
+  ],
+  "configuration_version": "1"
+}

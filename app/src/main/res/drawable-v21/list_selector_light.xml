@@ -1,0 +1,18 @@
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+        android:color="@color/ripple_material_light">
+    <item android:drawable="@android:color/transparent"/>
+    <item>
+        <selector
+            android:exitFadeDuration="@android:integer/config_mediumAnimTime">
+
+            <item
+                android:drawable="@drawable/list_item_activated_light"
+                android:state_activated="true"/>
+
+            <item android:drawable="@android:color/transparent"/>
+        </selector>
+    </item>
+    <item android:id="@android:id/mask">
+        <color android:color="@color/white"/>
+    </item>
+</ripple>

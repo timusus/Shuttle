@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2015 Google Inc. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+<resources>
+
+    <!-- Custom Media Router Dialog -->
+    <color name="ccl_mr_custom_line_1">#000000</color>
+    <color name="ccl_mr_custom_line_2">#AA000000</color>
+    <color name="ccl_mr_custom_title">#33b5e5</color>
+
+    <!-- VideoCastControllerActivity/Fragment -->
+    <color name="ccl_cast_activity_progress_text_color">#E5FFFFFF</color>
+    <color name="ccl_cast_activity_line1_text_color">#E5FFFFFF</color>
+    <color name="ccl_cast_activity_line2_text_color">#E5AAAAAA</color>
+    <color name="ccl_cast_activity_background_color">#000000</color>
+    <color name="ccl_cast_activity_text_color">#FFFFFF</color>
+
+    <color name="ccl_blue">#4285f4</color>
+    <color name="ccl_grey600">#555753</color>
+    <color name="ccl_mini_upcoming_background">#03A9F4</color>
+    <color name="ccl_mini_main_background">#FFFFFF</color>
+    <color name="ccl_mini_upcoming_upnext_color">#eeff41</color>
+
+    <!-- Introductory Overlay -->
+    <color name="ccl_intro_overlay_background_color">#CC000000</color>
+    <color name="ccl_intro_overlay_button_background_color">#BB33B5E5</color>
+    <color name="ccl_intro_overlay_button_foreground_color">#FFFFFF</color>
+</resources>

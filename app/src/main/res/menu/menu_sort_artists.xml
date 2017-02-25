@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/sort"
+        android:icon="?attr/btn_sort"
+        android:title="@string/sorting"
+        app:showAsAction="ifRoom">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/sort_default"
+                    android:title="@string/sort_default"/>
+                <item
+                    android:id="@+id/sort_artist_name"
+                    android:title="@string/sort_artist_name"/>
+                <item
+                    android:id="@+id/sort_ascending"
+                    android:checkable="true"
+                    android:checked="true"
+                    android:title="@string/sort_ascending"/>
+            </group>
+        </menu>
+    </item>
+</menu>

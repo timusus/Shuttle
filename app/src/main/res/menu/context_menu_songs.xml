@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:icon="?attr/btn_add"
+        android:title="@string/add_to_playlist"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item android:title="Placeholder"/>
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/menu_add_to_queue"
+        android:icon="?attr/btn_queue"
+        android:title="@string/add_to_queue"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/delete"
+        android:icon="?attr/btn_delete"
+        android:title="@string/delete_item"
+        app:showAsAction="ifRoom"/>
+</menu>

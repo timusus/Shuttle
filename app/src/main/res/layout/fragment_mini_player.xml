@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/mini_player_height"
+    android:clickable="true"
+    android:elevation="4dp"
+    android:foreground="?attr/list_selector">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:alpha="0.15"
+        android:src="@color/white" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/progressbar"
+            style="@style/CustomProgressBar"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_toEndOf="@+id/mini_album_artwork"
+            android:layout_toRightOf="@+id/mini_album_artwork"
+            android:indeterminate="false"
+            android:maxHeight="3dp"
+            android:minHeight="3dp" />
+
+        <ImageView
+            android:id="@+id/mini_album_artwork"
+            android:layout_width="@dimen/mini_player_height"
+            android:layout_height="@dimen/mini_player_height"
+            android:layout_centerVertical="true"
+            android:scaleType="centerCrop" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:layout_toLeftOf="@+id/mini_play"
+            android:layout_toRightOf="@+id/mini_album_artwork"
+            android:orientation="vertical"
+            android:paddingBottom="6dp"
+            android:paddingTop="6dp">
+
+            <TextView
+                android:id="@+id/track_name"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:ellipsize="marquee"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/artist_name"
+                style="@style/SecondaryTextDark"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:ellipsize="marquee"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/card_shadow" />
+
+        <com.simplecity.amp_library.ui.views.PlayPauseView
+            android:id="@+id/mini_play"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="4dp"
+            android:background="?attr/circular_ripple"
+            android:contentDescription="@string/btn_play"
+            android:padding="40dp" />
+    </RelativeLayout>
+</FrameLayout>

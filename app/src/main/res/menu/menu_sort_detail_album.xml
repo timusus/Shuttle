@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:icon="?attr/btn_sort"
+        android:title="@string/sorting"
+        app:showAsAction="ifRoom">
+
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/sort_song_default"
+                    android:title="@string/sort_default"/>
+                <item
+                    android:id="@+id/sort_song_name"
+                    android:title="@string/sort_song_name"/>
+                <item
+                    android:id="@+id/sort_song_track_number"
+                    android:title="@string/sort_song_track_number"/>
+                <item
+                    android:id="@+id/sort_song_duration"
+                    android:title="@string/sort_song_duration"/>
+                <item
+                    android:id="@+id/sort_song_year"
+                    android:title="@string/sort_song_year"/>
+                <item
+                    android:id="@+id/sort_song_date"
+                    android:title="@string/sort_song_date_added"/>
+            </group>
+            <item
+                android:id="@+id/sort_songs_ascending"
+                android:checkable="true"
+                android:checked="true"
+                android:title="@string/sort_ascending"/>
+        </menu>
+    </item>
+</menu>

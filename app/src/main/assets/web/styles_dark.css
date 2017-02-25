@@ -1,0 +1,31 @@
+* {
+	font-family: 'Helvetica', sans-serif;
+	color: #ffffff;
+}
+
+body
+{
+ 	padding-top: 0px;
+    padding-right: 16px;
+    padding-bottom: 0px;
+    padding-left: 16px;
+    margin: 0;
+	background-color: transparent;
+	line-height: 1.6em;
+}
+
+pre {
+	width: 100%;
+	padding: 16px;
+    overflow: auto;
+    font-size: 85%;
+	line-height: 1.45;
+	background-color: #202020;
+	border-radius: 3px;
+}
+
+a:link {color: #B0D1F1; text-decoration: underline; }
+a:active {color: #ffffff; text-decoration: underline; }
+a:visited {color: #4575A5; text-decoration: underline; }
+a:hover {color: #6198BF; text-decoration: none; }
+

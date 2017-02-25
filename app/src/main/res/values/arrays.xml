@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="baseThemeArray">
+        <item>@string/pref_title_theme_light</item>
+        <item>@string/pref_title_theme_dark</item>
+        <item>@string/pref_title_theme_black</item>
+    </string-array>
+
+    <string-array name="baseThemeValues">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <array name="pastel_colors">
+        <item>@color/red_300</item>
+        <item>@color/pink_300</item>
+        <item>@color/purple_300</item>
+        <item>@color/deep_purple_300</item>
+        <item>@color/indigo_300</item>
+        <item>@color/blue_300</item>
+        <item>@color/light_blue_300</item>
+        <item>@color/cyan_300</item>
+        <item>@color/teal_300</item>
+        <item>@color/green_200</item>
+        <item>@color/light_green_300</item>
+        <item>@color/lime_300</item>
+        <item>@color/amber_300</item>
+        <item>@color/orange_300</item>
+        <item>@color/deep_orange_300</item>
+    </array>
+
+    <array name="column_range">
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </array>
+
+</resources>

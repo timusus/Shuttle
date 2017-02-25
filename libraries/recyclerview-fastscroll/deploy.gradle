@@ -1,0 +1,145 @@
+/*
+ * Copyright (c) 2016 Tim Malseed
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+def Properties bintrayProps = new Properties()
+File bintrayProperties = file('bintray.properties')
+if (bintrayProperties.exists()) {
+    bintrayProps.load(new FileInputStream(bintrayProperties))
+}
+
+group = bintrayProps['group']
+version = bintrayProps['version']
+
+def pkgRepo = bintrayProps['repo']
+def pkgName = bintrayProps['pkgName']
+def libraryDescription = bintrayProps['description']
+
+def siteUrl = bintrayProps['siteUrl']      // Homepage URL of the library
+def gitUrl = bintrayProps['gitUrl']   // Git repository URL
+def issuesUrl = bintrayProps['issuesUrl']
+
+def licenceName = bintrayProps['licenceName']
+def licenceUrl = bintrayProps['licenceUrl']
+def licenceDistribution = bintrayProps['licenceDistribution']
+
+def developerId = bintrayProps['developerId']
+def developerName = bintrayProps['developerName']
+def developerEmail = bintrayProps['developerEmail']
+def developerOrg = bintrayProps['developerOrg']
+
+def publishJavadoc = bintrayProps['publishJavadoc']
+def publishSources = bintrayProps['publishSources']
+def publishDownloadNumbers = bintrayProps['publishDownloadNumbers']
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    if (publishJavadoc) {
+        archives javadocJar
+    }
+    if (publishSources) {
+        archives sourcesJar
+    }
+}
+
+Properties properties = new Properties()
+File propertiesFile = project.rootProject.file('local.properties')
+if(propertiesFile.exists()) {
+    properties.load(new FileInputStream(propertiesFile))
+} else {
+    properties.setProperty('bintray.apikey', System.getenv('BINTRAY_KEY'))
+    properties.setProperty('bintray.user', System.getenv('BINTRAY_USER'))
+}
+
+bintray {
+    user = properties['bintray.user']
+    key = properties['bintray.apikey']
+
+    configurations = ['archives']
+    publish = true
+
+    pkg {
+        repo = pkgRepo
+        if (developerOrg) {
+            userOrg = developerOrg
+        }
+        name = pkgName
+        desc = libraryDescription
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        issueTrackerUrl = issuesUrl
+        publicDownloadNumbers = publishDownloadNumbers
+        version {
+            name = project.version
+            vcsTag = project.version
+            gpg {
+                sign = true //Determines whether to GPG sign the files. The default is false
+                passphrase = properties.getProperty("bintray.gpg.password")
+                //Optional. The passphrase for GPG signing'
+            }
+        }
+    }
+}
+
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging 'aar'
+                name pkgName
+                description libraryDescription
+                url siteUrl
+                licenses {
+                    license {
+                        name licenceName
+                        url licenceUrl
+                        distribution licenceDistribution
+                    }
+                }
+                developers {
+                    developer {
+                        id developerId
+                        name developerName
+                        if (developerEmail) {
+                            email developerEmail
+                        }
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
+}

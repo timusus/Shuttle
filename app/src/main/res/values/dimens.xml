@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="pause_bar_width">4dp</dimen>
+    <dimen name="pause_bar_distance">6dp</dimen>
+    <dimen name="pause_bar_height">20dp</dimen>
+
+    <dimen name="grid_item_horizontal_width">128dp</dimen>
+
+    <dimen name="drawer_horizontal_margin">16dp</dimen>
+    <dimen name="drawer_header_height">172dp</dimen>
+
+    <dimen name="navigation_drawer_width">304dp</dimen>
+
+    <dimen name="equalizer_activity_edge_padding">16dp</dimen>
+    <dimen name="equalizer_activity_top_padding">16dp</dimen>
+
+    <dimen name="mini_player_height">64dp</dimen>
+
+    <dimen name="header_view_height">320dp</dimen>
+
+    <dimen name="preference_item_padding_side">8dip</dimen>
+    <dimen name="preference_item_padding_inner">8dip</dimen>
+    <dimen name="preference_icon_minWidth">0dp</dimen>
+    <dimen name="preference_widget_width">48dp</dimen>
+
+    <dimen name="widget_margin">8dp</dimen>
+
+    <!-- The width of the big icons in notifications. -->
+    <dimen name="notification_large_icon_width">112dp</dimen>
+    <!-- The width of the big icons in notifications. -->
+    <dimen name="notification_large_icon_height">112dp</dimen>
+
+    <!-- height of a normal list item in edit playlist mode -->
+    <!-- height of an expanded list item in edit playlist mode -->
+    <dimen name="drag_grip_ridge_size">4dp</dimen>
+    <dimen name="drag_grip_ridge_gap">2dp</dimen>
+
+    <!-- Better Pickers Dimens -->
+    <dimen name="medium_font_padding">12dp</dimen>
+    <dimen name="medium_font_size">60dp</dimen>
+    <dimen name="medium_font_size_hms">36dp</dimen>
+    <dimen name="medium_date_font_size">48dp</dimen>
+    <dimen name="label_font_size">14sp</dimen>
+    <dimen name="dialpad_font_size">36sp</dimen>
+    <dimen name="timer_padding_left">16dip</dimen>
+    <dimen name="dialpad_font_size_ampm">24sp</dimen>
+    <dimen name="tablet_dialpad_font_size">60sp</dimen>
+    <dimen name="tablet_dialpad_font_size_ampm">30sp</dimen>
+
+    <!--Widget Dimens -->
+    <dimen name="widget_medium_width">250dp</dimen>
+    <dimen name="widget_medium_height">96dp</dimen>
+    <dimen name="widget_large_height">152dp</dimen>
+    <dimen name="widget_small_height">96dp</dimen>
+    <dimen name="widget_small_width">128dp</dimen>
+    <dimen name="widget_medium_artwork_height">96dp</dimen>
+
+    <!--Widget Dimens -->
+    <dimen name="widget_large_image_width">88dp</dimen>
+    <dimen name="widget_large_image_height">88dp</dimen>
+
+    <!-- Quick Circle Dims -->
+    <!-- physical width(mm) of quickcircle window -->
+    <dimen name="physical_width_of_quickcircle">47mm</dimen>
+    <!-- physical height(mm) of quickcircle window -->
+    <dimen name="physical_height_of_quickcircle">47mm</dimen>
+
+    <!-- Floating Action Button -->
+    <dimen name="fab_size_normal">56dp</dimen>
+    <dimen name="fab_size_mini">40dp</dimen>
+
+
+    <!-- Default insets (outer padding) around controls -->
+    <dimen name="control_inset_material">4dp</dimen>
+
+    <!-- Default inner padding within controls -->
+    <dimen name="control_padding_material">4dp</dimen>
+
+</resources>

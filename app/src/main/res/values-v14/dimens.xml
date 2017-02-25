@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="widget_margin">0dp</dimen>
+
+    <!--Widget Dimens -->
+    <dimen name="widget_large_image_width">96dp</dimen>
+    <dimen name="widget_large_image_height">96dp</dimen>
+
+</resources>

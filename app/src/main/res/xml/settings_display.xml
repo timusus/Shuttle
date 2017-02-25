@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.simplecity.amp_library.ui.views.CustomPreferenceCategory
+        android:layout="@layout/preference_category"
+        android:title="@string/pref_category_navigation">
+        <Preference
+            android:key="pref_tab_chooser"
+            android:layout="@layout/preference"
+            android:summary="@string/pref_summary_choose_tabs"
+            android:title="@string/pref_title_choose_tabs"/>
+        <ListPreference
+            android:dialogTitle="@string/select_default_page"
+            android:entries="@array/pref_default_page_entries"
+            android:entryValues="@array/pref_default_page_entries"
+            android:key="pref_default_page"
+            android:layout="@layout/preference"
+            android:summary="@string/pref_summary_default_page"
+            android:title="@string/pref_title_default_page"/>
+    </com.simplecity.amp_library.ui.views.CustomPreferenceCategory>
+    <com.simplecity.amp_library.ui.views.CustomPreferenceCategory
+        android:key="display_group"
+        android:layout="@layout/preference_category"
+        android:title="@string/pref_category_notif_drawer">
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_invert_notif_icons"
+            android:layout="@layout/preference"
+            android:title="@string/pref_title_invert_notif_icons"
+            android:widgetLayout="@layout/preference_widget_checkbox"/>
+
+    </com.simplecity.amp_library.ui.views.CustomPreferenceCategory>
+    <com.simplecity.amp_library.ui.views.CustomPreferenceCategory
+        android:key="display_group"
+        android:layout="@layout/preference_category"
+        android:title="@string/pref_category_other">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_screen_on"
+            android:layout="@layout/preference"
+            android:summary="@string/pref_summary_screen_on"
+            android:title="@string/pref_title_screen_on"
+            android:widgetLayout="@layout/preference_widget_checkbox"/>
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref_show_lockscreen_artwork"
+            android:layout="@layout/preference"
+            android:summary="@string/pref_summary_lockscreen"
+            android:title="@string/pref_title_lockscreen"
+            android:widgetLayout="@layout/preference_widget_checkbox"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_ignore_duplicates"
+            android:layout="@layout/preference"
+            android:summary="@string/pref_summary_ignore_duplicates"
+            android:title="@string/pref_title_ignore_duplicates"
+            android:widgetLayout="@layout/preference_widget_checkbox"/>
+    </com.simplecity.amp_library.ui.views.CustomPreferenceCategory>
+</PreferenceScreen>

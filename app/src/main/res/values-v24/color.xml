@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="notification_control_tint_v24">#757575</color>
+
+    <color name="notification_control_tint_v24_inverse">#E1E1E1</color>
+
+</resources>

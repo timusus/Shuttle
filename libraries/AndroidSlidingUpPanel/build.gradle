@@ -1,0 +1,39 @@
+apply plugin: 'com.android.library'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath gradlePlugins.android
+    }
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile libs.supportv4
+    compile libs.recyclerView
+}
+
+android {
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
+    lintOptions {
+        abortOnError false
+    }
+    defaultConfig {
+        minSdkVersion 9
+    }
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+        }
+    }
+}

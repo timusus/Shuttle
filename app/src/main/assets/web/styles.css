@@ -1,0 +1,25 @@
+* {
+	font-family: 'Helvetica', sans-serif;
+	color: #333333;
+}
+
+body
+{
+ 	padding-top: 0px;
+    padding-right: 16px;
+    padding-bottom: 0px;
+    padding-left: 16px;
+    margin: 0;
+	background-color: transparent;
+	line-height: 1.6em;
+}
+
+pre {
+	width: 100%;
+	padding: 16px;
+    overflow: auto;
+    font-size: 85%;
+	line-height: 1.45;
+	background-color: #f1f1f1;
+	border-radius: 3px;
+}

@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- ## Toast Messages ## -->
+    <!-- Shown when a user attempts to edit tags, but they don't have a 'DocumentProvider' available to pick the directory of their music (and thus give permission to Shuttle)-->
+    <!-- Displayed when an M3U playlist is being saved, but it already exists -->
+    <string name="playlist_save_exists">Playlist already exists</string>
+    <!-- Displayed when an M3U playlist save fails -->
+    <string name="playlist_save_failed">Couldn\'t save playlist</string>
+    <!-- Displayed when an M3U playlist is saved, %s will be the path -->
+    <!-- Displayed after a blacklist is deleted -->
+    <string name="blacklist_deleted">Blacklist deleted</string>
+    <!-- Displayed after a whitelist is deleted -->
+    <string name="whitelist_deleted">Whitelist deleted</string>
+    <!-- Displayed when a folder couldn't be deleted-->
+    <!-- Displayed when a file couldn't be deleted -->
+    <!-- Displayed when a folder couldn't be renamed-->
+    <!-- Displayed when a file couldn't be renamed-->
+    <!-- Toast after turning shuffle on -->
+    <string name="shuffle_on_notif">Shuffle is on.</string>
+    <!-- Toast after turning shuffle off -->
+    <string name="shuffle_off_notif">Shuffle is off.</string>
+    <!-- Toast after turning repeat off -->
+    <string name="repeat_off_notif">Repeat is off.</string>
+    <!-- Toast after turning single repeat on -->
+    <string name="repeat_current_notif">Repeating current song.</string>
+    <!-- Toast after turning repeat all on -->
+    <!-- Individual song context menu item -->
+    <string name="ringtone_menu">Use as phone ringtone</string>
+    <!-- Toast after setting a song as phone ringtone -->
+    <!-- Toast if setting ringtone fails -->
+    <!-- Toasts after adding song(s) to playlists -->
+    <!-- Toast after selecting an empty playlist -->
+    <string name="emptyplaylist">Selected playlist is empty.</string>
+    <!-- Used in sleep message. Example 2 hours (and) 5 minutes -->
+    <string name="and">" and "</string>
+    <!-- Alarm confirmation toast: singular hour -->
+    <string name="hour">" hour"</string>
+    <!-- Alarm confirmation toast: plural hours -->
+    <!-- Alarm confirmation toast: plural minutes -->
+    <string name="minutes">" minutes"</string>
+    <!-- Alarm toast: Sleep timer set for -->
+    <!-- -->
+    <!-- Transient popup message shown after deleting a playlist -->
+    <!-- Transient popup message shown after renaming a playlist -->
+    <!-- Toast confirming that song(s) was/were deleted. -->
+    <!-- -->
+    <!-- Toasts after adding song(s) to playlists -->
+    <!-- ## Dialogs ## -->
+    <!-- Displays when a restart is required due to a change (themes etc) -->
+    <!-- Displays when a restart is required due to a change (themes etc) -->
+    <!-- Restart now button -->
+    <string name="restart_button">Restart now</string>
+    <!-- Displays when picking a theme color -->
+    <string name="color_pick">Pick a Colour</string>
+    <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
+    <!-- Displays when sharing a file fails -->
+    <!-- Displays when you click 'share' -->
+    <!-- Option to share song info -->
+    <!-- Option to share audio file -->
+    <!-- Displays when you need to choose which app to share the song with -->
+    <!-- Displayed when an M3U playlist is being saved-->
+    <!-- Displayed when whitelisting a folder, as the app gathers the songs-->
+    <string name="gathering_songs">Gathering songs...</string>
+    <!-- -->
+    <string name="get_pro_title">Upgrade to Shuttle+</string>
+    <!-- -->
+    <!-- -->
+    <string name="upgraded_title">Thank You</string>
+    <!-- -->
+    <!-- Dialog 'close' button -->
+    <!-- No internet connection warning -->
+    <!-- Prompt in dialog when creating a playlist. The user will enter the name of the playlist in a textfield underneath this prompt. -->
+    <!-- Text for the "cancel" button in the "delete" and "create playlist" confirmation dialogs -->
+    <!-- Delete confirmation dialog when deleting an entire artist -->
+    <!-- Delete confirmation dialog message when deleting artists -->
+    <!-- Delete confirmation dialog when deleting an entire album -->
+    <!-- Delete confirmation dialog message when deleting albums -->
+    <!-- Delete confirmation dialog when deleting a single song -->
+    <!-- Delete confirmation dialog message title when deleting songs -->
+    <!-- Toast shown when songs are successfully deleted -->
+    <!-- Toast shown when failing to delete songs-->
+    <!-- Delete confirmation dialog, confirmation button text -->
+    <!-- -->
+    <!-- -->
+    <!-- Displayed when user presses 'delete artwork' -->
+    <!-- QuickLyric button -->
+    <!--"Set Ringtone" title -->
+    <!-- "Set Ringtone" message -->
+    <!-- Message displayed in dialog when attempting to add duplicates to playlist -->
+    <!-- Checkbox text 'apply to all' -->
+    <!-- Title displayed in dialog when attempting to add duplicates to playlist -->
+    <!-- Button displayed in dialog when attempting to add duplicates to playlist (Add) -->
+    <!-- Button displayed in dialog when attempting to add duplicates to playlist (Skip) -->
+    <!-- Checkbox text 'always add duplicates' -->
+    <!-- ## Widgets ## -->
+    <!-- Checkbox text to invert colors of buttons & text -->
+    <!-- Text shown on widget when first loaded -->
+    <!-- ## Menu Headings ## -->
+    <!-- Context menu in navigation drawer - option to save playlist as M3U -->
+    <!-- context menu item to remove the selected item from the playlist -->
+    <!-- Menu option 'clear queue' -->
+    <!-- -->
+    <string name="fav_add">Add to Favourites</string>
+    <!-- Context menu item -->
+    <!-- Context menu item -->
+    <!-- Context menu item -->
+    <!-- Button for lyrics -->
+    <!-- menu item to save the current list as a new playlist -->
+    <!-- Context menu item to remove the selected item from the playlist -->
+    <!-- Context menu item to remove the selected item from the playlist -->
+    <!-- Context menu item -->
+    <!-- Menu text for the settings item -->
+    <!-- Playing screen, menu item -->
+    <string name="fav_title">Favourites</string>
+    <!-- -->
+    <!-- -->
+    <!-- Library screen, menu item -->
+    <!-- Playlist context menu item to delete the selected playlist. -->
+    <!-- Playlist context menu item to clear the selected playlist. -->
+    <!-- Playlist context menu item to edit the selected playlist -->
+    <!-- Playlist context menu item to rename the selected playlist -->
+    <!-- -->
+    <!-- Menu item to play back all the songs in the currently showing list in shuffle mode -->
+    <!-- title of the "current playlist" screen when not in party shuffle mode -->
+    <!-- -->
+    <!-- Context menu item -->
+    <!-- Popup menu item -->
+    <!-- 'More' button -->
+    <!-- Share option-->
+    <!-- ## Navigation Drawer ## -->
+    <!-- Accessibility description 'open navigation drawer'-->
+    <!-- Accessibility description 'close navigation drawer'-->
+    <!-- ## Preference Menu ## -->
+    <!--Settings title for white accent color) -->
+    <!--Settings summary for white accent color-->
+    <string name="pref_summary_theme_white_accent">Uses white for all colour accents, except those which need to show state (shuffle and repeat need a colour other than white to show they are turned on).</string>
+    <!--Settings category for 'navigation' items -->
+    <!--Settings category for 'other' items -->
+    <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
+    <!--Settings summary for opening the dialog to pick which categories are shown as tab headings -->
+    <!--Settings title for picking the primary theme color -->
+    <string name="pref_title_theme_pick_color">Theme Colour</string>
+    <!--Settings summary for picking the primary theme color-->
+    <string name="pref_summary_theme_pick_color">Choose the colour for your theme</string>
+    <!--Settings title for for picking the accent theme color-->
+    <string name="pref_title_theme_pick_accent_color">Accent Colour</string>
+    <!--Settings summary for picking the accent theme color-->
+    <string name="pref_summary_theme_pick_accent_color">Choose the accent colour for your theme</string>
+    <!--Settings title for enabling the tinted navigation bar -->
+    <!--Settings summary for enabling the tinted navigation bar -->
+    <!-- Settings title for the themes -->
+    <!--Settings titles for the themes -->
+    <!--Settings summary for the downloading more themes -->
+    <!--Settings title for whitelist/blacklist-->
+    <!--Settings title for viewing blacklist-->
+    <!--Settings title for clearing blacklist-->
+    <!--Settings title for viewing whitelist-->
+    <!--Settings title for clearing whitelist-->
+    <!--Settings title for clearing whitelist-->
+    <!-- Context menu item to remove the selected item from the blacklist -->
+    <!--Settings message for cropping album art on the Playing Activity screen-->
+    <!-- Settings title for showing artwork in the queue screen -->
+    <!-- Settings title for embedded artwork checkbox (whether the app can use local artwork for the album art -->
+    <!-- Settings summary for the ignore embedded artwork checkbox-->
+    <!-- Settings title for ignore embedded artwork checkbox (whether the app can use local artwork for the album art -->
+    <!-- Settings summary for the ignore folder artwork checkbox-->
+    <!-- Settings title for ignore embedded artwork checkbox (whether the app can use local artwork for the album art -->
+    <!-- Settings summary for the ignore folder artwork checkbox-->
+    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
+    <!-- Settings summary for the embedded artwork checkbox-->
+    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
+    <!-- Settings summary for the embedded artwork checkbox-->
+    <!-- Settings title for Artwork settings heading -->
+    <!-- Settings title for the download artwork button -->
+    <!-- Settings summary for the download artwork button-->
+    <!-- Settings warning for the download artwork button -->
+    <!-- Settings title for the delete artwork button-->
+    <!-- Settings summary for the delete artwork button -->
+    <!-- Shown when a user changes artwork source, and is prompted to delete existing artwork-->
+    <!-- The 'remove' artwork confirmation button-->
+    <!-- Settings title for the option to download artwork automatically-->
+    <!-- Settings summary for the option to download artwork automatically-->
+    <!-- Settings title for the download via Wi-Fi checkbox -->
+    <!-- Settings summary for the download via Wi-Fi checkbox -->
+    <!-- Settings title for gmail style placeholders checkbox-->
+    <!-- Settings summary for gmail style placeholders checkbox-->
+    <!-- Settings title for the enable lockscreen controls checkbox -->
+    <!-- Settings summary for the enable lockscreen controls checkbox -->
+    <!-- Settings title for the Display heading -->
+    <!-- Settings title for the keep screen on checkbox -->
+    <!-- Settings summary for the keep screen on checkbox -->
+    <!-- Settings title for the default page (choose which page displays by default in the Main Activity) -->
+    <!-- Settings summary for the default page  -->
+    <!-- Settings title for the headset control options -->
+    <!-- Settings title for the headset resume on connect option -->
+    <!-- Settings summary for the headset resume on connect option -->
+    <!-- Settings title for the headset pause on disconnect -->
+    <!-- Settings summary for the headset pause on disconnect -->
+    <!-- Settings title 'headset' -->
+    <!-- Settings title 'bluetooth' -->
+    <!-- Settings summary for the bluetooth pause on disconnect -->
+    <!-- Settings summary for the bluetooth resume on connect -->
+    <!-- Settings title for the scrobbling heading -->
+    <!-- Settings title for Simple Last.fm scrobbler -->
+    <!-- Settings title for the enable last.fm scrobbling checkbox -->
+    <!-- Settings summary for the enable last.fm scrobbling checkbox -->
+    <!-- Settings title for downloading the Simple Last.fm scrobbler -->
+    <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
+    <!-- Settings title for the About heading -->
+    <!-- Settings title for the Support heading -->
+    <!-- Settings title for ignore playlist duplicates -->
+    <!-- Settings summary for ignore playlist duplicates -->
+    <!-- Displayed on the settings page to choose the default main page -->
+    <!-- Option to view the list as a list or grid -->
+    <!-- List ('view as' option) -->
+    <!-- Grid ('view as' option) -->
+    <!-- Grid with palette ('view as' option) -->
+    <!-- Grid with cards ('view as' option) -->
+    <!-- Grid size (number of columns in grid view) -->
+    <!-- -->
+    <!-- -->
+    <!-- -->
+    <!-- -->
+    <!-- ## Detail Activity - Info for artists/albums ## -->
+    <!-- The viewpager tab title for the artist/album info -->
+    <!-- Displayed when no artist information can be retrieved -->
+    <!-- Displayed when no album information can be retrieved -->
+    <!-- ## Tag Editor ## -->
+    <!-- Context option save tags -->
+    <!-- Tag editor saving tags -->
+    <!-- -->
+    <!-- Track count. i.e "1 of 15" -->
+    <!-- Button text for saving tags  -->
+    <!-- Message displayed when tag editing fails -->
+    <!-- ## Folder browsing ## -->
+    <!-- -->
+    <!-- -->
+    <!-- Menu option to save current folder as initial (starting) directory -->
+    <!-- Label in folder view - number of folders within the current folder -->
+    <!-- -->
+    <!-- -->
+    <!-- 'Scan'-->
+    <!-- Scan Complete-->
+    <!-- Scanning-->
+    <!-- ## Main Headings ## -->
+    <!-- Artist screen title -->
+    <!-- Albums screen title -->
+    <!-- Songs screen title -->
+    <!-- Playlists screen title -->
+    <!-- Genres screen title -->
+    <!-- Files title -->
+    <!-- Folders screen title -->
+    <!-- Suggestions screen title -->
+    <!-- The name of the pseudo-playlist that holds all the podcasts, shown in title bar of songs list -->
+    <!-- The name of the pseudo-playlist that holds all the recently added files, shown in list view -->
+    <!-- The name of the pseudo-playlist that holds all the most-played files, shown in list view -->
+    <!-- Artist (singular) -->
+    <!-- Album (singular) -->
+    <!-- Title (singular) -->
+    <!-- Year (singular)-->
+    <!-- Genre (singular)-->
+    <!-- Album artist (singular)-->
+    <!-- ## Lyrics ## -->
+    <!-- -->
+    <!-- ## Equalizer ## -->
+    <!-- Menu item to open the equalizer -->
+    <string name="equalizer">Equaliser</string>
+    <!-- Displayed at the top of the preset selection screen in the equalizer -->
+    <!-- Bass boost strength -->
+    <!-- Virtualizer strength -->
+    <!-- Button to open external equalizer (DSP manager) -->
+    <!-- Equalizer 'custom' preset -->
+    <!-- ## Empty list messages ## -->
+    <!-- -->
+    <!-- -->
+    <!-- -->
+    <!-- -->
+    <!-- -->
+    <!-- -->
+    <!-- ## Sort options ## -->
+    <!-- ## Sleep Timer ## -->
+    <!-- Options Menu - Sleep Timer Title -->
+    <!-- -->
+    <!-- Sleep timer "set" -->
+    <!-- Sleep timer "set" -->
+    <!-- Button name in time span picker -->
+    <!-- Title of time span picker -->
+    <!-- ## Notification bar text ## -->
+    <!-- Message in notification bar when downloading -->
+    <!-- ## SD card error messages ##-->
+    <!-- Title of screen when no sd card is present -->
+    <!-- Title of screen when no sd card is present -->
+    <!-- label underneath icon used to indicate that the sd card is present, but currently unavailable -->
+    <!-- label underneath icon used to indicate that the sd card is present, but currently unavailable -->
+    <!-- label underneath icon used to indicate sd card is mounted to your computer via USB -->
+    <!-- ## Playlist creation ## -->
+    <!-- Template for newly created playlist name -->
+    <!-- Button name when saving a playlist -->
+    <!-- Button name when saving a playlist and the new playlist will overwrite an existing one -->
+    <!-- ## Various plurals ## -->
+    <!-- used in various places to indicate there is one song for a given artist or album -->
+    <!-- used in various places to indicate there is some number other than one songs for a given artist or album. -->
+    <!-- Used in artists list view, indicates how many albums exist for a given artist. -->
+    <!--## Miscellaneous ##-->
+    <!-- Tag editor 'comment' field-->
+    <!-- Chromecast button for choosing which Chromecast device to play on -->
+    <!-- Action bar button text for saving a selected items to whitelist -->
+    <!-- DashClock Extension Description -->
+    <!-- Week Selector title -->
+    <!-- Displayed under the 'Most Played' section of the 'suggested' tab.. Artist, Album, Song -->
+    <!-- Displayed under the 'Recent' section of the 'suggested' tab.. Artist, Album, Song  -->
+    <!-- Shows when multiple items are selected after-long pressing-->
+    <!-- ## Unknown artist/album metadata ##-->
+    <!-- Default name of artist that doesn't have a name in the metadata -->
+    <!-- Default name of album artist that doesn't have a name in the metadata -->
+    <!-- Default name of genre that doesn't have a name in the metadata -->
+    <!-- Default name of album artist that doesn't have a name in the metadata -->
+    <!-- Song Info overflow option-->
+    <!-- Artwork Download Service Label-->
+    <!-- ## Better Pickers Strings ## -->
+    <!-- Accessibility button description -->
+    <!-- Accessibility button description -->
+    <!-- Accessibility button description -->
+    <!-- Accessibility button description -->
+    <!-- Accessibility button description -->
+    <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
+    <!-- Accessibility button description -->
+    <!-- Accessibility button description -->
+    <!-- Accessibility button description -->
+    <!-- Accessibility button description -->
+    <!-- Accessibility button description -->
+    <!-- Accessibility button description -->
+    <!-- Accessibility button description -->
+    <!-- Accessibility now playing 'mini player' description. Example: Now playing <Wannabe> by <Spice Girls> -->
+    <!-- Accessibility 'show lyrics' -->
+    <!-- Artwork picker -->
+    <!-- Launcher Shortcuts -->
+    <!-- "Shuffle" Shortcut label. Max 10 characters.-->
+    <!-- "Shuffle" Shortcut long label. Max 25 characters.-->
+    <!-- "Shuffle" Shortcut label disabled. Shows when shuffle not available (I don't think this ever happens)-->
+    <!-- "Play" Shortcut label. Max 10 characters.-->
+    <!-- "Play" Shortcut long label. Max 25 characters.-->
+    <!-- "Play" Shortcut label disabled. Shows when music is already playing-->
+    <!-- "Folders" Shortcut label. Max 10 characters.-->
+    <!-- "Folders" Shortcut long label. Max 25 characters.-->
+    <!-- "Folders" Shortcut label disabled. (I don't think this ever happens)-->
+    <!-- "Playlist" Shortcut label. Max 10 characters.-->
+    <!-- "Playlist" Shortcut long label. Max 25 characters.-->
+    <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
+    <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
+</resources>

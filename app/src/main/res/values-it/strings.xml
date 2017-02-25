@@ -1,0 +1,744 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- ## Toast Messages ## -->
+    <!-- Shown when a user attempts to edit tags, but they don't have a 'DocumentProvider' available to pick the directory of their music (and thus give permission to Shuttle)-->
+    <string name="R.string.toast_no_document_provider">Nessun DocumentProvider disponibile per gestire la richiesta di permessi</string>
+    <!-- Displayed when an M3U playlist is being saved, but it already exists -->
+    <string name="playlist_save_exists">Playlist già esistente</string>
+    <!-- Displayed when an M3U playlist save fails -->
+    <string name="playlist_save_failed">Impossibile salvare la playlist</string>
+    <!-- Displayed when an M3U playlist is saved, %s will be the path -->
+    <string name="playlist_saved">Playlist salvata in <xliff:g id="path">%s</xliff:g></string>
+    <!-- Displayed after a blacklist is deleted -->
+    <string name="blacklist_deleted">Lista nera eliminata</string>
+    <!-- Displayed after a whitelist is deleted -->
+    <string name="whitelist_deleted">Lista bianca eliminata</string>
+    <!-- Displayed when a folder couldn't be deleted-->
+    <string name="delete_folder_failed">Impossibile eliminare la cartella.\n\nLa cartella potrebbe essere protetta da scrittura.</string>
+    <!-- Displayed when a file couldn't be deleted -->
+    <string name="delete_file_failed">Impossibile cancellare il file.\n\nIl file potrebbe essere protetto da scrittura.</string>
+    <!-- Displayed when a folder couldn't be renamed-->
+    <string name="rename_folder_failed">Impossibile rinominare la cartella.\n\nQuesta cartella potrebbe essere protetta da scrittura, o esiste già una cartella con lo stesso nome.</string>
+    <!-- Displayed when a file couldn't be renamed-->
+    <string name="rename_file_failed">Impossibile rinominare il file.\n\nQuesto file potrebbe essere protetto da scrittura, o esiste già un file con lo stesso nome.</string>
+    <!-- Toast after turning shuffle on -->
+    <string name="shuffle_on_notif">Riproduzione casuale attivata</string>
+    <!-- Toast after turning shuffle off -->
+    <string name="shuffle_off_notif">Riproduzione casuale disattivata</string>
+    <!-- Toast after turning repeat off -->
+    <string name="repeat_off_notif">Ripetizione non attiva.</string>
+    <!-- Toast after turning single repeat on -->
+    <string name="repeat_current_notif">Ripetizione brano corrente.</string>
+    <!-- Toast after turning repeat all on -->
+    <string name="repeat_all_notif">Ripetizione di tutti i brani.</string>
+    <!-- Individual song context menu item -->
+    <string name="ringtone_menu">Usa come suoneria</string>
+    <!-- Toast after setting a song as phone ringtone -->
+    <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\ impostata come suoneria.</string>
+    <!-- Toast if setting ringtone fails -->
+    <string name="ringtone_set_failed">Non è possibile impostare la suoneria</string>
+    <!-- Toasts after adding song(s) to playlists -->
+    <plurals name="NNNtrackstoplaylist">
+        <item quantity="one">Un brano aggiunto alla playlist.</item>
+        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> brani aggiunti alla playlist.</item>
+    </plurals>
+    <!-- Toast after selecting an empty playlist -->
+    <string name="emptyplaylist">La playlist selezionata è vuota.</string>
+    <!-- Used in sleep message. Example 2 hours (and) 5 minutes -->
+    <string name="and">" e "</string>
+    <!-- Alarm confirmation toast: singular hour -->
+    <string name="hour">" ora"</string>
+    <!-- Alarm confirmation toast: plural hours -->
+    <string name="hours">" ore"</string>
+    <!-- Alarm confirmation toast: plural minutes -->
+    <string name="minutes">" minuti"</string>
+    <!-- Alarm toast: Sleep timer set for -->
+    <string name="sleep_message">"Spegnimento automatico tra "</string>
+    <!-- -->
+    <string name="initial_dir_set_message">" impostato come percorso iniziale"</string>
+    <!-- Transient popup message shown after deleting a playlist -->
+    <string name="playlist_deleted_message">Playlist eliminata.</string>
+    <!-- Transient popup message shown after renaming a playlist -->
+    <string name="playlist_renamed_message">Playlist rinominata.</string>
+    <!-- Toast confirming that song(s) was/were deleted. -->
+    <plurals name="NNNtracksdeleted">
+        <item quantity="one">Un brano è stato eliminato.</item>
+        <item quantity="other"><xliff:g id="songs_to_delete">%d</xliff:g> brani sono stati eliminati.</item>
+    </plurals>
+    <!-- -->
+    <plurals name="NNNtrackstoqueue">
+        <item quantity="one">Un brano aggiunto alla coda.</item>
+        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> brani aggiunti alla coda.</item>
+    </plurals>
+    <!-- Toasts after adding song(s) to playlists -->
+    <plurals name="NNNtrackstofavourites">
+        <item quantity="one">Un brano aggiunto ai preferiti.</item>
+        <item quantity="other"><xliff:g id="number" example="27">%d</xliff:g> brani aggiunti ai preferiti.</item>
+    </plurals>
+    <string name="song_to_favourites"><xliff:g id="song_name">%s</xliff:g> aggiunta ai preferiti.</string>
+    <string name="song_removed_from_favourites"><xliff:g id="song_name">%s</xliff:g> rimossa dai preferiti.</string>
+    <!-- ## Dialogs ## -->
+    <!-- Displays when a restart is required due to a change (themes etc) -->
+    <string name="restart_tite">Riavvio richiesto</string>
+    <!-- Displays when a restart is required due to a change (themes etc) -->
+    <string name="restart_message">Queste modifiche avranno effetto solo dopo il riavvio di Shuttle</string>
+    <!-- Restart now button -->
+    <string name="restart_button">Riavvia adesso</string>
+    <!-- Displays when picking a theme color -->
+    <string name="color_pick">Seleziona un colore</string>
+    <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
+    <string name="dialog_custom">Personale</string>
+    <!-- Displays when sharing a file fails -->
+    <string name="share_failed">Mi dispiace, questo file non può essere condiviso</string>
+    <!-- Displays when you click 'share' -->
+    <string name="share_dialog_title">Cosa vuoi condividere?</string>
+    <!-- Option to share song info -->
+    <string name="share_option_song_info">Informazioni \"in riproduzione\"</string>
+    <!-- Option to share audio file -->
+    <string name="share_option_audio_file">File audio</string>
+    <!-- Displays when you need to choose which app to share the song with -->
+    <string name="share_via">Condivi il brano in riproduzione con</string>
+    <!-- Displayed when an M3U playlist is being saved-->
+    <string name="saving_playlist">Salva playlist</string>
+    <!-- Displayed when whitelisting a folder, as the app gathers the songs-->
+    <string name="gathering_songs">Raccolta dei brani in corso...</string>
+    <!-- -->
+    <string name="get_pro_title">Aggiorna a Shuttle+</string>
+    <!-- -->
+    <string name="get_pro_message">Se ti piace utilizzare Shuttle considera l\'upgrade.
+\n\nCaratteristiche:
+\nMolti temi aggiuntivi
+\nModifica dei tag (supporto limitato su Android 4.4 KitKat)
+\nNavigazione delle cartelle
+\nSupporto a ChromeCast\n\nPermette inoltre di promuovere il futuro sviluppo dell\'applicazione.</string>
+    <!-- -->
+    <string name="upgraded_title">Grazie</string>
+    <string name="upgraded_message">Hai effettuato con successo l\'upgrade a Shuttle+. Ti ringrazio per il supporto.\n\nPer favore riavvia l\'app per attivare tutte le caratteristiche.</string>
+    <string name="upgrade_dialog_message">Effettuando l\'upgrade verranno sbloccate alcune caratteristiche addizionali, tra le quali:
+\n\n\&#8226;-Numerosi temi aggiuntivi
+\n\&#8226;-Editor dei tag (supporto limitato su Android 4.4 KitKat)
+\n\&#8226;-Navigazione a cartelle
+\n\&#8226;-Supporto a ChromeCast
+\n\nPermette inoltre di promuovere il futuro sviluppo dell\'applicazione. \n\n Non è necessario effettuare l\'upgrade se hai già acquistato Shuttle+.</string>
+    <string name="get_pro_button_play_store">Play Store</string>
+    <string name="get_pro_button_amazon">Amazon</string>
+    <string name="btn_upgrade">Upgrade</string>
+    <!-- -->
+    <string name="get_pro_button_no">No, grazie</string>
+    <!-- Dialog 'close' button -->
+    <string name="close">Chiudi</string>
+    <!-- No internet connection warning -->
+    <string name="connection_unavailable">Connessione a Internet non disponibile</string>
+    <!-- Prompt in dialog when creating a playlist. The user will enter the name of the playlist in a textfield underneath this prompt. -->
+    <string name="create_playlist_create_text_prompt">Nome della playlist</string>
+    <!-- Text for the "cancel" button in the "delete" and "create playlist" confirmation dialogs -->
+    <string name="cancel">Annulla</string>
+    <!-- Delete confirmation dialog when deleting an entire artist -->
+    <string name="delete_album_artist_desc">Tutti i brani di  <xliff:g id="album-artist">%s</xliff:g> verranno cancellati definitivamente.</string>
+    <!-- Delete confirmation dialog message when deleting artists -->
+    <string name="delete_album_artist_desc_multiple">Tutti i brani degli artisti seguenti:<xliff:g id="album-artist">%s</xliff:g>verranno cancellati definitivamente.</string>
+    <!-- Delete confirmation dialog when deleting an entire album -->
+    <string name="delete_album_desc">L\'intero album <xliff:g id="album">%s</xliff:g> sarà eliminato definitivamente.</string>
+    <!-- Delete confirmation dialog message when deleting albums -->
+    <string name="delete_album_desc_multiple">I seguenti album:<xliff:g id="album">%s</xliff:g>saranno eliminati permanentemente.</string>
+    <!-- Delete confirmation dialog when deleting a single song -->
+    <string name="delete_song_desc"><xliff:g id="song">%s</xliff:g> sarà eliminata definitivamente.</string>
+    <!-- Delete confirmation dialog message title when deleting songs -->
+    <string name="delete_song_desc_multiple">I seguenti brani:<xliff:g id="song">%s</xliff:g>saranno eliminati permanentemente.</string>
+    <!-- Toast shown when songs are successfully deleted -->
+    <string name="delete_songs_success_toast"><xliff:g id="number">%d</xliff:g> brani cancellati.</string>
+    <!-- Toast shown when failing to delete songs-->
+    <string name="delete_songs_failure_toast">Non è possibile cancellare i brani.</string>
+    <!-- Delete confirmation dialog, confirmation button text -->
+    <string name="button_ok">OK</string>
+    <!-- -->
+    <string name="delete_folder_confirmation_dialog">Sei sicuro di voler eliminare definitivamente la cartella \"<xliff:g id="folder">%s</xliff:g>\"? Tutti i file in questa cartella verranno eliminati, inclusi quelli che potrebbero non essere visualizzati dal file manager di Shuttle.</string>
+    <!-- -->
+    <string name="delete_file_confirmation_dialog">Sei sicuro di voler eliminare definitivamente \"<xliff:g id="file">%s</xliff:g>\"?</string>
+    <!-- Displayed when user presses 'delete artwork' -->
+    <string name="delete_artwork_confirmation_dialog">Sei sicuro di voler eliminare definitivamente tutte le illustrazioni dal dispositivo?</string>
+    <!-- QuickLyric button -->
+    <string name="quicklyric">QuickLyric</string>
+    <!--"Set Ringtone" title -->
+    <string name="dialog_title_set_ringtone">Imposta suoneria</string>
+    <!-- "Set Ringtone" message -->
+    <string name="dialog_message_set_ringtone">Shuttle richiede un permesso di scrittura allo scopo di impostare la suoneria.\nDopo aver dato il permesso prova a impostare la suoneria ancora.</string>
+    <!-- Message displayed in dialog when attempting to add duplicates to playlist -->
+    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%s</xliff:g> - <xliff:g id="song">%s</xliff:g> già presente in questa playlist. Aggiungere lo stesso?</string>
+    <!-- Checkbox text 'apply to all' -->
+    <string name="dialog_checkbox_playlist_duplicate_apply_all">Applica a tutti (<xliff:g id="number">%d</xliff:g>)</string>
+    <!-- Title displayed in dialog when attempting to add duplicates to playlist -->
+    <string name="dialog_title_playlist_duplicates">Trovati duplicati</string>
+    <!-- Button displayed in dialog when attempting to add duplicates to playlist (Add) -->
+    <string name="dialog_button_playlist_duplicate_add">Aggiungi</string>
+    <!-- Button displayed in dialog when attempting to add duplicates to playlist (Skip) -->
+    <string name="dialog_button_playlist_duplicate_skip">Tralascia</string>
+    <!-- Checkbox text 'always add duplicates' -->
+    <string name="dialog_checkbox_playlist_duplicate_always_add">Aggiungere sempre duplicati</string>
+    <!-- ## Widgets ## -->
+    <!-- Checkbox text to invert colors of buttons & text -->
+    <string name="widget_background_color">Sfondo</string>
+    <string name="widget_background_transparency">Trasparenza</string>
+    <string name="widget_text_color">Testo</string>
+    <string name="widget_invert_icons">Inverti icone</string>
+    <!-- Text shown on widget when first loaded -->
+    <string name="widget_initial_text">Tocca per scegliere cosa ascoltare</string>
+    <string name="widget_show_artwork">Mostra copertina</string>
+    <!-- ## Menu Headings ## -->
+    <!-- Context menu in navigation drawer - option to save playlist as M3U -->
+    <string name="export_playlist">Esporta playlist</string>
+    <!-- context menu item to remove the selected item from the playlist -->
+    <!-- Menu option 'clear queue' -->
+    <string name="clear_queue">Svuota coda</string>
+    <!-- -->
+    <string name="fav_add">Aggiungi ai preferiti</string>
+    <!-- Context menu item -->
+    <string name="play_selection">Riproduci</string>
+    <!-- Context menu item -->
+    <string name="add_to_playlist">Aggiungi a playlist</string>
+    <!-- Context menu item -->
+    <string name="new_playlist">Nuova</string>
+    <!-- Button for lyrics -->
+    <string name="lyrics">Testi</string>
+    <!-- menu item to save the current list as a new playlist -->
+    <string name="save_as_playlist">Salva come playlist</string>
+    <!-- Context menu item to remove the selected item from the playlist -->
+    <string name="remove_from_playlist">Rimuovi da playlist</string>
+    <!-- Context menu item to remove the selected item from the playlist -->
+    <string name="remove_from_queue">Rimuovi dalla coda</string>
+    <!-- Context menu item -->
+    <string name="play_next">Traccia successiva</string>
+    <!-- Menu text for the settings item -->
+    <string name="settings">Impostazioni</string>
+    <!-- Playing screen, menu item -->
+    <string name="fav_title">Preferiti</string>
+    <!-- -->
+    <string name="library_title">Libreria</string>
+    <!-- -->
+    <string name="share_title">Condividi</string>
+    <!-- Library screen, menu item -->
+    <string name="search_title">Cerca</string>
+    <!-- Playlist context menu item to delete the selected playlist. -->
+    <string name="delete_playlist_menu">Elimina</string>
+    <!-- Playlist context menu item to clear the selected playlist. -->
+    <string name="clear_playlist_menu">Cancella</string>
+    <!-- Playlist context menu item to edit the selected playlist -->
+    <string name="edit_playlist_menu">Modifica</string>
+    <!-- Playlist context menu item to rename the selected playlist -->
+    <string name="rename_playlist_menu">Rinomina</string>
+    <!-- -->
+    <string name="delete_item">Elimina</string>
+    <!-- Menu item to play back all the songs in the currently showing list in shuffle mode -->
+    <string name="shuffle_all">Casuale</string>
+    <!-- title of the "current playlist" screen when not in party shuffle mode -->
+    <string name="nowplaying_title">"In riproduzione "</string>
+    <!-- -->
+    <string name="up_next_title">A seguire</string>
+    <!-- Context menu item -->
+    <string name="add_to_queue">Aggiungi alla coda</string>
+    <!-- Popup menu item -->
+    <string name="go_to">Vai a...</string>
+    <!-- 'More' button -->
+    <string name="heading_more">Altro</string>
+    <!-- Share option-->
+    <string name="share">Condividi</string>
+    <!-- ## Navigation Drawer ## -->
+    <!-- Accessibility description 'open navigation drawer'-->
+    <string name="navigation_drawer_open">Apri il navigation drawer</string>
+    <!-- Accessibility description 'close navigation drawer'-->
+    <string name="navigation_drawer_close">Chiudi il navigation drawer</string>
+    <!-- ## Preference Menu ## -->
+    <!--Settings title for white accent color) -->
+    <string name="pref_title_theme_white_accent">Usa bianco in risalto</string>
+    <!--Settings summary for white accent color-->
+    <string name="pref_summary_theme_white_accent">Usa il bianco come colore in risalto, eccettuato dove è necessario indicare uno stato (Casuale e Ripeti hanno bisogno di un colore diverso dal bianco per mostrare che sono attivi)</string>
+    <!--Settings category for 'navigation' items -->
+    <string name="pref_category_navigation">Navigazione</string>
+    <!--Settings category for 'other' items -->
+    <string name="pref_category_other">Altro</string>
+    <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
+    <string name="pref_title_choose_tabs">Scegli schede</string>
+    <!--Settings summary for opening the dialog to pick which categories are shown as tab headings -->
+    <string name="pref_summary_choose_tabs">Scegli e riordina le categorie visualizzate come schede nella parte alta dello schermo</string>
+    <!--Settings title for picking the primary theme color -->
+    <string name="pref_title_theme_pick_color">Colore tema</string>
+    <!--Settings summary for picking the primary theme color-->
+    <string name="pref_summary_theme_pick_color">Seleziona il colore del tema</string>
+    <!--Settings title for for picking the accent theme color-->
+    <string name="pref_title_theme_pick_accent_color">Colore in risalto</string>
+    <!--Settings summary for picking the accent theme color-->
+    <string name="pref_summary_theme_pick_accent_color">Seleziona il colore in risalto del tuo tema</string>
+    <!--Settings title for enabling the tinted navigation bar -->
+    <string name="pref_title_tinted_nav">Barra di navigazione colorata</string>
+    <!--Settings summary for enabling the tinted navigation bar -->
+    <string name="pref_summary_tinted_nav">Abilita/disabilita la barra di navigazione colorata</string>
+    <!-- Settings title for the themes -->
+    <string name="pref_string_title_themes">Temi</string>
+    <!--Settings titles for the themes -->
+    <string name="pref_title_base_theme">Tema base</string>
+    <string name="pref_summary_base_theme">Seleziona il tema base (chiaro o scuro)</string>
+    <string name="pref_title_theme_dark">Tema scuro</string>
+    <string name="pref_title_theme_light">Tema chiaro</string>
+    <string name="pref_title_theme_black">Nero</string>
+    <!--Settings summary for the downloading more themes -->
+    <string name="pref_summary_get_pro_themes">Altri temi sono disponibili in Shuttle+</string>
+    <!--Settings title for whitelist/blacklist-->
+    <string name="pref_title_blacklist">Lista bianca/nera</string>
+    <!--Settings title for viewing blacklist-->
+    <string name="pref_title_view_blacklist">Visualizza/Modifica la lista nera</string>
+    <!--Settings title for clearing blacklist-->
+    <string name="pref_title_clear_blacklist">Svuota</string>
+    <!--Settings title for viewing whitelist-->
+    <string name="pref_title_view_whitelist">Visualizza/Modifica la lista bianca</string>
+    <!--Settings title for clearing whitelist-->
+    <string name="pref_title_clear_whitelist">Svuota</string>
+    <!--Settings title for clearing whitelist-->
+    <string name="pref_title_update_whitelist">Aggiorna</string>
+    <!-- Context menu item to remove the selected item from the blacklist -->
+    <string name="pref_title_crop_album_art">Ritaglia copertine</string>
+    <!--Settings message for cropping album art on the Playing Activity screen-->
+    <string name="pref_summary_crop_album_art">Ritaglia la parte centrale delle copertine degli album per occupare tutto lo spazio disponibile nella schermata \"In riproduzione\"</string>
+    <!-- Settings title for showing artwork in the queue screen -->
+    <string name="pref_title_artwork_queue">Visualizza le copertine in \"A seguire\"</string>
+    <!-- Settings title for embedded artwork checkbox (whether the app can use local artwork for the album art -->
+    <string name="pref_title_prefer_embedded_art">Illustrazioni incorporate</string>
+    <!-- Settings summary for the ignore embedded artwork checkbox-->
+    <string name="pref_summary_prefer_embedded_art">Seleziona questa opzione se preferisci che Shuttle cerchi le illustrazioni all\'interno del file stesso prima di cercare all\'interno delle cartelle</string>
+    <!-- Settings title for ignore embedded artwork checkbox (whether the app can use local artwork for the album art -->
+    <string name="pref_title_ignore_embedded_art">Ignora illustrazioni incorporate</string>
+    <!-- Settings summary for the ignore folder artwork checkbox-->
+    <string name="pref_summary_ignore_embedded_art">Non cercare le illustrazioni incorporate nei file musicali</string>
+    <!-- Settings title for ignore embedded artwork checkbox (whether the app can use local artwork for the album art -->
+    <string name="pref_title_ignore_mediastore_art">Ignora il Media Store per le illustrazioni</string>
+    <!-- Settings summary for the ignore folder artwork checkbox-->
+    <string name="pref_summary_ignore_mediastore_art">Android Media Store trova le tue illustrazioni incorporate, e sembra conservarle in bassa risoluzione. Cambiare questa impostazione per bypassare il Media Store (caricamento delle illustrazioni leggermente più lento)</string>
+    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
+    <string name="pref_title_ignore_folder_art">Ignora le illustrazioni nelle cartelle</string>
+    <!-- Settings summary for the embedded artwork checkbox-->
+    <string name="pref_summary_ignore_folder_art">Non cercare le illustrazioni memorizzate nelle cartelle musicali</string>
+    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
+    <string name="pref_title_prefer_lastfm">Preferisci le illustrazioni di Last.fm</string>
+    <!-- Settings summary for the embedded artwork checkbox-->
+    <string name="pref_summary_prefer_lastfm">Seleziona questa opzione se preferisci che Shuttle cerchi le illustrazioni in Last.fm prima di cercare in iTunes. (Solo copertine degli album)</string>
+    <!-- Settings title for Artwork settings heading -->
+    <string name="pref_string_title_artwork">Illustrazioni</string>
+    <!-- Settings title for the download artwork button -->
+    <string name="pref_title_download_artwork">Scarica illustrazioni</string>
+    <!-- Settings summary for the download artwork button-->
+    <string name="pref_summary_download_artwork">"Scarica le immagini degli artisti e delle copertine degli album mancanti
+    "</string>
+    <!-- Settings warning for the download artwork button -->
+    <string name="pref_warning_download_artwork">Shuttle scaricherà tutte le illustrazioni a prescindere dal tipo di connessione. Potrebbe comportare costi per il traffico dati.</string>
+    <!-- Settings title for the delete artwork button-->
+    <string name="pref_title_delete_artwork">Elimina illustrazioni</string>
+    <!-- Settings summary for the delete artwork button -->
+    <string name="pref_summary_delete_artwork">"Elimina le immagini degli artisti e delle copertine degli album dal dispositivo
+    "</string>
+    <!-- Shown when a user changes artwork source, and is prompted to delete existing artwork-->
+    <string name="pref_summary_change_artwork_source">Cambiare la fonte delle copertine non avrà effetto sulle copertine già scaricate. Vuoi rimuovere le tue copertine?</string>
+    <!-- The 'remove' artwork confirmation button-->
+    <string name="pref_button_remove_artwork">Rimuovi</string>
+    <!-- Settings title for the option to download artwork automatically-->
+    <string name="pref_title_download_artwork_auto">Scarica automaticamente</string>
+    <!-- Settings summary for the option to download artwork automatically-->
+    <string name="pref_summary_download_artwork_auto">"Scarica le immagini degli artisti e delle copertine degli album automaticamente
+    "</string>
+    <!-- Settings title for the download via Wi-Fi checkbox -->
+    <string name="pref_title_download_wifi_only">Scarica solo tramite Wi-Fi</string>
+    <!-- Settings summary for the download via Wi-Fi checkbox -->
+    <string name="pref_summary_download_wifi_only">"Le immagini degli artisti e delle copertine degli album verranno scaricate solo se si sta utilizzando una connessione Wi-Fi
+    "</string>
+    <!-- Settings title for gmail style placeholders checkbox-->
+    <string name="pref_title_placeholders">Usa etichette Gmail</string>
+    <!-- Settings summary for gmail style placeholders checkbox-->
+    <string name="pref_summary_placeholders">Visualizza le etichette in stile Gmail per impostazione predefinita. Se non selezionato verrà utilizzata come etichetta l\'icona di Shuttle.</string>
+    <!-- Settings title for the enable lockscreen controls checkbox -->
+    <string name="pref_title_lockscreen">Copertina nella schermata di sblocco</string>
+    <!-- Settings summary for the enable lockscreen controls checkbox -->
+    <string name="pref_summary_lockscreen">Abilita/disabilita la copertina nella schermata di sblocco</string>
+    <!-- Settings title for the Display heading -->
+    <string name="pref_title_display">Interfaccia</string>
+    <!-- Settings title for the keep screen on checkbox -->
+    <string name="pref_title_screen_on">Schermo acceso</string>
+    <!-- Settings summary for the keep screen on checkbox -->
+    <string name="pref_summary_screen_on">Disattiva lo spegnimento automatico dello schermo</string>
+    <!-- Settings title for the default page (choose which page displays by default in the Main Activity) -->
+    <string name="pref_title_default_page">Pagina predefinita</string>
+    <!-- Settings summary for the default page  -->
+    <string name="pref_summary_default_page">Scegli la pagina da visualizzare all\'avvio dell\'applicazione</string>
+    <!-- Settings title for the headset control options -->
+    <string name="pref_title_headset_bluetooth">Cuffie/Bluetooth</string>
+    <!-- Settings title for the headset resume on connect option -->
+    <string name="pref_title_headset_con">Riprendi alla riconnessione</string>
+    <!-- Settings summary for the headset resume on connect option -->
+    <string name="pref_summary_headset_con">La riproduzione riprende quando le cuffie vengono connesse</string>
+    <!-- Settings title for the headset pause on disconnect -->
+    <string name="pref_title_headset_disconnect">In pausa alla disconnessione</string>
+    <!-- Settings summary for the headset pause on disconnect -->
+    <string name="pref_summary_headset_disconnect">Mette in pausa la riproduzione quando le cuffie vengono disconnesse</string>
+    <!-- Settings title 'headset' -->
+    <string name="pref_title_headset">Cuffie</string>
+    <!-- Settings title 'bluetooth' -->
+    <string name="pref_title_bluetooth">Bluetooth</string>
+    <!-- Settings summary for the bluetooth pause on disconnect -->
+    <string name="pref_summary_bluetooth_disconnect">Mette in pausa la riproduzione quando il bluetooth viene disconnesso</string>
+    <!-- Settings summary for the bluetooth resume on connect -->
+    <string name="pref_summary_bluetooth_connect">La riproduzione riprende quando il bluetooth viene connesso</string>
+    <!-- Settings title for the scrobbling heading -->
+    <string name="pref_title_scrobbling">Scrobbling</string>
+    <!-- Settings title for Simple Last.fm scrobbler -->
+    <string name="pref_title_simple_scrobbler">Simple Last.FM Scrobbler</string>
+    <!-- Settings title for the enable last.fm scrobbling checkbox -->
+    <string name="pref_title_simple_enable">Abilita scrobbling</string>
+    <!-- Settings summary for the enable last.fm scrobbling checkbox -->
+    <string name="pref_summary_simple_enable">Attiva lo scrobbling tramite Simple Last.FM Scrobbler</string>
+    <!-- Settings title for downloading the Simple Last.fm scrobbler -->
+    <string name="download">Scarica</string>
+    <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
+    <string name="pref_summary_simple_download">"Scarica Simple Last.FM Scrobbler dal Google Play Store
+	"</string>
+    <!-- Settings title for the About heading -->
+    <string name="pref_title_about">Note di versione</string>
+    <!-- Settings title for the Support heading -->
+    <string name="pref_title_support">Supporto</string>
+    <string name="pref_title_version">Versione</string>
+    <string name="pref_title_faq">FAQ</string>
+    <string name="pref_summary_faq">Hai una domanda da fare? Hai bisogno d\'aiuto? Clicca qui per leggere le FAQ su www.shuttlemusicplayer.com</string>
+    <string name="pref_title_gplus">Ottieni aiuto</string>
+    <string name="pref_summary_gplus">C\'è una comunità molto attiva di utenti di Shuttle su Google+. Se hai domande o hai bisogno di aiuto, questo è il miglior posto dove andare.</string>
+    <string name="pref_title_rate">Ringrazia</string>
+    <string name="pref_summary_rate">Se ti piace utilizzare Shuttle, per favore scrivi una ricensione.</string>
+    <!-- Settings title for ignore playlist duplicates -->
+    <string name="pref_title_ignore_duplicates">Ignora duplicati nella playlist</string>
+    <!-- Settings summary for ignore playlist duplicates -->
+    <string name="pref_summary_ignore_duplicates">Non cercare e proporre di tralasciare i duplicati quando di aggiungono canzoni a una playlist.</string>
+    <!-- Displayed on the settings page to choose the default main page -->
+    <string name="select_default_page">Seleziona pagina predefinita</string>
+    <!-- Option to view the list as a list or grid -->
+    <string name="view_as_title">Visualizza come</string>
+    <!-- List ('view as' option) -->
+    <string name="view_options_list">Lista</string>
+    <!-- Grid ('view as' option) -->
+    <string name="view_options_grid">Griglia</string>
+    <!-- Grid with palette ('view as' option) -->
+    <string name="view_options_grid_palette">Griglia: Colori</string>
+    <!-- Grid with cards ('view as' option) -->
+    <string name="view_options_grid_card">Griglia: Schede</string>
+    <!-- Grid size (number of columns in grid view) -->
+    <string name="menu_grid_size">Dimensioni griglia</string>
+    <!-- -->
+    <string name="whitelist_title">Lista bianca</string>
+    <!-- -->
+    <string name="blacklist_title">Lista nera</string>
+    <!-- -->
+    <string name="blacklist_description">Per aggiungere un brano alla lista nera premere i tre pulsanti verticali del brano di interesse e selezionare \'Lista nera\'.</string>
+    <!-- -->
+    <string name="whitelist_description">Per aggiungere dei brani alla lista bianca premere il pulsante delle impostazioni nella modalità di navigazione a cartelle, selezionare \'Lista bianca\' e infine scegliere le cartelle da aggiungere alla lista bianca.</string>
+    <!-- ## Detail Activity - Info for artists/albums ## -->
+    <!-- The viewpager tab title for the artist/album info -->
+    <string name="info">Biografia</string>
+    <!-- Displayed when no artist information can be retrieved -->
+    <string name="no_artist_info">Nessuna informazione disponibile per questo artista</string>
+    <!-- Displayed when no album information can be retrieved -->
+    <string name="no_album_info">Nessuna informazione disponibile per questo album</string>
+    <!-- ## Tag Editor ## -->
+    <!-- Context option save tags -->
+    <string name="edit_tags">Modifica tag</string>
+    <!-- Tag editor saving tags -->
+    <string name="saving_tags">Salvataggio dei tag</string>
+    <!-- -->
+    <string name="track_number">Traccia \#</string>
+    <string name="track_total">Tracce totali</string>
+    <string name="disc_number">Disco \#</string>
+    <string name="disc_total">Dischi totali</string>
+    <!-- Track count. i.e "1 of 15" -->
+    <string name="track_count"><xliff:g id="track">%s</xliff:g> di <xliff:g id="total tracks">%s</xliff:g></string>
+    <!-- Button text for saving tags  -->
+    <string name="save">Salva</string>
+    <!-- Message displayed when tag editing fails -->
+    <string name="tag_edit_error">Si è verificato un errore durante la modifica dei tag.</string>
+    <string name="tag_error_lollipop">Errore durante la modifica dei tag. Se il file risiede su una scheda SD, Shuttle potrebbe non avere i permessi per accedere.</string>
+    <string name="tag_error_kitkat">Si è verificato un errore durante la modifica dei tag. Il file è memorizzato su una scheda SD? In tal caso, Google ha reso impossibile la modifica dei tag per questo file.</string>
+    <string name="tag_editor_document_tree_message">A causa dei cambiamenti in Android 5.0, Google ora richiede che vengano indicate quali cartelle in una scheda SD possono essere modificate da un\'app.\n\nShuttle aprirà ora un selettore di file. Per favore scegli la cartella genitore dei file che desideri modificare.</string>
+    <string name="tag_editor_check_permission">Sto controllando i permessi. Potrebbe richiedere un po\' di tempo...\n\nColpa di Google!</string>
+    <string name="tag_editor_document_tree_permission_failed">Sembra che Shuttle continui a non avere le necessarie autorizzazioni per modificare i file. Controlla nuovamente la cartella scelta attraverso il selettore di file.</string>
+    <string name="tag_retrieve_error">Si è verificato un errore durante il recupero dei tag.</string>
+    <!-- ## Folder browsing ## -->
+    <!-- -->
+    <string name="rename_folder">Rinomina cartella</string>
+    <!-- -->
+    <string name="rename_file">Rinomina file</string>
+    <!-- Menu option to save current folder as initial (starting) directory -->
+    <string name="set_initial_dir">Imposta come percorso iniziale</string>
+    <!-- Label in folder view - number of folders within the current folder -->
+    <string name="onefolder">1 cartella</string>
+    <plurals name="Nfolders">
+        <item quantity="other">" <xliff:g id="count">%d</xliff:g>
+cartelle "</item>
+        <item quantity="one">" <xliff:g id="count">%d</xliff:g>
+cartelle "</item>
+    </plurals>
+    <!-- -->
+    <string name="parent_folder">Cartella genitore</string>
+    <!-- -->
+    <string name="show_filenames">Mostra i nomi dei file</string>
+    <!-- 'Scan'-->
+    <string name="scan_file">Scansiona</string>
+    <!-- Scan Complete-->
+    <string name="scan_complete">Scansione completata</string>
+    <!-- Scanning-->
+    <string name="scanning">Scansione...</string>
+    <!-- ## Main Headings ## -->
+    <!-- Artist screen title -->
+    <string name="artists_title">Artisti</string>
+    <!-- Albums screen title -->
+    <string name="albums_title">Album</string>
+    <!-- Songs screen title -->
+    <string name="tracks_title">Brani</string>
+    <!-- Playlists screen title -->
+    <string name="playlists_title">Playlist</string>
+    <!-- Genres screen title -->
+    <string name="genres_title">Generi</string>
+    <!-- Files title -->
+    <string name="files_title">File</string>
+    <!-- Folders screen title -->
+    <string name="folders_title">Cartelle</string>
+    <!-- Suggestions screen title -->
+    <string name="suggested_title">Suggeriti</string>
+    <!-- The name of the pseudo-playlist that holds all the podcasts, shown in title bar of songs list -->
+    <string name="podcasts_title">Podcast</string>
+    <!-- The name of the pseudo-playlist that holds all the recently added files, shown in list view -->
+    <string name="recentlyadded">Aggiunti di recente</string>
+    <!-- The name of the pseudo-playlist that holds all the most-played files, shown in list view -->
+    <string name="mostplayed">Le più riprodotte</string>
+    <!-- Artist (singular) -->
+    <string name="artist_title">Artista</string>
+    <!-- Album (singular) -->
+    <string name="album_title">Album</string>
+    <!-- Title (singular) -->
+    <string name="song_title">Titolo</string>
+    <!-- Year (singular)-->
+    <string name="year_title">Anno</string>
+    <!-- Genre (singular)-->
+    <string name="genre_title">Genere</string>
+    <!-- Album artist (singular)-->
+    <string name="album_artist_title">Artista album</string>
+    <!-- ## Lyrics ## -->
+    <!-- -->
+    <string name="no_lyrics">Nessun testo incorporato</string>
+    <!-- ## Equalizer ## -->
+    <!-- Menu item to open the equalizer -->
+    <string name="equalizer">Equalizzatore</string>
+    <!-- Displayed at the top of the preset selection screen in the equalizer -->
+    <string name="select_preset">Seleziona preset</string>
+    <!-- Bass boost strength -->
+    <string name="bass_boost_strength">"Potenza Bass Boost "</string>
+    <!-- Virtualizer strength -->
+    <string name="virtualizer_strength">Potenza virtualizzatore</string>
+    <!-- Button to open external equalizer (DSP manager) -->
+    <string name="open_dsp">Equalizzatore esterno</string>
+    <!-- Equalizer 'custom' preset -->
+    <string name="custom">Personalizzato</string>
+    <!-- ## Empty list messages ## -->
+    <!-- -->
+    <string name="empty_artists">Nessun artista rilevato. Carica dei brani sul tuo dispositivo.</string>
+    <!-- -->
+    <string name="empty_albums">Nessun album rilevato. Carica dei brani sul tuo dispositivo.</string>
+    <!-- -->
+    <string name="empty_genres">Nessun genere rilevato.</string>
+    <!-- -->
+    <string name="empty_playlist">Questa playlist è vuota. Premi a lungo su un artista, un album o un brano e scegli \'Aggiungi alla playlist\' oppure premi sull\'icona +.</string>
+    <!-- -->
+    <string name="empty_songlist">Nessun brano rilevato. Carica dei brani sul tuo dispositivo.</string>
+    <!-- -->
+    <string name="empty_suggested">Riproduci altra musica, e i suggerimenti saranno visualizzati qui.</string>
+    <!-- ## Sort options ## -->
+    <string name="sorting">Ordinamento</string>
+    <string name="sort_default">Predefinito</string>
+    <string name="sort_ascending">Ascendente</string>
+    <string name="sort_artist_name">Nome dell\'artista</string>
+    <string name="sort_album_name">Nome dell\'album</string>
+    <string name="sort_album_year">anno dell\'album</string>
+    <string name="sort_song_name">Nome del brano</string>
+    <string name="sort_song_year">Anno del brano</string>
+    <string name="sort_song_duration">Durata del brano</string>
+    <string name="sort_song_track_number">Traccia #</string>
+    <string name="sort_song_date_added">Aggiunto in data</string>
+    <string name="sort_folders_default">Predefinito</string>
+    <string name="sort_folders_count">Conteggio</string>
+    <string name="sort_files_default">Predefinito</string>
+    <string name="sort_files_file_name">Nome del file</string>
+    <string name="sort_files_size">Dimensione</string>
+    <string name="sort_files_song_artist_name">Nome dell\'artista</string>
+    <string name="sort_files_album_name">Nome dell\'album</string>
+    <string name="sort_files_track_name">Nome del brano</string>
+    <!-- ## Sleep Timer ## -->
+    <!-- Options Menu - Sleep Timer Title -->
+    <string name="timer">Spegnimento automatico</string>
+    <!-- -->
+    <string name="sleep_timer_play_to_end">Riproduci l\'ultimo brano fino alla fine</string>
+    <!-- Sleep timer "set" -->
+    <string name="timer_set">Imposta</string>
+    <!-- Sleep timer "set" -->
+    <string name="timer_stop">Stop</string>
+    <!-- Button name in time span picker -->
+    <string name="button_done">Fatto</string>
+    <!-- Title of time span picker -->
+    <string name="weekpicker_title">Seziona in quante settimane passate Shuttle dovrebbe cercare la musica \'recente\'</string>
+    <!-- ## Notification bar text ## -->
+    <!-- Message in notification bar when downloading -->
+    <string name="notif_downloading_art">Download delle illustrazioni</string>
+    <!-- ## SD card error messages ##-->
+    <!-- Title of screen when no sd card is present -->
+    <string name="sdcard_missing_title">Nessuna scheda SD</string>
+    <!-- Title of screen when no sd card is present -->
+    <string name="sdcard_missing_title_nosdcard" msgid="9008284946643270850">Nessun archivio USB</string>
+    <!-- label underneath icon used to indicate that the sd card is present, but currently unavailable -->
+    <string name="sdcard_busy_title">Scheda SD non disponibile</string>
+    <!-- label underneath icon used to indicate that the sd card is present, but currently unavailable -->
+    <string name="sdcard_busy_title_nosdcard" msgid="1162763571147174655">Archivio USB non disponibile</string>
+    <!-- label underneath icon used to indicate sd card is mounted to your computer via USB -->
+    <!-- ## Playlist creation ## -->
+    <!-- Template for newly created playlist name -->
+    <string name="new_playlist_name_template">Nuova playlist <xliff:g id="number">%d</xliff:g></string>
+    <!-- Button name when saving a playlist -->
+    <string name="create_playlist_create_text">Salva</string>
+    <!-- Button name when saving a playlist and the new playlist will overwrite an existing one -->
+    <string name="create_playlist_overwrite_text">Sovrascrivi</string>
+    <!-- ## Various plurals ## -->
+    <!-- used in various places to indicate there is one song for a given artist or album -->
+    <string name="onesong">1 brano</string>
+    <!-- used in various places to indicate there is some number other than one songs for a given artist or album. -->
+    <plurals name="Nsongs">
+        <item quantity="one"><xliff:g id="count">%d</xliff:g> brano</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> brani</item>
+    </plurals>
+    <!-- Used in artists list view, indicates how many albums exist for a given artist. -->
+    <plurals name="Nalbums">
+        <item quantity="one">Un album</item>
+        <item quantity="other"><xliff:g id="COUNT">%d</xliff:g> album</item>
+    </plurals>
+    <!--## Miscellaneous ##-->
+    <!-- Tag editor 'comment' field-->
+    <string name="comment">Commento</string>
+    <!-- Chromecast button for choosing which Chromecast device to play on -->
+    <string name="media_route_menu_title">Riprodotta da&#8230;</string>
+    <!-- Action bar button text for saving a selected items to whitelist -->
+    <string name="save_whitelist">Salva lista bianca</string>
+    <!-- DashClock Extension Description -->
+    <string name="extension_description">Visualizza informazioni sui brani</string>
+    <!-- Week Selector title -->
+    <string name="week_selector">Seleziona settimana</string>
+    <!-- Displayed under the 'Most Played' section of the 'suggested' tab.. Artist, Album, Song -->
+    <string name="suggested_most_played_songs_subtitle">Primi 20 brani</string>
+    <!-- Displayed under the 'Recent' section of the 'suggested' tab.. Artist, Album, Song  -->
+    <string name="suggested_recent_title">Recente</string>
+    <string name="suggested_recent_subtitle">Album riprodotti di recente</string>
+    <string name="suggested_favorite_subtitle">Brani preferiti</string>
+    <string name="suggested_recently_added_subtitle">Album aggiunti di recente</string>
+    <!-- Shows when multiple items are selected after-long pressing-->
+    <string name="action_mode_selection_count"><xliff:g id="number">%d</xliff:g> selezionati</string>
+    <!-- ## Unknown artist/album metadata ##-->
+    <!-- Default name of artist that doesn't have a name in the metadata -->
+    <string name="unknown_artist_name">Artista sconosciuto</string>
+    <!-- Default name of album artist that doesn't have a name in the metadata -->
+    <string name="unknown_album_name">Album sconosciuto</string>
+    <!-- Default name of genre that doesn't have a name in the metadata -->
+    <string name="unknown_genre_name">Genere sconosciuto</string>
+    <!-- Default name of album artist that doesn't have a name in the metadata -->
+    <string name="unknown_album_artist_name">Artista dell\'album sconosciuto</string>
+    <!-- Song Info overflow option-->
+    <string name="song_info">Info brano</string>
+    <!-- Artwork Download Service Label-->
+    <string name="download_service">Scarica servizio</string>
+    <!-- ## Better Pickers Strings ## -->
+    <string name="picker_set">OK</string>
+    <string name="timer_delete">Elimina</string>
+    <string name="time_picker_time_seperator">:</string>
+    <!-- Accessibility button description -->
+    <string name="btn_play">Riproduci</string>
+    <!-- Accessibility button description -->
+    <string name="btn_pause">Pausa</string>
+    <!-- Accessibility button description -->
+    <string name="btn_skip">Salta</string>
+    <!-- Accessibility button description -->
+    <string name="btn_prev">Precedente</string>
+    <!-- Accessibility button description -->
+    <string name="btn_queue">Visualizza coda riproduzione</string>
+    <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
+    <string name="btn_options">opzioni %s</string>
+    <!-- Accessibility button description -->
+    <string name="btn_repeat_off">Ripeti disattivato</string>
+    <!-- Accessibility button description -->
+    <string name="btn_repeat_current">Ripeti corrente</string>
+    <!-- Accessibility button description -->
+    <string name="btn_repeat_all">Ripeti tutto</string>
+    <!-- Accessibility button description -->
+    <string name="btn_shuffle_on">Riproduzione casuale attivata</string>
+    <!-- Accessibility button description -->
+    <string name="btn_shuffle_off">Riproduzione casuale disattivata</string>
+    <!-- Accessibility button description -->
+    <string name="btn_show_queue">Riproduzione casuale coda</string>
+    <!-- Accessibility button description -->
+    <string name="btn_fab_shuffle">Mescola e riproduci lista corrente</string>
+    <!-- Accessibility now playing 'mini player' description. Example: Now playing <Wannabe> by <Spice Girls> -->
+    <string name="btn_now_playing">In riproduzione %1$s di %2$s</string>
+    <!-- Accessibility 'show lyrics' -->
+    <string name="btn_show_lyrics">Mostra testo</string>
+    <string name="pref_summary_restore_purchases">Se hai già aggiornato Shuttle, ma continua a visualizzare che è la versione free, premi questo.</string>
+    <string name="pref_title_restore_purchases">Ripristina acquisti</string>
+    <string name="blacklist_empty">Non hai nessun brano nella lista nera!</string>
+    <string name="whitelist_empty">Non hai nessuna cartella nella lista bianca!</string>
+    <string name="dialog_song_info_title">Info Brano</string>
+    <string name="song_info_path">Percorso</string>
+    <string name="song_info_file_size">Dimensione file</string>
+    <string name="song_info_format">Formato</string>
+    <string name="song_info_bitrate">Bitrate</string>
+    <string name="song_info_sample_Rate">Freq. campionamento</string>
+    <string name="song_info_play_count">Numero riproduzioni</string>
+    <string name="song_info_bitrate_suffix">" kbps"</string>
+    <string name="song_info_sample_rate_suffix">" kHz"</string>
+    <string name="iab_purchase_restored">Acquisto ripristinato. Riavviare Shuttle</string>
+    <string name="iab_purchase_not_found">Non è stato trovato alcun acquisto precedente.</string>
+    <string name="iab_already_upgraded">Shuttle è già aggiornato. Prova a riavviare l\'app.</string>
+    <string name="iab_purchase_failed">Qualcosa è andato storto. Per favore, riprova dopo...</string>
+    <string name="snackbar_rate_text">Ti piace usare Shuttle?</string>
+    <string name="snackbar_rate_action">Votalo!</string>
+    <string name="toast_purchase_failed">Qualcosa è andato storto. Riprova dopo per favore...</string>
+    <string name="dialog_create_playlist_error">Errore nella creazione della playlist</string>
+    <!-- Artwork picker -->
+    <string name="artwork_edit">Scegli copertina</string>
+    <string name="artwork_type_media_store">Media Store</string>
+    <string name="artwork_type_tag">Tag</string>
+    <string name="artwork_type_lastfm">Last.FM</string>
+    <string name="artwork_type_itunes">iTunes</string>
+    <string name="artwork_type_custom">Personalizzata</string>
+    <string name="artwork_gallery">Galleria</string>
+    <!-- Launcher Shortcuts -->
+    <!-- "Shuffle" Shortcut label. Max 10 characters.-->
+    <string name="shortcut_shuffle_short_label">Casuale</string>
+    <!-- "Shuffle" Shortcut long label. Max 25 characters.-->
+    <string name="shortcut_shuffle_long_label">Casuale su tutti i brani</string>
+    <!-- "Shuffle" Shortcut label disabled. Shows when shuffle not available (I don't think this ever happens)-->
+    <string name="shortcut_shuffle_disabled">Casuale non disponibile</string>
+    <!-- "Play" Shortcut label. Max 10 characters.-->
+    <string name="shortcut_play_short_label">Riproduci</string>
+    <!-- "Play" Shortcut long label. Max 25 characters.-->
+    <string name="shortcut_play_long_label">Riproduci</string>
+    <!-- "Play" Shortcut label disabled. Shows when music is already playing-->
+    <string name="shortcut_play_disabled">Già in riproduzione</string>
+    <!-- "Folders" Shortcut label. Max 10 characters.-->
+    <string name="shortcut_folders_short_label">Cartelle</string>
+    <!-- "Folders" Shortcut long label. Max 25 characters.-->
+    <string name="shortcut_folders_long_label">Sfoglia le cartelle</string>
+    <!-- "Folders" Shortcut label disabled. (I don't think this ever happens)-->
+    <string name="shortcut_folders_disabled">Cartelle non disponibili</string>
+    <!-- "Playlist" Shortcut label. Max 10 characters.-->
+    <string name="shortcut_playlist_short_label">Playlist</string>
+    <!-- "Playlist" Shortcut long label. Max 25 characters.-->
+    <string name="shortcut_playlist_long_label">Apri le playlist favorite</string>
+    <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
+    <string name="shortcut_playlist_disabled">Playlist non disponibile</string>
+    <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
+    <string name="disc_number_label">Disco <xliff:g id="number">%d</xliff:g></string>
+</resources>

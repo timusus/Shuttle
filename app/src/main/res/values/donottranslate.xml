@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <!-- Do not translate. App Name -->
+    <string name="app_name">Shuttle</string>
+
+    <!-- Do not translate. Duration format for duration < 1 hour -->
+    <string name="durationformatshort" translatable="false"><xliff:g id="format">%2$d:%5$02d</xliff:g></string>
+
+    <!-- Do not translate. Duration format for duration >= 1 hour -->
+    <string name="durationformatlong" translatable="false"><xliff:g id="format">%1$d:%3$02d:%5$02d</xliff:g></string>
+
+    <!-- Do not translate. This is the separator character used when building the string that shows number of albums and songs. -->
+    <string name="albumsongseparator">\n</string>
+
+    <!-- Do not translate -->
+    <string name="number_picker_seperator">.</string>
+    <!-- Do not translate -->
+    <string name="hms_picker_hours_label">H</string>
+    <string name="hms_picker_minutes_label">M</string>
+
+    <!-- Do not translate -->
+    <string-array name="pref_default_page_entries">
+        <item>@string/genres_title</item>
+        <item>@string/suggested_title</item>
+        <item>@string/artists_title</item>
+        <item>@string/albums_title</item>
+        <item>@string/tracks_title</item>
+        <item>@string/folders_title</item>
+        <item>@string/playlists_title</item>
+    </string-array>
+
+</resources>

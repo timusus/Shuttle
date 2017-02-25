@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/view_as"
+        android:title="@string/view_as_title"
+        app:showAsAction="never">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/view_as_list"
+                    android:title="@string/view_options_list"/>
+                <item
+                    android:id="@+id/view_as_grid"
+                    android:title="@string/view_options_grid"/>
+                <item
+                    android:id="@+id/view_as_grid_card"
+                    android:title="@string/view_options_grid_card"/>
+                <item
+                    android:id="@+id/view_as_grid_palette"
+                    android:title="@string/view_options_grid_palette"/>
+            </group>
+        </menu>
+    </item>
+
+</menu>

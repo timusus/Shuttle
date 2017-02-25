@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TextAppearance.Material.Notification.Title.Inverse" parent="@android:style/TextAppearance.Material.Notification.Title">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">@dimen/notification_title_text_size</item>
+    </style>
+
+    <style name="TextAppearance.Material.Notification.Inverse" parent="@android:style/TextAppearance.Material.Notification">
+        <item name="android:textColor">#b3ffffff</item>
+        <item name="android:textSize">@dimen/notification_text_size</item>
+    </style>
+
+</resources>

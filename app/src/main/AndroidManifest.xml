@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.simplecity.amp_library">
+
+    <!-- ## 'Protection-Normal' permissions ## -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- ## End 'Protection-Normal' permissions ## -->
+
+    <!-- ## 'Special' permissions ##-->
+    <!-- Used to set ringtone-->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <!-- Used to read mediastore db, caching artwork etc. -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- ## End 'Special' permissions ##-->
+
+    <application
+        android:name="com.simplecity.amp_library.ShuttleApplication"
+        android:allowBackup="true"
+        android:allowTaskReparenting="true"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:theme="@style/Theme.Launch">
+
+        <meta-data
+            android:name="com.simplecity.amp_library.glide.utils.CustomGlideModule"
+            android:value="GlideModule" />
+
+        <activity android:name="com.google.android.libraries.cast.companionlibrary.cast.player.VideoCastControllerActivity" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="android.app.default_searchable"
+            android:value="com.simplecity.amp_library.SearchActivity" />
+        <meta-data
+            android:name="com.crashlytics.ApiKey"
+            android:value="94f7dbcd9c73c47e45d1ded9c8fc38d4d0ddebb4" />
+
+        <activity
+            android:name=".ui.activities.MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="adjustPan">
+
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MUSIC_PLAYER" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.APP_MUSIC" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="com.simplecity.amp_library.update" />
+                <action android:name="com.simplecity.amp_library.updateplaybutton" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="content" />
+                <data android:mimeType="audio/*" />
+                <data android:mimeType="application/ogg" />
+                <data android:mimeType="application/x-ogg" />
+                <data android:mimeType="application/itunes" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="file" />
+                <data android:mimeType="audio/*" />
+                <data android:mimeType="application/ogg" />
+                <data android:mimeType="application/x-ogg" />
+                <data android:mimeType="application/itunes" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="http" />
+                <data android:mimeType="audio/*" />
+                <data android:mimeType="application/ogg" />
+                <data android:mimeType="application/x-ogg" />
+                <data android:mimeType="application/itunes" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="${applicationId}.PLAYBACK_VIEWER" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.dir/playlist" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.activities.PlayerActivity"
+            android:clearTaskOnLaunch="true"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustPan">
+            <intent-filter>
+                <action android:name="com.simplecity.amp_library.update" />
+                <action android:name="com.simplecity.amp_library.updateplaybutton" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="${applicationId}.TABLET_PLAYBACK_VIEWER" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".ui.activities.SettingsActivity" />
+        <activity android:name=".ui.activities.EqualizerActivity" />
+        <activity
+            android:name=".ui.activities.SearchActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.MEDIA_SEARCH" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+        <activity
+            android:name=".ui.activities.VoiceSearchActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:theme="@style/Theme.Transparent">
+            <intent-filter>
+                <action android:name="android.media.action.MEDIA_PLAY_FROM_SEARCH" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.activities.ShortcutTrampolineActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:theme="@style/TranslucentTheme">
+            <intent-filter>
+                <action android:name="com.simplecity.amp_library.shortcuts.SHUFFLE" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".playback.MusicService"
+            android:label="@string/app_name" />
+        <service
+            android:name=".services.EqualizerService"
+            android:label="@string/equalizer" />
+        <service
+            android:name=".services.DashClockService"
+            android:icon="@drawable/ic_headphones_white"
+            android:label="@string/app_name"
+            android:permission="com.google.android.apps.dashclock.permission.READ_EXTENSION_DATA">
+            <intent-filter>
+                <action android:name="com.google.android.apps.dashclock.Extension" />
+            </intent-filter>
+
+            <meta-data
+                android:name="protocolVersion"
+                android:value="1" />
+            <meta-data
+                android:name="description"
+                android:value="@string/extension_description" />
+        </service>
+
+        <service
+            android:name=".services.ArtworkDownloadService"
+            android:label="@string/download_service" />
+
+        <receiver android:name="com.simplecity.amp_library.utils.MediaButtonIntentReceiver">
+            <intent-filter>
+                <action
+                    android:name="android.intent.action.MEDIA_BUTTON"
+                    android:priority="999" />
+                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
+                <action
+                    android:name="android.intent.action.HEADSET_PLUG"
+                    android:priority="999" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Config Activity for medium Widget -->
+        <activity
+            android:name=".ui.activities.WidgetConfigureMedium"
+            android:theme="@style/WallpaperTheme">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <!-- Config Activity for extra large Widget -->
+        <activity
+            android:name=".ui.activities.WidgetConfigureExtraLarge"
+            android:theme="@style/WallpaperTheme">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <!-- Broadcast Receiver for medium Widget -->
+        <receiver
+            android:name=".ui.widgets.WidgetProviderMedium"
+            android:label="Shuttle 4x1">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_provider_medium" />
+        </receiver>
+
+        <!-- Config Activity for small Widget -->
+        <activity
+            android:name=".ui.activities.WidgetConfigureSmall"
+            android:theme="@style/WallpaperTheme">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <!-- Broadcast Receiver for small Widget -->
+        <receiver
+            android:name=".ui.widgets.WidgetProviderSmall"
+            android:label="Shuttle 2x1">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_provider_small" />
+        </receiver>
+
+        <!-- Config Activity for large Widget -->
+        <activity
+            android:name=".ui.activities.WidgetConfigureLarge"
+            android:theme="@style/WallpaperTheme">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.activities.QCircleActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:excludeFromRecents="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar.FullScreen">
+
+            <intent-filter>
+                <action android:name="com.lge.quickcover" />
+                <action android:name="android.intent.action.MAIN" />
+
+            </intent-filter>
+
+        </activity>
+
+        <!-- Broadcast Receiver for large Widget -->
+        <receiver
+            android:name=".ui.widgets.WidgetProviderLarge"
+            android:label="Shuttle 4x2">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_provider_large" />
+        </receiver>
+
+        <!-- Broadcast Receiver for extra large Widget -->
+        <receiver
+            android:name=".ui.widgets.WidgetProviderExtraLarge"
+            android:label="Shuttle 4x4">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_provider_extra_large" />
+        </receiver>
+
+        <provider
+            android:name=".sql.providers.CustomArtworkContentProvider"
+            android:authorities="${applicationId}.custom_artwork.contentprovider"
+            android:exported="false" />
+
+        <provider
+            android:name=".sql.providers.PlayCountContentProvider"
+            android:authorities="${applicationId}.play_count.contentprovider"
+            android:exported="false" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+
+    </application>
+</manifest>

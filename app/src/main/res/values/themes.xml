@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Base Dark Theme -->
+    <style name="AppTheme.Dark" parent="AppTheme.Dark.Buttons">
+
+        <item name="android:textViewStyle">@style/PrimaryTextDark</item>
+        <item name="android:checkboxStyle">@style/CheckboxStyle</item>
+        <item name="android:buttonStyle">@style/ButtonStyle</item>
+        <item name="android:editTextStyle">@style/EditTextStyle</item>
+        <item name="secondaryTextViewStyle">@style/SecondaryTextDark</item>
+        <!--<item name="android:windowEnterTransition">@transition/details_window_enter_transition</item>-->
+        <!--<item name="android:windowReturnTransition">@transition/details_window_return_transition</item>-->
+
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowActivityTransitions">true</item>
+
+        <item name="colorPrimary">@color/indigo_500</item>
+        <item name="colorPrimaryDark">@color/indigo_500</item>
+        <item name="colorAccent">@color/pink_a400</item>
+
+        <item name="windowActionModeOverlay">true</item>
+
+        <item name="ic_placeholder_large">@drawable/ic_placeholder_dark_large</item>
+        <item name="ic_placeholder_medium">@drawable/ic_placeholder_dark_medium</item>
+
+        <item name="toolbar_theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="toolbar_popup_theme">@style/ThemeOverlay.AppCompat.Dark</item>
+
+        <item name="android:progressBarStyleHorizontal">@style/CustomProgressBar</item>
+
+        <item name="android:windowBackground">@color/bg_dark</item>
+
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat</item>
+        <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
+        <item name="android:actionOverflowButtonStyle">@style/Dark.OverFlow</item>
+
+        <item name="list_selector">@drawable/list_selector_dark</item>
+        <item name="circular_ripple">@drawable/ripple_circular_dark</item>
+        <item name="bg_drawer">@color/bg_drawer_dark</item>
+        <item name="listDividerColor">@color/list_divider_dark</item>
+        <item name="bg_card">@color/bg_card_dark</item>
+
+        <item name="circle_border">@color/grey_900</item>
+
+        <item name="breadcrumb_divider">@drawable/ic_breadcrumb_divider_white</item>
+
+        <item name="drag_grip">@color/white</item>
+
+    </style>
+
+    <!-- Base Light Theme -->
+    <style name="AppTheme.Light" parent="AppTheme.Light.Buttons">
+
+        <item name="android:textViewStyle">@style/PrimaryTextLight</item>
+        <item name="android:checkboxStyle">@style/CheckboxStyle</item>
+        <item name="android:buttonStyle">@style/ButtonStyle</item>
+        <item name="android:editTextStyle">@style/EditTextStyle</item>
+        <item name="secondaryTextViewStyle">@style/SecondaryTextLight</item>
+
+        <!--<item name="android:windowEnterTransition">@transition/details_window_enter_transition</item>-->
+        <!--<item name="android:windowReturnTransition">@transition/details_window_return_transition</item>-->
+
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowActivityTransitions">true</item>
+
+        <item name="colorPrimary">@color/indigo_500</item>
+        <item name="colorPrimaryDark">@color/indigo_500</item>
+        <item name="colorAccent">@color/pink_a400</item>
+
+        <item name="windowActionModeOverlay">true</item>
+
+        <item name="ic_placeholder_large">@drawable/ic_placeholder_light_large</item>
+        <item name="ic_placeholder_medium">@drawable/ic_placeholder_light_medium</item>
+
+        <item name="toolbar_theme">@style/ThemeOverlay.AppCompat.ActionBar</item>
+        <item name="toolbar_popup_theme">@style/ThemeOverlay.AppCompat</item>
+
+        <item name="android:progressBarStyleHorizontal">@style/CustomProgressBar</item>
+
+        <item name="android:windowBackground">@color/bg_light</item>
+
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
+        <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
+        <item name="android:actionOverflowButtonStyle">@style/Light.OverFlow</item>
+
+        <item name="list_selector">@drawable/list_selector_light</item>
+        <item name="circular_ripple">@drawable/ripple_circular_light</item>
+        <item name="bg_drawer">@color/bg_drawer_light</item>
+        <item name="listDividerColor">@color/list_divider_light</item>
+        <item name="bg_card">@color/bg_card_light</item>
+
+        <item name="circle_border">@color/grey_250</item>
+
+        <item name="breadcrumb_divider">@drawable/ic_breadcrumb_divider_white</item>
+        <item name="drag_grip">@color/black</item>
+
+    </style>
+
+    <!-- Dark Solid ActionBar Theme -->
+    <style name="AppTheme.Solid.Dark" parent="AppTheme.Dark">
+
+        <item name="android:textViewStyle">@style/PrimaryTextDark</item>
+        <item name="android:checkboxStyle">@style/CheckboxStyle</item>
+        <item name="android:buttonStyle">@style/ButtonStyle</item>
+        <item name="android:editTextStyle">@style/EditTextStyle</item>
+        <item name="secondaryTextViewStyle">@style/SecondaryTextDark</item>
+
+        <!--<item name="android:windowEnterTransition">@transition/details_window_enter_transition</item>-->
+        <!--<item name="android:windowReturnTransition">@transition/details_window_return_transition</item>-->
+
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowActivityTransitions">true</item>
+
+        <item name="colorPrimary">@color/indigo_500</item>
+        <item name="colorPrimaryDark">@color/indigo_500</item>
+        <item name="colorAccent">@color/pink_a400</item>
+
+        <item name="windowActionModeOverlay">true</item>
+
+        <item name="ic_placeholder_large">@drawable/ic_placeholder_dark_large</item>
+        <item name="ic_placeholder_medium">@drawable/ic_placeholder_dark_medium</item>
+
+        <item name="toolbar_theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="toolbar_popup_theme">@style/ThemeOverlay.AppCompat.Dark</item>
+
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:actionBarWidgetTheme">@style/ActionBarWidget.Dark</item>
+
+        <item name="android:windowBackground">@color/bg_dark</item>
+
+        <item name="actionBarStyle">@style/Widget.Solid.ActionBar.Dark</item>
+        <item name="android:actionBarStyle">@style/Widget.Solid.ActionBar.Dark</item>
+        <item name="android:actionOverflowButtonStyle">@style/Dark.OverFlow</item>
+    </style>
+
+    <!-- Light Solid ActionBar Theme -->
+    <style name="AppTheme.Solid.Light" parent="AppTheme.Light.Buttons.Inverse">
+
+        <item name="android:textViewStyle">@style/PrimaryTextLight</item>
+        <item name="android:checkboxStyle">@style/CheckboxStyle</item>
+        <item name="android:buttonStyle">@style/ButtonStyle</item>
+        <item name="android:editTextStyle">@style/EditTextStyle</item>
+        <item name="secondaryTextViewStyle">@style/SecondaryTextLight</item>
+
+        <!--<item name="android:windowEnterTransition">@transition/details_window_enter_transition</item>-->
+        <!--<item name="android:windowReturnTransition">@transition/details_window_return_transition</item>-->
+
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowActivityTransitions">true</item>
+
+        <item name="colorPrimary">@color/indigo_500</item>
+        <item name="colorPrimaryDark">@color/indigo_500</item>
+        <item name="colorAccent">@color/pink_a400</item>
+
+        <item name="windowActionModeOverlay">true</item>
+
+        <item name="ic_placeholder_large">@drawable/ic_placeholder_light_large</item>
+        <item name="ic_placeholder_medium">@drawable/ic_placeholder_light_medium</item>
+
+        <item name="toolbar_theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="toolbar_popup_theme">@style/ThemeOverlay.AppCompat.Light</item>
+
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:actionBarWidgetTheme">@style/ActionBarWidget.Light</item>
+
+        <item name="android:progressBarStyleHorizontal">@style/CustomProgressBar</item>
+
+        <item name="android:windowBackground">@color/bg_light</item>
+
+        <item name="actionBarStyle">@style/Widget.Solid.ActionBar.Light</item>
+        <item name="android:actionBarStyle">@style/Widget.Solid.ActionBar.Light</item>
+        <item name="android:actionOverflowButtonStyle">@style/Dark.OverFlow</item>
+
+        <item name="list_selector">@drawable/list_selector_light</item>
+        <item name="circular_ripple">@drawable/ripple_circular_light</item>
+        <item name="bg_drawer">@color/bg_drawer_light</item>
+        <item name="listDividerColor">@color/list_divider_light</item>
+        <item name="bg_card">@color/bg_card_light</item>
+
+        <item name="circle_border">@color/grey_250</item>
+
+        <item name="breadcrumb_divider">@drawable/ic_breadcrumb_divider_white</item>
+        <item name="drag_grip">@color/black</item>
+
+    </style>
+
+    <!-- Base Dark Theme -->
+    <style name="AppTheme.Black" parent="AppTheme.Dark">
+        <item name="android:windowBackground">@color/bg_black</item>
+        <item name="bg_drawer">@color/bg_drawer_black</item>
+        <item name="bg_card">@color/bg_card_black</item>
+    </style>
+
+    <style name="AppTheme.Solid.Black" parent="AppTheme.Solid.Dark">
+        <item name="android:windowBackground">@color/bg_black</item>
+        <item name="bg_drawer">@color/bg_drawer_black</item>
+        <item name="bg_card">@color/bg_card_black</item>
+        <item name="actionBarStyle">@style/Widget.Solid.ActionBar.Dark</item>
+        <item name="android:actionBarStyle">@style/Widget.Solid.ActionBar.Dark</item>
+    </style>
+
+    <style name="AppTheme.Solid.Dark.Transparent.ActionBar" parent="AppTheme.Solid.Dark">
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="AppTheme.Solid.Light.Transparent.ActionBar" parent="AppTheme.Solid.Light">
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="AppTheme.Solid.Black.Transparent.ActionBar" parent="AppTheme.Solid.Black">
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="Dark.OverFlow" parent="@style/Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_overflow_white</item>
+    </style>
+
+    <style name="Light.OverFlow" parent="@style/Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_overflow_dark</item>
+    </style>
+
+    <style name="AppTheme.Dark.Buttons" parent="Theme.AppCompat.NoActionBar">
+        <item name="btn_search">@drawable/ic_action_search</item>
+        <item name="btn_settings">@drawable/ic_action_settings</item>
+        <item name="btn_share">@drawable/ic_action_share</item>
+        <item name="btn_sort">@drawable/ic_action_sort</item>
+        <item name="btn_fav">@drawable/ic_fav</item>
+        <item name="btn_fav_pressed">@drawable/ic_fav_pressed</item>
+        <item name="btn_add">@drawable/ic_action_add</item>
+        <item name="btn_tags">@drawable/ic_action_tags</item>
+        <item name="btn_queue">@drawable/ic_action_add_queue</item>
+        <item name="btn_toggle_queue">@drawable/ic_action_toggle_queue</item>
+        <item name="btn_delete">@drawable/ic_action_delete</item>
+        <item name="btn_remove">@drawable/ic_action_remove</item>
+        <item name="btn_dialog_alert">@drawable/ic_dialog_alert</item>
+    </style>
+
+    <style name="AppTheme.Light.Buttons" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="btn_search">@drawable/ic_action_search_light</item>
+        <item name="btn_settings">@drawable/ic_action_settings_light</item>
+        <item name="btn_share">@drawable/ic_action_share_light</item>
+        <item name="btn_sort">@drawable/ic_action_sort_light</item>
+        <item name="btn_add">@drawable/ic_action_add_light</item>
+        <item name="btn_fav">@drawable/ic_fav_light</item>
+        <item name="btn_fav_pressed">@drawable/ic_fav_pressed_light</item>
+        <item name="btn_tags">@drawable/ic_action_tags_light</item>
+        <item name="btn_queue">@drawable/ic_action_add_queue_light</item>
+        <item name="btn_toggle_queue">@drawable/ic_action_toggle_queue_light</item>
+        <item name="btn_delete">@drawable/ic_action_delete_light</item>
+        <item name="btn_remove">@drawable/ic_action_remove_light</item>
+        <item name="btn_dialog_alert">@drawable/ic_dialog_alert_light</item>
+    </style>
+
+    <style name="AppTheme.Light.Buttons.Inverse" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="btn_search">@drawable/ic_action_search</item>
+        <item name="btn_settings">@drawable/ic_action_settings</item>
+        <item name="btn_share">@drawable/ic_action_share</item>
+        <item name="btn_sort">@drawable/ic_action_sort</item>
+        <item name="btn_add">@drawable/ic_action_add</item>
+        <item name="btn_fav">@drawable/ic_fav</item>
+        <item name="btn_fav_pressed">@drawable/ic_fav_pressed</item>
+        <item name="btn_tags">@drawable/ic_action_tags</item>
+        <item name="btn_queue">@drawable/ic_action_add_queue</item>
+        <item name="btn_toggle_queue">@drawable/ic_action_toggle_queue</item>
+        <item name="btn_delete">@drawable/ic_action_delete</item>
+        <item name="btn_remove">@drawable/ic_action_remove</item>
+        <item name="btn_dialog_alert">@drawable/ic_dialog_alert</item>
+    </style>
+
+    <style name="Widget.Styled.ActionBar" parent="Widget.AppCompat.ActionBar">
+        <item name="elevation">0dp</item>
+        <item name="logo">@android:color/transparent</item>
+        <item name="icon">@android:color/transparent</item>
+    </style>
+
+    <style name="Widget.Solid.ActionBar.Light" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="elevation">0dp</item>
+        <item name="logo">@android:color/transparent</item>
+        <item name="icon">@android:color/transparent</item>
+    </style>
+
+    <style name="Widget.Solid.ActionBar.Dark" parent="Widget.AppCompat.ActionBar.Solid">
+        <item name="elevation">0dp</item>
+        <item name="logo">@android:color/transparent</item>
+        <item name="icon">@android:color/transparent</item>
+    </style>
+
+    <style name="ActionBarWidget.Light" parent="Theme.AppCompat.Light.DarkActionBar">
+
+    </style>
+
+    <style name="ActionBarWidget.Dark" parent="Theme.AppCompat">
+
+    </style>
+
+    <style name="TranslucentTheme" parent="Theme.AppCompat">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@color/semitransparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="AppTheme.Widgets" parent="AppTheme.Solid.Light">
+        <item name="background">@color/bg_light</item>
+        <item name="android:windowShowWallpaper">true</item>
+        <item name="android:windowBackground">@color/transparent</item>
+    </style>
+
+    <style name="WallpaperTheme" parent="Theme.AppCompat">
+        <item name="android:windowShowWallpaper">true</item>
+        <item name="android:windowBackground">@color/transparent</item>
+    </style>
+
+    <style name="Theme.Transparent" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="Theme.Launch" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/bg_dark</item>
+        <item name="colorPrimaryDark">@color/bg_dark</item>
+        <item name="android:actionBarStyle">@style/Widget.ActionBar.Launch</item>
+        <item name="actionBarStyle">@style/Widget.ActionBar.Launch</item>
+    </style>
+
+    <style name="Widget.ActionBar.Launch" parent="Widget.AppCompat.ActionBar.Solid">
+        <item name="android:displayOptions">showHome|useLogo</item>
+        <item name="displayOptions">showHome|useLogo</item>
+        <item name="logo">@android:color/transparent</item>
+        <item name="icon">@android:color/transparent</item>
+    </style>
+
+    <style name="BaseTextStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="PrimaryTextLight" parent="BaseTextStyle">
+        <item name="android:textColor">#DE000000</item>
+    </style>
+
+    <style name="PrimaryTextDark" parent="BaseTextStyle">
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="SecondaryTextLight" parent="BaseTextStyle">
+        <item name="android:textColor">#8A000000</item>
+    </style>
+
+    <style name="SecondaryTextDark" parent="BaseTextStyle">
+        <item name="android:textColor">#c0ffffff</item>
+    </style>
+
+    <style name="ButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="CheckboxStyle" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="EditTextStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="Theme.AppCompat.NoActionBar.FullScreen" parent="@style/Theme.AppCompat" />
+
+
+</resources>

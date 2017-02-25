@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="drawer_horizontal_margin">16dp</dimen>
+
+    <dimen name="mini_player_height">56dp</dimen>
+
+    <dimen name="header_view_height">180dp</dimen>
+
+    <dimen name="preference_widget_width">72dp</dimen>
+
+    <!-- Better Pickers Dimens -->
+
+    <dimen name="dialpad_font_size">24sp</dimen>
+    <!--  -->
+
+</resources>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The description in the Play Store for the paid version. It's important that this is well translated, and use your artistic license,
+    it doesn't have to be word-for-word, the idea is that it really sells the app!-->
+    <string name="play_store_description_long_paid"><![CDATA[Shuttle Music Player is an intuitive, lightweight and powerful music player for Android.
+
+🔹 <b>Features:</b>
+
+• Modern, Material design
+• Built in 6-band equalizer with bass boost
+• Gapless playback
+• Lyrics (embedded lyrics only, for legal reasons)
+• Automatic artwork downloading
+• Tons of theme options, including light & dark mode
+• Sleep timer
+• Extremely customizable widgets
+• Last.fm Scrobbling
+
+🔹<b>Paid features:</b>
+
+• ID3 tag editing
+• Folder browsing
+• Chromecast support
+• Extra themes
+
+"Shuttle doesn't try to reinvent the music playing wheel — it embraces it" - AndroidPolice.com
+
+"Shuttle Music Player builds on the strengths of Google Play Music and adds useful, everyday features." - softonic.com
+
+"... the right balance between simple and intuitive, and feature rich at the same time." - androidcommunity.com
+
+Shuttle Music Player contains everything you need in a music player... and a little bit more. It is the music player of choice for your Android device!
+
+Check out https://www.shuttlemusicplayer.com for more info.
+
+---
+
+Social Links:
+
+Google+ / Beta testing
+https://plus.google.com/communities/112365043563095486408
+
+Like Shuttle+ on Facebook:
+https://www.facebook.com/SimpleCity.AMP
+
+Reddit:
+https://www.reddit.com/r/shuttle]]></string>
+
+    <!-- The description in the Play Store for the free version. It's important that this is well translated, and use your artistic license,
+     it doesn't have to be word-for-word, the idea is that it really sells the app!-->
+    <string name="play_store_description_long_free"><![CDATA[Shuttle Music Player is an intuitive, lightweight and powerful music player for Android.
+
+🔹 <b>Features:</b>
+
+• Modern, Material design
+• Built in 6-band equalizer with bass boost
+• Gapless playback
+• Lyrics (embedded lyrics only, for legal reasons)
+• Automatic artwork downloading
+• Tons of theme options, including light & dark mode
+• Sleep timer
+• Extremely customizable widgets
+• Last.fm Scrobbling
+
+"Shuttle doesn't try to reinvent the music playing wheel — it embraces it" - AndroidPolice.com
+
+"Shuttle Music Player builds on the strengths of Google Play Music and adds useful, everyday features." - softonic.com
+
+"... the right balance between simple and intuitive, and feature rich at the same time." - androidcommunity.com
+
+Note: In-app purchase is available for upgrading to the pro version of the app.
+
+🔹 <b>Paid Features:</b> (Shuttle+)
+
+• ID3 tag editing
+• Folder browsing
+• Chromecast support
+• Extra themes
+
+Shuttle Music Player contains everything you need in a music player... and a little bit more. It is the music player of choice for your Android device!
+
+Check out http://www.shuttlemusicplayer.com for more info.
+
+---
+
+Social Links:
+
+Google+ / Beta testing
+https://plus.google.com/communities/112365043563095486408
+
+Like Shuttle+ on Facebook:
+https://www.facebook.com/SimpleCity.AMP
+
+Reddit:
+https://www.reddit.com/r/shuttle]]></string>
+
+    <!-- The short description in the Play Store (paid version). Maximum 80 characters! -->
+    <string name="play_store_description_short_paid">🎵 Shuttle Music Player is the music player of choice for your Android device 🎵</string>
+
+    <!-- The short description in the Play Store (free version). Maximum 80 characters! -->
+    <string name="play_store_description_short_free">🎵 Shuttle Music Player is the music player of choice for your Android device 🎵</string>
+</resources>

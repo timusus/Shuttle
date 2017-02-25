@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2015 Google Inc. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+<resources>
+
+    <declare-styleable name="CCLIntroOverlay">
+        <attr name="ccl_IntroBackgroundColor" format="color|reference" />
+        <attr name="ccl_IntroDetailTextColor" format="color|reference" />
+        <attr name="ccl_IntroTitleTextColor" format="color|reference" />
+        <attr name="ccl_IntroButtonBackgroundColor" format="color|reference" />
+        <attr name="ccl_IntroButtonForegroundColor" format="color|reference" />
+        <attr name="ccl_IntroButtonText" format="string|reference" />
+        <attr name="ccl_IntroSubtitleTextAppearance" format="reference" />
+        <attr name="ccl_IntroTitleTextAppearance" format="reference" />
+        <attr name="ccl_IntroButtonTextAppearance" format="reference" />
+        <attr name="ccl_IntroFocusRadius" format="dimension|reference" />
+    </declare-styleable>
+    <declare-styleable name="CustomTheme">
+        <attr name="CCLIntroOverlayStyle" format="reference" />
+    </declare-styleable>
+
+    <style name="CCLIntroOverlay">
+        <item name="ccl_IntroTitleTextAppearance">@style/TextAppearance.CCLIntroOverlay.Title</item>
+        <item name="ccl_IntroSubtitleTextAppearance">@style/TextAppearance.CCLIntroOverlay.Subtitle</item>
+        <item name="ccl_IntroButtonTextAppearance">@style/TextAppearance.CCLIntroOverlay.Button</item>
+        <item name="ccl_IntroBackgroundColor">@color/ccl_intro_overlay_background_color</item>
+        <item name="ccl_IntroButtonText">@string/ccl_intro_overlay_button_text</item>
+        <item name="ccl_IntroButtonBackgroundColor">@color/ccl_intro_overlay_button_background_color</item>
+        <item name="ccl_IntroButtonForegroundColor">@color/ccl_intro_overlay_button_foreground_color</item>
+        <item name="ccl_IntroFocusRadius">@dimen/ccl_intro_overlay_focus_radius</item>
+    </style>
+
+    <style name="TextAppearance.CCLIntroOverlay.Title" parent="android:style/TextAppearance.Large">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <style name="TextAppearance.CCLIntroOverlay.Subtitle" parent="android:style/TextAppearance">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <style name="TextAppearance.CCLIntroOverlay.Button" parent="android:style/TextAppearance">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <style name="TextAppearance.CCLIntroOverlay.Subtitle.Light">
+        <item name="android:textColor">#333333</item>
+        <item name="android:shadowColor">#FF0000</item>
+        <item name="android:shadowRadius">0</item>
+    </style>
+
+    <style name="TextAppearance.CCLIntroOverlay.Title.Light">
+        <item name="android:shadowRadius">0</item>
+    </style>
+
+</resources>

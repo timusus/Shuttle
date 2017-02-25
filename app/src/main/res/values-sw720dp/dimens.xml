@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <dimen name="grid_item_horizontal_width">168dp</dimen>
+
+    <dimen name="drawer_horizontal_margin">24dp</dimen>
+
+    <dimen name="player_activity_top_padding">128dp</dimen>
+    <dimen name="player_activity_edge_padding">64dp</dimen>
+
+    <dimen name="mini_player_height">80dp</dimen>
+
+    <dimen name="header_view_height">600dp</dimen>
+
+    <dimen name="preference_icon_minWidth">56dp</dimen>
+
+</resources>

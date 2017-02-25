@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.simplecity.amp_library.ui.views.CircleView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/image"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="1dp"
+    android:minHeight="48dp"
+    android:minWidth="48dp" />

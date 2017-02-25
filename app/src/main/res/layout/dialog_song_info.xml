@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="16dp"
+    android:paddingLeft="24dp"
+    android:paddingRight="24dp"
+    android:paddingTop="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/title"
+            layout="@layout/dialog_song_info_item"/>
+
+        <include
+            android:id="@+id/track_number"
+            layout="@layout/dialog_song_info_item"/>
+
+        <include
+            android:id="@+id/artist"
+            layout="@layout/dialog_song_info_item"/>
+
+        <include
+            android:id="@+id/album"
+            layout="@layout/dialog_song_info_item"/>
+
+        <include
+            android:id="@+id/album_artist"
+            layout="@layout/dialog_song_info_item"/>
+
+        <include
+            android:id="@+id/genre"
+            layout="@layout/dialog_song_info_item"/>
+
+        <include
+            android:id="@+id/duration"
+            layout="@layout/dialog_song_info_item"/>
+
+        <include
+            android:id="@+id/path"
+            layout="@layout/dialog_song_info_item"/>
+
+        <include
+            android:id="@+id/disc_number"
+            layout="@layout/dialog_song_info_item"/>
+
+        <include
+            android:id="@+id/file_size"
+            layout="@layout/dialog_song_info_item"/>
+
+        <include
+            android:id="@+id/format"
+            layout="@layout/dialog_song_info_item"/>
+
+        <include
+            android:id="@+id/bitrate"
+            layout="@layout/dialog_song_info_item"/>
+
+        <include
+            android:id="@+id/sample_rate"
+            layout="@layout/dialog_song_info_item"/>
+
+        <include
+            android:id="@+id/play_count"
+            layout="@layout/dialog_song_info_item"/>
+
+    </LinearLayout>
+
+</ScrollView>

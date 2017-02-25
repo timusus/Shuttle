@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Swipe dismiss list view animation -->
+
+    <!-- Notification Styles -->
+
+    <style name="notification_button">
+        <item name="android:background">?android:listChoiceBackgroundIndicator</item>
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+    </style>
+
+    <style name="SeekBar" parent="android:Widget.SeekBar">
+        <item name="android:progressDrawable">@drawable/scrubber_progress_horizontal_material
+        </item>
+        <item name="android:indeterminateDrawable">@drawable/scrubber_progress_horizontal_material
+        </item>
+        <item name="android:thumb">@drawable/scrubber_control_from_pressed_mtrl_000</item>
+        <item name="android:splitTrack">false</item>
+        <item name="android:focusable">true</item>
+        <item name="android:paddingLeft">16dip</item>
+        <item name="android:paddingRight">16dip</item>
+        <item name="android:mirrorForRtl">true</item>
+        <!--<item name="android:background">?attr/selectableItemBackgroundBorderless</item>-->
+    </style>
+
+    <style name="CustomProgressBar" parent="android:Widget.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/scrubber_progress_horizontal_transparent
+        </item>
+        <item name="android:indeterminateDrawable">
+            @drawable/scrubber_progress_horizontal_transparent
+        </item>
+        <item name="android:minHeight">4dip</item>
+        <item name="android:maxHeight">4dip</item>
+    </style>
+
+    <style name="BetterPickersDialogFragment">
+        <item name="bpDialogBackground">@drawable/dialog_full_holo_dark</item>
+        <item name="bpTitleColor">@color/dialog_text_color_holo_dark</item>
+        <item name="bpTextColor">@color/dialog_text_color_holo_dark</item>
+        <item name="bpDeleteIcon">@drawable/ic_backspace_dark</item>
+        <item name="bpCheckIcon">@drawable/ic_check_dark</item>
+        <item name="bpKeyBackground">@drawable/key_background_dark</item>
+        <item name="bpButtonBackground">@drawable/button_background_dark</item>
+        <item name="bpTitleDividerColor">@color/default_keyboard_indicator_color_dark</item>
+        <item name="bpDividerColor">@color/default_divider_color_dark</item>
+        <item name="bpKeyboardIndicatorColor">@color/default_keyboard_indicator_color_dark</item>
+    </style>
+
+    <style name="BetterPickersDialogFragment.Light">
+        <item name="bpDialogBackground">@drawable/dialog_full_holo_light</item>
+        <item name="bpTitleColor">@color/dialog_text_color_holo_light</item>
+        <item name="bpTextColor">@color/dialog_text_color_holo_light</item>
+        <item name="bpDeleteIcon">@drawable/ic_backspace_light</item>
+        <item name="bpCheckIcon">@drawable/ic_check_light</item>
+        <item name="bpKeyBackground">@drawable/key_background_light</item>
+        <item name="bpButtonBackground">@drawable/button_background_light</item>
+        <item name="bpTitleDividerColor">@color/default_keyboard_indicator_color_dark</item>
+        <item name="bpDividerColor">@color/default_divider_color_light</item>
+        <item name="bpKeyboardIndicatorColor">@color/default_keyboard_indicator_color_light</item>
+    </style>
+
+    <style name="AppWidget_TextView">
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="AppWidget_TextView.Bold" parent="AppWidget_TextView">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+</resources>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceScreen
+        android:icon="@drawable/ic_settings_display"
+        android:key="pref_display"
+        android:layout="@layout/preference_header"
+        android:title="@string/pref_title_display" />
+    <PreferenceScreen
+        android:icon="@drawable/ic_settings_themes"
+        android:key="pref_themes"
+        android:layout="@layout/preference_header"
+        android:title="@string/pref_string_title_themes" />
+    <PreferenceScreen
+        android:icon="@drawable/ic_settings_artwork"
+        android:key="pref_artwork"
+        android:layout="@layout/preference_header"
+        android:title="@string/pref_string_title_artwork" />
+    <PreferenceScreen
+        android:icon="@drawable/ic_settings_headset"
+        android:key="pref_headset"
+        android:layout="@layout/preference_header"
+        android:title="@string/pref_title_headset_bluetooth" />
+    <PreferenceScreen
+        android:icon="@drawable/ic_settings_scrobbling"
+        android:key="pref_scrobbling"
+        android:layout="@layout/preference_header"
+        android:title="@string/pref_title_scrobbling" />
+    <PreferenceScreen
+        android:icon="@drawable/ic_settings_blacklist"
+        android:key="pref_blacklist"
+        android:layout="@layout/preference_header"
+        android:title="@string/pref_title_blacklist" />
+    <Preference
+        android:icon="@drawable/ic_settings_about"
+        android:key="pref_about"
+        android:layout="@layout/preference_header"
+        android:title="@string/pref_title_about" />
+    <Preference
+        android:icon="@drawable/ic_settings_purchase"
+        android:key="pref_upgrade"
+        android:layout="@layout/preference_header"
+        android:title="@string/get_pro_title" />
+</PreferenceScreen>
