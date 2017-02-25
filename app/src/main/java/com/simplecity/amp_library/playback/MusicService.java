@@ -913,7 +913,7 @@ public class MusicService extends Service {
                 pausedByTransientLossOfFocus = false;
                 releaseServiceUiAndStop();
                 mNotificationStateHandler.removeCallbacksAndMessages(null);
-                //For some reason, the notification will only fuck off if it this call is delayed.
+                //For some reason, the notification will only fuck off if this call is delayed.
                 new Handler().postDelayed(() -> stopForegroundImpl(true, false), 150);
             } else if (ServiceCommand.SHUFFLE_ACTION.equals(action)) {
                 toggleShuffleMode();
