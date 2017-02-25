@@ -1,4 +1,6 @@
-####Readme
+### Shuttle Music Player
+
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE.md)
 
 Shuttle is an open source, local music player for Android.
 
