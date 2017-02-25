@@ -97,4 +97,4 @@ Secondly, I don't feel like I'm able to dedicate as much time to the project as 
 
 #### License
 
-Shuttle Music Player is released under the GNU General Public License v3.0 (GPLv3), which can be found here: [License](https://github.com/timusus/Shuttle/blob/master/LICENSE)
+Shuttle Music Player is released under the GNU General Public License v3.0 (GPLv3), which can be found here: [License](https://github.com/timusus/Shuttle/blob/master/LICENSE.md)
