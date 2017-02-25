@@ -16,6 +16,15 @@ Please be aware of and try to keep under the 65k method limit (Shuttle is precar
 Also, please respect the licenses of any code that is used/contributed to Shuttle. Credit should be given where it is due.
 
 
+##### Getting started:
+
+Checkout the `master` branch. Shuttle has been setup so you should be able to run it without any additional configuration.
+
+The `devDebug` build variant is the one to use. The `release` variants are for Shuttle Play Store releases, and will not compile for you (as you need private API keys & keystore information).
+
+If you're using the Last.fm artwork a lot, please go to https://www.last.fm/api/account/create and create your own key.
+
+
 #### Bug Reports:
 
 Bugs are tracked using the [Github Issue Tracker](https://github.com/timusus/Shuttle/issues)
