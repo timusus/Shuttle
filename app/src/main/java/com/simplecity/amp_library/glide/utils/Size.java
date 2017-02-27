@@ -19,8 +19,7 @@ public class Size {
 
         Size size = (Size) o;
 
-        if (width != size.width) return false;
-        return height == size.height;
+        return width == size.width && height == size.height;
 
     }
 

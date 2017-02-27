@@ -335,9 +335,7 @@ public class Song implements
 
         Song song = (Song) o;
 
-        if (id != song.id) return false;
-        if (artistId != song.artistId) return false;
-        return albumId == song.albumId;
+        return id == song.id && artistId == song.artistId && albumId == song.albumId;
 
     }
 
