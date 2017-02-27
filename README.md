@@ -12,7 +12,7 @@ Shuttle comes in two flavours:
 
 The free version includes an option to upgrade via an IAP, which unlocks the features otherwise available in Shuttle+.
 
-#### Features
+##### Features
 
 - Local playback only (based on the MediaStore)
 - Built in equalizer
@@ -24,13 +24,18 @@ The free version includes an option to upgrade via an IAP, which unlocks the fea
 - Album-artist support
 - Artwork scraping (Last.FM & iTunes)
 
-Paid features:
+##### Paid features:
 
 - Tag editing
 - Folder browsing
 - Chromecast
 - Additional theme options
 - Additional artwork editing options
+
+
+#### Contributing:
+
+See the [Contributing](CONTRIBUTING.md) document. This is/will become a good resource if you're just wondering how the app works.
 
 
 #### Future:
