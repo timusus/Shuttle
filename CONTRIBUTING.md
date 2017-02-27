@@ -1,4 +1,4 @@
-#### Contributing
+### Contributing
 
 Thank you for visiting this page. Contributions is one of the main reasons Shuttle was open-sourced, so I'm happy to have you here!
 
@@ -9,6 +9,17 @@ The following is a set of guidelines for contributing to Shuttle. These are just
 
 One of the main reasons for open sourcing Shuttle is to get some help from fellow programmers. I encourage you to make pull requests, and I will do my best to look over them, and either approve, provide constructive criticism, or improve upon them myself before merging.
 
+
+Keep in mind that Shuttle is currently on the Play Store, as a free and paid app. The paid features are open source and visible in this repository. I do make money from these features, and the current plan is to continue to do so. If you feel that it's unfair for me to profit from your contributions, I encourage you to away from the paid aspects of the app, including:
+
+- Folder browsing
+- Chromecast
+- Theming
+- Tag editing
+
+Feel free to open an issue if you have any questions/concerns on this matter.
+
+
 If you plan on working on a new feature, changing the existing code in some significant way, or make UI changes, please create an issue where we can discuss the idea/implementation/UI before working on it.
 
 Please be aware of and try to keep under the 65k method limit (Shuttle is precariously close at the moment). 
@@ -16,13 +27,18 @@ Please be aware of and try to keep under the 65k method limit (Shuttle is precar
 Also, please respect the licenses of any code that is used/contributed to Shuttle. Credit should be given where it is due.
 
 
-##### Getting started:
+#### Getting started:
 
-Checkout the `master` branch. Shuttle has been setup so you should be able to run it without any additional configuration.
+Checkout the `dev` branch. Shuttle has been setup so you should be able to run it without any additional configuration.
 
 The `devDebug` build variant is the one to use. The `release` variants are for Shuttle Play Store releases, and will not compile for you (as you need private API keys & keystore information).
 
 If you're using the Last.fm artwork a lot, please go to https://www.last.fm/api/account/create and create your own key.
+
+
+#### Git
+
+The plan is to use the [Git-flow](https://datasift.github.io/gitflow/IntroducingGitFlow.html) branching model. Feature branches should branch off `dev`.
 
 
 #### Bug Reports:
