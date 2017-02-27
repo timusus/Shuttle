@@ -41,9 +41,6 @@ proguard/
 # Android Studio
 .idea
 
-# Firebase Config
-/app/google-services.json
-
 # Crashlytics
 /app/crashlytics.properties
 
@@ -51,8 +48,7 @@ proguard/
 /private.properties
 
 # Private google-services config
-/app/src/paid/google-services.json
-/app/src/free/google-services.json
+/app/src/release/google-services.json
 
 # Keystore
 /shuttle.jks
@@ -60,3 +56,4 @@ proguard/
 # Onesky ruby files
 /onesky_download.rb
 /onesky_upload.rb
+
