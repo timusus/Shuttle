@@ -360,7 +360,7 @@ public class AnimatedExpandableListView extends ExpandableListView {
 
             if (info.animating) {
                 // If this group is animating, return the a DummyView...
-                if (convertView instanceof DummyView == false) {
+                if (!(convertView instanceof DummyView)) {
                     convertView = new DummyView(parent.getContext());
                     convertView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 0));
                 }
