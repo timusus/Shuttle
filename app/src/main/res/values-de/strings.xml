@@ -371,8 +371,11 @@
     <!-- Settings title for the headset pause on disconnect -->
     <string name="pref_title_headset_disconnect">Wiedergabe beim Entfernen pausieren</string>
     <!-- Settings summary for the headset pause on disconnect -->
-    <string name="pref_summary_headset_disconnect">"Unterbricht die Wiedergabe, wenn der Kopfhörer entfernt wird
-	"</string>
+    <string name="pref_summary_headset_disconnect">"Unterbricht die Wiedergabe, wenn der Kopfhörer entfernt wird</string>
+    <!-- Settings title for the headset beep on next -->
+    <string name="pref_title_headset_beep">Piepen wenn Titel über Kopfhörersteuerung übersprungen wird</string>
+    <!-- Settings summary for the headset beep on next -->
+    <string name="pref_summary_headset_beep">Spielt einen Piepton, wenn über die Kopfhörersteuerung ein Titel übersprungen wird</string>
     <!-- Settings title 'headset' -->
     <string name="pref_title_headset">Kopfhörer</string>
     <!-- Settings title 'bluetooth' -->

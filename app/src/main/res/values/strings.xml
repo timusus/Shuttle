@@ -804,5 +804,7 @@
 
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">Disc <xliff:g id="number">%d</xliff:g></string>
+    <string name="pref_summary_headset_beep">Beep when skipping song via headset controls</string>
+    <string name="pref_title_headset_beep">Beep when skipping song via headset controls</string>
 
 </resources>
