@@ -35,10 +35,10 @@
             android:layout_height="wrap_content"
             android:alpha="0.7"
             android:gravity="center_vertical"
-            android:singleLine="true"
             android:textColor="@color/primary_text_dark"
             android:textSize="12sp"
-            tools:text="Naysayer - Kill Stuff" />
+            tools:text="Naysayer - Kill Stuff"
+            android:maxLines="1" />
     </LinearLayout>
 
     <com.simplecity.amp_library.ui.recyclerview.ScrollBlockingRecyclerView

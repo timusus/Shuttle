@@ -35,10 +35,10 @@
         android:drawablePadding="8dp"
         android:ellipsize="end"
         android:gravity="start|center_vertical"
-        android:singleLine="true"
         android:src="@drawable/ic_prev_white"
         android:textColor="#ccc"
-        android:textSize="14sp"/>
+        android:textSize="14sp"
+        android:maxLines="1" />
 
     <ImageButton
         android:id="@+id/pause"
@@ -49,10 +49,10 @@
         android:drawablePadding="8dp"
         android:ellipsize="end"
         android:gravity="start|center_vertical"
-        android:singleLine="true"
         android:src="@drawable/ic_pause_white"
         android:textColor="#ccc"
-        android:textSize="14dp"/>
+        android:textSize="14dp"
+        android:maxLines="1" />
 
     <ImageButton
         android:id="@+id/next"
@@ -63,9 +63,9 @@
         android:drawablePadding="8dp"
         android:ellipsize="end"
         android:gravity="start|center_vertical"
-        android:singleLine="true"
         android:src="@drawable/ic_skip_white"
         android:textColor="#ccc"
-        android:textSize="14sp"/>
+        android:textSize="14sp"
+        android:maxLines="1" />
 
 </LinearLayout>

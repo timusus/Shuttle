@@ -18,9 +18,9 @@
         android:layout_weight="1"
         android:ellipsize="end"
         android:gravity="center_vertical"
-        android:singleLine="true"
         android:textSize="16sp"
-        tools:text="Line One"/>
+        tools:text="Line One"
+        android:maxLines="1" />
 
     <com.simplecity.amp_library.ui.views.NonScrollImageButton
         android:id="@+id/btn_overflow"

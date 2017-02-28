@@ -45,10 +45,10 @@
                 android:lines="1"
                 android:shadowColor="#50000000"
                 android:shadowRadius="2"
-                android:singleLine="true"
                 android:textColor="#ffffff"
                 android:textSize="20sp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:maxLines="1" />
 
         </LinearLayout>
 
@@ -66,9 +66,9 @@
                 android:lines="1"
                 android:shadowColor="#50000000"
                 android:shadowRadius="2"
-                android:singleLine="true"
                 android:textColor="#ffffff"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:maxLines="1" />
 
             <TextView
                 android:id="@+id/line2"
@@ -77,9 +77,9 @@
                 android:lines="1"
                 android:shadowColor="#50000000"
                 android:shadowRadius="2"
-                android:singleLine="true"
                 android:textColor="#ffffff"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:maxLines="1" />
         </LinearLayout>
 
     </LinearLayout>

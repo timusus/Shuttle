@@ -25,8 +25,7 @@
             android:gravity="center"
             android:maxLines="1"
             android:paddingLeft="64dp"
-            android:paddingRight="64dp"
-            android:singleLine="true"/>
+            android:paddingRight="64dp" />
 
         <TextView
             android:id="@+id/text2"
@@ -41,7 +40,6 @@
             android:maxLines="1"
             android:paddingLeft="48dp"
             android:paddingRight="48dp"
-            android:singleLine="true"
             android:textColor="@color/primary_text_dark"/>
 
         <ImageButton

@@ -37,9 +37,9 @@
                 android:ellipsize="end"
                 android:fadingEdge="horizontal"
                 android:gravity="center"
-                android:singleLine="true"
 
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                android:maxLines="1" />
 
             <TextView
                 android:id="@+id/text2"
@@ -50,9 +50,9 @@
                 android:ellipsize="end"
                 android:fadingEdge="horizontal"
                 android:gravity="center"
-                android:singleLine="true"
 
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                android:maxLines="1" />
 
             <TextView
                 android:id="@+id/text3"
@@ -63,9 +63,9 @@
                 android:ellipsize="end"
                 android:fadingEdge="horizontal"
                 android:gravity="center"
-                android:singleLine="true"
 
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                android:maxLines="1" />
         </LinearLayout>
 
         <LinearLayout

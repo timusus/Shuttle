@@ -39,9 +39,9 @@
                 android:ellipsize="end"
                 android:fadingEdge="horizontal"
                 android:gravity="center"
-                android:singleLine="true"
                 android:textColor="?android:textColorPrimaryInverse"
-                android:textSize="14sp"/>
+                android:textSize="14sp"
+                android:maxLines="1" />
 
             <TextView
                 android:id="@+id/text2"
@@ -54,9 +54,9 @@
                 android:ellipsize="end"
                 android:fadingEdge="horizontal"
                 android:gravity="center"
-                android:singleLine="true"
                 android:textColor="?android:textColorSecondaryInverse"
-                android:textSize="14sp"/>
+                android:textSize="14sp"
+                android:maxLines="1" />
         </LinearLayout>
 
         <LinearLayout

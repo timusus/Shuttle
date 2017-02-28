@@ -30,9 +30,9 @@
         android:fadingEdge="horizontal"
         android:fontFamily="sans-serif-light"
         android:gravity="center_vertical"
-        android:singleLine="true"
         android:textSize="14sp"
-        tools:text="Line One" />
+        tools:text="Line One"
+        android:maxLines="1" />
 
     <com.simplecity.amp_library.ui.views.CustomCheckBox
         android:id="@+id/checkBox1"

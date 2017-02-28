@@ -26,8 +26,8 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/song_title"
                 android:inputType="textCapWords"
-                android:singleLine="true"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:maxLines="1" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -41,8 +41,8 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/album_title"
                 android:inputType="textCapWords"
-                android:singleLine="true"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:maxLines="1" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -56,8 +56,8 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/artist_title"
                 android:inputType="textCapWords"
-                android:singleLine="true"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:maxLines="1" />
         </android.support.design.widget.TextInputLayout>
 
         <LinearLayout
@@ -76,8 +76,8 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/genre_title"
                     android:inputType="textCapWords"
-                    android:singleLine="true"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:maxLines="1" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -92,8 +92,8 @@
                     android:hint="@string/year_title"
                     android:inputType="number"
                     android:maxLength="4"
-                    android:singleLine="true"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:maxLines="1" />
             </android.support.design.widget.TextInputLayout>
 
         </LinearLayout>
@@ -115,8 +115,8 @@
                     android:hint="@string/track_number"
                     android:inputType="number"
                     android:maxLength="3"
-                    android:singleLine="true"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:maxLines="1" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -131,8 +131,8 @@
                     android:hint="@string/track_total"
                     android:inputType="number"
                     android:maxLength="3"
-                    android:singleLine="true"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:maxLines="1" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
@@ -153,8 +153,8 @@
                     android:hint="@string/disc_number"
                     android:inputType="number"
                     android:maxLength="3"
-                    android:singleLine="true"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:maxLines="1" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -169,8 +169,8 @@
                     android:hint="@string/disc_total"
                     android:inputType="number"
                     android:maxLength="3"
-                    android:singleLine="true"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:maxLines="1" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
@@ -185,8 +185,8 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/album_artist_title"
                 android:inputType="textCapWords"
-                android:singleLine="true"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:maxLines="1" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout

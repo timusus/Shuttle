@@ -15,8 +15,8 @@
         android:gravity="center_vertical"
         android:paddingLeft="8dp"
         android:scrollHorizontally="true"
-        android:singleLine="true"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:maxLines="1" />
 
     <TextView
         android:id="@+id/line_two"
@@ -27,8 +27,8 @@
         android:gravity="center_vertical"
         android:paddingLeft="8dp"
         android:scrollHorizontally="true"
-        android:singleLine="true"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:maxLines="1" />
 
     <TextView
         android:id="@+id/play_count"
@@ -50,8 +50,8 @@
         android:ellipsize="marquee"
         android:fadingEdge="horizontal"
         android:gravity="center"
-        android:singleLine="true"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:maxLines="1" />
 
     <com.simplecity.amp_library.ui.views.NonScrollImageButton
         android:id="@+id/btn_overflow"

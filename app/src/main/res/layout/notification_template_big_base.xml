@@ -58,9 +58,9 @@
                         android:layout_weight="1"
                         android:ellipsize="marquee"
                         android:fadingEdge="horizontal"
-                        android:singleLine="true"
                         android:textAppearance="@android:style/TextAppearance.StatusBar.EventContent.Title"
-                        tools:text="Ticks &amp; Leeches" />
+                        tools:text="Ticks &amp; Leeches"
+                        android:maxLines="1" />
                 </LinearLayout>
 
                 <TextView
@@ -73,16 +73,15 @@
                     android:layout_marginTop="-2dp"
                     android:ellipsize="marquee"
                     android:fadingEdge="horizontal"
-                    android:singleLine="true"
                     android:visibility="gone"
-                    tools:text="Text 2" />
+                    tools:text="Text 2"
+                    android:maxLines="1" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
-                    android:singleLine="false"
                     android:textAppearance="@android:style/TextAppearance.StatusBar.EventContent"
                     android:visibility="gone" />
 
@@ -104,8 +103,8 @@
                         android:layout_weight="1"
                         android:ellipsize="marquee"
                         android:fadingEdge="horizontal"
-                        android:singleLine="true"
-                        android:textAppearance="@android:style/TextAppearance.StatusBar.EventContent" />
+                        android:textAppearance="@android:style/TextAppearance.StatusBar.EventContent"
+                        android:maxLines="1" />
                 </LinearLayout>
             </LinearLayout>
 
