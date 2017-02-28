@@ -1873,11 +1873,14 @@ public class MusicService extends Service {
                     .putString(MediaMetadataCompat.METADATA_KEY_TITLE, getSongName())
                     .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, getDuration())
                     .putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, (long) (getQueuePosition() + 1))
-                    .putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, (long) (getQueue().size()))
-
                     //Getting the genre is expensive.. let's not bother for now.
                     //.putString(MediaMetadataCompat.METADATA_KEY_GENRE, getGenreName())
                     .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, null);
+
+            // MetadataEditor does not support NUM_TRACKS at all, so we don't attempt to set it on <API21 devices
+            if(ShuttleUtils.hasLollipop()) {
+                metaData.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, (long) (getQueue().size()));
+            }
 
 
             if (SettingsManager.getInstance().showLockscreenArtwork()) {
