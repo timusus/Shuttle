@@ -66,8 +66,7 @@ public class ColorView extends BaseAdaptableItem<Integer, ColorView.ViewHolder> 
 
         ColorView colorView = (ColorView) o;
 
-        if (color != colorView.color) return false;
-        return selected == colorView.selected;
+        return color == colorView.color && selected == colorView.selected;
 
     }
 

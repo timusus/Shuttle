@@ -18,7 +18,7 @@ public class FilterableStateListDrawable extends StateListDrawable {
 
     public FilterableStateListDrawable() {
         super();
-        filterMap = new SparseArray<ColorFilter>();
+        filterMap = new SparseArray<>();
     }
 
     @Override

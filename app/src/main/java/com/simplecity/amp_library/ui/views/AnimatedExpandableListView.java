@@ -263,7 +263,7 @@ public class AnimatedExpandableListView extends ExpandableListView {
      * adapters used with AnimatedExpandableListView MUST extend this class.
      */
     public static abstract class AnimatedExpandableListAdapter extends BaseExpandableListAdapter {
-        private SparseArray<GroupInfo> groupInfo = new SparseArray<GroupInfo>();
+        private SparseArray<GroupInfo> groupInfo = new SparseArray<>();
         private AnimatedExpandableListView parent;
 
         private static final int STATE_IDLE = 0;
@@ -360,7 +360,7 @@ public class AnimatedExpandableListView extends ExpandableListView {
 
             if (info.animating) {
                 // If this group is animating, return the a DummyView...
-                if (convertView instanceof DummyView == false) {
+                if (!(convertView instanceof DummyView)) {
                     convertView = new DummyView(parent.getContext());
                     convertView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 0));
                 }
@@ -519,7 +519,7 @@ public class AnimatedExpandableListView extends ExpandableListView {
     }
 
     private static class DummyView extends View {
-        private List<View> views = new ArrayList<View>();
+        private List<View> views = new ArrayList<>();
         private Drawable divider;
         private int dividerWidth;
         private int dividerHeight;

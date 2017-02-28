@@ -25,8 +25,7 @@ public class BlacklistedSong {
 
         BlacklistedSong that = (BlacklistedSong) o;
 
-        if (id != that.id) return false;
-        return songId == that.songId;
+        return id == that.id && songId == that.songId;
 
     }
 

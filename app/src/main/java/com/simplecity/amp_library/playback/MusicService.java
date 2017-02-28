@@ -2631,10 +2631,7 @@ public class MusicService extends Service {
 
     private boolean isPodcast() {
         synchronized (this) {
-            if (currentSong == null) {
-                return false;
-            }
-            return currentSong.isPodcast;
+            return currentSong != null && currentSong.isPodcast;
         }
     }
 

@@ -96,9 +96,6 @@ public class PlayPauseView extends FrameLayout {
     }
 
     public boolean isPlay() {
-        if (mDrawable == null) {
-            return false;
-        }
-        return mDrawable.isPlay();
+        return mDrawable != null && mDrawable.isPlay();
     }
 }
