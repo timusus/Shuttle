@@ -274,6 +274,11 @@ dependencies {
     // /////////////////////////////////////////////////////////////////////////
 
     testCompile libs.junit
+    testCompile libs.mockito
+    testCompile libs.powermock
+    testCompile libs.powermockjunit
+    testCompile libs.robolectric
+    testCompile libs.assertj
     androidTestCompile(libs.espresso) {
         exclude group: 'com.android.support', module: 'support-annotations'
     }

@@ -1,4 +1,4 @@
-package simplecity.amp_library.test;
+package com.simplecity.amp_library;
 
 import org.junit.Test;
 
