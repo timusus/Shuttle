@@ -57,3 +57,6 @@ proguard/
 /onesky_download.rb
 /onesky_upload.rb
 
+
+# Ignore Gradle GUI config
+gradle-app.setting
