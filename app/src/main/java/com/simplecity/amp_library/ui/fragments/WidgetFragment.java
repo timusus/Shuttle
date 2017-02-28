@@ -59,8 +59,8 @@ public class WidgetFragment extends BaseFragment {
             frameLayout.setScaleY(.75f);
         }
 
-        float height = 0;
-        float width = 0;
+        float height;
+        float width;
         FrameLayout.LayoutParams layoutParams = null;
         if (mWidgetLayoutResId == R.layout.widget_layout_medium || mWidgetLayoutResId == R.layout.widget_layout_medium_alt) {
             height = getActivity().getResources().getDimension(R.dimen.widget_medium_height);
