@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AsyncPlayer;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Handler;
@@ -48,26 +49,29 @@ public class MediaButtonIntentReceiver extends WakefulBroadcastReceiver {
     /**
      * Play a beep sound.
      */
-    private static void beep(Context context)
-    {
+    private static void beep(Context context) {
         if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("pref_headset_beep", true)) {
             if (sBeepPlayer == null) {
                 sBeepPlayer = new AsyncPlayer("BeepPlayer");
 
                 sBeepSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
-                         context.getResources().getResourcePackageName(R.raw.beep) + '/' +
-                         context.getResources().getResourceTypeName(R.raw.beep) + '/' +
-                         context.getResources().getResourceEntryName(R.raw.beep) );
+                        context.getResources().getResourcePackageName(R.raw.beep) + '/' +
+                        context.getResources().getResourceTypeName(R.raw.beep) + '/' +
+                        context.getResources().getResourceEntryName(R.raw.beep));
             }
-            // TODO: This might be used in future:
-            /*
-            AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .build();
-            sBeepPlayer.play(context, sBeepSound, false, audioAttributes);
-            */
-            sBeepPlayer.play(context, sBeepSound, false, AudioManager.STREAM_MUSIC);
+
+            if (ShuttleUtils.hasMarshmallow()) {
+                AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                        // Could use AudioAttributes.ASSISTANCE_SONIFICATION here, since this represents a button press type action..
+                        // However, that seems to play our audio a little too quietly (and the beep track is already adjusted to be relatively quiet).
+                        // So let's just treat it as music, which will use the user's music stream's volume anyway.
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .build();
+                sBeepPlayer.play(context, sBeepSound, false, audioAttributes);
+            } else {
+                sBeepPlayer.play(context, sBeepSound, false, AudioManager.STREAM_MUSIC);
+            }
         }
     }
 
