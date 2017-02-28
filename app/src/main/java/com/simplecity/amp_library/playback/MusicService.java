@@ -1872,15 +1872,8 @@ public class MusicService extends Service {
                     .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, getAlbumName())
                     .putString(MediaMetadataCompat.METADATA_KEY_TITLE, getSongName())
                     .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, getDuration())
-
-                    /**
-                     METADATA_KEY_NUM_TRACKS doesn't actually seem to be supported in RemoteControlClient
-                     (Api >= 14 <= 19). Don't bother setting these values.
-                     See http://developer.android.com/reference/android/media/RemoteControlClient.MetadataEditor.html#putLong(int, long)
-                     */
-
-                    //.putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, (long) (getQueuePosition() + 1))
-                    //.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, (long) (getQueue().length))
+                    .putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, (long) (getQueuePosition() + 1))
+                    .putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, (long) (getQueue().size()))
 
                     //Getting the genre is expensive.. let's not bother for now.
                     //.putString(MediaMetadataCompat.METADATA_KEY_GENRE, getGenreName())
