@@ -1,4 +1,4 @@
-package simplecity.amp_library.test;
+package com.simplecity.amp_library;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

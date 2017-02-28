@@ -202,7 +202,7 @@ public class ShuttleApplication extends Application {
     }
 
     public boolean getIsUpgraded() {
-        return isUpgraded;
+        return isUpgraded || BuildConfig.DEBUG;
     }
 
     private void deleteOldResources() {
