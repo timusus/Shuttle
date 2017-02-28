@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding.widget.RxSeekBar;
@@ -31,10 +32,8 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.playback.PlaybackMonitor;
-import com.simplecity.amp_library.ui.activities.MainActivity;
 import com.simplecity.amp_library.ui.views.PlayPauseView;
 import com.simplecity.amp_library.ui.views.RepeatingImageButton;
-import com.simplecity.amp_library.ui.views.SizableSeekBar;
 import com.simplecity.amp_library.utils.ColorUtils;
 import com.simplecity.amp_library.utils.DrawableUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
@@ -56,7 +55,7 @@ public class PlayerFragment extends BaseFragment implements
 
     public static final String UPDATE_PLAYING_FRAGMENT = "update_playing_fragment";
 
-    private SizableSeekBar mSeekBar;
+    private SeekBar seekBar;
     private boolean isSeeking;
 
     private PlayPauseView playPauseView;
@@ -76,10 +75,7 @@ public class PlayerFragment extends BaseFragment implements
     private TextView totalTime;
     private TextView queuePosition;
 
-    private View textViewContainer;
-    private View buttonContainer;
-
-    private View bottomView;
+    private View backgroundView;
 
     private SharedPreferences sharedPreferences;
     private long startSeekPos = 0;
@@ -131,8 +127,6 @@ public class PlayerFragment extends BaseFragment implements
 
         View rootView = inflater.inflate(R.layout.fragment_player, container, false);
 
-        bottomView = rootView.findViewById(R.id.bottom_view);
-
         playPauseView = (PlayPauseView) rootView.findViewById(R.id.play);
         repeatButton = (ImageButton) rootView.findViewById(R.id.repeat);
         shuffleButton = (ImageButton) rootView.findViewById(R.id.shuffle);
@@ -146,8 +140,7 @@ public class PlayerFragment extends BaseFragment implements
         album = (TextView) rootView.findViewById(R.id.text2);
         artist = (TextView) rootView.findViewById(R.id.text3);
 
-        textViewContainer = rootView.findViewById(R.id.textContainer);
-        buttonContainer = rootView.findViewById(R.id.button_container);
+        backgroundView = rootView.findViewById(R.id.backgroundView);
 
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
 
@@ -162,8 +155,8 @@ public class PlayerFragment extends BaseFragment implements
             fab.setOnClickListener(this);
         }
 
-        mSeekBar = (SizableSeekBar) rootView.findViewById(R.id.seekbar);
-        mSeekBar.setMax(1000);
+        seekBar = (SeekBar) rootView.findViewById(R.id.seekbar);
+        seekBar.setMax(1000);
 
         themeUIComponents();
 
@@ -196,14 +189,11 @@ public class PlayerFragment extends BaseFragment implements
         if (prevButton != null) {
             prevButton.setImageDrawable(DrawableUtils.getColoredStateListDrawableWithThemeColor(getActivity(), prevButton.getDrawable(), ThemeUtils.WHITE));
         }
-        if (mSeekBar != null) {
-            ThemeUtils.themeSeekBar(getActivity(), mSeekBar, true);
+        if (seekBar != null) {
+            ThemeUtils.themeSeekBar(seekBar, true);
         }
-        if (textViewContainer != null) {
-            textViewContainer.setBackgroundColor(ColorUtils.getPrimaryColorDark(getActivity()));
-        }
-        if (buttonContainer != null) {
-            buttonContainer.setBackgroundColor(ColorUtils.getPrimaryColor());
+        if (backgroundView != null) {
+            backgroundView.setBackgroundColor(ColorUtils.getPrimaryColor());
         }
         if (fab != null) {
             fab.setBackgroundTintList(ColorStateList.valueOf(ColorUtils.getAccentColor()));
@@ -263,7 +253,7 @@ public class PlayerFragment extends BaseFragment implements
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(progress -> {
-                    mSeekBar.setProgress((int) (progress * 1000));
+                    seekBar.setProgress((int) (progress * 1000));
                 }));
 
         subscriptions.add(PlaybackMonitor.getInstance().getCurrentTimeObservable()
@@ -282,7 +272,7 @@ public class PlayerFragment extends BaseFragment implements
                     }
                 }));
 
-        Observable<SeekBarChangeEvent> sharedSeekBarEvents = RxSeekBar.changeEvents(mSeekBar)
+        Observable<SeekBarChangeEvent> sharedSeekBarEvents = RxSeekBar.changeEvents(seekBar)
                 .onBackpressureLatest()
                 .ofType(SeekBarChangeEvent.class)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -340,11 +330,6 @@ public class PlayerFragment extends BaseFragment implements
             cycleRepeat();
         } else if (view == shuffleButton) {
             toggleShuffle();
-        } else if (view == fab) {
-            if (fabIsAnimating) {
-                return;
-            }
-            toggleQueue();
         }
     }
 
@@ -367,7 +352,7 @@ public class PlayerFragment extends BaseFragment implements
         String queueLength = String.valueOf(MusicUtils.getQueue().size());
 
         if (totalTime != null && totalTime.length() != 0) {
-            this.totalTime.setText(String.format(" / %s", totalTime));
+            this.totalTime.setText(totalTime);
         }
 
         Song song = MusicUtils.getSong();
@@ -377,7 +362,7 @@ public class PlayerFragment extends BaseFragment implements
             album.setText(String.format("%s | %s", song.artistName, song.albumName));
         }
 
-        queuePosition.setText(String.format("%s / %s", currentQueuePos, queueLength));
+//        queuePosition.setText(String.format("%s / %s", currentQueuePos, queueLength));
 
         FragmentActivity activity = getActivity();
         if (activity != null) {
@@ -533,35 +518,6 @@ public class PlayerFragment extends BaseFragment implements
         ft.commit();
     }
 
-    public void toggleQueue() {
-
-        Fragment lyricsFragment = getChildFragmentManager().findFragmentByTag(LYRICS_FRAGMENT);
-        Fragment queueFragment = getChildFragmentManager().findFragmentByTag(QUEUE_FRAGMENT);
-        Fragment queuePagerFragment = getChildFragmentManager().findFragmentByTag(QUEUE_PAGER_FRAGMENT);
-
-        final FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-        fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
-        //Remove the lyrics fragment
-
-        if (lyricsFragment != null) {
-            fragmentTransaction.remove(lyricsFragment);
-        }
-
-        if (queueFragment != null) {
-            fragmentTransaction.remove(queueFragment);
-            fragmentTransaction.replace(R.id.main_container, new QueuePagerFragment(), QUEUE_PAGER_FRAGMENT);
-            toggleFabVisibility(true, true);
-
-        } else if (queuePagerFragment != null) {
-            fragmentTransaction.remove(queuePagerFragment);
-            fragmentTransaction.add(R.id.queue_container, QueueFragment.newInstance(), QUEUE_FRAGMENT);
-            bottomView.setClickable(true);
-            toggleFabVisibility(false, true);
-        }
-
-        fragmentTransaction.commitAllowingStateLoss();
-    }
-
     private void toggleFabVisibility(boolean show, boolean animate) {
         if (fab == null) {
             return;
@@ -633,19 +589,6 @@ public class PlayerFragment extends BaseFragment implements
                 }
             });
         }
-    }
-
-    public void setDragView(View view) {
-        dragView = view;
-        ((MainActivity) getActivity()).setDragView(view, true);
-    }
-
-    public View getDragView() {
-        return dragView;
-    }
-
-    public boolean isQueueShowing() {
-        return getChildFragmentManager().findFragmentByTag(QUEUE_FRAGMENT) != null;
     }
 
     @Override

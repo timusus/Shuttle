@@ -15,7 +15,7 @@
         android:elevation="4dp"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:paddingLeft="60dp"
+        android:paddingLeft="72dp"
         android:paddingRight="16dp">
 
         <TextView
@@ -23,7 +23,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
-            android:layout_marginTop="8dp"
             android:gravity="center_vertical"
             android:text="@string/nowplaying_title"
             android:textColor="@color/primary_text_dark"

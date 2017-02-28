@@ -49,6 +49,7 @@ public class MiniPlayerFragment extends BaseFragment {
     private BroadcastReceiver statusListener;
 
     View rootView;
+
     private PlayPauseView playPauseView;
     private ProgressBar progressBar;
 
@@ -271,7 +272,7 @@ public class MiniPlayerFragment extends BaseFragment {
                 Activity parent = getActivity();
                 if (getResources().getBoolean(R.bool.isSlidingEnabled)) {
                     if (parent instanceof MainActivity) {
-                        ((MainActivity) parent).togglePane();
+                        ((MainActivity) parent).showPanel(MainActivity.Panel.PLAYER);
                     }
                 } else {
                     Intent intent = new Intent(parent, PlayerActivity.class);

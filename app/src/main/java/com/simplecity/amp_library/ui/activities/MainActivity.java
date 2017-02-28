@@ -1,6 +1,5 @@
 package com.simplecity.amp_library.ui.activities;
 
-import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
@@ -24,10 +23,12 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -42,6 +43,7 @@ import android.view.SubMenu;
 import android.view.View;
 import android.view.Window;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -89,7 +91,6 @@ import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
-import com.simplecity.amp_library.utils.ResourceUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.SleepTimer;
@@ -127,9 +128,17 @@ public class MainActivity extends BaseCastActivity implements
 
     private static final String ARG_EXPANDED = "is_expanded";
 
+    public @interface Panel {
+        int NONE = 0;
+        int MAIN = 1;
+        int PLAYER = 2;
+        int QUEUE = 3;
+    }
+
     SharedPreferences mPrefs;
     private WeakReference<BackPressListener> mBackPressListenerReference;
-    private SlidingUpPanelLayout mSlidingUpPanelLayout;
+    private SlidingUpPanelLayout panelOne;
+    private SlidingUpPanelLayout panelTwo;
 
     private CustomDrawerLayout mDrawerLayout;
 
@@ -148,13 +157,15 @@ public class MainActivity extends BaseCastActivity implements
      */
     CharSequence mTitle;
 
+    private
+    @Panel
+    int targetNavigationPanel;
+
     private Toolbar mToolbar;
 
     private FrameLayout mDummyStatusBar;
 
     private boolean mIsSlidingEnabled;
-
-    private Drawable mActionBarBackButton;
 
     private SystemBarTintManager mTintManager;
 
@@ -237,82 +248,17 @@ public class MainActivity extends BaseCastActivity implements
         }
         mDrawerLayout.setStatusBarBackgroundColor(ShuttleUtils.hasLollipop() ? ColorUtils.getPrimaryColorDark(this) : ColorUtils.getPrimaryColor());
 
+        ImageView arrow = (ImageView) findViewById(R.id.arrow);
+        Drawable arrowDrawable = DrawableCompat.wrap(arrow.getDrawable());
+        DrawableCompat.setTint(arrowDrawable, ColorUtils.getTextColorPrimary());
+        arrow.setImageDrawable(arrowDrawable);
+
         mNavigationDrawerFragment.setup((DrawerLayout) findViewById(R.id.drawer_layout));
 
-        if (mIsSlidingEnabled) {
-            mSlidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.container);
+        targetNavigationPanel = Panel.NONE;
 
-            setDragView(null, false);
-
-            //The second panel slide offset is mini player height + toolbar height + status bar height.
-            //This gets our 'up next' sitting snugly underneath the toolbar
-            int offset = (int) (ActionBarUtils.getActionBarHeight(this)
-                    + (ShuttleUtils.hasKitKat() ? ActionBarUtils.getStatusBarHeight(this) : 0)
-                    - getResources().getDimension(R.dimen.mini_player_height));
-            mSlidingUpPanelLayout.setSlidePanelOffset(-offset);
-
-            mSlidingUpPanelLayout.hidePanel();
-
-            mSlidingUpPanelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
-
-                @Override
-                public void onPanelSlide(View panel, float slideOffset) {
-
-                    setActionBarAlpha(slideOffset, false);
-
-                    boolean canChangeElevation = true;
-                    Fragment playingFragment = getSupportFragmentManager().findFragmentById(R.id.player_container);
-                    if (playingFragment != null) {
-                        Fragment childFragment = playingFragment.getChildFragmentManager().findFragmentById(R.id.queue_container);
-                        if (childFragment != null && childFragment instanceof QueueFragment) {
-                            canChangeElevation = false;
-                        }
-                    }
-                    if (canChangeElevation) {
-                        getSupportActionBar().setElevation(ResourceUtils.toPixels(4) * slideOffset);
-                    }
-
-                    mNavigationDrawerFragment.animateDrawerToggle(slideOffset);
-                }
-
-                @Override
-                public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
-                    switch (newState) {
-                        case COLLAPSED: {
-
-                            setDragView(null, false);
-
-                            mTitle = getString(R.string.library_title);
-
-                            supportInvalidateOptionsMenu();
-
-                            toggleQueue(false);
-
-                            mNavigationDrawerFragment.toggleDrawerLock(false);
-                            break;
-                        }
-                        case EXPANDED: {
-
-                            Fragment playerFragment = getSupportFragmentManager().findFragmentById(R.id.player_container);
-                            if (playerFragment != null && playerFragment instanceof PlayerFragment) {
-                                setDragView(((PlayerFragment) playerFragment).getDragView(), true);
-
-                                if (((PlayerFragment) playerFragment).isQueueShowing()) {
-                                    toggleQueue(true);
-                                }
-                            }
-
-                            mTitle = getString(R.string.nowplaying_title);
-
-                            supportInvalidateOptionsMenu();
-
-                            mNavigationDrawerFragment.toggleDrawerLock(true);
-                            break;
-                        }
-                    }
-                }
-            });
-        }
+        setupFirstPanel();
+        setupSecondPanel();
 
         if (savedInstanceState != null && mIsSlidingEnabled) {
             if (savedInstanceState.getBoolean(ARG_EXPANDED, false)) {
@@ -320,22 +266,14 @@ public class MainActivity extends BaseCastActivity implements
                 final ActionBar actionBar = getSupportActionBar();
 
                 //If the sliding panel was previously expanded, expand it again.
-                mSlidingUpPanelLayout.post(() -> {
-                    mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED, false);
+                panelOne.post(() -> {
+                    panelOne.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED, false);
                     setActionBarAlpha(1f, false);
                 });
 
                 mTitle = getString(R.string.nowplaying_title);
                 if (actionBar != null) {
                     actionBar.setTitle(mTitle);
-                }
-
-                Fragment playingFragment = getSupportFragmentManager().findFragmentById(R.id.player_container);
-                if (playingFragment != null) {
-                    Fragment childFragment = playingFragment.getChildFragmentManager().findFragmentById(R.id.queue_container);
-                    if (childFragment != null && childFragment instanceof QueueFragment) {
-                        toggleQueue(true);
-                    }
                 }
             }
         }
@@ -346,18 +284,6 @@ public class MainActivity extends BaseCastActivity implements
                     .beginTransaction()
                     .add(R.id.main_container, MainFragment.newInstance())
                     .commit();
-
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.mini_player_container, MiniPlayerFragment.newInstance())
-                    .commit();
-
-            if (mIsSlidingEnabled) {
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .add(R.id.player_container, PlayerFragment.newInstance())
-                        .commit();
-            }
         }
 
         themeTaskDescription();
@@ -365,45 +291,153 @@ public class MainActivity extends BaseCastActivity implements
         handleIntent(getIntent());
     }
 
-    public void setDragView(View dragView, boolean fromExpandedView) {
+    private void setupFirstPanel() {
+        panelOne = (SlidingUpPanelLayout) findViewById(R.id.panel1);
+        panelOne.setTag("Panel One");
+        panelOne.addPanelSlideListener(new SlidingUpPanelLayout.SimplePanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
 
-        if (mSlidingUpPanelLayout == null) {
-            return;
-        }
+                mNavigationDrawerFragment.animateDrawerToggle(slideOffset);
 
-        if (fromExpandedView) {
-            if (mSlidingUpPanelLayout.getPanelState() != SlidingUpPanelLayout.PanelState.EXPANDED) {
-                dragView = null;
+                mDummyStatusBar.setAlpha(1 - slideOffset);
             }
-        }
 
-        if (dragView == null) {
-            dragView = findViewById(R.id.mini_player_container);
-        }
+            @Override
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+                super.onPanelStateChanged(panel, previousState, newState);
 
-        mSlidingUpPanelLayout.setDragView(dragView);
+                switch (newState) {
+                    case COLLAPSED:
+
+                        //When collapsed, the drag view is the 'mini player'
+                        if (getMiniPlayerFragment() != null) {
+                            panelOne.setDragView(getMiniPlayerFragment().getView());
+                        }
+
+                        checkTargetNavigation();
+                        mNavigationDrawerFragment.toggleDrawerLock(false);
+
+                        mTitle = getString(R.string.library_title);
+                        supportInvalidateOptionsMenu();
+                        break;
+                    case EXPANDED:
+
+                        //When expanded, the drag view is the 'player fragment'
+                        if (getPlayerFragment() != null) {
+                            panelOne.setDragView(getPlayerFragment().getView());
+                        }
+
+                        checkTargetNavigation();
+                        mNavigationDrawerFragment.toggleDrawerLock(true);
+
+                        mTitle = getString(R.string.nowplaying_title);
+                        supportInvalidateOptionsMenu();
+                        break;
+                }
+            }
+        });
     }
 
-    public void setScrollableView(View scrollableView) {
-        if (mSlidingUpPanelLayout == null) {
-            return;
-        }
-        mSlidingUpPanelLayout.setScrollableView(scrollableView);
+    private void setupSecondPanel() {
+        panelTwo = (SlidingUpPanelLayout) findViewById(R.id.panel2);
+        panelTwo.setTag("Panel Two");
+
+        //The second panel slide offset is mini player height + toolbar height + status bar height.
+        //This gets our 'up next' sitting snugly underneath the toolbar
+        int offset = (int) (ActionBarUtils.getActionBarHeight(this)
+                + (ShuttleUtils.hasKitKat() ? ActionBarUtils.getStatusBarHeight(this) : 0)
+                - getResources().getDimension(R.dimen.mini_player_height));
+        panelTwo.setSlidePanelOffset(-offset);
+        panelTwo.addPanelSlideListener(new SlidingUpPanelLayout.SimplePanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+                // if we are not going to a specific panel, then disable sliding to prevent
+                // the two sliding panels from fighting for touch input
+                if (targetNavigationPanel == Panel.NONE) {
+                    panelOne.setSlidingEnabled(false);
+                }
+
+                //Rotate the little arrow thing
+                ImageView arrow = (ImageView) findViewById(R.id.arrow);
+                if (panelTwo.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
+                    arrow.setRotation(-slideOffset * 180);
+                } else {
+                    arrow.setRotation(slideOffset * 180);
+                }
+
+                setActionBarAlpha(slideOffset, false);
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+                super.onPanelStateChanged(panel, previousState, newState);
+
+                switch (newState) {
+                    case COLLAPSED:
+
+                        //When collapsed, the drag view is the 'up next' view
+                        View upNextView = findViewById(R.id.upNextView);
+                        panelTwo.setDragView(upNextView);
+
+                        panelOne.setSlidingEnabled(true);
+                        checkTargetNavigation();
+                        break;
+                    case EXPANDED:
+
+                        //When expanded, the drag view is the 'queue'
+                        if (getQueueFragment() != null) {
+                            panelTwo.setDragView(getQueueFragment().getView());
+                        }
+
+                        checkTargetNavigation();
+                        break;
+                }
+            }
+        });
     }
 
-    public void togglePane() {
+    public
+    @Panel
+    int getCurrentPanel() {
+        if (panelTwo.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
+            return Panel.QUEUE;
+        } else if (panelOne.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
+            return Panel.PLAYER;
+        } else {
+            return Panel.MAIN;
+        }
+    }
 
-        if (!mIsSlidingEnabled) {
+    protected void checkTargetNavigation() {
+        if (targetNavigationPanel == getCurrentPanel()) {
+            targetNavigationPanel = Panel.NONE;
+        }
+    }
+
+    public void showPanel(@Panel int panel) {
+        // if we are already at our target panel, then don't do anything
+        if (panel == getCurrentPanel()) {
             return;
         }
 
-        if (mSlidingUpPanelLayout == null) {
-            return;
-        }
-        if (mSlidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
-            mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED, true);
-        } else if (mSlidingUpPanelLayout.getPanelState() != SlidingUpPanelLayout.PanelState.HIDDEN) {
-            mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED, true);
+        switch (panel) {
+            case Panel.MAIN:
+                targetNavigationPanel = panel;
+                panelTwo.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED, true);
+                // Re-enable sliding on first panel so we can collapse it
+                panelOne.setSlidingEnabled(true);
+                panelOne.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED, true);
+                break;
+            case Panel.PLAYER:
+                panelTwo.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED, true);
+                panelOne.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED, true);
+                break;
+            case Panel.QUEUE:
+                targetNavigationPanel = panel;
+                panelTwo.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED, true);
+                panelOne.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED, true);
+                break;
         }
     }
 
@@ -453,8 +487,8 @@ public class MainActivity extends BaseCastActivity implements
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_EXPAND:
-                    if (mSlidingUpPanelLayout != null) {
-                        mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED, true);
+                    if (panelOne != null) {
+                        panelOne.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED, true);
                     }
                     return;
                 case REQUEST_SEARCH:
@@ -480,7 +514,7 @@ public class MainActivity extends BaseCastActivity implements
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         if (mIsSlidingEnabled) {
-            savedInstanceState.putBoolean(ARG_EXPANDED, mSlidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED);
+            savedInstanceState.putBoolean(ARG_EXPANDED, panelOne.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED);
         }
         super.onSaveInstanceState(savedInstanceState);
     }
@@ -509,7 +543,7 @@ public class MainActivity extends BaseCastActivity implements
 
             menu.add(0, TIMER, TIMER, R.string.timer);
 
-            if (mSlidingUpPanelLayout == null || mSlidingUpPanelLayout.getPanelState() != SlidingUpPanelLayout.PanelState.EXPANDED) {
+            if (panelOne == null || panelOne.getPanelState() != SlidingUpPanelLayout.PanelState.EXPANDED) {
 
                 menu.findItem(R.id.menu_favorite).setVisible(false);
                 menu.findItem(R.id.menu_share).setVisible(false);
@@ -576,7 +610,7 @@ public class MainActivity extends BaseCastActivity implements
         MenuItem sortingItem = menu.findItem(R.id.sort);
         MenuItem viewAsItem = menu.findItem(R.id.view_as);
 
-        if (mSlidingUpPanelLayout == null || !mIsSlidingEnabled || mSlidingUpPanelLayout.getPanelState() != SlidingUpPanelLayout.PanelState.EXPANDED) {
+        if (panelOne == null || !mIsSlidingEnabled || panelOne.getPanelState() != SlidingUpPanelLayout.PanelState.EXPANDED) {
             if (whiteListItem != null) {
                 whiteListItem.setVisible(true);
             }
@@ -632,7 +666,7 @@ public class MainActivity extends BaseCastActivity implements
                             .subscribe(albumArtist -> {
                                 swapFragments(DetailFragment.newInstance(albumArtist), true);
                                 new Handler().postDelayed(() ->
-                                        mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED, true), time - System.currentTimeMillis() + 250);
+                                        panelOne.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED, true), time - System.currentTimeMillis() + 250);
                             });
                 }
                 return true;
@@ -648,7 +682,7 @@ public class MainActivity extends BaseCastActivity implements
                             .subscribe(album -> {
                                 swapFragments(DetailFragment.newInstance(album), true);
                                 new Handler().postDelayed(() ->
-                                        mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED, true), time - System.currentTimeMillis() + 250);
+                                        panelOne.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED, true), time - System.currentTimeMillis() + 250);
                             });
                 }
                 return true;
@@ -694,27 +728,17 @@ public class MainActivity extends BaseCastActivity implements
             case R.id.menu_share:
                 DialogUtils.showShareDialog(MainActivity.this, MusicUtils.getSong());
                 return true;
-            case R.id.menu_queue:
-                Fragment playingFragment = getSupportFragmentManager().findFragmentById(R.id.player_container);
-                if (playingFragment != null) {
-                    ((PlayerFragment) playingFragment).toggleQueue();
-                }
-                return true;
             case android.R.id.home:
-                playingFragment = getSupportFragmentManager().findFragmentById(R.id.player_container);
-                if (playingFragment != null) {
-                    Fragment childFragment = playingFragment.getChildFragmentManager().findFragmentById(R.id.queue_container);
-                    if (childFragment != null && childFragment instanceof QueueFragment) {
-                        ((PlayerFragment) playingFragment).toggleQueue();
-                        toggleQueue(false);
-                        return true;
-                    }
-                }
-
-                if (mSlidingUpPanelLayout != null) {
-                    if (mSlidingUpPanelLayout.getPanelState() != SlidingUpPanelLayout.PanelState.COLLAPSED && mSlidingUpPanelLayout.getPanelState() != SlidingUpPanelLayout.PanelState.HIDDEN) {
-                        mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED, true);
-                        return true;
+                if (mIsSlidingEnabled) {
+                    switch (getCurrentPanel()) {
+                        case Panel.QUEUE:
+                            showPanel(Panel.PLAYER);
+                            break;
+                        case Panel.PLAYER:
+                            showPanel(Panel.MAIN);
+                            break;
+                        case Panel.MAIN:
+                            break;
                     }
                 }
                 break;
@@ -734,7 +758,7 @@ public class MainActivity extends BaseCastActivity implements
         sendBroadcast(new Intent(PlayerFragment.UPDATE_PLAYING_FRAGMENT));
 
         if (mIsSlidingEnabled) {
-            PlayerFragment playerFragment = (PlayerFragment) getSupportFragmentManager().findFragmentById(R.id.player_container);
+            PlayerFragment playerFragment = (PlayerFragment) getSupportFragmentManager().findFragmentById(R.id.playerFragment);
 
             if (playerFragment != null) {
 
@@ -762,7 +786,7 @@ public class MainActivity extends BaseCastActivity implements
     public void onServiceDisconnected(ComponentName name) {
         super.onServiceDisconnected(name);
         if (mIsSlidingEnabled) {
-            PlayerFragment playerFragment = (PlayerFragment) getSupportFragmentManager().findFragmentById(R.id.player_container);
+            PlayerFragment playerFragment = (PlayerFragment) getSupportFragmentManager().findFragmentById(R.id.playerFragment);
             if (playerFragment != null) {
                 playerFragment.setPauseButtonImage();
             }
@@ -772,20 +796,16 @@ public class MainActivity extends BaseCastActivity implements
     @Override
     public void onBackPressed() {
 
-        Fragment playingFragment = getSupportFragmentManager().findFragmentById(R.id.player_container);
-        if (playingFragment != null) {
-            Fragment childFragment = playingFragment.getChildFragmentManager().findFragmentById(R.id.queue_container);
-            if (childFragment != null && childFragment instanceof QueueFragment) {
-                ((PlayerFragment) playingFragment).toggleQueue();
-                toggleQueue(false);
-                return;
-            }
-        }
-
         if (mIsSlidingEnabled) {
-            if (mSlidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
-                mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED, true);
-                return;
+            switch (getCurrentPanel()) {
+                case Panel.QUEUE:
+                    showPanel(Panel.PLAYER);
+                    return;
+                case Panel.PLAYER:
+                    showPanel(Panel.MAIN);
+                    return;
+                case Panel.MAIN:
+                    break;
             }
         }
 
@@ -1066,60 +1086,14 @@ public class MainActivity extends BaseCastActivity implements
         if (!mIsSlidingEnabled) {
             findViewById(R.id.mini_player_container).setVisibility(show ? View.VISIBLE : View.GONE);
         } else {
-            if (mSlidingUpPanelLayout != null) {
+            if (panelOne != null) {
                 if (show) {
-                    mSlidingUpPanelLayout.showPanel();
+                    panelOne.showPanel();
                 } else {
-                    mSlidingUpPanelLayout.hidePanel();
+                    panelOne.hidePanel();
                 }
             }
         }
-    }
-
-    public void toggleQueue(boolean show) {
-        if (mToolbar == null) {
-            return;
-        }
-
-        if (mActionBarBackButton == null) {
-            mActionBarBackButton = mToolbar.getNavigationIcon();
-        }
-        if (show) {
-            mToolbar.setNavigationIcon(R.drawable.ic_action_navigation_close);
-            mTitle = getString(R.string.up_next_title);
-            mToolbar.setTitle(mTitle);
-            animateElevationChange(4, 0);
-        } else {
-            mToolbar.setNavigationIcon(mActionBarBackButton);
-            if (mSlidingUpPanelLayout != null) {
-                if (mSlidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
-                    mTitle = getResources().getString(R.string.nowplaying_title);
-                } else {
-                    mTitle = getResources().getString(R.string.library_title);
-                }
-            }
-            mToolbar.setTitle(mTitle);
-            animateElevationChange(0, 4);
-        }
-    }
-
-    private void animateElevationChange(int currentElevationDips, int targetElevationDips) {
-
-        currentElevationDips = ResourceUtils.toPixels(currentElevationDips);
-        targetElevationDips = ResourceUtils.toPixels(targetElevationDips);
-
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar == null) {
-            return;
-        }
-        ValueAnimator valueAnimator = ValueAnimator.ofInt(currentElevationDips, targetElevationDips);
-        valueAnimator.setIntValues(currentElevationDips, targetElevationDips);
-        valueAnimator.addUpdateListener(animation -> {
-            int value = (Integer) animation.getAnimatedValue();
-            actionBar.setElevation(value);
-        });
-        valueAnimator.setDuration(250);
-        valueAnimator.start();
     }
 
     public void setOnBackPressedListener(BackPressListener listener) {
@@ -1132,20 +1106,23 @@ public class MainActivity extends BaseCastActivity implements
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void setActionBarAlpha(float alpha, boolean store) {
+
+        Log.i(TAG, "Setting alpha to: " + alpha);
+
         Fragment mainFragment = getSupportFragmentManager().findFragmentById(R.id.main_container);
-        if (mainFragment != null && !(mainFragment instanceof DetailFragment)) {
-            if (alpha > 0f) {
-                alpha = 1f;
-            } else {
-                alpha = 0f;
-            }
+//        if (mainFragment != null && !(mainFragment instanceof DetailFragment)) {
+//            if (alpha > 0f) {
+//                alpha = 1f;
+//            } else {
+//                alpha = 0f;
+//            }
+//        } else {
+        if (store) {
+            mAlpha = alpha;
         } else {
-            if (store) {
-                mAlpha = alpha;
-            } else {
-                alpha = Math.max(0f, Math.min(1f, mAlpha + alpha));
-            }
+            alpha = Math.max(0f, Math.min(1f, mAlpha + alpha));
         }
+//        }
 
         if (mToolbar != null) {
             mToolbar.setBackgroundColor(ColorUtils.adjustAlpha(ColorUtils.getPrimaryColor(), alpha));
@@ -1182,11 +1159,13 @@ public class MainActivity extends BaseCastActivity implements
         boolean canSetAlpha = true;
 
         if (mIsSlidingEnabled
-                && mSlidingUpPanelLayout != null
-                && (mSlidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.DRAGGING
-                || mSlidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED)) {
+                && panelOne != null
+                && (panelOne.getPanelState() == SlidingUpPanelLayout.PanelState.DRAGGING
+                || panelOne.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED)) {
             canSetAlpha = false;
         }
+
+        Log.i(TAG, "Can set alpha: " + canSetAlpha);
 
         return canSetAlpha;
     }
@@ -1194,5 +1173,27 @@ public class MainActivity extends BaseCastActivity implements
     @Override
     protected String screenName() {
         return TAG;
+    }
+
+    @Nullable
+    private PlayerFragment getPlayerFragment() {
+        return (PlayerFragment) getSupportFragmentManager().findFragmentById(R.id.playerFragment);
+    }
+
+    @Nullable
+    private QueueFragment getQueueFragment() {
+        return (QueueFragment) getSupportFragmentManager().findFragmentById(R.id.queueFragment);
+    }
+
+    @Nullable
+    private MiniPlayerFragment getMiniPlayerFragment() {
+        return (MiniPlayerFragment) getSupportFragmentManager().findFragmentById(R.id.miniPlayerFragment);
+    }
+
+    public void setScrollableView(View scrollableView) {
+        if (panelTwo == null) {
+            return;
+        }
+        panelTwo.setScrollableView(scrollableView);
     }
 }

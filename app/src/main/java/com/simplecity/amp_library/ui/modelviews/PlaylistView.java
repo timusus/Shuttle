@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Playlist;
+import com.simplecity.amp_library.ui.fragments.PlaylistFragment;
 import com.simplecity.amp_library.ui.views.NonScrollImageButton;
 import com.simplecity.amp_library.utils.DrawableUtils;
 
@@ -49,6 +50,7 @@ public class PlaylistView extends BaseAdaptableItem<Playlist, PlaylistView.ViewH
 
         public TextView lineOne;
         public NonScrollImageButton overflowButton;
+        public PlaylistFragment.PlaylistClickListener listener;
 
         public ViewHolder(View itemView) {
             super(itemView);

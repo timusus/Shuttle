@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.sothree.slidinguppanel.SlidingUpPanelLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/container"
+    android:id="@+id/panel1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="bottom"
@@ -13,25 +14,74 @@
     <FrameLayout
         android:id="@+id/main_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <FrameLayout
-            android:id="@+id/mini_player_container"
+        <fragment
+            android:id="@+id/miniPlayerFragment"
+            android:name="com.simplecity.amp_library.ui.fragments.MiniPlayerFragment"
             android:layout_width="match_parent"
             android:layout_height="@dimen/mini_player_height"
-            android:fitsSystemWindows="true" />
+            android:fitsSystemWindows="true"/>
 
-        <FrameLayout
-            android:id="@+id/player_container"
+        <com.sothree.slidinguppanel.SlidingUpPanelLayout
+            android:id="@+id/panel2"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:clickable="true" />
+            android:layout_height="match_parent"
+            android:gravity="bottom"
+            app:umanoDragView="@+id/panel2"
+            app:umanoPanelHeight="@dimen/mini_player_height"
+            app:umanoShadowHeight="0dp"
+            app:umanoSlideOffset="@dimen/mini_player_height">
+
+            <fragment
+                android:id="@+id/playerFragment"
+                android:name="com.simplecity.amp_library.ui.fragments.PlayerFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <LinearLayout
+                android:id="@+id/panel2DragView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:id="@+id/upNextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/mini_player_height"
+                    android:background="?android:attr/windowBackground">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="16dp"
+                        android:gravity="center_vertical"
+                        android:text="Up Next"
+                        android:textSize="16sp"/>
+
+                    <ImageView
+                        android:id="@+id/arrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:layout_marginRight="16dp"
+                        android:src="@drawable/ic_arrow_up"/>
+
+                </FrameLayout>
+
+                <fragment
+                    android:id="@+id/queueFragment"
+                    android:name="com.simplecity.amp_library.ui.fragments.QueueFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </LinearLayout>
+
+        </com.sothree.slidinguppanel.SlidingUpPanelLayout>
     </LinearLayout>
 
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>

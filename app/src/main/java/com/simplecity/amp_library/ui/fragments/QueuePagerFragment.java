@@ -69,21 +69,12 @@ public class QueuePagerFragment extends BaseFragment implements
 
     @Override
     public void onPause() {
-
-        if (getParentFragment() != null && getParentFragment() instanceof PlayerFragment) {
-            ((PlayerFragment) getParentFragment()).setDragView(null);
-        }
-
         super.onPause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        if (getParentFragment() != null && getParentFragment() instanceof PlayerFragment) {
-            ((PlayerFragment) getParentFragment()).setDragView(mRootView);
-        }
     }
 
     @Override

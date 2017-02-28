@@ -192,9 +192,9 @@
 
                 </LinearLayout>
 
-                <com.simplecity.amp_library.ui.views.SizableSeekBar
+                <SeekBar
                     android:id="@+id/seekbar"
-                    style="@style/SeekBar"
+                    style="@style/SeekBarNoPadding"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@id/textContainer"

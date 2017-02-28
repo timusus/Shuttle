@@ -22,9 +22,9 @@ public class CustomColorPicker extends FrameLayout
 
     private View colorView;
 
-    private SizableSeekBar redSeekBar;
-    private SizableSeekBar greenSeekBar;
-    private SizableSeekBar blueSeekBar;
+    private SeekBar redSeekBar;
+    private SeekBar greenSeekBar;
+    private SeekBar blueSeekBar;
 
     private TextView redValue;
     private TextView greenValue;
@@ -41,18 +41,18 @@ public class CustomColorPicker extends FrameLayout
 
         colorView = customView.findViewById(R.id.view);
 
-        redSeekBar = (SizableSeekBar) findViewById(R.id.seekbarRed);
-        ThemeUtils.themeSeekBar(context, redSeekBar);
+        redSeekBar = (SeekBar) findViewById(R.id.seekbarRed);
+        ThemeUtils.themeSeekBar(redSeekBar);
         redSeekBar.setMax(255);
         redSeekBar.setOnSeekBarChangeListener(this);
 
-        greenSeekBar = (SizableSeekBar) findViewById(R.id.seekbarGreen);
-        ThemeUtils.themeSeekBar(context, greenSeekBar);
+        greenSeekBar = (SeekBar) findViewById(R.id.seekbarGreen);
+        ThemeUtils.themeSeekBar(greenSeekBar);
         greenSeekBar.setMax(255);
         greenSeekBar.setOnSeekBarChangeListener(this);
 
-        blueSeekBar = (SizableSeekBar) findViewById(R.id.seekbarBlue);
-        ThemeUtils.themeSeekBar(context, blueSeekBar);
+        blueSeekBar = (SeekBar) findViewById(R.id.seekbarBlue);
+        ThemeUtils.themeSeekBar(blueSeekBar);
         blueSeekBar.setMax(255);
         blueSeekBar.setOnSeekBarChangeListener(this);
 

@@ -74,6 +74,7 @@ public class QueueFragment extends BaseFragment implements
 
     private View header;
 
+    private TextView lineOne;
     private TextView lineTwo;
 
     MultiSelector multiSelector = new MultiSelector();
@@ -104,10 +105,6 @@ public class QueueFragment extends BaseFragment implements
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).toggleQueue(true);
-        }
     }
 
     @Override
@@ -177,6 +174,7 @@ public class QueueFragment extends BaseFragment implements
             header.setVisibility(View.VISIBLE);
         }
 
+        lineOne = (TextView) rootView.findViewById(R.id.line1);
         lineTwo = (TextView) rootView.findViewById(R.id.line2);
 
         recyclerView = (ScrollBlockingRecyclerView) rootView.findViewById(R.id.recyclerView);
@@ -220,10 +218,6 @@ public class QueueFragment extends BaseFragment implements
             getActivity().unregisterReceiver(receiver);
         }
 
-        if (getParentFragment() != null && getParentFragment() instanceof PlayerFragment) {
-            ((PlayerFragment) getParentFragment()).setDragView(null);
-        }
-
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).setScrollableView(null);
         }
@@ -245,15 +239,11 @@ public class QueueFragment extends BaseFragment implements
         filter.addAction(UPDATE_QUEUE_FRAGMENT);
         getActivity().registerReceiver(receiver, filter);
 
-        updateTrackInfo();
-
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).setScrollableView(recyclerView);
         }
 
-        if (getParentFragment() != null && getParentFragment() instanceof PlayerFragment) {
-            ((PlayerFragment) getParentFragment()).setDragView(rootView);
-        }
+        updateTrackInfo();
 
         refreshAdapterItems();
     }
@@ -286,13 +276,14 @@ public class QueueFragment extends BaseFragment implements
     }
 
     void updateTrackInfo() {
-        if (lineTwo != null) {
+        if (lineOne != null) {
             String trackName = MusicUtils.getSongName();
             String artistName = MusicUtils.getAlbumArtistName();
+            String albumName = MusicUtils.getAlbumName();
             if (trackName != null) {
-                lineTwo.setText(MusicUtils.getSongName());
-                if (artistName != null) {
-                    lineTwo.setText(String.format("%s | %s", trackName, artistName));
+                lineOne.setText(MusicUtils.getSongName());
+                if (artistName != null && albumName != null) {
+                    lineTwo.setText(String.format("%s | %s", artistName, albumName));
                 }
             }
         }

@@ -222,6 +222,11 @@ public class SlidingUpPanelLayout extends ViewGroup {
     float mAnchorPoint = 1.f;
 
     /**
+     * Flag indicating that sliding feature is enabled\disabled
+     */
+    private boolean mIsSlidingEnabled;
+
+    /**
      * A panel view is locked into internal scrolling or another condition that
      * is preventing a drag.
      */
@@ -370,6 +375,8 @@ public class SlidingUpPanelLayout extends ViewGroup {
         mDragHelper.setMinVelocity(mMinFlingVelocity * density);
 
         mIsTouchEnabled = true;
+
+        mIsSlidingEnabled = true;
     }
 
     @Override
@@ -452,6 +459,19 @@ public class SlidingUpPanelLayout extends ViewGroup {
             invalidate();
             return;
         }
+    }
+
+    /**
+     * Set sliding enabled flag
+     *
+     * @param enabled flag value
+     */
+    public void setSlidingEnabled(boolean enabled) {
+        mIsSlidingEnabled = enabled;
+    }
+
+    public boolean isSlidingEnabled() {
+        return mIsSlidingEnabled && mSlideableView != null;
     }
 
     protected void smoothToBottom() {
@@ -714,7 +734,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
         } else {
             left = right = top = bottom = 0;
         }
-        View child = getChildAt(0);
+        View child = mMainView;
         final int clampedChildLeft = Math.max(leftBound, child.getLeft());
         final int clampedChildTop = Math.max(topBound, child.getTop());
         final int clampedChildRight = Math.min(rightBound, child.getRight());
@@ -879,7 +899,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
             final LayoutParams lp = (LayoutParams) child.getLayoutParams();
 
             // Always layout the sliding view on the first layout
-            if (child.getVisibility() == GONE && (i == 0 || mFirstLayout)) {
+            if (child.getVisibility() == GONE && (child == mMainView || mFirstLayout)) {
                 continue;
             }
 
@@ -921,8 +941,9 @@ public class SlidingUpPanelLayout extends ViewGroup {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+
         // If the scrollable view is handling touch, never intercept
-        if (mIsScrollableViewHandlingTouch || !isTouchEnabled()) {
+        if (mIsScrollableViewHandlingTouch || !mIsSlidingEnabled || !isTouchEnabled()) {
             mDragHelper.abort();
             return false;
         }
@@ -975,7 +996,8 @@ public class SlidingUpPanelLayout extends ViewGroup {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        if (!isEnabled() || !isTouchEnabled()) {
+
+        if (!isEnabled() || !isSlidingEnabled() || !isTouchEnabled()) {
             return super.onTouchEvent(ev);
         }
         try {
@@ -1203,7 +1225,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
         boolean result;
         final int save = canvas.save(Canvas.CLIP_SAVE_FLAG);
 
-        if (mSlideableView != child) { // if main view
+        if (isSlidingEnabled() && mSlideableView != child) { // if main view
             // Clip against the slider; no sense drawing what will immediately be covered,
             // Unless the panel is set to overlay content
             canvas.getClipBounds(mTmpRect);
@@ -1243,7 +1265,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
      * @param velocity    initial velocity in case of fling, or 0.
      */
     boolean smoothSlideTo(float slideOffset, int velocity, boolean smoothSlide) {
-        if (!isEnabled()) {
+        if (!isEnabled() || !isSlidingEnabled()) {
             // Nothing to do.
             return false;
         }
@@ -1260,7 +1282,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
     @Override
     public void computeScroll() {
         if (mDragHelper != null && mDragHelper.continueSettling(true)) {
-            if (!isEnabled()) {
+            if (!isEnabled() || !isSlidingEnabled()) {
                 mDragHelper.abort();
                 return;
             }
@@ -1272,6 +1294,11 @@ public class SlidingUpPanelLayout extends ViewGroup {
     @Override
     public void draw(Canvas c) {
         super.draw(c);
+
+        if (!isSlidingEnabled()) {
+            // No need to draw a shadow if we don't have one.
+            return;
+        }
 
         // draw the shadow
         if (mShadowDrawable != null && mSlideableView != null) {
