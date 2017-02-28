@@ -434,6 +434,9 @@
     <string name="pref_title_rate">Say Thanks</string>
     <string name="pref_summary_rate">If you like Shuttle, please consider leaving a review.</string>
 
+    <string name="pref_title_headset_beep">Beep on Skip</string>
+    <string name="pref_summary_headset_beep">Beep when skipping song via headset controls</string>
+
     <!-- Settings title for ignore playlist duplicates -->
     <string name="pref_title_ignore_duplicates">Ignore playlist duplicates</string>
     <!-- Settings summary for ignore playlist duplicates -->
@@ -804,7 +807,5 @@
 
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">Disc <xliff:g id="number">%d</xliff:g></string>
-    <string name="pref_summary_headset_beep">Beep when skipping song via headset controls</string>
-    <string name="pref_title_headset_beep">Beep when skipping song via headset controls</string>
 
 </resources>
