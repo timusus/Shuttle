@@ -12,18 +12,18 @@
             android:title="@string/pref_title_headset_disconnect"
             android:widgetLayout="@layout/preference_widget_checkbox" />
         <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="pref_headset_beep"
-            android:layout="@layout/preference"
-            android:summary="@string/pref_summary_headset_beep"
-            android:title="@string/pref_title_headset_beep"
-            android:widgetLayout="@layout/preference_widget_checkbox" />
-        <CheckBoxPreference
             android:defaultValue="false"
             android:key="pref_headset_connect"
             android:layout="@layout/preference"
             android:summary="@string/pref_summary_headset_con"
             android:title="@string/pref_title_headset_con"
+            android:widgetLayout="@layout/preference_widget_checkbox" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref_headset_beep"
+            android:layout="@layout/preference"
+            android:summary="@string/pref_summary_headset_beep"
+            android:title="@string/pref_title_headset_beep"
             android:widgetLayout="@layout/preference_widget_checkbox" />
     </com.simplecity.amp_library.ui.views.CustomPreferenceCategory>
     <com.simplecity.amp_library.ui.views.CustomPreferenceCategory
