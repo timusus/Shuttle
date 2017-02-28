@@ -78,7 +78,17 @@ ext.versions = [
         // /////////////////////////////////////////////////////////////////////////
 
         junit                  : "4.12",
-        espressoCore           : "2.2.2"
+        espressoCore           : "2.2.2",
+        assertj                : "3.6.1",
+
+        // Mockito version restriction -- PowerMock does not fully support Mockito2 yet.
+        // https://github.com/powermock/powermock/wiki/Mockito2_maven
+        mockito                : "1.10.19",
+        powermock              : "1.6.6",
+
+        // Future note: PowerMock and Robolectric can't work together until Robolectric 3.3 is released
+        // https://github.com/robolectric/robolectric/wiki/Using-PowerMock
+        robolectric            : "3.2.2"
 ]
 
 ext.gradlePlugins = [
@@ -174,7 +184,17 @@ ext.libs = [
         // Testing
         // /////////////////////////////////////////////////////////////////////////
 
-        //Junit
+        // JUnit
         junit              : "junit:junit:$versions.junit",
-        espresso           : "com.android.support.test.espresso:espresso-core:$versions.espressoCore"
+        // Espresso
+        espresso           : "com.android.support.test.espresso:espresso-core:$versions.espressoCore",
+        // Mockito - https://github.com/mockito/mockito
+        mockito            : "org.mockito:mockito-core:$versions.mockito",
+        // Powermock - https://github.com/powermock/powermock
+        powermock          : "org.powermock:powermock-api-mockito:$versions.powermock",
+        powermockjunit     : "org.powermock:powermock-module-junit4:$versions.powermock",
+        // Robolectric - https://github.com/robolectric/robolectric
+        robolectric        : "org.robolectric:robolectric:$versions.robolectric",
+        // AssertJ - http://joel-costigliola.github.io/assertj/
+        assertj            : "org.assertj:assertj-core:$versions.assertj"
 ]
