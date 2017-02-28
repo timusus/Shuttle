@@ -96,7 +96,7 @@ public class CustomArtworkContentProvider extends ContentProvider {
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         int uriType = sURIMatcher.match(uri);
         SQLiteDatabase sqlDB = database.getWritableDatabase();
-        int rowsDeleted = 0;
+        int rowsDeleted;
         switch (uriType) {
             case CUSTOM_ARTWORK:
                 rowsDeleted = sqlDB.delete(CustomArtworkTable.TABLE_ARTIST_ART, selection,
@@ -128,7 +128,7 @@ public class CustomArtworkContentProvider extends ContentProvider {
 
         int uriType = sURIMatcher.match(uri);
         SQLiteDatabase sqlDB = database.getWritableDatabase();
-        int rowsUpdated = 0;
+        int rowsUpdated;
         switch (uriType) {
             case CUSTOM_ARTWORK:
                 rowsUpdated = sqlDB.update(CustomArtworkTable.TABLE_ARTIST_ART,

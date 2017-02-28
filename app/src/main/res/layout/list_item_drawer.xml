@@ -29,9 +29,9 @@
         android:layout_weight="1"
         android:ellipsize="end"
         android:gravity="center_vertical"
-        android:singleLine="true"
         android:textSize="14sp"
-        tools:text="Folders"/>
+        tools:text="Folders"
+        android:maxLines="1" />
 
     <FrameLayout
         android:layout_width="48dp"

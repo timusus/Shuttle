@@ -29,9 +29,9 @@
                 android:ellipsize="marquee"
                 android:fadingEdge="horizontal"
                 android:fontFamily="sans-serif"
-                android:singleLine="true"
                 android:textAppearance="@android:style/TextAppearance.StatusBar.EventContent.Title"
-                tools:text="Ticks &amp; Leeches"/>
+                tools:text="Ticks &amp; Leeches"
+                android:maxLines="1" />
 
             <TextView
                 android:id="@+id/text"
@@ -42,9 +42,9 @@
                 android:ellipsize="marquee"
                 android:fadingEdge="horizontal"
                 android:fontFamily="sans-serif"
-                android:singleLine="true"
                 android:textAppearance="@android:style/TextAppearance.StatusBar.EventContent"
-                tools:text="Tool | Lateralus"/>
+                tools:text="Tool | Lateralus"
+                android:maxLines="1" />
         </LinearLayout>
 
         <LinearLayout

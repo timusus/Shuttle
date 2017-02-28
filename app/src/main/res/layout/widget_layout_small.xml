@@ -28,9 +28,9 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:singleLine="true"
 
-                android:textSize="14sp"/>
+                android:textSize="14sp"
+                android:maxLines="1" />
 
             <TextView
                 android:id="@+id/text2"
@@ -39,9 +39,9 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:singleLine="true"
 
-                android:textSize="14sp"/>
+                android:textSize="14sp"
+                android:maxLines="1" />
         </LinearLayout>
 
         <LinearLayout

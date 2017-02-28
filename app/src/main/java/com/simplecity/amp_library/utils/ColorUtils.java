@@ -283,7 +283,6 @@ public class ColorUtils {
         // Default enabled state
         states[i] = new int[0];
         colors[i] = accentColor;
-        i++;
         colorStateList = new ColorStateList(states, colors);
         return colorStateList;
     }
@@ -305,7 +304,6 @@ public class ColorUtils {
         // Default enabled state
         states[i] = new int[0];
         colors[i] = getDisabledColor(accentColor, 0.3f);
-        i++;
         return new ColorStateList(states, colors);
     }
 
@@ -326,7 +324,6 @@ public class ColorUtils {
         // Default enabled state
         states[i] = new int[0];
         colors[i] = accentColor;
-        i++;
 
         return new ColorStateList(states, colors);
     }
@@ -358,8 +355,6 @@ public class ColorUtils {
         // Default enabled state
         states[i] = EMPTY_STATE_SET;
         colors[i] = ColorUtils.getAccentColor();
-        i++;
-
         return new ColorStateList(states, colors);
     }
 

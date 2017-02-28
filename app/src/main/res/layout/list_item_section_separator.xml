@@ -11,5 +11,5 @@
     android:fadingEdge="horizontal"
     android:fontFamily="sans-serif"
     android:gravity="center_vertical"
-    android:singleLine="true"
-    android:textSize="20sp"/>
+    android:textSize="20sp"
+    android:maxLines="1" />

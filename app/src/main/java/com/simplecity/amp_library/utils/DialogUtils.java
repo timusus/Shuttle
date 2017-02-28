@@ -222,9 +222,7 @@ public class DialogUtils {
                 .title(context.getString(R.string.color_pick))
                 .negativeText(R.string.cancel)
                 .positiveText(R.string.button_done)
-                .onPositive((d, which) -> {
-                    listener.colorSelected(customColorPicker.color);
-                })
+                .onPositive((d, which) -> listener.colorSelected(customColorPicker.color))
                 .customView(customColorPicker, false)
                 .show();
     }

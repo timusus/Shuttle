@@ -35,10 +35,10 @@
                 android:ellipsize="marquee"
                 android:fadingEdge="horizontal"
                 android:fontFamily="sans-serif"
-                android:singleLine="true"
                 android:textAppearance="@style/TextAppearance.Material.Notification.Title.Inverse"
                 tools:ignore="NewApi"
-                tools:text="Ticks &amp; Leeches" />
+                tools:text="Ticks &amp; Leeches"
+                android:maxLines="1" />
 
             <TextView
                 android:id="@+id/text"
@@ -49,10 +49,10 @@
                 android:ellipsize="marquee"
                 android:fadingEdge="horizontal"
                 android:fontFamily="sans-serif"
-                android:singleLine="true"
                 android:textAppearance="@style/TextAppearance.Material.Notification.Inverse"
                 tools:ignore="NewApi"
-                tools:text="Tool | LAteralus" />
+                tools:text="Tool | LAteralus"
+                android:maxLines="1" />
         </LinearLayout>
 
         <LinearLayout

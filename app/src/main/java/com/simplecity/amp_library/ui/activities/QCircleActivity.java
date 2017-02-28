@@ -273,9 +273,7 @@ public class QCircleActivity extends BaseActivity {
     private void initializeBackButton() {
         backBtn = (ImageButton) findViewById(R.id.back_btn);
         backBtn.setImageDrawable(DrawableUtils.getColoredStateListDrawableWithThemeType(this, R.drawable.backbutton, ThemeUtils.ThemeType.TYPE_DARK));
-        backBtn.setOnClickListener(v -> {
-            QCircleActivity.this.finish();
-        });
+        backBtn.setOnClickListener(v -> QCircleActivity.this.finish());
     }
 
     void updateTrackInfo() {

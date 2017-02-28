@@ -30,9 +30,9 @@
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
             android:fadingEdge="horizontal"
-            android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            tools:text="Title" />
+            tools:text="Title"
+            android:maxLines="1" />
 
         <TextView
             android:id="@android:id/summary"

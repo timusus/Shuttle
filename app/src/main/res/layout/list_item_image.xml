@@ -30,9 +30,9 @@
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
             android:gravity="center_vertical"
-            android:singleLine="true"
             android:textSize="16sp"
-            tools:text="Feeling Kinda Anxious" />
+            tools:text="Feeling Kinda Anxious"
+            android:maxLines="1" />
 
         <TextView
             android:id="@+id/line_two"
@@ -41,9 +41,9 @@
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
             android:gravity="center_vertical"
-            android:singleLine="true"
             android:textSize="14sp"
-            tools:text="Franz Ferdinand - Tonight" />
+            tools:text="Franz Ferdinand - Tonight"
+            android:maxLines="1" />
     </LinearLayout>
 
     <com.simplecity.amp_library.ui.views.NonScrollImageButton

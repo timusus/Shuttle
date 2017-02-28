@@ -63,9 +63,9 @@
                 android:layout_marginRight="8dp"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:singleLine="true"
                 android:textSize="14sp"
-                tools:text="Feeling Kind Of Anxious"/>
+                tools:text="Feeling Kind Of Anxious"
+                android:maxLines="1" />
 
             <TextView
                 android:id="@+id/line_two"
@@ -77,9 +77,9 @@
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:singleLine="true"
                 android:textSize="14sp"
-                tools:text="Franz Ferdinand - Tonight"/>
+                tools:text="Franz Ferdinand - Tonight"
+                android:maxLines="1" />
         </LinearLayout>
     </FrameLayout>
 
@@ -91,9 +91,9 @@
         android:ellipsize="end"
         android:gravity="center"
         android:minEms="3"
-        android:singleLine="true"
         android:textSize="14sp"
-        tools:text="3:52"/>
+        tools:text="3:52"
+        android:maxLines="1" />
 
     <com.simplecity.amp_library.ui.views.NonScrollImageButton
         android:id="@+id/btn_overflow"

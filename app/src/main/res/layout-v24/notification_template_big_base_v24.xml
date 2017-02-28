@@ -18,20 +18,20 @@
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
             android:fontFamily="sans-serif"
-            android:singleLine="true"
             android:textAppearance="@android:style/TextAppearance.Material.Notification.Title"
             tools:ignore="NewApi"
-            tools:text="Ticks &amp; Leeches" />
+            tools:text="Ticks &amp; Leeches"
+            android:maxLines="1" />
 
         <TextView
             android:id="@+id/text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
-            android:singleLine="true"
             android:textAppearance="@android:style/TextAppearance.Material.Notification"
             tools:ignore="NewApi"
-            tools:text="Tool | Lateralus" />
+            tools:text="Tool | Lateralus"
+            android:maxLines="1" />
 
         <LinearLayout
             android:id="@+id/buttons"

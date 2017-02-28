@@ -28,8 +28,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="none"
-                android:singleLine="true"
-                tools:text="0"/>
+                tools:text="0"
+                android:maxLines="1" />
 
             <com.doomonafireball.betterpickers.hmspicker.ZeroTopPaddingTextView
                 android:id="@+id/hours_label"
@@ -38,8 +38,8 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="none"
                 android:gravity="top"
-                android:singleLine="true"
-                android:text="@string/hms_picker_hours_label"/>
+                android:text="@string/hms_picker_hours_label"
+                android:maxLines="1" />
 
             <com.doomonafireball.betterpickers.hmspicker.ZeroTopPaddingTextView
                 android:id="@+id/minutes_tens"
@@ -47,8 +47,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="none"
-                android:singleLine="true"
-                tools:text="0"/>
+                tools:text="0"
+                android:maxLines="1" />
 
             <com.doomonafireball.betterpickers.hmspicker.ZeroTopPaddingTextView
                 android:id="@+id/minutes_ones"
@@ -56,8 +56,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="none"
-                android:singleLine="true"
-                tools:text="0"/>
+                tools:text="0"
+                android:maxLines="1" />
 
             <com.doomonafireball.betterpickers.hmspicker.ZeroTopPaddingTextView
                 android:id="@+id/minutes_label"
@@ -66,8 +66,8 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="none"
                 android:gravity="top"
-                android:singleLine="true"
-                android:text="@string/hms_picker_minutes_label"/>
+                android:text="@string/hms_picker_minutes_label"
+                android:maxLines="1" />
         </com.doomonafireball.betterpickers.hmspicker.HmsView>
 
         <ImageButton

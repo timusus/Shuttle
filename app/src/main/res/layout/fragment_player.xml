@@ -44,7 +44,6 @@
                     android:layout_marginRight="56dp"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:singleLine="true"
                     android:textColor="@color/white"
                     tools:text="Down In It"/>
 
@@ -55,7 +54,6 @@
                     android:layout_marginBottom="8dp"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:singleLine="true"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     tools:text="Nine Inch Nails"/>
@@ -70,27 +68,27 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:singleLine="true"
                         android:textColor="@color/white"
-                        tools:text="12/20"/>
+                        tools:text="12/20"
+                        android:maxLines="1" />
 
                     <TextView
                         android:id="@+id/current_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical|right"
-                        android:singleLine="true"
                         android:text="--:--"
-                        android:textColor="@color/white"/>
+                        android:textColor="@color/white"
+                        android:maxLines="1" />
 
                     <TextView
                         android:id="@+id/total_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical|right"
-                        android:singleLine="true"
                         android:text=" / --:--"
-                        android:textColor="@color/white"/>
+                        android:textColor="@color/white"
+                        android:maxLines="1" />
                 </LinearLayout>
 
             </LinearLayout>

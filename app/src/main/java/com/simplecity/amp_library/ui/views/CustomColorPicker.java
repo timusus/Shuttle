@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -18,8 +17,6 @@ import com.simplecity.amp_library.utils.ThemeUtils;
 public class CustomColorPicker extends FrameLayout
         implements SeekBar.OnSeekBarChangeListener,
         TextWatcher {
-
-    private static final String TAG = "ColorPicker";
 
     public int color;
 

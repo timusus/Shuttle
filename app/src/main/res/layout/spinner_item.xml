@@ -8,6 +8,5 @@
     android:gravity="center_vertical"
     android:paddingLeft="8dp"
     android:paddingRight="8dp"
-    android:singleLine="true"
-    >
+    android:maxLines="1">
 </TextView>
