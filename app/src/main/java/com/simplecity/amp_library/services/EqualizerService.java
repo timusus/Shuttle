@@ -384,7 +384,7 @@ public class EqualizerService extends Service {
 
             short[] equalizerLevels = new short[levels.length];
             for (int i = 0; i < levels.length; i++) {
-                equalizerLevels[i] = (short) (Float.parseFloat(levels[i]));
+                equalizerLevels[i] = Short.parseShort(levels[i]);
             }
 
             session.setEqualizerLevels(equalizerLevels);
