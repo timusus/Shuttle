@@ -221,16 +221,6 @@ public class EqualizerService extends Service {
         }
     };
 
-    /**
-     * Update audio parameters when preferences have been updated.
-     */
-    private final BroadcastReceiver mPreferenceUpdateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            update();
-        }
-    };
-
     @Override
     public void onCreate() {
         super.onCreate();
