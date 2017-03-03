@@ -51,6 +51,4 @@ deploy:
   on:
     branch: alpha
     repo: timusus/Shuttle
-
-after_success:
-- sh set_tags.sh
+    tags: true
