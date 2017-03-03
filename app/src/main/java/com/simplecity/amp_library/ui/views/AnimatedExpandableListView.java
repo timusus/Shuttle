@@ -20,7 +20,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.View;
@@ -154,7 +153,7 @@ public class AnimatedExpandableListView extends ExpandableListView {
     @SuppressLint("NewApi")
     public boolean expandGroupWithAnimation(int groupPos) {
         boolean lastGroup = groupPos == adapter.getGroupCount() - 1;
-        if (lastGroup && Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+        if (lastGroup) {
             return expandGroup(groupPos, true);
         }
 
