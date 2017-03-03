@@ -32,7 +32,7 @@ ext.versions = [
         supportLib             : "25.0.1",
         firebaseCore           : "10.0.0",
         chromecast             : "10.0.0",
-        constraintLayout       : "1.0.0-beta4",
+        constraintLayout       : "1.0.0",
 
         // //////////////////////////////////////////////////////////////////////////
         // Square lib versions
