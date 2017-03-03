@@ -50,13 +50,9 @@ proguard/
 # Private google-services config
 /app/src/release/google-services.json
 
-# Keystore
-/shuttle.jks
-
 # Onesky ruby files
 /onesky_download.rb
 /onesky_upload.rb
-
 
 # Ignore Gradle GUI config
 gradle-app.setting
