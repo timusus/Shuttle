@@ -68,9 +68,16 @@ public class ShuttleUtilsTest {
         verify(mockActivity).startActivity(intentCaptor.capture());
         Intent intent = intentCaptor.getValue();
 
-        // Expecting a non-Amazon configuration
         assertThat(intent.getAction()).isEqualTo(Intent.ACTION_VIEW);
-        assertThat(intent.getData()).isEqualTo(Uri.parse("market://details?id=" + fakePackage));
+
+        // Todo:
+        // Is this the correct approach, or should this be run under two different tests?
+        // Also, I guess ShuttleUtils.isAmazonBuild() needs to be tested or we can't trust this test
+        if (ShuttleUtils.isAmazonBuild()) {
+            assertThat(intent.getData()).isEqualTo(Uri.parse("amzn://apps/android?p=" + fakePackage));
+        } else {
+            assertThat(intent.getData()).isEqualTo(Uri.parse("market://details?id=" + fakePackage));
+        }
     }
 
     @Test
@@ -87,9 +94,16 @@ public class ShuttleUtilsTest {
         verify(mockActivity, times(2)).startActivity(intentCaptor.capture());
         Intent intent = intentCaptor.getValue();
 
-        // Expecting a non-Amazon configuration
         assertThat(intent.getAction()).isEqualTo(Intent.ACTION_VIEW);
-        assertThat(intent.getData()).isEqualTo(Uri.parse("https://play.google.com/store/apps/details?id=" + fakePackage));
+
+        // Todo:
+        // Is this the correct approach, or should this be run under two different tests?
+        // Also, I guess ShuttleUtils.isAmazonBuild() needs to be tested or we can't trust this test
+        if (ShuttleUtils.isAmazonBuild()) {
+            assertThat(intent.getData()).isEqualTo(Uri.parse("http://www.amazon.com/gp/mas/dl/android?p=" + fakePackage));
+        } else {
+            assertThat(intent.getData()).isEqualTo(Uri.parse("https://play.google.com/store/apps/details?id=" + fakePackage));
+        }
     }
 
     @Test
