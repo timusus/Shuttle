@@ -69,7 +69,7 @@ android {
 
     signingConfigs {
         release {
-            Properties properties = getProperties(System.properties['user.home'].toString() + "/.android/keystore-props/shuttle.properties")
+            Properties properties = getProperties('../keystore.properties')
             storeFile file(getProperty(properties, 'store'))
             keyAlias getProperty(properties, 'alias')
             storePassword getProperty(properties, 'storePass')
