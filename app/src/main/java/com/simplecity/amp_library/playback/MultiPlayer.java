@@ -183,7 +183,13 @@ class MultiPlayer implements
     }
 
     int getAudioSessionId() {
-        return mCurrentMediaPlayer.getAudioSessionId();
+        int sessionId = 0;
+        try {
+            sessionId = mCurrentMediaPlayer.getAudioSessionId();
+        } catch (IllegalStateException ignored) {
+            //Nothing to do
+        }
+        return sessionId;
     }
 
     @Override
