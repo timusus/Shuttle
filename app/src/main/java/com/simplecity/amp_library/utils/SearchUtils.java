@@ -27,7 +27,7 @@ public class SearchUtils {
             //In other words, the scores are weighted in favour of field order.
             for (int i = 0, fieldsLength = fields.length; i < fieldsLength; i++) {
                 String field = fields[i];
-                score = Math.max(score, StringUtils.getJaroWinklerSimilarity(field, filterString) - (i * 0.001));
+                score = Math.max(score, StringUtils.getAdjustedJaroWinklerSimilarity(field, filterString) - (i * 0.001));
             }
         }
     }

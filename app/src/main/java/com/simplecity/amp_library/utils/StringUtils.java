@@ -208,6 +208,29 @@ public class StringUtils {
     }
 
     /**
+     * Find the Jaro Winkler Similarity which indicates the similarity score between two Strings.
+     * <p>
+     * Note: This method splits the {@param first} string at whitespaces, and returns the best Jaro-Winkler
+     * score between {@param second} and the 'split' strings.
+     */
+    public static double getAdjustedJaroWinklerSimilarity(String first, String second) {
+
+        String[] split = first.split("\\s");
+        if (split.length > 1) {
+            double score = 0;
+            for (String str : split) {
+                double curScore = getJaroWinklerSimilarity(str, second);
+                if (curScore > score) {
+                    score = curScore;
+                }
+            }
+            return score;
+        } else {
+            return getJaroWinklerSimilarity(first, second);
+        }
+    }
+
+    /**
      * <p>Find the Jaro Winkler Similarity which indicates the similarity score between two Strings.</p>
      * <p>
      * <p>The Jaro measure is the weighted sum of percentage of matched characters from each file and transposed characters.
