@@ -19,12 +19,17 @@ android:
   - google-gdk-license-.+
   - ".+"
 
+branches:
+  only:
+  - alpha
+  - beta
+  - master
+  - dev
+  - travis
+
 script:
-- if [ "$TRAVIS_BRANCH" = "alpha" || "$TRAVIS_BRANCH" = "beta" || "$TRAVIS_BRANCH" = "master" ]; then
-    "./gradlew build";
-  else
-    "./gradlew assembleDebug testDebugUnitTest";
-  fi
+  - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then bash .travis/run_on_pull_requests; fi'
+  - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash .travis/run_on_non_pull_requests; fi'
 
 before_install:
 - mkdir "$ANDROID_HOME/licenses" || true
