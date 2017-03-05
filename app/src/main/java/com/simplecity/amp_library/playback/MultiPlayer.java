@@ -3,7 +3,6 @@ package com.simplecity.amp_library.playback;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.text.TextUtils;
@@ -184,17 +183,13 @@ class MultiPlayer implements
     }
 
     int getAudioSessionId() {
-        if (Build.VERSION.SDK_INT > 8) {
-            int sessionId = 0;
-            try {
-                sessionId = mCurrentMediaPlayer.getAudioSessionId();
-            } catch (IllegalStateException ignored) {
-                //Nothing to do
-            }
-            return sessionId;
-        } else {
-            return 0;
+        int sessionId = 0;
+        try {
+            sessionId = mCurrentMediaPlayer.getAudioSessionId();
+        } catch (IllegalStateException ignored) {
+            //Nothing to do
         }
+        return sessionId;
     }
 
     @Override

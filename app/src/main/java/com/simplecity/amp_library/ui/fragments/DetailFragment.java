@@ -260,7 +260,14 @@ public class DetailFragment extends BaseFragment implements
         if (canEdit()) {
             itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(
                     (from, to) ->
-                            adapter.moveItem(from, to),
+                    {
+                        long songViewCount = Stream.of(adapter.items)
+                                .filter(adaptableItem -> adaptableItem instanceof SongView).count();
+                        int offset = (int) (adapter.getItemCount() - songViewCount);
+                        if(to >= offset) {
+                            adapter.moveItem(from, to);
+                        }
+                    },
                     (from, to) ->
                     {
                         // The 'offset' here is the number of items in the list which are not
@@ -268,11 +275,11 @@ public class DetailFragment extends BaseFragment implements
                         long songViewCount = Stream.of(adapter.items)
                                 .filter(adaptableItem -> adaptableItem instanceof SongView).count();
                         int offset = (int) (adapter.getItemCount() - songViewCount);
-                        from = from - offset;
-                        to = to - offset;
+                        from -= offset;
+                        to -= offset;
 
                         try {
-                            MediaStore.Audio.Playlists.Members.moveItem(getActivity().getContentResolver(), playlist.id, from, to);
+                                MediaStore.Audio.Playlists.Members.moveItem(getActivity().getContentResolver(), playlist.id, from, to);
                         } catch (IllegalArgumentException e) {
                             CrashlyticsCore.getInstance().log(String.format("Failed to move playlist item from %s to %s. Adapter count: %s. Error:%s", from, to, adapter.getItemCount(), e.getMessage()));
                         }

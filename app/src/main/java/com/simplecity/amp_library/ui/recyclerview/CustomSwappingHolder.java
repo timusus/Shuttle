@@ -27,7 +27,6 @@ import com.bignerdranch.android.multiselector.SelectableHolder;
  * which allows for a null multiselector.
  */
 public class CustomSwappingHolder extends CustomMultiSelectorBindingHolder implements SelectableHolder {
-    private MultiSelector mMultiSelector;
     private boolean mIsSelectable;
     private Drawable mSelectionModeBackgroundDrawable;
     private Drawable mDefaultModeBackgroundDrawable;
@@ -37,7 +36,6 @@ public class CustomSwappingHolder extends CustomMultiSelectorBindingHolder imple
     public CustomSwappingHolder(View itemView, MultiSelector multiSelector) {
         super(itemView, multiSelector);
         this.mIsSelectable = false;
-        this.mMultiSelector = multiSelector;
         if (VERSION.SDK_INT >= 21) {
             this.setSelectionModeStateListAnimator(getRaiseStateListAnimator(itemView.getContext()));
             this.setDefaultModeStateListAnimator(itemView.getStateListAnimator());

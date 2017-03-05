@@ -4,7 +4,7 @@ ext.versions = [
         // App versions
         // /////////////////////////////////////////////////////////////////////////
 
-        name                   : "1.6.4",
+        name                   : "1.6.5-alpha1",
 
         // //////////////////////////////////////////////////////////////////////////
         // Compile versions
@@ -19,7 +19,7 @@ ext.versions = [
         // Plugin versions
         // /////////////////////////////////////////////////////////////////////////
 
-        androidGradlePlugin    : "2.3.0-rc1",
+        androidGradlePlugin    : "2.3.0",
         dexcountGradlePlugin   : "0.6.1",
         retrolambdaGradlePlugin: "3.4.0",
         fabricGradlePlugin     : "1.+",
@@ -32,7 +32,7 @@ ext.versions = [
         supportLib             : "25.0.1",
         firebaseCore           : "10.0.0",
         chromecast             : "10.0.0",
-        constraintLayout       : "1.0.0-beta4",
+        constraintLayout       : "1.0.0",
 
         // //////////////////////////////////////////////////////////////////////////
         // Square lib versions

@@ -191,11 +191,6 @@ public class EqualizerService extends Service {
     protected final ConcurrentHashMap<Integer, EffectSet> mAudioSessions = new ConcurrentHashMap<>();
 
     /**
-     * Has DSPManager assumed control of equalizer levels?
-     */
-    private float[] mOverriddenEqualizerLevels;
-
-    /**
      * Receive new broadcast intents for adding DSP to session
      */
     private final BroadcastReceiver mAudioSessionReceiver = new BroadcastReceiver() {
@@ -222,16 +217,6 @@ public class EqualizerService extends Service {
                     gone.release();
                 }
             }
-            update();
-        }
-    };
-
-    /**
-     * Update audio parameters when preferences have been updated.
-     */
-    private final BroadcastReceiver mPreferenceUpdateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
             update();
         }
     };
@@ -379,28 +364,19 @@ public class EqualizerService extends Service {
              * Equalizer state is in a single string preference with all values
              * separated by ;
              */
-            String[] levels = null;
-            short[] equalizerLevels;
+            String[] levels;
 
-            if (mOverriddenEqualizerLevels == null) {
-                if (preset == customPresetPos) {
-                    levels = mPrefs.getString("audiofx.eq.bandlevels.custom", getZeroedBandsString(bands)).split(";");
-                } else {
-                    levels = mPrefs.getString("equalizer.preset." + preset, getZeroedBandsString(bands)).split(";");
-                }
-            }
-
-            if (levels != null) {
-                equalizerLevels = new short[levels.length];
-                for (int i = 0; i < levels.length; i++) {
-                    equalizerLevels[i] = (short) (Float.parseFloat(levels[i]));
-                }
+            if (preset == customPresetPos) {
+                levels = mPrefs.getString("audiofx.eq.bandlevels.custom", getZeroedBandsString(bands)).split(";");
             } else {
-                equalizerLevels = new short[levels.length];
-                for (int i = 0; i < levels.length; i++) {
-                    equalizerLevels[i] = (short) mOverriddenEqualizerLevels[i];
-                }
+                levels = mPrefs.getString("equalizer.preset." + preset, getZeroedBandsString(bands)).split(";");
             }
+
+            short[] equalizerLevels = new short[levels.length];
+            for (int i = 0; i < levels.length; i++) {
+                equalizerLevels[i] = Short.parseShort(levels[i]);
+            }
+
             session.setEqualizerLevels(equalizerLevels);
 
         } catch (Exception e) {
