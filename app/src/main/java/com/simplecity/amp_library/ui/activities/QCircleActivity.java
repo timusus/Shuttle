@@ -40,13 +40,8 @@ public class QCircleActivity extends BaseActivity {
     public static final String QUICKCOVERSETTINGS_QUICKCOVER_ENABLE = "quick_view_enable";
     // [END] QuickCover Settings DB
 
-    // QuickCover Type
-    public static final int QUICKCOVERSETTINGS_QUICKCIRCLE = 3;
-
     // [START] QuickCircle info.
     static boolean quickCircleEnabled = false;
-    static int quickCaseType = 0;
-    static boolean quickCircleClosed = true;
     int circleWidth = 0;
     int circleHeight = 0;
     int circleXpos = 0;
@@ -189,9 +184,6 @@ public class QCircleActivity extends BaseActivity {
         if (DEBUG) {
             Log.d(TAG, "quickCircleEnabled:" + quickCircleEnabled);
         }
-
-        //Get a case type
-        quickCaseType = Settings.Global.getInt(contentResolver, "cover_type", 0/*default value*/);
 
 
         //[START] Get the QuickCircle window information

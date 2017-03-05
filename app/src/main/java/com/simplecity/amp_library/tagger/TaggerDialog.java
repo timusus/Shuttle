@@ -90,16 +90,10 @@ public class TaggerDialog extends DialogFragment {
     private EditText lyricsEditText;
     private EditText commentEditText;
 
-    private TextInputLayout albumArtistInputLayout;
-    private TextInputLayout artistInputLayout;
     private TextInputLayout albumInputLayout;
     private TextInputLayout titleInputLayout;
-    private TextInputLayout genreInputLayout;
-    private TextInputLayout yearInputLayout;
     private TextInputLayout trackInputLayout;
-    private TextInputLayout trackTotalInputLayout;
     private TextInputLayout discInputLayout;
-    private TextInputLayout discTotalInputLayout;
     private TextInputLayout lyricsInputLayout;
     private TextInputLayout commentInputLayout;
 
@@ -198,19 +192,15 @@ public class TaggerDialog extends DialogFragment {
         ThemeUtils.themeEditText(albumEditText);
 
         artistEditText = (EditText) rootView.findViewById(R.id.new_artist_name);
-        artistInputLayout = getParent(artistEditText);
         ThemeUtils.themeEditText(artistEditText);
 
         albumArtistEditText = (EditText) rootView.findViewById(R.id.new_album_artist_name);
-        albumArtistInputLayout = getParent(albumArtistEditText);
         ThemeUtils.themeEditText(albumArtistEditText);
 
         genreEditText = (EditText) rootView.findViewById(R.id.new_genre_name);
-        genreInputLayout = getParent(genreEditText);
         ThemeUtils.themeEditText(genreEditText);
 
         yearEditText = (EditText) rootView.findViewById(R.id.new_year_number);
-        yearInputLayout = getParent(yearEditText);
         ThemeUtils.themeEditText(yearEditText);
 
         trackEditText = (EditText) rootView.findViewById(R.id.new_track_number);
@@ -218,7 +208,6 @@ public class TaggerDialog extends DialogFragment {
         ThemeUtils.themeEditText(trackEditText);
 
         trackTotalEditText = (EditText) rootView.findViewById(R.id.new_track_total);
-        trackTotalInputLayout = getParent(trackTotalEditText);
         ThemeUtils.themeEditText(trackTotalEditText);
 
         discEditText = (EditText) rootView.findViewById(R.id.new_disc_number);
@@ -226,7 +215,6 @@ public class TaggerDialog extends DialogFragment {
         ThemeUtils.themeEditText(discEditText);
 
         discTotalEditText = (EditText) rootView.findViewById(R.id.new_disc_total);
-        discTotalInputLayout = getParent(discTotalEditText);
         ThemeUtils.themeEditText(discTotalEditText);
 
         lyricsEditText = (EditText) rootView.findViewById(R.id.new_lyrics);
