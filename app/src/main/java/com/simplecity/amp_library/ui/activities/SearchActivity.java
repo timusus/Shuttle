@@ -76,6 +76,8 @@ public class SearchActivity extends BaseActivity implements
 
     private static final String TAG = "SearchActivity";
 
+    private static final double SCORE_THRESHOLD = 0.70;
+
     private SearchAdapter adapter;
     private FastScrollRecyclerView recyclerView;
     private String filterString;
@@ -206,7 +208,7 @@ public class SearchActivity extends BaseActivity implements
                     List<AdaptableItem> adaptableItems = Stream.of(albumArtists)
                             .filter(album -> album.name != null)
                             .map(albumArtist -> new SearchUtils.JaroWinklerObject<>(albumArtist, filterString, albumArtist.name))
-                            .filter(jaroWinklerObject -> jaroWinklerObject.score > 0.75 || TextUtils.isEmpty(filterString))
+                            .filter(jaroWinklerObject -> jaroWinklerObject.score > SCORE_THRESHOLD || TextUtils.isEmpty(filterString))
                             .sorted((a, b) -> a.object.compareTo(b.object))
                             .sorted((a, b) -> Double.compare(b.score, a.score))
                             .map(jaroWinklerObject -> jaroWinklerObject.object)
@@ -225,7 +227,7 @@ public class SearchActivity extends BaseActivity implements
                     List<AdaptableItem> albumItems = Stream.of(albums)
                             .filter(album -> album.name != null)
                             .map(album -> new SearchUtils.JaroWinklerObject<>(album, filterString, album.name, album.albumArtistName))
-                            .filter(jaroWinklerObject -> jaroWinklerObject.score > 0.75 || TextUtils.isEmpty(filterString))
+                            .filter(jaroWinklerObject -> jaroWinklerObject.score > SCORE_THRESHOLD || TextUtils.isEmpty(filterString))
                             .sorted((a, b) -> a.object.compareTo(b.object))
                             .sorted((a, b) -> Double.compare(b.score, a.score))
                             .map(jaroWinklerObject -> jaroWinklerObject.object)
@@ -244,7 +246,7 @@ public class SearchActivity extends BaseActivity implements
                     //Songs
                     songs = Stream.of(songs).filter(song -> song.name != null)
                             .map(song -> new SearchUtils.JaroWinklerObject<>(song, filterString, song.name, song.albumName, song.artistName, song.albumArtistName))
-                            .filter(jaroWinklerObject -> jaroWinklerObject.score > 0.75 || TextUtils.isEmpty(filterString))
+                            .filter(jaroWinklerObject -> jaroWinklerObject.score > SCORE_THRESHOLD || TextUtils.isEmpty(filterString))
                             .sorted((a, b) -> a.object.compareTo(b.object))
                             .sorted((a, b) -> Double.compare(b.score, a.score))
                             .map(jaroWinklerObject -> jaroWinklerObject.object)
