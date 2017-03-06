@@ -2,7 +2,7 @@ language: android
 
 jdk: oraclejdk8
 
-sudo: true
+sudo: required
 
 android:
   components:

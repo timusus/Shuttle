@@ -59,3 +59,4 @@ gradle-app.setting
 
 # Private deployment keys
 /deployment_keys.json
+/secrets.tar

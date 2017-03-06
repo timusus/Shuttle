@@ -4,11 +4,9 @@ set -e
 
 # Decrypt private keys
 
-openssl aes-256-cbc -K $encrypted_dcc914e7eb3f_key -iv $encrypted_dcc914e7eb3f_iv -in app/src/release/google-services.json.enc -out app/src/release/google-services.json -d
+openssl aes-256-cbc -K $encrypted_7fcb240c82db_key -iv $encrypted_7fcb240c82db_iv -in secrets.tar.enc -out secrets.tar -d
 
-openssl aes-256-cbc -K $encrypted_7fcb240c82db_key -iv $encrypted_7fcb240c82db_iv -in keystore.properties.enc -out keystore.properties -d
-
-openssl aes-256-cbc -K $encrypted_7fcb240c82db_key -iv $encrypted_7fcb240c82db_iv -in deployment_keys.json.enc -out deployment_keys.json -d
+tar xvf secrets.tar
 
 # For non pull-requests, build & test everything.
 
