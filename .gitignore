@@ -54,5 +54,9 @@ proguard/
 /onesky_download.rb
 /onesky_upload.rb
 
-# Ignore Gradle GUI config
+# Gradle GUI config
 gradle-app.setting
+
+# Private deployment keys
+/deployment_keys.json
+/secrets.tar

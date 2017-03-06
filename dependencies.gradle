@@ -4,7 +4,7 @@ ext.versions = [
         // App versions
         // /////////////////////////////////////////////////////////////////////////
 
-        name                   : "1.6.5-alpha1",
+        name                   : "1.6.5-alpha2",
 
         // //////////////////////////////////////////////////////////////////////////
         // Compile versions
@@ -24,6 +24,7 @@ ext.versions = [
         retrolambdaGradlePlugin: "3.4.0",
         fabricGradlePlugin     : "1.+",
         googleServicesPlugin   : "3.0.0",
+        playPublisher          : "1.2.0-beta1",
 
         // //////////////////////////////////////////////////////////////////////////
         // Google lib versions
@@ -96,7 +97,8 @@ ext.gradlePlugins = [
         dexcount      : "com.getkeepsafe.dexcount:dexcount-gradle-plugin:$versions.dexcountGradlePlugin",
         fabric        : "io.fabric.tools:gradle:$versions.fabricGradlePlugin",
         retrolambda   : "me.tatarka:gradle-retrolambda:$versions.retrolambdaGradlePlugin",
-        googleServices: "com.google.gms:google-services:$versions.googleServicesPlugin"
+        googleServices: "com.google.gms:google-services:$versions.googleServicesPlugin",
+        playPublisher : "com.github.triplet.gradle:play-publisher:$versions.playPublisher"
 ]
 
 ext.libs = [
