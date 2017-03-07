@@ -53,7 +53,7 @@ public class SearchUtilsUnitTest {
 
         //'Baby worm' isn't similar enough to 'aby wolf' to pass our threshold.
         song = new Song(mock(Cursor.class));
-        song.artistName = "Baby Worm";
+        song.artistName = "Bad Worms";
         jaroWinklerObject = new SearchUtils.JaroWinklerObject<>(song, "aby wolf", song.artistName);
         assertThat(jaroWinklerObject.score).isLessThan(SCORE_THRESHOLD);
 

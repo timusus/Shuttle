@@ -54,7 +54,7 @@ android {
         targetSdkVersion versions.targetSdk
 
         versionName versions.name
-        versionCode gitInfo().commitCount + 3100 // Add 3100 to account for moving to github and resetting commit count.
+        versionCode gitCommitCount() + 3200 // Add 3200 to account for moving to github and resetting commit count.
 
         resConfigs "en", "zh-rCN", "ja", "fr", "de", "ko", "it", "ru", "nl", "tr", "pl", "ro", "hu", "uk", "bg-rBG", "en-rGB", "vi", "pt-rBR", "es", "en-rNZ", "zh-rTW", "es-rES", "ca", "hr", "en-rAU", "eu-rES"
 
@@ -285,27 +285,20 @@ dependencies {
     }
 }
 
-def gitInfo() {
+def gitCommitCount() {
     def commitCount = 0
-    def revision = "(unknown revision)"
     try {
         def stdout = new ByteArrayOutputStream()
         exec {
-            commandLine 'git', 'rev-list', '--all', '--count'
+            commandLine 'git', 'rev-list', '--first-parent', '--count', 'master'
             standardOutput stdout
         }
         commitCount = stdout.toString().trim().toInteger()
-        stdout = new ByteArrayOutputStream()
-        exec {
-            commandLine 'git', 'rev-list', 'HEAD', '-n', '1'
-            standardOutput stdout
-        }
-        revision = stdout.toString().trim()
     }
     catch (error) {
         println "Error: ${error}"
     }
-    return [commitCount: commitCount, revision: revision]
+    return commitCount
 }
 
 //Fix an issue where launcher shortcuts don't use the correct package name based on the build flavours.
@@ -330,8 +323,11 @@ afterEvaluate {
 }
 
 play {
-    track = 'beta'
-    untrackOld = true
+
+    println("versionCode: ${gitCommitCount() + 3200}")
+
+    track = 'alpha'
+    // untrackOld = true
     serviceAccountEmail = 'app-deployment@api-5801704373554614142-812229.iam.gserviceaccount.com'
     jsonFile = file('../deployment_keys.json')
 }
