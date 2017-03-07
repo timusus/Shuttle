@@ -1,8 +1,4 @@
 language: android
 
 script:
-- echo "Starting.."
-- echo "Travis branch:" $TRAVIS_BRANCH
-- echo "Travis pull request:" $TRAVIS_PULL_REQUEST
-- echo "Travis tag:" $TRAVIS_TAG
-- echo "Finished.."
+- echo "Starting.. \nTravis branch:" $TRAVIS_BRANCH "\nTravis tag:" $TRAVIS_TAG "\nFinished.."
