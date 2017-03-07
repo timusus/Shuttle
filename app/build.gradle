@@ -290,7 +290,7 @@ def gitCommitCount() {
     try {
         def stdout = new ByteArrayOutputStream()
         exec {
-            commandLine 'git', 'rev-list', '--first-parent', '--count', 'master'
+            commandLine 'git', 'rev-list', '--all', '--count'
             standardOutput stdout
         }
         commitCount = stdout.toString().trim().toInteger()
@@ -323,11 +323,8 @@ afterEvaluate {
 }
 
 play {
-
-    println("versionCode: ${gitCommitCount() + 3200}")
-
-    track = 'alpha'
-    // untrackOld = true
+    track = 'beta'
+    untrackOld = true
     serviceAccountEmail = 'app-deployment@api-5801704373554614142-812229.iam.gserviceaccount.com'
     jsonFile = file('../deployment_keys.json')
 }
