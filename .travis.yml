@@ -19,13 +19,6 @@ android:
   - google-gdk-license-.+
   - ".+"
 
-branches:
-  only:
-  - alpha
-  - beta
-  - master
-  - dev
-
 script:
 - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then bash .travis/run_on_pull_requests; fi
 - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash .travis/run_on_non_pull_requests; fi
@@ -85,7 +78,7 @@ deploy:
 
 # Play Store alpha release
 - provider: script
-  script: ".travis/deploy.sh"
+  script: chmod +x .travis/deploy.sh && .travis/deploy.sh
   skip_cleanup: true
   on:
     branch: alpha
@@ -94,7 +87,7 @@ deploy:
 
 # Play Store beta release
 - provider: script
-  script: ".travis/deploy.sh"
+  script: chmod +x .travis/deploy.sh && .travis/deploy.sh
   skip_cleanup: true
   on:
     branch: beta
