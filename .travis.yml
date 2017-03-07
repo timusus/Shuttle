@@ -1,43 +1,8 @@
 language: android
 
-jdk: oraclejdk8
-
-sudo: required
-
-android:
-  components:
-  - tools
-  - platform-tools
-  - build-tools-25.0.2
-  - android-25
-  - extra-android-support
-  - extra-android-m2repository
-  - extra-google-m2repository
-  licenses:
-  - android-sdk-preview-license-.+
-  - android-sdk-license-.+
-  - google-gdk-license-.+
-  - ".+"
-
 script:
-- if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then bash .travis/run_on_pull_requests; fi
-- if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash .travis/run_on_non_pull_requests; fi
-
-before_install:
-- mkdir "$ANDROID_HOME/licenses" || true
-- echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
-- echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
-
-before_cache:
-- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-
-cache:
-  directories:
-  - "$HOME/.gradle/caches/"
-  - "$HOME/.gradle/wrapper/"
-  - "$HOME/.android/build-cache"
-
-# Slack build notifications
-notifications:
-  slack: shuttlemusicplayer:g90QK9lL6Hg5jfzegqjjNqqN
+- echo "Starting.."
+- echo "Travis branch:" $TRAVIS_BRANCH
+- echo "Travis pull request:" $TRAVIS_PULL_REQUEST
+- echo "Travis tag:" $TRAVIS_TAG
+- echo "Finished.."
