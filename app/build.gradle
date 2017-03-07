@@ -15,7 +15,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'io.fabric'
 apply plugin: 'me.tatarka.retrolambda'
-apply plugin: 'com.github.triplet.play'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
@@ -320,16 +319,6 @@ afterEvaluate {
             }
         }
     }
-}
-
-play {
-
-    println("versionCode: ${gitCommitCount() + 3200}")
-
-    track = 'alpha'
-    untrackOld = true
-    serviceAccountEmail = 'app-deployment@api-5801704373554614142-812229.iam.gserviceaccount.com'
-    jsonFile = file('../deployment_keys.json')
 }
 
 /**
