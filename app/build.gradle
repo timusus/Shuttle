@@ -54,7 +54,7 @@ android {
         targetSdkVersion versions.targetSdk
 
         versionName versions.name
-        versionCode gitInfo().commitCount + 3200 // Add 3200 to account for moving to github and resetting commit count.
+        versionCode gitCommitCount() + 3200 // Add 3200 to account for moving to github and resetting commit count.
 
         resConfigs "en", "zh-rCN", "ja", "fr", "de", "ko", "it", "ru", "nl", "tr", "pl", "ro", "hu", "uk", "bg-rBG", "en-rGB", "vi", "pt-rBR", "es", "en-rNZ", "zh-rTW", "es-rES", "ca", "hr", "en-rAU", "eu-rES"
 
@@ -285,7 +285,7 @@ dependencies {
     }
 }
 
-def gitInfo() {
+def gitCommitCount() {
     def commitCount = 0
     try {
         def stdout = new ByteArrayOutputStream()
@@ -298,7 +298,7 @@ def gitInfo() {
     catch (error) {
         println "Error: ${error}"
     }
-    return [commitCount: commitCount, revision: revision]
+    return commitCount
 }
 
 //Fix an issue where launcher shortcuts don't use the correct package name based on the build flavours.
@@ -324,7 +324,7 @@ afterEvaluate {
 
 play {
 
-    println("versionCode: ${gitInfo().commitCount + 3200}")
+    println("versionCode: ${gitCommitCount() + 3200}")
 
     track = 'alpha'
     // untrackOld = true
