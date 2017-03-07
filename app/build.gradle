@@ -330,8 +330,8 @@ afterEvaluate {
 }
 
 play {
-    track = 'beta'
-    untrackOld = true
+    track = 'alpha'
+    // untrackOld = true
     serviceAccountEmail = 'app-deployment@api-5801704373554614142-812229.iam.gserviceaccount.com'
     jsonFile = file('../deployment_keys.json')
 }
