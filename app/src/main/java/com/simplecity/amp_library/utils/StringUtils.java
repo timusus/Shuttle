@@ -224,7 +224,8 @@ public class StringUtils {
                     score = curScore;
                 }
             }
-            return score;
+            //Make sure we do a normal (non-adjusted) test as well, in case that comes out as our best match.
+            return Math.max(getJaroWinklerSimilarity(first, second), score);
         } else {
             return getJaroWinklerSimilarity(first, second);
         }
