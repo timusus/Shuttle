@@ -78,7 +78,7 @@ deploy:
 
 # Play Store alpha release
 - provider: script
-  script: chmod +x .travis/deploy.sh && .travis/deploy.sh $TRAVIS_BRANCH
+  script: ./gradlew publishApkFreeRelease publishApkPaidRelease
   skip_cleanup: true
   on:
     branch: alpha
@@ -87,7 +87,7 @@ deploy:
 
 # Play Store beta release
 - provider: script
-  script: chmod +x .travis/deploy.sh && .travis/deploy.sh $TRAVIS_BRANCH
+  script: ./gradlew publishApkFreeRelease publishApkPaidRelease
   skip_cleanup: true
   on:
     branch: beta
