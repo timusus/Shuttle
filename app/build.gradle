@@ -330,6 +330,9 @@ afterEvaluate {
 }
 
 play {
+
+    println("versionCode: ${gitInfo().commitCount + 3100}")
+
     track = 'alpha'
     // untrackOld = true
     serviceAccountEmail = 'app-deployment@api-5801704373554614142-812229.iam.gserviceaccount.com'
