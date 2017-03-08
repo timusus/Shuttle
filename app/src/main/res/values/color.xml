@@ -5,7 +5,7 @@
     <color name="list_divider_light">#1E000000</color>
 
     <color name="notification_control_tint">#ffffffff</color>
-    <color name="notification_control_tint_inverse">#45000000</color>
+    <color name="notification_control_tint_inverse">#E1E1E1</color>
 
     <color name="pressed_material_light">#15000000</color>
     <color name="selected_material_light">#45000000</color>
