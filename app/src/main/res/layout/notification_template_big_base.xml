@@ -35,12 +35,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
                 android:minHeight="@dimen/notification_large_icon_height"
                 android:orientation="vertical"
-                android:paddingTop="2dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true">
+                android:paddingTop="2dp">
 
                 <LinearLayout
                     android:id="@+id/line1"
@@ -58,9 +58,9 @@
                         android:layout_weight="1"
                         android:ellipsize="marquee"
                         android:fadingEdge="horizontal"
+                        android:maxLines="1"
                         android:textAppearance="@android:style/TextAppearance.StatusBar.EventContent.Title"
-                        tools:text="Ticks &amp; Leeches"
-                        android:maxLines="1" />
+                        tools:text="Ticks &amp; Leeches"/>
                 </LinearLayout>
 
                 <TextView
@@ -73,9 +73,9 @@
                     android:layout_marginTop="-2dp"
                     android:ellipsize="marquee"
                     android:fadingEdge="horizontal"
+                    android:maxLines="1"
                     android:visibility="gone"
-                    tools:text="Text 2"
-                    android:maxLines="1" />
+                    tools:text="Text 2"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -83,7 +83,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:textAppearance="@android:style/TextAppearance.StatusBar.EventContent"
-                    android:visibility="gone" />
+                    android:visibility="gone"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -95,7 +95,6 @@
 
                     <TextView
                         android:id="@+id/text"
-                        tools:text="Tool | Lateralus"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -103,8 +102,9 @@
                         android:layout_weight="1"
                         android:ellipsize="marquee"
                         android:fadingEdge="horizontal"
+                        android:maxLines="1"
                         android:textAppearance="@android:style/TextAppearance.StatusBar.EventContent"
-                        android:maxLines="1" />
+                        tools:text="Tool | Lateralus"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -120,7 +120,7 @@
             layout="@layout/notification_action_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/notification_large_icon_width" />
+            android:layout_marginLeft="@dimen/notification_large_icon_width"/>
     </LinearLayout>
 
 </FrameLayout>

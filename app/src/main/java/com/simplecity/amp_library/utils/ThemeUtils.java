@@ -38,6 +38,7 @@ import android.widget.EdgeEffect;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.doomonafireball.betterpickers.hmspicker.HmsPicker;
@@ -51,7 +52,6 @@ import com.simplecity.amp_library.ui.activities.WidgetConfigureLarge;
 import com.simplecity.amp_library.ui.activities.WidgetConfigureMedium;
 import com.simplecity.amp_library.ui.activities.WidgetConfigureSmall;
 import com.simplecity.amp_library.ui.views.FilterableStateListDrawable;
-import com.simplecity.amp_library.ui.views.SizableSeekBar;
 import com.simplecity.amp_library.ui.views.SlidingTabLayout;
 import com.simplecity.amp_library.ui.views.Themable;
 
@@ -295,40 +295,23 @@ public class ThemeUtils {
         }
     }
 
-    public static void themeSeekBar(Context context, SizableSeekBar seekBar) {
-        themeSeekBar(context, seekBar, false);
+    public static void themeSeekBar(SeekBar seekBar) {
+        themeSeekBar(seekBar, false);
     }
 
-    public static void themeSeekBar(Context context, SizableSeekBar seekBar, boolean noBackground) {
+    public static void themeSeekBar(SeekBar seekBar, boolean noBackground) {
+        DrawableCompat.setTint(seekBar.getThumb(), ColorUtils.getAccentColor());
 
-        int accentColor = ColorUtils.getAccentColor();
+        LayerDrawable progressDrawable = (LayerDrawable) seekBar.getProgressDrawable();//.mutate();
+        Drawable progress = progressDrawable.findDrawableByLayerId(android.R.id.progress);
+        DrawableCompat.setTint(progress, ColorUtils.getAccentColor());
+
         if (noBackground) {
-            if (accentColor == ColorUtils.getPrimaryColor()) {
-                accentColor = android.graphics.Color.WHITE;
-            }
-        }
-
-        seekBar.setThumb(DrawableUtils.getColoredDrawable(seekBar.getThumb(), accentColor));
-
-        LayerDrawable progressDrawable = (LayerDrawable) seekBar.getProgressDrawable();
-        progressDrawable.setDrawableByLayerId(
-                android.R.id.progress, DrawableUtils.getColoredDrawable(progressDrawable.findDrawableByLayerId(android.R.id.progress), accentColor));
-
-        if (!noBackground) {
-            int color;
-            int themeType = getThemeType(context);
-            if (themeType == ThemeType.TYPE_DARK
-                    || themeType == ThemeType.TYPE_SOLID_DARK
-                    || themeType == ThemeType.TYPE_BLACK
-                    || themeType == ThemeType.TYPE_SOLID_BLACK) {
-                color = android.graphics.Color.parseColor("#5a5a5a");
+            DrawableCompat.setTint(progressDrawable.findDrawableByLayerId(android.R.id.background), Color.TRANSPARENT);
             } else {
-                color = android.graphics.Color.parseColor("#bfbfbf");
+            DrawableCompat.setTint(progressDrawable.findDrawableByLayerId(android.R.id.background), ColorUtils.getAccentColor());
             }
-            progressDrawable.setDrawableByLayerId(android.R.id.background, DrawableUtils.getColoredDrawable(progressDrawable.findDrawableByLayerId(android.R.id.background), color));
-        } else {
-            progressDrawable.setDrawableByLayerId(android.R.id.background, new ColorDrawable(context.getResources().getColor(android.R.color.transparent)));
-        }
+        seekBar.setProgressDrawable(progressDrawable);
     }
 
     /**

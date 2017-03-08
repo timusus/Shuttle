@@ -18,20 +18,20 @@
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
             android:fontFamily="sans-serif"
+            android:maxLines="1"
             android:textAppearance="@style/TextAppearance.Material.Notification.Title.Inverse"
             tools:ignore="NewApi"
-            tools:text="Ticks &amp; Leeches"
-            android:maxLines="1" />
+            tools:text="Ticks &amp; Leeches"/>
 
         <TextView
             android:id="@+id/text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
+            android:maxLines="1"
             android:textAppearance="@style/TextAppearance.Material.Notification.Inverse"
             tools:ignore="NewApi"
-            tools:text="Tool | Lateralus"
-            android:maxLines="1" />
+            tools:text="Tool | Lateralus"/>
 
         <LinearLayout
             android:id="@+id/buttons"
@@ -47,6 +47,7 @@
                 android:layout_height="48dp"
                 android:layout_gravity="center_vertical"
                 android:background="@drawable/ripple_circular_light"
+                android:contentDescription="@string/btn_prev"
                 android:src="@drawable/ic_prev_white"
                 tools:tint="#757575"/>
 
@@ -57,6 +58,7 @@
                 android:layout_height="48dp"
                 android:layout_gravity="center_vertical"
                 android:background="@drawable/ripple_circular_light"
+                android:contentDescription="@string/btn_play_pause"
                 android:padding="4dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_pause_white"
@@ -69,6 +71,7 @@
                 android:layout_height="48dp"
                 android:layout_gravity="center_vertical"
                 android:background="@drawable/ripple_circular_light"
+                android:contentDescription="@string/btn_skip"
                 android:src="@drawable/ic_skip_white"
                 tools:tint="#757575"/>
 

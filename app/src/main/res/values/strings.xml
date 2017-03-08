@@ -718,11 +718,15 @@
     <!-- Accessibility button description -->
     <string name="btn_pause">Pause</string>
     <!-- Accessibility button description -->
+    <string name="btn_play_pause">Play/Pause</string>
+    <!-- Accessibility button description -->
     <string name="btn_skip">Skip</string>
     <!-- Accessibility button description -->
     <string name="btn_prev">Previous</string>
     <!-- Accessibility button description -->
     <string name="btn_queue">View play queue</string>
+    <!-- Accessibility button description -->
+    <string name="btn_close">Close</string>
 
     <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
     <string name="btn_options">%s options</string>

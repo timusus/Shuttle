@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="64dp">
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="64dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -29,9 +29,9 @@
                 android:ellipsize="marquee"
                 android:fadingEdge="horizontal"
                 android:fontFamily="sans-serif"
+                android:maxLines="1"
                 android:textAppearance="@android:style/TextAppearance.StatusBar.EventContent.Title"
-                tools:text="Ticks &amp; Leeches"
-                android:maxLines="1" />
+                tools:text="Ticks &amp; Leeches"/>
 
             <TextView
                 android:id="@+id/text"
@@ -42,9 +42,9 @@
                 android:ellipsize="marquee"
                 android:fadingEdge="horizontal"
                 android:fontFamily="sans-serif"
+                android:maxLines="1"
                 android:textAppearance="@android:style/TextAppearance.StatusBar.EventContent"
-                tools:text="Tool | Lateralus"
-                android:maxLines="1" />
+                tools:text="Tool | Lateralus"/>
         </LinearLayout>
 
         <LinearLayout
@@ -55,9 +55,10 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/pause"
+                android:id="@+id/btn_play_pause"
                 style="@style/notification_button"
                 android:layout_gravity="center_vertical"
+                android:contentDescription="@string/btn_play"
                 android:src="@drawable/ic_pause_white">
             </ImageButton>
 
@@ -65,6 +66,7 @@
                 android:id="@+id/next"
                 style="@style/notification_button"
                 android:layout_gravity="center_vertical"
+                android:contentDescription="@string/btn_skip"
                 android:src="@drawable/ic_skip_white">
             </ImageButton>
 
@@ -72,6 +74,7 @@
                 android:id="@+id/close"
                 style="@style/notification_button"
                 android:layout_gravity="center_vertical"
+                android:contentDescription="@string/btn_close"
                 android:src="@drawable/ic_cancel">
             </ImageButton>
 
@@ -81,11 +84,11 @@
             android:id="@+id/icon"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:background="@drawable/ic_placeholder_dark_medium"
-            android:scaleType="centerCrop"
-            android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/ic_placeholder_dark_medium"
+            android:scaleType="centerCrop"/>
     </RelativeLayout>
 
 </FrameLayout>
