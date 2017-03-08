@@ -16,6 +16,7 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -34,7 +35,6 @@ import com.simplecity.amp_library.constants.OpenSLESConstants;
 import com.simplecity.amp_library.services.EqualizerService;
 import com.simplecity.amp_library.ui.adapters.RobotoSpinnerAdapter;
 import com.simplecity.amp_library.ui.views.CustomSwitch;
-import com.simplecity.amp_library.ui.views.SizableSeekBar;
 import com.simplecity.amp_library.utils.ColorUtils;
 import com.simplecity.amp_library.utils.DrawableUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
@@ -89,7 +89,7 @@ public class EqualizerActivity extends BaseActivity {
     int mEqPreset;
     private String[] mEqPresetNames;
 
-    private final SizableSeekBar[] mEqualizerSeekBar = new SizableSeekBar[EQUALIZER_MAX_BANDS];
+    private final AppCompatSeekBar[] mEqualizerSeekBar = new AppCompatSeekBar[EQUALIZER_MAX_BANDS];
 
     Spinner mSpinner;
     RobotoSpinnerAdapter mSpinnerAdapter;
@@ -263,8 +263,8 @@ public class EqualizerActivity extends BaseActivity {
             (eqContainer.findViewById(eqViewElementIds[band][1])).setVisibility(View.VISIBLE);
             (eqContainer.findViewById(eqViewTextElementIds[band][1])).setVisibility(View.VISIBLE);
             ((TextView) eqContainer.findViewById(eqViewElementIds[band][0])).setText(format("%.0f ", centerFreqHz) + unitPrefix + "Hz");
-            mEqualizerSeekBar[band] = (SizableSeekBar) eqContainer.findViewById(eqViewElementIds[band][1]);
-            ThemeUtils.themeSeekBar(this, mEqualizerSeekBar[band]);
+            mEqualizerSeekBar[band] = (AppCompatSeekBar) eqContainer.findViewById(eqViewElementIds[band][1]);
+            ThemeUtils.themeSeekBar(mEqualizerSeekBar[band]);
             mEqualizerSeekBar[band].setMax((bandLevelRange[1] / 100) - (bandLevelRange[0] / 100));
             mEqualizerSeekBar[band].setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
@@ -310,8 +310,8 @@ public class EqualizerActivity extends BaseActivity {
         // Set the SeekBar listener.
         if (mBassBoostSupported) {
 
-            final SizableSeekBar seekbar = (SizableSeekBar) findViewById(R.id.bb_strength);
-            ThemeUtils.themeSeekBar(this, seekbar);
+            final AppCompatSeekBar seekbar = (AppCompatSeekBar) findViewById(R.id.bb_strength);
+            ThemeUtils.themeSeekBar(seekbar);
             seekbar.setMax(OpenSLESConstants.BASSBOOST_MAX_STRENGTH - OpenSLESConstants.BASSBOOST_MIN_STRENGTH);
 
             seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -351,8 +351,8 @@ public class EqualizerActivity extends BaseActivity {
         // Set the SeekBar listener.
         if (mVirtualizerSupported) {
 
-            final SizableSeekBar seekbar = (SizableSeekBar) findViewById(R.id.virtualizer_strength);
-            ThemeUtils.themeSeekBar(this, seekbar);
+            final AppCompatSeekBar seekbar = (AppCompatSeekBar) findViewById(R.id.virtualizer_strength);
+            ThemeUtils.themeSeekBar(seekbar);
             seekbar.setMax(OpenSLESConstants.VIRTUALIZER_MAX_STRENGTH - OpenSLESConstants.VIRTUALIZER_MIN_STRENGTH);
 
             seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
