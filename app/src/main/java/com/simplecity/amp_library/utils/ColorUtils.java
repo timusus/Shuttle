@@ -291,8 +291,8 @@ public class ColorUtils {
 
         final int accentColor = ColorUtils.getAccentColor();
 
-        final int[][] states = new int[3][];
-        final int[] colors = new int[3];
+        final int[][] states = new int[4][];
+        final int[] colors = new int[4];
         int i = 0;
         // Disabled state
         states[i] = new int[]{-android.R.attr.state_enabled};
@@ -300,6 +300,9 @@ public class ColorUtils {
         i++;
         states[i] = new int[]{android.R.attr.state_checked};
         colors[i] = getDisabledColor(accentColor, 0.3f);
+        i++;
+        states[i] = new int[]{-android.R.attr.state_checked};
+        colors[i] = getDisabledColor(Color.WHITE, 0.3f);
         i++;
         // Default enabled state
         states[i] = new int[0];
@@ -311,12 +314,15 @@ public class ColorUtils {
 
         final int accentColor = ColorUtils.getAccentColor();
 
-        final int[][] states = new int[3][];
-        final int[] colors = new int[3];
+        final int[][] states = new int[4][];
+        final int[] colors = new int[4];
         int i = 0;
 
         states[i] = new int[]{-android.R.attr.state_enabled};
         colors[i] = getDisabledColor(accentColor, 0.6f);
+        i++;
+        states[i] = new int[]{-android.R.attr.state_checked};
+        colors[i] = Color.WHITE;
         i++;
         states[i] = new int[]{android.R.attr.state_checked};
         colors[i] = accentColor;
