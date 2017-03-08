@@ -29,7 +29,6 @@ public class Album implements
         Sortable {
 
     public long id;
-    public long artistId;
     public String name;
 
     public List<Artist> artists = new ArrayList<>();
@@ -173,7 +172,6 @@ public class Album implements
         Album album = (Album) o;
 
         if (id != album.id) return false;
-        if (artistId != album.artistId) return false;
         if (year != album.year) return false;
         if (numSongs != album.numSongs) return false;
         if (lastPlayed != album.lastPlayed) return false;
@@ -189,7 +187,6 @@ public class Album implements
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (int) (artistId ^ (artistId >>> 32));
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (artists != null ? artists.hashCode() : 0);
         result = 31 * result + (albumArtistName != null ? albumArtistName.hashCode() : 0);
@@ -205,7 +202,6 @@ public class Album implements
     public String toString() {
         return "Album{" +
                 "id=" + id +
-                ", artistId=" + artistId +
                 ", name='" + name + '\'' +
                 ", artists=" + artists +
                 ", albumArtistName='" + albumArtistName + '\'' +
