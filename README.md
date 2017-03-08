@@ -3,6 +3,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE.md)
 [![API](https://img.shields.io/badge/API-16%2B-green.svg?style=flat)](https://android-arsenal.com/api?level=16)
 [![Build Status](https://travis-ci.org/timusus/Shuttle.svg?branch=dev)](https://travis-ci.org/timusus/Shuttle)
+[![Slack invite](http://shuttle-slack-inviter.herokuapp.com/badge.svg)](http://shuttle-slack-inviter.herokuapp.com)
 
 Shuttle is an open source, local music player for Android.
 
