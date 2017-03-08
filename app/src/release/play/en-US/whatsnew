@@ -1,6 +1,6 @@
 - Fixed an issue where searching didn't work very well for songs/albums/artists with multiple words in the name
 
-- Fixed an issue where inverted notification icons weren't very visible on devices running API < 24
+- Fixed an issue where inverted notification icons aren't visible
 
 - Fixed a crash when choosing to invert icons on API < 21. This feature is no longer available on such devices
 
@@ -8,6 +8,4 @@
 
 - Added accessibility content descriptions to notification buttons
 
-- Fixed an issue where the equalizer toggle didn't change color when set to 'off'
-
-- Potential fix for issue where Seekbar thumb goes off-screen on tablets
+- See changelog for more
