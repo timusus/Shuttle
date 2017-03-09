@@ -192,15 +192,15 @@
 
                 </LinearLayout>
 
-                <android.support.v7.widget.AppCompatSeekBar
+                <com.simplecity.amp_library.ui.views.SizableSeekBar
                     android:id="@+id/seekbar"
-                    android:progress="0"
-                    style="@style/SeekBarNoPadding"
-                    android:thumbOffset="4dp"
+                    style="@style/SeekBar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@id/textContainer"
                     android:layout_marginBottom="-9dp"
+                    android:layout_marginLeft="-16.5dp"
+                    android:layout_marginRight="-16.5dp"
                     android:indeterminate="false" />
 
             </RelativeLayout>
@@ -221,9 +221,7 @@
             <FrameLayout
                 android:id="@+id/queue_container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"/>
+                android:layout_height="match_parent" />
         </RelativeLayout>
 
     </LinearLayout>

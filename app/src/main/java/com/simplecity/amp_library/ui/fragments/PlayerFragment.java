@@ -20,7 +20,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding.widget.RxSeekBar;
@@ -35,6 +34,7 @@ import com.simplecity.amp_library.playback.PlaybackMonitor;
 import com.simplecity.amp_library.ui.activities.MainActivity;
 import com.simplecity.amp_library.ui.views.PlayPauseView;
 import com.simplecity.amp_library.ui.views.RepeatingImageButton;
+import com.simplecity.amp_library.ui.views.SizableSeekBar;
 import com.simplecity.amp_library.utils.ColorUtils;
 import com.simplecity.amp_library.utils.DrawableUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
@@ -56,7 +56,7 @@ public class PlayerFragment extends BaseFragment implements
 
     public static final String UPDATE_PLAYING_FRAGMENT = "update_playing_fragment";
 
-    private SeekBar mSeekBar;
+    private SizableSeekBar mSeekBar;
     private boolean isSeeking;
 
     private PlayPauseView playPauseView;
@@ -162,7 +162,7 @@ public class PlayerFragment extends BaseFragment implements
             fab.setOnClickListener(this);
         }
 
-        mSeekBar = (SeekBar) rootView.findViewById(R.id.seekbar);
+        mSeekBar = (SizableSeekBar) rootView.findViewById(R.id.seekbar);
         mSeekBar.setMax(1000);
 
         themeUIComponents();
@@ -197,7 +197,7 @@ public class PlayerFragment extends BaseFragment implements
             prevButton.setImageDrawable(DrawableUtils.getColoredStateListDrawableWithThemeColor(getActivity(), prevButton.getDrawable(), ThemeUtils.WHITE));
         }
         if (mSeekBar != null) {
-            ThemeUtils.themeSeekBar(mSeekBar, true);
+            ThemeUtils.themeSeekBar(getActivity(), mSeekBar, true);
         }
         if (textViewContainer != null) {
             textViewContainer.setBackgroundColor(ColorUtils.getPrimaryColorDark(getActivity()));

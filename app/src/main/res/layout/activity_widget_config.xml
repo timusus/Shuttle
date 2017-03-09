@@ -116,8 +116,9 @@
                 android:text="@string/widget_background_transparency"
                 android:textSize="18sp" />
 
-            <android.support.v7.widget.AppCompatSeekBar
+            <com.simplecity.amp_library.ui.views.SizableSeekBar
                 android:id="@+id/seekBar1"
+                style="@style/SeekBar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

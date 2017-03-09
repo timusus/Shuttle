@@ -50,8 +50,9 @@
             android:minEms="1"
             android:text="R" />
 
-        <android.support.v7.widget.AppCompatSeekBar
+        <com.simplecity.amp_library.ui.views.SizableSeekBar
             android:id="@+id/seekbarRed"
+            style="@style/SeekBar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
@@ -81,8 +82,9 @@
             android:minEms="1"
             android:text="G" />
 
-        <android.support.v7.widget.AppCompatSeekBar
+        <com.simplecity.amp_library.ui.views.SizableSeekBar
             android:id="@+id/seekbarGreen"
+            style="@style/SeekBar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
@@ -112,8 +114,9 @@
             android:minEms="1"
             android:text="B" />
 
-        <android.support.v7.widget.AppCompatSeekBar
+        <com.simplecity.amp_library.ui.views.SizableSeekBar
             android:id="@+id/seekbarBlue"
+            style="@style/SeekBar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />

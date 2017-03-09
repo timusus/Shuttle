@@ -11,11 +11,18 @@
         <item name="android:layout_height">48dp</item>
     </style>
 
-    <style name="SeekBarNoPadding" parent="Widget.AppCompat.SeekBar">
-        <item name="android:paddingLeft">0dp</item>
-        <item name="android:paddingStart">0dp</item>
-        <item name="android:paddingEnd">0dp</item>
-        <item name="android:paddingRight">0dp</item>
+    <style name="SeekBar" parent="android:Widget.SeekBar">
+        <item name="android:progressDrawable">@drawable/scrubber_progress_horizontal_material
+        </item>
+        <item name="android:indeterminateDrawable">@drawable/scrubber_progress_horizontal_material
+        </item>
+        <item name="android:thumb">@drawable/scrubber_control_from_pressed_mtrl_000</item>
+        <item name="android:splitTrack">false</item>
+        <item name="android:focusable">true</item>
+        <item name="android:paddingLeft">16dip</item>
+        <item name="android:paddingRight">16dip</item>
+        <item name="android:mirrorForRtl">true</item>
+        <!--<item name="android:background">?attr/selectableItemBackgroundBorderless</item>-->
     </style>
 
     <style name="CustomProgressBar" parent="android:Widget.ProgressBar.Horizontal">

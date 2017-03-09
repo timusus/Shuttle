@@ -111,26 +111,26 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center_vertical"
-                                android:maxLines="1"
-                                android:textColor="@color/white"/>
+                                android:textColor="@color/white"
+                                android:maxLines="1" />
 
                             <TextView
                                 android:id="@+id/current_time"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center_vertical|right"
-                                android:maxLines="1"
                                 android:text="--:--"
-                                android:textColor="@color/white"/>
+                                android:textColor="@color/white"
+                                android:maxLines="1" />
 
                             <TextView
                                 android:id="@+id/total_time"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center_vertical|right"
-                                android:maxLines="1"
                                 android:text=" / --:--"
-                                android:textColor="@color/white"/>
+                                android:textColor="@color/white"
+                                android:maxLines="1" />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -215,18 +215,18 @@
             android:layout_below="@id/top_view"
             android:background="?android:attr/windowBackground"/>
 
-        <android.support.v7.widget.AppCompatSeekBar
+        <com.simplecity.amp_library.ui.views.SizableSeekBar
             android:id="@+id/seekbar"
-            style="@style/SeekBarNoPadding"
+            style="@style/SeekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/top_view"
             android:layout_alignLeft="@id/top_view"
             android:layout_alignRight="@id/top_view"
             android:layout_marginBottom="-9dp"
-            android:indeterminate="false"
-            android:progress="60"
-            android:thumbOffset="4dp"/>
+            android:layout_marginLeft="-16.5dp"
+            android:layout_marginRight="-16.5dp"
+            android:indeterminate="false"/>
 
     </RelativeLayout>
 

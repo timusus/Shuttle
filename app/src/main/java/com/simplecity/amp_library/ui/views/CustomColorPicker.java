@@ -2,7 +2,6 @@ package com.simplecity.amp_library.ui.views;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v7.widget.AppCompatSeekBar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -23,9 +22,9 @@ public class CustomColorPicker extends FrameLayout
 
     private View colorView;
 
-    private AppCompatSeekBar redSeekBar;
-    private AppCompatSeekBar greenSeekBar;
-    private AppCompatSeekBar blueSeekBar;
+    private SizableSeekBar redSeekBar;
+    private SizableSeekBar greenSeekBar;
+    private SizableSeekBar blueSeekBar;
 
     private TextView redValue;
     private TextView greenValue;
@@ -42,18 +41,18 @@ public class CustomColorPicker extends FrameLayout
 
         colorView = customView.findViewById(R.id.view);
 
-        redSeekBar = (AppCompatSeekBar) findViewById(R.id.seekbarRed);
-        ThemeUtils.themeSeekBar(redSeekBar);
+        redSeekBar = (SizableSeekBar) findViewById(R.id.seekbarRed);
+        ThemeUtils.themeSeekBar(context, redSeekBar);
         redSeekBar.setMax(255);
         redSeekBar.setOnSeekBarChangeListener(this);
 
-        greenSeekBar = (AppCompatSeekBar) findViewById(R.id.seekbarGreen);
-        ThemeUtils.themeSeekBar(greenSeekBar);
+        greenSeekBar = (SizableSeekBar) findViewById(R.id.seekbarGreen);
+        ThemeUtils.themeSeekBar(context, greenSeekBar);
         greenSeekBar.setMax(255);
         greenSeekBar.setOnSeekBarChangeListener(this);
 
-        blueSeekBar = (AppCompatSeekBar) findViewById(R.id.seekbarBlue);
-        ThemeUtils.themeSeekBar(blueSeekBar);
+        blueSeekBar = (SizableSeekBar) findViewById(R.id.seekbarBlue);
+        ThemeUtils.themeSeekBar(context, blueSeekBar);
         blueSeekBar.setMax(255);
         blueSeekBar.setOnSeekBarChangeListener(this);
 

@@ -19,7 +19,6 @@ import android.os.Message;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -44,6 +43,7 @@ import com.simplecity.amp_library.ui.fragments.LyricsFragment;
 import com.simplecity.amp_library.ui.fragments.QueueFragment;
 import com.simplecity.amp_library.ui.fragments.QueuePagerFragment;
 import com.simplecity.amp_library.ui.views.RepeatingImageButton;
+import com.simplecity.amp_library.ui.views.SizableSeekBar;
 import com.simplecity.amp_library.utils.ColorUtils;
 import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.DrawableUtils;
@@ -94,7 +94,7 @@ public class PlayerActivity extends BaseCastActivity implements
     private RepeatingImageButton mNextButton;
     private RepeatingImageButton mPrevButton;
 
-    private AppCompatSeekBar mSeekBar;
+    private SizableSeekBar mSeekBar;
 
     private TextView mArtist;
     private TextView mTrack;
@@ -176,7 +176,7 @@ public class PlayerActivity extends BaseCastActivity implements
         mTextViewContainer = findViewById(R.id.textContainer);
         mButtonContainer = findViewById(R.id.button_container);
 
-        mSeekBar = (AppCompatSeekBar) findViewById(R.id.seekbar);
+        mSeekBar = (SizableSeekBar) findViewById(R.id.seekbar);
         mSeekBar.setMax(1000);
         mSeekBar.setOnSeekBarChangeListener(this);
 
@@ -454,7 +454,7 @@ public class PlayerActivity extends BaseCastActivity implements
             mPrevButton.setImageDrawable(DrawableUtils.getColoredStateListDrawableWithThemeColor(this, mPrevButton.getDrawable(), ThemeUtils.WHITE));
         }
         if (mSeekBar != null) {
-            ThemeUtils.themeSeekBar(mSeekBar, true);
+            ThemeUtils.themeSeekBar(this, mSeekBar, true);
         }
         if (mTextViewContainer != null) {
             mTextViewContainer.setBackgroundColor(ColorUtils.getPrimaryColorDark(this));
