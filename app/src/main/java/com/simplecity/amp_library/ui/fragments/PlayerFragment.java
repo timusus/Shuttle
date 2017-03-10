@@ -4,18 +4,15 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,9 +27,10 @@ import com.jakewharton.rxbinding.widget.SeekBarStopChangeEvent;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
-import com.simplecity.amp_library.playback.PlaybackMonitor;
 import com.simplecity.amp_library.ui.activities.MainActivity;
+import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.ui.views.PlayPauseView;
+import com.simplecity.amp_library.ui.views.PlayerView;
 import com.simplecity.amp_library.ui.views.RepeatingImageButton;
 import com.simplecity.amp_library.ui.views.SizableSeekBar;
 import com.simplecity.amp_library.utils.ColorUtils;
@@ -45,18 +43,13 @@ import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class PlayerFragment extends BaseFragment implements
-        View.OnClickListener,
-        MusicUtils.Defs {
+public class PlayerFragment extends BaseFragment implements PlayerView {
 
     private final String TAG = ((Object) this).getClass().getSimpleName();
 
-    public static final String UPDATE_PLAYING_FRAGMENT = "update_playing_fragment";
-
-    private SizableSeekBar mSeekBar;
+    private SizableSeekBar seekBar;
     private boolean isSeeking;
 
     private PlayPauseView playPauseView;
@@ -82,10 +75,6 @@ public class PlayerFragment extends BaseFragment implements
     private View bottomView;
 
     private SharedPreferences sharedPreferences;
-    private long startSeekPos = 0;
-    private long lastSeekEventTime;
-
-    private BroadcastReceiver statusListener;
 
     private static final String QUEUE_FRAGMENT = "queue_fragment";
     private static final String QUEUE_PAGER_FRAGMENT = "queue_pager_fragment";
@@ -99,7 +88,7 @@ public class PlayerFragment extends BaseFragment implements
 
     private CompositeSubscription subscriptions;
 
-    private long currentMediaPlayerTime;
+    private PlayerPresenter presenter = new PlayerPresenter();
 
     public PlayerFragment() {
     }
@@ -134,10 +123,21 @@ public class PlayerFragment extends BaseFragment implements
         bottomView = rootView.findViewById(R.id.bottom_view);
 
         playPauseView = (PlayPauseView) rootView.findViewById(R.id.play);
+        playPauseView.setOnClickListener(v -> presenter.togglePlayback());
+
         repeatButton = (ImageButton) rootView.findViewById(R.id.repeat);
+        repeatButton.setOnClickListener(v -> presenter.toggleRepeat());
+
         shuffleButton = (ImageButton) rootView.findViewById(R.id.shuffle);
+        shuffleButton.setOnClickListener(v -> presenter.toggleShuffle());
+
         nextButton = (RepeatingImageButton) rootView.findViewById(R.id.next);
+        nextButton.setOnClickListener(v -> presenter.skip());
+        nextButton.setRepeatListener((v, duration, repeatcount) -> presenter.scanForward(repeatcount, duration));
+
         prevButton = (RepeatingImageButton) rootView.findViewById(R.id.prev);
+        prevButton.setOnClickListener(v -> presenter.prev(true));
+        prevButton.setRepeatListener((v, duration, repeatcount) -> presenter.scanBackward(repeatcount, duration));
 
         currentTime = (TextView) rootView.findViewById(R.id.current_time);
         totalTime = (TextView) rootView.findViewById(R.id.total_time);
@@ -150,20 +150,17 @@ public class PlayerFragment extends BaseFragment implements
         buttonContainer = rootView.findViewById(R.id.button_container);
 
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-
-        playPauseView.setOnClickListener(this);
-        nextButton.setOnClickListener(this);
-        nextButton.setRepeatListener(mFastForwardListener);
-        prevButton.setOnClickListener(this);
-        prevButton.setRepeatListener(mRewindListener);
-        repeatButton.setOnClickListener(this);
-        shuffleButton.setOnClickListener(this);
         if (fab != null) {
-            fab.setOnClickListener(this);
+            fab.setOnClickListener(v -> {
+                if (fabIsAnimating) {
+                    return;
+                }
+                toggleQueue();
+            });
         }
 
-        mSeekBar = (SizableSeekBar) rootView.findViewById(R.id.seekbar);
-        mSeekBar.setMax(1000);
+        seekBar = (SizableSeekBar) rootView.findViewById(R.id.seekbar);
+        seekBar.setMax(1000);
 
         themeUIComponents();
 
@@ -180,12 +177,27 @@ public class PlayerFragment extends BaseFragment implements
 
         toggleFabVisibility(queueFragment == null, false);
 
-        updateTrackInfo();
-        setPauseButtonImage();
-        setShuffleButtonImage();
-        setRepeatButtonImage();
-
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        presenter.bindView(this);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        presenter.unbindView(this);
+    }
+
+    public void update() {
+        if (presenter != null) {
+            presenter.updateTrackInfo();
+        }
     }
 
     public void themeUIComponents() {
@@ -196,8 +208,8 @@ public class PlayerFragment extends BaseFragment implements
         if (prevButton != null) {
             prevButton.setImageDrawable(DrawableUtils.getColoredStateListDrawableWithThemeColor(getActivity(), prevButton.getDrawable(), ThemeUtils.WHITE));
         }
-        if (mSeekBar != null) {
-            ThemeUtils.themeSeekBar(getActivity(), mSeekBar, true);
+        if (seekBar != null) {
+            ThemeUtils.themeSeekBar(getActivity(), seekBar, true);
         }
         if (textViewContainer != null) {
             textViewContainer.setBackgroundColor(ColorUtils.getPrimaryColorDark(getActivity()));
@@ -210,79 +222,19 @@ public class PlayerFragment extends BaseFragment implements
             fab.setRippleColor(ColorUtils.darkerise(ColorUtils.getAccentColor(), 0.85f));
         }
 
-        setShuffleButtonImage();
-        setRepeatButtonImage();
+        if (presenter != null) {
+            shuffleChanged(MusicUtils.getShuffleMode());
+            repeatChanged(MusicUtils.getRepeatMode());
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        update();
-
-        statusListener = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                final String action = intent.getAction();
-
-                if (action != null) {
-                    switch (action) {
-                        case MusicService.InternalIntents.META_CHANGED:
-                            updateTrackInfo();
-                            break;
-                        case MusicService.InternalIntents.PLAY_STATE_CHANGED:
-                            updateTrackInfo();
-                            setPauseButtonImage();
-                            break;
-                        case MusicService.InternalIntents.SHUFFLE_CHANGED:
-                            updateTrackInfo();
-                            setShuffleButtonImage();
-                            break;
-                        case MusicService.InternalIntents.REPEAT_CHANGED:
-                            setRepeatButtonImage();
-                            break;
-                        case UPDATE_PLAYING_FRAGMENT:
-                            update();
-                            break;
-                    }
-                }
-            }
-        };
-        final IntentFilter filter = new IntentFilter();
-        filter.addAction(MusicService.InternalIntents.META_CHANGED);
-        filter.addAction(MusicService.InternalIntents.PLAY_STATE_CHANGED);
-        filter.addAction(MusicService.InternalIntents.SHUFFLE_CHANGED);
-        filter.addAction(MusicService.InternalIntents.REPEAT_CHANGED);
-        filter.addAction(UPDATE_PLAYING_FRAGMENT);
-        getActivity().registerReceiver(statusListener, filter);
-
         subscriptions = new CompositeSubscription();
 
-        subscriptions.add(PlaybackMonitor.getInstance().getProgressObservable()
-                .filter(progress -> !isSeeking)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(progress -> {
-                    mSeekBar.setProgress((int) (progress * 1000));
-                }));
-
-        subscriptions.add(PlaybackMonitor.getInstance().getCurrentTimeObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(pos -> refreshCurrentTimeText(pos / 1000)));
-
-        subscriptions.add(Observable.interval(500, TimeUnit.MILLISECONDS)
-                .onBackpressureDrop()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(aLong -> {
-                    if (MusicUtils.isPlaying()) {
-                        currentTime.setVisibility(View.VISIBLE);
-                    } else {
-                        currentTime.setVisibility(currentTime.getVisibility() == View.INVISIBLE ? View.VISIBLE : View.INVISIBLE);
-                    }
-                }));
-
-        Observable<SeekBarChangeEvent> sharedSeekBarEvents = RxSeekBar.changeEvents(mSeekBar)
+        Observable<SeekBarChangeEvent> sharedSeekBarEvents = RxSeekBar.changeEvents(seekBar)
                 .onBackpressureLatest()
                 .ofType(SeekBarChangeEvent.class)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -300,17 +252,12 @@ public class PlayerFragment extends BaseFragment implements
                 .ofType(SeekBarProgressChangeEvent.class)
                 .filter(SeekBarProgressChangeEvent::fromUser)
                 .debounce(15, TimeUnit.MILLISECONDS)
-                .subscribe(seekBarChangeEvent -> {
-                    MusicUtils.seekTo(MusicUtils.getDuration() * seekBarChangeEvent.progress() / 1000);
-                }));
+                .subscribe(seekBarChangeEvent -> presenter.seekTo(seekBarChangeEvent.progress())));
     }
 
     @Override
     public void onPause() {
-        getActivity().unregisterReceiver(statusListener);
-
         subscriptions.unsubscribe();
-
         super.onPause();
     }
 
@@ -318,204 +265,6 @@ public class PlayerFragment extends BaseFragment implements
     public void onDestroy() {
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
         super.onDestroy();
-    }
-
-    void update() {
-        updateTrackInfo();
-        setPauseButtonImage();
-        setShuffleButtonImage();
-        setRepeatButtonImage();
-    }
-
-    @Override
-    public void onClick(View view) {
-        if (view == playPauseView) {
-            playPauseView.toggle();
-            MusicUtils.playOrPause();
-        } else if (view == nextButton) {
-            MusicUtils.next();
-        } else if (view == prevButton) {
-            MusicUtils.previous(true);
-        } else if (view == repeatButton) {
-            cycleRepeat();
-        } else if (view == shuffleButton) {
-            toggleShuffle();
-        } else if (view == fab) {
-            if (fabIsAnimating) {
-                return;
-            }
-            toggleQueue();
-        }
-    }
-
-    /**
-     * Method refreshCurrentTimeText.
-     *
-     * @param pos the {@link long} getPosition of the current track}
-     */
-    private void refreshCurrentTimeText(final long pos) {
-        if (pos != currentMediaPlayerTime) {
-            currentTime.setText(StringUtils.makeTimeString(this.getActivity(), pos));
-        }
-        currentMediaPlayerTime = pos;
-    }
-
-    public void updateTrackInfo() {
-
-        String totalTime = StringUtils.makeTimeString(this.getActivity(), MusicUtils.getDuration() / 1000);
-        String currentQueuePos = String.valueOf(MusicUtils.getQueuePosition() + 1);
-        String queueLength = String.valueOf(MusicUtils.getQueue().size());
-
-        if (totalTime != null && totalTime.length() != 0) {
-            this.totalTime.setText(String.format(" / %s", totalTime));
-        }
-
-        Song song = MusicUtils.getSong();
-        if (song != null) {
-            track.setText(song.name);
-            track.setSelected(true);
-            album.setText(String.format("%s | %s", song.artistName, song.albumName));
-        }
-
-        queuePosition.setText(String.format("%s / %s", currentQueuePos, queueLength));
-
-        FragmentActivity activity = getActivity();
-        if (activity != null) {
-            activity.supportInvalidateOptionsMenu();
-        }
-
-        Fragment fragment = getChildFragmentManager().findFragmentById(R.id.main_container);
-        if (fragment != null && fragment instanceof LyricsFragment) {
-            ((LyricsFragment) fragment).updateLyrics();
-        }
-    }
-
-    private final RepeatingImageButton.RepeatListener mRewindListener = (v, howlong, repcnt) -> scanBackward(repcnt, howlong);
-
-    private final RepeatingImageButton.RepeatListener mFastForwardListener = (v, howlong, repcnt) -> scanForward(repcnt, howlong);
-
-    public void scanForward(final int repcnt, long delta) {
-        if (repcnt == 0) {
-            startSeekPos = MusicUtils.getPosition();
-            lastSeekEventTime = 0;
-        } else {
-            if (delta < 5000) {
-                // seek at 10x speed for the first 5 seconds
-                delta = delta * 10;
-            } else {
-                // seek at 40x after that
-                delta = 50000 + (delta - 5000) * 40;
-            }
-            long newpos = startSeekPos + delta;
-            final long duration = MusicUtils.getDuration();
-            if (newpos >= duration) {
-                // move to next track
-                MusicUtils.next();
-                startSeekPos -= duration; // is OK to go negative
-                newpos -= duration;
-            }
-            if (delta - lastSeekEventTime > 250 || repcnt < 0) {
-                MusicUtils.seekTo(newpos);
-                lastSeekEventTime = delta;
-            }
-        }
-    }
-
-    public void scanBackward(final int repcnt, long delta) {
-        if (repcnt == 0) {
-            startSeekPos = MusicUtils.getPosition();
-            lastSeekEventTime = 0;
-        } else {
-            if (delta < 5000) {
-                // seek at 10x speed for the first 5 seconds
-                delta = delta * 10;
-            } else {
-                // seek at 40x after that
-                delta = 50000 + (delta - 5000) * 40;
-            }
-            long newpos = startSeekPos - delta;
-            if (newpos < 0) {
-                // move to previous track
-                MusicUtils.previous(true);
-                final long duration = MusicUtils.getDuration();
-                startSeekPos += duration;
-                newpos += duration;
-            }
-            if (delta - lastSeekEventTime > 250 || repcnt < 0) {
-                MusicUtils.seekTo(newpos);
-                lastSeekEventTime = delta;
-            }
-        }
-    }
-
-    public void setShuffleButtonImage() {
-        if (shuffleButton == null) {
-            return;
-        }
-
-        switch (MusicUtils.getShuffleMode()) {
-
-            case MusicService.ShuffleMode.OFF:
-                shuffleButton.setImageDrawable(DrawableUtils.getWhiteDrawable(getActivity(), R.drawable.ic_shuffle_white));
-                shuffleButton.setContentDescription(getString(R.string.btn_shuffle_off));
-                break;
-
-            default:
-                shuffleButton.setImageDrawable(DrawableUtils.getColoredAccentDrawableNonWhite(getActivity(), getResources().getDrawable(R.drawable.ic_shuffle_white)));
-                shuffleButton.setContentDescription(getString(R.string.btn_shuffle_on));
-                break;
-        }
-    }
-
-    public void setPauseButtonImage() {
-        if (playPauseView == null) {
-            return;
-        }
-        if (MusicUtils.isPlaying()) {
-            if (playPauseView.isPlay()) {
-                playPauseView.toggle();
-                playPauseView.setContentDescription(getString(R.string.btn_pause));
-            }
-        } else {
-            if (!playPauseView.isPlay()) {
-                playPauseView.toggle();
-                playPauseView.setContentDescription(getString(R.string.btn_play));
-            }
-        }
-    }
-
-    public void setRepeatButtonImage() {
-        if (repeatButton == null) {
-            return;
-        }
-        switch (MusicUtils.getRepeatMode()) {
-
-            case MusicService.RepeatMode.ALL:
-                repeatButton.setImageDrawable(DrawableUtils.getColoredAccentDrawableNonWhite(getActivity(), getResources().getDrawable(R.drawable.ic_repeat_white)));
-                repeatButton.setContentDescription(getResources().getString(R.string.btn_repeat_all));
-                break;
-
-            case MusicService.RepeatMode.ONE:
-                repeatButton.setImageDrawable(DrawableUtils.getColoredAccentDrawableNonWhite(getActivity(), getResources().getDrawable(R.drawable.ic_repeat_one_white)));
-                repeatButton.setContentDescription(getResources().getString(R.string.btn_repeat_current));
-                break;
-
-            default:
-                repeatButton.setImageDrawable(DrawableUtils.getWhiteDrawable(getActivity(), R.drawable.ic_repeat_white));
-                repeatButton.setContentDescription(getResources().getString(R.string.btn_repeat_off));
-                break;
-        }
-    }
-
-    private void cycleRepeat() {
-        MusicUtils.cycleRepeat();
-        setRepeatButtonImage();
-    }
-
-    private void toggleShuffle() {
-        MusicUtils.toggleShuffleMode();
-        setRepeatButtonImage();
-        setShuffleButtonImage();
     }
 
     public void toggleLyrics() {
@@ -651,5 +400,103 @@ public class PlayerFragment extends BaseFragment implements
     @Override
     protected String screenName() {
         return TAG;
+    }
+
+    ////////////////////////////////////////////////////////////////////
+    // View implementation
+    ////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void setSeekProgress(int progress) {
+        if (!isSeeking) {
+            seekBar.setProgress(progress);
+        }
+    }
+
+    @Override
+    public void currentTimeVisibilityChanged(boolean visible) {
+        currentTime.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void currentTimeChanged(long seconds) {
+        currentTime.setText(StringUtils.makeTimeString(this.getActivity(), seconds));
+    }
+
+    @Override
+    public void queueChanged(int queuePosition, int queueLength) {
+        this.queuePosition.setText(String.format("%s / %s", queuePosition, queueLength));
+    }
+
+    @Override
+    public void playbackChanged(boolean isPlaying) {
+        if (isPlaying) {
+            if (playPauseView.isPlay()) {
+                playPauseView.toggle();
+                playPauseView.setContentDescription(getString(R.string.btn_pause));
+            }
+        } else {
+            if (!playPauseView.isPlay()) {
+                playPauseView.toggle();
+                playPauseView.setContentDescription(getString(R.string.btn_play));
+            }
+        }
+    }
+
+    @Override
+    public void shuffleChanged(@MusicService.ShuffleMode int shuffleMode) {
+        switch (MusicUtils.getShuffleMode()) {
+            case MusicService.ShuffleMode.OFF:
+                shuffleButton.setImageDrawable(DrawableUtils.getWhiteDrawable(getActivity(), R.drawable.ic_shuffle_white));
+                shuffleButton.setContentDescription(getString(R.string.btn_shuffle_off));
+                break;
+            case MusicService.ShuffleMode.ON:
+                shuffleButton.setImageDrawable(DrawableUtils.getColoredAccentDrawableNonWhite(getActivity(), getResources().getDrawable(R.drawable.ic_shuffle_white)));
+                shuffleButton.setContentDescription(getString(R.string.btn_shuffle_on));
+                break;
+        }
+    }
+
+    @Override
+    public void repeatChanged(@MusicService.RepeatMode int repeatMode) {
+        switch (MusicUtils.getRepeatMode()) {
+            case MusicService.RepeatMode.ALL:
+                repeatButton.setImageDrawable(DrawableUtils.getColoredAccentDrawableNonWhite(getActivity(), getResources().getDrawable(R.drawable.ic_repeat_white)));
+                repeatButton.setContentDescription(getResources().getString(R.string.btn_repeat_all));
+                break;
+            case MusicService.RepeatMode.ONE:
+                repeatButton.setImageDrawable(DrawableUtils.getColoredAccentDrawableNonWhite(getActivity(), getResources().getDrawable(R.drawable.ic_repeat_one_white)));
+                repeatButton.setContentDescription(getResources().getString(R.string.btn_repeat_current));
+                break;
+            case MusicService.RepeatMode.OFF:
+                repeatButton.setImageDrawable(DrawableUtils.getWhiteDrawable(getActivity(), R.drawable.ic_repeat_white));
+                repeatButton.setContentDescription(getResources().getString(R.string.btn_repeat_off));
+                break;
+        }
+    }
+
+    @Override
+    public void favoriteChanged() {
+        getActivity().supportInvalidateOptionsMenu();
+    }
+
+    @Override
+    public void trackInfoChanged(@Nullable Song song) {
+
+        if (song == null) return;
+
+        String totalTime = StringUtils.makeTimeString(this.getActivity(), song.duration / 1000);
+        if (!TextUtils.isEmpty(totalTime)) {
+            this.totalTime.setText(String.format(" / %s", totalTime));
+        }
+
+        track.setText(song.name);
+        track.setSelected(true);
+        album.setText(String.format("%s | %s", song.artistName, song.albumName));
+
+        Fragment fragment = getChildFragmentManager().findFragmentById(R.id.main_container);
+        if (fragment != null && fragment instanceof LyricsFragment) {
+            ((LyricsFragment) fragment).updateLyrics();
+        }
     }
 }

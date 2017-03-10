@@ -1,10 +1,8 @@
 package com.simplecity.amp_library.ui.fragments;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
@@ -26,36 +24,33 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.glide.utils.GlideUtils;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
-import com.simplecity.amp_library.playback.PlaybackMonitor;
 import com.simplecity.amp_library.ui.activities.MainActivity;
 import com.simplecity.amp_library.ui.activities.PlayerActivity;
+import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.ui.views.PlayPauseView;
+import com.simplecity.amp_library.ui.views.PlayerView;
 import com.simplecity.amp_library.utils.ColorUtils;
 import com.simplecity.amp_library.utils.DrawableUtils;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
-
-public class MiniPlayerFragment extends BaseFragment {
+public class MiniPlayerFragment extends BaseFragment implements PlayerView {
 
     private static final String TAG = "MiniPlayerFragment";
 
-    public static final String UPDATE_MINI_PLAYER = "update_mini_player";
+    private View rootView;
 
-    private BroadcastReceiver statusListener;
-
-    View rootView;
     private PlayPauseView playPauseView;
     private ProgressBar progressBar;
 
     private SharedPreferences sharedPreferences;
     private SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener;
 
-    private CompositeSubscription subscriptions;
+    private PlayerPresenter presenter = new PlayerPresenter();
+
+    private TextView trackName;
+    private TextView artistName;
+    private ImageView miniArtwork;
 
     public MiniPlayerFragment() {
 
@@ -86,76 +81,50 @@ public class MiniPlayerFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.fragment_mini_player, container, false);
+        rootView.setBackgroundColor(ColorUtils.getPrimaryColor());
         rootView.setOnTouchListener(new OnSwipeTouchListener(getActivity()));
 
         playPauseView = (PlayPauseView) rootView.findViewById(R.id.mini_play);
-        playPauseView.setOnClickListener(view -> {
-            playPauseView.toggle();
-            view.postDelayed(MusicUtils::playOrPause, 200);
-        });
+        playPauseView.setOnClickListener(view -> presenter.togglePlayback());
 
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressbar);
         progressBar.setMax(1000);
 
+        trackName = (TextView) rootView.findViewById(R.id.track_name);
+        artistName = (TextView) rootView.findViewById(R.id.artist_name);
+        miniArtwork = (ImageView) rootView.findViewById(R.id.mini_album_artwork);
+
         themeUIComponents();
 
-        rootView.setBackgroundColor(ColorUtils.getPrimaryColor());
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        presenter.bindView(this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        update();
-
-        statusListener = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                final String action = intent.getAction();
-
-                if (action != null) {
-                    switch (action) {
-                        case MusicService.InternalIntents.META_CHANGED:
-                            updateTrackInfo();
-                            updateMiniPlayerVisibility();
-                            setPauseButtonImage();
-                            break;
-                        case MusicService.InternalIntents.PLAY_STATE_CHANGED:
-                            updateTrackInfo();
-                            setPauseButtonImage();
-                            break;
-                        case UPDATE_MINI_PLAYER:
-                            update();
-                            break;
-                    }
-                }
-            }
-        };
-        final IntentFilter filter = new IntentFilter();
-        filter.addAction(MusicService.InternalIntents.META_CHANGED);
-        filter.addAction(MusicService.InternalIntents.PLAY_STATE_CHANGED);
-        filter.addAction(UPDATE_MINI_PLAYER);
-        getActivity().registerReceiver(statusListener, filter);
-
-        subscriptions = new CompositeSubscription();
-
-        Observable<Float> progressObservable = PlaybackMonitor.getInstance().getProgressObservable();
-        if (progressObservable != null) {
-            subscriptions.add(progressObservable
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(progress -> {
-                        progressBar.setProgress((int) (progress * 1000));
-                    }));
+        if (presenter != null) {
+            presenter.updateTrackInfo();
         }
     }
 
     @Override
     public void onPause() {
-        getActivity().unregisterReceiver(statusListener);
-        subscriptions.unsubscribe();
         super.onPause();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        presenter.unbindView(this);
     }
 
     @Override
@@ -164,12 +133,6 @@ public class MiniPlayerFragment extends BaseFragment {
         rootView.setOnTouchListener(null);
 
         super.onDestroy();
-    }
-
-    void update() {
-        updateMiniPlayerVisibility();
-        updateTrackInfo();
-        setPauseButtonImage();
     }
 
     private void themeUIComponents() {
@@ -186,46 +149,6 @@ public class MiniPlayerFragment extends BaseFragment {
         ((MainActivity) getActivity()).togglePanelVisibility(show);
     }
 
-    void updateTrackInfo() {
-
-        Song song = MusicUtils.getSong();
-
-        if (song != null) {
-            TextView trackName = (TextView) rootView.findViewById(R.id.track_name);
-            TextView artistName = (TextView) rootView.findViewById(R.id.artist_name);
-            ImageView miniArtwork = (ImageView) rootView.findViewById(R.id.mini_album_artwork);
-
-            trackName.setText(song.name);
-            artistName.setText(String.format("%s | %s", song.artistName, song.albumName));
-
-            Glide.with(getContext())
-                    .load(song)
-                    .priority(Priority.HIGH)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .placeholder(GlideUtils.getMediumPlaceHolderResId())
-                    .into(miniArtwork);
-
-            if (rootView != null) {
-                rootView.setContentDescription(getString(R.string.btn_now_playing, song.name, song.artistName));
-            }
-        }
-    }
-
-    void setPauseButtonImage() {
-        if (playPauseView == null) {
-            return;
-        }
-        if (MusicUtils.isPlaying()) {
-            if (playPauseView.isPlay()) {
-                playPauseView.toggle();
-            }
-        } else {
-            if (!playPauseView.isPlay()) {
-                playPauseView.toggle();
-            }
-        }
-    }
-
     private class OnSwipeTouchListener implements View.OnTouchListener {
 
         private final GestureDetector gestureDetector;
@@ -235,11 +158,11 @@ public class MiniPlayerFragment extends BaseFragment {
         }
 
         void onSwipeLeft() {
-            MusicUtils.next();
+            presenter.skip();
         }
 
         void onSwipeRight() {
-            MusicUtils.previous(false);
+            presenter.prev(false);
         }
 
         public boolean onTouch(View v, MotionEvent event) {
@@ -299,6 +222,76 @@ public class MiniPlayerFragment extends BaseFragment {
     @Override
     protected String screenName() {
         return TAG;
+    }
+
+
+    @Override
+    public void setSeekProgress(int progress) {
+
+    }
+
+    @Override
+    public void currentTimeVisibilityChanged(boolean visible) {
+
+    }
+
+    @Override
+    public void currentTimeChanged(long seconds) {
+
+    }
+
+    @Override
+    public void queueChanged(int queuePosition, int queueLength) {
+
+    }
+
+    @Override
+    public void playbackChanged(boolean isPlaying) {
+        if (isPlaying) {
+            if (playPauseView.isPlay()) {
+                playPauseView.toggle();
+            }
+        } else {
+            if (!playPauseView.isPlay()) {
+                playPauseView.toggle();
+            }
+        }
+    }
+
+    @Override
+    public void shuffleChanged(@MusicService.ShuffleMode int shuffleMode) {
+
+    }
+
+    @Override
+    public void repeatChanged(@MusicService.RepeatMode int repeatMode) {
+
+    }
+
+    @Override
+    public void favoriteChanged() {
+
+    }
+
+    @Override
+    public void trackInfoChanged(@Nullable Song song) {
+
+        if (song == null) return;
+
+        ((MainActivity)getActivity()).togglePanelVisibility(true);
+
+        trackName.setText(song.name);
+        artistName.setText(String.format("%s | %s", song.artistName, song.albumName));
+
+        Glide.with(getContext())
+                .load(song)
+                .priority(Priority.HIGH)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .placeholder(GlideUtils.getMediumPlaceHolderResId())
+                .into(miniArtwork);
+
+        rootView.setContentDescription(getString(R.string.btn_now_playing, song.name, song.artistName));
+
     }
 }
 

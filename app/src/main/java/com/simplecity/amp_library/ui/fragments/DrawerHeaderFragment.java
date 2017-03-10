@@ -30,8 +30,6 @@ public class DrawerHeaderFragment extends BaseFragment {
 
     private static final String TAG = "DrawerHeaderFragment";
 
-    public static final String UPDATE_DRAWER_HEADER = "update_drawer_header";
-
     private BroadcastReceiver mStatusListener;
 
     private View mRootView;
@@ -104,7 +102,7 @@ public class DrawerHeaderFragment extends BaseFragment {
                         case MusicService.InternalIntents.PLAY_STATE_CHANGED:
                             updateTrackInfo();
                             break;
-                        case UPDATE_DRAWER_HEADER:
+                        case MusicService.InternalIntents.SERVICE_CONNECTED:
                             updateTrackInfo();
                             break;
                     }
@@ -114,7 +112,7 @@ public class DrawerHeaderFragment extends BaseFragment {
         final IntentFilter filter = new IntentFilter();
         filter.addAction(MusicService.InternalIntents.META_CHANGED);
         filter.addAction(MusicService.InternalIntents.PLAY_STATE_CHANGED);
-        filter.addAction(UPDATE_DRAWER_HEADER);
+        filter.addAction(MusicService.InternalIntents.SERVICE_CONNECTED);
         getActivity().registerReceiver(mStatusListener, filter);
 
         updateTrackInfo();

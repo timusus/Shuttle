@@ -60,8 +60,6 @@ public class QueueFragment extends BaseFragment implements
 
     private static final String TAG = "QueueFragment";
 
-    public static final String UPDATE_QUEUE_FRAGMENT = "update_queue_fragment";
-
     private SharedPreferences prefs;
 
     private View rootView;
@@ -141,7 +139,7 @@ public class QueueFragment extends BaseFragment implements
                             refreshAdapterItems();
                             break;
                         case MusicService.InternalIntents.PLAY_STATE_CHANGED:
-                        case UPDATE_QUEUE_FRAGMENT:
+                        case MusicService.InternalIntents.SERVICE_CONNECTED:
                             updateTrackInfo();
                             if (songAdapter != null) {
                                 songAdapter.notifyDataSetChanged();
@@ -242,7 +240,7 @@ public class QueueFragment extends BaseFragment implements
         filter.addAction(MusicService.InternalIntents.QUEUE_CHANGED);
         filter.addAction(MusicService.InternalIntents.SHUFFLE_CHANGED);
         filter.addAction(MusicService.InternalIntents.PLAY_STATE_CHANGED);
-        filter.addAction(UPDATE_QUEUE_FRAGMENT);
+        filter.addAction(MusicService.InternalIntents.SERVICE_CONNECTED);
         getActivity().registerReceiver(receiver, filter);
 
         updateTrackInfo();

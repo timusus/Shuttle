@@ -67,6 +67,7 @@ ext.versions = [
         rxImageSel             : "1.3.1",
         rxJava                 : "1.2.0",
         rxRelay                : "1.2.0",
+        rxReceivers            : "0.1.0",
         streams                : "1.1.3",
 
         // //////////////////////////////////////////////////////////////////////////
@@ -168,6 +169,8 @@ ext.libs = [
         rxImageSel         : "com.mlsdev.rximagepicker:library:$versions.rxImageSel",
         // RX Relay - https://github.com/JakeWharton/RxRelay
         rxRelay            : "com.jakewharton.rxrelay:rxrelay:$versions.rxRelay",
+        // Rx Receivers - https://github.com/f2prateek/rx-receivers
+        rxReceivers        : "com.f2prateek.rx.receivers:rx-receivers:$versions.rxReceivers",
         // Streams Backport - https://git.io/vCazA (Victor Melnik)
         streams            : "com.annimon:stream:$versions.streams",
         // Glide Palette - https://git.io/vix57 (Florent Champigny)

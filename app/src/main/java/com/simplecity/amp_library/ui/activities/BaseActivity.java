@@ -2,6 +2,7 @@ package com.simplecity.amp_library.ui.activities;
 
 import android.Manifest;
 import android.content.ComponentName;
+import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 
 import com.greysonparrelli.permiso.Permiso;
 import com.simplecity.amp_library.interfaces.ThemeCallbacks;
+import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ThemeUtils;
@@ -93,8 +95,9 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     @Override
+    @CallSuper
     public void onServiceConnected(ComponentName name, IBinder service) {
-
+        sendBroadcast(new Intent(MusicService.InternalIntents.SERVICE_CONNECTED));
     }
 
     @Override

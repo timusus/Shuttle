@@ -260,6 +260,7 @@ dependencies {
     compile libs.rxImageSel
     compile libs.rxJava
     compile libs.rxRelay
+    compile libs.rxReceivers
     compile libs.slidingUpPanel
     compile libs.streams
     compile(libs.crashlytics) {

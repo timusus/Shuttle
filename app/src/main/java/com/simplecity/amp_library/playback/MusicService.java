@@ -106,12 +106,12 @@ public class MusicService extends Service {
 
     private static final int NOTIFICATION_ID = 150;
 
-    public interface ShuffleMode {
+    public @interface ShuffleMode {
         int OFF = 0;
         int ON = 1;
     }
 
-    public interface RepeatMode {
+    public @interface RepeatMode {
         int OFF = 0;
         int ONE = 1;
         int ALL = 2;
@@ -134,6 +134,7 @@ public class MusicService extends Service {
         String SHUFFLE_CHANGED = INTERNAL_INTENT_PREFIX + ".shufflechanged";
         String REPEAT_CHANGED = INTERNAL_INTENT_PREFIX + ".repeatchanged";
         String FAVORITE_CHANGED = INTERNAL_INTENT_PREFIX + ".favoritechanged";
+        String SERVICE_CONNECTED = INTERNAL_INTENT_PREFIX + ".serviceconnected";
     }
 
     public interface MediaButtonCommand {
