@@ -176,6 +176,8 @@
     <string name="delete_file_confirmation_dialog">Are you sure you want to permanently delete \"<xliff:g id="file">%s</xliff:g>\"?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">Are you sure you want to permanently delete all artwork from the device?</string>
+    <!-- QuickLyric Play Store Link -->
+    <string name="quicklyric_play_store">Download QuickLyric</string>
     <!-- QuickLyric button -->
     <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
