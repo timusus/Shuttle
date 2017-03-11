@@ -1,31 +1,5 @@
 package com.simplecity.amp_library.ui.fragments;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
-import android.view.ActionMode;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.SubMenu;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
@@ -62,6 +36,32 @@ import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.SortManager;
 import com.simplecity.amp_library.utils.ThemeUtils;
 import com.simplecity.amp_library.utils.ViewUtils;
+
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.view.ActionMode;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.SubMenu;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -484,6 +484,8 @@ public class FolderFragment extends BaseFragment implements
                         })
                         .collect(Collectors.toList());
 
+				mCurrentDir = path;
+
                 if (mShowBreadcrumbsInList) {
                     BreadcrumbsView breadcrumbsView = new BreadcrumbsView(mCurrentDir);
                     breadcrumbsView.setBreadcrumbsPath(mCurrentDir);
@@ -493,8 +495,6 @@ public class FolderFragment extends BaseFragment implements
                 if (mAdapter != null) {
                     mAdapter.setItems(items);
                 }
-
-                mCurrentDir = path;
 
                 if (mBreadcrumb != null) {
                     mBreadcrumb.changeBreadcrumbPath(mCurrentDir);
