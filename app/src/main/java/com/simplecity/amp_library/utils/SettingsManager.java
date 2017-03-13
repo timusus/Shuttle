@@ -125,7 +125,11 @@ public class SettingsManager {
     }
 
     public int getArtistColumnCount(Resources res) {
-        int defaultSpanCount = getArtistDisplayType() == ViewType.ARTIST_LIST ? res.getInteger(R.integer.list_num_columns) : res.getInteger(R.integer.grid_num_columns);
+        int artistDisplayType = getArtistDisplayType();
+        int defaultSpanCount = artistDisplayType == ViewType.ARTIST_LIST ? res.getInteger(R.integer.list_num_columns) : res.getInteger(R.integer.grid_num_columns);
+        if (artistDisplayType == ViewType.ARTIST_LIST && defaultSpanCount == 1) {
+            return 1;
+        }
         return getIntValue(getArtistColumnCountKey(), defaultSpanCount);
     }
 
@@ -151,7 +155,11 @@ public class SettingsManager {
     }
 
     public int getAlbumColumnCount(Resources res) {
-        int defaultSpanCount = getAlbumDisplayType() == ViewType.ALBUM_LIST ? res.getInteger(R.integer.list_num_columns) : res.getInteger(R.integer.grid_num_columns);
+        int albumDisplayType = getAlbumDisplayType();
+        int defaultSpanCount = albumDisplayType == ViewType.ALBUM_LIST ? res.getInteger(R.integer.list_num_columns) : res.getInteger(R.integer.grid_num_columns);
+        if (albumDisplayType == ViewType.ALBUM_LIST && defaultSpanCount == 1) {
+            return 1;
+        }
         return getIntValue(getAlbumColumnCountKey(), defaultSpanCount);
     }
 
