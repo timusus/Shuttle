@@ -54,7 +54,7 @@ ext.versions = [
         nanoHttp               : "2.3.1",
         crashlytics            : "2.6.4@aar",
         dashClockApi           : "2.0.0",
-        fastScroll             : "1.0.11",
+        fastScroll             : "1.0.13",
         glide                  : "3.8.0-SNAPSHOT",
         glideOkhttp            : "1.4.0@aar",
         lambdaBackport         : "2.3.0",
@@ -144,7 +144,7 @@ ext.libs = [
         // Dashclock - https://git.io/vix9g (Roman Nurik)
         dashClockApi       : "com.google.android.apps.dashclock:dashclock-api:$versions.dashClockApi",
         // RecyclerView-FastScroll - https://git.io/vix5z (dumb fuck)
-        fastScroll         : project(':libraries/:recyclerview-fastscroll'),
+        fastScroll         : "com.simplecityapps:recyclerview-fastscroll:$versions.fastScroll",
         // Glide - https://git.io/vtn9K (Bump)
         glide              : "com.github.bumptech.glide:glide:$versions.glide",
         // Glide - OkHttp  integration - https://git.io/vihvW (Bump)
