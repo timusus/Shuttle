@@ -54,7 +54,7 @@ ext.versions = [
         nanoHttp               : "2.3.1",
         crashlytics            : "2.6.4@aar",
         dashClockApi           : "2.0.0",
-        fastScroll             : "1.0.13",
+        fastScroll             : "1.0.14",
         glide                  : "3.8.0-SNAPSHOT",
         glideOkhttp            : "1.4.0@aar",
         lambdaBackport         : "2.3.0",
