@@ -9,6 +9,7 @@ buildscript {
         classpath gradlePlugins.android
         classpath gradlePlugins.retrolambda
         classpath gradlePlugins.googleServices
+        classpath gradlePlugins.playPublisher
     }
 }
 

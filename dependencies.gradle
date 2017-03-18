@@ -4,7 +4,7 @@ ext.versions = [
         // App versions
         // /////////////////////////////////////////////////////////////////////////
 
-        name                   : "1.6.5-alpha1",
+        name                   : "1.6.5-beta5",
 
         // //////////////////////////////////////////////////////////////////////////
         // Compile versions
@@ -24,6 +24,7 @@ ext.versions = [
         retrolambdaGradlePlugin: "3.4.0",
         fabricGradlePlugin     : "1.+",
         googleServicesPlugin   : "3.0.0",
+        playPublisher          : "1.2.0-beta1",
 
         // //////////////////////////////////////////////////////////////////////////
         // Google lib versions
@@ -53,7 +54,7 @@ ext.versions = [
         nanoHttp               : "2.3.1",
         crashlytics            : "2.6.4@aar",
         dashClockApi           : "2.0.0",
-        fastScroll             : "1.0.11",
+        fastScroll             : "1.0.14",
         glide                  : "3.8.0-SNAPSHOT",
         glideOkhttp            : "1.4.0@aar",
         lambdaBackport         : "2.3.0",
@@ -66,6 +67,7 @@ ext.versions = [
         rxImageSel             : "1.3.1",
         rxJava                 : "1.2.0",
         rxRelay                : "1.2.0",
+        rxReceivers            : "0.1.0",
         streams                : "1.1.3",
 
         // //////////////////////////////////////////////////////////////////////////
@@ -96,7 +98,8 @@ ext.gradlePlugins = [
         dexcount      : "com.getkeepsafe.dexcount:dexcount-gradle-plugin:$versions.dexcountGradlePlugin",
         fabric        : "io.fabric.tools:gradle:$versions.fabricGradlePlugin",
         retrolambda   : "me.tatarka:gradle-retrolambda:$versions.retrolambdaGradlePlugin",
-        googleServices: "com.google.gms:google-services:$versions.googleServicesPlugin"
+        googleServices: "com.google.gms:google-services:$versions.googleServicesPlugin",
+        playPublisher : "com.github.triplet.gradle:play-publisher:$versions.playPublisher"
 ]
 
 ext.libs = [
@@ -141,7 +144,7 @@ ext.libs = [
         // Dashclock - https://git.io/vix9g (Roman Nurik)
         dashClockApi       : "com.google.android.apps.dashclock:dashclock-api:$versions.dashClockApi",
         // RecyclerView-FastScroll - https://git.io/vix5z (dumb fuck)
-        fastScroll         : project(':libraries/:recyclerview-fastscroll'),
+        fastScroll         : "com.simplecityapps:recyclerview-fastscroll:$versions.fastScroll",
         // Glide - https://git.io/vtn9K (Bump)
         glide              : "com.github.bumptech.glide:glide:$versions.glide",
         // Glide - OkHttp  integration - https://git.io/vihvW (Bump)
@@ -166,6 +169,8 @@ ext.libs = [
         rxImageSel         : "com.mlsdev.rximagepicker:library:$versions.rxImageSel",
         // RX Relay - https://github.com/JakeWharton/RxRelay
         rxRelay            : "com.jakewharton.rxrelay:rxrelay:$versions.rxRelay",
+        // Rx Receivers - https://github.com/f2prateek/rx-receivers
+        rxReceivers        : "com.f2prateek.rx.receivers:rx-receivers:$versions.rxReceivers",
         // Streams Backport - https://git.io/vCazA (Victor Melnik)
         streams            : "com.annimon:stream:$versions.streams",
         // Glide Palette - https://git.io/vix57 (Florent Champigny)

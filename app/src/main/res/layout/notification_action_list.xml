@@ -16,13 +16,13 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
-    android:divider="?android:attr/listDivider"
-    android:dividerPadding="12dp"
-    android:orientation="horizontal"
-    android:showDividers="middle">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="8dp"
+              android:divider="?android:attr/listDivider"
+              android:dividerPadding="12dp"
+              android:orientation="horizontal"
+              android:showDividers="middle">
 
     <!-- actions will be added here -->
 
@@ -32,13 +32,14 @@
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_weight="1"
+        android:contentDescription="@string/btn_prev"
         android:drawablePadding="8dp"
         android:ellipsize="end"
         android:gravity="start|center_vertical"
+        android:maxLines="1"
         android:src="@drawable/ic_prev_white"
         android:textColor="#ccc"
-        android:textSize="14sp"
-        android:maxLines="1" />
+        android:textSize="14sp"/>
 
     <ImageButton
         android:id="@+id/pause"
@@ -46,13 +47,14 @@
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_weight="1"
+        android:contentDescription="@string/btn_play_pause"
         android:drawablePadding="8dp"
         android:ellipsize="end"
         android:gravity="start|center_vertical"
+        android:maxLines="1"
         android:src="@drawable/ic_pause_white"
         android:textColor="#ccc"
-        android:textSize="14dp"
-        android:maxLines="1" />
+        android:textSize="14dp"/>
 
     <ImageButton
         android:id="@+id/next"
@@ -60,12 +62,13 @@
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_weight="1"
+        android:contentDescription="@string/btn_skip"
         android:drawablePadding="8dp"
         android:ellipsize="end"
         android:gravity="start|center_vertical"
+        android:maxLines="1"
         android:src="@drawable/ic_skip_white"
         android:textColor="#ccc"
-        android:textSize="14sp"
-        android:maxLines="1" />
+        android:textSize="14sp"/>
 
 </LinearLayout>

@@ -71,7 +71,6 @@ import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.fragments.AlbumArtistFragment;
 import com.simplecity.amp_library.ui.fragments.AlbumFragment;
 import com.simplecity.amp_library.ui.fragments.DetailFragment;
-import com.simplecity.amp_library.ui.fragments.DrawerHeaderFragment;
 import com.simplecity.amp_library.ui.fragments.FolderFragment;
 import com.simplecity.amp_library.ui.fragments.GenreFragment;
 import com.simplecity.amp_library.ui.fragments.MainFragment;
@@ -463,11 +462,6 @@ public class MainActivity extends BaseCastActivity implements
 
         super.onResume();
 
-        sendBroadcast(new Intent(QueueFragment.UPDATE_QUEUE_FRAGMENT));
-        sendBroadcast(new Intent(MiniPlayerFragment.UPDATE_MINI_PLAYER));
-        sendBroadcast(new Intent(DrawerHeaderFragment.UPDATE_DRAWER_HEADER));
-        sendBroadcast(new Intent(PlayerFragment.UPDATE_PLAYING_FRAGMENT));
-
         DialogUtils.showUpgradeNagDialog(this, (materialDialog, dialogAction) -> {
             if (ShuttleUtils.isAmazonBuild()) {
                 ShuttleUtils.openShuttleLink(MainActivity.this, "com.simplecity.amp_pro");
@@ -752,20 +746,12 @@ public class MainActivity extends BaseCastActivity implements
         super.onServiceConnected(name, obj);
         supportInvalidateOptionsMenu();
 
-        sendBroadcast(new Intent(QueueFragment.UPDATE_QUEUE_FRAGMENT));
-        sendBroadcast(new Intent(MiniPlayerFragment.UPDATE_MINI_PLAYER));
-        sendBroadcast(new Intent(DrawerHeaderFragment.UPDATE_DRAWER_HEADER));
-        sendBroadcast(new Intent(PlayerFragment.UPDATE_PLAYING_FRAGMENT));
-
         if (mIsSlidingEnabled) {
             PlayerFragment playerFragment = (PlayerFragment) getSupportFragmentManager().findFragmentById(R.id.playerFragment);
 
             if (playerFragment != null) {
 
-                playerFragment.updateTrackInfo();
-                playerFragment.setRepeatButtonImage();
-                playerFragment.setShuffleButtonImage();
-                playerFragment.setPauseButtonImage();
+                playerFragment.update();
 
                 // If the QueuePagerFragment's adapter is empty, it's because it was created before the service
                 // was connected. We need to recreate it now that we know the service is connected.
@@ -780,17 +766,8 @@ public class MainActivity extends BaseCastActivity implements
         }
 
         handlePendingPlaybackRequest();
-    }
 
-    @Override
-    public void onServiceDisconnected(ComponentName name) {
-        super.onServiceDisconnected(name);
-        if (mIsSlidingEnabled) {
-            PlayerFragment playerFragment = (PlayerFragment) getSupportFragmentManager().findFragmentById(R.id.playerFragment);
-            if (playerFragment != null) {
-                playerFragment.setPauseButtonImage();
-            }
-        }
+        togglePanelVisibility(!(MusicServiceConnectionUtils.sServiceBinder == null || MusicUtils.getSongId() == -1));
     }
 
     @Override
@@ -1084,7 +1061,7 @@ public class MainActivity extends BaseCastActivity implements
 
     public void togglePanelVisibility(boolean show) {
         if (!mIsSlidingEnabled) {
-            findViewById(R.id.mini_player_container).setVisibility(show ? View.VISIBLE : View.GONE);
+//            findViewById(R.id.mini_player_container).setVisibility(show ? View.VISIBLE : View.GONE);
         } else {
             if (panelOne != null) {
                 if (show) {

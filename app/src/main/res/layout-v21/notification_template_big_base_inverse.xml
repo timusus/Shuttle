@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/icon"
         android:layout_width="@dimen/notification_large_icon_width"
         android:layout_height="@dimen/notification_large_icon_height"
         android:background="@drawable/ic_placeholder_light_medium"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"/>
+
+    <!-- Dummy holder for the 'close' button which doesn't exist above API 21-->
+    <FrameLayout
+        android:id="@+id/close"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,12 +34,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
                 android:minHeight="@dimen/notification_large_icon_height"
                 android:orientation="vertical"
-                android:paddingTop="2dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true">
+                android:paddingTop="2dp">
 
                 <LinearLayout
                     android:id="@+id/line1"
@@ -50,9 +57,9 @@
                         android:layout_weight="1"
                         android:ellipsize="marquee"
                         android:fadingEdge="horizontal"
+                        android:maxLines="1"
                         android:textAppearance="@style/TextAppearance.Material.Notification.Title.Inverse"
-                        tools:text="Ticks &amp; Leeches"
-                        android:maxLines="1" />
+                        tools:text="Ticks &amp; Leeches"/>
                 </LinearLayout>
 
                 <TextView
@@ -65,9 +72,9 @@
                     android:layout_marginTop="-2dp"
                     android:ellipsize="marquee"
                     android:fadingEdge="horizontal"
+                    android:maxLines="1"
                     android:visibility="gone"
-                    tools:text="text2"
-                    android:maxLines="1" />
+                    tools:text="text2"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -75,7 +82,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:textAppearance="@android:style/TextAppearance.Material.Notification"
-                    android:visibility="gone" />
+                    android:visibility="gone"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -94,9 +101,9 @@
                         android:layout_weight="1"
                         android:ellipsize="marquee"
                         android:fadingEdge="horizontal"
+                        android:maxLines="1"
                         android:textAppearance="@style/TextAppearance.Material.Notification.Inverse"
-                        tools:text="Tool | Lateralus"
-                        android:maxLines="1" />
+                        tools:text="Tool | Lateralus"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -106,20 +113,13 @@
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_marginLeft="112dp"
-            android:background="?android:attr/dividerHorizontal" />
+            android:background="?android:attr/dividerHorizontal"/>
 
         <include
             layout="@layout/notification_action_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/notification_large_icon_width" />
+            android:layout_marginLeft="@dimen/notification_large_icon_width"/>
     </LinearLayout>
-
-    <!-- Dummy holder for the 'close' button which doesn't exist above API 21-->
-    <FrameLayout
-        android:id="@+id/close"
-        android:visibility="gone"
-        android:layout_width="0dp"
-        android:layout_height="0dp"/>
 
 </FrameLayout>

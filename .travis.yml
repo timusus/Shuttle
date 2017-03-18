@@ -2,7 +2,7 @@ language: android
 
 jdk: oraclejdk8
 
-sudo: true
+sudo: required
 
 android:
   components:
@@ -19,61 +19,52 @@ android:
   - google-gdk-license-.+
   - ".+"
 
+# Increase travis 'git depth' from default of 50, to 10000. Potential fix for commit count issue.
+git:
+  depth: 10000
+
 script:
-- if [ "$TRAVIS_BRANCH" = "alpha" || "$TRAVIS_BRANCH" = "beta" || "$TRAVIS_BRANCH" = "master" ]; then
-    "./gradlew build";
-  else
-    "./gradlew assembleDebug testDebugUnitTest";
-  fi
+- if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then bash .travis/run_on_pull_requests; fi
+- if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash .travis/run_on_non_pull_requests; fi
 
 before_install:
 - mkdir "$ANDROID_HOME/licenses" || true
 - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
 - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
-- openssl aes-256-cbc -K $encrypted_dcc914e7eb3f_key -iv $encrypted_dcc914e7eb3f_iv
-  -in app/src/release/google-services.json.enc -out app/src/release/google-services.json
-  -d
-- openssl aes-256-cbc -K $encrypted_7fcb240c82db_key -iv $encrypted_7fcb240c82db_iv
-  -in keystore.properties.enc -out keystore.properties -d
 
 before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 
 cache:
   directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
-    - $HOME/.android/build-cache
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
+  - "$HOME/.android/build-cache"
 
 deploy:
-  - provider: releases
-    api_key:
-      secure: y/DY5he0HhCR1M4B4eKuhjvcpNYDAKCg89g3Bw7YAla10sYS5EJch3QQorLzTdSSFZuuufaue5524ap4mNAyB1RClw5waDwSbmhk96xdVFGak6u1Hzc3yTb7YaFmLtmWY93kCcpXOHkqqf/M7QwG4FlilwKhTiEa6YcB+U78JA3pVx1TLTezW+E79wJkB6yGY0nlzRUYZG2z1IqpIE8Cgj56T2gpBHLfJCcPkcM56d4hhxrs+pWqkF0Y2pFtNI8CxzqQlGXYoakW/QEZ5GDCkuvwNro5RhJZx6Vr7uMBmh2Rq+xwIvnwA4ljXrl8pwJVwua/g7NvQGdWaEsWJkVaEOqARbDWs3OJlBvmGBMldkwnbBDHMzHD6BTDwum+qIllr1V5skIqib6xwPw8qPk40QpjldaHRvRwqqpjNrHJ4jc44LoUTrCS9HT0pXiUT2HBQPWGZ+fg7rMIS1x7psRFQ7bjz9T/AHYkAqTZC5BqfezHh19RZdco2p+1rHCWEOZnLUJi9IJtXdpNeCPdllwPIEra4+2RdCPV6ASXf7GhQX5e/NmdCMAAaABxgRH8wiycYeEYTySBeeNWAB7u3ctY+CKUHm77P21myJi7+oolW4LaZw4J/RcjFny26AYKVtPYXVJ8AwV/epdpxiiEciiCf2nujmVFpLqKXMIV7La9LCc=
-    file: "app/build/outputs/apk/shuttle-free-*.apk"
-    file_glob: "true"
-    skip_cleanup: true
-    on:
-      branch: alpha
-      repo: timusus/Shuttle
-      tags: true
-  - provider: releases
-    api_key:
-      secure: y/DY5he0HhCR1M4B4eKuhjvcpNYDAKCg89g3Bw7YAla10sYS5EJch3QQorLzTdSSFZuuufaue5524ap4mNAyB1RClw5waDwSbmhk96xdVFGak6u1Hzc3yTb7YaFmLtmWY93kCcpXOHkqqf/M7QwG4FlilwKhTiEa6YcB+U78JA3pVx1TLTezW+E79wJkB6yGY0nlzRUYZG2z1IqpIE8Cgj56T2gpBHLfJCcPkcM56d4hhxrs+pWqkF0Y2pFtNI8CxzqQlGXYoakW/QEZ5GDCkuvwNro5RhJZx6Vr7uMBmh2Rq+xwIvnwA4ljXrl8pwJVwua/g7NvQGdWaEsWJkVaEOqARbDWs3OJlBvmGBMldkwnbBDHMzHD6BTDwum+qIllr1V5skIqib6xwPw8qPk40QpjldaHRvRwqqpjNrHJ4jc44LoUTrCS9HT0pXiUT2HBQPWGZ+fg7rMIS1x7psRFQ7bjz9T/AHYkAqTZC5BqfezHh19RZdco2p+1rHCWEOZnLUJi9IJtXdpNeCPdllwPIEra4+2RdCPV6ASXf7GhQX5e/NmdCMAAaABxgRH8wiycYeEYTySBeeNWAB7u3ctY+CKUHm77P21myJi7+oolW4LaZw4J/RcjFny26AYKVtPYXVJ8AwV/epdpxiiEciiCf2nujmVFpLqKXMIV7La9LCc=
-    file: "app/build/outputs/apk/shuttle-free-*.apk"
-    file_glob: "true"
-    skip_cleanup: true
-    on:
-      branch: beta
-      repo: timusus/Shuttle
-      tags: true      
-  - provider: releases
-    api_key:
-      secure: y/DY5he0HhCR1M4B4eKuhjvcpNYDAKCg89g3Bw7YAla10sYS5EJch3QQorLzTdSSFZuuufaue5524ap4mNAyB1RClw5waDwSbmhk96xdVFGak6u1Hzc3yTb7YaFmLtmWY93kCcpXOHkqqf/M7QwG4FlilwKhTiEa6YcB+U78JA3pVx1TLTezW+E79wJkB6yGY0nlzRUYZG2z1IqpIE8Cgj56T2gpBHLfJCcPkcM56d4hhxrs+pWqkF0Y2pFtNI8CxzqQlGXYoakW/QEZ5GDCkuvwNro5RhJZx6Vr7uMBmh2Rq+xwIvnwA4ljXrl8pwJVwua/g7NvQGdWaEsWJkVaEOqARbDWs3OJlBvmGBMldkwnbBDHMzHD6BTDwum+qIllr1V5skIqib6xwPw8qPk40QpjldaHRvRwqqpjNrHJ4jc44LoUTrCS9HT0pXiUT2HBQPWGZ+fg7rMIS1x7psRFQ7bjz9T/AHYkAqTZC5BqfezHh19RZdco2p+1rHCWEOZnLUJi9IJtXdpNeCPdllwPIEra4+2RdCPV6ASXf7GhQX5e/NmdCMAAaABxgRH8wiycYeEYTySBeeNWAB7u3ctY+CKUHm77P21myJi7+oolW4LaZw4J/RcjFny26AYKVtPYXVJ8AwV/epdpxiiEciiCf2nujmVFpLqKXMIV7La9LCc=
-    file: "app/build/outputs/apk/shuttle-free-*.apk"
-    file_glob: "true"
-    skip_cleanup: true
-    on:
-      branch: master
-      repo: timusus/Shuttle
-      tags: true
+
+# Github alpha/beta/release
+- provider: releases
+  api_key:
+    secure: y/DY5he0HhCR1M4B4eKuhjvcpNYDAKCg89g3Bw7YAla10sYS5EJch3QQorLzTdSSFZuuufaue5524ap4mNAyB1RClw5waDwSbmhk96xdVFGak6u1Hzc3yTb7YaFmLtmWY93kCcpXOHkqqf/M7QwG4FlilwKhTiEa6YcB+U78JA3pVx1TLTezW+E79wJkB6yGY0nlzRUYZG2z1IqpIE8Cgj56T2gpBHLfJCcPkcM56d4hhxrs+pWqkF0Y2pFtNI8CxzqQlGXYoakW/QEZ5GDCkuvwNro5RhJZx6Vr7uMBmh2Rq+xwIvnwA4ljXrl8pwJVwua/g7NvQGdWaEsWJkVaEOqARbDWs3OJlBvmGBMldkwnbBDHMzHD6BTDwum+qIllr1V5skIqib6xwPw8qPk40QpjldaHRvRwqqpjNrHJ4jc44LoUTrCS9HT0pXiUT2HBQPWGZ+fg7rMIS1x7psRFQ7bjz9T/AHYkAqTZC5BqfezHh19RZdco2p+1rHCWEOZnLUJi9IJtXdpNeCPdllwPIEra4+2RdCPV6ASXf7GhQX5e/NmdCMAAaABxgRH8wiycYeEYTySBeeNWAB7u3ctY+CKUHm77P21myJi7+oolW4LaZw4J/RcjFny26AYKVtPYXVJ8AwV/epdpxiiEciiCf2nujmVFpLqKXMIV7La9LCc=
+  file: app/build/outputs/apk/shuttle-free-*.apk
+  file_glob: 'true'
+  skip_cleanup: true
+  on:
+    repo: timusus/Shuttle
+    tags: true
+    condition: $TRAVIS_TAG =~ beta || $TRAVIS_TAG =~ alpha || $TRAVIS_TAG =~ release
+
+# Play Store beta release
+- provider: script
+  script: ./gradlew publishApkFreeRelease publishApkPaidRelease
+  skip_cleanup: true
+  on:
+    repo: timusus/Shuttle
+    tags: true
+    condition: $TRAVIS_TAG =~ beta
+
+# Slack build notifications
+notifications:
+  slack: shuttlemusicplayer:g90QK9lL6Hg5jfzegqjjNqqN

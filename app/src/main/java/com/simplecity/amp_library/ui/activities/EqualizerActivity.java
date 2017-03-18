@@ -35,7 +35,6 @@ import com.simplecity.amp_library.services.EqualizerService;
 import com.simplecity.amp_library.ui.adapters.RobotoSpinnerAdapter;
 import com.simplecity.amp_library.ui.views.CustomSwitch;
 import com.simplecity.amp_library.utils.ColorUtils;
-import com.simplecity.amp_library.utils.DrawableUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
@@ -425,9 +424,6 @@ public class EqualizerActivity extends BaseActivity {
         getMenuInflater().inflate(R.menu.menu_equalizer_activity, menu);
         MenuItem switchItem = menu.findItem(R.id.action_equalizer);
         mInternalEqSwitch = (CustomSwitch) MenuItemCompat.getActionView(switchItem);
-        //Todo: Thumb drawable
-//        mInternalEqSwitch.setThumbDrawable(DrawableUtils.getSwitchThumbDrawable(this));
-        mInternalEqSwitch.setTrackDrawable(DrawableUtils.getSwitchTrackDrawable(this));
         mInternalEqSwitch.setOnCheckedChangeListener(mOnCheckedChangeListener);
 
         return super.onCreateOptionsMenu(menu);

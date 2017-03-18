@@ -19,7 +19,7 @@
             android:title="@string/pref_title_default_page"/>
     </com.simplecity.amp_library.ui.views.CustomPreferenceCategory>
     <com.simplecity.amp_library.ui.views.CustomPreferenceCategory
-        android:key="display_group"
+        android:key="pref_category_notifications"
         android:layout="@layout/preference_category"
         android:title="@string/pref_category_notif_drawer">
 

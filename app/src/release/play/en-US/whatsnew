@@ -1,0 +1,11 @@
+- Fixed an issue where searching didn't work very well for songs/albums/artists with multiple words in the name
+
+- Fixed an issue where inverted notification icons aren't visible
+
+- Fixed a crash when choosing to invert icons on API < 21. This feature is no longer available on such devices
+
+- Fixed an issue where songs with no album tag information ended up being grouped under one artist
+
+- Added accessibility content descriptions to notification buttons
+
+- See changelog for more

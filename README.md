@@ -2,6 +2,8 @@
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE.md)
 [![API](https://img.shields.io/badge/API-16%2B-green.svg?style=flat)](https://android-arsenal.com/api?level=16)
+[![Build Status](https://travis-ci.org/timusus/Shuttle.svg?branch=dev)](https://travis-ci.org/timusus/Shuttle)
+[![Slack invite](http://shuttle-slack-inviter.herokuapp.com/badge.svg)](http://shuttle-slack-inviter.herokuapp.com)
 
 Shuttle is an open source, local music player for Android.
 
@@ -36,7 +38,7 @@ The free version includes an option to upgrade via an IAP, which unlocks the fea
 
 #### Contributing:
 
-See the [Contributing](CONTRIBUTING.md) document. This is/will become a good resource if you're just wondering how the app works.
+See the [Contributing](.github/CONTRIBUTING.md) document. This is/will become a good resource if you're just wondering how the app works.
 
 
 #### History:
@@ -64,4 +66,4 @@ Secondly, I don't feel like I'm able to dedicate as much time to the project as 
 
 #### License
 
-Shuttle Music Player is released under the GNU General Public License v3.0 (GPLv3), which can be found here: [License](https://github.com/timusus/Shuttle/blob/master/LICENSE.md)
+Shuttle Music Player is released under the GNU General Public License v3.0 (GPLv3), which can be found here: [License](LICENSE.md)

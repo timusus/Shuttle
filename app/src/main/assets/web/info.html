@@ -8,9 +8,19 @@
 </head>
 
 <body>
-<h4>1.6.5-alpha1</h4>
+<h4>1.6.5-beta5</h4>
 <ul>
-	<li></li>
+	<li>Fixed an issue where Last.fm artwork wasn't downloading</li>
+	<li>Added back 'QuickLyric' button to lyrics screen</li>
+	<li>Fixed an issue with 'breadcrumbs' in Folder screen</li>
+	<li>Fixed a fairly significant crash affecting most beta users :( related to a change to the seekbar theming</li>
+	<li>Fixed an issue where searching didn't work very well for songs/albums/artists with multiple words in the name</li>
+	<li>Fixed an issue where inverted notification icons weren't very visible on devices running API < 24</li>
+	<li>Fixed a crash when choosing to invert icons on API < 21. This feature is no longer available on such devices</li>
+	<li>Fixed an issue where songs with no album tag information ended up being grouped under one artist</li>
+	<li>Added accessibility content descriptions to notification buttons</li>
+	<li>Fixed an issue where the equalizer toggle didn't change color when set to 'off'</li>
+	<li>Potential fix for issue where Seekbar thumb goes off-screen on tablets</li>
 </ul>
 <h4>1.6.4</h4>
 <ul>
@@ -855,6 +865,31 @@
 </ul>
 <h3>Licenses:</h3>
 <p>Shuttle+ uses the following open-source libraries:</p>
+<h4>Gradle Play Publisher</h4>
+<pre>
+The MIT License (MIT)
+
+Copyright (c) 2014 Christian Becker
+Copyright (c) 2014 Björn Hurling
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</pre>
 <h4>RxRelay</h4>
 <pre>
 Copyright 2014 Netflix, Inc.

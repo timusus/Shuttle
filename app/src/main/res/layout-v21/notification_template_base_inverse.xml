@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="64dp">
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="64dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -14,7 +14,7 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:background="@drawable/ic_placeholder_dark_medium"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,10 +35,10 @@
                 android:ellipsize="marquee"
                 android:fadingEdge="horizontal"
                 android:fontFamily="sans-serif"
+                android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.Material.Notification.Title.Inverse"
                 tools:ignore="NewApi"
-                tools:text="Ticks &amp; Leeches"
-                android:maxLines="1" />
+                tools:text="Ticks &amp; Leeches"/>
 
             <TextView
                 android:id="@+id/text"
@@ -49,10 +49,10 @@
                 android:ellipsize="marquee"
                 android:fadingEdge="horizontal"
                 android:fontFamily="sans-serif"
+                android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.Material.Notification.Inverse"
                 tools:ignore="NewApi"
-                tools:text="Tool | LAteralus"
-                android:maxLines="1" />
+                tools:text="Tool | LAteralus"/>
         </LinearLayout>
 
         <LinearLayout
@@ -66,19 +66,22 @@
                 android:id="@+id/prev"
                 style="@style/notification_button"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_prev_white" />
+                android:contentDescription="@string/btn_prev"
+                android:src="@drawable/ic_prev_white"/>
 
             <ImageButton
                 android:id="@+id/pause"
                 style="@style/notification_button"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_pause_white" />
+                android:contentDescription="@string/btn_play_pause"
+                android:src="@drawable/ic_pause_white"/>
 
             <ImageButton
                 android:id="@+id/next"
                 style="@style/notification_button"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_skip_white" />
+                android:contentDescription="@string/btn_skip"
+                android:src="@drawable/ic_skip_white"/>
 
         </LinearLayout>
     </RelativeLayout>
@@ -86,8 +89,8 @@
     <!-- Dummy holder for the 'close' button which doesn't exist above API 21-->
     <FrameLayout
         android:id="@+id/close"
-        android:visibility="gone"
         android:layout_width="0dp"
-        android:layout_height="0dp"/>
+        android:layout_height="0dp"
+        android:visibility="gone"/>
 
 </FrameLayout>

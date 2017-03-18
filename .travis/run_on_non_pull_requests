@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -e
+
+# Decrypt private keys
+
+openssl aes-256-cbc -K $encrypted_7fcb240c82db_key -iv $encrypted_7fcb240c82db_iv -in secrets.tar.enc -out secrets.tar -d
+
+tar xvf secrets.tar
+
+# For non pull-requests, build & test everything.
+
+./gradlew build

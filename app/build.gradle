@@ -15,6 +15,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'io.fabric'
 apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.github.triplet.play'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
@@ -53,7 +54,7 @@ android {
         targetSdkVersion versions.targetSdk
 
         versionName versions.name
-        versionCode gitInfo().commitCount + 3000 // Add 3000 to account for moving to github and resetting commit count.
+        versionCode gitCommitCount() + 3200 // Add 3200 to account for moving to github and resetting commit count.
 
         resConfigs "en", "zh-rCN", "ja", "fr", "de", "ko", "it", "ru", "nl", "tr", "pl", "ro", "hu", "uk", "bg-rBG", "en-rGB", "vi", "pt-rBR", "es", "en-rNZ", "zh-rTW", "es-rES", "ca", "hr", "en-rAU", "eu-rES"
 
@@ -65,6 +66,8 @@ android {
 
         // This API key is provided for convenience. Please go to https://www.last.fm/api/account/create and create your own.
         buildConfigField("String", "LASTFM_API_KEY", "\"${getProperty(getProperties('../public.properties'), 'LASTFM_API_KEY')}\"")
+
+        manifestPlaceholders = [CRASHLYTICS_API_KEY: ""]
     }
 
     signingConfigs {
@@ -81,6 +84,7 @@ android {
 
         debug {
             applicationIdSuffix ".debug"
+            ext.enableCrashlytics = false
         }
 
         release {
@@ -90,6 +94,7 @@ android {
             signingConfig signingConfigs.release
 
             buildConfigField("String", "LASTFM_API_KEY", "\"${getProperty(getProperties('../private.properties'), 'LASTFM_API_KEY')}\"")
+            manifestPlaceholders = [CRASHLYTICS_API_KEY: "${getProperty(getProperties('../private.properties'), 'CRASHLYTICS_API_KEY')}"]
         }
 
         applicationVariants.all { variant ->
@@ -255,6 +260,7 @@ dependencies {
     compile libs.rxImageSel
     compile libs.rxJava
     compile libs.rxRelay
+    compile libs.rxReceivers
     compile libs.slidingUpPanel
     compile libs.streams
     compile(libs.crashlytics) {
@@ -284,9 +290,8 @@ dependencies {
     }
 }
 
-def gitInfo() {
+def gitCommitCount() {
     def commitCount = 0
-    def revision = "(unknown revision)"
     try {
         def stdout = new ByteArrayOutputStream()
         exec {
@@ -294,17 +299,11 @@ def gitInfo() {
             standardOutput stdout
         }
         commitCount = stdout.toString().trim().toInteger()
-        stdout = new ByteArrayOutputStream()
-        exec {
-            commandLine 'git', 'rev-list', 'HEAD', '-n', '1'
-            standardOutput stdout
-        }
-        revision = stdout.toString().trim()
     }
     catch (error) {
         println "Error: ${error}"
     }
-    return [commitCount: commitCount, revision: revision]
+    return commitCount
 }
 
 //Fix an issue where launcher shortcuts don't use the correct package name based on the build flavours.
@@ -326,6 +325,13 @@ afterEvaluate {
             }
         }
     }
+}
+
+play {
+    track = 'beta'
+//    untrackOld = true
+    serviceAccountEmail = 'app-deployment@api-5801704373554614142-812229.iam.gserviceaccount.com'
+    jsonFile = file('../deployment_keys.json')
 }
 
 /**

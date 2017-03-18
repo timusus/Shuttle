@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -e
+
+# For pull requests, just assemble & test the debug build
+./gradlew assembleDebug testDebugUnitTest

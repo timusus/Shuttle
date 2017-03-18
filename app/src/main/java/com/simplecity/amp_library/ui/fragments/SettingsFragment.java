@@ -425,6 +425,16 @@ public class SettingsFragment extends PreferenceFragment {
                 }
             }
         }
+
+        if (!ShuttleUtils.hasLollipop()) {
+            PreferenceScreen preferenceScreen = getPreferenceScreen();
+            if (preferenceScreen != null) {
+                Preference notificationPreference = preferenceScreen.findPreference("pref_category_notifications");
+                if (notificationPreference != null) {
+                    preferenceScreen.removePreference(notificationPreference);
+                }
+            }
+        }
     }
 
     private Dialog showArtworkPreferenceDialog() {
