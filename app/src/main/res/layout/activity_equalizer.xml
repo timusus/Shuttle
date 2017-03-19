@@ -61,8 +61,9 @@
                         android:layout_alignParentRight="true"
                         android:layout_below="@+id/EqBand0TopTextView">
 
-                        <SeekBar
+                        <com.simplecity.amp_library.ui.views.SizableSeekBar
                             android:id="@+id/EqBand0SeekBar"
+                            style="@style/SeekBar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_toLeftOf="@+id/EqBand0RightTextView"
@@ -108,8 +109,9 @@
                         android:layout_alignParentRight="true"
                         android:layout_below="@+id/EqBand1TopTextView">
 
-                        <SeekBar
+                        <com.simplecity.amp_library.ui.views.SizableSeekBar
                             android:id="@+id/EqBand1SeekBar"
+                            style="@style/SeekBar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_toLeftOf="@+id/EqBand1RightTextView"
@@ -154,8 +156,9 @@
                         android:layout_alignParentRight="true"
                         android:layout_below="@+id/EqBand2TopTextView">
 
-                        <SeekBar
+                        <com.simplecity.amp_library.ui.views.SizableSeekBar
                             android:id="@+id/EqBand2SeekBar"
+                            style="@style/SeekBar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_toLeftOf="@+id/EqBand2RightTextView"
@@ -202,8 +205,9 @@
                         android:layout_alignParentRight="true"
                         android:layout_below="@+id/EqBand3TopTextView">
 
-                        <SeekBar
+                        <com.simplecity.amp_library.ui.views.SizableSeekBar
                             android:id="@+id/EqBand3SeekBar"
+                            style="@style/SeekBar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_toLeftOf="@+id/EqBand3RightTextView"
@@ -248,8 +252,9 @@
                         android:layout_alignParentRight="true"
                         android:layout_below="@+id/EqBand4TopTextView">
 
-                        <SeekBar
+                        <com.simplecity.amp_library.ui.views.SizableSeekBar
                             android:id="@+id/EqBand4SeekBar"
+                            style="@style/SeekBar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_toLeftOf="@+id/EqBand4RightTextView"
@@ -294,8 +299,9 @@
                         android:layout_alignParentRight="true"
                         android:layout_below="@+id/EqBand5TopTextView">
 
-                        <SeekBar
+                        <com.simplecity.amp_library.ui.views.SizableSeekBar
                             android:id="@+id/EqBand5SeekBar"
+                            style="@style/SeekBar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_toLeftOf="@+id/EqBand5RightTextView"
@@ -348,8 +354,9 @@
                 android:text="@string/virtualizer_strength"
                 android:textSize="14sp"/>
 
-            <SeekBar
+            <com.simplecity.amp_library.ui.views.SizableSeekBar
                 android:id="@+id/virtualizer_strength"
+                style="@style/SeekBar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"/>
@@ -370,8 +377,9 @@
                 android:text="@string/bass_boost_strength"
                 android:textSize="14sp"/>
 
-            <SeekBar
+            <com.simplecity.amp_library.ui.views.SizableSeekBar
                 android:id="@+id/bb_strength"
+                style="@style/SeekBar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"/>

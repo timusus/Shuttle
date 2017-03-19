@@ -138,9 +138,7 @@ public class QueueFragment extends BaseFragment implements
                         case MusicService.InternalIntents.PLAY_STATE_CHANGED:
                         case MusicService.InternalIntents.SERVICE_CONNECTED:
                             updateTrackInfo();
-                            if (songAdapter != null) {
-                                songAdapter.notifyDataSetChanged();
-                            }
+                            refreshAdapterItems();
                             break;
                     }
                 }

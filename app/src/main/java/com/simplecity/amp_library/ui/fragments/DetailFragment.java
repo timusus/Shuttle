@@ -264,7 +264,7 @@ public class DetailFragment extends BaseFragment implements
                         long songViewCount = Stream.of(adapter.items)
                                 .filter(adaptableItem -> adaptableItem instanceof SongView).count();
                         int offset = (int) (adapter.getItemCount() - songViewCount);
-                        if(to >= offset) {
+                        if (to >= offset) {
                             adapter.moveItem(from, to);
                         }
                     },
@@ -279,7 +279,7 @@ public class DetailFragment extends BaseFragment implements
                         to -= offset;
 
                         try {
-                                MediaStore.Audio.Playlists.Members.moveItem(getActivity().getContentResolver(), playlist.id, from, to);
+                            MediaStore.Audio.Playlists.Members.moveItem(getActivity().getContentResolver(), playlist.id, from, to);
                         } catch (IllegalArgumentException e) {
                             CrashlyticsCore.getInstance().log(String.format("Failed to move playlist item from %s to %s. Adapter count: %s. Error:%s", from, to, adapter.getItemCount(), e.getMessage()));
                         }
@@ -372,11 +372,12 @@ public class DetailFragment extends BaseFragment implements
                 //Check to make sure the sliding panel isn't currently expanded or being
                 //dragged. Workaround for issue where the action bar ends up being transparent
                 //when recreating this fragment.
-                if (getActivity() != null) {
-                    if (((MainActivity) getActivity()).canSetAlpha()) {
-                        ((MainActivity) getActivity()).setActionBarAlpha(ratio, true);
-                    }
-                }
+//                if (getActivity() != null) {
+//                    if (((MainActivity) getActivity()).canSetAlpha()) {
+//                        ((MainActivity) getActivity()).setActionBarAlpha(ratio, true);
+//                        Log.i(TAG, "DetailFragment on scroll listener setting action bar alpha to  " + ratio);
+//                    }
+//                }
             }
         });
 

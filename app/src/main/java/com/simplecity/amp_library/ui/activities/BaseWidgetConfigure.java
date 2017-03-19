@@ -31,6 +31,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.ui.fragments.WidgetFragment;
+import com.simplecity.amp_library.ui.views.SizableSeekBar;
 import com.simplecity.amp_library.ui.views.SlidingTabLayout;
 import com.simplecity.amp_library.ui.widgets.BaseWidgetProvider;
 import com.simplecity.amp_library.utils.ColorUtils;
@@ -74,7 +75,7 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
 
     private Button mBackgroundColorButton;
     private Button mTextColorButton;
-    private SeekBar mSeekBar;
+    private SizableSeekBar mSeekBar;
 
     private int mBackgroundColor;
     private int mTextColor;
@@ -139,9 +140,9 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
         CheckBox invertedIconsCheckbox = (CheckBox) findViewById(R.id.checkBox2);
         invertedIconsCheckbox.setOnCheckedChangeListener(this);
 
-        mSeekBar = (SeekBar) findViewById(R.id.seekBar1);
+        mSeekBar = (SizableSeekBar) findViewById(R.id.seekBar1);
         mSeekBar.setOnSeekBarChangeListener(this);
-        ThemeUtils.themeSeekBar(mSeekBar);
+        ThemeUtils.themeSeekBar(this, mSeekBar);
 
         updateWidgetUI();
     }

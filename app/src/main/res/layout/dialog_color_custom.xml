@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingBottom="16dp"
-    android:paddingTop="16dp">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:paddingBottom="16dp"
+              android:paddingTop="16dp">
 
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="180dp"
-        tools:background="#33b5e5" />
+        tools:background="#33b5e5"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,7 +24,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="#" />
+            android:text="#"/>
 
         <com.simplecity.amp_library.ui.views.CustomEditText
             android:id="@+id/editText"
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:hint="RRGGBB"
             android:inputType="textCapCharacters"
-            android:maxLength="6" />
+            android:maxLength="6"/>
 
     </LinearLayout>
 
@@ -48,13 +48,14 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:minEms="1"
-            android:text="R" />
+            android:text="R"/>
 
-        <SeekBar
+        <com.simplecity.amp_library.ui.views.SizableSeekBar
             android:id="@+id/seekbarRed"
+            style="@style/SeekBar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
         <TextView
             android:id="@+id/redValue"
@@ -62,7 +63,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:minEms="2"
-            android:text="255" />
+            android:text="255"/>
 
     </LinearLayout>
 
@@ -79,13 +80,14 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:minEms="1"
-            android:text="G" />
+            android:text="G"/>
 
-        <SeekBar
+        <com.simplecity.amp_library.ui.views.SizableSeekBar
             android:id="@+id/seekbarGreen"
+            style="@style/SeekBar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
         <TextView
             android:id="@+id/greenValue"
@@ -93,7 +95,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:minEms="2"
-            android:text="255" />
+            android:text="255"/>
 
     </LinearLayout>
 
@@ -110,13 +112,14 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:minEms="1"
-            android:text="B" />
+            android:text="B"/>
 
-        <SeekBar
+        <com.simplecity.amp_library.ui.views.SizableSeekBar
             android:id="@+id/seekbarBlue"
+            style="@style/SeekBar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
         <TextView
             android:id="@+id/blueValue"
@@ -124,7 +127,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:minEms="2"
-            android:text="0" />
+            android:text="0"/>
 
     </LinearLayout>
 

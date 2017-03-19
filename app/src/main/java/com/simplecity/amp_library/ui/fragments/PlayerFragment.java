@@ -1,15 +1,9 @@
 package com.simplecity.amp_library.ui.fragments;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
@@ -17,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding.widget.RxSeekBar;
@@ -32,6 +25,7 @@ import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.ui.views.PlayPauseView;
 import com.simplecity.amp_library.ui.views.PlayerView;
 import com.simplecity.amp_library.ui.views.RepeatingImageButton;
+import com.simplecity.amp_library.ui.views.SizableSeekBar;
 import com.simplecity.amp_library.utils.ColorUtils;
 import com.simplecity.amp_library.utils.DrawableUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
@@ -48,7 +42,8 @@ public class PlayerFragment extends BaseFragment implements PlayerView {
 
     private final String TAG = ((Object) this).getClass().getSimpleName();
 
-    private SeekBar seekBar;
+    private SizableSeekBar seekBar;
+
     private boolean isSeeking;
 
     private PlayPauseView playPauseView;
@@ -58,8 +53,6 @@ public class PlayerFragment extends BaseFragment implements PlayerView {
 
     private RepeatingImageButton nextButton;
     private RepeatingImageButton prevButton;
-
-    FloatingActionButton fab;
 
     private TextView artist;
     private TextView album;
@@ -79,8 +72,6 @@ public class PlayerFragment extends BaseFragment implements PlayerView {
     private SharedPreferences.OnSharedPreferenceChangeListener mSharedPreferenceChangeListener;
 
     boolean fabIsAnimating = false;
-
-    private View dragView;
 
     private CompositeSubscription subscriptions;
 
@@ -142,23 +133,18 @@ public class PlayerFragment extends BaseFragment implements PlayerView {
 
         backgroundView = rootView.findViewById(R.id.backgroundView);
 
-        seekBar = (SeekBar) rootView.findViewById(R.id.seekbar);
+        seekBar = (SizableSeekBar) rootView.findViewById(R.id.seekbar);
         seekBar.setMax(1000);
 
         themeUIComponents();
 
-        //If the queueFragment exists in the child fragment manager, retrieve it
-        Fragment queueFragment = getChildFragmentManager().findFragmentByTag(QUEUE_FRAGMENT);
-
         Fragment queuePagerFragment = getChildFragmentManager().findFragmentByTag(QUEUE_PAGER_FRAGMENT);
-        //We only want to add th
-        if (queueFragment == null && queuePagerFragment == null) {
+
+        if (queuePagerFragment == null) {
             getChildFragmentManager().beginTransaction()
                     .replace(R.id.main_container, QueuePagerFragment.newInstance(), QUEUE_PAGER_FRAGMENT)
                     .commit();
         }
-
-        toggleFabVisibility(queueFragment == null, false);
 
         return rootView;
     }
@@ -192,16 +178,12 @@ public class PlayerFragment extends BaseFragment implements PlayerView {
             prevButton.setImageDrawable(DrawableUtils.getColoredStateListDrawableWithThemeColor(getActivity(), prevButton.getDrawable(), ThemeUtils.WHITE));
         }
         if (seekBar != null) {
-            ThemeUtils.themeSeekBar(seekBar, true);
+            ThemeUtils.themeSeekBar(getContext(), seekBar, true);
             if (seekBar != null) {
-                ThemeUtils.themeSeekBar(seekBar, true);
+                ThemeUtils.themeSeekBar(getContext(), seekBar, true);
             }
             if (backgroundView != null) {
                 backgroundView.setBackgroundColor(ColorUtils.getPrimaryColor());
-            }
-            if (fab != null) {
-                fab.setBackgroundTintList(ColorStateList.valueOf(ColorUtils.getAccentColor()));
-                fab.setRippleColor(ColorUtils.darkerise(ColorUtils.getAccentColor(), 0.85f));
             }
 
             if (presenter != null) {
@@ -259,83 +241,9 @@ public class PlayerFragment extends BaseFragment implements PlayerView {
         ft.setCustomAnimations(R.anim.abc_fade_in, R.anim.abc_fade_out);
         if (fragment instanceof QueueFragment) {
             ft.replace(R.id.main_container, new QueuePagerFragment(), QUEUE_PAGER_FRAGMENT);
-            toggleFabVisibility(true, true);
         }
         ft.add(R.id.main_container, new LyricsFragment(), LYRICS_FRAGMENT);
         ft.commit();
-    }
-
-    private void toggleFabVisibility(boolean show, boolean animate) {
-        if (fab == null) {
-            return;
-        }
-
-        if (show && fab.getVisibility() == View.VISIBLE) {
-            return;
-        }
-
-        if (!show && fab.getVisibility() == View.GONE) {
-            return;
-        }
-
-        if (fabIsAnimating) {
-            return;
-        }
-
-        if (!animate) {
-            if (show) {
-                fab.setVisibility(View.VISIBLE);
-            } else {
-                fab.setVisibility(View.GONE);
-            }
-            return;
-        }
-
-        fabIsAnimating = true;
-
-        if (show) {
-
-            fab.setScaleX(0f);
-            fab.setScaleY(0f);
-            fab.setAlpha(0f);
-            fab.setVisibility(View.VISIBLE);
-
-            ObjectAnimator fadeAnimator = ObjectAnimator.ofFloat(fab, "alpha", 0f, 1f);
-            ObjectAnimator scaleXAnimator = ObjectAnimator.ofFloat(fab, "scaleX", 0f, 1f);
-            ObjectAnimator scaleYAnimator = ObjectAnimator.ofFloat(fab, "scaleY", 0f, 1f);
-
-            AnimatorSet animatorSet = new AnimatorSet();
-            animatorSet.playTogether(fadeAnimator, scaleXAnimator, scaleYAnimator);
-            animatorSet.setDuration(350);
-            animatorSet.start();
-
-            animatorSet.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    super.onAnimationEnd(animation);
-                    fabIsAnimating = false;
-                }
-            });
-
-        } else {
-            ObjectAnimator fadeAnimator = ObjectAnimator.ofFloat(fab, "alpha", 1f, 0f);
-            ObjectAnimator scaleXAnimator = ObjectAnimator.ofFloat(fab, "scaleX", 1f, 0f);
-            ObjectAnimator scaleYAnimator = ObjectAnimator.ofFloat(fab, "scaleY", 1f, 0f);
-
-            AnimatorSet animatorSet = new AnimatorSet();
-            animatorSet.playTogether(fadeAnimator, scaleXAnimator, scaleYAnimator);
-            animatorSet.setDuration(250);
-            animatorSet.start();
-
-            animatorSet.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    super.onAnimationEnd(animation);
-                    fab.setVisibility(View.GONE);
-                    fabIsAnimating = false;
-                }
-            });
-        }
     }
 
     @Override

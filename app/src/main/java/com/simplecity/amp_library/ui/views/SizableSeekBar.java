@@ -2,6 +2,7 @@ package com.simplecity.amp_library.ui.views;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ScaleDrawable;
 import android.util.AttributeSet;
@@ -57,12 +58,7 @@ public class SizableSeekBar extends SeekBar {
     private AccelerateDecelerateInterpolator mInterpolator = new AccelerateDecelerateInterpolator();
 
     public SizableSeekBar(Context context) {
-        super(context);
-        super.setOnSeekBarChangeListener(mInternalListener);
-
-        setThumb(mPendingThumb);
-        mPendingThumb = null;
-        configureThumbPadding();
+        this(context, null);
     }
 
     public SizableSeekBar(Context context, AttributeSet attrs) {
