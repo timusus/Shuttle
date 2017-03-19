@@ -62,8 +62,6 @@ public class QueueFragment extends BaseFragment implements
 
     private SharedPreferences prefs;
 
-    private View rootView;
-
     private ScrollBlockingRecyclerView recyclerView;
 
     private ItemTouchHelper itemTouchHelper;
@@ -161,7 +159,7 @@ public class QueueFragment extends BaseFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        rootView = inflater.inflate(R.layout.fragment_queue, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_queue, container, false);
 
         header = rootView.findViewById(R.id.header);
         if (ShuttleUtils.isLandscape() || ShuttleUtils.isTablet()) {
