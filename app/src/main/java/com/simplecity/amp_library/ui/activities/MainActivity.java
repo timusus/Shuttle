@@ -125,7 +125,8 @@ public class MainActivity extends BaseCastActivity implements
 
     private static final int REQUEST_EXPAND = 200;
 
-    private static final String ARG_EXPANDED = "is_expanded";
+    private static final String ARG_PANEL1_EXPANDED = "panel_1_expanded";
+    private static final String ARG_PANEL2_EXPANDED = "panel_2_expanded";
 
     public @interface Panel {
         int NONE = 0;
@@ -260,7 +261,7 @@ public class MainActivity extends BaseCastActivity implements
         setupSecondPanel();
 
         if (savedInstanceState != null && mIsSlidingEnabled) {
-            if (savedInstanceState.getBoolean(ARG_EXPANDED, false)) {
+            if (savedInstanceState.getBoolean(ARG_PANEL1_EXPANDED, false)) {
 
                 final ActionBar actionBar = getSupportActionBar();
 
@@ -274,6 +275,9 @@ public class MainActivity extends BaseCastActivity implements
                 if (actionBar != null) {
                     actionBar.setTitle(mTitle);
                 }
+            }
+            if (savedInstanceState.getBoolean(ARG_PANEL1_EXPANDED, false)) {
+                panelTwo.post(() -> panelTwo.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED, false));
             }
         }
 
@@ -396,9 +400,8 @@ public class MainActivity extends BaseCastActivity implements
         });
     }
 
-    public
     @Panel
-    int getCurrentPanel() {
+    public int getCurrentPanel() {
         if (panelTwo.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
             return Panel.QUEUE;
         } else if (panelOne.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
@@ -508,7 +511,8 @@ public class MainActivity extends BaseCastActivity implements
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         if (mIsSlidingEnabled) {
-            savedInstanceState.putBoolean(ARG_EXPANDED, panelOne.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED);
+            savedInstanceState.putBoolean(ARG_PANEL1_EXPANDED, panelOne.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED);
+            savedInstanceState.putBoolean(ARG_PANEL2_EXPANDED, panelTwo.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED);
         }
         super.onSaveInstanceState(savedInstanceState);
     }
