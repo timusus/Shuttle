@@ -125,8 +125,7 @@ public class MainActivity extends BaseCastActivity implements
 
     private static final int REQUEST_EXPAND = 200;
 
-    private static final String ARG_PANEL1_EXPANDED = "panel_1_expanded";
-    private static final String ARG_PANEL2_EXPANDED = "panel_2_expanded";
+    private static final String KEY_CURRENT_PANEL = "current_panel";
 
     public @interface Panel {
         int NONE = 0;
@@ -135,12 +134,13 @@ public class MainActivity extends BaseCastActivity implements
         int QUEUE = 3;
     }
 
-    SharedPreferences mPrefs;
-    private WeakReference<BackPressListener> mBackPressListenerReference;
+    SharedPreferences prefs;
+
+    private WeakReference<BackPressListener> backPressListenerReference;
     private SlidingUpPanelLayout panelOne;
     private SlidingUpPanelLayout panelTwo;
 
-    private CustomDrawerLayout mDrawerLayout;
+    private CustomDrawerLayout drawerLayout;
 
     //Request code for the purchase flow
     static final int RC_REQUEST = 300;
@@ -149,27 +149,26 @@ public class MainActivity extends BaseCastActivity implements
      * Fragment managing the behaviors, interactions and presentation of the
      * navigation drawer.
      */
-    NavigationDrawerFragment mNavigationDrawerFragment;
+    NavigationDrawerFragment navigationDrawerFragment;
 
     /**
      * Used to store the last screen title. For use in
      * {@link #restoreActionBar()}.
      */
-    CharSequence mTitle;
+    CharSequence title;
 
-    private
     @Panel
-    int targetNavigationPanel;
+    private int targetNavigationPanel;
 
-    private Toolbar mToolbar;
+    private Toolbar toolbar;
 
-    private FrameLayout mDummyStatusBar;
+    private FrameLayout dummyStatusBar;
 
-    private boolean mIsSlidingEnabled;
+    private boolean isSlidingEnabled;
 
-    private SystemBarTintManager mTintManager;
+    private SystemBarTintManager tintManager;
 
-    private float mAlpha;
+    private float alpha;
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -180,7 +179,7 @@ public class MainActivity extends BaseCastActivity implements
         }
     };
 
-    private boolean mHasPendingPlaybackRequest;
+    private boolean hasPendingPlaybackRequest;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -201,7 +200,7 @@ public class MainActivity extends BaseCastActivity implements
 
         if (!ShuttleUtils.hasLollipop() && ShuttleUtils.hasKitKat()) {
             getWindow().setFlags(FLAG_TRANSLUCENT_STATUS, FLAG_TRANSLUCENT_STATUS);
-            mTintManager = new SystemBarTintManager(this);
+            tintManager = new SystemBarTintManager(this);
         }
         if (ShuttleUtils.hasLollipop()) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
@@ -214,70 +213,74 @@ public class MainActivity extends BaseCastActivity implements
 
         supportRequestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Now call super to ensure the theme was properly set
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
 
-        mIsSlidingEnabled = getResources().getBoolean(R.bool.isSlidingEnabled);
+        isSlidingEnabled = getResources().getBoolean(R.bool.isSlidingEnabled);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        mDummyStatusBar = (FrameLayout) findViewById(R.id.dummyStatusBar);
+        dummyStatusBar = (FrameLayout) findViewById(R.id.dummyStatusBar);
 
         if (ShuttleUtils.hasKitKat()) {
-            mDummyStatusBar.setVisibility(View.VISIBLE);
-            mDummyStatusBar.setBackgroundColor(ColorUtils.getPrimaryColorDark(this));
+            dummyStatusBar.setVisibility(View.VISIBLE);
+            dummyStatusBar.setBackgroundColor(ColorUtils.getPrimaryColorDark(this));
             LinearLayout.LayoutParams statusBarParams = new LinearLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, (int) ActionBarUtils.getStatusBarHeight(this));
-            mDummyStatusBar.setLayoutParams(statusBarParams);
+            dummyStatusBar.setLayoutParams(statusBarParams);
         }
 
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(toolbar);
 
-        ThemeUtils.themeStatusBar(this, mTintManager);
+        ThemeUtils.themeStatusBar(this, tintManager);
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+        navigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
-        mTitle = getString(R.string.library_title);
+        title = getString(R.string.library_title);
 
-        mDrawerLayout = (CustomDrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout = (CustomDrawerLayout) findViewById(R.id.drawer_layout);
         if (ShuttleUtils.hasLollipop() && ShuttleUtils.hasKitKat()) {
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
-        mDrawerLayout.setStatusBarBackgroundColor(ShuttleUtils.hasLollipop() ? ColorUtils.getPrimaryColorDark(this) : ColorUtils.getPrimaryColor());
+        drawerLayout.setStatusBarBackgroundColor(ShuttleUtils.hasLollipop() ? ColorUtils.getPrimaryColorDark(this) : ColorUtils.getPrimaryColor());
 
         ImageView arrow = (ImageView) findViewById(R.id.arrow);
         Drawable arrowDrawable = DrawableCompat.wrap(arrow.getDrawable());
         DrawableCompat.setTint(arrowDrawable, ColorUtils.getTextColorPrimary());
         arrow.setImageDrawable(arrowDrawable);
 
-        mNavigationDrawerFragment.setup((DrawerLayout) findViewById(R.id.drawer_layout));
+        navigationDrawerFragment.setup((DrawerLayout) findViewById(R.id.drawer_layout));
 
         targetNavigationPanel = Panel.NONE;
 
         setupFirstPanel();
         setupSecondPanel();
 
-        if (savedInstanceState != null && mIsSlidingEnabled) {
-            if (savedInstanceState.getBoolean(ARG_PANEL1_EXPANDED, false)) {
+        if (savedInstanceState != null && isSlidingEnabled) {
 
-                final ActionBar actionBar = getSupportActionBar();
+            int panelIndex = savedInstanceState.getInt(KEY_CURRENT_PANEL, Panel.MAIN);
+            showPanel(panelIndex);
+            targetNavigationPanel = Panel.NONE;
 
-                //If the sliding panel was previously expanded, expand it again.
-                panelOne.post(() -> {
-                    panelOne.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED, false);
-                    setActionBarAlpha(1f, false);
-                });
+            if (panelIndex == Panel.QUEUE) {
+                setActionBarAlpha(1f, false);
+                panelOne.setSlidingEnabled(false);
 
-                mTitle = getString(R.string.nowplaying_title);
-                if (actionBar != null) {
-                    actionBar.setTitle(mTitle);
-                }
-            }
-            if (savedInstanceState.getBoolean(ARG_PANEL1_EXPANDED, false)) {
-                panelTwo.post(() -> panelTwo.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED, false));
+                panelOne.post(() -> navigationDrawerFragment.animateDrawerToggle(1));
+                
+            } else if (panelIndex == Panel.PLAYER) {
+
+                View upNextView = findViewById(R.id.upNextView);
+                panelTwo.setDragView(upNextView);
+
+                panelOne.post(() -> navigationDrawerFragment.animateDrawerToggle(1));
+
+                setActionBarAlpha(0f, false);
+            } else {
+                setActionBarAlpha(0f, false);
             }
         }
 
@@ -301,9 +304,9 @@ public class MainActivity extends BaseCastActivity implements
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
 
-                mNavigationDrawerFragment.animateDrawerToggle(slideOffset);
+                navigationDrawerFragment.animateDrawerToggle(slideOffset);
 
-                mDummyStatusBar.setAlpha(1 - slideOffset);
+                dummyStatusBar.setAlpha(1 - slideOffset);
             }
 
             @Override
@@ -319,9 +322,9 @@ public class MainActivity extends BaseCastActivity implements
                         }
 
                         checkTargetNavigation();
-                        mNavigationDrawerFragment.toggleDrawerLock(false);
+                        navigationDrawerFragment.toggleDrawerLock(false);
 
-                        mTitle = getString(R.string.library_title);
+                        title = getString(R.string.library_title);
                         supportInvalidateOptionsMenu();
                         break;
                     case EXPANDED:
@@ -332,9 +335,9 @@ public class MainActivity extends BaseCastActivity implements
                         }
 
                         checkTargetNavigation();
-                        mNavigationDrawerFragment.toggleDrawerLock(true);
+                        navigationDrawerFragment.toggleDrawerLock(true);
 
-                        mTitle = getString(R.string.nowplaying_title);
+                        title = getString(R.string.nowplaying_title);
                         supportInvalidateOptionsMenu();
                         break;
                 }
@@ -418,8 +421,14 @@ public class MainActivity extends BaseCastActivity implements
     }
 
     public void showPanel(@Panel int panel) {
+
+        Log.i(TAG, "Show panel called..");
+
         // if we are already at our target panel, then don't do anything
         if (panel == getCurrentPanel()) {
+
+            Log.i(TAG, "Panel = current panel. Returning");
+
             return;
         }
 
@@ -444,14 +453,14 @@ public class MainActivity extends BaseCastActivity implements
     }
 
     public void onSectionAttached(String title) {
-        mTitle = title;
+        this.title = title;
     }
 
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+        actionBar.setTitle(title);
     }
 
     @Override
@@ -510,16 +519,15 @@ public class MainActivity extends BaseCastActivity implements
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        if (mIsSlidingEnabled) {
-            savedInstanceState.putBoolean(ARG_PANEL1_EXPANDED, panelOne.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED);
-            savedInstanceState.putBoolean(ARG_PANEL2_EXPANDED, panelTwo.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED);
+        if (isSlidingEnabled) {
+            savedInstanceState.putInt(KEY_CURRENT_PANEL, getCurrentPanel());
         }
         super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
+        if (!navigationDrawerFragment.isDrawerOpen()) {
 
             getMenuInflater().inflate(R.menu.menu_main_activity, menu);
 
@@ -608,7 +616,7 @@ public class MainActivity extends BaseCastActivity implements
         MenuItem sortingItem = menu.findItem(R.id.sort);
         MenuItem viewAsItem = menu.findItem(R.id.view_as);
 
-        if (panelOne == null || !mIsSlidingEnabled || panelOne.getPanelState() != SlidingUpPanelLayout.PanelState.EXPANDED) {
+        if (panelOne == null || !isSlidingEnabled || panelOne.getPanelState() != SlidingUpPanelLayout.PanelState.EXPANDED) {
             if (whiteListItem != null) {
                 whiteListItem.setVisible(true);
             }
@@ -727,7 +735,7 @@ public class MainActivity extends BaseCastActivity implements
                 DialogUtils.showShareDialog(MainActivity.this, MusicUtils.getSong());
                 return true;
             case android.R.id.home:
-                if (mIsSlidingEnabled) {
+                if (isSlidingEnabled) {
                     switch (getCurrentPanel()) {
                         case Panel.QUEUE:
                             showPanel(Panel.PLAYER);
@@ -750,7 +758,7 @@ public class MainActivity extends BaseCastActivity implements
         super.onServiceConnected(name, obj);
         supportInvalidateOptionsMenu();
 
-        if (mIsSlidingEnabled) {
+        if (isSlidingEnabled) {
             PlayerFragment playerFragment = (PlayerFragment) getSupportFragmentManager().findFragmentById(R.id.playerFragment);
 
             if (playerFragment != null) {
@@ -777,7 +785,7 @@ public class MainActivity extends BaseCastActivity implements
     @Override
     public void onBackPressed() {
 
-        if (mIsSlidingEnabled) {
+        if (isSlidingEnabled) {
             switch (getCurrentPanel()) {
                 case Panel.QUEUE:
                     showPanel(Panel.PLAYER);
@@ -801,8 +809,8 @@ public class MainActivity extends BaseCastActivity implements
             }
         }
         if (isShowingFolders) {
-            if (mBackPressListenerReference != null && mBackPressListenerReference.get() != null) {
-                if (mBackPressListenerReference.get().onBackPressed()) {
+            if (backPressListenerReference != null && backPressListenerReference.get() != null) {
+                if (backPressListenerReference.get().onBackPressed()) {
                     return;
                 }
             }
@@ -811,10 +819,10 @@ public class MainActivity extends BaseCastActivity implements
         super.onBackPressed();
 
         if (isShowingFolders || containerFragment instanceof MainFragment) {
-            if (mNavigationDrawerFragment != null) {
-                mNavigationDrawerFragment.setDrawerItem(0);
+            if (navigationDrawerFragment != null) {
+                navigationDrawerFragment.setDrawerItem(0);
             }
-            mTitle = getString(R.string.library_title);
+            title = getString(R.string.library_title);
             supportInvalidateOptionsMenu();
         }
     }
@@ -857,11 +865,11 @@ public class MainActivity extends BaseCastActivity implements
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void themeColorChanged() {
-        if (mDummyStatusBar != null) {
-            mDummyStatusBar.setBackgroundColor(ShuttleUtils.hasLollipop() ? ColorUtils.getPrimaryColorDark(this) : ColorUtils.getPrimaryColor());
+        if (dummyStatusBar != null) {
+            dummyStatusBar.setBackgroundColor(ShuttleUtils.hasLollipop() ? ColorUtils.getPrimaryColorDark(this) : ColorUtils.getPrimaryColor());
         }
-        if (mDrawerLayout != null && ShuttleUtils.hasKitKat()) {
-            mDrawerLayout.setStatusBarBackgroundColor(ShuttleUtils.hasLollipop() ? ColorUtils.getPrimaryColorDark(MainActivity.this) : ColorUtils.getPrimaryColor());
+        if (drawerLayout != null && ShuttleUtils.hasKitKat()) {
+            drawerLayout.setStatusBarBackgroundColor(ShuttleUtils.hasLollipop() ? ColorUtils.getPrimaryColorDark(MainActivity.this) : ColorUtils.getPrimaryColor());
         }
         if (SettingsManager.getInstance().canTintNavBar()) {
             getWindow().setNavigationBarColor(ColorUtils.getPrimaryColorDark(MainActivity.this));
@@ -871,31 +879,31 @@ public class MainActivity extends BaseCastActivity implements
 
     @Override
     public void onItemClicked(AlbumArtist albumArtist, View transitionView) {
-        mTitle = getString(R.string.library_title);
+        title = getString(R.string.library_title);
         swapFragments(albumArtist, transitionView);
     }
 
     @Override
     public void onItemClicked(Album album, View transitionView) {
-        mTitle = getString(R.string.library_title);
+        title = getString(R.string.library_title);
         swapFragments(album, transitionView);
     }
 
     @Override
     public void onItemClicked(Genre genre) {
-        mTitle = getString(R.string.library_title);
+        title = getString(R.string.library_title);
         swapFragments(DetailFragment.newInstance(genre), true);
     }
 
     @Override
     public void onItemClicked(Playlist playlist) {
-        mTitle = getString(R.string.library_title);
+        title = getString(R.string.library_title);
         swapFragments(DetailFragment.newInstance(playlist), true);
     }
 
     @Override
     public void onItemClicked(Serializable item, View transitionView) {
-        mTitle = getString(R.string.library_title);
+        title = getString(R.string.library_title);
         if (transitionView != null) {
             swapFragments(item, transitionView);
         } else {
@@ -918,7 +926,7 @@ public class MainActivity extends BaseCastActivity implements
                             CrashlyticsCore.getInstance().logException(e);
                         }
                     }
-                    mTitle = getString(R.string.library_title);
+                    title = getString(R.string.library_title);
                 }
                 break;
             case DrawerGroupItem.Type.FOLDERS:
@@ -974,7 +982,7 @@ public class MainActivity extends BaseCastActivity implements
     }
 
     private void handlePendingPlaybackRequest() {
-        if (mHasPendingPlaybackRequest) {
+        if (hasPendingPlaybackRequest) {
             handlePlaybackRequest(getIntent());
         }
     }
@@ -984,7 +992,7 @@ public class MainActivity extends BaseCastActivity implements
         if (intent == null) {
             return;
         } else if (MusicServiceConnectionUtils.sServiceBinder == null) {
-            mHasPendingPlaybackRequest = true;
+            hasPendingPlaybackRequest = true;
             return;
         }
 
@@ -1013,7 +1021,7 @@ public class MainActivity extends BaseCastActivity implements
             }
         }
 
-        mHasPendingPlaybackRequest = false;
+        hasPendingPlaybackRequest = false;
     }
 
     private long parseIdFromIntent(Intent intent, String longKey,
@@ -1046,7 +1054,7 @@ public class MainActivity extends BaseCastActivity implements
             String sku = purchase.getSku();
 
             if (sku.equals(Config.SKU_PREMIUM)) {
-                mPrefs.edit().putBoolean("pref_theme_gold", true).apply();
+                prefs.edit().putBoolean("pref_theme_gold", true).apply();
                 ShuttleApplication.getInstance().setIsUpgraded(true);
                 DialogUtils.showUpgradeThankyouDialog(MainActivity.this);
             }
@@ -1064,31 +1072,29 @@ public class MainActivity extends BaseCastActivity implements
     }
 
     public void togglePanelVisibility(boolean show) {
-        if (!mIsSlidingEnabled) {
-//            findViewById(R.id.mini_player_container).setVisibility(show ? View.VISIBLE : View.GONE);
-        } else {
-            if (panelOne != null) {
-                if (show) {
-                    panelOne.showPanel();
-                } else {
-                    panelOne.hidePanel();
-                }
-            }
-        }
+//        if (!mIsSlidingEnabled) {
+////            findViewById(R.id.mini_player_container).setVisibility(show ? View.VISIBLE : View.GONE);
+//        } else {
+//            if (panelOne != null) {
+//                if (show) {
+//                    panelOne.showPanel();
+//                } else {
+//                    panelOne.hidePanel();
+//                }
+//            }
+//        }
     }
 
     public void setOnBackPressedListener(BackPressListener listener) {
         if (listener == null) {
-            mBackPressListenerReference.clear();
+            backPressListenerReference.clear();
         } else {
-            mBackPressListenerReference = new WeakReference<>(listener);
+            backPressListenerReference = new WeakReference<>(listener);
         }
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void setActionBarAlpha(float alpha, boolean store) {
-
-        Log.i(TAG, "Setting alpha to: " + alpha);
 
         Fragment mainFragment = getSupportFragmentManager().findFragmentById(R.id.main_container);
 //        if (mainFragment != null && !(mainFragment instanceof DetailFragment)) {
@@ -1099,23 +1105,23 @@ public class MainActivity extends BaseCastActivity implements
 //            }
 //        } else {
         if (store) {
-            mAlpha = alpha;
+            this.alpha = alpha;
         } else {
-            alpha = Math.max(0f, Math.min(1f, mAlpha + alpha));
+            alpha = Math.max(0f, Math.min(1f, this.alpha + alpha));
         }
 //        }
 
-        if (mToolbar != null) {
-            mToolbar.setBackgroundColor(ColorUtils.adjustAlpha(ColorUtils.getPrimaryColor(), alpha));
+        if (toolbar != null) {
+            toolbar.setBackgroundColor(ColorUtils.adjustAlpha(ColorUtils.getPrimaryColor(), alpha));
         }
 
-        if (mDummyStatusBar != null) {
-            mDummyStatusBar.setBackgroundColor(ColorUtils.adjustAlpha(ShuttleUtils.hasLollipop() ? ColorUtils.getPrimaryColorDark(this) : ColorUtils.getPrimaryColor(), alpha));
+        if (dummyStatusBar != null) {
+            dummyStatusBar.setBackgroundColor(ColorUtils.adjustAlpha(ShuttleUtils.hasLollipop() ? ColorUtils.getPrimaryColorDark(this) : ColorUtils.getPrimaryColor(), alpha));
         }
 
         if (ShuttleUtils.hasKitKat()) {
-            if (mTintManager != null) {
-                mTintManager.setStatusBarTintColor(ColorUtils.adjustAlpha(ShuttleUtils.hasLollipop() ? ColorUtils.getPrimaryColorDark(this) : ColorUtils.getPrimaryColor(), alpha));
+            if (tintManager != null) {
+                tintManager.setStatusBarTintColor(ColorUtils.adjustAlpha(ShuttleUtils.hasLollipop() ? ColorUtils.getPrimaryColorDark(this) : ColorUtils.getPrimaryColor(), alpha));
             }
         }
 
@@ -1139,7 +1145,7 @@ public class MainActivity extends BaseCastActivity implements
 
         boolean canSetAlpha = true;
 
-        if (mIsSlidingEnabled
+        if (isSlidingEnabled
                 && panelOne != null
                 && (panelOne.getPanelState() == SlidingUpPanelLayout.PanelState.DRAGGING
                 || panelOne.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED)) {
