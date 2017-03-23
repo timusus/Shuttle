@@ -270,11 +270,8 @@ public class MainActivity extends BaseCastActivity implements
                 panelOne.setSlidingEnabled(false);
 
                 panelOne.post(() -> navigationDrawerFragment.animateDrawerToggle(1));
-                
-            } else if (panelIndex == Panel.PLAYER) {
 
-                View upNextView = findViewById(R.id.upNextView);
-                panelTwo.setDragView(upNextView);
+            } else if (panelIndex == Panel.PLAYER) {
 
                 panelOne.post(() -> navigationDrawerFragment.animateDrawerToggle(1));
 
@@ -355,6 +352,10 @@ public class MainActivity extends BaseCastActivity implements
                 + (ShuttleUtils.hasKitKat() ? ActionBarUtils.getStatusBarHeight(this) : 0)
                 - getResources().getDimension(R.dimen.mini_player_height));
         panelTwo.setSlidePanelOffset(-offset);
+
+        View upNextView = findViewById(R.id.upNextView);
+        panelTwo.setDragView(upNextView);
+
         panelTwo.addPanelSlideListener(new SlidingUpPanelLayout.SimplePanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
