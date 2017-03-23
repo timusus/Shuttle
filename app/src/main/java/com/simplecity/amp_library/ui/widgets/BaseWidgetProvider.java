@@ -13,10 +13,14 @@ import android.preference.PreferenceManager;
 import android.support.annotation.LayoutRes;
 import android.widget.RemoteViews;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.glide.utils.CustomAppWidgetTarget;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.ui.activities.MainActivity;
+import com.simplecity.amp_library.utils.DrawableUtils;
 
 import rx.functions.Action0;
 
@@ -127,5 +131,61 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         intent.setComponent(serviceName);
         pendingIntent = PendingIntent.getService(context, appWidgetId, intent, 0);
         views.setOnClickPendingIntent(R.id.repeat_button, pendingIntent);
+    }
+
+    void loadArtwork(MusicService service, int[] appWidgetIds, RemoteViews views, int bitmapSize) {
+        //Try to load the artwork. If it fails, halve the dimensions and try again.
+        loadArtwork(service, views, bitmapSize, e ->
+                loadArtwork(service, views, bitmapSize / 2, e1 ->
+                        //If this one doesn't work, load a placeholder.
+                        loadArtwork(service, views, bitmapSize / 3, e2
+                                        -> views.setImageViewResource(R.id.album_art, R.drawable.ic_placeholder_light_medium),
+                                appWidgetIds), appWidgetIds), appWidgetIds);
+    }
+
+    void loadArtwork(MusicService service, RemoteViews views, int size, CustomAppWidgetTarget.CustomErrorListener errorListener, int... appWidgetIds) {
+        Glide.with(service)
+                .load(service.getSong())
+                .asBitmap()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(new CustomAppWidgetTarget(service, views, R.id.album_art, size, size, errorListener, appWidgetIds));
+    }
+
+    void setupRepeatView(MusicService service, RemoteViews views, boolean invertIcons) {
+        switch (service.getRepeatMode()) {
+            case MusicService.RepeatMode.ALL:
+                views.setImageViewBitmap(R.id.repeat_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_repeat_white));
+                views.setContentDescription(R.id.shuffle_button, service.getString(R.string.btn_repeat_current));
+                break;
+            case MusicService.RepeatMode.ONE:
+                views.setImageViewBitmap(R.id.repeat_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_repeat_one_white));
+                views.setContentDescription(R.id.shuffle_button, service.getString(R.string.btn_repeat_off));
+                break;
+            default:
+                if (invertIcons) {
+                    views.setImageViewBitmap(R.id.repeat_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_repeat_white));
+                } else {
+                    views.setImageViewResource(R.id.repeat_button, R.drawable.ic_repeat_white);
+                }
+                views.setContentDescription(R.id.shuffle_button, service.getString(R.string.btn_repeat_all));
+                break;
+        }
+    }
+
+    void setupShuffleView(MusicService service, RemoteViews views, boolean invertIcons) {
+        switch (service.getShuffleMode()) {
+            case MusicService.ShuffleMode.OFF:
+                if (invertIcons) {
+                    views.setImageViewBitmap(R.id.shuffle_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_shuffle_white));
+                } else {
+                    views.setImageViewResource(R.id.shuffle_button, R.drawable.ic_shuffle_white);
+                }
+                views.setContentDescription(R.id.shuffle_button, service.getString(R.string.btn_shuffle_on));
+                break;
+            default:
+                views.setImageViewBitmap(R.id.shuffle_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_shuffle_white));
+                views.setContentDescription(R.id.shuffle_button, service.getString(R.string.btn_shuffle_off));
+                break;
+        }
     }
 }
