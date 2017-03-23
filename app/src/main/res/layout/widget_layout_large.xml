@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <FrameLayout
-    android:id="@+id/widget_layout_large"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/widget_layout_large"
     android:layout_width="match_parent"
     android:layout_height="144dp"
     android:padding="@dimen/widget_margin"
@@ -42,8 +42,8 @@
                     android:fadingEdge="horizontal"
                     android:gravity="center_vertical"
 
-                    android:textSize="14sp"
-                    android:maxLines="1" />
+                    android:maxLines="1"
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/text2"
@@ -55,8 +55,8 @@
                     android:fadingEdge="horizontal"
                     android:gravity="center_vertical"
 
-                    android:textSize="14sp"
-                    android:maxLines="1" />
+                    android:maxLines="1"
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/text3"
@@ -68,8 +68,8 @@
                     android:fadingEdge="horizontal"
                     android:gravity="center_vertical"
 
-                    android:textSize="14sp"
-                    android:maxLines="1" />
+                    android:maxLines="1"
+                    android:textSize="14sp"/>
             </LinearLayout>
         </RelativeLayout>
 
@@ -87,6 +87,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
+                android:contentDescription="@string/btn_shuffle_on"
                 android:src="@drawable/ic_shuffle_white"/>
 
             <ImageButton
@@ -96,6 +97,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
+                android:contentDescription="@string/btn_prev"
                 android:src="@drawable/ic_prev_white"/>
 
             <ImageButton
@@ -105,6 +107,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
+                android:contentDescription="@string/btn_play_pause"
                 android:src="@drawable/ic_play_white"/>
 
             <ImageButton
@@ -114,6 +117,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
+                android:contentDescription="@string/btn_skip"
                 android:src="@drawable/ic_skip_white"/>
 
             <ImageButton
@@ -123,6 +127,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
+                android:contentDescription="@string/btn_repeat_all"
                 android:src="@drawable/ic_repeat_white"/>
         </LinearLayout>
 

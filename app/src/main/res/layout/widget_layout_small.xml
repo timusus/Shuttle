@@ -29,8 +29,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
 
-                android:textSize="14sp"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:textSize="14sp"/>
 
             <TextView
                 android:id="@+id/text2"
@@ -40,8 +40,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
 
-                android:textSize="14sp"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:textSize="14sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -57,6 +57,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
+                android:contentDescription="@string/btn_prev"
                 android:gravity="center_vertical"
                 android:src="@drawable/ic_prev_white"/>
 
@@ -66,6 +67,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
+                android:contentDescription="@string/btn_play_pause"
                 android:gravity="center_vertical"
                 android:src="@drawable/ic_play_white"/>
 
@@ -75,6 +77,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
+                android:contentDescription="@string/btn_skip"
                 android:gravity="center_vertical"
                 android:src="@drawable/ic_skip_white"/>
         </LinearLayout>

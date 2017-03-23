@@ -150,18 +150,22 @@ public class WidgetProviderSmall extends BaseWidgetProvider {
                     } else {
                         views.setImageViewResource(R.id.shuffle_button, R.drawable.ic_shuffle_white);
                     }
+                    views.setContentDescription(R.id.shuffle_button, service.getString(R.string.btn_shuffle_on));
                     break;
                 default:
                     views.setImageViewBitmap(R.id.shuffle_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_shuffle_white));
+                    views.setContentDescription(R.id.shuffle_button, service.getString(R.string.btn_shuffle_off));
                     break;
             }
 
             switch (service.getRepeatMode()) {
                 case MusicService.RepeatMode.ALL:
                     views.setImageViewBitmap(R.id.repeat_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_repeat_white));
+                    views.setContentDescription(R.id.shuffle_button, service.getString(R.string.btn_repeat_current));
                     break;
                 case MusicService.RepeatMode.ONE:
                     views.setImageViewBitmap(R.id.repeat_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_repeat_one_white));
+                    views.setContentDescription(R.id.shuffle_button, service.getString(R.string.btn_repeat_off));
                     break;
                 default:
                     if (invertIcons) {
@@ -169,6 +173,7 @@ public class WidgetProviderSmall extends BaseWidgetProvider {
                     } else {
                         views.setImageViewResource(R.id.repeat_button, R.drawable.ic_repeat_white);
                     }
+                    views.setContentDescription(R.id.shuffle_button, service.getString(R.string.btn_repeat_all));
                     break;
             }
 
