@@ -595,6 +595,8 @@
     <!-- -->
     <string name="empty_suggested">Play some more music, and suggestions will show up here.</string>
 
+    <string name="empty_search">No search results found.</string>
+
     <!-- ## Sort options ## -->
     <string name="sorting">Sorting</string>
 

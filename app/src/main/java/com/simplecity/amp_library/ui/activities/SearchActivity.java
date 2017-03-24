@@ -41,6 +41,8 @@ import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.adapters.SearchAdapter;
 import com.simplecity.amp_library.ui.modelviews.AlbumArtistView;
 import com.simplecity.amp_library.ui.modelviews.AlbumView;
+import com.simplecity.amp_library.ui.modelviews.EmptyView;
+import com.simplecity.amp_library.ui.modelviews.LoadingView;
 import com.simplecity.amp_library.ui.modelviews.SearchHeaderView;
 import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.modelviews.ViewType;
@@ -50,6 +52,7 @@ import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.Operators;
 import com.simplecity.amp_library.utils.PlaylistUtils;
+import com.simplecity.amp_library.utils.ResourceUtils;
 import com.simplecity.amp_library.utils.SearchUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
@@ -63,6 +66,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
+import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -99,10 +103,20 @@ public class SearchActivity extends BaseActivity implements
     private CompositeSubscription subscriptions;
 
     private Subscription setItemsSubscription = null;
+    private Subscription performSearchSubscription = null;
+
+    private LoadingView loadingView;
+
+    private EmptyView emptyView;
 
     @SuppressLint("InlinedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        loadingView = new LoadingView();
+
+        emptyView = new EmptyView(R.string.empty_search);
+        emptyView.setHeight(ResourceUtils.toPixels(96));
 
         ThemeUtils.setTheme(this);
 
@@ -192,90 +206,51 @@ public class SearchActivity extends BaseActivity implements
 
     private void refreshAdapterItems() {
 
-        subscriptions.add(DataManager.getInstance().getSongsRelay()
-                .first()
-                .map(songs -> {
+        adapter.setItems(Collections.singletonList(loadingView));
 
-                    char[] prefix = filterString.toUpperCase().toCharArray();
+        //We've received a new refresh call. Unsubscribe the in-flight subscription if it exists.
+        if (performSearchSubscription != null) {
+            performSearchSubscription.unsubscribe();
+        }
 
-                    List<Album> albums = Operators.songsToAlbums(songs);
-                    Collections.sort(albums, Album::compareTo);
+        performSearchSubscription = Observable.combineLatest(
 
-                    List<AlbumArtist> albumArtists = Operators.albumsToAlbumArtists(albums);
-                    Collections.sort(albumArtists, AlbumArtist::compareTo);
+                DataManager.getInstance().getAlbumArtistsRelay()
+                        .first()
+                        .lift(artistFilterOperator),
 
-                    //Album artists
-                    List<AdaptableItem> adaptableItems = Stream.of(albumArtists)
-                            .filter(album -> album.name != null)
-                            .map(albumArtist -> new SearchUtils.JaroWinklerObject<>(albumArtist, filterString, albumArtist.name))
-                            .filter(jaroWinklerObject -> jaroWinklerObject.score > SCORE_THRESHOLD || TextUtils.isEmpty(filterString))
-                            .sorted((a, b) -> a.object.compareTo(b.object))
-                            .sorted((a, b) -> Double.compare(b.score, a.score))
-                            .map(jaroWinklerObject -> jaroWinklerObject.object)
-                            .map(albumArtist -> {
-                                AlbumArtistView albumArtistView = new AlbumArtistView(albumArtist, ViewType.ARTIST_LIST, requestManager);
-                                albumArtistView.setPrefix(prefixHighlighter, prefix);
-                                return (AdaptableItem) albumArtistView;
-                            })
-                            .collect(Collectors.toList());
+                DataManager.getInstance().getAlbumsRelay()
+                        .first()
+                        .lift(albumFilterOperator),
 
-                    if (!adaptableItems.isEmpty()) {
-                        adaptableItems.add(0, artistsHeader);
-                    }
+                DataManager.getInstance().getSongsRelay()
+                        .first()
+                        .lift(songFilterOperator),
 
-                    //Albums
-                    List<AdaptableItem> albumItems = Stream.of(albums)
-                            .filter(album -> album.name != null)
-                            .map(album -> new SearchUtils.JaroWinklerObject<>(album, filterString, album.name, album.albumArtistName))
-                            .filter(jaroWinklerObject -> jaroWinklerObject.score > SCORE_THRESHOLD || TextUtils.isEmpty(filterString))
-                            .sorted((a, b) -> a.object.compareTo(b.object))
-                            .sorted((a, b) -> Double.compare(b.score, a.score))
-                            .map(jaroWinklerObject -> jaroWinklerObject.object)
-                            .map(album -> {
-                                AlbumView albumView = new AlbumView(album, ViewType.ALBUM_LIST, requestManager);
-                                albumView.setPrefix(prefixHighlighter, prefix);
-                                return albumView;
-                            })
-                            .collect(Collectors.toList());
-
-                    if (!albumItems.isEmpty()) {
-                        albumItems.add(0, albumsHeader);
-                    }
-                    adaptableItems.addAll(albumItems);
-
-                    //Songs
-                    songs = Stream.of(songs).filter(song -> song.name != null)
-                            .map(song -> new SearchUtils.JaroWinklerObject<>(song, filterString, song.name, song.albumName, song.artistName, song.albumArtistName))
-                            .filter(jaroWinklerObject -> jaroWinklerObject.score > SCORE_THRESHOLD || TextUtils.isEmpty(filterString))
-                            .sorted((a, b) -> a.object.compareTo(b.object))
-                            .sorted((a, b) -> Double.compare(b.score, a.score))
-                            .map(jaroWinklerObject -> jaroWinklerObject.object)
-                            .collect(Collectors.toList());
-
-                    List<AdaptableItem> songItems = Stream.of(songs)
-                            .map(song -> {
-                                SongView songView = new SongView(song, dummySelector, requestManager);
-                                songView.setPrefix(prefixHighlighter, prefix);
-                                return songView;
-                            })
-                            .collect(Collectors.toList());
-
-                    if (!songItems.isEmpty()) {
-                        songItems.add(0, songsHeader);
-                    }
-                    adaptableItems.addAll(songItems);
-
-                    return adaptableItems;
+                (adaptableItems, adaptableItems2, adaptableItems3) -> {
+                    List<AdaptableItem> list = new ArrayList<>();
+                    list.addAll(adaptableItems);
+                    list.addAll(adaptableItems2);
+                    list.addAll(adaptableItems3);
+                    return list;
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(adaptableItems -> {
+
+                    if (adaptableItems.isEmpty()) {
+                        adaptableItems.add(loadingView);
+                    }
+
                     //We've got a new set of items to adapt.. Cancel the in-flight subscription.
                     if (setItemsSubscription != null) {
                         setItemsSubscription.unsubscribe();
                     }
+
                     setItemsSubscription = adapter.setItems(adaptableItems);
                     recyclerView.scrollToPosition(0);
-                }));
+                });
+
+        subscriptions.add(performSearchSubscription);
     }
 
     @Override
@@ -310,7 +285,7 @@ public class SearchActivity extends BaseActivity implements
     private Subscription getSearchViewSubscription() {
         return RxSearchView.queryTextChangeEvents(searchView)
                 .skip(1)
-                .debounce(50, TimeUnit.MILLISECONDS)
+                .debounce(200, TimeUnit.MILLISECONDS)
                 .onBackpressureLatest()
                 .subscribe(searchViewQueryTextEvent -> {
                     filterString = !TextUtils.isEmpty(searchViewQueryTextEvent.queryText()) ? searchViewQueryTextEvent.queryText().toString() : "";
@@ -465,6 +440,147 @@ public class SearchActivity extends BaseActivity implements
         );
         menu.show();
     }
+
+    Observable.Operator<List<AdaptableItem>, List<Song>> songFilterOperator = subscriber -> new Subscriber<List<Song>>() {
+        @Override
+        public void onNext(List<Song> songs) {
+
+            char[] prefix = filterString.toUpperCase().toCharArray();
+
+            List<Album> albums = Operators.songsToAlbums(songs);
+            Collections.sort(albums, Album::compareTo);
+
+            List<AlbumArtist> albumArtists = Operators.albumsToAlbumArtists(albums);
+            Collections.sort(albumArtists, AlbumArtist::compareTo);
+
+            if (isUnsubscribed()) return;
+
+            songs = Stream.of(songs).filter(song -> song.name != null)
+                    .map(song -> new SearchUtils.JaroWinklerObject<>(song, filterString, song.name, song.albumName, song.artistName, song.albumArtistName))
+                    .filter(jaroWinklerObject -> jaroWinklerObject.score > SCORE_THRESHOLD || TextUtils.isEmpty(filterString))
+                    .sorted((a, b) -> a.object.compareTo(b.object))
+                    .sorted((a, b) -> Double.compare(b.score, a.score))
+                    .map(jaroWinklerObject -> jaroWinklerObject.object)
+                    .collect(Collectors.toList());
+
+            List<AdaptableItem> songItems = Stream.of(songs)
+                    .map(song -> {
+                        SongView songView = new SongView(song, dummySelector, requestManager);
+                        songView.setPrefix(prefixHighlighter, prefix);
+                        return songView;
+                    })
+                    .collect(Collectors.toList());
+
+            if (!songItems.isEmpty()) {
+                songItems.add(0, songsHeader);
+            }
+
+            if (!subscriber.isUnsubscribed()) {
+                subscriber.onNext(songItems);
+            }
+        }
+
+        @Override
+        public void onCompleted() {
+            subscriber.onCompleted();
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            subscriber.onError(e);
+        }
+
+    };
+
+    Observable.Operator<List<AdaptableItem>, List<Album>> albumFilterOperator = subscriber -> new Subscriber<List<Album>>() {
+        @Override
+        public void onNext(List<Album> albums) {
+
+            char[] prefix = filterString.toUpperCase().toCharArray();
+
+            Collections.sort(albums, Album::compareTo);
+
+            if (isUnsubscribed()) return;
+
+            List<AdaptableItem> albumItems = Stream.of(albums)
+                    .filter(album -> album.name != null)
+                    .map(album -> new SearchUtils.JaroWinklerObject<>(album, filterString, album.name, album.albumArtistName))
+                    .filter(jaroWinklerObject -> jaroWinklerObject.score > SCORE_THRESHOLD || TextUtils.isEmpty(filterString))
+                    .sorted((a, b) -> a.object.compareTo(b.object))
+                    .sorted((a, b) -> Double.compare(b.score, a.score))
+                    .map(jaroWinklerObject -> jaroWinklerObject.object)
+                    .map(album -> {
+                        AlbumView albumView = new AlbumView(album, ViewType.ALBUM_LIST, requestManager);
+                        albumView.setPrefix(prefixHighlighter, prefix);
+                        return albumView;
+                    })
+                    .collect(Collectors.toList());
+
+            if (!albumItems.isEmpty()) {
+                albumItems.add(0, albumsHeader);
+            }
+
+            if (!subscriber.isUnsubscribed()) {
+                subscriber.onNext(albumItems);
+            }
+        }
+
+        @Override
+        public void onCompleted() {
+            subscriber.onCompleted();
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            subscriber.onError(e);
+        }
+
+    };
+
+    Observable.Operator<List<AdaptableItem>, List<AlbumArtist>> artistFilterOperator = subscriber -> new Subscriber<List<AlbumArtist>>() {
+        @Override
+        public void onNext(List<AlbumArtist> albumArtists) {
+
+            char[] prefix = filterString.toUpperCase().toCharArray();
+
+            Collections.sort(albumArtists, AlbumArtist::compareTo);
+
+            if (isUnsubscribed()) return;
+
+            List<AdaptableItem> adaptableItems = Stream.of(albumArtists)
+                    .filter(albumArtist -> albumArtist.name != null)
+                    .map(albumArtist -> new SearchUtils.JaroWinklerObject<>(albumArtist, filterString, albumArtist.name))
+                    .filter(jaroWinklerObject -> jaroWinklerObject.score > SCORE_THRESHOLD || TextUtils.isEmpty(filterString))
+                    .sorted((a, b) -> a.object.compareTo(b.object))
+                    .sorted((a, b) -> Double.compare(b.score, a.score))
+                    .map(jaroWinklerObject -> jaroWinklerObject.object)
+                    .map(albumArtist -> {
+                        AlbumArtistView albumArtistView = new AlbumArtistView(albumArtist, ViewType.ARTIST_LIST, requestManager);
+                        albumArtistView.setPrefix(prefixHighlighter, prefix);
+                        return (AdaptableItem) albumArtistView;
+                    })
+                    .collect(Collectors.toList());
+
+            if (!adaptableItems.isEmpty()) {
+                adaptableItems.add(0, artistsHeader);
+            }
+
+            if (!subscriber.isUnsubscribed()) {
+                subscriber.onNext(adaptableItems);
+            }
+        }
+
+        @Override
+        public void onCompleted() {
+            subscriber.onCompleted();
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            subscriber.onError(e);
+        }
+
+    };
 
     @Override
     protected String screenName() {

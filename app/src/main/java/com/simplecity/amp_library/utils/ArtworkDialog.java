@@ -21,7 +21,7 @@ import com.simplecity.amp_library.model.UserSelectedArtwork;
 import com.simplecity.amp_library.sql.databases.CustomArtworkTable;
 import com.simplecity.amp_library.ui.adapters.ItemAdapter;
 import com.simplecity.amp_library.ui.modelviews.ArtworkView;
-import com.simplecity.amp_library.ui.modelviews.LoadingView;
+import com.simplecity.amp_library.ui.modelviews.ArtworkLoadingView;
 import com.simplecity.amp_library.ui.recyclerview.SpacesItemDecoration;
 
 import java.io.File;
@@ -59,7 +59,7 @@ public class ArtworkDialog {
             }
         });
 
-        artworkAdapter.items.add(0, new LoadingView());
+        artworkAdapter.items.add(0, new ArtworkLoadingView());
         artworkAdapter.notifyDataSetChanged();
         recyclerView.setAdapter(artworkAdapter);
 
