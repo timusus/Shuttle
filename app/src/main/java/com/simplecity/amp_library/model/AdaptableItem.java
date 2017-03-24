@@ -25,4 +25,6 @@ public interface AdaptableItem<T, H extends RecyclerView.ViewHolder> extends Con
     void recycle(H holder);
 
     T getItem();
+
+    int getSpanSize(int spanCount);
 }

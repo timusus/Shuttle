@@ -40,4 +40,9 @@ public abstract class BaseAdaptableItem<T, H extends RecyclerView.ViewHolder> im
     public T getItem() {
         return null;
     }
+
+    @Override
+    public int getSpanSize(int spanCount) {
+        return spanCount;
+    }
 }
