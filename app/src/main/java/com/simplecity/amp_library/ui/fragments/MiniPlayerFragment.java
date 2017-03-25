@@ -85,7 +85,10 @@ public class MiniPlayerFragment extends BaseFragment implements PlayerView {
         rootView.setOnTouchListener(new OnSwipeTouchListener(getActivity()));
 
         playPauseView = (PlayPauseView) rootView.findViewById(R.id.mini_play);
-        playPauseView.setOnClickListener(view -> presenter.togglePlayback());
+        playPauseView.setOnClickListener(v -> {
+            playPauseView.toggle();
+            playPauseView.postDelayed(() -> presenter.togglePlayback(), 200);
+        });
 
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressbar);
         progressBar.setMax(1000);
