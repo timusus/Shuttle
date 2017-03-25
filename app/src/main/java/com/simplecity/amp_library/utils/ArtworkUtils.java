@@ -110,30 +110,28 @@ public class ArtworkUtils {
 
         FileInputStream fileInputStream = null;
 
-        Cursor cursor = null;
+        Cursor cursor = ShuttleApplication.getInstance()
+                .getContentResolver()
+                .query(contentUri, new String[]{MediaStore.Audio.Albums.ALBUM_ART}, null, null, null);
 
-        try {
-            cursor = ShuttleApplication.getInstance()
-                    .getContentResolver()
-                    .query(contentUri, new String[]{MediaStore.Audio.Albums.ALBUM_ART}, null, null, null);
+        if (cursor != null) {
+            try {
+                if (cursor.moveToFirst()) {
+                    File file = new File(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART)));
+                    if (file.exists()) {
+                        try {
+                            fileInputStream = new FileInputStream(file);
+                        } catch (FileNotFoundException ignored) {
 
-            if (cursor != null && cursor.moveToFirst()) {
-                File file = new File(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART)));
-                if (file.exists()) {
-                    try {
-                        fileInputStream = new FileInputStream(file);
-                    } catch (FileNotFoundException ignored) {
-
+                        }
                     }
                 }
-            }
+            } catch (NullPointerException ignored) {
 
-        } catch (NullPointerException ignored) {
-
-        } finally {
-            if (cursor != null) {
+            } finally {
                 cursor.close();
             }
+
         }
 
         return fileInputStream;

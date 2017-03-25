@@ -92,13 +92,17 @@ public class LyricsFragment extends BaseFragment {
                         .uri(Uri.parse(path))
                         .projection(new String[]{MediaStore.Audio.Media.DATA})
                         .build();
+
                 Cursor cursor = SqlUtils.createQuery(getContext(), query);
                 if (cursor != null) {
-                    int colIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
-                    if (cursor.moveToFirst()) {
-                        filePath = cursor.getString(colIndex);
+                    try {
+                        int colIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+                        if (cursor.moveToFirst()) {
+                            filePath = cursor.getString(colIndex);
+                        }
+                    } finally {
+                        cursor.close();
                     }
-                    cursor.close();
                 }
             }
         }

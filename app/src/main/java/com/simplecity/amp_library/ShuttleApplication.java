@@ -280,15 +280,8 @@ public class ShuttleApplication extends Application {
                     .projection(new String[]{PlayCountTable.COLUMN_ID})
                     .build();
 
-            Cursor playCount = SqlUtils.createQuery(ShuttleApplication.getInstance(), query);
-            if (playCount != null && playCount.moveToFirst()) {
-                do {
-                    playCountIds.add(playCount.getInt(playCount.getColumnIndex(PlayCountTable.COLUMN_ID)));
-                } while (playCount.moveToNext());
-            }
-            if (playCount != null) {
-                playCount.close();
-            }
+            SqlUtils.createActionableQuery(this, cursor ->
+                    playCountIds.add(cursor.getInt(cursor.getColumnIndex(PlayCountTable.COLUMN_ID))), query);
 
             List<Integer> songIds = new ArrayList<>();
 
@@ -297,16 +290,8 @@ public class ShuttleApplication extends Application {
                     .projection(new String[]{MediaStore.Audio.Media._ID})
                     .build();
 
-            Cursor songs = SqlUtils.createQuery(ShuttleApplication.getInstance(), query);
-            if (songs != null && songs.moveToFirst()) {
-                do {
-                    songIds.add(songs.getInt(songs.getColumnIndex(PlayCountTable.COLUMN_ID)));
-                } while (songs.moveToNext());
-            }
-
-            if (songs != null) {
-                songs.close();
-            }
+            SqlUtils.createActionableQuery(this, cursor ->
+                    songIds.add(cursor.getInt(cursor.getColumnIndex(PlayCountTable.COLUMN_ID))), query);
 
             StringBuilder selection = new StringBuilder(PlayCountTable.COLUMN_ID + " IN (");
 
@@ -338,11 +323,14 @@ public class ShuttleApplication extends Application {
 
         Cursor cursor = SqlUtils.createQuery(ShuttleApplication.this, query);
 
-        if (cursor != null && cursor.getCount() != 0) {
-            genreHasSongs = true;
-        }
         if (cursor != null) {
-            cursor.close();
+            try {
+                if (cursor.getCount() != 0) {
+                    genreHasSongs = true;
+                }
+            } finally {
+                cursor.close();
+            }
         }
         return genreHasSongs;
     }
@@ -357,22 +345,17 @@ public class ShuttleApplication extends Application {
             String[] projection = new String[]{MediaStore.Audio.Genres._ID, MediaStore.Audio.Genres.NAME};
             Uri uri = MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI;
 
-            Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-            if (cursor != null && cursor.moveToFirst()) {
-                do {
-                    long genreId = cursor.getLong(cursor.getColumnIndex(projection[0]));
-                    if (!genreHasSongs(genreId)) {
-                        try {
-                            getContentResolver().delete(uri, MediaStore.Audio.Genres._ID + " == " + genreId, null);
-                        } catch (IllegalArgumentException ignored) {
-                            //Don't care if we couldn't delete this uri.
-                        }
+            Query query = new Query.Builder().uri(uri).projection(projection).build();
+            SqlUtils.createActionableQuery(this, cursor -> {
+                long genreId = cursor.getLong(cursor.getColumnIndex(projection[0]));
+                if (!genreHasSongs(genreId)) {
+                    try {
+                        getContentResolver().delete(uri, MediaStore.Audio.Genres._ID + " == " + genreId, null);
+                    } catch (IllegalArgumentException ignored) {
+                        //Don't care if we couldn't delete this uri.
                     }
-                } while (cursor.moveToNext());
-            }
-            if (cursor != null) {
-                cursor.close();
-            }
+                }
+            }, query);
             return null;
         })
                 .subscribeOn(Schedulers.io())

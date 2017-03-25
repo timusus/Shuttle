@@ -80,32 +80,34 @@ public class PlaylistUtils {
 
         Cursor cursor = SqlUtils.createQuery(context, query);
 
-        if (cursor == null) {
-            return null;
-        }
+        if (cursor != null) {
+            try {
+                String suggestedName = String.format(template, num++);
 
-        String suggestedName = String.format(template, num++);
-
-        // Need to loop until we've made 1 full pass through without finding a match.
-        // Looping more than once shouldn't happen very often, but will happen
-        // if you have playlists named "New Playlist 1"/10/2/3/4/5/6/7/8/9, where
-        // making only one pass would result in "New Playlist 10" being erroneously
-        // picked for the new name.
-        boolean done = false;
-        while (!done) {
-            done = true;
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                String playlistName = cursor.getString(0);
-                if (playlistName.compareToIgnoreCase(suggestedName) == 0) {
-                    suggestedName = String.format(template, num++);
-                    done = false;
+                // Need to loop until we've made 1 full pass through without finding a match.
+                // Looping more than once shouldn't happen very often, but will happen
+                // if you have playlists named "New Playlist 1"/10/2/3/4/5/6/7/8/9, where
+                // making only one pass would result in "New Playlist 10" being erroneously
+                // picked for the new name.
+                boolean done = false;
+                while (!done) {
+                    done = true;
+                    cursor.moveToFirst();
+                    while (!cursor.isAfterLast()) {
+                        String playlistName = cursor.getString(0);
+                        if (playlistName.compareToIgnoreCase(suggestedName) == 0) {
+                            suggestedName = String.format(template, num++);
+                            done = false;
+                        }
+                        cursor.moveToNext();
+                    }
                 }
-                cursor.moveToNext();
+                return suggestedName;
+            } finally {
+                cursor.close();
             }
         }
-        cursor.close();
-        return suggestedName;
+        return null;
     }
 
     public static Observable<Integer> idForPlaylistObservable(Context context, String name) {
@@ -414,22 +416,26 @@ public class PlaylistUtils {
             final Cursor cursor = SqlUtils.createQuery(context, query);
 
             if (cursor != null) {
-                int count = cursor.getCount();
-                cursor.close();
-                if (count <= 0) {
-                    final ContentValues values = new ContentValues(1);
-                    values.put(MediaStore.Audio.PlaylistsColumns.NAME, name);
-                    //Catch NPE occurring on Amazon devices.
-                    try {
-                        final Uri uri = context.getContentResolver().insert(
-                                MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
-                                values);
-                        if (uri != null) {
-                            id = Long.parseLong(uri.getLastPathSegment());
+                try {
+                    int count = cursor.getCount();
+
+                    if (count <= 0) {
+                        final ContentValues values = new ContentValues(1);
+                        values.put(MediaStore.Audio.PlaylistsColumns.NAME, name);
+                        //Catch NPE occurring on Amazon devices.
+                        try {
+                            final Uri uri = context.getContentResolver().insert(
+                                    MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
+                                    values);
+                            if (uri != null) {
+                                id = Long.parseLong(uri.getLastPathSegment());
+                            }
+                        } catch (NullPointerException e) {
+                            Crashlytics.log("Failed to create playlist: " + e.getMessage());
                         }
-                    } catch (NullPointerException e) {
-                        Crashlytics.log("Failed to create playlist: " + e.getMessage());
                     }
+                } finally {
+                    cursor.close();
                 }
             }
         }

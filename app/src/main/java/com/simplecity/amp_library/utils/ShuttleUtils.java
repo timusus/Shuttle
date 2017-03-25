@@ -163,22 +163,20 @@ public final class ShuttleUtils {
                             .build();
 
                     final Cursor cursor = SqlUtils.createQuery(context, query);
-
-                    try {
-                        if (cursor != null && cursor.getCount() == 1) {
-                            // Set the system setting to make this the current ringtone
-                            cursor.moveToFirst();
-                            if (ringUri != null) {
-                                Settings.System.putString(resolver, Settings.System.RINGTONE, ringUri.toString());
+                    if (cursor != null) {
+                        try {
+                            if (cursor.getCount() == 1) {
+                                // Set the system setting to make this the current ringtone
+                                cursor.moveToFirst();
+                                if (ringUri != null) {
+                                    Settings.System.putString(resolver, Settings.System.RINGTONE, ringUri.toString());
+                                }
+                                success = true;
                             }
-                            success = true;
-                        }
-                    } finally {
-                        if (cursor != null) {
+                        } finally {
                             cursor.close();
                         }
                     }
-
                     return success;
                 }
         )
