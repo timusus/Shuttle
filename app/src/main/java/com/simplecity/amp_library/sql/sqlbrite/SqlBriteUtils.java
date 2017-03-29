@@ -26,19 +26,23 @@ public final class SqlBriteUtils {
     private static BriteContentResolver wrapContentProvider(Context context) {
         final SqlBrite sqlBrite = SqlBrite.create();
         BriteContentResolver briteContentResolver = sqlBrite.wrapContentProvider(context.getContentResolver(), Schedulers.io());
-//        briteContentResolver.setLoggingEnabled(BuildConfig.DEBUG);
+        // briteContentResolver.setLoggingEnabled(BuildConfig.DEBUG);
         return briteContentResolver;
+    }
+
+    public static Observable<SqlBrite.Query> createContinuousQuery(Context context, Query query) {
+        return wrapContentProvider(context)
+                .createQuery(query.uri, query.projection, query.selection, query.args, query.sort, false)
+                .subscribeOn(Schedulers.io())
+                .doOnError(error -> Log.e(TAG, "Query failed.\nError:" + error.toString() + "\nQuery: " + query.toString()));
     }
 
     /**
      * Creates an {@link Observable} that <b>continuously</b> emits new Lists when subscribed and when the content provider notifies of a change.
      */
     public static <T> Observable<List<T>> createContinuousQuery(Context context, Func1<Cursor, T> mapper, Query query) {
-        return wrapContentProvider(context)
-                .createQuery(query.uri, query.projection, query.selection, query.args, query.sort, false)
-                .subscribeOn(Schedulers.io())
-                .lift(new QueryToListOperator<>(mapper))
-                .doOnError(error -> Log.e(TAG, "Query failed.\nError:" + error.toString() + "\nQuery: " + query.toString()));
+        return createContinuousQuery(context, query)
+                .lift(new QueryToListOperator<>(mapper));
     }
 
     /**
@@ -75,9 +79,7 @@ public final class SqlBriteUtils {
     public static <T> Observable<T> createSingleContinuousQuery(Context context, Func1<Cursor, T> mapper, T defaultValue, Query query) {
         return wrapContentProvider(context)
                 .createQuery(query.uri, query.projection, query.selection, query.args, query.sort, false)
-                .subscribeOn(Schedulers.io())
-                .lift(new QueryToOneOperator<>(mapper, defaultValue != null, defaultValue))
-                .doOnError(error -> Log.e(TAG, "Query failed.\nError:" + error.toString() + "\nQuery: " + query.toString()));
+                .lift(new QueryToOneOperator<>(mapper, defaultValue != null, defaultValue));
     }
 
     /**

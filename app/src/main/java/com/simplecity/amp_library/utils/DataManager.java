@@ -193,24 +193,14 @@ public class DataManager {
     public Observable<List<Genre>> getGenresRelay() {
         if (genresSubscription == null || genresSubscription.isUnsubscribed()) {
             genresSubscription = SqlBriteUtils.createContinuousQuery(ShuttleApplication.getInstance(), Genre::new, Genre.getQuery())
-                    .flatMap(genres -> {
-                        if (genres.size() < 150) {
-                            return Observable.from(genres)
-                                    .flatMap(genre -> genre.getSongsObservable(ShuttleApplication.getInstance())
-                                            .first()
-                                            .filter(songs -> !songs.isEmpty())
-                                            .map(songs -> {
-                                                genre.numSongs = songs.size();
-                                                return genre;
-                                            }))
-                                    .toList();
-                        } else {
-                            return Observable.just(genres);
-                        }
-                    })
                     .subscribe(genresRelay, error -> Crashlytics.log("getGenresRelay error: " + error.getMessage()));
         }
+
         return genresRelay.subscribeOn(Schedulers.io()).map(ArrayList::new);
+    }
+
+    public void updateGenresRelay(List<Genre> genres){
+        genresRelay.call(genres);
     }
 
     /**

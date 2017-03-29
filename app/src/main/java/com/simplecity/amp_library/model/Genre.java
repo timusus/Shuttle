@@ -50,6 +50,22 @@ public class Genre implements Serializable {
         return SqlBriteUtils.createQuery(context, Song::new, query);
     }
 
+    public Observable<Integer> getSongCountObservable(Context context) {
+        Query query = Song.getQuery();
+        query.uri = MediaStore.Audio.Genres.Members.getContentUri("external", id);
+        return SqlBriteUtils.createContinuousQuery(context, query).map(query1 -> {
+            Cursor cursor = query1.run();
+            if (cursor != null) {
+                try {
+                    return cursor.getCount();
+                } finally {
+                    cursor.close();
+                }
+            }
+            return 0;
+        }).first();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -58,13 +74,16 @@ public class Genre implements Serializable {
         Genre genre = (Genre) o;
 
         if (id != genre.id) return false;
+        if (numSongs != genre.numSongs) return false;
         return name != null ? name.equals(genre.name) : genre.name == null;
+
     }
 
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + numSongs;
         return result;
     }
 }

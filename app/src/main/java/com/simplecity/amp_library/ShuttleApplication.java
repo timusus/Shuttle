@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
@@ -29,12 +27,14 @@ import com.google.android.libraries.cast.companionlibrary.cast.CastConfiguration
 import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.simplecity.amp_library.constants.Config;
+import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Query;
 import com.simplecity.amp_library.model.UserSelectedArtwork;
 import com.simplecity.amp_library.services.EqualizerService;
 import com.simplecity.amp_library.sql.SqlUtils;
 import com.simplecity.amp_library.sql.databases.CustomArtworkTable;
 import com.simplecity.amp_library.sql.providers.PlayCountTable;
+import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
 import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
@@ -48,6 +48,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -165,12 +166,12 @@ public class ShuttleApplication extends Application {
                 .subscribeOn(Schedulers.io())
                 .subscribe();
 
+        //Clean up the genres database - remove any genres which contain no songs. Also, populates song counts.
+        cleanGenres();
+
         //Clean up the 'most played' playlist. We delay this call to allow the app to finish launching,
         //since it's not time critical.
         new Handler().postDelayed(this::cleanMostPlayedPlaylist, 5000);
-
-        //Clean up the genres database - remove any genres which contain no songs.
-        new Handler().postDelayed(this::cleanGenres, 7500);
 
         //Clean up any old, unused resources.
         new Handler().postDelayed(this::deleteOldResources, 10000);
@@ -312,53 +313,35 @@ public class ShuttleApplication extends Application {
                 .subscribe();
     }
 
-    private boolean genreHasSongs(long genreId) {
-
-        boolean genreHasSongs = false;
-
-        Query query = new Query.Builder()
-                .uri(MediaStore.Audio.Genres.Members.getContentUri("external", genreId))
-                .projection(new String[]{MediaStore.Audio.Media._ID})
-                .build();
-
-        Cursor cursor = SqlUtils.createQuery(ShuttleApplication.this, query);
-
-        if (cursor != null) {
-            try {
-                if (cursor.getCount() != 0) {
-                    genreHasSongs = true;
-                }
-            } finally {
-                cursor.close();
-            }
-        }
-        return genreHasSongs;
-    }
-
     private void cleanGenres() {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
 
-        Observable.fromCallable(() -> {
-            String[] projection = new String[]{MediaStore.Audio.Genres._ID, MediaStore.Audio.Genres.NAME};
-            Uri uri = MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI;
-
-            Query query = new Query.Builder().uri(uri).projection(projection).build();
-            SqlUtils.createActionableQuery(this, cursor -> {
-                long genreId = cursor.getLong(cursor.getColumnIndex(projection[0]));
-                if (!genreHasSongs(genreId)) {
-                    try {
-                        getContentResolver().delete(uri, MediaStore.Audio.Genres._ID + " == " + genreId, null);
-                    } catch (IllegalArgumentException ignored) {
-                        //Don't care if we couldn't delete this uri.
-                    }
-                }
-            }, query);
-            return null;
-        })
-                .subscribeOn(Schedulers.io())
+        // This observable emits a genre every 250ms. We then make a query against the genre database to populate the song count.
+        // If the count is zero, then the genre can be deleted.
+        // The reason for the delay is, on some slower devices, if the user has tons of genres, a ton of cursors get created.
+        // If the maximum number of cursors is created (based on memory/processor speed or god knows what else), then the device
+        // will start throwing CursorWindow exceptions, and the queries will slow down massively. This ends up making all queries slow.
+        // This task isn't time critical, so we can afford to let it just casually do its job.
+        SqlBriteUtils.createQuery(ShuttleApplication.getInstance(), Genre::new, Genre.getQuery())
+                .first()
+                .flatMap(Observable::from)
+                .concatMap(genre -> Observable.just(genre).delay(250, TimeUnit.MILLISECONDS))
+                .flatMap(genre -> genre.getSongCountObservable(ShuttleApplication.getInstance())
+                        .doOnNext(numSongs -> {
+                            if (numSongs == 0) {
+                                try {
+                                    getContentResolver().delete(MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI, MediaStore.Audio.Genres._ID + " == " + genre.id, null);
+                                } catch (IllegalArgumentException ignored) {
+                                    //Don't care if we couldn't delete this uri.
+                                }
+                            }
+                        })
+                )
+                // Since this is called on app launch, let's delay to allow more important tasks to complete.
+                .delaySubscription(2500, TimeUnit.MILLISECONDS)
                 .subscribe();
     }
 
