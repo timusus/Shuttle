@@ -29,6 +29,8 @@
         android:largeHeap="true"
         android:theme="@style/Theme.Launch">
 
+        <meta-data android:name="android.max_aspect" android:value="2.1" />
+
         <meta-data
             android:name="com.simplecity.amp_library.glide.utils.CustomGlideModule"
             android:value="GlideModule" />
