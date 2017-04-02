@@ -64,6 +64,7 @@ import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Query;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.search.SearchActivity;
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.fragments.AlbumArtistFragment;

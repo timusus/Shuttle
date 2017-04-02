@@ -137,7 +137,7 @@
         <activity android:name=".ui.activities.SettingsActivity" />
         <activity android:name=".ui.activities.EqualizerActivity" />
         <activity
-            android:name=".ui.activities.SearchActivity"
+            android:name=".search.SearchActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />

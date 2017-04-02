@@ -3,6 +3,11 @@ package com.simplecity.amp_library.ui.adapters;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
+import com.simplecity.amp_library.model.Album;
+import com.simplecity.amp_library.model.AlbumArtist;
+import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.ui.modelviews.AlbumArtistView;
 import com.simplecity.amp_library.ui.modelviews.AlbumView;
 import com.simplecity.amp_library.ui.modelviews.MultiItemView;
@@ -10,13 +15,23 @@ import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.modelviews.SuggestedSongView;
 import com.simplecity.amp_library.ui.modelviews.ViewType;
 
+import java.util.List;
+
 public class SearchAdapter extends ItemAdapter {
 
     public interface SearchListener {
 
-        void onItemClick(View v, int position, Object item);
+        void onItemClick(AlbumArtist albumArtist);
 
-        void onOverflowClick(View v, int position, Object item);
+        void onItemClick(Album album);
+
+        void onItemClick(Song song, List<Song> allSongs);
+
+        void onOverflowClick(View v, AlbumArtist albumArtist);
+
+        void onOverflowClick(View v, Album album);
+
+        void onOverflowClick(View v, Song song);
     }
 
     private SearchListener listener;
@@ -43,19 +58,20 @@ public class SearchAdapter extends ItemAdapter {
                     switch (items.get(viewHolder.getAdapterPosition()).getViewType()) {
                         case ViewType.ARTIST_CARD:
                         case ViewType.ARTIST_LIST:
-                            listener.onItemClick(v, viewHolder.getAdapterPosition(), ((AlbumArtistView) items.get(viewHolder.getAdapterPosition())).albumArtist);
+                            listener.onItemClick(((AlbumArtistView) items.get(viewHolder.getAdapterPosition())).albumArtist);
                             break;
                         case ViewType.ALBUM_CARD:
                         case ViewType.ALBUM_CARD_LARGE:
                         case ViewType.ALBUM_LIST_SMALL:
                         case ViewType.ALBUM_LIST:
-                            listener.onItemClick(v, viewHolder.getAdapterPosition(), ((AlbumView) items.get(viewHolder.getAdapterPosition())).album);
+                            listener.onItemClick(((AlbumView) items.get(viewHolder.getAdapterPosition())).album);
                             break;
                         case ViewType.SUGGESTED_SONG:
-                            listener.onItemClick(v, viewHolder.getAdapterPosition(), ((SuggestedSongView) items.get(viewHolder.getAdapterPosition())).song);
-                            break;
                         case ViewType.SONG:
-                            listener.onItemClick(v, viewHolder.getAdapterPosition(), ((SongView) items.get(viewHolder.getAdapterPosition())).song);
+                            listener.onItemClick(((SuggestedSongView) items.get(viewHolder.getAdapterPosition())).song, Stream.of(items)
+                                    .filter(adaptableItem -> adaptableItem instanceof SongView)
+                                    .map(adaptableItem -> ((SongView) adaptableItem).getItem())
+                                    .collect(Collectors.toList()));
                             break;
                     }
                 }
@@ -66,16 +82,16 @@ public class SearchAdapter extends ItemAdapter {
                     switch (items.get(viewHolder.getAdapterPosition()).getViewType()) {
                         case ViewType.ARTIST_CARD:
                         case ViewType.ARTIST_LIST:
-                            listener.onOverflowClick(v, viewHolder.getAdapterPosition(), ((AlbumArtistView) items.get(viewHolder.getAdapterPosition())).albumArtist);
+                            listener.onOverflowClick(v, ((AlbumArtistView) items.get(viewHolder.getAdapterPosition())).albumArtist);
                             break;
                         case ViewType.ALBUM_CARD:
                         case ViewType.ALBUM_CARD_LARGE:
                         case ViewType.ALBUM_LIST_SMALL:
                         case ViewType.ALBUM_LIST:
-                            listener.onOverflowClick(v, viewHolder.getAdapterPosition(), ((AlbumView) items.get(viewHolder.getAdapterPosition())).album);
+                            listener.onOverflowClick(v, ((AlbumView) items.get(viewHolder.getAdapterPosition())).album);
                             break;
                         case ViewType.SUGGESTED_SONG:
-                            listener.onOverflowClick(v, viewHolder.getAdapterPosition(), ((SuggestedSongView) items.get(viewHolder.getAdapterPosition())).song);
+                            listener.onOverflowClick(v, ((SuggestedSongView) items.get(viewHolder.getAdapterPosition())).song);
                             break;
                     }
                 }
@@ -83,13 +99,16 @@ public class SearchAdapter extends ItemAdapter {
         } else if (viewHolder instanceof SongView.ViewHolder) {
             viewHolder.itemView.setOnClickListener(v -> {
                 if (listener != null && viewHolder.getAdapterPosition() != -1) {
-                    listener.onItemClick(v, viewHolder.getAdapterPosition(), ((SongView) items.get(viewHolder.getAdapterPosition())).song);
+                    listener.onItemClick(((SongView) items.get(viewHolder.getAdapterPosition())).song, Stream.of(items)
+                            .filter(adaptableItem -> adaptableItem instanceof SongView)
+                            .map(adaptableItem -> ((SongView) adaptableItem).getItem())
+                            .collect(Collectors.toList()));
                 }
             });
 
             ((SongView.ViewHolder) viewHolder).overflowButton.setOnClickListener(v -> {
                 if (listener != null && viewHolder.getAdapterPosition() != -1) {
-                    listener.onOverflowClick(v, viewHolder.getAdapterPosition(), ((SongView) items.get(viewHolder.getAdapterPosition())).song);
+                    listener.onOverflowClick(v, ((SongView) items.get(viewHolder.getAdapterPosition())).song);
                 }
             });
         }

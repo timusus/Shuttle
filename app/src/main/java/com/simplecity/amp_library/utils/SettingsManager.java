@@ -366,4 +366,49 @@ public class SettingsManager {
     public boolean invertNotificationIcons() {
         return getBooleanValue(KEY_INVERT_NOTIFICATION_ICONS, false);
     }
+
+    // Search settings
+
+    public static final String KEY_SEARCH_FUZZY = "search_fuzzy";
+
+    public void setSearchFuzzy(boolean fuzzy) {
+        setBooleanValue(KEY_SEARCH_FUZZY, fuzzy);
+    }
+
+    public boolean getSearchFuzzy() {
+        return getBooleanValue(KEY_SEARCH_FUZZY, true);
+    }
+
+    public static final String KEY_SEARCH_TITLE_ONLY = "search_title_only";
+
+    public void setSearchTitleOnly(boolean titleOnly) {
+        setBooleanValue(KEY_SEARCH_TITLE_ONLY, titleOnly);
+    }
+
+    public boolean getSearchTitleOnly() {
+        return getBooleanValue(KEY_SEARCH_TITLE_ONLY, true);
+    }
+
+    public static final String KEY_SEARCH_ARTISTS = "search_artists";
+
+    public void setSearchArtists(boolean searchArtists) {
+        setBooleanValue(KEY_SEARCH_ARTISTS, searchArtists);
+    }
+
+    public boolean getSearchArtists() {
+        return getBooleanValue(KEY_SEARCH_ARTISTS, true);
+    }
+
+    public static final String KEY_SEARCH_ALBUMS = "search_albums";
+
+    public void setSearchAlbums(boolean searchAlbums) {
+        setBooleanValue(KEY_SEARCH_ALBUMS, searchAlbums);
+    }
+
+    public boolean getSearchAlbums() {
+        return getBooleanValue(KEY_SEARCH_ALBUMS, true);
+    }
+
+    public static final String KEY_SEARCH_SONGS = "search_songs";
+
 }
