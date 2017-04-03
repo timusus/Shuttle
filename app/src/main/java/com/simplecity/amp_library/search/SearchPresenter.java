@@ -55,7 +55,7 @@ class SearchPresenter extends Presenter<SearchView> implements
         SearchAdapter.SearchListener,
         Toolbar.OnMenuItemClickListener {
 
-    private static final double SCORE_THRESHOLD = 0.70;
+    private static final double SCORE_THRESHOLD = 0.80;
 
     private PrefixHighlighter prefixHighlighter;
 
