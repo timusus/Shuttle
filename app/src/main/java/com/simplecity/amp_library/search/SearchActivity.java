@@ -99,10 +99,6 @@ public class SearchActivity extends BaseActivity implements
                     item.setChecked(!item.isChecked());
                     searchPresenter.setSearchFuzzy(item.isChecked());
                     break;
-                case R.id.search_title_only:
-                    item.setChecked(!item.isChecked());
-                    searchPresenter.setSearchTitleOnly(item.isChecked());
-                    break;
                 case R.id.search_artist:
                     item.setChecked(!item.isChecked());
                     searchPresenter.setSearchArtists(item.isChecked());
@@ -187,11 +183,6 @@ public class SearchActivity extends BaseActivity implements
     @Override
     public void setFilterFuzzyChecked(boolean checked) {
         toolbar.getMenu().findItem(R.id.search_fuzzy).setChecked(checked);
-    }
-
-    @Override
-    public void setFilterTitleOnlyChecked(boolean checked) {
-        toolbar.getMenu().findItem(R.id.search_title_only).setChecked(checked);
     }
 
     @Override

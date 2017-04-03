@@ -15,11 +15,6 @@
                 android:checked="true"
                 android:title="@string/search_fuzzy"/>
             <item
-                android:id="@+id/search_title_only"
-                android:checkable="true"
-                android:checked="true"
-                android:title="@string/search_title_only"/>
-            <item
                 android:id="@+id/search_artist"
                 android:checkable="true"
                 android:checked="true"

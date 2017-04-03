@@ -76,7 +76,6 @@ class SearchPresenter extends Presenter<SearchView> implements
         super.bindView(view);
 
         view.setFilterFuzzyChecked(SettingsManager.getInstance().getSearchFuzzy());
-        view.setFilterTitleOnlyChecked(SettingsManager.getInstance().getSearchTitleOnly());
         view.setFilterArtistsChecked(SettingsManager.getInstance().getSearchArtists());
         view.setFilterAlbumsChecked(SettingsManager.getInstance().getSearchAlbums());
     }
@@ -155,11 +154,6 @@ class SearchPresenter extends Presenter<SearchView> implements
 
     void setSearchFuzzy(boolean searchFuzzy) {
         SettingsManager.getInstance().setSearchFuzzy(searchFuzzy);
-        loadData(query);
-    }
-
-    void setSearchTitleOnly(boolean searchTitleOnly) {
-        SettingsManager.getInstance().setSearchTitleOnly(searchTitleOnly);
         loadData(query);
     }
 
@@ -551,10 +545,7 @@ class SearchPresenter extends Presenter<SearchView> implements
         }
 
         private Stream<Song> applyJaroWinklerFilter(Stream<Song> songStream) {
-
-            boolean titleOnly = SettingsManager.getInstance().getSearchTitleOnly();
-
-            return songStream.map(song -> new SearchUtils.JaroWinklerObject<>(song, filterString, titleOnly ? song.name : song.name, song.albumName, song.artistName, song.albumArtistName))
+            return songStream.map(song -> new SearchUtils.JaroWinklerObject<>(song, filterString, song.name ))
                     .filter(jaroWinklerObject -> jaroWinklerObject.score > SCORE_THRESHOLD || TextUtils.isEmpty(filterString))
                     .sorted((a, b) -> a.object.compareTo(b.object))
                     .sorted((a, b) -> Double.compare(b.score, a.score))

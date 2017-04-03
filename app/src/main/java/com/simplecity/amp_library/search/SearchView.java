@@ -22,8 +22,6 @@ public interface SearchView {
 
     void setFilterFuzzyChecked(boolean checked);
 
-    void setFilterTitleOnlyChecked(boolean checked);
-
     void setFilterArtistsChecked(boolean checked);
 
     void setFilterAlbumsChecked(boolean checked);

@@ -379,16 +379,6 @@ public class SettingsManager {
         return getBooleanValue(KEY_SEARCH_FUZZY, true);
     }
 
-    public static final String KEY_SEARCH_TITLE_ONLY = "search_title_only";
-
-    public void setSearchTitleOnly(boolean titleOnly) {
-        setBooleanValue(KEY_SEARCH_TITLE_ONLY, titleOnly);
-    }
-
-    public boolean getSearchTitleOnly() {
-        return getBooleanValue(KEY_SEARCH_TITLE_ONLY, true);
-    }
-
     public static final String KEY_SEARCH_ARTISTS = "search_artists";
 
     public void setSearchArtists(boolean searchArtists) {
@@ -408,7 +398,5 @@ public class SettingsManager {
     public boolean getSearchAlbums() {
         return getBooleanValue(KEY_SEARCH_ALBUMS, true);
     }
-
-    public static final String KEY_SEARCH_SONGS = "search_songs";
 
 }
