@@ -51,6 +51,7 @@ import com.android.vending.billing.utils.Purchase;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.IabManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
@@ -363,6 +364,21 @@ public class MainActivity extends BaseCastActivity implements
         themeTaskDescription();
 
         handleIntent(getIntent());
+
+        showChangelogDialog();
+    }
+
+    private void showChangelogDialog() {
+        int storedVersionCode = SettingsManager.getInstance().getStoredVersionCode();
+        // If we've stored a version code in the past, and it's lower than the current version code,
+        // we can show the changelog.
+        // Don't show the changelog for first time users.
+        if (storedVersionCode != -1 && storedVersionCode < BuildConfig.VERSION_CODE) {
+            if (SettingsManager.getInstance().getShowChangelogOnLaunch()) {
+                DialogUtils.showChangelog(this);
+            }
+            SettingsManager.getInstance().setVersionCode();
+        }
     }
 
     public void setDragView(View dragView, boolean fromExpandedView) {

@@ -24,7 +24,6 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -101,7 +100,8 @@ public class SettingsFragment extends PreferenceFragment {
 
                 TabsAdapter tabsAdapter = new TabsAdapter(getContext());
 
-                ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(tabsAdapter::moveItem, (fromPosition, toPosition) -> tabsAdapter.updatePreferences(), () -> {}));
+                ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(tabsAdapter::moveItem, (fromPosition, toPosition) -> tabsAdapter.updatePreferences(), () -> {
+                }));
 
                 itemTouchHelper.attachToRecyclerView(recyclerView);
 
@@ -252,26 +252,7 @@ public class SettingsFragment extends PreferenceFragment {
         final Preference about = findPreference("pref_about");
         if (about != null) {
             about.setOnPreferenceClickListener(preference -> {
-
-                View customView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_changelog, null);
-                WebView webView = (WebView) customView.findViewById(R.id.webView);
-                int themeType = ThemeUtils.getThemeType(getActivity());
-                webView.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-
-                if (themeType == ThemeUtils.ThemeType.TYPE_LIGHT || themeType == ThemeUtils.ThemeType.TYPE_SOLID_LIGHT) {
-                    webView.loadUrl("file:///android_asset/web/info.html");
-                } else {
-                    webView.loadUrl("file:///android_asset/web/info_dark.html");
-                }
-
-                DialogUtils.getBuilder(getActivity())
-                        .title(R.string.pref_title_about)
-                        .customView(customView, false)
-                        .negativeText(R.string.close)
-                        .show();
-
-                AnalyticsManager.logChangelogViewed();
-
+                DialogUtils.showChangelog(getContext());
                 return true;
             });
         }

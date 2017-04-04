@@ -826,4 +826,7 @@
     <string name="search_artists">Artists</string>
     <string name="search_albums">Albums</string>
 
+    <!-- Changelog -->
+    <string name="changelog_show_on_launch">Show on launch</string>
+
 </resources>

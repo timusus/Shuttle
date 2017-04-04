@@ -21,6 +21,8 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.NumberPicker;
@@ -59,6 +61,7 @@ import com.simplecity.amp_library.ui.modelviews.BlacklistView;
 import com.simplecity.amp_library.ui.modelviews.ColorView;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.WhitelistView;
+import com.simplecity.amp_library.ui.views.CustomCheckBox;
 import com.simplecity.amp_library.ui.views.CustomColorPicker;
 
 import java.io.File;
@@ -103,6 +106,44 @@ public class DialogUtils {
                 .negativeColor(accentColor)
                 .widgetColor(accentColor)
                 .buttonRippleColor(accentColor);
+    }
+
+    public static void showChangelog(Context context) {
+        View customView = LayoutInflater.from(context).inflate(R.layout.dialog_changelog, null);
+
+        WebView webView = (WebView) customView.findViewById(R.id.webView);
+        int themeType = ThemeUtils.getThemeType(context);
+        webView.setBackgroundColor(context.getResources().getColor(android.R.color.transparent));
+
+        CustomCheckBox checkBox = (CustomCheckBox) customView.findViewById(R.id.checkbox);
+        checkBox.setChecked(SettingsManager.getInstance().getShowChangelogOnLaunch());
+        checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> SettingsManager.getInstance().setShowChangelogOnLaunch(isChecked));
+
+        ProgressBar progressBar = (ProgressBar) customView.findViewById(R.id.progress);
+
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+
+                ViewUtils.fadeOut(progressBar, ()
+                        -> ViewUtils.fadeIn(webView, null));
+            }
+        });
+
+        if (themeType == ThemeUtils.ThemeType.TYPE_LIGHT || themeType == ThemeUtils.ThemeType.TYPE_SOLID_LIGHT) {
+            webView.loadUrl("file:///android_asset/web/info.html");
+        } else {
+            webView.loadUrl("file:///android_asset/web/info_dark.html");
+        }
+
+        getBuilder(context)
+                .title(R.string.pref_title_about)
+                .customView(customView, false)
+                .negativeText(R.string.close)
+                .show();
+
+        AnalyticsManager.logChangelogViewed();
     }
 
     public interface ColorSelectionListener {

@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
 
+import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.ui.modelviews.ViewType;
@@ -29,35 +30,35 @@ public class SettingsManager {
         return PreferenceManager.getDefaultSharedPreferences(ShuttleApplication.getInstance());
     }
 
-    public String getStringValue(String key) {
+    private String getStringValue(String key) {
         return getSharedPreferences().getString(key, null);
     }
 
-    public String getStringValue(String key, String defaultValue) {
+    private String getStringValue(String key, String defaultValue) {
         return getSharedPreferences().getString(key, defaultValue);
     }
 
-    public boolean getBooleanValue(String key, boolean defaultValue) {
+    private boolean getBooleanValue(String key, boolean defaultValue) {
         return getSharedPreferences().getBoolean(key, defaultValue);
     }
 
-    public int getIntValue(String key, int defaultValue) {
+    private int getIntValue(String key, int defaultValue) {
         return getSharedPreferences().getInt(key, defaultValue);
     }
 
-    public void setStringValue(String key, String value) {
+    private void setStringValue(String key, String value) {
         final SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putString(key, value);
         editor.apply();
     }
 
-    public void setBooleanValue(String key, boolean value) {
+    private void setBooleanValue(String key, boolean value) {
         final SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putBoolean(key, value);
         editor.apply();
     }
 
-    public void setIntValue(String key, int value) {
+    private void setIntValue(String key, int value) {
         final SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putInt(key, value);
         editor.apply();
@@ -69,19 +70,19 @@ public class SettingsManager {
         return getBooleanValue(KEY_SHOW_LOCKSCREEN_ARTWORK, true);
     }
 
-    public static final String KEY_CAN_TINT_NAV_BAR = "pref_nav_bar";
+    private static final String KEY_CAN_TINT_NAV_BAR = "pref_nav_bar";
 
     public boolean canTintNavBar() {
         return ShuttleUtils.hasLollipop() && getBooleanValue(KEY_CAN_TINT_NAV_BAR, true);
     }
 
-    public static final String KEY_KEEP_SCREEN_ON = "pref_screen_on";
+    private static final String KEY_KEEP_SCREEN_ON = "pref_screen_on";
 
     public boolean keepScreenOn() {
         return getBooleanValue(KEY_KEEP_SCREEN_ON, false);
     }
 
-    public static final String KEY_ALBUM_DISPLAY_TYPE = "album_display_type_new";
+    private static final String KEY_ALBUM_DISPLAY_TYPE = "album_display_type_new";
 
     public void setAlbumDisplayType(int type) {
         setIntValue(KEY_ALBUM_DISPLAY_TYPE, type);
@@ -92,7 +93,7 @@ public class SettingsManager {
         return getIntValue(KEY_ALBUM_DISPLAY_TYPE, ViewType.ALBUM_LIST);
     }
 
-    public static final String KEY_ARTIST_DISPLAY_TYPE = "artist_display_type_new";
+    private static final String KEY_ARTIST_DISPLAY_TYPE = "artist_display_type_new";
 
     public void setArtistDisplayType(int type) {
         setIntValue(KEY_ARTIST_DISPLAY_TYPE, type);
@@ -103,10 +104,10 @@ public class SettingsManager {
         return getIntValue(KEY_ARTIST_DISPLAY_TYPE, ViewType.ARTIST_PALETTE);
     }
 
-    public static final String KEY_ARTIST_COLUMN_COUNT = "artist_column_count";
-    public static final String KEY_ARTIST_COLUMN_COUNT_LAND = "artist_column_count_land";
-    public static final String KEY_ARTIST_COLUMN_COUNT_TABLET = "artist_column_count_tablet";
-    public static final String KEY_ARTIST_COLUMN_COUNT_TABLET_LAND = "artist_column_count_tablet_land";
+    private static final String KEY_ARTIST_COLUMN_COUNT = "artist_column_count";
+    private static final String KEY_ARTIST_COLUMN_COUNT_LAND = "artist_column_count_land";
+    private static final String KEY_ARTIST_COLUMN_COUNT_TABLET = "artist_column_count_tablet";
+    private static final String KEY_ARTIST_COLUMN_COUNT_TABLET_LAND = "artist_column_count_tablet_land";
 
     private String getArtistColumnCountKey() {
         String key = KEY_ARTIST_COLUMN_COUNT;
@@ -133,10 +134,10 @@ public class SettingsManager {
         return getIntValue(getArtistColumnCountKey(), defaultSpanCount);
     }
 
-    public static final String KEY_ALBUM_COLUMN_COUNT = "album_column_count";
-    public static final String KEY_ALBUM_COLUMN_COUNT_LAND = "album_column_count_land";
-    public static final String KEY_ALBUM_COLUMN_COUNT_TABLET = "album_column_count_tablet";
-    public static final String KEY_ALBUM_COLUMN_COUNT_TABLET_LAND = "album_column_count_tablet_land";
+    private static final String KEY_ALBUM_COLUMN_COUNT = "album_column_count";
+    private static final String KEY_ALBUM_COLUMN_COUNT_LAND = "album_column_count_land";
+    private static final String KEY_ALBUM_COLUMN_COUNT_TABLET = "album_column_count_tablet";
+    private static final String KEY_ALBUM_COLUMN_COUNT_TABLET_LAND = "album_column_count_tablet_land";
 
     private String getAlbumColumnCountKey() {
         String key = KEY_ALBUM_COLUMN_COUNT;
@@ -167,7 +168,7 @@ public class SettingsManager {
         return getBooleanValue("audiofx.global.enable", false);
     }
 
-    public static final String DOCUMENT_TREE_URI = "document_tree_uri";
+    private static final String DOCUMENT_TREE_URI = "document_tree_uri";
 
     public void setDocumentTreeUri(String documentTreeUri) {
         setStringValue(DOCUMENT_TREE_URI, documentTreeUri);
@@ -177,7 +178,7 @@ public class SettingsManager {
         return getStringValue(DOCUMENT_TREE_URI);
     }
 
-    public static final String KEY_FOLDER_BROWSER_INITIAL_DIR = "folder_browser_initial_dir";
+    private static final String KEY_FOLDER_BROWSER_INITIAL_DIR = "folder_browser_initial_dir";
 
     public void setFolderBrowserInitialDir(String dir) {
         setStringValue(KEY_FOLDER_BROWSER_INITIAL_DIR, dir);
@@ -187,7 +188,7 @@ public class SettingsManager {
         return getStringValue(KEY_FOLDER_BROWSER_INITIAL_DIR);
     }
 
-    public static final String KEY_FOLDER_BROWSER_FILES_SORT_ORDER = "folder_browser_files_sort_order";
+    private static final String KEY_FOLDER_BROWSER_FILES_SORT_ORDER = "folder_browser_files_sort_order";
 
     public void setFolderBrowserFilesSortOrder(String sortOrder) {
         setStringValue(KEY_FOLDER_BROWSER_FILES_SORT_ORDER, sortOrder);
@@ -197,7 +198,7 @@ public class SettingsManager {
         return getStringValue(KEY_FOLDER_BROWSER_FILES_SORT_ORDER, SortManager.SortFiles.DEFAULT);
     }
 
-    public static final String KEY_FOLDER_BROWSER_FILES_ASCENDING = "folder_browser_files_ascending";
+    private static final String KEY_FOLDER_BROWSER_FILES_ASCENDING = "folder_browser_files_ascending";
 
     public void setFolderBrowserFilesAscending(boolean ascending) {
         setBooleanValue(KEY_FOLDER_BROWSER_FILES_ASCENDING, ascending);
@@ -207,7 +208,7 @@ public class SettingsManager {
         return getBooleanValue(KEY_FOLDER_BROWSER_FILES_ASCENDING, true);
     }
 
-    public static final String KEY_FOLDER_BROWSER_FOLDERS_SORT_ORDER = "folder_browser_folders_sort_order";
+    private static final String KEY_FOLDER_BROWSER_FOLDERS_SORT_ORDER = "folder_browser_folders_sort_order";
 
     public void setFolderBrowserFoldersSortOrder(String sortOrder) {
         setStringValue(KEY_FOLDER_BROWSER_FOLDERS_SORT_ORDER, sortOrder);
@@ -217,7 +218,7 @@ public class SettingsManager {
         return getStringValue(KEY_FOLDER_BROWSER_FOLDERS_SORT_ORDER, SortManager.SortFolders.DEFAULT);
     }
 
-    public static final String KEY_FOLDER_BROWSER_FOLDERS_ASCENDING = "folder_browser_folders_ascending";
+    private static final String KEY_FOLDER_BROWSER_FOLDERS_ASCENDING = "folder_browser_folders_ascending";
 
     public void setFolderBrowserFoldersAscending(boolean ascending) {
         setBooleanValue(KEY_FOLDER_BROWSER_FOLDERS_ASCENDING, ascending);
@@ -227,7 +228,7 @@ public class SettingsManager {
         return getBooleanValue(KEY_FOLDER_BROWSER_FOLDERS_ASCENDING, true);
     }
 
-    public static final String KEY_FOLDER_BROWSER_SHOW_FILENAMES = "folder_browser_show_file_names";
+    private static final String KEY_FOLDER_BROWSER_SHOW_FILENAMES = "folder_browser_show_file_names";
 
     public void setFolderBrowserShowFileNames(boolean showFileNames) {
         setBooleanValue(KEY_FOLDER_BROWSER_SHOW_FILENAMES, showFileNames);
@@ -237,7 +238,7 @@ public class SettingsManager {
         return getBooleanValue(KEY_FOLDER_BROWSER_SHOW_FILENAMES, false);
     }
 
-    public static final String KEY_LAUNCH_COUNT = "launch_count";
+    private static final String KEY_LAUNCH_COUNT = "launch_count";
 
     public void incrementLaunchCount() {
         setIntValue(KEY_LAUNCH_COUNT, getLaunchCount() + 1);
@@ -247,7 +248,7 @@ public class SettingsManager {
         return getIntValue(KEY_LAUNCH_COUNT, 0);
     }
 
-    public static final String KEY_NAG_MESSAGE_READ = "nag_message_read";
+    private static final String KEY_NAG_MESSAGE_READ = "nag_message_read";
 
     public void setNagMessageRead() {
         setBooleanValue(KEY_NAG_MESSAGE_READ, true);
@@ -257,7 +258,7 @@ public class SettingsManager {
         return getBooleanValue(KEY_NAG_MESSAGE_READ, false);
     }
 
-    public static final String KEY_HAS_RATED = "has_rated";
+    private static final String KEY_HAS_RATED = "has_rated";
 
     public void setHasRated() {
         setBooleanValue(KEY_HAS_RATED, true);
@@ -267,8 +268,8 @@ public class SettingsManager {
         return getBooleanValue(KEY_HAS_RATED, false);
     }
 
-    public static final String KEY_BLUETOOTH_PAUSE_DISCONNECT = "pref_bluetooth_disconnect";
-    public static final String KEY_BLUETOOTH_RESUME_CONNECT = "pref_bluetooth_connect";
+    private static final String KEY_BLUETOOTH_PAUSE_DISCONNECT = "pref_bluetooth_disconnect";
+    private static final String KEY_BLUETOOTH_RESUME_CONNECT = "pref_bluetooth_connect";
 
     public boolean getBluetoothPauseDisconnect() {
         return getBooleanValue(KEY_BLUETOOTH_PAUSE_DISCONNECT, true);
@@ -278,9 +279,9 @@ public class SettingsManager {
         return getBooleanValue(KEY_BLUETOOTH_RESUME_CONNECT, false);
     }
 
-    public static final String KEY_PRIMARY_COLOR = "pref_theme_highlight_color";
-    public static final String KEY_ACCENT_COLOR = "pref_theme_accent_color";
-    public static final String KEY_ACCENT_IS_WHITE = "pref_theme_white_accent";
+    private static final String KEY_PRIMARY_COLOR = "pref_theme_highlight_color";
+    private static final String KEY_ACCENT_COLOR = "pref_theme_accent_color";
+    private static final String KEY_ACCENT_IS_WHITE = "pref_theme_white_accent";
 
     public int getPrimaryColor(int defaultColor) {
         return getIntValue(KEY_PRIMARY_COLOR, defaultColor);
@@ -306,10 +307,10 @@ public class SettingsManager {
     //ARTWORK
 
     public static final String KEY_PREFER_LAST_FM = "pref_prefer_lastfm";
-    public static final String KEY_DOWNLOAD_AUTOMATICALLY = "pref_download_artwork_auto";
-    public static final String KEY_USE_GMAIL_PLACEHOLDERS = "pref_placeholders";
-    public static final String KEY_QUEUE_ARTWORK = "pref_artwork_queue";
-    public static final String KEY_CROP_ARTWORK = "pref_crop_artwork";
+    private static final String KEY_DOWNLOAD_AUTOMATICALLY = "pref_download_artwork_auto";
+    private static final String KEY_USE_GMAIL_PLACEHOLDERS = "pref_placeholders";
+    private static final String KEY_QUEUE_ARTWORK = "pref_artwork_queue";
+    private static final String KEY_CROP_ARTWORK = "pref_crop_artwork";
     public static final String KEY_IGNORE_MEDIASTORE_ART = "pref_ignore_mediastore_artwork";
     public static final String KEY_IGNORE_EMBEDDED_ARTWORK = "pref_ignore_embedded_artwork";
     public static final String KEY_IGNORE_FOLDER_ARTWORK = "pref_ignore_folder_artwork";
@@ -351,7 +352,7 @@ public class SettingsManager {
         return getBooleanValue(KEY_IGNORE_EMBEDDED_ARTWORK, false);
     }
 
-    public static final String KEY_PLAYLIST_IGNORE_DUPLICATES = "pref_ignore_duplicates";
+    private static final String KEY_PLAYLIST_IGNORE_DUPLICATES = "pref_ignore_duplicates";
 
     public boolean ignoreDuplicates() {
         return getBooleanValue(KEY_PLAYLIST_IGNORE_DUPLICATES, false);
@@ -361,7 +362,7 @@ public class SettingsManager {
         setBooleanValue(KEY_PLAYLIST_IGNORE_DUPLICATES, ignoreDuplicates);
     }
 
-    public static final String KEY_INVERT_NOTIFICATION_ICONS = "pref_invert_notif_icons";
+    private static final String KEY_INVERT_NOTIFICATION_ICONS = "pref_invert_notif_icons";
 
     public boolean invertNotificationIcons() {
         return getBooleanValue(KEY_INVERT_NOTIFICATION_ICONS, false);
@@ -369,7 +370,7 @@ public class SettingsManager {
 
     // Search settings
 
-    public static final String KEY_SEARCH_FUZZY = "search_fuzzy";
+    private static final String KEY_SEARCH_FUZZY = "search_fuzzy";
 
     public void setSearchFuzzy(boolean fuzzy) {
         setBooleanValue(KEY_SEARCH_FUZZY, fuzzy);
@@ -379,7 +380,7 @@ public class SettingsManager {
         return getBooleanValue(KEY_SEARCH_FUZZY, true);
     }
 
-    public static final String KEY_SEARCH_ARTISTS = "search_artists";
+    private static final String KEY_SEARCH_ARTISTS = "search_artists";
 
     public void setSearchArtists(boolean searchArtists) {
         setBooleanValue(KEY_SEARCH_ARTISTS, searchArtists);
@@ -389,7 +390,7 @@ public class SettingsManager {
         return getBooleanValue(KEY_SEARCH_ARTISTS, true);
     }
 
-    public static final String KEY_SEARCH_ALBUMS = "search_albums";
+    private static final String KEY_SEARCH_ALBUMS = "search_albums";
 
     public void setSearchAlbums(boolean searchAlbums) {
         setBooleanValue(KEY_SEARCH_ALBUMS, searchAlbums);
@@ -399,4 +400,26 @@ public class SettingsManager {
         return getBooleanValue(KEY_SEARCH_ALBUMS, true);
     }
 
+
+    // Changelog
+
+    private static final String KEY_VERSION_CODE = "version_code";
+
+    public void setVersionCode() {
+        setIntValue(KEY_VERSION_CODE, BuildConfig.VERSION_CODE);
+    }
+
+    public int getStoredVersionCode() {
+        return getIntValue(KEY_VERSION_CODE, -1);
+    }
+
+    private static final String KEY_CHANGELOG_SHOW_ON_LAUNCH = "show_on_launch";
+
+    public void setShowChangelogOnLaunch(boolean showOnLaunch) {
+        setBooleanValue(KEY_CHANGELOG_SHOW_ON_LAUNCH, showOnLaunch);
+    }
+
+    public boolean getShowChangelogOnLaunch() {
+        return getBooleanValue(KEY_CHANGELOG_SHOW_ON_LAUNCH, true);
+    }
 }
