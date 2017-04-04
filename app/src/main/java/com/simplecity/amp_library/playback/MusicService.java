@@ -1860,11 +1860,14 @@ public class MusicService extends Service {
                 ? PlaybackStateCompat.STATE_PLAYING
                 : PlaybackStateCompat.STATE_PAUSED;
 
+        long playbackActions = getMediaSessionActions();
+
         if (what.equals(InternalIntents.PLAY_STATE_CHANGED) || what.equals(InternalIntents.POSITION_CHANGED)) {
             //noinspection WrongConstant
             mSession.setPlaybackState(new PlaybackStateCompat.Builder()
-                    .setActions(getMediaSessionActions())
-                    .setState(playState, getPosition(), 1.0f).build());
+                    .setActions(playbackActions)
+                    .setState(playState, getPosition(), 1.0f)
+                    .build());
         } else if (what.equals(InternalIntents.META_CHANGED) || what.equals(InternalIntents.QUEUE_CHANGED)) {
 
             MediaMetadataCompat.Builder metaData = new MediaMetadataCompat.Builder()
@@ -1882,7 +1885,6 @@ public class MusicService extends Service {
             if (ShuttleUtils.hasLollipop()) {
                 metaData.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, (long) (getQueue().size()));
             }
-
 
             if (SettingsManager.getInstance().showLockscreenArtwork()) {
                 //Glide has to be called from the main thread.
@@ -1913,6 +1915,11 @@ public class MusicService extends Service {
             } else {
                 mSession.setMetadata(metaData.build());
             }
+
+            mSession.setPlaybackState(new PlaybackStateCompat.Builder()
+                    .setActions(playbackActions)
+                    .setState(playState, getPosition(), 1.0f)
+                    .build());
         }
     }
 
