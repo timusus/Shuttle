@@ -373,7 +373,8 @@ public class MainActivity extends BaseCastActivity implements
         // If we've stored a version code in the past, and it's lower than the current version code,
         // we can show the changelog.
         // Don't show the changelog for first time users.
-        if (storedVersionCode != -1 && storedVersionCode < BuildConfig.VERSION_CODE) {
+        // Todo: Re-comment this after v1.6.5-beta8 release.
+        if (/*storedVersionCode != -1 &&*/ storedVersionCode < BuildConfig.VERSION_CODE) {
             if (SettingsManager.getInstance().getShowChangelogOnLaunch()) {
                 DialogUtils.showChangelog(this);
             }
