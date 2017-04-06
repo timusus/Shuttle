@@ -2047,11 +2047,15 @@ public class MusicService extends Service {
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        if (resource != null) {
-                            contentView.setImageViewBitmap(R.id.icon, resource);
-                            bigContentView.setImageViewBitmap(R.id.icon, resource);
+                        try {
+                            if (resource != null) {
+                                contentView.setImageViewBitmap(R.id.icon, resource);
+                                bigContentView.setImageViewBitmap(R.id.icon, resource);
+                            }
+                            mNotificationManager.notify(NOTIFICATION_ID, mNotification);
+                        } catch (NullPointerException e) {
+                            Log.e(TAG, "Exception while attempting to update notification with glide image: " + e);
                         }
-                        mNotificationManager.notify(NOTIFICATION_ID, mNotification);
                     }
 
                     @Override
