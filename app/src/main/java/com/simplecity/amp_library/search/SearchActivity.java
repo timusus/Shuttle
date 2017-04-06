@@ -119,8 +119,7 @@ public class SearchActivity extends BaseActivity implements
                 .skip(1)
                 .debounce(200, TimeUnit.MILLISECONDS)
                 .onBackpressureLatest()
-                .subscribe(searchViewQueryTextEvent ->
-                        searchPresenter.queryChanged((String) searchViewQueryTextEvent.queryText())));
+                .subscribe(searchViewQueryTextEvent -> searchPresenter.queryChanged(searchViewQueryTextEvent.queryText().toString())));
 
         recyclerView = (FastScrollRecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
