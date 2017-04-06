@@ -148,6 +148,8 @@
     <string name="delete_file_confirmation_dialog">¿Estás seguro de que quieres borrar permanentemente \"<xliff:g id="file">%s</xliff:g>\"?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">¿Estás seguro que quieres borrar permanentemente todas las caratulas de este dispositivo?</string>
+    <!-- QuickLyric Play Store Link -->
+    <string name="quicklyric_play_store">Descargar QuickLyric</string>
     <!-- QuickLyric button -->
     <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
@@ -245,6 +247,10 @@
     <string name="pref_summary_theme_white_accent">Utiliza blanco para todo el color de énfasis, excepto para aquellos que necesitan mostrar un estado (aleatorio y repetir necesitan un color diferente al blanco para mostrar que están encendidos).</string>
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">Navegación</string>
+    <!--Settings category for 'notification' items -->
+    <string name="pref_category_notif_drawer">Cajón de notificaciones</string>
+    <!-- Settings title for inverting the notification drawer text & icons -->
+    <string name="pref_title_invert_notif_icons">Invertir íconos/texto de notificación</string>
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Otros</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
@@ -648,11 +654,15 @@
     <!-- Accessibility button description -->
     <string name="btn_pause">Pausa</string>
     <!-- Accessibility button description -->
+    <string name="btn_play_pause">Reproducir/Pausar</string>
+    <!-- Accessibility button description -->
     <string name="btn_skip">Omitir</string>
     <!-- Accessibility button description -->
     <string name="btn_prev">Previo</string>
     <!-- Accessibility button description -->
     <string name="btn_queue">Ver lista de reproducción</string>
+    <!-- Accessibility button description -->
+    <string name="btn_close">Cerrar</string>
     <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
     <string name="btn_options">%s opciones</string>
     <!-- Accessibility button description -->
@@ -729,4 +739,8 @@
     <string name="shortcut_playlist_disabled">"Lista de reproducción no disponible "</string>
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">Disco <xliff:g id="number">%d</xliff:g></string>
+    <!-- Search Filter-->
+    <string name="search_title_only">Solo título</string>
+    <string name="search_artists">Artistas</string>
+    <!-- Changelog -->
 </resources>

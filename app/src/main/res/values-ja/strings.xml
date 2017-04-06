@@ -147,6 +147,7 @@
     <string name="delete_file_confirmation_dialog">\"<xliff:g id="file">%s</xliff:g>\"を完全に削除しますか?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">本当に端末から全てのアートワークを完全に削除しますか?</string>
+    <!-- QuickLyric Play Store Link -->
     <!-- QuickLyric button -->
     <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
@@ -243,6 +244,8 @@
     <string name="pref_summary_theme_white_accent">状態を表すもの (シャッフルとリピート)以外のカラーアクセントに白色を使うようにします。</string>
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">ナビ</string>
+    <!--Settings category for 'notification' items -->
+    <!-- Settings title for inverting the notification drawer text & icons -->
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">その他</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
@@ -629,11 +632,13 @@
     <string name="btn_play">再生/一時停止</string>
     <!-- Accessibility button description -->
     <!-- Accessibility button description -->
+    <!-- Accessibility button description -->
     <string name="btn_skip">次の曲へ</string>
     <!-- Accessibility button description -->
     <string name="btn_prev">前の曲へ</string>
     <!-- Accessibility button description -->
     <string name="btn_queue">再生キューの表示</string>
+    <!-- Accessibility button description -->
     <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
     <!-- Accessibility button description -->
     <!-- Accessibility button description -->
@@ -680,4 +685,6 @@
     <!-- "Playlist" Shortcut long label. Max 25 characters.-->
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
+    <!-- Search Filter-->
+    <!-- Changelog -->
 </resources>

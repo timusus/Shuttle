@@ -160,6 +160,7 @@ músicas adicionadas à fila.</item>
     <string name="delete_file_confirmation_dialog">Você tem certeza que gostaria de apagar \"<xliff:g id="file">%s</xliff:g>\" permanentemente?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">Tem certeza de que deseja apagar permanentemente todas as capas do dispositivo?</string>
+    <!-- QuickLyric Play Store Link -->
     <!-- QuickLyric button -->
     <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
@@ -257,6 +258,10 @@ músicas adicionadas à fila.</item>
     <string name="pref_summary_theme_white_accent">Usa o branco para todas as cores de destaque, exceto aquelas que precisam mostrar estado (modos aleatório e repetir precisam de outra cor além de branco para mostrar que estão ligados).</string>
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">Navegação</string>
+    <!--Settings category for 'notification' items -->
+    <string name="pref_category_notif_drawer">Gaveta de Notificações</string>
+    <!-- Settings title for inverting the notification drawer text & icons -->
+    <string name="pref_title_invert_notif_icons">Inverter Ícones/Texto da Notificação</string>
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Outros</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
@@ -658,11 +663,13 @@ pastas</item>
     <!-- Accessibility button description -->
     <string name="btn_pause">Pausar</string>
     <!-- Accessibility button description -->
+    <!-- Accessibility button description -->
     <string name="btn_skip">Próxima</string>
     <!-- Accessibility button description -->
     <string name="btn_prev">Anterior</string>
     <!-- Accessibility button description -->
     <string name="btn_queue">Ver fila de reprodução</string>
+    <!-- Accessibility button description -->
     <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
     <string name="btn_options">%s opções</string>
     <!-- Accessibility button description -->
@@ -739,4 +746,6 @@ pastas</item>
     <string name="shortcut_playlist_disabled">Lista de reprodução não disponível</string>
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">Disco <xliff:g id="number">%d</xliff:g></string>
+    <!-- Search Filter-->
+    <!-- Changelog -->
 </resources>

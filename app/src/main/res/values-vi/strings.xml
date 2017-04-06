@@ -155,6 +155,8 @@
     <string name="delete_file_confirmation_dialog">Bạn chắc muốn xoá vĩnh viễn \"<xliff:g id="file">%s</xliff:g>\"?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">Bạn chắc muốn xoá vĩnh viễn tất cả ảnh bìa khỏi thiết bị?</string>
+    <!-- QuickLyric Play Store Link -->
+    <string name="quicklyric_play_store">Tải QuickLyric</string>
     <!-- QuickLyric button -->
     <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
@@ -216,6 +218,7 @@
     <string name="share_title">Chia sẻ</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Tìm kiếm</string>
+    <string name="search_filter">Lọc</string>
     <!-- Playlist context menu item to delete the selected playlist. -->
     <string name="delete_playlist_menu">Xoá</string>
     <!-- Playlist context menu item to clear the selected playlist. -->
@@ -252,6 +255,10 @@
     <string name="pref_summary_theme_white_accent">Dùng màu trắng cho tất cả các màu nhấn mạnh, trừ những màu cần để hiện tình trạng (ngẫu nhiên và lặp lại cần một màu khác màu trắng đển hiển thị khi chúng được bật)</string>
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">Điều hướng</string>
+    <!--Settings category for 'notification' items -->
+    <string name="pref_category_notif_drawer">Ngăn thông báo</string>
+    <!-- Settings title for inverting the notification drawer text & icons -->
+    <string name="pref_title_invert_notif_icons">Đảo ngược biểu tượng/văn bản thông báo</string>
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Khác</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
@@ -402,6 +409,8 @@
     <string name="pref_summary_gplus">Có một cộng đồng người dùng Shuttle rất năng động trên Google+. Nếu bạn có câu hỏi hay cần giúp đỡ gì đó, đấy chính là nơi tốt nhất.</string>
     <string name="pref_title_rate">Nói cảm ơn</string>
     <string name="pref_summary_rate">Nếu bạn thích Shuttle, hãy xem xét để lại một đánh giá</string>
+    <string name="pref_title_headset_beep">Beep khi bỏ qua</string>
+    <string name="pref_summary_headset_beep">Phát âm beep khi bỏ qua bài hát bằng các nút điều khiển trên tai nghe</string>
     <!-- Settings title for ignore playlist duplicates -->
     <string name="pref_title_ignore_duplicates">Bỏ qua danh sách trùng lặp</string>
     <!-- Settings summary for ignore playlist duplicates -->
@@ -546,6 +555,7 @@
     <string name="empty_songlist">Không tìm thấy bài hát. Hãy chép một số bài hát vào thiết bị của bạn.</string>
     <!-- -->
     <string name="empty_suggested">Nghe thêm bài hát và những gợi ý sẽ hiện tại đây.</string>
+    <string name="empty_search">Không tìm thấy kết quả.</string>
     <!-- ## Sort options ## -->
     <string name="sorting">Sắp xếp</string>
     <string name="sort_default">Mặc định</string>
@@ -652,11 +662,15 @@
     <!-- Accessibility button description -->
     <string name="btn_pause">Tạm dừng</string>
     <!-- Accessibility button description -->
+    <string name="btn_play_pause">Phát/Tạm dừng</string>
+    <!-- Accessibility button description -->
     <string name="btn_skip">Bỏ qua</string>
     <!-- Accessibility button description -->
     <string name="btn_prev">Bài trước</string>
     <!-- Accessibility button description -->
     <string name="btn_queue">Xem danh sách chờ phát</string>
+    <!-- Accessibility button description -->
+    <string name="btn_close">Đóng</string>
     <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
     <string name="btn_options">Tuỳ chọn %s</string>
     <!-- Accessibility button description -->
@@ -733,4 +747,11 @@
     <string name="shortcut_playlist_disabled">Danh sách không khả dụng</string>
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">Đĩa <xliff:g id="number">%d</xliff:g></string>
+    <!-- Search Filter-->
+    <string name="search_fuzzy">Gần đúng</string>
+    <string name="search_title_only">Chỉ tiêu đề</string>
+    <string name="search_artists">Nghệ sĩ</string>
+    <string name="search_albums">Album</string>
+    <!-- Changelog -->
+    <string name="changelog_show_on_launch">Hiện lúc khởi động</string>
 </resources>

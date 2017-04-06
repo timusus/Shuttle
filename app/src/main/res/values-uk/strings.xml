@@ -167,6 +167,7 @@
     <string name="delete_file_confirmation_dialog">Ви впевнені, що хочете назавжди видалити \"<xliff:g id="file">%s</xliff:g>\"?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">Ви впевнені що хочете назавжди видалити всі обкладинки альбомів з пристрою?</string>
+    <!-- QuickLyric Play Store Link -->
     <!-- QuickLyric button -->
     <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
@@ -263,6 +264,8 @@
     <string name="pref_summary_theme_white_accent">Використовує білий для всіх кольорових акцентів, виключаючи ті, які повинні відображати стан (тасування та повтор потребують кольору відмінного від білого щоб показати, що вони увімкнені)</string>
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">Навігація</string>
+    <!--Settings category for 'notification' items -->
+    <!-- Settings title for inverting the notification drawer text & icons -->
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Інші</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
@@ -667,11 +670,13 @@
     <!-- Accessibility button description -->
     <string name="btn_pause">Пауза</string>
     <!-- Accessibility button description -->
+    <!-- Accessibility button description -->
     <string name="btn_skip">Пропустити</string>
     <!-- Accessibility button description -->
     <string name="btn_prev">Попередній</string>
     <!-- Accessibility button description -->
     <string name="btn_queue">Переглянути чергу відтворення</string>
+    <!-- Accessibility button description -->
     <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
     <string name="btn_options">параметри %s</string>
     <!-- Accessibility button description -->
@@ -747,4 +752,6 @@
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">Плейлист недоступний</string>
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
+    <!-- Search Filter-->
+    <!-- Changelog -->
 </resources>

@@ -158,6 +158,8 @@
     <string name="delete_file_confirmation_dialog">Weet je zeker dat je \"<xliff:g id="file">%s</xliff:g>\" permanent wil verwijderen?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">Weet je zeker dat je alle albumillustraties wilt verwijderen?</string>
+    <!-- QuickLyric Play Store Link -->
+    <string name="quicklyric_play_store">QuickLyric downloaden</string>
     <!-- QuickLyric button -->
     <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
@@ -219,6 +221,7 @@
     <string name="share_title">Delen</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Zoeken</string>
+    <string name="search_filter">Filter</string>
     <!-- Playlist context menu item to delete the selected playlist. -->
     <string name="delete_playlist_menu">Verwijderen</string>
     <!-- Playlist context menu item to clear the selected playlist. -->
@@ -255,6 +258,10 @@
     <string name="pref_summary_theme_white_accent">Gebruik wit voor alle kleuraccenten, behalve degene die status tonen (shuffle en herhalen hebben een andere kleur nodig wanneer ze zijn ingeschakeld).</string>
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">Navigatie</string>
+    <!--Settings category for 'notification' items -->
+    <string name="pref_category_notif_drawer">Notificatiepaneel</string>
+    <!-- Settings title for inverting the notification drawer text & icons -->
+    <string name="pref_title_invert_notif_icons">Notificatie-iconen/tekst  omkeren</string>
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Anders</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
@@ -284,13 +291,13 @@
     <!--Settings summary for the downloading more themes -->
     <string name="pref_summary_get_pro_themes">Meer thema\'s zijn beschikbaar in Shuttle+</string>
     <!--Settings title for whitelist/blacklist-->
-    <string name="pref_title_blacklist">White/Blacklist</string>
+    <string name="pref_title_blacklist">White/blacklist</string>
     <!--Settings title for viewing blacklist-->
-    <string name="pref_title_view_blacklist">Bekijk/Bewerk Blacklist</string>
+    <string name="pref_title_view_blacklist">Blacklist bekijken/bewerken</string>
     <!--Settings title for clearing blacklist-->
     <string name="pref_title_clear_blacklist">Legen</string>
     <!--Settings title for viewing whitelist-->
-    <string name="pref_title_view_whitelist">Bekijk/Bewerk Whitelist</string>
+    <string name="pref_title_view_whitelist">Whitelist bekijken/bewerken</string>
     <!--Settings title for clearing whitelist-->
     <string name="pref_title_clear_whitelist">Legen</string>
     <!--Settings title for clearing whitelist-->
@@ -365,7 +372,7 @@ Anders wordt het Shuttle-icoon als plaatshouder gebruikt</string>
     <!-- Settings summary for the default page  -->
     <string name="pref_summary_default_page">Kies welke pagina standaard wordt getoond</string>
     <!-- Settings title for the headset control options -->
-    <string name="pref_title_headset_bluetooth">Headset/Bluetooth</string>
+    <string name="pref_title_headset_bluetooth">Headset/bluetooth</string>
     <!-- Settings title for the headset resume on connect option -->
     <string name="pref_title_headset_con">"Hervatten bij aansluiten "</string>
     <!-- Settings summary for the headset resume on connect option -->
@@ -405,6 +412,8 @@ Anders wordt het Shuttle-icoon als plaatshouder gebruikt</string>
     <string name="pref_summary_gplus">Er is een actieve gemeenschap van Shuttle-gebruikers op Google+. Als je vragen hebt of hulp nodig hebt, is dit de beste plek om naar toe te gaan.</string>
     <string name="pref_title_rate">Zeg bedankt</string>
     <string name="pref_summary_rate">Als je Shuttle leuk vindt, overweeg dan om een beoordeling achter te laten.</string>
+    <string name="pref_title_headset_beep">Beep bij skippen</string>
+    <string name="pref_summary_headset_beep">Beep bij skippen nummer via headsetknoppen</string>
     <!-- Settings title for ignore playlist duplicates -->
     <string name="pref_title_ignore_duplicates">Dubbelingen afspeellijst negeren</string>
     <!-- Settings summary for ignore playlist duplicates -->
@@ -549,6 +558,7 @@ map "</item>
     <string name="empty_songlist">Geen nummers gevonden. Kopieer een paar nummers naar je apparaat</string>
     <!-- -->
     <string name="empty_suggested">Speel meer muziek, en suggesties zullen hier verschijnen.</string>
+    <string name="empty_search">Geen zoekresultaten gevonden.</string>
     <!-- ## Sort options ## -->
     <string name="sorting">Sortering</string>
     <string name="sort_default">Standaard</string>
@@ -657,11 +667,15 @@ map "</item>
     <!-- Accessibility button description -->
     <string name="btn_pause">Pauze</string>
     <!-- Accessibility button description -->
+    <string name="btn_play_pause">Afspelen/pauzeren</string>
+    <!-- Accessibility button description -->
     <string name="btn_skip">Overslaan</string>
     <!-- Accessibility button description -->
     <string name="btn_prev">Vorige</string>
     <!-- Accessibility button description -->
     <string name="btn_queue">Afspeelwachtrij zien</string>
+    <!-- Accessibility button description -->
+    <string name="btn_close">Sluiten</string>
     <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
     <string name="btn_options">%s-opties</string>
     <!-- Accessibility button description -->
@@ -684,8 +698,8 @@ map "</item>
     <string name="btn_show_lyrics">Songteksten tonen</string>
     <string name="pref_summary_restore_purchases">Als je Shuttle al hebt geüpgraded, met zegt dat je de gratis versie hebt, druk hier.</string>
     <string name="pref_title_restore_purchases">Herstel aankopen</string>
-    <string name="blacklist_empty">Je hebt geen nummers geblacklisted!</string>
-    <string name="whitelist_empty">Je hebt geen mappen gewhitelisted!</string>
+    <string name="blacklist_empty">Je hebt geen nummers geblacklist!</string>
+    <string name="whitelist_empty">Je hebt geen mappen gewhitelist!</string>
     <string name="dialog_song_info_title">Nummer info</string>
     <string name="song_info_path">Pad</string>
     <string name="song_info_file_size">Bestandsgrootte</string>
@@ -738,4 +752,11 @@ map "</item>
     <string name="shortcut_playlist_disabled">Afspeellijst niet beschikbaar</string>
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">CD <xliff:g id="number">%d</xliff:g></string>
+    <!-- Search Filter-->
+    <string name="search_fuzzy">Fuzzy</string>
+    <string name="search_title_only">Alleen titel</string>
+    <string name="search_artists">Artiesten</string>
+    <string name="search_albums">Albums</string>
+    <!-- Changelog -->
+    <string name="changelog_show_on_launch">Tonen bij opstarten</string>
 </resources>

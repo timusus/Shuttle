@@ -154,6 +154,7 @@
     <string name="delete_file_confirmation_dialog">您确定要永久性删除\"<xliff:g id="file">%s</xliff:g>\"吗?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">您确定要永久删除设备上的所有封面吗?</string>
+    <!-- QuickLyric Play Store Link -->
     <!-- QuickLyric button -->
     <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
@@ -251,6 +252,8 @@
     <string name="pref_summary_theme_white_accent">为所有除需要显示状态的地方以外使用白色（随机或重复需要一个除白色以外的颜色来标示出启用）</string>
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">导航</string>
+    <!--Settings category for 'notification' items -->
+    <!-- Settings title for inverting the notification drawer text & icons -->
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">其它</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
@@ -655,11 +658,13 @@ www.shuttlemusicplayer.com</string>
     <!-- Accessibility button description -->
     <string name="btn_pause">暂停</string>
     <!-- Accessibility button description -->
+    <!-- Accessibility button description -->
     <string name="btn_skip">跳过</string>
     <!-- Accessibility button description -->
     <string name="btn_prev">上一首</string>
     <!-- Accessibility button description -->
     <string name="btn_queue">查看播放队列</string>
+    <!-- Accessibility button description -->
     <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
     <string name="btn_options">%s选项</string>
     <!-- Accessibility button description -->
@@ -736,4 +741,6 @@ www.shuttlemusicplayer.com</string>
     <string name="shortcut_playlist_disabled">播放列表不可用</string>
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">音轨<xliff:g id="number">%d</xliff:g></string>
+    <!-- Search Filter-->
+    <!-- Changelog -->
 </resources>

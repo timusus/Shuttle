@@ -163,6 +163,7 @@
     <string name="delete_file_confirmation_dialog">Jeste li sigurni da želite trajno izbrisati \"<xliff:g id="file">%s</xliff:g>\"?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">Jeste li sigurni da želite trajno izbrisati sve omote sa uređaja?</string>
+    <!-- QuickLyric Play Store Link -->
     <!-- QuickLyric button -->
     <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
@@ -260,6 +261,8 @@ Svejedno dodati?</string>
     <string name="pref_summary_theme_white_accent">Koristi bijelu boju za naglašavanje svih boja, osim onih koje prikazuju stanje (nasumično reproduciranje i ponavljanje trebaju boju drugačiju od bijele kako bi prikazali da su uključeni).</string>
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">Navigacija</string>
+    <!--Settings category for 'notification' items -->
+    <!-- Settings title for inverting the notification drawer text & icons -->
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Ostalo</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
@@ -664,11 +667,13 @@ mapa</item>
     <!-- Accessibility button description -->
     <string name="btn_pause">Pauza</string>
     <!-- Accessibility button description -->
+    <!-- Accessibility button description -->
     <string name="btn_skip">Preskoči</string>
     <!-- Accessibility button description -->
     <string name="btn_prev">Prošlo</string>
     <!-- Accessibility button description -->
     <string name="btn_queue">Prikaži red čekanja</string>
+    <!-- Accessibility button description -->
     <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
     <string name="btn_options">%s opcije</string>
     <!-- Accessibility button description -->
@@ -745,4 +750,6 @@ mapa</item>
     <string name="shortcut_playlist_disabled">Popis naslova nije dostupan</string>
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">Disk <xliff:g id="number">%d</xliff:g></string>
+    <!-- Search Filter-->
+    <!-- Changelog -->
 </resources>
