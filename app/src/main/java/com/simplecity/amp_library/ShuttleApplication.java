@@ -334,7 +334,7 @@ public class ShuttleApplication extends Application {
                             if (numSongs == 0) {
                                 try {
                                     getContentResolver().delete(MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI, MediaStore.Audio.Genres._ID + " == " + genre.id, null);
-                                } catch (IllegalArgumentException ignored) {
+                                } catch (IllegalArgumentException | UnsupportedOperationException ignored) {
                                     //Don't care if we couldn't delete this uri.
                                 }
                             }
