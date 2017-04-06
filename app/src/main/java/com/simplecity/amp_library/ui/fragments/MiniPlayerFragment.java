@@ -230,7 +230,7 @@ public class MiniPlayerFragment extends BaseFragment implements PlayerView {
 
     @Override
     public void setSeekProgress(int progress) {
-
+        progressBar.setProgress(progress);
     }
 
     @Override
@@ -281,7 +281,7 @@ public class MiniPlayerFragment extends BaseFragment implements PlayerView {
 
         if (song == null) return;
 
-        ((MainActivity)getActivity()).togglePanelVisibility(true);
+        ((MainActivity) getActivity()).togglePanelVisibility(true);
 
         trackName.setText(song.name);
         artistName.setText(String.format("%s | %s", song.artistName, song.albumName));
