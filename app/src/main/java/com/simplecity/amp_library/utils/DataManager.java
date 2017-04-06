@@ -167,7 +167,7 @@ public class DataManager {
         if (albumArtistsSubscription == null || albumArtistsSubscription.isUnsubscribed()) {
             albumArtistsSubscription = getAlbumsRelay()
                     .flatMap(albums -> Observable.just(Operators.albumsToAlbumArtists(albums)))
-                    .subscribe(albumArtistsRelay,error -> Crashlytics.log("getAlbumArtistsRelay error: " + error.getMessage()));
+                    .subscribe(albumArtistsRelay, error -> Crashlytics.log("getAlbumArtistsRelay error: " + error.getMessage()));
         }
         return albumArtistsRelay.subscribeOn(Schedulers.io()).map(ArrayList::new);
     }
@@ -193,17 +193,14 @@ public class DataManager {
     public Observable<List<Genre>> getGenresRelay() {
         if (genresSubscription == null || genresSubscription.isUnsubscribed()) {
             genresSubscription = SqlBriteUtils.createContinuousQuery(ShuttleApplication.getInstance(), Genre::new, Genre.getQuery())
-                    .flatMap(genres -> Observable.from(genres)
-                            .flatMap(genre -> genre.getSongsObservable(ShuttleApplication.getInstance())
-                                    .filter(songs -> !songs.isEmpty())
-                                    .map(songs -> {
-                                        genre.numSongs = songs.size();
-                                        return genre;
-                                    }))
-                            .toList())
                     .subscribe(genresRelay, error -> Crashlytics.log("getGenresRelay error: " + error.getMessage()));
         }
+
         return genresRelay.subscribeOn(Schedulers.io()).map(ArrayList::new);
+    }
+
+    public void updateGenresRelay(List<Genre> genres){
+        genresRelay.call(genres);
     }
 
     /**

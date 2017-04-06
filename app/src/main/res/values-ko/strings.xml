@@ -156,6 +156,8 @@
     <string name="delete_file_confirmation_dialog">정말 \"<xliff:g id="file">%s</xliff:g>\"을(를) 영구적으로 삭제하시겠습니까?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">정말 기기에 있는 모든 앨범 사진들을 삭제하시겠습니까?</string>
+    <!-- QuickLyric Play Store Link -->
+    <string name="quicklyric_play_store">QuickLyric 다운로드</string>
     <!-- QuickLyric button -->
     <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
@@ -217,6 +219,7 @@
     <string name="share_title">공유</string>
     <!-- Library screen, menu item -->
     <string name="search_title">검색</string>
+    <string name="search_filter">필터</string>
     <!-- Playlist context menu item to delete the selected playlist. -->
     <string name="delete_playlist_menu">삭제</string>
     <!-- Playlist context menu item to clear the selected playlist. -->
@@ -243,9 +246,9 @@
     <string name="share">공유</string>
     <!-- ## Navigation Drawer ## -->
     <!-- Accessibility description 'open navigation drawer'-->
-    <string name="navigation_drawer_open">내비게이션 드로워 열기</string>
+    <string name="navigation_drawer_open">내비게이션 서랍 열기</string>
     <!-- Accessibility description 'close navigation drawer'-->
-    <string name="navigation_drawer_close">내비게이션 드로워 닫기</string>
+    <string name="navigation_drawer_close">내비게이션 서랍 닫기</string>
     <!-- ## Preference Menu ## -->
     <!--Settings title for white accent color) -->
     <string name="pref_title_theme_white_accent">강조 색상으로 흰색 사용</string>
@@ -253,6 +256,10 @@
     <string name="pref_summary_theme_white_accent">필요한 곳을 제외한 모든 강조되는 부분을 흰색으로 사용합니다. (랜덤 재생 및 반복 버튼은 켜진 상태를 표시하기 위하여 다른 색상이 필요합니다)</string>
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">내비게이션</string>
+    <!--Settings category for 'notification' items -->
+    <string name="pref_category_notif_drawer">알림 표시창</string>
+    <!-- Settings title for inverting the notification drawer text & icons -->
+    <string name="pref_title_invert_notif_icons">알림 아이콘/글자 반전</string>
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">기타</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
@@ -403,6 +410,8 @@
     <string name="pref_summary_gplus">Google+의 Shuttle 사용자 커뮤니티입니다. 매우 활성화되어 있어 도움이 필요할 때 가장 좋은 곳입니다.</string>
     <string name="pref_title_rate">감사 표하기</string>
     <string name="pref_summary_rate">Shuttle이 마음에 드신다면 리뷰를 남겨 주세요.</string>
+    <string name="pref_title_headset_beep">건너뛸 때 비프음</string>
+    <string name="pref_summary_headset_beep">헤드셋 버튼을 이용하여 노래를 건너뛸 때 비프음을 냅니다</string>
     <!-- Settings title for ignore playlist duplicates -->
     <string name="pref_title_ignore_duplicates">재생 목록 중복 무시</string>
     <!-- Settings summary for ignore playlist duplicates -->
@@ -545,6 +554,7 @@
     <string name="empty_songlist">발견된 음악이 없습니다. 기기에 음악을 추가해 주십시오.</string>
     <!-- -->
     <string name="empty_suggested">음악을 좀 더 들으면 여기에 추천 음악이 나타납니다.</string>
+    <string name="empty_search">검색 결과가 없습니다.</string>
     <!-- ## Sort options ## -->
     <string name="sorting">정렬</string>
     <string name="sort_default">기본값</string>
@@ -651,11 +661,15 @@
     <!-- Accessibility button description -->
     <string name="btn_pause">일시정지</string>
     <!-- Accessibility button description -->
+    <string name="btn_play_pause">재생/일시정지</string>
+    <!-- Accessibility button description -->
     <string name="btn_skip">건너뛰기</string>
     <!-- Accessibility button description -->
     <string name="btn_prev">이전</string>
     <!-- Accessibility button description -->
     <string name="btn_queue">재생 대기열 보기</string>
+    <!-- Accessibility button description -->
+    <string name="btn_close">닫기</string>
     <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
     <string name="btn_options">%s 옵션</string>
     <!-- Accessibility button description -->
@@ -732,4 +746,11 @@
     <string name="shortcut_playlist_disabled">재생 목록 사용 불가</string>
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">디스크 <xliff:g id="number">%d</xliff:g></string>
+    <!-- Search Filter-->
+    <string name="search_fuzzy">퍼지</string>
+    <string name="search_title_only">제목만</string>
+    <string name="search_artists">아티스트</string>
+    <string name="search_albums">앨범</string>
+    <!-- Changelog -->
+    <string name="changelog_show_on_launch">실행 시 표시</string>
 </resources>

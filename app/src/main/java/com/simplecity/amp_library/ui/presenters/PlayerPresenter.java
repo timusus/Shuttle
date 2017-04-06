@@ -61,6 +61,7 @@ public class PlayerPresenter extends Presenter<PlayerView> {
         filter.addAction(MusicService.InternalIntents.SERVICE_CONNECTED);
 
         addSubcscription(RxBroadcastReceiver.create(ShuttleApplication.getInstance(), filter)
+                .onBackpressureLatest()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(intent -> {
                     final String action = intent.getAction();

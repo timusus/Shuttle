@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:listitem="@layout/list_item_two_lines" />
+        tools:listitem="@layout/list_item_two_lines"/>
 
     <FrameLayout
         android:id="@+id/headerView"
@@ -30,19 +30,6 @@
             app:layout_collapseMode="parallax"
             tools:src="#33b5e5"/>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right|bottom"
-            android:layout_marginBottom="62dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            app:fabSize="normal"
-            tools:tint="#fff"
-            android:contentDescription="@string/btn_fab_shuffle"
-            android:src="@drawable/ic_shuffle_24dp"/>
-
         <View
             android:id="@+id/textProtectionScrim"
             android:layout_width="match_parent"
@@ -53,6 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="90dp"
             android:layout_below="@id/background"
+            tools:background="#000000"
             android:layout_gravity="bottom"
             android:background="?attr/bg_card"
             android:gravity="center_vertical"
@@ -106,6 +94,18 @@
                     android:src="@drawable/ic_overflow_white"/>
             </LinearLayout>
         </LinearLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|bottom"
+            android:layout_marginBottom="46dp"
+            android:contentDescription="@string/btn_fab_shuffle"
+            android:src="@drawable/ic_shuffle_24dp"
+            app:fabSize="normal"
+            app:useCompatPadding="true"
+            tools:tint="#fff"/>
 
     </FrameLayout>
 

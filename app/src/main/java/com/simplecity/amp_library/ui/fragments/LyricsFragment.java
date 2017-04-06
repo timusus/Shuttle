@@ -92,13 +92,17 @@ public class LyricsFragment extends BaseFragment {
                         .uri(Uri.parse(path))
                         .projection(new String[]{MediaStore.Audio.Media.DATA})
                         .build();
+
                 Cursor cursor = SqlUtils.createQuery(getContext(), query);
                 if (cursor != null) {
-                    int colIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
-                    if (cursor.moveToFirst()) {
-                        filePath = cursor.getString(colIndex);
+                    try {
+                        int colIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+                        if (cursor.moveToFirst()) {
+                            filePath = cursor.getString(colIndex);
+                        }
+                    } finally {
+                        cursor.close();
                     }
-                    cursor.close();
                 }
             }
         }
@@ -148,7 +152,7 @@ public class LyricsFragment extends BaseFragment {
                 mQuickLyricButton.setText(R.string.quicklyric_play_store);
                 mQuickLyricButton.setOnClickListener(v -> {
                     try {
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.geecko.QuickLyric"));
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://d3khd.app.goo.gl/jdF1"));
                         startActivity(intent);
                     } catch (ActivityNotFoundException ignored) {
                         // If the user doesn't have the play store on their device

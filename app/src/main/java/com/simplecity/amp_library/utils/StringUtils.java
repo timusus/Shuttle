@@ -245,7 +245,6 @@ public class StringUtils {
      * @param second the second String, must not be null
      * @return result similarity
      * @throws IllegalArgumentException if either String input {@code null}
-     * @since 3.6
      */
     public static double getJaroWinklerSimilarity(String first, String second) {
 

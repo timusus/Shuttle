@@ -6,10 +6,7 @@ import android.os.Environment;
 import android.view.View;
 import android.widget.RemoteViews;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.glide.utils.CustomAppWidgetTarget;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.utils.ColorUtils;
 import com.simplecity.amp_library.utils.DrawableUtils;
@@ -147,34 +144,9 @@ public class WidgetProviderMedium extends BaseWidgetProvider {
                 }
             }
 
-            switch (service.getShuffleMode()) {
-                case MusicService.ShuffleMode.OFF:
-                    if (invertIcons) {
-                        views.setImageViewBitmap(R.id.shuffle_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_shuffle_white));
-                    } else {
-                        views.setImageViewResource(R.id.shuffle_button, R.drawable.ic_shuffle_white);
-                    }
-                    break;
-                default:
-                    views.setImageViewBitmap(R.id.shuffle_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_shuffle_white));
-                    break;
-            }
+            setupShuffleView(service, views, invertIcons);
 
-            switch (service.getRepeatMode()) {
-                case MusicService.RepeatMode.ALL:
-                    views.setImageViewBitmap(R.id.repeat_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_repeat_white));
-                    break;
-                case MusicService.RepeatMode.ONE:
-                    views.setImageViewBitmap(R.id.repeat_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_repeat_one_white));
-                    break;
-                default:
-                    if (invertIcons) {
-                        views.setImageViewBitmap(R.id.repeat_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_repeat_white));
-                    } else {
-                        views.setImageViewResource(R.id.repeat_button, R.drawable.ic_repeat_white);
-                    }
-                    break;
-            }
+            setupRepeatView(service, views, invertIcons);
 
             int textColor = mPrefs.getInt(ARG_WIDGET_TEXT_COLOR + appWidgetId, service.getResources().getColor(R.color.white));
             if (invertIcons) {
@@ -208,25 +180,8 @@ public class WidgetProviderMedium extends BaseWidgetProvider {
                     views.setInt(R.id.album_art, "setColorFilter", colorFilter);
                 }
 
-                doOnMainThread(() -> {
-                    int bitmapSize = 256;
-                    //Try to load the artwork. If it fails, halve the dimensions and try again.
-                    loadArtwork(service, views, bitmapSize, e ->
-                            loadArtwork(service, views, bitmapSize / 2, e1 ->
-                                    //If this one doesn't work, load a placeholder.
-                                    loadArtwork(service, views, bitmapSize / 3, e2 ->
-                                                    views.setImageViewResource(R.id.album_art, R.drawable.ic_placeholder_light_medium),
-                                            appWidgetIds), appWidgetIds), appWidgetIds);
-                });
+                doOnMainThread(() -> loadArtwork(service, appWidgetIds, views, 256));
             }
         }
-    }
-
-    private void loadArtwork(MusicService service, RemoteViews views, int size, CustomAppWidgetTarget.CustomErrorListener errorListener, int... appWidgetIds) {
-        Glide.with(service)
-                .load(service.getSong())
-                .asBitmap()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(new CustomAppWidgetTarget(service, views, R.id.album_art, size, size, errorListener, appWidgetIds));
     }
 }

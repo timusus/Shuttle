@@ -108,7 +108,10 @@ public class PlayerFragment extends BaseFragment implements PlayerView {
         View rootView = inflater.inflate(R.layout.fragment_player, container, false);
 
         playPauseView = (PlayPauseView) rootView.findViewById(R.id.play);
-        playPauseView.setOnClickListener(v -> presenter.togglePlayback());
+        playPauseView.setOnClickListener(v -> {
+            playPauseView.toggle();
+            playPauseView.postDelayed(() -> presenter.togglePlayback(), 200);
+        });
 
         repeatButton = (ImageButton) rootView.findViewById(R.id.repeat);
         repeatButton.setOnClickListener(v -> presenter.toggleRepeat());

@@ -36,7 +36,7 @@
     <!-- Toast after setting a song as phone ringtone -->
     <string name="ringtone_set">\"<xliff:g id="name" example="Alarm Bell">%s</xliff:g>\" als Klingelton gesetzt.</string>
     <!-- Toast if setting ringtone fails -->
-    <string name="ringtone_set_failed">Konnte Klingelton nicht festlegen</string>
+    <string name="ringtone_set_failed">Klingelton wurde nicht gespeichert</string>
     <!-- Toasts after adding song(s) to playlists -->
     <plurals name="NNNtrackstoplaylist">
         <item quantity="one">1 Titel zur Playlist hinzugefügt</item>
@@ -82,7 +82,7 @@
     <!-- Displays when a restart is required due to a change (themes etc) -->
     <string name="restart_tite">Neustart erforderlich</string>
     <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_message">Diese Veränderungen treten erst in Kraft, wenn du Shuttle neu startest</string>
+    <string name="restart_message">Diese Veränderungen treten erst in Kraft, wenn Shuttle neu gestartet wird</string>
     <!-- Restart now button -->
     <string name="restart_button">Neu starten</string>
     <!-- Displays when picking a theme color -->
@@ -90,7 +90,7 @@
     <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
     <string name="dialog_custom">Benutzerd.</string>
     <!-- Displays when sharing a file fails -->
-    <string name="share_failed">Entschuldige, diese Datei kann nicht geteilt werden.</string>
+    <string name="share_failed">Entschuldige, diese Datei konnte nicht geteilt werden.</string>
     <!-- Displays when you click 'share' -->
     <string name="share_dialog_title">Was möchtest du teilen?</string>
     <!-- Option to share song info -->
@@ -106,16 +106,23 @@
     <!-- -->
     <string name="get_pro_title">Auf Shuttle+ upgraden</string>
     <!-- -->
-    <string name="get_pro_message">Wenn Dir Shuttle gefällt, überlege doch vielleicht, auf Shuttle+ upzugraden.
- \n\nZusätzliche Funktionen:
- \n Unmengen weiterer Themes
- \nEditieren von MP3-Tags (Begrenzte Unterstützung unter Android 4.4 Kitkat)
-\nOrdner-Ansicht
- \nChromecast-Unterstützung\n\nDamit unterstützt du mich außerdem bei weiterer Entwicklung.</string>
+    <string name="get_pro_message">Wenn dir Shuttle gefällt, denke bitte über ein Upgrade nach.
+        \n\nFunktionen:
+        \n• Viele neue Themen
+        \n• Bearbeiten von Tags
+        \n• Orderansicht
+        \n• ChromeCast-Unterstützung\n
+        \nAußerdem unterstützt du die weitere Entwicklung.</string>
     <!-- -->
     <string name="upgraded_title">Dankeschön</string>
-    <string name="upgraded_message">Du hast erfolgreich auf Shuttle+ upgegradet. Ich danke dir für deine Unterstützung.\n\n Bitte starte die App neu, um sicherzustellen, dass alle Funktionen aktiviert sind.</string>
-    <string name="upgrade_dialog_message">Wenn du upgradest, bekommst du diese Features dazu.\n\n&#8226;-Total viele neue Themen\n&#8226;-Tag Bearbeitung (Limitierter Support unter Android 4.4 Kitkat)\n&#8226;-Datei Browser\n&#8226;-Chromecast Support\n\nZusätzlich hillft es mir die Entwicklung dieser App voranzutreiben.\n\nDu musst nicht upgraden, wenn du schon Shuttle+ besitzt.&#8226;</string>
+    <string name="upgraded_message">Dein Upgrade auf Shuttle+ war erfolgreich. Danke für deine Unterstützung.
+\n\nBitte starte die App neu um die neuen Funktionen zu aktivieren.</string>
+    <string name="upgrade_dialog_message">Ein Upgrade schaltet diese Funktionen frei:
+        \n\n• Viele neue Themen
+        \n• Bearbeiten von Tags
+        \n• Ordneransicht
+        \n• ChromeCast-Unterstützung
+        \n\nAußerdem unterstützt du die weitere Entwicklung.\n\nWenn du Shuttle+ bereits besitzt ist ein Upgrade nicht nötig.</string>
     <string name="get_pro_button_play_store">Play Store</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="btn_upgrade">Upgrade</string>
@@ -153,6 +160,8 @@
     <string name="delete_file_confirmation_dialog">Bist Du sicher, dass Du die Datei \"<xliff:g id="file">%s</xliff:g>\" endgültig löschen willst?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">Bist du sicher, dass du alle Bilder endgültig löschen willst?</string>
+    <!-- QuickLyric Play Store Link -->
+    <string name="quicklyric_play_store">QuickLyric herunterladen</string>
     <!-- QuickLyric button -->
     <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
@@ -214,6 +223,7 @@
     <string name="share_title">Teilen</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Suche</string>
+    <string name="search_filter">Filter</string>
     <!-- Playlist context menu item to delete the selected playlist. -->
     <string name="delete_playlist_menu">Löschen</string>
     <!-- Playlist context menu item to clear the selected playlist. -->
@@ -250,6 +260,10 @@
     <string name="pref_summary_theme_white_accent">Verwendet Weiß für alle Farbakzente, außer den Statusanzeigen (Shuffle und Wiederholen benötigen eine andere Farbe als Weiß um darzustellen, dass sie eingeschaltet sind).</string>
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">Navigation</string>
+    <!--Settings category for 'notification' items -->
+    <string name="pref_category_notif_drawer">Navigationsmenü</string>
+    <!-- Settings title for inverting the notification drawer text & icons -->
+    <string name="pref_title_invert_notif_icons">Symbole und Text in der Benachrichtigung invertieren</string>
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Andere</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
@@ -257,22 +271,22 @@
     <!--Settings summary for opening the dialog to pick which categories are shown as tab headings -->
     <string name="pref_summary_choose_tabs">Kategorien auswählen und sortieren, die in Reitern angezeigt werden sollen.</string>
     <!--Settings title for picking the primary theme color -->
-    <string name="pref_title_theme_pick_color">Theme Farbe</string>
+    <string name="pref_title_theme_pick_color">Themenfarbe</string>
     <!--Settings summary for picking the primary theme color-->
-    <string name="pref_summary_theme_pick_color">Wähle die Farbe für dein Theme</string>
+    <string name="pref_summary_theme_pick_color">Wähle die Farbe deines Themas</string>
     <!--Settings title for for picking the accent theme color-->
-    <string name="pref_title_theme_pick_accent_color">Akzent Farbe</string>
+    <string name="pref_title_theme_pick_accent_color">Akzentfarbe</string>
     <!--Settings summary for picking the accent theme color-->
-    <string name="pref_summary_theme_pick_accent_color">Wähle die Akzentfarbe für dein Theme</string>
+    <string name="pref_summary_theme_pick_accent_color">Wähle die Akzentfarbe deines Themas</string>
     <!--Settings title for enabling the tinted navigation bar -->
-    <string name="pref_title_tinted_nav">Benutze gefärbte Navigationsleiste</string>
+    <string name="pref_title_tinted_nav">Navigationsleiste einfärben</string>
     <!--Settings summary for enabling the tinted navigation bar -->
-    <string name="pref_summary_tinted_nav">Aktiviere/Deaktiviere gefärbte Navigationsleiste.</string>
+    <string name="pref_summary_tinted_nav">Aktiviere oder deaktiviere das Einfärben der Navigationsleiste.</string>
     <!-- Settings title for the themes -->
     <string name="pref_string_title_themes">Themen</string>
     <!--Settings titles for the themes -->
-    <string name="pref_title_base_theme">Basis Theme</string>
-    <string name="pref_summary_base_theme">Wähle dein Standard Theme (hell oder dunkel)</string>
+    <string name="pref_title_base_theme">Grundthema</string>
+    <string name="pref_summary_base_theme">Wähle die Grundlage deines Themas (hell oder dunkel)</string>
     <string name="pref_title_theme_dark">Dunkles Theme</string>
     <string name="pref_title_theme_light">Helles Theme</string>
     <string name="pref_title_theme_black">Schwarz</string>
@@ -401,11 +415,13 @@
     <string name="pref_title_support">Support</string>
     <string name="pref_title_version">Version</string>
     <string name="pref_title_faq">FAQ</string>
-    <string name="pref_summary_faq">Hast du eine Frage? Brauchst du Hilfe? Klicke hier um das FAQ auf www.shuttlemusicplayer.com anzusehen.</string>
+    <string name="pref_summary_faq">Du hast eine Frage oder brauchst Hilfe? Klicke hier für die FAQ auf www.shuttlemusicplayer.com.</string>
     <string name="pref_title_gplus">Hilfe</string>
-    <string name="pref_summary_gplus">Es gibt eine sehr aktive Google+ Shuttle Community. Wenn Du fragen hast oder Hilfe brauchst, ist dass der beste Ort.</string>
+    <string name="pref_summary_gplus">Shuttle hat eine sehr aktive Community auf Google+. Für Fragen oder Hilfe ist das der beste Ort.</string>
     <string name="pref_title_rate">Danke sagen</string>
-    <string name="pref_summary_rate">Wenn dir Shuttle gefällt, hinterlasse Bitte eine Bewertung.</string>
+    <string name="pref_summary_rate">Wenn dir Shuttle gefällt, gib bitte eine Bewertung ab.</string>
+    <string name="pref_title_headset_beep">Ton beim Überspringen</string>
+    <string name="pref_summary_headset_beep">Ton beim Überspringen mit Headset</string>
     <!-- Settings title for ignore playlist duplicates -->
     <string name="pref_title_ignore_duplicates">Playlist-Duplikate ignorieren</string>
     <!-- Settings summary for ignore playlist duplicates -->
@@ -532,7 +548,7 @@
     <!-- Menu item to open the equalizer -->
     <string name="equalizer">Equalizer</string>
     <!-- Displayed at the top of the preset selection screen in the equalizer -->
-    <string name="select_preset">Auswahl Voreinstellung</string>
+    <string name="select_preset">Voreinstellung</string>
     <!-- Bass boost strength -->
     <string name="bass_boost_strength">Bassverstärkung</string>
     <!-- Virtualizer strength -->
@@ -554,6 +570,7 @@
     <string name="empty_songlist">Keine Songs erkannt. Kopiere ein paar Songs auf das Gerät.</string>
     <!-- -->
     <string name="empty_suggested">Spiele mehr Musik und Empfehlungen werden hier erscheinen.</string>
+    <string name="empty_search">Keine Suchergebnisse vorhanden</string>
     <!-- ## Sort options ## -->
     <string name="sorting">Sortierung</string>
     <string name="sort_default">Standard</string>
@@ -586,7 +603,7 @@
     <!-- Button name in time span picker -->
     <string name="button_done">Fertig</string>
     <!-- Title of time span picker -->
-    <string name="weekpicker_title">Wähle wie viele Wochen, Shuttle nach neuer Musik durchsucht.</string>
+    <string name="weekpicker_title">Für wie viele Wochen soll Musik als neu hinzugefügt gelten?</string>
     <!-- ## Notification bar text ## -->
     <!-- Message in notification bar when downloading -->
     <string name="notif_downloading_art">Shuttle - Lade herunter</string>
@@ -602,7 +619,7 @@
     <!-- label underneath icon used to indicate sd card is mounted to your computer via USB -->
     <!-- ## Playlist creation ## -->
     <!-- Template for newly created playlist name -->
-    <string name="new_playlist_name_template">Neue Wiedergabeliste <xliff:g id="number">%d</xliff:g></string>
+    <string name="new_playlist_name_template">Neue Playlist <xliff:g id="number">%d</xliff:g></string>
     <!-- Button name when saving a playlist -->
     <string name="create_playlist_create_text">Speichern</string>
     <!-- Button name when saving a playlist and the new playlist will overwrite an existing one -->
@@ -630,7 +647,7 @@
     <!-- DashClock Extension Description -->
     <string name="extension_description">Zeigt Titelinformationen</string>
     <!-- Week Selector title -->
-    <string name="week_selector">Wochen-Auswahl</string>
+    <string name="week_selector">Wochen auswählen</string>
     <!-- Displayed under the 'Most Played' section of the 'suggested' tab.. Artist, Album, Song -->
     <string name="suggested_most_played_songs_subtitle">20 meistgespielte Titel</string>
     <!-- Displayed under the 'Recent' section of the 'suggested' tab.. Artist, Album, Song  -->
@@ -662,11 +679,15 @@
     <!-- Accessibility button description -->
     <string name="btn_pause">Pause</string>
     <!-- Accessibility button description -->
+    <string name="btn_play_pause">Play/Pause</string>
+    <!-- Accessibility button description -->
     <string name="btn_skip">"Weiter "</string>
     <!-- Accessibility button description -->
     <string name="btn_prev">Zurück</string>
     <!-- Accessibility button description -->
     <string name="btn_queue">Zeige Warteschlange</string>
+    <!-- Accessibility button description -->
+    <string name="btn_close">Schließen</string>
     <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
     <string name="btn_options">%s Optionen</string>
     <!-- Accessibility button description -->
@@ -687,7 +708,7 @@
     <string name="btn_now_playing">Spielt %1$s von %2$s</string>
     <!-- Accessibility 'show lyrics' -->
     <string name="btn_show_lyrics">Text anzeigen</string>
-    <string name="pref_summary_restore_purchases">Wenn du schon auf Shuttle+ upgegradet hast, aber es trotzdem als Gratis-Version erscheint,  tippe hierauf.</string>
+    <string name="pref_summary_restore_purchases">Klicke hier wenn Shuttle trotz Upgrade noch als Gratis-Version angezeigt wird.</string>
     <string name="pref_title_restore_purchases">Käufe wiederherstellen</string>
     <string name="blacklist_empty">Du hast keine Titel in deiner Blacklist!</string>
     <string name="whitelist_empty">Du hast keine Ordner in deiner Whitelist!</string>
@@ -743,4 +764,7 @@
     <string name="shortcut_playlist_disabled">Playlist nicht verfügbar</string>
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">Album <xliff:g id="number">%d</xliff:g></string>
+    <!-- Search Filter-->
+    <!-- Changelog -->
+    <string name="changelog_show_on_launch">Beim Appstart anzeigen</string>
 </resources>

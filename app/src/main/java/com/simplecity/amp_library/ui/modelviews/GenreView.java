@@ -1,6 +1,7 @@
 package com.simplecity.amp_library.ui.modelviews;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +33,13 @@ public class GenreView extends BaseAdaptableItem<Genre, GenreView.ViewHolder> {
     @Override
     public void bindView(ViewHolder holder) {
         holder.lineOne.setText(genre.name);
-        holder.lineTwo.setText(StringUtils.makeAlbumAndSongsLabel(holder.itemView.getContext(), -1, genre.numSongs));
+        String albumAndSongsLabel = StringUtils.makeAlbumAndSongsLabel(holder.itemView.getContext(), -1, genre.numSongs);
+        if (!TextUtils.isEmpty(albumAndSongsLabel)) {
+            holder.lineTwo.setText(albumAndSongsLabel);
+            holder.lineTwo.setVisibility(View.VISIBLE);
+        } else {
+            holder.lineTwo.setVisibility(View.GONE);
+        }
     }
 
     @Override

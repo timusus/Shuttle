@@ -155,6 +155,7 @@
     <string name="delete_file_confirmation_dialog">您確定要永久刪除「<xliff:g id="file">%s</xliff:g>」嗎？</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">您確定要永久刪除裝置中的所有專輯封面嗎？</string>
+    <!-- QuickLyric Play Store Link -->
     <!-- QuickLyric button -->
     <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
@@ -252,6 +253,8 @@
     <string name="pref_summary_theme_white_accent">以白色作為狀態顯示外的輔助色 (隨機播放或重複模式按鍵需要白色以外的色彩來辨別為啟用)</string>
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">導覽</string>
+    <!--Settings category for 'notification' items -->
+    <!-- Settings title for inverting the notification drawer text & icons -->
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">其他</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
@@ -648,11 +651,13 @@
     <!-- Accessibility button description -->
     <string name="btn_pause">暫停</string>
     <!-- Accessibility button description -->
+    <!-- Accessibility button description -->
     <string name="btn_skip">跳過</string>
     <!-- Accessibility button description -->
     <string name="btn_prev">上一首</string>
     <!-- Accessibility button description -->
     <string name="btn_queue">顯示播放佇列</string>
+    <!-- Accessibility button description -->
     <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
     <string name="btn_options">%s 選項</string>
     <!-- Accessibility button description -->
@@ -729,4 +734,6 @@
     <string name="shortcut_playlist_disabled">播放清單無法使用</string>
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label"><xliff:g id="number">%d</xliff:g> 張唱片</string>
+    <!-- Search Filter-->
+    <!-- Changelog -->
 </resources>

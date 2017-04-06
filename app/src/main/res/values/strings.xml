@@ -240,8 +240,12 @@
     <string name="library_title">Library</string>
     <!-- -->
     <string name="share_title">Share</string>
+
     <!-- Library screen, menu item -->
     <string name="search_title">Search</string>
+
+    <string name="search_filter">Filter</string>
+
     <!-- Playlist context menu item to delete the selected playlist. -->
     <string name="delete_playlist_menu">Delete</string>
     <!-- Playlist context menu item to clear the selected playlist. -->
@@ -595,6 +599,8 @@
     <!-- -->
     <string name="empty_suggested">Play some more music, and suggestions will show up here.</string>
 
+    <string name="empty_search">No search results found.</string>
+
     <!-- ## Sort options ## -->
     <string name="sorting">Sorting</string>
 
@@ -813,5 +819,14 @@
 
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">Disc <xliff:g id="number">%d</xliff:g></string>
+
+    <!-- Search Filter-->
+    <string name="search_fuzzy">Fuzzy</string>
+    <string name="search_title_only">Title Only</string>
+    <string name="search_artists">Artists</string>
+    <string name="search_albums">Albums</string>
+
+    <!-- Changelog -->
+    <string name="changelog_show_on_launch">Show on launch</string>
 
 </resources>

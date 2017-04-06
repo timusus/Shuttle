@@ -143,34 +143,9 @@ public class WidgetProviderSmall extends BaseWidgetProvider {
                 }
             }
 
-            switch (service.getShuffleMode()) {
-                case MusicService.ShuffleMode.OFF:
-                    if (invertIcons) {
-                        views.setImageViewBitmap(R.id.shuffle_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_shuffle_white));
-                    } else {
-                        views.setImageViewResource(R.id.shuffle_button, R.drawable.ic_shuffle_white);
-                    }
-                    break;
-                default:
-                    views.setImageViewBitmap(R.id.shuffle_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_shuffle_white));
-                    break;
-            }
+            setupShuffleView(service, views, invertIcons);
 
-            switch (service.getRepeatMode()) {
-                case MusicService.RepeatMode.ALL:
-                    views.setImageViewBitmap(R.id.repeat_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_repeat_white));
-                    break;
-                case MusicService.RepeatMode.ONE:
-                    views.setImageViewBitmap(R.id.repeat_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_repeat_one_white));
-                    break;
-                default:
-                    if (invertIcons) {
-                        views.setImageViewBitmap(R.id.repeat_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_repeat_white));
-                    } else {
-                        views.setImageViewResource(R.id.repeat_button, R.drawable.ic_repeat_white);
-                    }
-                    break;
-            }
+            setupRepeatView(service, views, invertIcons);
 
             int textColor = mPrefs.getInt(ARG_WIDGET_TEXT_COLOR + appWidgetId, service.getResources().getColor(R.color.white));
             if (invertIcons) {
@@ -198,4 +173,5 @@ public class WidgetProviderSmall extends BaseWidgetProvider {
             pushUpdate(service, appWidgetId, views);
         }
     }
+
 }

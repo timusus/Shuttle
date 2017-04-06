@@ -1,4 +1,6 @@
-package com.simplecity.amp_library.utils;
+package com.simplecity.amp_library.search;
+
+import com.simplecity.amp_library.utils.StringUtils;
 
 public class SearchUtils {
 

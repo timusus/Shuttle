@@ -2,6 +2,7 @@ package com.simplecity.amp_library.ui.modelviews;
 
 import android.support.annotation.StringRes;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +16,18 @@ public class EmptyView extends BaseAdaptableItem<String, EmptyView.ViewHolder> {
 
     private int resId = -1;
 
+    private int height = 0;
+
     public EmptyView(String text) {
         this.text = text;
     }
 
     public EmptyView(@StringRes int resId) {
         this.resId = resId;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 
     @Override
@@ -35,10 +42,17 @@ public class EmptyView extends BaseAdaptableItem<String, EmptyView.ViewHolder> {
 
     @Override
     public void bindView(ViewHolder holder) {
+
         if (resId != -1) {
             text = holder.itemView.getResources().getString(resId);
         }
+
         ((TextView) holder.itemView).setText(text);
+
+        if (height != 0) {
+            holder.itemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height));
+            Log.i("EmptyView", "Setting height to: " + height);
+        }
     }
 
     @Override

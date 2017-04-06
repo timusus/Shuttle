@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    tools:context=".search.SearchActivity"
+    tools:menu="@menu/menu_search_activity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -13,8 +16,19 @@
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:minHeight="?attr/actionBarSize"
+        app:contentInsetStartWithNavigation="0dp"
         app:popupTheme="?attr/toolbar_popup_theme"
-        app:theme="?attr/toolbar_theme" />
+        app:theme="?attr/toolbar_theme">
+
+        <android.support.v7.widget.SearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            app:iconifiedByDefault="false"/>
+
+    </android.support.v7.widget.Toolbar>
 
     <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
         android:id="@+id/recyclerView"
@@ -26,7 +40,7 @@
         android:paddingRight="8dp"
         app:fastScrollAutoHide="true"
         app:fastScrollAutoHideDelay="1500"
-        tools:listitem="@layout/list_item_image" />
+        tools:listitem="@layout/list_item_image"/>
 
     <ViewStub
         android:id="@android:id/empty"
@@ -34,6 +48,6 @@
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
         android:layout_gravity="center"
-        android:layout="@layout/empty_view" />
+        android:layout="@layout/empty_view"/>
 
 </RelativeLayout>

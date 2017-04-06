@@ -160,6 +160,8 @@ abesti ilarara gehituak.</item>
     <string name="delete_file_confirmation_dialog">Seguru zaude \"<xliff:g id="file">%s</xliff:g>\" betirako ezabatu nahi duzula?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">Seguru zaude karatula guztiak ezabatu nahi dituzula zure telefonotik?</string>
+    <!-- QuickLyric Play Store Link -->
+    <string name="quicklyric_play_store">Jaitsi QuickLyric</string>
     <!-- QuickLyric button -->
     <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
@@ -221,6 +223,7 @@ abesti ilarara gehituak.</item>
     <string name="share_title">Banatu</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Bilatu</string>
+    <string name="search_filter">Filtratu</string>
     <!-- Playlist context menu item to delete the selected playlist. -->
     <string name="delete_playlist_menu">Ezabatu</string>
     <!-- Playlist context menu item to clear the selected playlist. -->
@@ -257,6 +260,10 @@ abesti ilarara gehituak.</item>
     <string name="pref_summary_theme_white_accent">Zuria erabiltzen du kolore azentu guztientzako, egoera azaldu behar dutenak ezik (nahastu eta errepikatu zuriaren beste kolore bat behar dute piztuta daudela adierazteko).</string>
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">Nabigazioa</string>
+    <!--Settings category for 'notification' items -->
+    <string name="pref_category_notif_drawer">Notifikazio kaxa</string>
+    <!-- Settings title for inverting the notification drawer text & icons -->
+    <string name="pref_title_invert_notif_icons">Notifikazio Ikonoak/Testua irauli</string>
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Bestelakoak</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
@@ -407,6 +414,8 @@ Desaktibatzen bada, Shuttle-en ikonoa erabiliko da bere ordez</string>
     <string name="pref_summary_gplus">Shuttle-en erabiltzaile komunitate oso aktiboa dago Google+ plataforman. Galderak badituzu edota laguntza behar baduzu, hau da leku onena.</string>
     <string name="pref_title_rate">Eskerrak eman</string>
     <string name="pref_summary_rate">Shuttle gustokoa baduzu, mesedez pentsatu kritika bat idaztea.</string>
+    <string name="pref_title_headset_beep">Soinua pasatzean</string>
+    <string name="pref_summary_headset_beep">Soinua egin abesti bat pasatzean entzungailuaren kontrolekin</string>
     <!-- Settings title for ignore playlist duplicates -->
     <string name="pref_title_ignore_duplicates">Zerrendako duplikatuak kontuan ez hartu</string>
     <!-- Settings summary for ignore playlist duplicates -->
@@ -550,6 +559,7 @@ karpeta</item>
     <string name="empty_songlist">Ez dira abestiak aurkitu. Kopia itzazu abesti batzuk zure telefonora.</string>
     <!-- -->
     <string name="empty_suggested">Entzun abesti batzuk eta gomendioak hemen agertuko dira.</string>
+    <string name="empty_search">Ez dira bilaketarako emaitzarik aurkitu.</string>
     <!-- ## Sort options ## -->
     <string name="sorting">Klasifikazioa</string>
     <string name="sort_default">Berezkoa</string>
@@ -658,11 +668,15 @@ karpeta</item>
     <!-- Accessibility button description -->
     <string name="btn_pause">Gelditu</string>
     <!-- Accessibility button description -->
+    <string name="btn_play_pause">Erreproduzitu/Gelditu</string>
+    <!-- Accessibility button description -->
     <string name="btn_skip">Saltatu</string>
     <!-- Accessibility button description -->
     <string name="btn_prev">Aurrekoa</string>
     <!-- Accessibility button description -->
     <string name="btn_queue">Erreprodukzio ilara ikusi</string>
+    <!-- Accessibility button description -->
+    <string name="btn_close">Itxi</string>
     <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
     <string name="btn_options">%s-(r)en aukerak</string>
     <!-- Accessibility button description -->
@@ -739,4 +753,11 @@ karpeta</item>
     <string name="shortcut_playlist_disabled">Zerrenda ez dago eskuragarri</string>
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label"><xliff:g id="number">%d</xliff:g>. Diskoa</string>
+    <!-- Search Filter-->
+    <string name="search_fuzzy">Zehaztugabea</string>
+    <string name="search_title_only">Izennburua bakarrik</string>
+    <string name="search_artists">Artistak</string>
+    <string name="search_albums">Albumak</string>
+    <!-- Changelog -->
+    <string name="changelog_show_on_launch">Erakutsi hasterakoan</string>
 </resources>

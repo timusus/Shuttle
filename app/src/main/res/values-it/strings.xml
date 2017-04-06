@@ -138,9 +138,9 @@
     <!-- Delete confirmation dialog message when deleting artists -->
     <string name="delete_album_artist_desc_multiple">Tutti i brani degli artisti seguenti:<xliff:g id="album-artist">%s</xliff:g>verranno cancellati definitivamente.</string>
     <!-- Delete confirmation dialog when deleting an entire album -->
-    <string name="delete_album_desc">L\'intero album <xliff:g id="album">%s</xliff:g> sarà eliminato definitivamente.</string>
+    <string name="delete_album_desc">Tutti i brani nell\'album <xliff:g id="album">%s</xliff:g> saranno eliminati definitivamente.</string>
     <!-- Delete confirmation dialog message when deleting albums -->
-    <string name="delete_album_desc_multiple">I seguenti album:<xliff:g id="album">%s</xliff:g>saranno eliminati permanentemente.</string>
+    <string name="delete_album_desc_multiple">Tutti i brani negli album <xliff:g id="album">%s</xliff:g>saranno eliminati definitivamente.</string>
     <!-- Delete confirmation dialog when deleting a single song -->
     <string name="delete_song_desc"><xliff:g id="song">%s</xliff:g> sarà eliminata definitivamente.</string>
     <!-- Delete confirmation dialog message title when deleting songs -->
@@ -157,6 +157,8 @@
     <string name="delete_file_confirmation_dialog">Sei sicuro di voler eliminare definitivamente \"<xliff:g id="file">%s</xliff:g>\"?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">Sei sicuro di voler eliminare definitivamente tutte le illustrazioni dal dispositivo?</string>
+    <!-- QuickLyric Play Store Link -->
+    <string name="quicklyric_play_store">Scarica QuickLyric</string>
     <!-- QuickLyric button -->
     <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
@@ -218,6 +220,7 @@
     <string name="share_title">Condividi</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Cerca</string>
+    <string name="search_filter">Filtro</string>
     <!-- Playlist context menu item to delete the selected playlist. -->
     <string name="delete_playlist_menu">Elimina</string>
     <!-- Playlist context menu item to clear the selected playlist. -->
@@ -254,6 +257,10 @@
     <string name="pref_summary_theme_white_accent">Usa il bianco come colore in risalto, eccettuato dove è necessario indicare uno stato (Casuale e Ripeti hanno bisogno di un colore diverso dal bianco per mostrare che sono attivi)</string>
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">Navigazione</string>
+    <!--Settings category for 'notification' items -->
+    <string name="pref_category_notif_drawer">Menu delle notifiche</string>
+    <!-- Settings title for inverting the notification drawer text & icons -->
+    <string name="pref_title_invert_notif_icons">Inverti icone/testo delle notifiche</string>
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Altro</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
@@ -408,6 +415,8 @@
     <string name="pref_summary_gplus">C\'è una comunità molto attiva di utenti di Shuttle su Google+. Se hai domande o hai bisogno di aiuto, questo è il miglior posto dove andare.</string>
     <string name="pref_title_rate">Ringrazia</string>
     <string name="pref_summary_rate">Se ti piace utilizzare Shuttle, per favore scrivi una ricensione.</string>
+    <string name="pref_title_headset_beep">Bip al salto</string>
+    <string name="pref_summary_headset_beep">Riproduci un bip quando salti un brano tramite i pulsanti delle cuffie.</string>
     <!-- Settings title for ignore playlist duplicates -->
     <string name="pref_title_ignore_duplicates">Ignora duplicati nella playlist</string>
     <!-- Settings summary for ignore playlist duplicates -->
@@ -552,6 +561,7 @@ cartelle "</item>
     <string name="empty_songlist">Nessun brano rilevato. Carica dei brani sul tuo dispositivo.</string>
     <!-- -->
     <string name="empty_suggested">Riproduci altra musica, e i suggerimenti saranno visualizzati qui.</string>
+    <string name="empty_search">Nessun risultato di ricerca trovato.</string>
     <!-- ## Sort options ## -->
     <string name="sorting">Ordinamento</string>
     <string name="sort_default">Predefinito</string>
@@ -660,11 +670,15 @@ cartelle "</item>
     <!-- Accessibility button description -->
     <string name="btn_pause">Pausa</string>
     <!-- Accessibility button description -->
+    <string name="btn_play_pause">Play/Pausa</string>
+    <!-- Accessibility button description -->
     <string name="btn_skip">Salta</string>
     <!-- Accessibility button description -->
     <string name="btn_prev">Precedente</string>
     <!-- Accessibility button description -->
     <string name="btn_queue">Visualizza coda riproduzione</string>
+    <!-- Accessibility button description -->
+    <string name="btn_close">Chiudi</string>
     <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
     <string name="btn_options">opzioni %s</string>
     <!-- Accessibility button description -->
@@ -741,4 +755,11 @@ cartelle "</item>
     <string name="shortcut_playlist_disabled">Playlist non disponibile</string>
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">Disco <xliff:g id="number">%d</xliff:g></string>
+    <!-- Search Filter-->
+    <string name="search_fuzzy">Fuzzy</string>
+    <string name="search_title_only">Solo titolo</string>
+    <string name="search_artists">Artisti</string>
+    <string name="search_albums">Album</string>
+    <!-- Changelog -->
+    <string name="changelog_show_on_launch">Mostra all\'avvio</string>
 </resources>

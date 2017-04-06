@@ -4,6 +4,7 @@ package com.simplecity.amp_library.utils;
 import android.database.Cursor;
 
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.search.SearchUtils;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

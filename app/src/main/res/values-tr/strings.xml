@@ -161,6 +161,8 @@
     <string name="delete_file_confirmation_dialog">\"<xliff:g id="file">%s</xliff:g>\"  Kalıcı olarak silmek istediğinizden emin misiniz?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">Cihazınızdan tüm albüm kapaklarını kalıcı olarak silmek istediğinizden emin misiniz?</string>
+    <!-- QuickLyric Play Store Link -->
+    <string name="quicklyric_play_store">QuickLyric\'i indirin</string>
     <!-- QuickLyric button -->
     <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
@@ -222,6 +224,7 @@
     <string name="share_title">Paylaş</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Ara</string>
+    <string name="search_filter">Filtre</string>
     <!-- Playlist context menu item to delete the selected playlist. -->
     <string name="delete_playlist_menu">Sil</string>
     <!-- Playlist context menu item to clear the selected playlist. -->
@@ -258,6 +261,10 @@
     <string name="pref_summary_theme_white_accent">Durumunu göstermesi gerekenler dışında beyaz kullanır (karıştır ve tekrar et, açık olduklarını göstermek için beyazdan farklı bir renk gerektirebilir).</string>
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">Gezinti</string>
+    <!--Settings category for 'notification' items -->
+    <string name="pref_category_notif_drawer">Bildirim Çekmecesi</string>
+    <!-- Settings title for inverting the notification drawer text & icons -->
+    <string name="pref_title_invert_notif_icons">Bildirim Simgeleri ve Yazı Rengini Tersine Çevir</string>
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Diğer</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
@@ -409,6 +416,8 @@ Bu seçenek işaretli değilse, Shuttle simgesi kullanılacaktır.</string>
     <string name="pref_summary_gplus">Shuttle kullanıcıların çok aktif bir Google+ topluluğu vardır. Sorularınız varsa veya yardıma ihtiyacınız varsa, burası uğramanız gereken en doğru yerdir.</string>
     <string name="pref_title_rate">Teşekkür etmek için</string>
     <string name="pref_summary_rate">Eğer Shuttle\'ı beğendiyseniz, bir yorum bırakmayı düşünün lütfen</string>
+    <string name="pref_title_headset_beep">Bip Sesini Atla</string>
+    <string name="pref_summary_headset_beep">Kulaklık kontrolleriyle şarkı atlanırken bip sesi</string>
     <!-- Settings title for ignore playlist duplicates -->
     <string name="pref_title_ignore_duplicates">Oynatma listesinde ki tekrarları yoksay</string>
     <!-- Settings summary for ignore playlist duplicates -->
@@ -552,6 +561,7 @@ dosyalar</item>
     <string name="empty_songlist">Hiçbir şarkı algılanmadı. Cihazınıza birkaç şarkı aktarın.</string>
     <!-- -->
     <string name="empty_suggested">Biraz daha fazla müzik çalın ve öneriler burada gösterilir.</string>
+    <string name="empty_search">Hiçbir arama sonucu bulunamadı.</string>
     <!-- ## Sort options ## -->
     <string name="sorting">Sıralama</string>
     <string name="sort_default">Varsayılan</string>
@@ -660,11 +670,15 @@ dosyalar</item>
     <!-- Accessibility button description -->
     <string name="btn_pause">Durdur</string>
     <!-- Accessibility button description -->
+    <string name="btn_play_pause">Oynat/Durdur</string>
+    <!-- Accessibility button description -->
     <string name="btn_skip">Atla</string>
     <!-- Accessibility button description -->
     <string name="btn_prev">Önceki</string>
     <!-- Accessibility button description -->
     <string name="btn_queue">Çalma kuyruğu görünümü</string>
+    <!-- Accessibility button description -->
+    <string name="btn_close">Kapat</string>
     <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
     <string name="btn_options">%s seçenekleri</string>
     <!-- Accessibility button description -->
@@ -741,4 +755,11 @@ dosyalar</item>
     <string name="shortcut_playlist_disabled">Şarkı listesi kullanılabilir değil</string>
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">Disk <xliff:g id="number">%d</xliff:g></string>
+    <!-- Search Filter-->
+    <string name="search_fuzzy">Bulanık</string>
+    <string name="search_title_only">Sadece Başlık</string>
+    <string name="search_artists">Sanatçılar</string>
+    <string name="search_albums">Albümler</string>
+    <!-- Changelog -->
+    <string name="changelog_show_on_launch">Başlangıçta göster</string>
 </resources>
