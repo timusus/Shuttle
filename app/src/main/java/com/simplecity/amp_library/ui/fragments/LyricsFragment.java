@@ -175,9 +175,6 @@ public class LyricsFragment extends BaseFragment {
 
         @Override
         public boolean onDoubleTap(MotionEvent e) {
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.setCustomAnimations(R.anim.abc_fade_in, R.anim.abc_fade_out);
-            ft.remove(LyricsFragment.this).commit();
             return true;
         }
     }
@@ -195,5 +192,11 @@ public class LyricsFragment extends BaseFragment {
     @Override
     protected String screenName() {
         return TAG;
+    }
+
+    public void remove() {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.anim.abc_fade_in, R.anim.abc_fade_out);
+        ft.remove(LyricsFragment.this).commit();
     }
 }

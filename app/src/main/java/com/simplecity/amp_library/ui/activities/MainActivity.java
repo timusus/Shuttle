@@ -73,6 +73,7 @@ import com.simplecity.amp_library.ui.fragments.AlbumFragment;
 import com.simplecity.amp_library.ui.fragments.DetailFragment;
 import com.simplecity.amp_library.ui.fragments.FolderFragment;
 import com.simplecity.amp_library.ui.fragments.GenreFragment;
+import com.simplecity.amp_library.ui.fragments.LyricsFragment;
 import com.simplecity.amp_library.ui.fragments.MainFragment;
 import com.simplecity.amp_library.ui.fragments.MiniPlayerFragment;
 import com.simplecity.amp_library.ui.fragments.NavigationDrawerFragment;
@@ -526,6 +527,7 @@ public class MainActivity extends BaseCastActivity implements
                 menu.findItem(R.id.menu_favorite).setVisible(false);
                 menu.findItem(R.id.menu_share).setVisible(false);
                 menu.findItem(R.id.menu_queue).setVisible(false);
+                menu.findItem(R.id.menu_lyrics).setVisible(false);
                 if (menu.findItem(GO_TO) != null) {
                     menu.findItem(GO_TO).setVisible(false);
                 }
@@ -534,6 +536,7 @@ public class MainActivity extends BaseCastActivity implements
             } else {
                 menu.findItem(R.id.action_search).setVisible(false);
                 menu.findItem(R.id.menu_favorite).setVisible(true);
+                menu.findItem(R.id.menu_lyrics).setVisible(true);
                 menu.findItem(R.id.menu_share).setVisible(true);
                 if (!ShuttleUtils.isTablet() && ShuttleUtils.isLandscape()) {
                     menu.findItem(R.id.menu_queue).setVisible(true);
@@ -710,6 +713,17 @@ public class MainActivity extends BaseCastActivity implements
                 Fragment playingFragment = getSupportFragmentManager().findFragmentById(R.id.player_container);
                 if (playingFragment != null) {
                     ((PlayerFragment) playingFragment).toggleQueue();
+                }
+                return true;
+            case R.id.menu_lyrics:
+                playingFragment = getSupportFragmentManager().findFragmentById(R.id.player_container);
+                if (playingFragment != null) {
+                    Fragment fragment = playingFragment.getChildFragmentManager().findFragmentById(R.id.main_container);
+                    if (fragment instanceof LyricsFragment)
+                        ((LyricsFragment) fragment).remove();
+                    else
+                        ((PlayerFragment) playingFragment).toggleLyrics();
+
                 }
                 return true;
             case android.R.id.home:

@@ -439,6 +439,11 @@ public class PlayerActivity extends BaseCastActivity implements
             return true;
         }
 
+        if (item.getItemId() == R.id.menu_lyrics) {
+            toggleLyrics();
+            return true;
+        }
+
         return false;
     }
 
