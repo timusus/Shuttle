@@ -2,7 +2,6 @@ package com.simplecity.amp_library.ui.fragments;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -22,6 +21,7 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Query;
 import com.simplecity.amp_library.sql.SqlUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
+import com.simplecity.amp_library.utils.QuickLyricUtils;
 import com.simplecity.amp_library.utils.ThemeUtils;
 
 import org.jaudiotagger.audio.AudioFile;
@@ -139,13 +139,11 @@ public class LyricsFragment extends BaseFragment {
         if (visible) {
             // If there are no embedded lyrics, the QuickLyric button is shown
             mQuickLyricButton.setVisibility(View.VISIBLE);
-            if (isQuickLyricInstalled()) {
+            if (QuickLyricUtils.isQLInstalled(getActivity())) {
                 mQuickLyricButton.setText(R.string.quicklyric);
                 mQuickLyricButton.setOnClickListener(v -> {
-                    if (isQuickLyricInstalled()) {
-                        Intent intent = new Intent("com.geecko.QuickLyric.getLyrics");
-                        intent.putExtra("TAGS", new String[]{MusicUtils.getAlbumArtistName(), MusicUtils.getSongName()});
-                        startActivity(intent);
+                    if (QuickLyricUtils.isQLInstalled(getActivity())) {
+                        QuickLyricUtils.getLyricsFor(getActivity(), MusicUtils.getAlbumArtistName(), MusicUtils.getSongName());
                     }
                 });
             } else {
@@ -176,16 +174,6 @@ public class LyricsFragment extends BaseFragment {
         @Override
         public boolean onDoubleTap(MotionEvent e) {
             return true;
-        }
-    }
-
-    private boolean isQuickLyricInstalled() {
-        PackageManager pm = getActivity().getPackageManager();
-        try {
-            pm.getPackageInfo("com.geecko.QuickLyric", PackageManager.GET_ACTIVITIES);
-            return true;
-        } catch (PackageManager.NameNotFoundException ignored) {
-            return false;
         }
     }
 

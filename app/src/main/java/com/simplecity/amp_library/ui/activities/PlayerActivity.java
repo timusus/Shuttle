@@ -50,6 +50,7 @@ import com.simplecity.amp_library.utils.DrawableUtils;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
+import com.simplecity.amp_library.utils.QuickLyricUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.SleepTimer;
@@ -316,6 +317,11 @@ public class PlayerActivity extends BaseCastActivity implements
             }
         }
 
+        if (QuickLyricUtils.isQLInstalled(this)) {
+            menu.findItem(R.id.menu_lyrics).setVisible(false);
+            menu.findItem(R.id.menu_quicklyric).setVisible(true);
+        }
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -441,6 +447,11 @@ public class PlayerActivity extends BaseCastActivity implements
 
         if (item.getItemId() == R.id.menu_lyrics) {
             toggleLyrics();
+            return true;
+        }
+
+        if (item.getItemId() == R.id.menu_quicklyric) {
+            QuickLyricUtils.getLyricsFor(this, MusicUtils.getAlbumArtistName(), MusicUtils.getSongName());
             return true;
         }
 
