@@ -160,8 +160,6 @@ abesti ilarara gehituak.</item>
     <string name="delete_file_confirmation_dialog">Seguru zaude \"<xliff:g id="file">%s</xliff:g>\" betirako ezabatu nahi duzula?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">Seguru zaude karatula guztiak ezabatu nahi dituzula zure telefonotik?</string>
-    <!-- QuickLyric Play Store Link -->
-    <string name="quicklyric_play_store">Jaitsi QuickLyric</string>
     <!-- QuickLyric button -->
     <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->

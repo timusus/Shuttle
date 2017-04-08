@@ -2,13 +2,14 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/btn_quick_lyric"
+        android:layout_above="@+id/quicklyric_section"
         android:layout_margin="8dp"
         android:fillViewport="true">
 
@@ -23,16 +24,43 @@
             />
     </ScrollView>
 
-    <Button
-        android:id="@+id/btn_quick_lyric"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
+    <RelativeLayout
+        android:id="@id/quicklyric_section"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:background="?attr/list_selector"
-        android:text="@string/quicklyric"
-        android:textColor="@color/white"
-        android:visibility="gone"/>
+        android:background="@color/deep_orange_a200"
+        android:layout_width="match_parent"
+        android:layout_height="110dp">
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_quick_lyric"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            app:backgroundTint="@color/amber_500"
+            android:text="@string/download"
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:id="@+id/quicklyric_tv"
+            android:drawableLeft="@drawable/quicklyric"
+            android:drawableStart="@drawable/quicklyric"
+            android:text="@string/quicklyric"
+            android:textSize="30sp"
+            android:drawablePadding="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@id/btn_quick_lyric"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -8,6 +8,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentTransaction;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.TypefaceSpan;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -21,8 +24,8 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Query;
 import com.simplecity.amp_library.sql.SqlUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
-import com.simplecity.amp_library.utils.QuickLyricUtils;
 import com.simplecity.amp_library.utils.ThemeUtils;
+import com.simplecity.amp_library.utils.TypefaceManager;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -56,7 +59,20 @@ public class LyricsFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_lyrics, container, false);
         rootView.setBackgroundColor(Color.parseColor("#C8000000"));
         mLyricsTextView = (TextView) rootView.findViewById(R.id.text1);
+        TextView quickLyricTV = (TextView) rootView.findViewById(R.id.quicklyric_tv);
+        // "Quick" must use roboto light
+        SpannableStringBuilder ssBuilder = new SpannableStringBuilder(quickLyricTV.getText());
+        ssBuilder.setSpan(new TypefaceSpan(TypefaceManager.SANS_SERIF_LIGHT), 0, 5, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+        quickLyricTV.setText(ssBuilder);
         mQuickLyricButton = (Button) rootView.findViewById(R.id.btn_quick_lyric);
+        mQuickLyricButton.setOnClickListener(v -> {
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://d3khd.app.goo.gl/jdF1"));
+                startActivity(intent);
+            } catch (ActivityNotFoundException ignored) {
+                // If the user doesn't have the play store on their device
+            }
+        });
 
         final GestureDetector gestureDetector = new GestureDetector(this.getActivity(), new GestureListener());
         mLyricsTextView.setOnTouchListener((view, motionEvent) -> gestureDetector.onTouchEvent(motionEvent));
@@ -136,30 +152,9 @@ public class LyricsFragment extends BaseFragment {
     }
 
     private void showQuickLyricButton(boolean visible) {
-        if (visible) {
-            // If there are no embedded lyrics, the QuickLyric button is shown
-            mQuickLyricButton.setVisibility(View.VISIBLE);
-            if (QuickLyricUtils.isQLInstalled(getActivity())) {
-                mQuickLyricButton.setText(R.string.quicklyric);
-                mQuickLyricButton.setOnClickListener(v -> {
-                    if (QuickLyricUtils.isQLInstalled(getActivity())) {
-                        QuickLyricUtils.getLyricsFor(getActivity(), MusicUtils.getAlbumArtistName(), MusicUtils.getSongName());
-                    }
-                });
-            } else {
-                mQuickLyricButton.setText(R.string.quicklyric_play_store);
-                mQuickLyricButton.setOnClickListener(v -> {
-                    try {
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://d3khd.app.goo.gl/jdF1"));
-                        startActivity(intent);
-                    } catch (ActivityNotFoundException ignored) {
-                        // If the user doesn't have the play store on their device
-                    }
-                });
-            }
-        } else {
-            mQuickLyricButton.setVisibility(View.GONE);
-        }
+        View quickLyricLayout = (View) mQuickLyricButton.getParent();
+        // If there are no embedded lyrics, the QuickLyric button is shown
+        quickLyricLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     private class GestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -173,6 +168,7 @@ public class LyricsFragment extends BaseFragment {
 
         @Override
         public boolean onDoubleTap(MotionEvent e) {
+            remove();
             return true;
         }
     }

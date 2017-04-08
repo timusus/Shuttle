@@ -156,8 +156,6 @@
     <string name="delete_file_confirmation_dialog">정말 \"<xliff:g id="file">%s</xliff:g>\"을(를) 영구적으로 삭제하시겠습니까?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">정말 기기에 있는 모든 앨범 사진들을 삭제하시겠습니까?</string>
-    <!-- QuickLyric Play Store Link -->
-    <string name="quicklyric_play_store">QuickLyric 다운로드</string>
     <!-- QuickLyric button -->
     <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->

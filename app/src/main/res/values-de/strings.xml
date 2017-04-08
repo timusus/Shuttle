@@ -160,8 +160,6 @@
     <string name="delete_file_confirmation_dialog">Bist Du sicher, dass Du die Datei \"<xliff:g id="file">%s</xliff:g>\" endgültig löschen willst?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">Bist du sicher, dass du alle Bilder endgültig löschen willst?</string>
-    <!-- QuickLyric Play Store Link -->
-    <string name="quicklyric_play_store">QuickLyric herunterladen</string>
     <!-- QuickLyric button -->
     <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->

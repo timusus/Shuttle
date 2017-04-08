@@ -155,8 +155,6 @@
     <string name="delete_file_confirmation_dialog">Bạn chắc muốn xoá vĩnh viễn \"<xliff:g id="file">%s</xliff:g>\"?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">Bạn chắc muốn xoá vĩnh viễn tất cả ảnh bìa khỏi thiết bị?</string>
-    <!-- QuickLyric Play Store Link -->
-    <string name="quicklyric_play_store">Tải QuickLyric</string>
     <!-- QuickLyric button -->
     <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
