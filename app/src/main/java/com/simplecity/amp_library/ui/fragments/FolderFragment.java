@@ -606,15 +606,15 @@ public class FolderFragment extends BaseFragment implements
             switch (item.getItemId()) {
 
                 case TAGGER:
-                    FileHelper.getSong(new File(fileObject.path))
+                    subscriptions.add(FileHelper.getSong(new File(fileObject.path))
                             .subscribeOn(Schedulers.io())
-                            .subscribe(song -> TaggerDialog.newInstance(song).show(getFragmentManager()));
+                            .subscribe(song -> TaggerDialog.newInstance(song).show(getFragmentManager())));
                     return true;
 
                 case QUEUE:
-                    FileHelper.getSongList(new File(fileObject.path), true, false)
+                    subscriptions.add(FileHelper.getSongList(new File(fileObject.path), true, false)
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(songs -> MusicUtils.addToQueue(getActivity(), songs));
+                            .subscribe(songs -> MusicUtils.addToQueue(getActivity(), songs)));
                     return true;
 
                 case DELETE_ITEM:
@@ -674,20 +674,20 @@ public class FolderFragment extends BaseFragment implements
                             .show();
                     return true;
                 case USE_AS_RINGTONE:
-                    FileHelper.getSong(new File(fileObject.path))
+                    subscriptions.add(FileHelper.getSong(new File(fileObject.path))
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(song -> ShuttleUtils.setRingtone(getContext(), song));
+                            .subscribe(song -> ShuttleUtils.setRingtone(getContext(), song)));
                     return true;
                 case PLAY_NEXT:
-                    FileHelper.getSongList(new File(fileObject.path), false, false)
+                    subscriptions.add(FileHelper.getSongList(new File(fileObject.path), false, false)
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(songs -> MusicUtils.playNext(getActivity(), songs));
+                            .subscribe(songs -> MusicUtils.playNext(getActivity(), songs)));
 
                     return true;
                 case PLAY_SELECTION:
                     final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", getString(R.string.gathering_songs), false);
-                    FileHelper.getSongList(new File(fileObject.path), true, fileObject.fileType == FileType.FILE)
+                    subscriptions.add(FileHelper.getSongList(new File(fileObject.path), true, fileObject.fileType == FileType.FILE)
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(songs -> {
                                 MusicUtils.playAll(songs, 0, () -> {
@@ -698,7 +698,7 @@ public class FolderFragment extends BaseFragment implements
                                 if (isAdded() && progressDialog.isShowing()) {
                                     progressDialog.dismiss();
                                 }
-                            });
+                            }));
                     return true;
                 case NEW_PLAYLIST:
                     List<BaseFileObject> fileObjects = new ArrayList<>();
@@ -707,9 +707,9 @@ public class FolderFragment extends BaseFragment implements
                     return true;
                 case PLAYLIST_SELECTED:
                     final Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
-                    FileHelper.getSongList(new File(fileObject.path), true, false)
+                    subscriptions.add(FileHelper.getSongList(new File(fileObject.path), true, false)
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(songs -> PlaylistUtils.addToPlaylist(getContext(), playlist, songs));
+                            .subscribe(songs -> PlaylistUtils.addToPlaylist(getContext(), playlist, songs)));
 
                     return true;
                 case SET_INITIAL_DIR:
@@ -741,7 +741,7 @@ public class FolderFragment extends BaseFragment implements
                                 .negativeText(R.string.close)
                                 .show();
 
-                        FileHelper.getSongList(new File(fileObject.path), true, false)
+                        subscriptions.add(FileHelper.getSongList(new File(fileObject.path), true, false)
                                 .map(songs -> Stream.of(songs)
                                         .map(song -> song.path)
                                         .collect(Collectors.toList()))
@@ -765,7 +765,7 @@ public class FolderFragment extends BaseFragment implements
                                             }
                                         }
                                     });
-                                });
+                                }));
                     } else {
                         CustomMediaScanner.scanFiles(Collections.singletonList(fileObject.path), new CustomMediaScanner.ScanCompletionListener() {
                             @Override
