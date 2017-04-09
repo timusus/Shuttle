@@ -57,6 +57,8 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.constants.Config;
 import com.simplecity.amp_library.interfaces.BackPressListener;
+import com.simplecity.amp_library.lyrics.LyricsFragment;
+import com.simplecity.amp_library.lyrics.QuickLyricUtils;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.DrawerGroupItem;
@@ -73,7 +75,6 @@ import com.simplecity.amp_library.ui.fragments.AlbumFragment;
 import com.simplecity.amp_library.ui.fragments.DetailFragment;
 import com.simplecity.amp_library.ui.fragments.FolderFragment;
 import com.simplecity.amp_library.ui.fragments.GenreFragment;
-import com.simplecity.amp_library.lyrics.LyricsFragment;
 import com.simplecity.amp_library.ui.fragments.MainFragment;
 import com.simplecity.amp_library.ui.fragments.MiniPlayerFragment;
 import com.simplecity.amp_library.ui.fragments.NavigationDrawerFragment;
@@ -91,7 +92,6 @@ import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
-import com.simplecity.amp_library.lyrics.QuickLyricUtils;
 import com.simplecity.amp_library.utils.ResourceUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
@@ -372,11 +372,13 @@ public class MainActivity extends BaseCastActivity implements
 
     private void showChangelogDialog() {
         int storedVersionCode = SettingsManager.getInstance().getStoredVersionCode();
+        int launchCount = SettingsManager.getInstance().getLaunchCount();
+
         // If we've stored a version code in the past, and it's lower than the current version code,
         // we can show the changelog.
         // Don't show the changelog for first time users.
-        // Todo: Re-comment this after v1.6.5-beta8 release.
-        if (/*storedVersionCode != -1 &&*/ storedVersionCode < BuildConfig.VERSION_CODE) {
+        // Todo: Remove launchCount check after 1.6.5 release.
+        if ((storedVersionCode != -1 || launchCount > 0) && storedVersionCode < BuildConfig.VERSION_CODE) {
             if (SettingsManager.getInstance().getShowChangelogOnLaunch()) {
                 DialogUtils.showChangelog(this);
             }
