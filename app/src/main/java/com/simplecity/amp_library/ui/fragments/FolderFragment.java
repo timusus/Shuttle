@@ -534,8 +534,10 @@ public class FolderFragment extends BaseFragment implements
                                 }
                             }
                             MusicUtils.playAll(songs, index, () -> {
-                                final String message = getContext().getString(R.string.emptyplaylist);
-                                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                                if (isAdded() && getContext() != null) {
+                                    final String message = getContext().getString(R.string.emptyplaylist);
+                                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                                }
                             });
                         });
             } else {
