@@ -1,6 +1,7 @@
 package com.simplecity.amp_library.utils;
 
 import android.os.Environment;
+import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 
 import com.simplecity.amp_library.interfaces.FileType;
@@ -19,7 +20,7 @@ public class FileBrowser {
 
     private static final String TAG = "FileBrowser";
 
-    private File mCurrentDir;
+    private File currentDir;
 
     /**
      * Loads the specified folder.
@@ -27,8 +28,12 @@ public class FileBrowser {
      * @param directory The file object to points to the directory to load.
      * @return An {@link List<BaseFileObject>} object that holds the data of the specified directory.
      */
+    @WorkerThread
     public List<BaseFileObject> loadDir(File directory) {
-        mCurrentDir = directory;
+
+        ThreadUtils.ensureNotOnMainThread();
+
+        currentDir = directory;
 
         List<BaseFileObject> folderObjects = new ArrayList<>();
         List<BaseFileObject> fileObjects = new ArrayList<>();
@@ -91,11 +96,11 @@ public class FileBrowser {
 
         folderObjects.addAll(fileObjects);
 
-        if (!FileHelper.isRootDirectory(mCurrentDir)) {
+        if (!FileHelper.isRootDirectory(currentDir)) {
             FolderObject parentObject = new FolderObject();
             parentObject.fileType = FileType.PARENT;
             parentObject.name = FileHelper.PARENT_DIRECTORY;
-            parentObject.path = FileHelper.getPath(mCurrentDir) + "/" + FileHelper.PARENT_DIRECTORY;
+            parentObject.path = FileHelper.getPath(currentDir) + "/" + FileHelper.PARENT_DIRECTORY;
             folderObjects.add(0, parentObject);
         }
 
@@ -103,10 +108,13 @@ public class FileBrowser {
     }
 
     public File getCurrentDir() {
-        return mCurrentDir;
+        return currentDir;
     }
 
+    @WorkerThread
     public File getInitialDir() {
+
+        ThreadUtils.ensureNotOnMainThread();
 
         File dir;
         String[] files;
