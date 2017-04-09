@@ -35,11 +35,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.jp.wasabeef.glide.transformations.BlurTransformation;
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.lyrics.LyricsFragment;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.tagger.TaggerDialog;
-import com.simplecity.amp_library.ui.fragments.LyricsFragment;
 import com.simplecity.amp_library.ui.fragments.QueueFragment;
 import com.simplecity.amp_library.ui.fragments.QueuePagerFragment;
 import com.simplecity.amp_library.ui.views.RepeatingImageButton;
@@ -50,7 +50,7 @@ import com.simplecity.amp_library.utils.DrawableUtils;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
-import com.simplecity.amp_library.utils.QuickLyricUtils;
+import com.simplecity.amp_library.lyrics.QuickLyricUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.SleepTimer;
@@ -451,7 +451,7 @@ public class PlayerActivity extends BaseCastActivity implements
         }
 
         if (item.getItemId() == R.id.menu_quicklyric) {
-            QuickLyricUtils.getLyricsFor(this, MusicUtils.getAlbumArtistName(), MusicUtils.getSongName());
+            QuickLyricUtils.getLyricsFor(this, MusicUtils.getSong());
             return true;
         }
 
@@ -688,11 +688,6 @@ public class PlayerActivity extends BaseCastActivity implements
         queueNextRefresh(1);
 
         supportInvalidateOptionsMenu();
-
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_container);
-        if (fragment != null && fragment instanceof LyricsFragment) {
-            ((LyricsFragment) fragment).updateLyrics();
-        }
 
         Glide.with(this)
                 .load(MusicUtils.getAlbumArtist())

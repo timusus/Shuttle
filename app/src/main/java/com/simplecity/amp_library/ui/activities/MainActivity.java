@@ -73,7 +73,7 @@ import com.simplecity.amp_library.ui.fragments.AlbumFragment;
 import com.simplecity.amp_library.ui.fragments.DetailFragment;
 import com.simplecity.amp_library.ui.fragments.FolderFragment;
 import com.simplecity.amp_library.ui.fragments.GenreFragment;
-import com.simplecity.amp_library.ui.fragments.LyricsFragment;
+import com.simplecity.amp_library.lyrics.LyricsFragment;
 import com.simplecity.amp_library.ui.fragments.MainFragment;
 import com.simplecity.amp_library.ui.fragments.MiniPlayerFragment;
 import com.simplecity.amp_library.ui.fragments.NavigationDrawerFragment;
@@ -91,7 +91,7 @@ import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
-import com.simplecity.amp_library.utils.QuickLyricUtils;
+import com.simplecity.amp_library.lyrics.QuickLyricUtils;
 import com.simplecity.amp_library.utils.ResourceUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
@@ -729,7 +729,7 @@ public class MainActivity extends BaseCastActivity implements
                 }
                 return true;
             case R.id.menu_quicklyric:
-                QuickLyricUtils.getLyricsFor(this, MusicUtils.getAlbumArtistName(), MusicUtils.getSongName());
+                QuickLyricUtils.getLyricsFor(this, MusicUtils.getSong());
                 return true;
             case android.R.id.home:
                 playingFragment = getSupportFragmentManager().findFragmentById(R.id.player_container);
