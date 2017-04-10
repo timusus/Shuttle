@@ -22,9 +22,9 @@ public class QuickLyricUtils {
 
     private static final String QUICKLYRIC_URL = "https://d3khd.app.goo.gl/jdF1";
 
-    public static boolean isQLInstalled(Context context) {
+    public static boolean isQLInstalled() {
 
-        PackageManager pm = context.getPackageManager();
+        PackageManager pm = ShuttleApplication.getInstance().getPackageManager();
         try {
             pm.getPackageInfo("com.geecko.QuickLyric", PackageManager.GET_ACTIVITIES);
             return true;
@@ -33,7 +33,7 @@ public class QuickLyricUtils {
         }
     }
 
-    public static void getLyricsFor(Context context, Song song) {
+    static void getLyricsFor(Context context, Song song) {
         Intent intent = new Intent("com.geecko.QuickLyric.getLyrics");
         intent.putExtra("TAGS", new String[]{song.artistName, song.name});
         if (intent.resolveActivity(ShuttleApplication.getInstance().getPackageManager()) != null) {

@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import com.f2prateek.rx.receivers.RxBroadcastReceiver;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Query;
+import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.sql.SqlUtils;
 import com.simplecity.amp_library.ui.presenters.Presenter;
@@ -41,17 +42,24 @@ class LyricsPresenter extends Presenter<LyricsView> {
                 .subscribe(intent -> updateLyrics()));
     }
 
-    void launchQuickLyric() {
+    void downloadOrLaunchQuickLyric() {
         LyricsView lyricsView = getView();
         if (lyricsView != null) {
-            lyricsView.launchQuickLyric();
+            if (QuickLyricUtils.isQLInstalled()) {
+                Song song = MusicUtils.getSong();
+                if (song != null) {
+                    lyricsView.launchQuickLyric(song);
+                }
+            } else {
+                lyricsView.downloadQuickLyric();
+            }
         }
     }
 
-    void showQuickLyricInfo() {
+    void showQuickLyricInfoDialog() {
         LyricsView lyricsView = getView();
         if (lyricsView != null) {
-            lyricsView.showQuickLyricInfo();
+            lyricsView.showQuickLyricInfoDialog();
         }
     }
 
@@ -108,6 +116,7 @@ class LyricsPresenter extends Presenter<LyricsView> {
             if (lyricsView != null) {
                 lyricsView.updateLyrics(lyrics);
                 lyricsView.showNoLyricsView(lyrics == null);
+                lyricsView.showQuickLyricInfoButton(!QuickLyricUtils.isQLInstalled());
             }
         }));
     }

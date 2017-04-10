@@ -3,6 +3,7 @@ package com.simplecity.amp_library.lyrics;
 import android.content.ActivityNotFoundException;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.view.GestureDetector;
@@ -15,6 +16,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.ui.fragments.BaseFragment;
 import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.ThemeUtils;
@@ -29,6 +31,8 @@ public class LyricsFragment extends BaseFragment implements LyricsView {
     private TextView lyricsTextView;
 
     private View noLyricsView;
+
+    private View quickLyricInfo;
 
     /**
      * Empty constructor as per the {@link android.app.Fragment} docs
@@ -48,10 +52,10 @@ public class LyricsFragment extends BaseFragment implements LyricsView {
 
         Button quickLyricButton = (Button) rootView.findViewById(R.id.quickLyricButton);
         quickLyricButton.setText(QuickLyricUtils.getSpannedString());
-        quickLyricButton.setOnClickListener(v -> lyricsPresenter.launchQuickLyric());
+        quickLyricButton.setOnClickListener(v -> lyricsPresenter.downloadOrLaunchQuickLyric());
 
-        View quickLyricInfo = rootView.findViewById(R.id.quickLyricInfo);
-        quickLyricInfo.setOnClickListener(v -> lyricsPresenter.showQuickLyricInfo());
+        quickLyricInfo = rootView.findViewById(R.id.quickLyricInfo);
+        quickLyricInfo.setOnClickListener(v -> lyricsPresenter.showQuickLyricInfoDialog());
 
         ScrollView scrollView = (ScrollView) rootView.findViewById(R.id.scrollView);
 
@@ -132,7 +136,17 @@ public class LyricsFragment extends BaseFragment implements LyricsView {
     }
 
     @Override
-    public void launchQuickLyric() {
+    public void showQuickLyricInfoButton(boolean show) {
+        quickLyricInfo.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void launchQuickLyric(@NonNull Song song) {
+        QuickLyricUtils.getLyricsFor(getContext(), song);
+    }
+
+    @Override
+    public void downloadQuickLyric() {
         try {
             startActivity(QuickLyricUtils.getQuickLyricIntent());
         } catch (ActivityNotFoundException ignored) {
@@ -141,14 +155,16 @@ public class LyricsFragment extends BaseFragment implements LyricsView {
     }
 
     @Override
-    public void showQuickLyricInfo() {
+    public void showQuickLyricInfoDialog() {
         DialogUtils.getBuilder(getContext())
                 .iconRes(R.drawable.quicklyric)
                 .title(R.string.quicklyric)
                 .content(getString(R.string.quicklyric_info))
                 .positiveText(R.string.download)
-                .onPositive((dialog, which) -> lyricsPresenter.launchQuickLyric())
+                .onPositive((dialog, which) -> lyricsPresenter.downloadOrLaunchQuickLyric())
                 .negativeText(R.string.close)
                 .show();
     }
+
+
 }

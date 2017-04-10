@@ -39,11 +39,4 @@
         app:showAsAction="ifRoom"
         android:visible="false"/>
 
-    <item
-        android:id="@+id/menu_quicklyric"
-        android:icon="?attr/btn_quicklyric"
-        android:title="@string/quicklyric"
-        app:showAsAction="ifRoom"
-        android:visible="false"/>
-
 </menu>

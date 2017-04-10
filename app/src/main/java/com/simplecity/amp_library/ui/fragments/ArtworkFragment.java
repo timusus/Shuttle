@@ -23,7 +23,6 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.glide.utils.GlideUtils;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.ui.activities.PlayerActivity;
-import com.simplecity.amp_library.lyrics.QuickLyricUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 
 import java.lang.ref.WeakReference;
@@ -185,8 +184,7 @@ public class ArtworkFragment extends BaseFragment {
                 if (parentFragment != null) {
                     playingFragment = parentFragment.getParentFragment();
                 }
-                if (playingFragment != null && playingFragment instanceof PlayerFragment
-                        && !QuickLyricUtils.isQLInstalled(fragment.getActivity())) {
+                if (playingFragment != null && playingFragment instanceof PlayerFragment) {
                     ((PlayerFragment) playingFragment).toggleLyrics();
                 }
             }

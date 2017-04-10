@@ -58,7 +58,6 @@ import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.constants.Config;
 import com.simplecity.amp_library.interfaces.BackPressListener;
 import com.simplecity.amp_library.lyrics.LyricsFragment;
-import com.simplecity.amp_library.lyrics.QuickLyricUtils;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.DrawerGroupItem;
@@ -531,7 +530,6 @@ public class MainActivity extends BaseCastActivity implements
                 menu.findItem(R.id.menu_share).setVisible(false);
                 menu.findItem(R.id.menu_queue).setVisible(false);
                 menu.findItem(R.id.menu_lyrics).setVisible(false);
-                menu.findItem(R.id.menu_quicklyric).setVisible(false);
                 if (menu.findItem(GO_TO) != null) {
                     menu.findItem(GO_TO).setVisible(false);
                 }
@@ -540,7 +538,7 @@ public class MainActivity extends BaseCastActivity implements
             } else {
                 menu.findItem(R.id.action_search).setVisible(false);
                 menu.findItem(R.id.menu_favorite).setVisible(true);
-                menu.findItem(QuickLyricUtils.isQLInstalled(this) ? R.id.menu_quicklyric : R.id.menu_lyrics).setVisible(true);
+                menu.findItem(R.id.menu_lyrics).setVisible(true);
                 menu.findItem(R.id.menu_share).setVisible(true);
                 if (!ShuttleUtils.isTablet() && ShuttleUtils.isLandscape()) {
                     menu.findItem(R.id.menu_queue).setVisible(true);
@@ -729,9 +727,6 @@ public class MainActivity extends BaseCastActivity implements
                         ((PlayerFragment) playingFragment).toggleLyrics();
 
                 }
-                return true;
-            case R.id.menu_quicklyric:
-                QuickLyricUtils.getLyricsFor(this, MusicUtils.getSong());
                 return true;
             case android.R.id.home:
                 playingFragment = getSupportFragmentManager().findFragmentById(R.id.player_container);
