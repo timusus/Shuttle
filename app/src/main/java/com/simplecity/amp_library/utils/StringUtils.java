@@ -214,9 +214,9 @@ public class StringUtils {
      * Note: This method splits the {@param first} string at whitespaces, and returns the best Jaro-Winkler
      * score between {@param second} and the 'split' strings.
      */
-    public static double getAdjustedJaroWinklerSimilarity(@Nullable String first, @Nullable String second) throws IllegalArgumentException {
+    public static double getAdjustedJaroWinklerSimilarity(@Nullable String first, @Nullable String second) {
 
-        if (first == null || second == null) {
+        if (TextUtils.isEmpty(first) || TextUtils.isEmpty(second)) {
             return 0;
         }
 
