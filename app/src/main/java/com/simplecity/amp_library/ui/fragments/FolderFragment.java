@@ -241,7 +241,7 @@ public class FolderFragment extends BaseFragment implements
     public void onPause() {
         super.onPause();
 
-        subscriptions.unsubscribe();
+        subscriptions.clear();
     }
 
     @Override
