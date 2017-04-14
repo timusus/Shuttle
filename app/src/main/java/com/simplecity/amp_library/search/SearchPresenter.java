@@ -40,6 +40,7 @@ import com.simplecity.amp_library.utils.Operators;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
+import com.simplecity.amp_library.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -545,7 +546,7 @@ class SearchPresenter extends Presenter<SearchView> implements
         }
 
         private Stream<Song> applyJaroWinklerFilter(Stream<Song> songStream) {
-            return songStream.map(song -> new SearchUtils.JaroWinklerObject<>(song, filterString, song.name ))
+            return songStream.map(song -> new SearchUtils.JaroWinklerObject<>(song, filterString, song.name))
                     .filter(jaroWinklerObject -> jaroWinklerObject.score > SCORE_THRESHOLD || TextUtils.isEmpty(filterString))
                     .sorted((a, b) -> a.object.compareTo(b.object))
                     .sorted((a, b) -> Double.compare(b.score, a.score))
@@ -553,7 +554,7 @@ class SearchPresenter extends Presenter<SearchView> implements
         }
 
         private Stream<Song> applySongFilter(Stream<Song> songStream) {
-            return songStream.filter(song -> song.name.contains(filterString));
+            return songStream.filter(song -> StringUtils.containsIgnoreCase(song.name, filterString));
         }
     }
 
@@ -629,7 +630,7 @@ class SearchPresenter extends Presenter<SearchView> implements
         }
 
         private Stream<Album> applyAlbumFilter(Stream<Album> stream) {
-            return stream.filter(album -> album.name.contains(filterString));
+            return stream.filter(album -> StringUtils.containsIgnoreCase(album.name, filterString));
         }
     }
 
@@ -707,7 +708,7 @@ class SearchPresenter extends Presenter<SearchView> implements
         }
 
         private Stream<AlbumArtist> applyAlbumArtistFilter(Stream<AlbumArtist> stream) {
-            return stream.filter(albumArtist -> albumArtist.name.contains(filterString));
+            return stream.filter(albumArtist -> StringUtils.containsIgnoreCase(albumArtist.name, filterString));
         }
     }
 }

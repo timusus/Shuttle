@@ -30,6 +30,13 @@
         android:id="@+id/menu_share"
         android:icon="?attr/btn_share"
         android:title="@string/share_title"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu_lyrics"
+        android:icon="?attr/btn_lyrics"
+        android:title="@string/lyrics"
+        app:showAsAction="ifRoom"
+        android:visible="false"/>
 
 </menu>

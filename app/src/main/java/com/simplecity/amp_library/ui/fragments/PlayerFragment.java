@@ -19,6 +19,7 @@ import com.jakewharton.rxbinding.widget.SeekBarProgressChangeEvent;
 import com.jakewharton.rxbinding.widget.SeekBarStartChangeEvent;
 import com.jakewharton.rxbinding.widget.SeekBarStopChangeEvent;
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.lyrics.LyricsFragment;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
@@ -345,10 +346,5 @@ public class PlayerFragment extends BaseFragment implements PlayerView {
         track.setText(song.name);
         track.setSelected(true);
         album.setText(String.format("%s | %s", song.artistName, song.albumName));
-
-        Fragment fragment = getChildFragmentManager().findFragmentById(R.id.main_container);
-        if (fragment != null && fragment instanceof LyricsFragment) {
-            ((LyricsFragment) fragment).updateLyrics();
-        }
     }
 }

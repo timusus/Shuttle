@@ -43,6 +43,8 @@
     <attr name="btn_delete" format="reference" />
     <attr name="btn_remove" format="reference" />
     <attr name="btn_share" format="reference" />
+    <attr name="btn_lyrics" format="reference" />
+    <attr name="btn_quicklyric" format="reference" />
     <attr name="btn_sort" format="reference" />
     <attr name="btn_dialog_alert" format="reference" />
 

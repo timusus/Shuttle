@@ -57,13 +57,13 @@ deploy:
     condition: $TRAVIS_TAG =~ beta || $TRAVIS_TAG =~ alpha || $TRAVIS_TAG =~ release
 
 # Play Store beta release
-- provider: script
-  script: ./gradlew publishApkFreeRelease publishApkPaidRelease
-  skip_cleanup: true
-  on:
-    repo: timusus/Shuttle
-    tags: true
-    condition: $TRAVIS_TAG =~ beta
+#    - provider: script
+#      script: ./gradlew publishApkFreeRelease publishApkPaidRelease
+#      skip_cleanup: true
+#      on:
+#        repo: timusus/Shuttle
+#        tags: true
+#        condition: $TRAVIS_TAG =~ beta
 
 # Slack build notifications
 notifications:

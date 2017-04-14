@@ -224,6 +224,7 @@
         <item name="btn_search">@drawable/ic_action_search</item>
         <item name="btn_settings">@drawable/ic_action_settings</item>
         <item name="btn_share">@drawable/ic_action_share</item>
+        <item name="btn_lyrics">@drawable/ic_action_lyrics_24dp</item>
         <item name="btn_sort">@drawable/ic_action_sort</item>
         <item name="btn_fav">@drawable/ic_fav</item>
         <item name="btn_fav_pressed">@drawable/ic_fav_pressed</item>
@@ -240,6 +241,7 @@
         <item name="btn_search">@drawable/ic_action_search_light</item>
         <item name="btn_settings">@drawable/ic_action_settings_light</item>
         <item name="btn_share">@drawable/ic_action_share_light</item>
+        <item name="btn_lyrics">@drawable/ic_action_lyrics_light_24dp</item>
         <item name="btn_sort">@drawable/ic_action_sort_light</item>
         <item name="btn_add">@drawable/ic_action_add_light</item>
         <item name="btn_fav">@drawable/ic_fav_light</item>
@@ -255,6 +257,7 @@
     <style name="AppTheme.Light.Buttons.Inverse" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="btn_search">@drawable/ic_action_search</item>
         <item name="btn_settings">@drawable/ic_action_settings</item>
+        <item name="btn_lyrics">@drawable/ic_action_lyrics_24dp</item>
         <item name="btn_share">@drawable/ic_action_share</item>
         <item name="btn_sort">@drawable/ic_action_sort</item>
         <item name="btn_add">@drawable/ic_action_add</item>

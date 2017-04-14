@@ -59,6 +59,7 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.constants.Config;
 import com.simplecity.amp_library.interfaces.BackPressListener;
+import com.simplecity.amp_library.lyrics.LyricsFragment;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.DrawerGroupItem;
@@ -300,11 +301,13 @@ public class MainActivity extends BaseCastActivity implements
 
     private void showChangelogDialog() {
         int storedVersionCode = SettingsManager.getInstance().getStoredVersionCode();
+        int launchCount = SettingsManager.getInstance().getLaunchCount();
+
         // If we've stored a version code in the past, and it's lower than the current version code,
         // we can show the changelog.
         // Don't show the changelog for first time users.
-        // Todo: Re-comment this after v1.6.5-beta8 release.
-        if (/*storedVersionCode != -1 &&*/ storedVersionCode < BuildConfig.VERSION_CODE) {
+        // Todo: Remove launchCount check after 1.6.5 release.
+        if ((storedVersionCode != -1 || launchCount > 0) && storedVersionCode < BuildConfig.VERSION_CODE) {
             if (SettingsManager.getInstance().getShowChangelogOnLaunch()) {
                 DialogUtils.showChangelog(this);
             }
@@ -575,6 +578,7 @@ public class MainActivity extends BaseCastActivity implements
                 menu.findItem(R.id.menu_favorite).setVisible(false);
                 menu.findItem(R.id.menu_share).setVisible(false);
                 menu.findItem(R.id.menu_queue).setVisible(false);
+                menu.findItem(R.id.menu_lyrics).setVisible(false);
                 if (menu.findItem(GO_TO) != null) {
                     menu.findItem(GO_TO).setVisible(false);
                 }
@@ -583,6 +587,7 @@ public class MainActivity extends BaseCastActivity implements
             } else {
                 menu.findItem(R.id.action_search).setVisible(false);
                 menu.findItem(R.id.menu_favorite).setVisible(true);
+                menu.findItem(R.id.menu_lyrics).setVisible(true);
                 menu.findItem(R.id.menu_share).setVisible(true);
                 if (!ShuttleUtils.isTablet() && ShuttleUtils.isLandscape()) {
                     menu.findItem(R.id.menu_queue).setVisible(true);
@@ -754,6 +759,17 @@ public class MainActivity extends BaseCastActivity implements
                 return true;
             case R.id.menu_share:
                 DialogUtils.showShareDialog(MainActivity.this, MusicUtils.getSong());
+                return true;
+            case R.id.menu_lyrics:
+                PlayerFragment playerFragment = getPlayerFragment();
+                if (playerFragment != null) {
+                    Fragment fragment = playerFragment.getChildFragmentManager().findFragmentById(R.id.main_container);
+                    if (fragment instanceof LyricsFragment) {
+                        ((LyricsFragment) fragment).remove();
+                    } else {
+                        playerFragment.toggleLyrics();
+                    }
+                }
                 return true;
             case android.R.id.home:
                 if (isSlidingEnabled) {

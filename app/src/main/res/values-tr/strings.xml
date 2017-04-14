@@ -161,8 +161,6 @@
     <string name="delete_file_confirmation_dialog">\"<xliff:g id="file">%s</xliff:g>\"  Kalıcı olarak silmek istediğinizden emin misiniz?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">Cihazınızdan tüm albüm kapaklarını kalıcı olarak silmek istediğinizden emin misiniz?</string>
-    <!-- QuickLyric Play Store Link -->
-    <string name="quicklyric_play_store">QuickLyric\'i indirin</string>
     <!-- QuickLyric button -->
     <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->

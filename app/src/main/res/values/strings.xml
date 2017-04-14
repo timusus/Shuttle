@@ -176,10 +176,6 @@
     <string name="delete_file_confirmation_dialog">Are you sure you want to permanently delete \"<xliff:g id="file">%s</xliff:g>\"?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">Are you sure you want to permanently delete all artwork from the device?</string>
-    <!-- QuickLyric Play Store Link -->
-    <string name="quicklyric_play_store">Download QuickLyric</string>
-    <!-- QuickLyric button -->
-    <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
     <string name="dialog_title_set_ringtone">Set Ringtone</string>
     <!-- "Set Ringtone" message -->
@@ -222,8 +218,6 @@
     <string name="add_to_playlist">Add to playlist</string>
     <!-- Context menu item -->
     <string name="new_playlist">New</string>
-    <!-- Button for lyrics -->
-    <string name="lyrics">Lyrics</string>
     <!-- menu item to save the current list as a new playlist -->
     <string name="save_as_playlist">Save as playlist</string>
     <!-- Context menu item to remove the selected item from the playlist -->
@@ -567,10 +561,6 @@
     <!-- Album artist (singular)-->
     <string name="album_artist_title">Album-Artist</string>
 
-    <!-- ## Lyrics ## -->
-    <!-- -->
-    <string name="no_lyrics">No embedded lyrics found</string>
-
     <!-- ## Equalizer ## -->
     <!-- Menu item to open the equalizer -->
     <string name="equalizer">Equalizer</string>
@@ -828,5 +818,16 @@
 
     <!-- Changelog -->
     <string name="changelog_show_on_launch">Show on launch</string>
+
+    <!-- Lyrics -->
+
+    <!-- QuickLyric button -->
+    <string name="quicklyric">QuickLyric</string>
+    <!-- Button for lyrics -->
+    <string name="lyrics">Lyrics</string>
+    <!-- Shown when there are no lyrics -->
+    <string name="no_lyrics">No embedded lyrics found.</string>
+    <!-- QuickLyric info dialog message-->
+    <string name="quicklyric_info">QuickLyric is an open-source lyric fetcher on the Google Play Store.\n\nOnce installed, QuickLyric will be opened from Shuttle whenever you hit the \'QuickLyric\' menu button.</string>
 
 </resources>

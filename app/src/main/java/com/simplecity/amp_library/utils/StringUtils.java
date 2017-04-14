@@ -3,6 +3,7 @@ package com.simplecity.amp_library.utils;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.simplecity.amp_library.R;
@@ -213,7 +214,11 @@ public class StringUtils {
      * Note: This method splits the {@param first} string at whitespaces, and returns the best Jaro-Winkler
      * score between {@param second} and the 'split' strings.
      */
-    public static double getAdjustedJaroWinklerSimilarity(String first, String second) {
+    public static double getAdjustedJaroWinklerSimilarity(@Nullable String first, @Nullable String second) {
+
+        if (TextUtils.isEmpty(first) || TextUtils.isEmpty(second)) {
+            return 0;
+        }
 
         String[] split = first.split("\\s");
         if (split.length > 1) {
@@ -244,15 +249,10 @@ public class StringUtils {
      * @param first  the first String, must not be null
      * @param second the second String, must not be null
      * @return result similarity
-     * @throws IllegalArgumentException if either String input {@code null}
      */
-    public static double getJaroWinklerSimilarity(String first, String second) {
+    public static double getJaroWinklerSimilarity(@NonNull String first, @NonNull String second) {
 
         final double DEFAULT_SCALING_FACTOR = 0.1;
-
-        if (first == null || second == null) {
-            throw new IllegalArgumentException("Strings must not be null");
-        }
 
         first = first.toLowerCase();
         second = second.toLowerCase();
