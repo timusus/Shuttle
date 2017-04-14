@@ -376,7 +376,12 @@ public class PlayerFragment extends BaseFragment implements PlayerView {
                         }
 
                         if (backgroundColor != newColor) {
-                            ColorUtils.startBackgroundTransition(backgroundView, backgroundColor, newColor);
+                            // Todo:
+                            // This null check is only necessary because backgroundView is null in landscape mode.
+                            // Can be removed when that problem is solved.
+                            if (backgroundView != null) {
+                                ColorUtils.startBackgroundTransition(backgroundView, backgroundColor, newColor);
+                            }
                             backgroundColor = newColor;
                         }
                     }
