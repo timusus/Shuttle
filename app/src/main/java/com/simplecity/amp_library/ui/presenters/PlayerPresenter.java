@@ -94,18 +94,18 @@ public class PlayerPresenter extends Presenter<PlayerView> {
 
 
     private void refreshCurrentTimeText(long playbackTime) {
-        PlayerView view = getView();
-        if (playbackTime != this.currentPlaybackTime) {
+        if (playbackTime != currentPlaybackTime) {
+            PlayerView view = getView();
             if (view != null) {
                 view.currentTimeChanged(playbackTime);
             }
         }
-        this.currentPlaybackTime = playbackTime;
+        currentPlaybackTime = playbackTime;
     }
 
     private void setCurrentTimeVisibility(boolean visible) {
-        PlayerView view = getView();
         if (visible != currentPlaybackTimeVisible) {
+            PlayerView view = getView();
             if (view != null) {
                 view.currentTimeVisibilityChanged(visible);
             }

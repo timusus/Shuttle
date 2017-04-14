@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.graphics.Palette;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +14,18 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.jakewharton.rxbinding.widget.RxSeekBar;
 import com.jakewharton.rxbinding.widget.SeekBarChangeEvent;
 import com.jakewharton.rxbinding.widget.SeekBarProgressChangeEvent;
 import com.jakewharton.rxbinding.widget.SeekBarStartChangeEvent;
 import com.jakewharton.rxbinding.widget.SeekBarStopChangeEvent;
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.glide.palette.PaletteBitmap;
+import com.simplecity.amp_library.glide.palette.PaletteBitmapTranscoder;
 import com.simplecity.amp_library.lyrics.LyricsFragment;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
@@ -77,6 +84,8 @@ public class PlayerFragment extends BaseFragment implements PlayerView {
     private CompositeSubscription subscriptions;
 
     private PlayerPresenter presenter = new PlayerPresenter();
+
+    private int backgroundColor;
 
     public PlayerFragment() {
     }
@@ -346,5 +355,31 @@ public class PlayerFragment extends BaseFragment implements PlayerView {
         track.setText(song.name);
         track.setSelected(true);
         album.setText(String.format("%s | %s", song.artistName, song.albumName));
+
+        //noinspection unchecked
+        Glide.with(this)
+                .load(song)
+                .asBitmap()
+                .transcode(new PaletteBitmapTranscoder(getContext()), PaletteBitmap.class)
+                .override(100, 100)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(new SimpleTarget<PaletteBitmap>() {
+                    @Override
+                    public void onResourceReady(PaletteBitmap resource, GlideAnimation<? super PaletteBitmap> glideAnimation) {
+
+                        Palette.Swatch swatch = resource.palette.getDarkMutedSwatch();
+
+                        int newColor = ColorUtils.getPrimaryColor();
+
+                        if (swatch != null) {
+                            newColor = swatch.getRgb();
+                        }
+
+                        if (backgroundColor != newColor) {
+                            ColorUtils.startBackgroundTransition(backgroundView, backgroundColor, newColor);
+                            backgroundColor = newColor;
+                        }
+                    }
+                });
     }
 }
