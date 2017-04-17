@@ -32,17 +32,11 @@ public class OperatorsUnitTest {
     @Test
     public void testSongsToAlbums() throws Exception {
 
-        // When a user doesn't have album tags for a particular album, Android ends up using the
-        // folder name as the album name. So if there's a bunch of songs in a folder, and none of the
-        // songs have correct album tags, all the songs will have the same album id.
+        // Test to ensure that only one album is generated under the following conditions:
 
-        // This test ensures that the songsToAlbums operator recognises that these songs don't share
-        // a common albumArtist name (remember, the albumArtistName falls back to artistName if not present)
-        // and as such, the songs belong to separate albums.
-
-        // Conditions:
-        // 1. The album name & album ID is the same for all songs.
-        // 2. The album artist differs for some songs.
+        // 1. The album ID is the same for all songs.
+        // 2. The album artist is the same for all songs.
+        // 3. The artist differs for some songs.
 
         List<Song> songs = new ArrayList<>();
 
@@ -51,37 +45,6 @@ public class OperatorsUnitTest {
             song.id = i;
             song.name = "Song " + i;
             song.albumId = 0;
-            song.albumName = "Music";
-            song.albumArtistName = "Artist 1";
-            songs.add(song);
-        }
-
-        for (int i = 0; i < 15; i++) {
-            Song song = new Song(mock(Cursor.class));
-            song.id = i + 14;
-            song.name = "Song " + i;
-            song.albumId = 0;
-            song.albumName = "Music";
-            song.albumArtistName = "Artist 2";
-            songs.add(song);
-        }
-
-        assertThat(Operators.songsToAlbums(songs).size()).isEqualTo(2);
-
-        // Test to ensure that only one album is generated under the following conditions:
-
-        // 1. The album name & album ID is the same for all songs.
-        // 2. The album artist is the same for all songs.
-        // 3. The artist differs for some songs.
-
-        songs = new ArrayList<>();
-
-        for (int i = 0; i < 15; i++) {
-            Song song = new Song(mock(Cursor.class));
-            song.id = i;
-            song.name = "Song " + i;
-            song.albumId = 0;
-            song.albumName = "Music";
             song.artistId = 0;
             song.artistName = "Artist 1";
             song.albumArtistName = "Album Artist 1";
@@ -93,7 +56,6 @@ public class OperatorsUnitTest {
             song.id = i + 14;
             song.name = "Song " + i;
             song.albumId = 0;
-            song.albumName = "Music";
             song.artistId = 1;
             song.artistName = "Artist 2";
             song.albumArtistName = "Album Artist 1";
