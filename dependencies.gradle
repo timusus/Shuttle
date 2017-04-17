@@ -137,6 +137,9 @@ ext.libs = [
         // Third party libs
         // /////////////////////////////////////////////////////////////////////////
 
+        // Internal navigation library
+        navigation         : project(':libraries/:navigation'),
+
         // NanoHttp - https://github.com/NanoHttpd/nanohttpd (Various)
         nanoHttp           : "org.nanohttpd:nanohttpd-webserver:$versions.nanoHttp",
         // Crashlytics - https://fabric.io/kits/android/crashlytics

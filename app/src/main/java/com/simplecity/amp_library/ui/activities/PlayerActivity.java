@@ -142,7 +142,6 @@ public class PlayerActivity extends BaseCastActivity implements
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ThemeUtils.themeActionBar(this);
-        ThemeUtils.themeStatusBar(this, null);
 
         if (!ShuttleUtils.isTablet() && ShuttleUtils.isLandscape()) {
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(ColorUtils.getPrimaryColor()));
@@ -413,7 +412,7 @@ public class PlayerActivity extends BaseCastActivity implements
             }
             case CLEAR_QUEUE: {
                 MusicUtils.clearQueue();
-                Intent intent = new Intent(this, MainActivity.class);
+                Intent intent = new Intent(this, MainActivity2.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);

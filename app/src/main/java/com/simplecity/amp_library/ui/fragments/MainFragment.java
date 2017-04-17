@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.ui.activities.MainActivity;
+import com.simplecity.amp_library.ui.activities.MainActivity2;
 import com.simplecity.amp_library.ui.adapters.PagerAdapter;
 import com.simplecity.amp_library.ui.views.SlidingTabLayout;
 import com.simplecity.amp_library.utils.ActionBarUtils;
@@ -68,7 +68,7 @@ public class MainFragment extends BaseFragment {
     public void onAttach(Context context) {
 
         super.onAttach(context);
-        ((MainActivity) context).onSectionAttached(getString(R.string.library_title));
+        ((MainActivity2) context).onSectionAttached(getString(R.string.library_title));
     }
 
     @Override

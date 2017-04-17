@@ -306,7 +306,7 @@ public class QCircleActivity extends BaseActivity {
                     setQuickCircleWindowParam();
                 } else if (mQuickCoverState == EXTRA_ACCESSORY_COVER_OPENED) { // opened
                     //Call FullScreenActivity
-                    Intent callFullscreen = new Intent(mContext, MainActivity.class);
+                    Intent callFullscreen = new Intent(mContext, MainActivity2.class);
                     startActivity(callFullscreen);
 
                     //Finish QCircleActivity

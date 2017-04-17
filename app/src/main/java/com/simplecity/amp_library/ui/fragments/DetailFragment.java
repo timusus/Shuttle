@@ -56,7 +56,7 @@ import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.sql.databases.BlacklistHelper;
-import com.simplecity.amp_library.ui.activities.MainActivity;
+import com.simplecity.amp_library.ui.activities.MainActivity2;
 import com.simplecity.amp_library.ui.adapters.DetailAdapter;
 import com.simplecity.amp_library.ui.adapters.ItemAdapter;
 import com.simplecity.amp_library.ui.modelviews.BaseAdaptableItem;
@@ -251,7 +251,7 @@ public class DetailFragment extends BaseFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+        rootView = inflater.inflate(R.layout.fragment_detail2, container, false);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -373,8 +373,8 @@ public class DetailFragment extends BaseFragment implements
                 //dragged. Workaround for issue where the action bar ends up being transparent
                 //when recreating this fragment.
 //                if (getActivity() != null) {
-//                    if (((MainActivity) getActivity()).canSetAlpha()) {
-//                        ((MainActivity) getActivity()).setActionBarAlpha(ratio, true);
+//                    if (((MainActivity2) getActivity()).canSetAlpha()) {
+//                        ((MainActivity2) getActivity()).setActionBarAlpha(ratio, true);
 //                        Log.i(TAG, "DetailFragment on scroll listener setting action bar alpha to  " + ratio);
 //                    }
 //                }
@@ -1124,7 +1124,7 @@ public class DetailFragment extends BaseFragment implements
             }
         }
 
-        ((MainActivity) getActivity()).swapFragments((Album) item, v.findViewById(R.id.image));
+        ((MainActivity2) getActivity()).swapFragments((Album) item, v.findViewById(R.id.image));
     }
 
     @Override

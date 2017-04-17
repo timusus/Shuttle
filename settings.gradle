@@ -2,4 +2,5 @@ include ':app',
         'libraries/:android-support-v4-preferencefragment',
         'libraries/:AndroidSlidingUpPanel',
         'libraries/:glidepalette',
-        'libraries/:ccl'
+        'libraries/:ccl',
+        'libraries/:navigation'

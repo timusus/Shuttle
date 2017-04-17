@@ -51,7 +51,7 @@ import com.simplecity.amp_library.sql.databases.BlacklistHelper;
 import com.simplecity.amp_library.sql.databases.WhitelistHelper;
 import com.simplecity.amp_library.sql.providers.PlayCountTable;
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
-import com.simplecity.amp_library.ui.activities.MainActivity;
+import com.simplecity.amp_library.ui.activities.MainActivity2;
 import com.simplecity.amp_library.ui.activities.SettingsActivity;
 import com.simplecity.amp_library.ui.adapters.BlacklistAdapter;
 import com.simplecity.amp_library.ui.adapters.ColorAdapter;
@@ -379,7 +379,7 @@ public class DialogUtils {
                 .content(R.string.restart_message)
                 .positiveText(R.string.restart_button)
                 .onPositive((materialDialog, dialogAction) -> {
-                    Intent intent = new Intent(context, MainActivity.class);
+                    Intent intent = new Intent(context, MainActivity2.class);
                     ComponentName componentNAme = intent.getComponent();
                     Intent mainIntent = IntentCompat.makeRestartActivityTask(componentNAme);
                     context.startActivity(mainIntent);
@@ -511,7 +511,7 @@ public class DialogUtils {
                 .content(context.getResources().getString(R.string.upgraded_message))
                 .positiveText(R.string.restart_button)
                 .onPositive((materialDialog, dialogAction) -> {
-                    Intent intent = new Intent(context, MainActivity.class);
+                    Intent intent = new Intent(context, MainActivity2.class);
                     ComponentName componentNAme = intent.getComponent();
                     Intent mainIntent = IntentCompat.makeRestartActivityTask(componentNAme);
                     context.startActivity(mainIntent);

@@ -41,7 +41,7 @@ import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.sql.databases.WhitelistHelper;
 import com.simplecity.amp_library.tagger.TaggerDialog;
-import com.simplecity.amp_library.ui.activities.MainActivity;
+import com.simplecity.amp_library.ui.activities.MainActivity2;
 import com.simplecity.amp_library.ui.adapters.FolderAdapter;
 import com.simplecity.amp_library.ui.modelviews.BreadcrumbsView;
 import com.simplecity.amp_library.ui.modelviews.FolderView;
@@ -135,10 +135,10 @@ public class FolderFragment extends BaseFragment implements
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if (context instanceof MainActivity) {
-            ((MainActivity) context).setOnBackPressedListener(this);
+        if (context instanceof MainActivity2) {
+            ((MainActivity2) context).setOnBackPressedListener(this);
             if (!(getParentFragment() != null && getParentFragment() instanceof MainFragment)) {
-                ((MainActivity) context).onSectionAttached(getString(R.string.folders_title));
+                ((MainActivity2) context).onSectionAttached(getString(R.string.folders_title));
             }
         }
     }
@@ -273,8 +273,8 @@ public class FolderFragment extends BaseFragment implements
     @Override
     public void onDetach() {
         super.onDetach();
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).setOnBackPressedListener(null);
+        if (getActivity() instanceof MainActivity2) {
+            ((MainActivity2) getActivity()).setOnBackPressedListener(null);
         }
     }
 

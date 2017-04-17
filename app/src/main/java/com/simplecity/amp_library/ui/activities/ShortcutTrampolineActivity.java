@@ -29,14 +29,14 @@ public class ShortcutTrampolineActivity extends AppCompatActivity {
                 finish();
                 break;
             case MusicService.ShortcutCommands.FOLDERS:
-                intent = new Intent(this, MainActivity.class);
+                intent = new Intent(this, MainActivity2.class);
 //                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.setAction(action);
                 startActivity(intent);
                 finish();
                 break;
             case MusicService.ShortcutCommands.PLAYLIST:
-                intent = new Intent(this, MainActivity.class);
+                intent = new Intent(this, MainActivity2.class);
 //                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.setAction(action);
                 Observable.fromCallable(Playlist::favoritesPlaylist)

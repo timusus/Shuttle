@@ -86,7 +86,11 @@ public class SlidingTabLayout extends HorizontalScrollView {
         mTitleOffset = (int) (TITLE_OFFSET_DIPS * getResources().getDisplayMetrics().density);
 
         mTabStrip = new SlidingTabStrip(context);
-        mTabStrip.setIndicatorColor(ColorUtils.getAccentColor());
+        int indicatorColor = getResources().getColor(R.color.colorPrimary);
+        if (!isInEditMode()) {
+            indicatorColor = ColorUtils.getAccentColor();
+        }
+        mTabStrip.setIndicatorColor(indicatorColor);
         addView(mTabStrip, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
     }
 

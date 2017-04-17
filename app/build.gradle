@@ -245,6 +245,8 @@ dependencies {
     // /////////////////////////////////////////////////////////////////////////
 
     retrolambdaConfig libs.lambdaBackport
+
+    compile libs.navigation
     compile libs.ccl
     compile libs.nanoHttp
     compile libs.dashClockApi

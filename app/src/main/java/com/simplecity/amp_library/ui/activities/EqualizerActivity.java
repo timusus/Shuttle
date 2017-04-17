@@ -28,7 +28,6 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.constants.OpenSLESConstants;
 import com.simplecity.amp_library.services.EqualizerService;
@@ -49,8 +48,6 @@ import java.util.UUID;
 public class EqualizerActivity extends BaseActivity {
 
     private static final String TAG = "EqualizerActivity";
-
-    private SystemBarTintManager mTintManager;
 
     private static final String EFFECT_TYPE_EQUALIZER = "47382d60-ddd8-11db-bf3a-0002a5d5c51b";
 
@@ -176,7 +173,6 @@ public class EqualizerActivity extends BaseActivity {
 
         if (!ShuttleUtils.hasLollipop() && ShuttleUtils.hasKitKat()) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            mTintManager = new SystemBarTintManager(this);
         }
         if (!ShuttleUtils.hasKitKat()) {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -198,7 +194,6 @@ public class EqualizerActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ThemeUtils.themeActionBar(this);
-        ThemeUtils.themeStatusBar(this, mTintManager);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(getResources().getString(R.string.equalizer));

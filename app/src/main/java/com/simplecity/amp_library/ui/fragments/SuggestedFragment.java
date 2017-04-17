@@ -104,7 +104,7 @@ public class SuggestedFragment extends BaseFragment implements
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        suggestedClickListener = (SuggestedClickListener) getActivity();
+//        suggestedClickListener = (SuggestedClickListener) getActivity();
     }
 
     @Override

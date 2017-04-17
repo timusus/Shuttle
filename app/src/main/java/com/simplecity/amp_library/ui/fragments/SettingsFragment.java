@@ -27,7 +27,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
@@ -35,7 +34,7 @@ import com.simplecity.amp_library.model.CategoryItem;
 import com.simplecity.amp_library.services.ArtworkDownloadService;
 import com.simplecity.amp_library.sql.databases.BlacklistHelper;
 import com.simplecity.amp_library.sql.databases.WhitelistHelper;
-import com.simplecity.amp_library.ui.activities.MainActivity;
+import com.simplecity.amp_library.ui.activities.MainActivity2;
 import com.simplecity.amp_library.ui.activities.SettingsActivity;
 import com.simplecity.amp_library.ui.adapters.TabsAdapter;
 import com.simplecity.amp_library.ui.recyclerview.ItemTouchHelperCallback;
@@ -59,7 +58,6 @@ public class SettingsFragment extends PreferenceFragment {
 
     private SharedPreferences mPrefs;
     private SharedPreferences.OnSharedPreferenceChangeListener mListener;
-    private SystemBarTintManager mTintManager;
 
     public SettingsFragment() {
 
@@ -78,7 +76,6 @@ public class SettingsFragment extends PreferenceFragment {
         super.onCreate(savedInstanceState);
 
         getActivity().supportInvalidateOptionsMenu();
-        mTintManager = new SystemBarTintManager(getActivity());
 
         if (getArguments() != null) {
             mPrefResId = getArguments().getInt(PREF_RES_ID);
@@ -160,7 +157,6 @@ public class SettingsFragment extends PreferenceFragment {
             if (key.equals("pref_theme_highlight_color") || key.equals("pref_theme_accent_color") || key.equals("pref_theme_white_accent")) {
                 ThemeUtils.setTheme(getActivity());
                 ThemeUtils.themeActionBar((SettingsActivity) getActivity());
-                ThemeUtils.themeStatusBar(getActivity(), mTintManager);
                 getListView().invalidate();
                 themeUIElements();
 
@@ -178,7 +174,7 @@ public class SettingsFragment extends PreferenceFragment {
         final Preference restartPreference = findPreference("pref_restart");
         if (restartPreference != null) {
             restartPreference.setOnPreferenceClickListener(preference -> {
-                Intent intent = new Intent(getActivity(), MainActivity.class);
+                Intent intent = new Intent(getActivity(), MainActivity2.class);
                 ComponentName componentNAme = intent.getComponent();
                 Intent mainIntent = IntentCompat.makeRestartActivityTask(componentNAme);
                 startActivity(mainIntent);

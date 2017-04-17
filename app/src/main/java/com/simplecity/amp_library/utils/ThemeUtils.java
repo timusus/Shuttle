@@ -42,9 +42,8 @@ import android.widget.TextView;
 
 import com.doomonafireball.betterpickers.hmspicker.HmsPicker;
 import com.doomonafireball.betterpickers.hmspicker.HmsView;
-import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.ui.activities.MainActivity;
+import com.simplecity.amp_library.ui.activities.MainActivity2;
 import com.simplecity.amp_library.ui.activities.PlayerActivity;
 import com.simplecity.amp_library.ui.activities.WidgetConfigureExtraLarge;
 import com.simplecity.amp_library.ui.activities.WidgetConfigureLarge;
@@ -182,7 +181,7 @@ public class ThemeUtils {
             activity.getSupportActionBar().setBackgroundDrawable(
                     DrawableUtils.getColoredDrawable(activity, CompatUtils.getDrawableCompat(activity, R.drawable.ab_transparent)));
         }
-        if (activity instanceof MainActivity || isActionBarSolid(activity)) {
+        if (activity instanceof MainActivity2 || isActionBarSolid(activity)) {
             ActionBar actionBar = activity.getSupportActionBar();
             Drawable actionBarDrawable = DrawableUtils.getColoredDrawable(activity, CompatUtils.getDrawableCompat(activity, R.drawable.action_bar_bg));
             actionBar.setBackgroundDrawable(actionBarDrawable);
@@ -195,21 +194,6 @@ public class ThemeUtils {
         return getThemeType(context) == ThemeType.TYPE_SOLID_LIGHT
                 || getThemeType(context) == ThemeType.TYPE_SOLID_DARK
                 || getThemeType(context) == ThemeType.TYPE_SOLID_BLACK;
-    }
-
-    @SuppressLint("NewApi")
-    public static void themeStatusBar(Activity activity, SystemBarTintManager tintManager) {
-
-        if (ShuttleUtils.hasKitKat()) {
-            if (ShuttleUtils.hasLollipop()) {
-                activity.getWindow().setStatusBarColor(ColorUtils.getPrimaryColorDark(activity));
-            } else {
-                if (tintManager != null) {
-                    tintManager.setStatusBarTintEnabled(true);
-                    tintManager.setStatusBarTintColor(ColorUtils.getPrimaryColor());
-                }
-            }
-        }
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -356,7 +340,7 @@ public class ThemeUtils {
             return;
         }
 
-        if (activity instanceof MainActivity) {
+        if (activity instanceof MainActivity2) {
             if (ThemeUtils.getInstance().themeType == ThemeType.TYPE_SOLID_DARK
                     || ThemeUtils.getInstance().themeType == ThemeType.TYPE_SOLID_LIGHT
                     || ThemeUtils.getInstance().themeType == ThemeType.TYPE_SOLID_BLACK) {

@@ -24,7 +24,7 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.glide.utils.GlideUtils;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
-import com.simplecity.amp_library.ui.activities.MainActivity;
+import com.simplecity.amp_library.ui.activities.MainActivity2;
 import com.simplecity.amp_library.ui.activities.PlayerActivity;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.ui.views.PlayPauseView;
@@ -149,7 +149,7 @@ public class MiniPlayerFragment extends BaseFragment implements PlayerView {
 
     void updateMiniPlayerVisibility() {
         boolean show = !(MusicServiceConnectionUtils.sServiceBinder == null || MusicUtils.getSongId() == -1);
-        ((MainActivity) getActivity()).togglePanelVisibility(show);
+        ((MainActivity2) getActivity()).togglePanelVisibility(show);
     }
 
     private class OnSwipeTouchListener implements View.OnTouchListener {
@@ -196,12 +196,12 @@ public class MiniPlayerFragment extends BaseFragment implements PlayerView {
             public boolean onSingleTapUp(MotionEvent e) {
                 Activity parent = getActivity();
                 if (getResources().getBoolean(R.bool.isSlidingEnabled)) {
-                    if (parent instanceof MainActivity) {
-                        ((MainActivity) parent).showPanel(MainActivity.Panel.PLAYER);
+                    if (parent instanceof MainActivity2) {
+                        ((MainActivity2) parent).showPanel(MainActivity2.Panel.PLAYER);
                     }
                 } else {
                     Intent intent = new Intent(parent, PlayerActivity.class);
-                    parent.startActivityForResult(intent, MainActivity.REQUEST_SEARCH);
+                    parent.startActivityForResult(intent, MainActivity2.REQUEST_SEARCH);
                 }
                 return super.onSingleTapUp(e);
             }
@@ -281,7 +281,7 @@ public class MiniPlayerFragment extends BaseFragment implements PlayerView {
 
         if (song == null) return;
 
-        ((MainActivity) getActivity()).togglePanelVisibility(true);
+        ((MainActivity2) getActivity()).togglePanelVisibility(true);
 
         trackName.setText(song.name);
         artistName.setText(String.format("%s | %s", song.artistName, song.albumName));

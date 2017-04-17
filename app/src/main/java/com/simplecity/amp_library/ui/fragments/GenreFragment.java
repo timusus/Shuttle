@@ -72,7 +72,7 @@ public class GenreFragment extends BaseFragment implements
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        genreClickListener = (GenreClickListener) getActivity();
+//        genreClickListener = (GenreClickListener) getActivity();
     }
 
     @Override

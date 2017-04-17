@@ -16,7 +16,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
-import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.format.PrefixHighlighter;
@@ -45,8 +44,6 @@ public class SearchActivity extends BaseActivity implements
 
     private static final String TAG = "SearchActivity";
 
-    private SystemBarTintManager tintManager;
-
     private Toolbar toolbar;
 
     private FastScrollRecyclerView recyclerView;
@@ -74,7 +71,6 @@ public class SearchActivity extends BaseActivity implements
 
         if (!ShuttleUtils.hasLollipop() && ShuttleUtils.hasKitKat()) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            tintManager = new SystemBarTintManager(this);
         }
         if (!ShuttleUtils.hasKitKat()) {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -133,7 +129,6 @@ public class SearchActivity extends BaseActivity implements
             }
         });
 
-        ThemeUtils.themeStatusBar(this, tintManager);
         ThemeUtils.themeSearchView(this, searchView);
         ThemeUtils.themeRecyclerView(recyclerView);
 

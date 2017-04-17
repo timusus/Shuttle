@@ -33,7 +33,7 @@ import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.sql.databases.BlacklistHelper;
-import com.simplecity.amp_library.ui.activities.MainActivity;
+import com.simplecity.amp_library.ui.activities.MainActivity2;
 import com.simplecity.amp_library.ui.adapters.QueueAdapter;
 import com.simplecity.amp_library.ui.adapters.SongAdapter;
 import com.simplecity.amp_library.ui.modelviews.SongView;
@@ -212,8 +212,8 @@ public class QueueFragment extends BaseFragment implements
             getActivity().unregisterReceiver(receiver);
         }
 
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).setScrollableView(null);
+        if (getActivity() instanceof MainActivity2) {
+            ((MainActivity2) getActivity()).setScrollableView(null);
         }
 
         super.onPause();
@@ -233,8 +233,8 @@ public class QueueFragment extends BaseFragment implements
         filter.addAction(MusicService.InternalIntents.SERVICE_CONNECTED);
         getActivity().registerReceiver(receiver, filter);
 
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).setScrollableView(recyclerView);
+        if (getActivity() instanceof MainActivity2) {
+            ((MainActivity2) getActivity()).setScrollableView(recyclerView);
         }
 
         updateTrackInfo();

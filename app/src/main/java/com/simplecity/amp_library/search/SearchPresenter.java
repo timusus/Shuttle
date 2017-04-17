@@ -25,7 +25,7 @@ import com.simplecity.amp_library.model.Header;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.tagger.TaggerDialog;
-import com.simplecity.amp_library.ui.activities.MainActivity;
+import com.simplecity.amp_library.ui.activities.MainActivity2;
 import com.simplecity.amp_library.ui.adapters.SearchAdapter;
 import com.simplecity.amp_library.ui.modelviews.AlbumArtistView;
 import com.simplecity.amp_library.ui.modelviews.AlbumView;
@@ -179,7 +179,7 @@ class SearchPresenter extends Presenter<SearchView> implements
         SearchView view = getView();
 
         Intent intent = new Intent();
-        intent.putExtra(MainActivity.ARG_MODEL, albumArtist);
+        intent.putExtra(MainActivity2.ARG_MODEL, albumArtist);
         if (view != null) {
             view.finish(Activity.RESULT_OK, intent);
         }
@@ -191,7 +191,7 @@ class SearchPresenter extends Presenter<SearchView> implements
         SearchView view = getView();
 
         Intent intent = new Intent();
-        intent.putExtra(MainActivity.ARG_MODEL, album);
+        intent.putExtra(MainActivity2.ARG_MODEL, album);
         if (view != null) {
             view.finish(Activity.RESULT_OK, intent);
         }

@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
+
+        <item name="list_selector">@drawable/list_selector_dark</item>
+        <item name="breadcrumb_divider">@drawable/ic_breadcrumb_divider_white</item>
+        <item name="circle_border">@color/grey_250</item>
+        <item name="listDividerColor">@color/list_divider_dark</item>
+        <item name="bg_card">@color/bg_card_light</item>
+
+
+
+    </style>
+
     <style name="TextAppearance.Material.Notification.Title.Inverse" parent="@android:style/TextAppearance.Material.Notification.Title">
         <item name="android:textColor">#ffffff</item>
         <item name="android:textSize">@dimen/notification_title_text_size</item>

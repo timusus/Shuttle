@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.android.vending.billing.utils.IabHelper;
 import com.android.vending.billing.utils.IabResult;
 import com.android.vending.billing.utils.Purchase;
-import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.simplecity.amp_library.IabManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
@@ -34,8 +33,6 @@ public class SettingsActivity extends BaseActivity {
     private static final String TAG = "SettingsActivity";
 
     public static final String EXTRA_SUPPORT = "support";
-
-    private SystemBarTintManager mTintManager;
 
     SharedPreferences mPrefs;
 
@@ -56,7 +53,6 @@ public class SettingsActivity extends BaseActivity {
 
         if (!ShuttleUtils.hasLollipop() && ShuttleUtils.hasKitKat()) {
             getWindow().setFlags(FLAG_TRANSLUCENT_STATUS, FLAG_TRANSLUCENT_STATUS);
-            mTintManager = new SystemBarTintManager(this);
         }
         if (!ShuttleUtils.hasKitKat()) {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -75,7 +71,6 @@ public class SettingsActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ThemeUtils.themeActionBar(this);
-        ThemeUtils.themeStatusBar(this, mTintManager);
 
         if (savedInstanceState == null) {
             if (!getIntent().getBooleanExtra(EXTRA_SUPPORT, false)) {

@@ -113,7 +113,7 @@ public class AlbumArtistFragment extends BaseFragment implements
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        albumArtistClickListener = (AlbumArtistClickListener) getActivity();
+//        albumArtistClickListener = (AlbumArtistClickListener) getActivity();
     }
 
     @Override

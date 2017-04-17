@@ -116,7 +116,7 @@ public class AlbumFragment extends BaseFragment implements
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        albumClickListener = (AlbumClickListener) getActivity();
+//        albumClickListener = (AlbumClickListener) getActivity();
     }
 
     @Override
