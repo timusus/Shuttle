@@ -330,7 +330,7 @@ public class FileHelper {
             "aac", "ts", "flac", "mid",
             "xmf", "mxmf", "midi", "rtttl",
             "rtx", "ota", "imy", "ogg",
-            "mkv", "wav"
+            "opus", "mkv", "wav"
     };
 
     /**
