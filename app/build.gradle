@@ -88,9 +88,13 @@ android {
         }
 
         release {
+
             minifyEnabled true
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), file('proguard-project.txt')
+
+            // For further optimisation, use 'proguard-android-optimize.txt' instead of 'proguard-android.txt'.
+            // Last time I checked, it reduced by another ~5000 methods.
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), file('proguard-rules.pro')
             signingConfig signingConfigs.release
 
             buildConfigField("String", "LASTFM_API_KEY", "\"${getProperty(getProperties('../private.properties'), 'LASTFM_API_KEY')}\"")
