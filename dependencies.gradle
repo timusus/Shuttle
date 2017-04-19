@@ -20,20 +20,20 @@ ext.versions = [
         // /////////////////////////////////////////////////////////////////////////
 
         androidGradlePlugin    : "2.3.1",
-        dexcountGradlePlugin   : "0.6.1",
-        retrolambdaGradlePlugin: "3.4.0",
+        dexcountGradlePlugin   : "0.6.4",
+        retrolambdaGradlePlugin: "3.6.0",
         fabricGradlePlugin     : "1.+",
         googleServicesPlugin   : "3.0.0",
-        playPublisher          : "1.2.0-beta1",
+        playPublisher          : "1.2.0",
 
         // //////////////////////////////////////////////////////////////////////////
         // Google lib versions
         // /////////////////////////////////////////////////////////////////////////
 
-        supportLib             : "25.0.1",
-        firebaseCore           : "10.0.0",
-        chromecast             : "10.0.0",
-        constraintLayout       : "1.0.0",
+        supportLib             : "25.3.1",
+        firebaseCore           : "10.2.1",
+        chromecast             : "10.2.1",
+        constraintLayout       : "1.0.2",
 
         // //////////////////////////////////////////////////////////////////////////
         // Square lib versions
@@ -41,10 +41,10 @@ ext.versions = [
 
         haha                   : "2.0.3",
         leakCanary             : "1.5",
-        okio                   : "1.11.0",
-        okhttp                 : "3.5.0",
-        retrofit               : "2.1.0",
-        retrofitGson           : "2.1.0",
+        okio                   : "1.12.0",
+        okhttp                 : "3.7.0",
+        retrofit               : "2.2.0",
+        retrofitGson           : "2.2.0",
         sqlBrite               : "1.1.1",
 
         // //////////////////////////////////////////////////////////////////////////
@@ -57,8 +57,8 @@ ext.versions = [
         fastScroll             : "1.0.14",
         glide                  : "3.8.0-SNAPSHOT",
         glideOkhttp            : "1.4.0@aar",
-        lambdaBackport         : "2.3.0",
-        materialDialogs        : "0.9.1.0@aar",
+        lambdaBackport         : "2.5.1",
+        materialDialogs        : "0.9.4.3",
         multiSelViewHolder     : "0.2",
         permiso                : "0.3.0",
         rxAndroid              : "1.2.1",
@@ -68,7 +68,7 @@ ext.versions = [
         rxJava                 : "1.2.0",
         rxRelay                : "1.2.0",
         rxReceivers            : "0.1.0",
-        streams                : "1.1.3",
+        streams                : "1.1.7",
 
         // //////////////////////////////////////////////////////////////////////////
         // MultiDex
