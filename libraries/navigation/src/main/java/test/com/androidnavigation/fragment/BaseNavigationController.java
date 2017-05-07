@@ -32,10 +32,7 @@ public abstract class BaseNavigationController extends Fragment
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState == null) {
-            getChildFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.container, getRootViewControllerInfo().instantiateFragment(getContext()), getRootViewControllerInfo().rootViewControllerTag)
-                    .commit();
+            addRootFragment();
         }
     }
 
@@ -43,6 +40,13 @@ public abstract class BaseNavigationController extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.navigation_fragment, container, false);
+    }
+
+    protected void addRootFragment() {
+        getChildFragmentManager()
+                .beginTransaction()
+                .add(R.id.mainContainer, getRootViewControllerInfo().instantiateFragment(getContext()), getRootViewControllerInfo().rootViewControllerTag)
+                .commit();
     }
 
     @Override
@@ -73,29 +77,24 @@ public abstract class BaseNavigationController extends Fragment
     }
 
     @Override
-    public void pushViewController(@NonNull BaseController controller, @Nullable String tag, @NonNull List<Pair<View, String>> sharedElements) {
+    public void pushViewController(@NonNull BaseController controller, @Nullable String tag, @Nullable List<Pair<View, String>> sharedElements) {
         FragmentTransaction fragmentTransaction = getChildFragmentManager()
                 .beginTransaction();
 
-        for (Pair<View, String> pair : sharedElements) {
-            // For some reason the transition name for some views is being set to null somewhere. Fix that here.
-//            ViewCompat.setTransitionName(pair.first, pair.second);
-
-            fragmentTransaction.addSharedElement(pair.first, pair.second);
+        if (sharedElements != null) {
+            for (Pair<View, String> pair : sharedElements) {
+                fragmentTransaction.addSharedElement(pair.first, pair.second);
+            }
         }
 
         fragmentTransaction.addToBackStack(null)
-                .replace(R.id.container, controller, tag)
+                .replace(R.id.mainContainer, controller, tag)
                 .commit();
     }
 
     @Override
     public void pushViewController(@NonNull BaseController controller, @Nullable String tag) {
-        getChildFragmentManager()
-                .beginTransaction()
-                .addToBackStack(null)
-                .replace(R.id.container, controller, tag)
-                .commit();
+        pushViewController(controller, tag, null);
     }
 
     @Override

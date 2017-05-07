@@ -7,11 +7,11 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,43 +32,36 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
-import com.simplecity.amp_library.sql.databases.BlacklistHelper;
-import com.simplecity.amp_library.ui.activities.MainActivity2;
-import com.simplecity.amp_library.ui.adapters.QueueAdapter;
-import com.simplecity.amp_library.ui.adapters.SongAdapter;
 import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.recyclerview.ItemTouchHelperCallback;
-import com.simplecity.amp_library.ui.recyclerview.ScrollBlockingRecyclerView;
 import com.simplecity.amp_library.utils.ColorUtils;
 import com.simplecity.amp_library.utils.DialogUtils;
-import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.ThemeUtils;
-import com.simplecityapps.recyclerview_fastscroll.interfaces.OnFastScrollStateChangeListener;
+import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
+import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
+import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.List;
 
 import rx.Observable;
+import test.com.multisheetview.ui.view.MultiSheetView;
 
 public class QueueFragment extends BaseFragment implements
-        MusicUtils.Defs,
-        SongAdapter.SongListener,
-        RecyclerView.RecyclerListener {
+        MusicUtils.Defs {
 
     private static final String TAG = "QueueFragment";
 
     private SharedPreferences prefs;
 
-    private ScrollBlockingRecyclerView recyclerView;
+    private FastScrollRecyclerView recyclerView;
 
     private ItemTouchHelper itemTouchHelper;
 
-    QueueAdapter songAdapter;
-
-    private View header;
+    private ViewModelAdapter adapter;
 
     private TextView lineOne;
     private TextView lineTwo;
@@ -109,8 +102,7 @@ public class QueueFragment extends BaseFragment implements
 
         setHasOptionsMenu(true);
 
-        songAdapter = new QueueAdapter();
-        songAdapter.setListener(this);
+        adapter = new ViewModelAdapter();
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
 
@@ -122,7 +114,7 @@ public class QueueFragment extends BaseFragment implements
                     switch (action) {
                         case MusicService.InternalIntents.META_CHANGED:
                             updateTrackInfo();
-                            songAdapter.notifyDataSetChanged();
+                            adapter.notifyDataSetChanged();
                             break;
                         case MusicService.InternalIntents.QUEUE_CHANGED:
                             if (intent.getBooleanExtra(MusicService.FROM_USER, false)) {
@@ -161,40 +153,25 @@ public class QueueFragment extends BaseFragment implements
 
         View rootView = inflater.inflate(R.layout.fragment_queue, container, false);
 
-        header = rootView.findViewById(R.id.header);
-        if (ShuttleUtils.isLandscape() || ShuttleUtils.isTablet()) {
-            header.setVisibility(View.GONE);
-        } else {
-            header.setVisibility(View.VISIBLE);
-        }
+        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
 
         lineOne = (TextView) rootView.findViewById(R.id.line1);
         lineTwo = (TextView) rootView.findViewById(R.id.line2);
 
-        recyclerView = (ScrollBlockingRecyclerView) rootView.findViewById(R.id.recyclerView);
+        recyclerView = (FastScrollRecyclerView) rootView.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setRecyclerListener(this);
-        recyclerView.setAdapter(songAdapter);
-        recyclerView.setStateChangeListener(new OnFastScrollStateChangeListener() {
-            @Override
-            public void onFastScrollStart() {
-                recyclerView.setBlockScroll(false);
-            }
-
-            @Override
-            public void onFastScrollStop() {
-                recyclerView.setBlockScroll(true);
-            }
-        });
+        recyclerView.setRecyclerListener(new RecyclerListener());
+        recyclerView.setAdapter(adapter);
 
         itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback((fromPosition, toPosition) -> {
-            songAdapter.moveItem(fromPosition, toPosition);
+            adapter.moveItem(fromPosition, toPosition);
         }, (fromPosition, toPosition) -> {
             MusicUtils.moveQueueItem(fromPosition, toPosition);
-            recyclerView.setBlockScroll(true);
+//            recyclerView.setBlockScroll(true);
         }, () -> {
             //We've finished our drag event. Allow the sliding up panel to intercept touch events
-            recyclerView.setBlockScroll(true);
+//            recyclerView.setBlockScroll(true);
         }));
 
         itemTouchHelper.attachToRecyclerView(recyclerView);
@@ -207,13 +184,16 @@ public class QueueFragment extends BaseFragment implements
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        MultiSheetView.setScrollableView(recyclerView);
+    }
+
+    @Override
     public void onPause() {
         if (receiver != null) {
             getActivity().unregisterReceiver(receiver);
-        }
-
-        if (getActivity() instanceof MainActivity2) {
-            ((MainActivity2) getActivity()).setScrollableView(null);
         }
 
         super.onPause();
@@ -223,7 +203,7 @@ public class QueueFragment extends BaseFragment implements
     public void onResume() {
         super.onResume();
 
-        songAdapter.notifyItemRangeChanged(0, songAdapter.getItemCount());
+        adapter.notifyItemRangeChanged(0, adapter.getItemCount());
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(MusicService.InternalIntents.META_CHANGED);
@@ -232,10 +212,6 @@ public class QueueFragment extends BaseFragment implements
         filter.addAction(MusicService.InternalIntents.PLAY_STATE_CHANGED);
         filter.addAction(MusicService.InternalIntents.SERVICE_CONNECTED);
         getActivity().registerReceiver(receiver, filter);
-
-        if (getActivity() instanceof MainActivity2) {
-            ((MainActivity2) getActivity()).setScrollableView(recyclerView);
-        }
 
         updateTrackInfo();
 
@@ -252,17 +228,17 @@ public class QueueFragment extends BaseFragment implements
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {
 
-                int count = songAdapter.items.size();
-                songAdapter.items.clear();
-                songAdapter.notifyItemRangeRemoved(0, count);
-                songAdapter.items.addAll(Stream.of(MusicUtils.getQueue())
+                int count = adapter.items.size();
+                adapter.items.clear();
+                adapter.notifyItemRangeRemoved(0, count);
+                adapter.items.addAll(Stream.of(MusicUtils.getQueue())
                         .map(song -> {
-                            SongView songView = new SongView(song, multiSelector, requestManager);
+                            SongView songView = new SongView(song, requestManager);
                             songView.setShowAlbumArt(true);
                             songView.setEditable(true);
                             return songView;
                         }).collect(Collectors.toList()));
-                songAdapter.notifyItemRangeInserted(0, songAdapter.items.size());
+                adapter.notifyItemRangeInserted(0, adapter.items.size());
 
                 scrollToCurrentItem();
             }
@@ -294,84 +270,77 @@ public class QueueFragment extends BaseFragment implements
             }
         });
 
-        if (header != null) {
-            header.setBackgroundColor(ColorUtils.getPrimaryColor());
-        }
+//        if (header != null) {
+//            header.setBackgroundColor(ColorUtils.getPrimaryColor());
+//        }
     }
 
-    @Override
-    public void onItemClick(View v, int position, Song song) {
-        if (inActionMode) {
-            multiSelector.setSelected(position, songAdapter.getItemId(position), !multiSelector.isSelected(position, songAdapter.getItemId(position)));
-            if (multiSelector.getSelectedPositions().size() == 0) {
-                if (actionMode != null) {
-                    actionMode.finish();
-                }
-            }
-        } else {
-            MusicUtils.setQueuePosition(position);
-            songAdapter.notifyDataSetChanged();
-        }
-    }
+//    @Override
+//    public void onItemClick(View v, int position, Song song) {
+//        if (inActionMode) {
+//            multiSelector.setSelected(position, songAdapter.getItemId(position), !multiSelector.isSelected(position, songAdapter.getItemId(position)));
+//            if (multiSelector.getSelectedPositions().size() == 0) {
+//                if (actionMode != null) {
+//                    actionMode.finish();
+//                }
+//            }
+//        } else {
+//            MusicUtils.setQueuePosition(position);
+//            songAdapter.notifyDataSetChanged();
+//        }
+//    }
 
-    @Override
-    public void onOverflowClick(View v, int position, Song song) {
-        PopupMenu menu = new PopupMenu(QueueFragment.this.getActivity(), v);
-        MenuUtils.addQueueMenuOptions(getActivity(), menu);
-        MenuUtils.addClickHandler((AppCompatActivity) getActivity(), menu, song, item -> {
-            switch (item.getItemId()) {
-                case REMOVE: {
-                    MusicUtils.removeFromQueue(song, true);
-                    songAdapter.removeItem(position);
-                    return true;
-                }
-                case BLACKLIST: {
-                    BlacklistHelper.addToBlacklist(song);
-                    MusicUtils.removeFromQueue(song, true);
-                    songAdapter.removeItem(position);
-                    return true;
-                }
-            }
-            return false;
-        });
+//    @Override
+//    public void onOverflowClick(View v, int position, Song song) {
+//        PopupMenu menu = new PopupMenu(QueueFragment.this.getActivity(), v);
+//        MenuUtils.addQueueMenuOptions(getActivity(), menu);
+//        MenuUtils.addClickHandler((AppCompatActivity) getActivity(), menu, song, item -> {
+//            switch (item.getItemId()) {
+//                case REMOVE: {
+//                    MusicUtils.removeFromQueue(song, true);
+//                    songAdapter.removeItem(position);
+//                    return true;
+//                }
+//                case BLACKLIST: {
+//                    BlacklistHelper.addToBlacklist(song);
+//                    MusicUtils.removeFromQueue(song, true);
+//                    songAdapter.removeItem(position);
+//                    return true;
+//                }
+//            }
+//            return false;
+//        });
+//
+//        menu.show();
+//    }
 
-        menu.show();
-    }
+//    @Override
+//    public void onAlbumLongClick(View v, int position, Song song) {
+//        if (inActionMode) {
+//            return;
+//        }
+//
+//        if (multiSelector.getSelectedPositions().size() == 0) {
+//            actionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(mActionModeCallback);
+//            inActionMode = true;
+//        }
+//
+//        multiSelector.setSelected(position, songAdapter.getItemId(position), !multiSelector.isSelected(position, songAdapter.getItemId(position)));
+//    }
 
-    @Override
-    public void onLongClick(View v, int position, Song song) {
-        if (inActionMode) {
-            return;
-        }
-
-        if (multiSelector.getSelectedPositions().size() == 0) {
-            actionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(mActionModeCallback);
-            inActionMode = true;
-        }
-
-        multiSelector.setSelected(position, songAdapter.getItemId(position), !multiSelector.isSelected(position, songAdapter.getItemId(position)));
-    }
-
-    @Override
-    public void onShuffleClick() {
-        //Nothing to do
-    }
-
-    @Override
-    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-        if (itemTouchHelper != null) {
-            //We've started a drag event, so don't allow the SlidingUpPanel to intercept touch events
-            recyclerView.setBlockScroll(false);
-            itemTouchHelper.startDrag(viewHolder);
-        }
-    }
-
-    @Override
-    public void onViewRecycled(RecyclerView.ViewHolder holder) {
-        if (holder.getAdapterPosition() != -1) {
-            songAdapter.items.get(holder.getAdapterPosition()).recycle(holder);
-        }
-    }
+//    @Override
+//    public void onShuffleClick() {
+//        //Nothing to do
+//    }
+//
+//    @Override
+//    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+//        if (itemTouchHelper != null) {
+//            //We've started a drag event, so don't allow the SlidingUpPanel to intercept touch events
+////            recyclerView.setBlockScroll(false);
+//            itemTouchHelper.onStartDrag(viewHolder);
+//        }
+//    }
 
     public void scrollToCurrentItem() {
         recyclerView.scrollToPosition(MusicUtils.getQueuePosition());
@@ -391,9 +360,11 @@ public class QueueFragment extends BaseFragment implements
         }
 
         private List<Song> getCheckedSongs() {
-            return Stream.of(multiSelector.getSelectedPositions())
-                    .map(i -> songAdapter.getSong(i))
-                    .collect(Collectors.toList());
+            return null;
+
+//            Stream.of(multiSelector.getSelectedPositions())
+//                    .map(i -> adapter.getSong(i))
+//                    .collect(Collectors.toList());
         }
 
         @Override

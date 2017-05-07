@@ -83,7 +83,7 @@ public class NavigationDrawerFragment extends BaseFragment implements
     private boolean mFromSavedInstanceState;
     boolean mUserLearnedDrawer;
 
-    private DrawerClickListener drawerClickListener;
+//    private DrawerClickListener drawerClickListener;
 
     private SharedPreferences mPrefs;
     private SharedPreferences.OnSharedPreferenceChangeListener mSharedPreferenceChangeListener;
@@ -100,7 +100,7 @@ public class NavigationDrawerFragment extends BaseFragment implements
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        drawerClickListener = (DrawerClickListener) getActivity();
+//        drawerClickListener = (DrawerClickListener) getActivity();
     }
 
     @Override
@@ -218,7 +218,7 @@ public class NavigationDrawerFragment extends BaseFragment implements
                             return list;
                         })
                         .flatMap(playlists -> Observable.from(playlists)
-                                .flatMap(playlist -> playlist.getSongsObservable(getContext())
+                                .flatMap(playlist -> playlist.getSongsObservable()
                                         .flatMap(songs -> {
                                             if (playlist.type == Playlist.Type.USER_CREATED
                                                     || playlist.type == Playlist.Type.RECENTLY_ADDED
@@ -414,14 +414,14 @@ public class NavigationDrawerFragment extends BaseFragment implements
             mAdapter.setSelectedItem(mCurrentSelectedGroupItem, null);
         }
         Handler handler = new Handler();
-        handler.postDelayed(() -> drawerClickListener.onItemClicked(drawerGroupItem), 200);
+//        handler.postDelayed(() -> drawerClickListener.onItemClicked(drawerGroupItem), 200);
     }
 
     @Override
     public void onPlaylistItemClick(final DrawerGroupItem drawerGroupItem, final Playlist playlist) {
         mDrawerLayout.closeDrawer(GravityCompat.START);
         Handler handler = new Handler();
-        handler.postDelayed(() -> drawerClickListener.onItemClicked(playlist), 200);
+//        handler.postDelayed(() -> drawerClickListener.onItemClicked(playlist), 200);
     }
 
     @Override

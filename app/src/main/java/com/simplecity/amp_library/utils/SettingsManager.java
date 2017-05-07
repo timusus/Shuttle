@@ -7,7 +7,7 @@ import android.preference.PreferenceManager;
 import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
-import com.simplecity.amp_library.ui.modelviews.ViewType;
+import com.simplecity.amp_library.ui.adapters.ViewType;
 
 public class SettingsManager {
 

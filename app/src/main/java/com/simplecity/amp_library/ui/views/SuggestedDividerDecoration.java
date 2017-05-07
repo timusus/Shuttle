@@ -6,7 +6,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.simplecity.amp_library.ui.modelviews.ViewType;
+import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.utils.ResourceUtils;
 
 public class SuggestedDividerDecoration extends RecyclerView.ItemDecoration {

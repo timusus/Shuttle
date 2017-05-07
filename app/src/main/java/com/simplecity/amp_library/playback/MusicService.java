@@ -2754,7 +2754,7 @@ public class MusicService extends Service {
     }
 
     public Observable<Boolean> isFavorite() {
-        return PlaylistUtils.isFavorite(this, getSong());
+        return PlaylistUtils.isFavorite(getSong());
     }
 
     public boolean isTimerActive() {

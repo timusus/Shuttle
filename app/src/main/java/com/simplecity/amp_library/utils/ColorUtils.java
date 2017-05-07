@@ -109,7 +109,7 @@ public class ColorUtils {
         }
     }
 
-    public static int getPrimaryColorDark(Context context) {
+    public static int getPrimaryColorDark() {
         int primaryColor = getPrimaryColor();
         return ColorUtils.getColorDark(primaryColor);
     }

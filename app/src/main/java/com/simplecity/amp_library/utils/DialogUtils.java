@@ -43,7 +43,6 @@ import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.http.HttpClient;
 import com.simplecity.amp_library.lastfm.LastFmAlbum;
 import com.simplecity.amp_library.lastfm.LastFmArtist;
-import com.simplecity.amp_library.model.AdaptableItem;
 import com.simplecity.amp_library.model.BlacklistedSong;
 import com.simplecity.amp_library.model.FileObject;
 import com.simplecity.amp_library.model.Song;
@@ -51,11 +50,9 @@ import com.simplecity.amp_library.sql.databases.BlacklistHelper;
 import com.simplecity.amp_library.sql.databases.WhitelistHelper;
 import com.simplecity.amp_library.sql.providers.PlayCountTable;
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
-import com.simplecity.amp_library.ui.activities.MainActivity2;
+import com.simplecity.amp_library.ui.activities.MainActivity;
 import com.simplecity.amp_library.ui.activities.SettingsActivity;
-import com.simplecity.amp_library.ui.adapters.BlacklistAdapter;
 import com.simplecity.amp_library.ui.adapters.ColorAdapter;
-import com.simplecity.amp_library.ui.adapters.WhitelistAdapter;
 import com.simplecity.amp_library.ui.fragments.SettingsFragment;
 import com.simplecity.amp_library.ui.modelviews.BlacklistView;
 import com.simplecity.amp_library.ui.modelviews.ColorView;
@@ -63,6 +60,8 @@ import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.WhitelistView;
 import com.simplecity.amp_library.ui.views.CustomCheckBox;
 import com.simplecity.amp_library.ui.views.CustomColorPicker;
+import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
+import com.simplecityapps.recycler_adapter.model.ViewModel;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -172,7 +171,7 @@ public class DialogUtils {
 
         ColorAdapter colorAdapter = new ColorAdapter();
 
-        List<AdaptableItem> colorViews = new ArrayList<>();
+        List<ViewModel> colorViews = new ArrayList<>();
         for (int i = 0, length = mainColors.length; i < length; i++) {
             ColorView colorView = new ColorView(mainColors[i]);
             boolean selected = false;
@@ -193,7 +192,7 @@ public class DialogUtils {
             if (isSubColor) {
                 colorAdapter.setSelectedPosition(position);
             } else {
-                List<AdaptableItem> subColorViews = new ArrayList<>();
+                List<ViewModel> subColorViews = new ArrayList<>();
                 for (int i = 0, length = subColors[position].length; i < length; i++) {
                     ColorView colorView = new ColorView(subColors[position][i]);
                     colorView.selected = colorView.color == selectedColor;
@@ -225,7 +224,7 @@ public class DialogUtils {
                 .positiveText(R.string.button_done)
                 .onPositive((dialog, which) -> {
                     int color = selectedColor;
-                    for (AdaptableItem item : colorAdapter.items) {
+                    for (ViewModel item : colorAdapter.items) {
                         if (((ColorView) item).selected) {
                             color = ((ColorView) item).color;
                             break;
@@ -379,10 +378,11 @@ public class DialogUtils {
                 .content(R.string.restart_message)
                 .positiveText(R.string.restart_button)
                 .onPositive((materialDialog, dialogAction) -> {
-                    Intent intent = new Intent(context, MainActivity2.class);
-                    ComponentName componentNAme = intent.getComponent();
-                    Intent mainIntent = IntentCompat.makeRestartActivityTask(componentNAme);
-                    context.startActivity(mainIntent);
+                    //Todo:
+//                    Intent intent = new Intent(context, MainActivity2.class);
+//                    ComponentName componentNAme = intent.getComponent();
+//                    Intent mainIntent = IntentCompat.makeRestartActivityTask(componentNAme);
+//                    context.startActivity(mainIntent);
                 });
         if (!((Activity) context).isFinishing()) {
             builder.show();
@@ -511,7 +511,7 @@ public class DialogUtils {
                 .content(context.getResources().getString(R.string.upgraded_message))
                 .positiveText(R.string.restart_button)
                 .onPositive((materialDialog, dialogAction) -> {
-                    Intent intent = new Intent(context, MainActivity2.class);
+                    Intent intent = new Intent(context, MainActivity.class);
                     ComponentName componentNAme = intent.getComponent();
                     Intent mainIntent = IntentCompat.makeRestartActivityTask(componentNAme);
                     context.startActivity(mainIntent);
@@ -634,17 +634,19 @@ public class DialogUtils {
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        final BlacklistAdapter blacklistAdapter = new BlacklistAdapter();
-        blacklistAdapter.setBlackListListener((v, position, song) -> {
-            BlacklistHelper.deleteSong(song.id);
-            if (blacklistAdapter.items.size() == 0) {
-                dialog.dismiss();
-            }
-        });
+        final ViewModelAdapter blacklistAdapter = new ViewModelAdapter();
+
         recyclerView.setAdapter(blacklistAdapter);
 
         Observable<List<Song>> songsObservable = SqlBriteUtils.createContinuousQuery(ShuttleApplication.getInstance(), Song::new, Song.getQuery()).first();
         Observable<List<BlacklistedSong>> blacklistObservable = BlacklistHelper.getBlacklistSongsObservable();
+
+        BlacklistView.ClickListener listener = song -> {
+            BlacklistHelper.deleteSong(song.id);
+            if (blacklistAdapter.items.size() == 0) {
+                dialog.dismiss();
+            }
+        };
 
         Subscription subscription = Observable.combineLatest(songsObservable, blacklistObservable, (songs, blacklistedSongs) ->
                 Stream.of(songs)
@@ -655,7 +657,11 @@ public class DialogUtils {
                         .sorted((a, b) -> ComparisonUtils.compareInt(a.track, b.track))
                         .sorted((a, b) -> ComparisonUtils.compareInt(a.discNumber, b.discNumber))
                         .sorted((a, b) -> ComparisonUtils.compare(a.albumName, b.albumName))
-                        .map(song -> (AdaptableItem) new BlacklistView(song))
+                        .map(song -> {
+                            BlacklistView blacklistView = new BlacklistView(song);
+                            blacklistView.setClickListener(listener);
+                            return (ViewModel) blacklistView;
+                        })
                         .collect(Collectors.toList()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(blacklistViews -> {
@@ -689,27 +695,31 @@ public class DialogUtils {
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        final WhitelistAdapter whitelistadapter = new WhitelistAdapter();
-        whitelistadapter.setWhitelistListener((v, position, songWhitelist) -> {
-            WhitelistHelper.deleteFolder(songWhitelist);
-            whitelistadapter.removeItem(position);
-            if (whitelistadapter.items.size() == 0) {
+        final ViewModelAdapter whitelistAdapter = new ViewModelAdapter();
+
+        recyclerView.setAdapter(whitelistAdapter);
+
+        WhitelistView.ClickListener listener = whitelistFolder -> {
+            WhitelistHelper.deleteFolder(whitelistFolder);
+            if (whitelistAdapter.items.size() == 0) {
                 dialog.dismiss();
             }
-        });
-
-        recyclerView.setAdapter(whitelistadapter);
+        };
 
         Subscription subscription = WhitelistHelper.getWhitelistFolders()
                 .map(whitelistFolders -> Stream.of(whitelistFolders)
-                        .map(folder -> (AdaptableItem) new WhitelistView(folder))
+                        .map(folder -> {
+                            WhitelistView whitelistView = new WhitelistView(folder);
+                            whitelistView.setClickListener(listener);
+                            return (ViewModel) whitelistView;
+                        })
                         .collect(Collectors.toList()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(whitelistViews -> {
                     if (whitelistViews.size() == 0) {
-                        whitelistadapter.addItem(0, new EmptyView(R.string.whitelist_empty));
+                        whitelistAdapter.addItem(0, new EmptyView(R.string.whitelist_empty));
                     } else {
-                        whitelistadapter.setItems(whitelistViews);
+                        whitelistAdapter.setItems(whitelistViews);
                     }
                 });
 

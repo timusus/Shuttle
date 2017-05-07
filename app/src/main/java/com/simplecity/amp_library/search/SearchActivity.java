@@ -19,7 +19,7 @@ import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.format.PrefixHighlighter;
-import com.simplecity.amp_library.model.AdaptableItem;
+import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.activities.BaseActivity;
 import com.simplecity.amp_library.ui.adapters.SearchAdapter;
@@ -77,7 +77,7 @@ public class SearchActivity extends BaseActivity implements
         }
 
         if (SettingsManager.getInstance().canTintNavBar()) {
-            getWindow().setNavigationBarColor(ColorUtils.getPrimaryColorDark(this));
+            getWindow().setNavigationBarColor(ColorUtils.getPrimaryColorDark());
         }
 
         super.onCreate(savedInstanceState);
@@ -168,7 +168,7 @@ public class SearchActivity extends BaseActivity implements
     }
 
     @Override
-    public Subscription setItems(@NonNull List<AdaptableItem> items) {
+    public Subscription setItems(@NonNull List<ViewModel> items) {
         Subscription subscription = adapter.setItems(items);
         recyclerView.scrollToPosition(0);
         return subscription;
@@ -190,7 +190,7 @@ public class SearchActivity extends BaseActivity implements
     }
 
     @Override
-    public void showEmptyPlaylistToast() {
+    public void showToast(String message) {
         Toast.makeText(this, (ShuttleApplication.getInstance().getString(R.string.emptyplaylist)), Toast.LENGTH_SHORT).show();
     }
 

@@ -33,7 +33,6 @@ import com.simplecity.amp_library.interfaces.BackPressListener;
 import com.simplecity.amp_library.interfaces.Breadcrumb;
 import com.simplecity.amp_library.interfaces.BreadcrumbListener;
 import com.simplecity.amp_library.interfaces.FileType;
-import com.simplecity.amp_library.model.AdaptableItem;
 import com.simplecity.amp_library.model.BaseFileObject;
 import com.simplecity.amp_library.model.FileObject;
 import com.simplecity.amp_library.model.FolderObject;
@@ -41,8 +40,6 @@ import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.sql.databases.WhitelistHelper;
 import com.simplecity.amp_library.tagger.TaggerDialog;
-import com.simplecity.amp_library.ui.activities.MainActivity2;
-import com.simplecity.amp_library.ui.adapters.FolderAdapter;
 import com.simplecity.amp_library.ui.modelviews.BreadcrumbsView;
 import com.simplecity.amp_library.ui.modelviews.FolderView;
 import com.simplecity.amp_library.ui.views.BreadcrumbItem;
@@ -61,6 +58,8 @@ import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.SortManager;
 import com.simplecity.amp_library.utils.ThemeUtils;
 import com.simplecity.amp_library.utils.ViewUtils;
+import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
+import com.simplecityapps.recycler_adapter.model.ViewModel;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -76,7 +75,7 @@ public class FolderFragment extends BaseFragment implements
         MusicUtils.Defs,
         BreadcrumbListener,
         BackPressListener,
-        FolderAdapter.Listener {
+        FolderView.ClickListener {
 
     private static final String TAG = "FolderFragment";
 
@@ -88,7 +87,7 @@ public class FolderFragment extends BaseFragment implements
 
     private RecyclerView recyclerView;
 
-    FolderAdapter adapter;
+    ViewModelAdapter adapter;
 
     private Toolbar toolbar;
 
@@ -135,12 +134,14 @@ public class FolderFragment extends BaseFragment implements
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if (context instanceof MainActivity2) {
-            ((MainActivity2) context).setOnBackPressedListener(this);
-            if (!(getParentFragment() != null && getParentFragment() instanceof MainFragment)) {
-                ((MainActivity2) context).onSectionAttached(getString(R.string.folders_title));
-            }
-        }
+        //Todo:
+
+//        if (context instanceof MainActivity2) {
+//            ((MainActivity2) context).setOnBackPressedListener(this);
+//            if (!(getParentFragment() != null && getParentFragment() instanceof MainFragment)) {
+//                ((MainActivity2) context).onSectionAttached(getString(R.string.folders_title));
+//            }
+//        }
     }
 
     @Override
@@ -161,8 +162,7 @@ public class FolderFragment extends BaseFragment implements
 
         prefs.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
 
-        adapter = new FolderAdapter();
-        adapter.setListener(this);
+        adapter = new ViewModelAdapter();
 
         fileBrowser = new FileBrowser();
 
@@ -273,16 +273,18 @@ public class FolderFragment extends BaseFragment implements
     @Override
     public void onDetach() {
         super.onDetach();
-        if (getActivity() instanceof MainActivity2) {
-            ((MainActivity2) getActivity()).setOnBackPressedListener(null);
-        }
+
+        //Todo:
+//        if (getActivity() instanceof MainActivity2) {
+//            ((MainActivity2) getActivity()).setOnBackPressedListener(null);
+//        }
     }
 
     private void themeUIComponents() {
 
         if (dummyStatusBar != null) {
             //noinspection ResourceAsColor
-            dummyStatusBar.setBackgroundColor(ShuttleUtils.hasLollipop() ? ColorUtils.getPrimaryColorDark(getContext()) : ColorUtils.getPrimaryColor());
+            dummyStatusBar.setBackgroundColor(ShuttleUtils.hasLollipop() ? ColorUtils.getPrimaryColorDark() : ColorUtils.getPrimaryColor());
         }
 
         if (dummyToolbar != null) {
@@ -436,21 +438,21 @@ public class FolderFragment extends BaseFragment implements
         changeDir(new File(item.getItemPath()));
     }
 
-    @Override
-    public void onCheckedChange(FolderView folderView, boolean isChecked) {
-
-        folderView.setChecked(isChecked);
-
-        if (isChecked) {
-            if (!paths.contains(folderView.baseFileObject.path)) {
-                paths.add(folderView.baseFileObject.path);
-            }
-        } else {
-            if (paths.contains(folderView.baseFileObject.path)) {
-                paths.remove(folderView.baseFileObject.path);
-            }
-        }
-    }
+//    @Override
+//    public void onCheckedChange(FolderView folderView, boolean isChecked) {
+//
+//        folderView.setChecked(isChecked);
+//
+//        if (isChecked) {
+//            if (!paths.contains(folderView.baseFileObject.path)) {
+//                paths.add(folderView.baseFileObject.path);
+//            }
+//        } else {
+//            if (paths.contains(folderView.baseFileObject.path)) {
+//                paths.remove(folderView.baseFileObject.path);
+//            }
+//        }
+//    }
 
     public void changeDir(File newDir) {
 
@@ -467,7 +469,7 @@ public class FolderFragment extends BaseFragment implements
             return fileBrowser.loadDir(new File(path));
         })
                 .map(baseFileObjects -> {
-                    List<AdaptableItem> items = Stream.of(baseFileObjects)
+                    List<ViewModel> items = Stream.of(baseFileObjects)
                             .map(baseFileObject -> {
                                 FolderView folderView = new FolderView(baseFileObject);
                                 folderView.setChecked(showCheckboxes);
@@ -517,10 +519,8 @@ public class FolderFragment extends BaseFragment implements
     }
 
     @Override
-    public void onItemClick(View v, int position, BaseFileObject fileObject) {
-
+    public void onFileObjectClick(BaseFileObject fileObject) {
         if (!isInActionMode) {
-
             if (fileObject.fileType == FileType.FILE) {
                 FileHelper.getSongList(new File(fileObject.path), false, true)
                         .observeOn(AndroidSchedulers.mainThread())
@@ -533,9 +533,8 @@ public class FolderFragment extends BaseFragment implements
                                     break;
                                 }
                             }
-                            MusicUtils.playAll(songs, index, () -> {
+                            MusicUtils.playAll(songs, index, (String message) -> {
                                 if (isAdded() && getContext() != null) {
-                                    final String message = getContext().getString(R.string.emptyplaylist);
                                     Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                                 }
                             });
@@ -549,7 +548,7 @@ public class FolderFragment extends BaseFragment implements
     }
 
     @Override
-    public void onOverflowClick(View v, int position, BaseFileObject fileObject) {
+    public void onFileObjectOverflowClick(View v, BaseFileObject fileObject) {
 
         PopupMenu menu = new PopupMenu(getActivity(), v);
 
@@ -614,7 +613,8 @@ public class FolderFragment extends BaseFragment implements
                 case QUEUE:
                     subscriptions.add(FileHelper.getSongList(new File(fileObject.path), true, false)
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(songs -> MusicUtils.addToQueue(getActivity(), songs)));
+                            .subscribe(songs -> MusicUtils.addToQueue(songs, message ->
+                                    Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show())));
                     return true;
 
                 case DELETE_ITEM:
@@ -631,7 +631,11 @@ public class FolderFragment extends BaseFragment implements
                     builder.positiveText(R.string.button_ok)
                             .onPositive((materialDialog, dialogAction) -> {
                                 if (FileHelper.deleteFile(new File(fileObject.path))) {
-                                    adapter.removeItem(position);
+                                    adapter.removeItem(Stream.of(adapter.items)
+                                            .filter(folderView -> folderView instanceof FolderView &&
+                                                    (((FolderView) folderView).baseFileObject.equals(fileObject)))
+                                            .findFirst()
+                                            .orElse(null));
                                     CustomMediaScanner.scanFiles(Collections.singletonList(fileObject.path), null);
                                 } else {
                                     Toast.makeText(getActivity(),
@@ -682,7 +686,8 @@ public class FolderFragment extends BaseFragment implements
                 case PLAY_NEXT:
                     subscriptions.add(FileHelper.getSongList(new File(fileObject.path), false, false)
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(songs -> MusicUtils.playNext(getActivity(), songs)));
+                            .subscribe(songs -> MusicUtils.playNext(songs, message ->
+                                    Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show())));
 
                     return true;
                 case PLAY_SELECTION:
@@ -690,10 +695,8 @@ public class FolderFragment extends BaseFragment implements
                     subscriptions.add(FileHelper.getSongList(new File(fileObject.path), true, fileObject.fileType == FileType.FILE)
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(songs -> {
-                                MusicUtils.playAll(songs, 0, () -> {
-                                    final String message = getContext().getString(R.string.emptyplaylist);
-                                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-                                });
+                                MusicUtils.playAll(songs, 0, (String message) ->
+                                        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show());
 
                                 if (isAdded() && progressDialog.isShowing()) {
                                     progressDialog.dismiss();
@@ -836,25 +839,25 @@ public class FolderFragment extends BaseFragment implements
 
         showCheckboxes = show;
 
-        List<AdaptableItem> folderViews = Stream.of(adapter.items)
+        List<ViewModel> folderViews = Stream.of(adapter.items)
                 .filter(adaptableItem -> adaptableItem instanceof FolderView)
                 .collect(Collectors.toList());
 
-        for (AdaptableItem adaptableItem : folderViews) {
-            ((FolderView) adaptableItem).setShowCheckboxes(showCheckboxes);
-            adapter.notifyItemChanged(adapter.items.indexOf(adaptableItem));
+        for (ViewModel viewModel : folderViews) {
+            ((FolderView) viewModel).setShowCheckboxes(showCheckboxes);
+            adapter.notifyItemChanged(adapter.items.indexOf(viewModel));
         }
     }
 
     public void changeBreadcrumbPath() {
 
-        List<AdaptableItem> breadcrumbViews = Stream.of(adapter.items)
+        List<ViewModel> breadcrumbViews = Stream.of(adapter.items)
                 .filter(adaptableItem -> adaptableItem instanceof BreadcrumbsView)
                 .collect(Collectors.toList());
 
-        for (AdaptableItem adaptableItem : breadcrumbViews) {
-            ((BreadcrumbsView) adaptableItem).setBreadcrumbsPath(currentDir);
-            adapter.notifyItemChanged(adapter.items.indexOf(adaptableItem));
+        for (ViewModel viewModel : breadcrumbViews) {
+            ((BreadcrumbsView) viewModel).setBreadcrumbsPath(currentDir);
+            adapter.notifyItemChanged(adapter.items.indexOf(viewModel));
         }
     }
 

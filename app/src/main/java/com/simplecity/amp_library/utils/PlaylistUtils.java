@@ -128,7 +128,7 @@ public class PlaylistUtils {
         progressDialog.setTitle(R.string.saving_playlist);
         progressDialog.show();
 
-        playlist.getSongsObservable(context)
+        playlist.getSongsObservable()
                 .flatMap(songs -> {
                     if (!songs.isEmpty()) {
 
@@ -240,9 +240,9 @@ public class PlaylistUtils {
     /**
      * @return true if this item is a favorite
      */
-    public static Observable<Boolean> isFavorite(Context context, Song song) {
+    public static Observable<Boolean> isFavorite(Song song) {
         return Observable.fromCallable(Playlist::favoritesPlaylist)
-                .flatMap(playlist -> playlist.getSongsObservable(context))
+                .flatMap(Playlist::getSongsObservable)
                 .flatMap(songs -> Observable.just(songs.contains(song)))
                 .onErrorReturn(throwable -> {
                     Log.e(TAG, "isFavorite() called,  playlist null. Returning false");
@@ -285,7 +285,7 @@ public class PlaylistUtils {
             return;
         }
 
-        playlist.getSongsObservable(context)
+        playlist.getSongsObservable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(existingSongs -> {
 
@@ -484,7 +484,7 @@ public class PlaylistUtils {
         }
 
         Observable.fromCallable(Playlist::favoritesPlaylist)
-                .flatMap(playlist -> playlist.getSongsObservable(context)
+                .flatMap(playlist -> playlist.getSongsObservable()
                         .flatMap(new Func1<List<Song>, Observable<Playlist>>() {
                             @Override
                             public Observable<Playlist> call(List<Song> songs) {

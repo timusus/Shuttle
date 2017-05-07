@@ -59,7 +59,7 @@ public class SettingsActivity extends BaseActivity {
         }
 
         if (SettingsManager.getInstance().canTintNavBar()) {
-            getWindow().setNavigationBarColor(ColorUtils.getPrimaryColorDark(this));
+            getWindow().setNavigationBarColor(ColorUtils.getPrimaryColorDark());
         }
 
         super.onCreate(savedInstanceState);

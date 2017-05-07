@@ -2,7 +2,6 @@ package com.simplecity.amp_library.ui.fragments;
 
 import android.annotation.TargetApi;
 import android.app.Dialog;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
@@ -16,7 +15,6 @@ import android.preference.Preference;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.support.v4.content.IntentCompat;
 import android.support.v4.preference.PreferenceFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,7 +32,6 @@ import com.simplecity.amp_library.model.CategoryItem;
 import com.simplecity.amp_library.services.ArtworkDownloadService;
 import com.simplecity.amp_library.sql.databases.BlacklistHelper;
 import com.simplecity.amp_library.sql.databases.WhitelistHelper;
-import com.simplecity.amp_library.ui.activities.MainActivity2;
 import com.simplecity.amp_library.ui.activities.SettingsActivity;
 import com.simplecity.amp_library.ui.adapters.TabsAdapter;
 import com.simplecity.amp_library.ui.recyclerview.ItemTouchHelperCallback;
@@ -174,10 +171,12 @@ public class SettingsFragment extends PreferenceFragment {
         final Preference restartPreference = findPreference("pref_restart");
         if (restartPreference != null) {
             restartPreference.setOnPreferenceClickListener(preference -> {
-                Intent intent = new Intent(getActivity(), MainActivity2.class);
-                ComponentName componentNAme = intent.getComponent();
-                Intent mainIntent = IntentCompat.makeRestartActivityTask(componentNAme);
-                startActivity(mainIntent);
+
+                //Todo:
+//                Intent intent = new Intent(getActivity(), MainActivity2.class);
+//                ComponentName componentNAme = intent.getComponent();
+//                Intent mainIntent = IntentCompat.makeRestartActivityTask(componentNAme);
+//                startActivity(mainIntent);
                 return true;
             });
         }

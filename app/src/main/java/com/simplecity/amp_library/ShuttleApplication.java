@@ -329,7 +329,7 @@ public class ShuttleApplication extends Application {
                 .first()
                 .flatMap(Observable::from)
                 .concatMap(genre -> Observable.just(genre).delay(250, TimeUnit.MILLISECONDS))
-                .flatMap(genre -> genre.getSongCountObservable(ShuttleApplication.getInstance())
+                .flatMap(genre -> genre.getSongCountObservable()
                         .doOnNext(numSongs -> {
                             if (numSongs == 0) {
                                 try {

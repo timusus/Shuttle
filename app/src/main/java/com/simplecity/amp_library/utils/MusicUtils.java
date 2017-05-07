@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
-import android.widget.Toast;
 
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Song;
@@ -17,7 +17,7 @@ import java.util.List;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
+import rx.functions.Action1;
 
 public class MusicUtils {
 
@@ -78,18 +78,15 @@ public class MusicUtils {
         int EXPORT_PLAYLIST = Defs.CHILD_MENU_BASE + 5;
     }
 
-    public static void playAll(Context context, Observable<List<Song>> songsObservable) {
+    public static void playAll(Observable<List<Song>> songsObservable, Action1<String> onEmpty) {
         songsObservable.observeOn(AndroidSchedulers.mainThread())
-                .subscribe(songs -> playAll(songs, () -> {
-                    final String message = context.getString(R.string.emptyplaylist);
-                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-                }));
+                .subscribe(songs -> playAll(songs, onEmpty));
     }
 
     /**
      * @param songs list of songs to play
      */
-    public static void playAll(List<Song> songs, Action0 onEmpty) {
+    public static void playAll(List<Song> songs, Action1<String> onEmpty) {
         playAll(songs, 0, false, onEmpty);
     }
 
@@ -97,7 +94,7 @@ public class MusicUtils {
      * @param songs    list of songs to play
      * @param position position of the pressed song
      */
-    public static void playAll(List<Song> songs, int position, Action0 onEmpty) {
+    public static void playAll(List<Song> songs, int position, Action1<String> onEmpty) {
         playAll(songs, position, false, onEmpty);
     }
 
@@ -108,13 +105,13 @@ public class MusicUtils {
      * @param position     int
      * @param forceShuffle boolean
      */
-    public static void playAll(List<Song> songs, int position, boolean forceShuffle, Action0 onEmpty) {
+    public static void playAll(List<Song> songs, int position, boolean forceShuffle, Action1<String> onEmpty) {
 
         if (songs.size() == 0
                 || MusicServiceConnectionUtils.sServiceBinder == null
                 || MusicServiceConnectionUtils.sServiceBinder.getService() == null) {
 
-            onEmpty.call();
+            onEmpty.call(ShuttleApplication.getInstance().getResources().getString(R.string.empty_playlist));
             return;
         }
 
@@ -129,22 +126,19 @@ public class MusicUtils {
     /**
      * Shuffles the passed in song list
      */
-    public static void shuffleAll(Context context, Observable<List<Song>> songsObservable) {
+    public static void shuffleAll(Observable<List<Song>> songsObservable, Action1<String> onEmpty) {
         songsObservable.observeOn(AndroidSchedulers.mainThread())
                 .subscribe(songs -> {
                     setShuffleMode(MusicService.ShuffleMode.ON);
-                    playAll(songs, 0, true, () -> {
-                        final String message = context.getString(R.string.emptyplaylist);
-                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-                    });
+                    playAll(songs, 0, true, onEmpty);
                 });
     }
 
     /**
      * Shuffles all songs on the device
      */
-    public static void shuffleAll(Context context) {
-        shuffleAll(context, DataManager.getInstance().getSongsRelay().first());
+    public static void shuffleAll(Action1<String> onEmpty) {
+        shuffleAll(DataManager.getInstance().getSongsRelay().first(), onEmpty);
     }
 
     /**
@@ -466,22 +460,20 @@ public class MusicUtils {
         MusicServiceConnectionUtils.sServiceBinder.getService().toggleRepeat();
     }
 
-    public static void addToQueue(Context context, List<Song> songs) {
+    public static void addToQueue(List<Song> songs, Action1<String> onAdded) {
         if (MusicServiceConnectionUtils.sServiceBinder.getService() == null) {
             return;
         }
         MusicServiceConnectionUtils.sServiceBinder.getService().enqueue(songs, MusicService.EnqueueAction.LAST);
-        final String message = context.getResources().getQuantityString(R.plurals.NNNtrackstoqueue, songs.size(), songs.size());
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+        onAdded.call(ShuttleApplication.getInstance().getResources().getQuantityString(R.plurals.NNNtrackstoqueue, songs.size(), songs.size()));
     }
 
-    public static void playNext(Context context, List<Song> songs) {
+    public static void playNext(List<Song> songs, Action1<String> onAdded) {
         if (MusicServiceConnectionUtils.sServiceBinder.getService() == null) {
             return;
         }
         MusicServiceConnectionUtils.sServiceBinder.getService().enqueue(songs, MusicService.EnqueueAction.NEXT);
-        final String message = context.getResources().getQuantityString(R.plurals.NNNtrackstoqueue, songs.size(), songs.size());
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+        onAdded.call(ShuttleApplication.getInstance().getResources().getQuantityString(R.plurals.NNNtrackstoqueue, songs.size(), songs.size()));
     }
 
     public static void setQueuePosition(final int position) {

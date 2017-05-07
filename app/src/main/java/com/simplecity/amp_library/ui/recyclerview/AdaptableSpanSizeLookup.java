@@ -2,22 +2,22 @@ package com.simplecity.amp_library.ui.recyclerview;
 
 import android.support.v7.widget.GridLayoutManager;
 
-import com.simplecity.amp_library.model.AdaptableItem;
-import com.simplecity.amp_library.ui.adapters.ItemAdapter;
+import com.simplecityapps.recycler_adapter.model.ViewModel;
+import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 
 import java.util.List;
 
 /**
- * A custom {@link GridLayoutManager.SpanSizeLookup} which determines the span size from the {@link AdaptableItem}
+ * A custom {@link GridLayoutManager.SpanSizeLookup} which determines the span size from the {@link ViewModel}
  * at the position of the lookup.
  */
 public class AdaptableSpanSizeLookup extends GridLayoutManager.SpanSizeLookup {
 
-    private List<AdaptableItem> items;
+    private List<ViewModel> items;
     private int spanCount;
 
-    public AdaptableSpanSizeLookup(ItemAdapter itemAdapter, int spanCount) {
-        this.items = itemAdapter.items;
+    public AdaptableSpanSizeLookup(ViewModelAdapter ViewModelAdapter, int spanCount) {
+        this.items = ViewModelAdapter.items;
         this.spanCount = spanCount;
     }
 

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.sothree.slidinguppanel.SlidingUpPanelLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sheet1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    app:umanoDragView="@+id/sheet1Parent"
+    app:umanoPanelHeight="64dp">
+
+    <FrameLayout
+        android:id="@+id/mainContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        android:id="@+id/sheet2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        app:umanoPanelHeight="64dp"
+        tools:ignore="MissingPrefix">
+
+        <FrameLayout
+            android:id="@+id/sheet1Parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/sheet1Container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <FrameLayout
+                android:id="@+id/sheet1PeekView"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:background="#2196F3">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="sans-serif"
+                    android:text="Sheet 1 Peek"
+                    android:textColor="#fff"
+                    android:textSize="24sp"/>
+
+            </FrameLayout>
+
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <FrameLayout
+                android:id="@+id/sheet2Container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <FrameLayout
+                android:id="@+id/sheet2PeekView"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:background="#009688">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="sans-serif"
+                    android:text="Sheet 2 Peek"
+                    android:textColor="#fff"
+                    android:textSize="24sp"/>
+
+            </FrameLayout>
+        </FrameLayout>
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+

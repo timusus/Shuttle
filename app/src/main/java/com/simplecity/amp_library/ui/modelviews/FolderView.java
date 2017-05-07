@@ -1,30 +1,66 @@
 package com.simplecity.amp_library.ui.modelviews;
 
 import android.os.AsyncTask;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.interfaces.FileType;
 import com.simplecity.amp_library.model.BaseFileObject;
 import com.simplecity.amp_library.model.FileObject;
 import com.simplecity.amp_library.model.FolderObject;
 import com.simplecity.amp_library.ui.views.CircleImageView;
-import com.simplecity.amp_library.utils.ColorUtils;
-import com.simplecity.amp_library.utils.DrawableUtils;
-import com.simplecity.amp_library.utils.SettingsManager;
-import com.simplecity.amp_library.utils.StringUtils;
+import com.simplecityapps.recycler_adapter.model.BaseViewModel;
+import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 
 import java.lang.ref.WeakReference;
 
-public class FolderView extends BaseAdaptableItem<BaseFileObject, FolderView.ViewHolder> {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+import static com.simplecity.amp_library.R.drawable.ic_folder_closed_white;
+import static com.simplecity.amp_library.R.drawable.ic_folder_open_white;
+import static com.simplecity.amp_library.R.drawable.ic_headphones_white;
+import static com.simplecity.amp_library.R.drawable.ic_overflow_white;
+import static com.simplecity.amp_library.R.id;
+import static com.simplecity.amp_library.R.id.btn_overflow;
+import static com.simplecity.amp_library.R.id.checkbox;
+import static com.simplecity.amp_library.R.id.image;
+import static com.simplecity.amp_library.R.id.line_four;
+import static com.simplecity.amp_library.R.id.line_one;
+import static com.simplecity.amp_library.R.id.line_three;
+import static com.simplecity.amp_library.R.id.line_two;
+import static com.simplecity.amp_library.R.layout.list_item_folder;
+import static com.simplecity.amp_library.R.string.parent_folder;
+import static com.simplecity.amp_library.interfaces.FileType.FILE;
+import static com.simplecity.amp_library.interfaces.FileType.PARENT;
+import static com.simplecity.amp_library.ui.adapters.ViewType.FOLDER;
+import static com.simplecity.amp_library.utils.ColorUtils.getAccentColor;
+import static com.simplecity.amp_library.utils.ColorUtils.getPrimaryColor;
+import static com.simplecity.amp_library.utils.ColorUtils.isPrimaryColorLowContrast;
+import static com.simplecity.amp_library.utils.DrawableUtils.getColoredStateListDrawable;
+import static com.simplecity.amp_library.utils.SettingsManager.getInstance;
+import static com.simplecity.amp_library.utils.StringUtils.makeSubfoldersLabel;
+import static java.lang.String.format;
+
+public class FolderView extends BaseViewModel<FolderView.ViewHolder> {
+
+    public interface ClickListener {
+
+        void onFileObjectClick(BaseFileObject fileObject);
+
+        void onFileObjectOverflowClick(View v, BaseFileObject fileObject);
+    }
 
     public BaseFileObject baseFileObject;
+
+    @Nullable
+    private ClickListener listener;
 
     private boolean mShowCheckboxes;
 
@@ -32,6 +68,10 @@ public class FolderView extends BaseAdaptableItem<BaseFileObject, FolderView.Vie
 
     public FolderView(BaseFileObject baseFileObject) {
         this.baseFileObject = baseFileObject;
+    }
+
+    public void setClickListener(@Nullable ClickListener listener) {
+        this.listener = listener;
     }
 
     public void setShowCheckboxes(boolean show) {
@@ -42,109 +82,127 @@ public class FolderView extends BaseAdaptableItem<BaseFileObject, FolderView.Vie
         mIsChecked = checked;
     }
 
+    private void onClick() {
+        if (listener != null) {
+            listener.onFileObjectClick(baseFileObject);
+        }
+    }
+
+    private void onOverflowClick(View v) {
+        if (listener != null) {
+            listener.onFileObjectOverflowClick(v, baseFileObject);
+        }
+    }
+
     @Override
     public int getViewType() {
-        return ViewType.FOLDER;
+        return FOLDER;
     }
 
     @Override
     public int getLayoutResId() {
-        return R.layout.list_item_folder;
+        return list_item_folder;
     }
 
     @Override
     public void bindView(ViewHolder holder) {
+        super.bindView(holder);
 
-        if (baseFileObject instanceof FileObject && SettingsManager.getInstance().getFolderBrowserShowFileNames()) {
-            holder.lineFour.setText(String.format("%s.%s", ((FileObject) baseFileObject).name, ((FileObject) baseFileObject).extension));
-            holder.lineFour.setVisibility(View.VISIBLE);
-            holder.textContainer.setVisibility(View.GONE);
+        if (baseFileObject instanceof FileObject && getInstance().getFolderBrowserShowFileNames()) {
+            holder.lineFour.setText(format("%s.%s", ((FileObject) baseFileObject).name, ((FileObject) baseFileObject).extension));
+            holder.lineFour.setVisibility(VISIBLE);
+            holder.textContainer.setVisibility(GONE);
         } else {
-            holder.lineFour.setVisibility(View.GONE);
-            holder.textContainer.setVisibility(View.VISIBLE);
+            holder.lineFour.setVisibility(GONE);
+            holder.textContainer.setVisibility(VISIBLE);
         }
 
         holder.lineThree.setText(null);
 
         switch (baseFileObject.fileType) {
-            case FileType.PARENT:
-                holder.imageView.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_folder_open_white));
-                holder.lineTwo.setText(holder.itemView.getContext().getString(R.string.parent_folder));
-                holder.overflow.setVisibility(View.GONE);
-                holder.lineThree.setVisibility(View.GONE);
+            case PARENT:
+                holder.imageView.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(ic_folder_open_white));
+                holder.lineTwo.setText(holder.itemView.getContext().getString(parent_folder));
+                holder.overflow.setVisibility(GONE);
+                holder.lineThree.setVisibility(GONE);
                 holder.lineOne.setText(baseFileObject.name);
                 break;
             case FileType.FOLDER:
-                holder.overflow.setVisibility(View.VISIBLE);
-                holder.imageView.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_folder_closed_white));
-                holder.lineTwo.setText(StringUtils.makeSubfoldersLabel(holder.itemView.getContext(), ((FolderObject) baseFileObject).folderCount, ((FolderObject) baseFileObject).fileCount));
-                holder.lineThree.setVisibility(View.GONE);
+                holder.overflow.setVisibility(VISIBLE);
+                holder.imageView.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(ic_folder_closed_white));
+                holder.lineTwo.setText(makeSubfoldersLabel(holder.itemView.getContext(), ((FolderObject) baseFileObject).folderCount, ((FolderObject) baseFileObject).fileCount));
+                holder.lineThree.setVisibility(GONE);
                 holder.lineOne.setText(baseFileObject.name);
                 break;
-            case FileType.FILE:
-                holder.overflow.setVisibility(View.VISIBLE);
-                holder.imageView.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_headphones_white));
-                holder.lineThree.setVisibility(View.VISIBLE);
+            case FILE:
+                holder.overflow.setVisibility(VISIBLE);
+                holder.imageView.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(ic_headphones_white));
+                holder.lineThree.setVisibility(VISIBLE);
                 holder.lineOne.setText(((FileObject) baseFileObject).tagInfo.trackName);
-                holder.lineTwo.setText(String.format("%s - %s", ((FileObject) baseFileObject).tagInfo.artistName, ((FileObject) baseFileObject).tagInfo.albumName));
+                holder.lineTwo.setText(format("%s - %s", ((FileObject) baseFileObject).tagInfo.artistName, ((FileObject) baseFileObject).tagInfo.albumName));
 
                 DurationTask durationTask = new DurationTask(holder.lineThree, (FileObject) baseFileObject);
                 durationTask.execute();
                 break;
         }
 
-        if (ColorUtils.isPrimaryColorLowContrast(holder.itemView.getContext())) {
-            holder.imageView.setColorFilter(ColorUtils.getAccentColor());
+        if (isPrimaryColorLowContrast(holder.itemView.getContext())) {
+            holder.imageView.setColorFilter(getAccentColor());
         } else {
-            holder.imageView.setColorFilter(ColorUtils.getPrimaryColor());
+            holder.imageView.setColorFilter(getPrimaryColor());
         }
 
         if (mShowCheckboxes && baseFileObject.fileType == FileType.FOLDER) {
-            holder.checkBox.setVisibility(View.VISIBLE);
-            holder.imageView.setVisibility(View.GONE);
+            holder.checkBox.setVisibility(VISIBLE);
+            holder.imageView.setVisibility(GONE);
         } else {
-            holder.checkBox.setVisibility(View.GONE);
-            holder.imageView.setVisibility(View.VISIBLE);
+            holder.checkBox.setVisibility(GONE);
+            holder.imageView.setVisibility(VISIBLE);
         }
 
         holder.checkBox.setChecked(mIsChecked);
     }
 
     @Override
-    public ViewHolder getViewHolder(ViewGroup parent) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutResId(), parent, false));
+    public ViewHolder createViewHolder(ViewGroup parent) {
+        return new ViewHolder(createView(parent));
     }
 
-    @Override
-    public BaseFileObject getItem() {
-        return baseFileObject;
-    }
+    public static class ViewHolder extends BaseViewHolder<FolderView> {
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-
-        public View itemView;
+        @BindView(line_one)
         public TextView lineOne;
+
+        @BindView(line_two)
         public TextView lineTwo;
+
+        @BindView(line_three)
         public TextView lineThree;
+
+        @BindView(line_four)
         public TextView lineFour;
+
+        @BindView(id.textContainer)
         public View textContainer;
+
+        @BindView(image)
         public CircleImageView imageView;
+
+        @BindView(btn_overflow)
         public ImageButton overflow;
+
+        @BindView(checkbox)
         public CheckBox checkBox;
 
         public ViewHolder(final View itemView) {
             super(itemView);
 
-            this.itemView = itemView;
-            lineOne = (TextView) itemView.findViewById(R.id.line_one);
-            lineTwo = (TextView) itemView.findViewById(R.id.line_two);
-            lineThree = (TextView) itemView.findViewById(R.id.line_three);
-            lineFour = (TextView) itemView.findViewById(R.id.line_four);
-            textContainer = itemView.findViewById(R.id.textContainer);
-            imageView = (CircleImageView) itemView.findViewById(R.id.image);
-            overflow = (ImageButton) itemView.findViewById(R.id.btn_overflow);
-            overflow.setImageDrawable(DrawableUtils.getColoredStateListDrawable(itemView.getContext(), R.drawable.ic_overflow_white));
-            checkBox = (CheckBox) itemView.findViewById(R.id.checkbox);
+            ButterKnife.bind(this, itemView);
+
+            overflow.setImageDrawable(getColoredStateListDrawable(itemView.getContext(), ic_overflow_white));
+
+            itemView.setOnClickListener(v -> viewModel.onClick());
+            overflow.setOnClickListener(v -> viewModel.onOverflowClick(v));
         }
 
         @Override
@@ -159,7 +217,7 @@ public class FolderView extends BaseAdaptableItem<BaseFileObject, FolderView.Vie
 
         private FileObject fileObject;
 
-        public DurationTask(TextView textView, FileObject fileObject) {
+        DurationTask(TextView textView, FileObject fileObject) {
             this.textView = textView;
             this.fileObject = fileObject;
             textView.setTag(new WeakReference<>(DurationTask.this));

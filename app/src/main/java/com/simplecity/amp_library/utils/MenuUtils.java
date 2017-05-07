@@ -21,6 +21,7 @@ import java.util.List;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 public class MenuUtils implements MusicUtils.Defs {
 
@@ -49,12 +50,22 @@ public class MenuUtils implements MusicUtils.Defs {
                 case QUEUE:
                     List<Song> songs = new ArrayList<>();
                     songs.add(song);
-                    MusicUtils.addToQueue(activity, songs);
+                    MusicUtils.addToQueue(songs, new Action1<String>() {
+                        @Override
+                        public void call(String s) {
+
+                        }
+                    });
                     break;
                 case PLAY_NEXT:
                     songs = new ArrayList<>();
                     songs.add(song);
-                    MusicUtils.playNext(activity, songs);
+                    MusicUtils.playNext(songs, new Action1<String>() {
+                        @Override
+                        public void call(String s) {
+
+                        }
+                    });
                     break;
                 case NEW_PLAYLIST:
                     songs = new ArrayList<>();
@@ -146,7 +157,12 @@ public class MenuUtils implements MusicUtils.Defs {
 
             switch (item.getItemId()) {
                 case PLAY_SELECTION:
-                    MusicUtils.playAll(activity, songsObservable);
+                    MusicUtils.playAll(songsObservable, new Action1<String>() {
+                        @Override
+                        public void call(String s) {
+
+                        }
+                    });
                     return true;
                 case NEW_PLAYLIST:
                     songsObservable
@@ -164,16 +180,21 @@ public class MenuUtils implements MusicUtils.Defs {
                 case QUEUE:
                     songsObservable
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(songs -> MusicUtils.addToQueue(activity, songs));
+                            .subscribe(songs -> MusicUtils.addToQueue(songs, new Action1<String>() {
+                                @Override
+                                public void call(String s) {
+
+                                }
+                            }));
                     return true;
                 case TAGGER:
                     TaggerDialog.newInstance(album)
                             .show(activity.getSupportFragmentManager());
                     return true;
                 case BLACKLIST:
-                        songsObservable
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(BlacklistHelper::addToBlacklist);
+                    songsObservable
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(BlacklistHelper::addToBlacklist);
                     return true;
                 case DELETE_ITEM:
                     new DialogUtils.DeleteDialogBuilder()
@@ -189,7 +210,7 @@ public class MenuUtils implements MusicUtils.Defs {
                     DialogUtils.showAlbumBiographyDialog(activity, album.albumArtistName, album.name);
                     return true;
                 case EDIT_ARTWORK:
-                    ArtworkDialog.showDialog(activity, album);
+                    ArtworkDialog.build(activity, album);
                     return true;
             }
             return false;
@@ -216,16 +237,22 @@ public class MenuUtils implements MusicUtils.Defs {
         PopupMenu.OnMenuItemClickListener listener = item -> {
 
             Observable<List<Song>> songsObservable = albumArtist.getSongsObservable()
-                    .doOnNext(songs -> {
+                    .map(songs -> {
                         Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(b.year, a.year));
                         Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(a.track, b.track));
                         Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(a.discNumber, b.discNumber));
                         Collections.sort(songs, (a, b) -> ComparisonUtils.compare(a.albumName, b.albumName));
+                        return songs;
                     });
 
             switch (item.getItemId()) {
                 case PLAY_SELECTION:
-                    MusicUtils.playAll(activity, songsObservable);
+                    MusicUtils.playAll(songsObservable, new Action1<String>() {
+                        @Override
+                        public void call(String s) {
+                            //Todo
+                        }
+                    });
                     return true;
                 case NEW_PLAYLIST:
                     songsObservable
@@ -243,7 +270,12 @@ public class MenuUtils implements MusicUtils.Defs {
                 case QUEUE:
                     songsObservable
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(songs -> MusicUtils.addToQueue(activity, songs));
+                            .subscribe(songs -> MusicUtils.addToQueue(songs, new Action1<String>() {
+                                @Override
+                                public void call(String s) {
+
+                                }
+                            }));
                     return true;
                 case TAGGER:
                     TaggerDialog.newInstance(albumArtist)
@@ -268,7 +300,7 @@ public class MenuUtils implements MusicUtils.Defs {
                     DialogUtils.showArtistBiographyDialog(activity, albumArtist.name);
                     return true;
                 case EDIT_ARTWORK:
-                    ArtworkDialog.showDialog(activity, albumArtist);
+                    ArtworkDialog.build(activity, albumArtist);
                     return true;
             }
             return false;
@@ -306,7 +338,12 @@ public class MenuUtils implements MusicUtils.Defs {
         final PopupMenu.OnMenuItemClickListener listener = item -> {
             switch (item.getItemId()) {
                 case PLAY_SELECTION:
-                    MusicUtils.playAll(context, playlist.getSongsObservable(context));
+                    MusicUtils.playAll(playlist.getSongsObservable(), new Action1<String>() {
+                        @Override
+                        public void call(String s) {
+
+                        }
+                    });
                     break;
                 case MusicUtils.PlaylistMenuOrder.DELETE_PLAYLIST:
                     playlist.delete(context);

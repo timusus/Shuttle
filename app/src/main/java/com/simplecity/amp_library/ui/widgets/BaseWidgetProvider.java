@@ -19,7 +19,7 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.glide.utils.CustomAppWidgetTarget;
 import com.simplecity.amp_library.playback.MusicService;
-import com.simplecity.amp_library.ui.activities.MainActivity2;
+import com.simplecity.amp_library.ui.activities.MainActivity;
 import com.simplecity.amp_library.utils.DrawableUtils;
 
 import rx.functions.Action0;
@@ -103,7 +103,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
         final ComponentName serviceName = new ComponentName(context, MusicService.class);
 
-        intent = new Intent(context, MainActivity2.class);
+        intent = new Intent(context, MainActivity.class);
         pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
         views.setOnClickPendingIntent(rootViewId, pendingIntent);
 

@@ -1,19 +1,24 @@
 package com.simplecity.amp_library.ui.modelviews;
 
-import android.view.LayoutInflater;
+import android.support.annotation.Nullable;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bignerdranch.android.multiselector.MultiSelector;
 import com.bumptech.glide.Glide;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.ui.recyclerview.CustomSwappingHolder;
+import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.ui.views.NonScrollImageButton;
 import com.simplecity.amp_library.utils.DrawableUtils;
+import com.simplecityapps.recycler_adapter.model.BaseViewModel;
+import com.simplecityapps.recycler_adapter.model.ViewModel;
+import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 
-public abstract class MultiItemView<T> extends BaseAdaptableItem<T, MultiItemView.ViewHolder> {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public abstract class MultiItemView<T extends BaseViewHolder> extends BaseViewModel<T> {
 
     protected MultiSelector multiSelector;
 
@@ -43,33 +48,29 @@ public abstract class MultiItemView<T> extends BaseAdaptableItem<T, MultiItemVie
         throw new IllegalStateException("getLayoutResId() invalid ViewType. Class: " + getClass().getSimpleName());
     }
 
-    @Override
-    public ViewHolder getViewHolder(ViewGroup parent) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(getLayoutResId(), parent, false), getViewType(), multiSelector);
-    }
+    public static class ViewHolder<T extends ViewModel> extends BaseViewHolder<T> {
 
-    @Override
-    public void recycle(ViewHolder holder) {
-        Glide.clear(holder.imageOne);
-    }
-
-    public static class ViewHolder extends CustomSwappingHolder {
-
+        @BindView(R.id.line_one)
         public TextView lineOne;
+
+        @BindView(R.id.line_two)
         public TextView lineTwo;
+
+        @BindView(R.id.image)
         public ImageView imageOne;
+
+        @BindView(R.id.btn_overflow)
         public NonScrollImageButton overflowButton;
-        public View bottomContainer;
 
-        public ViewHolder(View itemView, @ViewType int viewType, MultiSelector multiSelector) {
-            super(itemView, multiSelector);
+        @Nullable @BindView(R.id.bottom_container)
+        View bottomContainer;
 
-            lineOne = (TextView) itemView.findViewById(R.id.line_one);
-            lineTwo = (TextView) itemView.findViewById(R.id.line_two);
-            imageOne = (ImageView) itemView.findViewById(R.id.image);
-            overflowButton = (NonScrollImageButton) itemView.findViewById(R.id.btn_overflow);
-            bottomContainer = itemView.findViewById(R.id.bottom_container);
+        public ViewHolder(View itemView) {
+            super(itemView);
+
+            ButterKnife.bind(this, itemView);
+
+            int viewType = getItemViewType();
 
             if (viewType == ViewType.ARTIST_CARD
                     || viewType == ViewType.ALBUM_CARD
@@ -93,6 +94,13 @@ public abstract class MultiItemView<T> extends BaseAdaptableItem<T, MultiItemVie
         @Override
         public String toString() {
             return "MultiItemView.ViewHolder";
+        }
+
+        @Override
+        public void recycle() {
+            super.recycle();
+
+            Glide.clear(imageOne);
         }
     }
 }

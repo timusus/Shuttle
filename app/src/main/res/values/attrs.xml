@@ -234,4 +234,10 @@
         </attr>
     </declare-styleable>
 
+    <declare-styleable name="CustomCollapsingToolbarLayout" parent="CollapsingToolbarLayout">
+        <attr name="expandedSubtitleTextAppearance" format="reference"/>
+        <attr name="collapsedSubtitleTextAppearance" format="reference"/>
+        <attr name="subtitle" format="string"/>
+    </declare-styleable>
+
 </resources>

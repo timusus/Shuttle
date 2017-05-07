@@ -6,18 +6,12 @@
         android:id="@+id/media_route_menu_item"
         android:title="@string/media_route_menu_title"
         app:actionProviderClass="com.simplecity.amp_library.ui.views.MyMediaRouteActionProvider"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/action_search"
         android:icon="?attr/btn_search"
         android:title="@string/search_title"
-        app:showAsAction="always"/>
-
-    <item
-        android:id="@+id/menu_queue"
-        android:icon="?attr/btn_toggle_queue"
-        android:title="@string/btn_queue"
         app:showAsAction="ifRoom"/>
 
     <item
@@ -30,13 +24,13 @@
         android:id="@+id/menu_share"
         android:icon="?attr/btn_share"
         android:title="@string/share_title"
-        app:showAsAction="never"/>
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/menu_lyrics"
         android:icon="?attr/btn_lyrics"
         android:title="@string/lyrics"
-        app:showAsAction="ifRoom"
-        android:visible="false"/>
+        android:visible="false"
+        app:showAsAction="ifRoom"/>
 
 </menu>

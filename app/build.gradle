@@ -14,7 +14,6 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'io.fabric'
-apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.github.triplet.play'
 
 repositories {
@@ -152,7 +151,7 @@ android {
         setIgnore(debugIgnore || releaseIgnore)
     }
 
-    // Used to enable Java8 features (via RetroLambda)
+    // Used to enable Java8 features
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -248,9 +247,9 @@ dependencies {
     // External libs
     // /////////////////////////////////////////////////////////////////////////
 
-    retrolambdaConfig libs.lambdaBackport
-
     compile libs.navigation
+    compile libs.recyclerAdapter
+    compile libs.multiSheetView
     compile libs.ccl
     compile libs.nanoHttp
     compile libs.dashClockApi
@@ -267,7 +266,6 @@ dependencies {
     compile libs.rxJava
     compile libs.rxRelay
     compile libs.rxReceivers
-    compile libs.slidingUpPanel
     compile libs.streams
     compile(libs.crashlytics) {
         transitive = true;
@@ -275,6 +273,8 @@ dependencies {
     compile(libs.materialDialogs) {
         transitive = true;
     }
+    compile libs.butterknife
+    annotationProcessor libs.butterknifeAnnotationProcessor
 
     // //////////////////////////////////////////////////////////////////////////
     // Multidex (Only used in non-proguard pre-21 builds)

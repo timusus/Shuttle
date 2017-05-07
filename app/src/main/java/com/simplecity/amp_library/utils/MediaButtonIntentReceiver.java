@@ -17,7 +17,7 @@ import android.view.KeyEvent;
 
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.playback.MusicService;
-import com.simplecity.amp_library.ui.activities.MainActivity2;
+import com.simplecity.amp_library.ui.activities.MainActivity;
 
 /**
  * This class is used to control headset playback. Single press: pause/resume
@@ -164,7 +164,7 @@ public class MediaButtonIntentReceiver extends WakefulBroadcastReceiver {
                     if (!launched) {
                         final Context context = (Context) msg.obj;
                         final Intent intent = new Intent();
-                        intent.setClass(context, MainActivity2.class);
+                        intent.setClass(context, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         context.startActivity(intent);
                         launched = true;

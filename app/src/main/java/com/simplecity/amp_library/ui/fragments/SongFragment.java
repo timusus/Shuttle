@@ -26,11 +26,10 @@ import com.annimon.stream.Stream;
 import com.bignerdranch.android.multiselector.ModalMultiSelectorCallback;
 import com.bignerdranch.android.multiselector.MultiSelector;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.model.AdaptableItem;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.sql.databases.BlacklistHelper;
-import com.simplecity.amp_library.ui.adapters.SongAdapter;
+import com.simplecity.amp_library.ui.adapters.SectionedAdapter;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.ShuffleView;
 import com.simplecity.amp_library.ui.modelviews.SongView;
@@ -44,6 +43,8 @@ import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.SortManager;
 import com.simplecity.amp_library.utils.ThemeUtils;
+import com.simplecityapps.recycler_adapter.model.ViewModel;
+import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.Collections;
@@ -55,8 +56,8 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class SongFragment extends BaseFragment implements
         MusicUtils.Defs,
-        RecyclerView.RecyclerListener,
-        SongAdapter.SongListener {
+        SongView.ClickListener,
+        ShuffleView.ShuffleClickListener {
 
     private static final String TAG = "SongFragment";
 
@@ -66,7 +67,7 @@ public class SongFragment extends BaseFragment implements
 
     private FastScrollRecyclerView mRecyclerView;
 
-    private SongAdapter songsAdapter;
+    private SectionedAdapter songsAdapter;
 
     MultiSelector multiSelector = new MultiSelector();
 
@@ -104,8 +105,7 @@ public class SongFragment extends BaseFragment implements
 
         setHasOptionsMenu(true);
 
-        songsAdapter = new SongAdapter();
-        songsAdapter.setListener(this);
+        songsAdapter = new SectionedAdapter();
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
 
@@ -130,6 +130,7 @@ public class SongFragment extends BaseFragment implements
         mPrefs.registerOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
 
         shuffleView = new ShuffleView();
+        shuffleView.setClickListener(this);
     }
 
     private void themeUIComponents() {
@@ -154,7 +155,7 @@ public class SongFragment extends BaseFragment implements
 
             mRecyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            mRecyclerView.setRecyclerListener(this);
+            mRecyclerView.setRecyclerListener(new RecyclerListener());
             mRecyclerView.setAdapter(songsAdapter);
 
             themeUIComponents();
@@ -188,7 +189,11 @@ public class SongFragment extends BaseFragment implements
                                         Collections.reverse(songs);
                                     }
                                     return Observable.from(songs)
-                                            .map(song -> (AdaptableItem) new SongView(song, multiSelector, null))
+                                            .map(song -> {
+                                                SongView songView = new SongView(song, null);
+                                                songView.setClickListener(this);
+                                                return (ViewModel) songView;
+                                            })
                                             .toList();
                                 })
                                 .observeOn(AndroidSchedulers.mainThread())
@@ -325,75 +330,6 @@ public class SongFragment extends BaseFragment implements
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onItemClick(View v, int position, Song song) {
-        if (inActionMode) {
-            multiSelector.setSelected(position, songsAdapter.getItemId(position), !multiSelector.isSelected(position, songsAdapter.getItemId(position)));
-
-            if (multiSelector.getSelectedPositions().size() == 0) {
-                if (actionMode != null) {
-                    actionMode.finish();
-                }
-            }
-
-            updateActionModeSelectionCount();
-        } else {
-            List<Song> songs = Stream.of(songsAdapter.items)
-                    .filter(adaptableItem -> adaptableItem instanceof SongView)
-                    .map(adaptableItem -> ((SongView) adaptableItem).song)
-                    .collect(Collectors.toList());
-
-            int pos = songs.indexOf(song);
-
-            MusicUtils.playAll(songs, pos, () -> {
-                final String message = getContext().getString(R.string.emptyplaylist);
-                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-            });
-        }
-    }
-
-    @Override
-    public void onOverflowClick(View v, int position, final Song song) {
-        PopupMenu menu = new PopupMenu(SongFragment.this.getActivity(), v);
-        MenuUtils.addSongMenuOptions(getActivity(), menu);
-        MenuUtils.addClickHandler((AppCompatActivity) getActivity(), menu, song, item -> {
-            switch (item.getItemId()) {
-                case BLACKLIST: {
-                    BlacklistHelper.addToBlacklist(song);
-                    return true;
-                }
-            }
-            return false;
-        });
-        menu.show();
-    }
-
-    @Override
-    public void onLongClick(View v, int position, Song song) {
-        if (inActionMode) {
-            return;
-        }
-
-        if (multiSelector.getSelectedPositions().size() == 0) {
-            actionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(mActionModeCallback);
-            inActionMode = true;
-        }
-
-        multiSelector.setSelected(position, songsAdapter.getItemId(position), !multiSelector.isSelected(position, songsAdapter.getItemId(position)));
-
-        updateActionModeSelectionCount();
-    }
-
-    @Override
-    public void onShuffleClick() {
-        MusicUtils.shuffleAll(getContext());
-    }
-
-    @Override
-    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-        //Nothing to do.
-    }
-
     private void updateActionModeSelectionCount() {
         if (actionMode != null && multiSelector != null) {
             actionMode.setTitle(getString(R.string.action_mode_selection_count, multiSelector.getSelectedPositions().size()));
@@ -443,7 +379,8 @@ public class SongFragment extends BaseFragment implements
                     mode.finish();
                     break;
                 case R.id.menu_add_to_queue:
-                    MusicUtils.addToQueue(SongFragment.this.getActivity(), checkedSongs);
+                    MusicUtils.addToQueue(checkedSongs, message ->
+                            Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show());
                     break;
             }
             return true;
@@ -459,20 +396,84 @@ public class SongFragment extends BaseFragment implements
     };
 
     List<Song> getCheckedSongs() {
-        return Stream.of(multiSelector.getSelectedPositions())
-                .map(i -> songsAdapter.getSong(i))
-                .collect(Collectors.toList());
-    }
+        return  null;
 
-    @Override
-    public void onViewRecycled(RecyclerView.ViewHolder holder) {
-        if (holder.getAdapterPosition() != -1) {
-            songsAdapter.items.get(holder.getAdapterPosition()).recycle(holder);
-        }
+//        Stream.of(multiSelector.getSelectedPositions())
+//                .map(i -> songsAdapter.getSong(i))
+//                .collect(Collectors.toList());
     }
 
     @Override
     protected String screenName() {
         return TAG;
+    }
+
+    @Override
+    public void onItemClick(Song song, SongView.ViewHolder Holder) {
+//        if (inActionMode) {
+//            multiSelector.setSelected(position, songsAdapter.getItemId(position), !multiSelector.isSelected(position, songsAdapter.getItemId(position)));
+//
+//            if (multiSelector.getSelectedPositions().size() == 0) {
+//                if (actionMode != null) {
+//                    actionMode.finish();
+//                }
+//            }
+//
+//            updateActionModeSelectionCount();
+//        } else {
+        List<Song> songs = Stream.of(songsAdapter.items)
+                .filter(adaptableItem -> adaptableItem instanceof SongView)
+                .map(adaptableItem -> ((SongView) adaptableItem).song)
+                .collect(Collectors.toList());
+
+        int pos = songs.indexOf(song);
+
+        MusicUtils.playAll(songs, pos, (String message) ->
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show());
+//        }
+    }
+
+    @Override
+    public void onOverflowClick(View v, Song song) {
+        PopupMenu menu = new PopupMenu(SongFragment.this.getActivity(), v);
+        MenuUtils.addSongMenuOptions(getActivity(), menu);
+        MenuUtils.addClickHandler((AppCompatActivity) getActivity(), menu, song, item -> {
+            switch (item.getItemId()) {
+                case BLACKLIST: {
+                    BlacklistHelper.addToBlacklist(song);
+                    return true;
+                }
+            }
+            return false;
+        });
+        menu.show();
+    }
+
+    @Override
+    public boolean onItemLongClick(Song song) {
+//        if (inActionMode) {
+//            return;
+//        }
+//
+//        if (multiSelector.getSelectedPositions().size() == 0) {
+//            actionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(mActionModeCallback);
+//            inActionMode = true;
+//        }
+//
+//        multiSelector.setSelected(position, songsAdapter.getItemId(position), !multiSelector.isSelected(position, songsAdapter.getItemId(position)));
+//
+//        updateActionModeSelectionCount();
+
+        return false;
+    }
+
+    @Override
+    public void onStartDrag() {
+        // Nothing to do
+    }
+
+    @Override
+    public void onShuffleItemClick() {
+        MusicUtils.shuffleAll(message -> Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show());
     }
 }

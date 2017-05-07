@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,44 +8,55 @@
     android:background="?android:windowBackground"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/header"
+    <com.simplecity.amp_library.ui.views.StatusBarView
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="wrap_content"/>
+
+    <!-- Regular Toolbar steals touch events, but we need the events to be passed to our peek view -->
+    <com.simplecity.amp_library.ui.views.NonClickableToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:paddingLeft="72dp"
-        android:paddingRight="16dp">
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-        <TextView
-            android:id="@+id/line1"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
             android:gravity="center_vertical"
-            android:text="@string/nowplaying_title"
-            android:textColor="@color/primary_text_dark"
-            android:textSize="16sp" />
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/line2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:alpha="0.7"
-            android:gravity="center_vertical"
-            android:textColor="@color/primary_text_dark"
-            android:textSize="12sp"
-            tools:text="Naysayer - Kill Stuff"
-            android:maxLines="1" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/line1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:text="@string/nowplaying_title"
+                android:textColor="@color/primary_text_dark"
+                android:textSize="16sp"/>
 
-    <com.simplecity.amp_library.ui.recyclerview.ScrollBlockingRecyclerView
+            <TextView
+                android:id="@+id/line2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:alpha="0.7"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:textColor="@color/primary_text_dark"
+                android:textSize="12sp"
+                tools:text="Naysayer - Kill Stuff"/>
+        </LinearLayout>
+    </com.simplecity.amp_library.ui.views.NonClickableToolbar>
+
+    <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:listitem="@layout/list_item_two_lines" />
+        tools:listitem="@layout/list_item_two_lines"/>
 
 </LinearLayout>

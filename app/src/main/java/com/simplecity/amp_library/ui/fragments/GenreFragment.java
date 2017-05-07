@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,9 +14,8 @@ import android.view.ViewGroup;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.model.AdaptableItem;
 import com.simplecity.amp_library.model.Genre;
-import com.simplecity.amp_library.ui.adapters.GenreAdapter;
+import com.simplecity.amp_library.ui.adapters.SectionedAdapter;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.GenreView;
 import com.simplecity.amp_library.ui.recyclerview.GridDividerDecoration;
@@ -25,32 +25,33 @@ import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.ThemeUtils;
+import com.simplecityapps.recycler_adapter.model.ViewModel;
+import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 public class GenreFragment extends BaseFragment implements
-        MusicUtils.Defs,
-        RecyclerView.RecyclerListener,
-        GenreAdapter.GenreListener {
+        MusicUtils.Defs, GenreView.ClickListener {
 
     private static final String TAG = "GenreFragment";
 
     public interface GenreClickListener {
 
-        void onItemClicked(Genre genre);
+        void onGenreClicked(Genre genre);
     }
 
     private static final String ARG_PAGE_TITLE = "page_title";
 
     private SharedPreferences mPrefs;
 
+    @Nullable
     private GenreClickListener genreClickListener;
 
     private FastScrollRecyclerView mRecyclerView;
 
-    private GenreAdapter genreAdapter;
+    private SectionedAdapter adapter;
 
     private SharedPreferences.OnSharedPreferenceChangeListener mSharedPreferenceChangeListener;
 
@@ -72,15 +73,16 @@ public class GenreFragment extends BaseFragment implements
     public void onAttach(Context context) {
         super.onAttach(context);
 
-//        genreClickListener = (GenreClickListener) getActivity();
+        if (getParentFragment() instanceof GenreClickListener) {
+            genreClickListener = (GenreClickListener) getParentFragment();
+        }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        genreAdapter = new GenreAdapter();
-        genreAdapter.setListener(this);
+        adapter = new SectionedAdapter();
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
 
@@ -101,8 +103,8 @@ public class GenreFragment extends BaseFragment implements
             mRecyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             mRecyclerView.addItemDecoration(new GridDividerDecoration(getResources(), 4, true));
-            mRecyclerView.setRecyclerListener(this);
-            mRecyclerView.setAdapter(genreAdapter);
+            mRecyclerView.setRecyclerListener(new RecyclerListener());
+            mRecyclerView.setAdapter(adapter);
 
             themeUIComponents();
         }
@@ -139,18 +141,29 @@ public class GenreFragment extends BaseFragment implements
                 subscription = DataManager.getInstance().getGenresRelay()
                         .map(genres -> Stream.of(genres)
                                 .sorted((a, b) -> ComparisonUtils.compare(a.name, b.name))
-                                .map(genre -> (AdaptableItem) new GenreView(genre))
+                                .map(genre -> {
+                                    GenreView genreView = new GenreView(genre);
+                                    genreView.setClickListener(this);
+                                    return (ViewModel) genreView;
+                                })
                                 .collect(Collectors.toList()))
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(items -> {
                             if (items.isEmpty()) {
-                                genreAdapter.setEmpty(new EmptyView(R.string.empty_genres));
+                                adapter.setEmpty(new EmptyView(R.string.empty_genres));
                             } else {
-                                genreAdapter.setItems(items);
+                                adapter.setItems(items);
                             }
                         });
             }
         });
+    }
+
+    @Override
+    public void onItemClick(Genre genre) {
+        if (genreClickListener != null) {
+            genreClickListener.onGenreClicked(genre);
+        }
     }
 
     private void themeUIComponents() {
@@ -166,18 +179,6 @@ public class GenreFragment extends BaseFragment implements
                     super.onScrollStateChanged(recyclerView, newState);
                 }
             });
-        }
-    }
-
-    @Override
-    public void onItemClick(View v, int position, Genre genre) {
-        genreClickListener.onItemClicked(genre);
-    }
-
-    @Override
-    public void onViewRecycled(RecyclerView.ViewHolder holder) {
-        if (holder.getAdapterPosition() != -1) {
-            genreAdapter.items.get(holder.getAdapterPosition()).recycle(holder);
         }
     }
 

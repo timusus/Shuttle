@@ -1,16 +1,19 @@
 package com.simplecity.amp_library.ui.modelviews;
 
-import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ui.views.BreadcrumbView;
-import com.simplecity.amp_library.utils.ColorUtils;
+import com.simplecityapps.recycler_adapter.model.BaseViewModel;
+import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 
-public class BreadcrumbsView extends BaseAdaptableItem<String, BreadcrumbsView.ViewHolder> {
+import static android.text.TextUtils.isEmpty;
+import static com.simplecity.amp_library.R.id.breadcrumbs;
+import static com.simplecity.amp_library.R.layout.list_item_breadcrumbs;
+import static com.simplecity.amp_library.ui.adapters.ViewType.BREADCRUMBS;
+import static com.simplecity.amp_library.utils.ColorUtils.getTextColorPrimary;
+
+public class BreadcrumbsView extends BaseViewModel<BreadcrumbsView.ViewHolder> {
 
     private String breadcrumbPath;
 
@@ -24,40 +27,38 @@ public class BreadcrumbsView extends BaseAdaptableItem<String, BreadcrumbsView.V
 
     @Override
     public int getViewType() {
-        return ViewType.BREADCRUMBS;
+        return BREADCRUMBS;
     }
 
     @Override
     public int getLayoutResId() {
-        return R.layout.list_item_breadcrumbs;
+        return list_item_breadcrumbs;
     }
 
     @Override
     public void bindView(ViewHolder holder) {
-        if (!TextUtils.isEmpty(breadcrumbPath)) {
+
+        super.bindView(holder);
+
+        if (!isEmpty(breadcrumbPath)) {
             holder.breadcrumbView.changeBreadcrumbPath(breadcrumbPath);
         }
     }
 
     @Override
-    public ViewHolder getViewHolder(ViewGroup parent) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutResId(), parent, false));
+    public ViewHolder createViewHolder(ViewGroup parent) {
+        return new ViewHolder(createView(parent));
     }
 
-    @Override
-    public String getItem() {
-        return breadcrumbPath;
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends BaseViewHolder {
 
         public BreadcrumbView breadcrumbView;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            breadcrumbView = (BreadcrumbView) itemView.findViewById(R.id.breadcrumbs);
-            breadcrumbView.setTextColor(ColorUtils.getTextColorPrimary());
+            breadcrumbView = (BreadcrumbView) itemView.findViewById(breadcrumbs);
+            breadcrumbView.setTextColor(getTextColorPrimary());
         }
 
         @Override

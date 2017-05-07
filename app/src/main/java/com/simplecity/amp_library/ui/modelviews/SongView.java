@@ -1,35 +1,83 @@
 package com.simplecity.amp_library.ui.modelviews;
 
-import android.view.LayoutInflater;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bignerdranch.android.multiselector.MultiSelector;
-import com.bignerdranch.android.multiselector.SwappingHolder;
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.format.PrefixHighlighter;
-import com.simplecity.amp_library.glide.utils.GlideUtils;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.ui.views.NonScrollImageButton;
-import com.simplecity.amp_library.utils.DrawableUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
-import com.simplecity.amp_library.utils.SettingsManager;
+import com.simplecity.amp_library.utils.SortManager;
+import com.simplecityapps.recycler_adapter.model.BaseViewModel;
+import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class SongView extends BaseAdaptableItem<Song, SongView.ViewHolder> {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+import static android.support.v4.view.MotionEventCompat.getActionMasked;
+import static android.text.TextUtils.isEmpty;
+import static android.view.MotionEvent.ACTION_DOWN;
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+import static com.bumptech.glide.Glide.clear;
+import static com.bumptech.glide.load.engine.DiskCacheStrategy.ALL;
+import static com.simplecity.amp_library.R.drawable.ic_drag_grip;
+import static com.simplecity.amp_library.R.drawable.ic_overflow_white;
+import static com.simplecity.amp_library.R.id;
+import static com.simplecity.amp_library.R.id.btn_overflow;
+import static com.simplecity.amp_library.R.id.drag_handle;
+import static com.simplecity.amp_library.R.id.image;
+import static com.simplecity.amp_library.R.id.line_one;
+import static com.simplecity.amp_library.R.id.line_three;
+import static com.simplecity.amp_library.R.id.line_two;
+import static com.simplecity.amp_library.R.id.play_count;
+import static com.simplecity.amp_library.R.layout.list_item_edit;
+import static com.simplecity.amp_library.R.layout.list_item_two_lines;
+import static com.simplecity.amp_library.R.string.btn_options;
+import static com.simplecity.amp_library.glide.utils.GlideUtils.getPlaceHolderDrawable;
+import static com.simplecity.amp_library.ui.adapters.ViewType.SONG;
+import static com.simplecity.amp_library.ui.adapters.ViewType.SONG_EDITABLE;
+import static com.simplecity.amp_library.utils.DrawableUtils.getBaseDrawable;
+import static com.simplecity.amp_library.utils.DrawableUtils.getColoredAccentDrawable;
+import static com.simplecity.amp_library.utils.DrawableUtils.getColoredDrawable;
+import static com.simplecity.amp_library.utils.DrawableUtils.getColoredStateListDrawable;
+import static com.simplecity.amp_library.utils.MusicUtils.getSongId;
+import static com.simplecity.amp_library.utils.SettingsManager.getInstance;
+import static com.simplecity.amp_library.utils.SortManager.SongSort.ALBUM_NAME;
+import static com.simplecity.amp_library.utils.SortManager.SongSort.ARTIST_NAME;
+import static com.simplecity.amp_library.utils.SortManager.SongSort.DATE;
+import static com.simplecity.amp_library.utils.SortManager.SongSort.DEFAULT;
+import static com.simplecity.amp_library.utils.SortManager.SongSort.DURATION;
+import static com.simplecity.amp_library.utils.SortManager.SongSort.NAME;
+import static com.simplecity.amp_library.utils.SortManager.SongSort.TRACK_NUMBER;
+import static com.simplecity.amp_library.utils.SortManager.SongSort.YEAR;
+import static com.simplecity.amp_library.utils.StringUtils.keyFor;
+import static java.lang.String.format;
+import static java.lang.String.valueOf;
+
+public class SongView extends BaseViewModel<SongView.ViewHolder> implements
+        SectionedView {
+
+    public interface ClickListener {
+
+        void onItemClick(Song song, ViewHolder holder);
+
+        boolean onItemLongClick(Song song);
+
+        void onOverflowClick(View v, Song song);
+
+        void onStartDrag();
+    }
 
     private static final String TAG = "SongView";
 
     public Song song;
-
-    private MultiSelector multiSelector;
 
     private RequestManager requestManager;
 
@@ -37,20 +85,23 @@ public class SongView extends BaseAdaptableItem<Song, SongView.ViewHolder> {
 
     private char[] prefix;
 
-    public SongView(Song song, MultiSelector multiSelector, RequestManager requestManager) {
-        this.song = song;
-        this.multiSelector = multiSelector;
-        this.requestManager = requestManager;
-    }
-
-    public void setPrefix(PrefixHighlighter prefixHighlighter, char[] prefix) {
-        this.prefixHighlighter = prefixHighlighter;
-        this.prefix = prefix;
-    }
-
     private boolean editable;
 
     private boolean showAlbumArt;
+
+    private boolean showTrackNumber;
+
+    @Nullable
+    private ClickListener listener;
+
+    public SongView(Song song, RequestManager requestManager) {
+        this.song = song;
+        this.requestManager = requestManager;
+    }
+
+    public void setClickListener(@Nullable ClickListener listener) {
+        this.listener = listener;
+    }
 
     public void setEditable(boolean editable) {
         this.editable = editable;
@@ -60,60 +111,89 @@ public class SongView extends BaseAdaptableItem<Song, SongView.ViewHolder> {
         this.showAlbumArt = showAlbumArt;
     }
 
-    private boolean showTrackNumber = false;
+    public void setPrefix(PrefixHighlighter prefixHighlighter, char[] prefix) {
+        this.prefixHighlighter = prefixHighlighter;
+        this.prefix = prefix;
+    }
 
     public void setShowTrackNumber(boolean showTrackNumber) {
         this.showTrackNumber = showTrackNumber;
     }
 
+    private void onItemClick(ViewHolder holder) {
+        if (listener != null) {
+            listener.onItemClick(song, holder);
+        }
+    }
+
+    private void onOverflowClick(View v) {
+        if (listener != null) {
+            listener.onOverflowClick(v, song);
+        }
+    }
+
+    private boolean onItemLongClick() {
+        if (listener != null) {
+            return listener.onItemLongClick(song);
+        }
+        return false;
+    }
+
+    private void onStartDrag() {
+        if (listener != null) {
+            listener.onStartDrag();
+        }
+    }
+
     @Override
     public int getViewType() {
-        return editable ? ViewType.SONG_EDITABLE : ViewType.SONG;
+        return editable ? SONG_EDITABLE : SONG;
     }
 
     @Override
     public int getLayoutResId() {
-        return editable ? R.layout.list_item_edit : R.layout.list_item_two_lines;
+        return editable ? list_item_edit : list_item_two_lines;
     }
 
     @Override
     public void bindView(ViewHolder holder) {
+        super.bindView(holder);
 
         holder.lineOne.setText(song.name);
 
         if (holder.playCount != null) {
             if (song.playCount > 1) {
-                holder.playCount.setVisibility(View.VISIBLE);
-                holder.playCount.setText(String.valueOf(song.playCount));
+                holder.playCount.setVisibility(VISIBLE);
+                holder.playCount.setText(valueOf(song.playCount));
             } else {
-                holder.playCount.setVisibility(View.GONE);
+                holder.playCount.setVisibility(GONE);
             }
         }
 
-        holder.lineTwo.setText(String.format("%s - %s", song.artistName, song.albumName));
+        holder.lineTwo.setText(format("%s - %s", song.artistName, song.albumName));
         holder.lineThree.setText(song.getDurationLabel());
 
         if (holder.dragHandle != null) {
-            if (MusicUtils.getSongId() == song.id) {
-                holder.dragHandle.setImageDrawable(DrawableUtils.getColoredAccentDrawable(holder.itemView.getContext(), holder.itemView.getResources().getDrawable(R.drawable.ic_drag_grip)));
+            if (getSongId() == song.id) {
+                holder.dragHandle.setImageDrawable(getColoredAccentDrawable(holder.itemView.getContext(), holder.itemView.getResources().getDrawable(ic_drag_grip)));
             } else {
-                holder.dragHandle.setImageDrawable(DrawableUtils.getBaseDrawable(holder.itemView.getContext(), R.drawable.ic_drag_grip));
+                holder.dragHandle.setImageDrawable(getBaseDrawable(holder.itemView.getContext(), ic_drag_grip));
             }
         }
 
         if (holder.artwork != null) {
-            if (showAlbumArt && SettingsManager.getInstance().showArtworkInQueue()) {
-                holder.artwork.setVisibility(View.VISIBLE);
+            if (showAlbumArt && getInstance().showArtworkInQueue()) {
+                holder.artwork.setVisibility(VISIBLE);
                 requestManager.load(song)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .placeholder(GlideUtils.getPlaceHolderDrawable(song.albumName, false))
+                        .diskCacheStrategy(ALL)
+                        .placeholder(getPlaceHolderDrawable(song.albumName, false))
                         .into(holder.artwork);
             } else {
-                holder.artwork.setVisibility(View.GONE);
+                holder.artwork.setVisibility(GONE);
             }
         }
 
-        holder.overflowButton.setContentDescription(holder.itemView.getResources().getString(R.string.btn_options, song.name));
+        holder.overflowButton.setContentDescription(holder.itemView.getResources().getString(btn_options, song.name));
 
         if (prefixHighlighter != null) {
             prefixHighlighter.setText(holder.lineOne, prefix);
@@ -126,10 +206,10 @@ public class SongView extends BaseAdaptableItem<Song, SongView.ViewHolder> {
 
         if (holder.trackNumber != null) {
             if (showTrackNumber) {
-                holder.trackNumber.setVisibility(View.VISIBLE);
-                holder.trackNumber.setText(String.valueOf(song.track));
+                holder.trackNumber.setVisibility(VISIBLE);
+                holder.trackNumber.setText(valueOf(song.track));
             } else {
-                holder.trackNumber.setVisibility(View.GONE);
+                holder.trackNumber.setVisibility(GONE);
             }
         }
     }
@@ -145,59 +225,54 @@ public class SongView extends BaseAdaptableItem<Song, SongView.ViewHolder> {
     }
 
     @Override
-    public ViewHolder getViewHolder(ViewGroup parent) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutResId(), parent, false), multiSelector);
+    public ViewHolder createViewHolder(ViewGroup parent) {
+        return new ViewHolder(createView(parent));
     }
 
     @Override
-    public void recycle(ViewHolder holder) {
-        if (holder.artwork != null) {
-            Glide.clear(holder.artwork);
-        }
-    }
+    public String getSectionName() {
+        int sortOrder = SortManager.getInstance().getSongsSortOrder();
 
-    @Override
-    public Song getItem() {
-        return song;
-    }
+        if (sortOrder != DATE
+                && sortOrder != DURATION
+                && sortOrder != TRACK_NUMBER) {
 
-    public static class ViewHolder extends SwappingHolder {
-
-        public TextView lineOne;
-        public TextView lineTwo;
-        public TextView lineThree;
-        public TextView trackNumber;
-        public TextView playCount;
-        public NonScrollImageButton overflowButton;
-        public ImageView dragHandle;
-        public ImageView artwork;
-
-        public ViewHolder(View itemView, MultiSelector multiSelector) {
-            super(itemView, multiSelector);
-
-            lineOne = (TextView) itemView.findViewById(R.id.line_one);
-            lineTwo = (TextView) itemView.findViewById(R.id.line_two);
-            lineThree = (TextView) itemView.findViewById(R.id.line_three);
-            trackNumber = (TextView) itemView.findViewById(R.id.trackNumber);
-            overflowButton = (NonScrollImageButton) itemView.findViewById(R.id.btn_overflow);
-            playCount = (TextView) itemView.findViewById(R.id.play_count);
-            dragHandle = (ImageView) itemView.findViewById(R.id.drag_handle);
-            artwork = (ImageView) itemView.findViewById(R.id.image);
-
-            if (playCount != null) {
-                playCount.setBackground(DrawableUtils.getColoredDrawable(itemView.getContext(), playCount.getBackground()));
+            String string = null;
+            boolean requiresSubstring = true;
+            switch (sortOrder) {
+                case DEFAULT:
+                    string = keyFor(song.name);
+                    break;
+                case NAME:
+                    string = song.name;
+                    break;
+                case YEAR:
+                    string = valueOf(song.year);
+                    if (string.length() != 4) {
+                        string = "-";
+                    } else {
+                        string = string.substring(2, 4);
+                    }
+                    requiresSubstring = false;
+                    break;
+                case ALBUM_NAME:
+                    string = keyFor(song.albumName);
+                    break;
+                case ARTIST_NAME:
+                    string = keyFor(song.artistName);
+                    break;
             }
 
-            overflowButton.setImageDrawable(DrawableUtils.getColoredStateListDrawable(itemView.getContext(), R.drawable.ic_overflow_white));
-            if (dragHandle != null) {
-                dragHandle.setImageDrawable(DrawableUtils.getBaseDrawable(itemView.getContext(), R.drawable.ic_drag_grip));
+            if (requiresSubstring) {
+                if (!isEmpty(string)) {
+                    string = string.substring(0, 1).toUpperCase();
+                } else {
+                    string = " ";
+                }
             }
+            return string;
         }
-
-        @Override
-        public String toString() {
-            return "SongView.ViewHolder";
-        }
+        return "";
     }
 
     @Override
@@ -214,6 +289,7 @@ public class SongView extends BaseAdaptableItem<Song, SongView.ViewHolder> {
 
         if (editable != songView.editable) return false;
         if (showAlbumArt != songView.showAlbumArt) return false;
+        if (showTrackNumber != songView.showTrackNumber) return false;
         if (song != null ? !song.equals(songView.song) : songView.song != null) return false;
         return Arrays.equals(prefix, songView.prefix);
 
@@ -225,6 +301,77 @@ public class SongView extends BaseAdaptableItem<Song, SongView.ViewHolder> {
         result = 31 * result + Arrays.hashCode(prefix);
         result = 31 * result + (editable ? 1 : 0);
         result = 31 * result + (showAlbumArt ? 1 : 0);
+        result = 31 * result + (showTrackNumber ? 1 : 0);
         return result;
+    }
+
+    public static class ViewHolder extends BaseViewHolder<SongView> {
+
+        @BindView(line_one)
+        TextView lineOne;
+
+        @BindView(line_two)
+        TextView lineTwo;
+
+        @BindView(line_three)
+        TextView lineThree;
+
+        @Nullable @BindView(id.trackNumber)
+        TextView trackNumber;
+
+        @Nullable @BindView(play_count)
+        TextView playCount;
+
+        @BindView(btn_overflow)
+        public NonScrollImageButton overflowButton;
+
+        @Nullable @BindView(drag_handle)
+        ImageView dragHandle;
+
+        @Nullable @BindView(image)
+        ImageView artwork;
+
+        ViewHolder(View itemView) {
+            super(itemView);
+
+            ButterKnife.bind(this, itemView);
+
+            if (playCount != null) {
+                playCount.setBackground(getColoredDrawable(itemView.getContext(), playCount.getBackground()));
+            }
+
+            overflowButton.setImageDrawable(getColoredStateListDrawable(itemView.getContext(), ic_overflow_white));
+            if (dragHandle != null) {
+                dragHandle.setImageDrawable(getBaseDrawable(itemView.getContext(), ic_drag_grip));
+            }
+
+            itemView.setOnClickListener(v -> viewModel.onItemClick(this));
+            itemView.setOnLongClickListener(v -> viewModel.onItemLongClick());
+
+            overflowButton.setOnClickListener(v -> viewModel.onOverflowClick(v));
+
+            if (dragHandle != null) {
+                dragHandle.setOnTouchListener((v, event) -> {
+                    if (getActionMasked(event) == ACTION_DOWN) {
+                        viewModel.onStartDrag();
+                    }
+                    return false;
+                });
+            }
+        }
+
+        @Override
+        public String toString() {
+            return "SongView.ViewHolder";
+        }
+
+        @Override
+        public void recycle() {
+            super.recycle();
+
+            if (artwork != null) {
+                clear(artwork);
+            }
+        }
     }
 }

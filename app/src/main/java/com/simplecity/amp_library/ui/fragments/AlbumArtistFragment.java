@@ -8,11 +8,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,6 +22,7 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
@@ -28,14 +31,12 @@ import com.bignerdranch.android.multiselector.MultiSelector;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.model.AdaptableItem;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
-import com.simplecity.amp_library.ui.adapters.AlbumArtistAdapter;
+import com.simplecity.amp_library.ui.adapters.SectionedAdapter;
 import com.simplecity.amp_library.ui.modelviews.AlbumArtistView;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
-import com.simplecity.amp_library.ui.modelviews.ViewType;
 import com.simplecity.amp_library.ui.recyclerview.GridDividerDecoration;
 import com.simplecity.amp_library.utils.ColorUtils;
 import com.simplecity.amp_library.utils.DataManager;
@@ -48,6 +49,9 @@ import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.SortManager;
 import com.simplecity.amp_library.utils.ThemeUtils;
+import com.simplecityapps.recycler_adapter.model.ViewModel;
+import com.simplecity.amp_library.ui.adapters.ViewType;
+import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.Collections;
@@ -60,12 +64,11 @@ import rx.schedulers.Schedulers;
 
 public class AlbumArtistFragment extends BaseFragment implements
         MusicUtils.Defs,
-        AlbumArtistAdapter.AlbumArtistListener,
-        RecyclerView.RecyclerListener {
+        AlbumArtistView.ClickListener {
 
-    public interface AlbumArtistClickListener {
+    interface AlbumArtistClickListener {
 
-        void onItemClicked(AlbumArtist albumArtist, View transitionView);
+        void onAlbumArtistClicked(AlbumArtist albumArtist, View transitionView);
     }
 
     private static final String TAG = "AlbumArtistFragment";
@@ -77,13 +80,14 @@ public class AlbumArtistFragment extends BaseFragment implements
 
     private SharedPreferences sharedPreferences;
 
+    @Nullable
     private AlbumArtistClickListener albumArtistClickListener;
 
     private FastScrollRecyclerView recyclerView;
 
     private GridLayoutManager layoutManager;
 
-    AlbumArtistAdapter albumArtistAdapter;
+    SectionedAdapter adapter;
 
     MultiSelector multiSelector = new MultiSelector();
 
@@ -113,17 +117,21 @@ public class AlbumArtistFragment extends BaseFragment implements
     public void onAttach(Context context) {
         super.onAttach(context);
 
-//        albumArtistClickListener = (AlbumArtistClickListener) getActivity();
+        Fragment parentFragment = getParentFragment();
+        if (parentFragment instanceof AlbumArtistClickListener) {
+            albumArtistClickListener = (AlbumArtistClickListener) parentFragment;
+        }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.i(TAG, "onCreate");
+
         setHasOptionsMenu(true);
 
-        albumArtistAdapter = new AlbumArtistAdapter();
-        albumArtistAdapter.setListener(this);
+        adapter = new SectionedAdapter();
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
 
@@ -163,7 +171,7 @@ public class AlbumArtistFragment extends BaseFragment implements
             layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
-                    if (albumArtistAdapter.items.get(position) instanceof EmptyView) {
+                    if (adapter.items.get(position) instanceof EmptyView) {
                         return spanCount;
                     }
                     return 1;
@@ -173,8 +181,8 @@ public class AlbumArtistFragment extends BaseFragment implements
             recyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.addItemDecoration(new GridDividerDecoration(getResources(), 4, true));
-            recyclerView.setRecyclerListener(this);
-            recyclerView.setAdapter(albumArtistAdapter);
+            recyclerView.setRecyclerListener(new RecyclerListener());
+            recyclerView.setAdapter(adapter);
 
             actionMode = null;
 
@@ -200,6 +208,9 @@ public class AlbumArtistFragment extends BaseFragment implements
     @Override
     public void onResume() {
         super.onResume();
+
+        Log.i(TAG, "OnResume");
+
         IntentFilter filter = new IntentFilter();
         filter.addAction("restartLoader");
         getActivity().registerReceiver(broadcastReceiver, filter);
@@ -246,16 +257,20 @@ public class AlbumArtistFragment extends BaseFragment implements
                                 Collections.reverse(albumArtists);
                             }
                             return Observable.from(albumArtists)
-                                    .map(albumArtist -> (AdaptableItem) new AlbumArtistView(albumArtist, artistDisplayType, multiSelector, requestManager))
+                                    .map(albumArtist -> {
+                                        AlbumArtistView albumArtistView = new AlbumArtistView(albumArtist, artistDisplayType, multiSelector, requestManager);
+                                        albumArtistView.setClickListener(this);
+                                        return (ViewModel) albumArtistView;
+                                    })
                                     .toList();
                         })
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(items -> {
 
                             if (items.isEmpty()) {
-                                albumArtistAdapter.setEmpty(new EmptyView(R.string.empty_artists));
+                                adapter.setEmpty(new EmptyView(R.string.empty_artists));
                             } else {
-                                albumArtistAdapter.setItems(items);
+                                adapter.setItems(items);
                             }
 
                             //Move the RV back to the top if we've had a sort order change.
@@ -372,26 +387,26 @@ public class AlbumArtistFragment extends BaseFragment implements
             case R.id.view_as_list:
                 SettingsManager.getInstance().setArtistDisplayType(ViewType.ARTIST_LIST);
                 layoutManager.setSpanCount(getResources().getInteger(R.integer.list_num_columns));
-                albumArtistAdapter.updateItemViewType();
-                albumArtistAdapter.notifyItemRangeChanged(0, albumArtistAdapter.getItemCount());
+//                adapter.updateItemViewType();
+                adapter.notifyItemRangeChanged(0, adapter.getItemCount());
                 break;
             case R.id.view_as_grid:
                 SettingsManager.getInstance().setArtistDisplayType(ViewType.ARTIST_GRID);
                 layoutManager.setSpanCount(SettingsManager.getInstance().getArtistColumnCount(getResources()));
-                albumArtistAdapter.updateItemViewType();
-                albumArtistAdapter.notifyItemRangeChanged(0, albumArtistAdapter.getItemCount());
+//                adapter.updateItemViewType();
+                adapter.notifyItemRangeChanged(0, adapter.getItemCount());
                 break;
             case R.id.view_as_grid_card:
                 SettingsManager.getInstance().setArtistDisplayType(ViewType.ARTIST_CARD);
                 layoutManager.setSpanCount(SettingsManager.getInstance().getArtistColumnCount(getResources()));
-                albumArtistAdapter.updateItemViewType();
-                albumArtistAdapter.notifyItemRangeChanged(0, albumArtistAdapter.getItemCount());
+//                adapter.updateItemViewType();
+                adapter.notifyItemRangeChanged(0, adapter.getItemCount());
                 break;
             case R.id.view_as_grid_palette:
                 SettingsManager.getInstance().setArtistDisplayType(ViewType.ARTIST_PALETTE);
                 layoutManager.setSpanCount(SettingsManager.getInstance().getArtistColumnCount(getResources()));
-                albumArtistAdapter.updateItemViewType();
-                albumArtistAdapter.notifyItemRangeChanged(0, albumArtistAdapter.getItemCount());
+//                adapter.updateItemViewType();
+                adapter.notifyItemRangeChanged(0, adapter.getItemCount());
                 break;
         }
 
@@ -400,7 +415,7 @@ public class AlbumArtistFragment extends BaseFragment implements
 
             if (SettingsManager.getInstance().getArtistDisplayType() != ViewType.ARTIST_LIST) {
                 ((GridLayoutManager) recyclerView.getLayoutManager()).setSpanCount(SettingsManager.getInstance().getArtistColumnCount(getResources()));
-                albumArtistAdapter.notifyItemRangeChanged(0, albumArtistAdapter.getItemCount());
+                adapter.notifyItemRangeChanged(0, adapter.getItemCount());
             }
         }
 
@@ -410,52 +425,48 @@ public class AlbumArtistFragment extends BaseFragment implements
     }
 
     @Override
-    public void onItemClick(View v, int position, AlbumArtist albumArtist) {
-        if (inActionMode) {
-            multiSelector.setSelected(position, albumArtistAdapter.getItemId(position), !multiSelector.isSelected(position, albumArtistAdapter.getItemId(position)));
-
-            if (multiSelector.getSelectedPositions().size() == 0) {
-                if (actionMode != null) {
-                    actionMode.finish();
-                }
-            }
-
-            updateActionModeSelectionCount();
-
-        } else {
-            albumArtistClickListener.onItemClicked(albumArtist, v.findViewById(R.id.image));
+    public void onAlbumArtistClick(AlbumArtist albumArtist, AlbumArtistView.ViewHolder holder) {
+//        if (inActionMode) {
+//            multiSelector.setSelected(holder.getAdapterPosition(), albumArtistAdapter.getItemId(holder.getAdapterPosition()), !multiSelector.isSelected(holder.getAdapterPosition(), albumArtistAdapter.getItemId(holder.getAdapterPosition())));
+//
+//            if (multiSelector.getSelectedPositions().size() == 0) {
+//                if (actionMode != null) {
+//                    actionMode.finish();
+//                }
+//            }
+//            updateActionModeSelectionCount();
+//
+//        } else if (albumArtistClickListener != null) {
+        if (albumArtistClickListener != null) {
+            albumArtistClickListener.onAlbumArtistClicked(albumArtist, holder.imageOne);
         }
+//        }
     }
 
     @Override
-    public void onOverflowClick(View v, int position, AlbumArtist albumArtist) {
+    public boolean onAlbumArtistLongClick(AlbumArtist albumArtist) {
+
+//        if (inActionMode) {
+//            return false;
+//        }
+
+//        if (multiSelector.getSelectedPositions().size() == 0) {
+//            actionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(mActionModeCallback);
+//            inActionMode = true;
+//        }
+//
+//        multiSelector.setSelected(viewHolder.getAdapterPosition(), albumArtistAdapter.getItemId(viewHolder.getAdapterPosition()), !multiSelector.isSelected(viewHolder.getAdapterPosition(), albumArtistAdapter.getItemId(viewHolder.getAdapterPosition())));
+//
+//        updateActionModeSelectionCount();
+        return false;
+    }
+
+    @Override
+    public void onAlbumArtistOverflowClicked(View v, AlbumArtist albumArtist) {
         PopupMenu menu = new PopupMenu(AlbumArtistFragment.this.getActivity(), v);
         MenuUtils.addAlbumArtistMenuOptions(getActivity(), menu);
         MenuUtils.addClickHandler((AppCompatActivity) getActivity(), menu, albumArtist);
         menu.show();
-    }
-
-    @Override
-    public void onLongClick(View v, int position, AlbumArtist albumArtist) {
-        if (inActionMode) {
-            return;
-        }
-
-        if (multiSelector.getSelectedPositions().size() == 0) {
-            actionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(mActionModeCallback);
-            inActionMode = true;
-        }
-
-        multiSelector.setSelected(position, albumArtistAdapter.getItemId(position), !multiSelector.isSelected(position, albumArtistAdapter.getItemId(position)));
-
-        updateActionModeSelectionCount();
-    }
-
-    @Override
-    public void onViewRecycled(RecyclerView.ViewHolder holder) {
-        if (holder.getAdapterPosition() != -1) {
-            albumArtistAdapter.items.get(holder.getAdapterPosition()).recycle(holder);
-        }
     }
 
     private void updateActionModeSelectionCount() {
@@ -521,7 +532,8 @@ public class AlbumArtistFragment extends BaseFragment implements
                     mode.finish();
                     return true;
                 case R.id.menu_add_to_queue: {
-                    songsObservable.subscribe(songs -> MusicUtils.addToQueue(getActivity(), songs));
+                    songsObservable.subscribe(songs -> MusicUtils.addToQueue(songs, message ->
+                            Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show()));
                     return true;
                 }
             }
@@ -539,7 +551,7 @@ public class AlbumArtistFragment extends BaseFragment implements
 
     List<AlbumArtist> getCheckedAlbumArtists() {
         return Stream.of(multiSelector.getSelectedPositions())
-                .map(i -> ((AlbumArtistView) albumArtistAdapter.items.get(i)).albumArtist)
+                .map(i -> ((AlbumArtistView) adapter.items.get(i)).albumArtist)
                 .collect(Collectors.toList());
     }
 

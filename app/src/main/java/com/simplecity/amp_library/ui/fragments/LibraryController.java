@@ -4,16 +4,28 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.libraries.cast.companionlibrary.cast.BaseCastManager;
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.detail.AlbumDetailFragment;
+import com.simplecity.amp_library.detail.ArtistDetailFragment;
+import com.simplecity.amp_library.detail.BaseDetailFragment;
+import com.simplecity.amp_library.detail.GenreDetailFragment;
+import com.simplecity.amp_library.detail.PlaylistDetailFragment;
+import com.simplecity.amp_library.model.Album;
+import com.simplecity.amp_library.model.AlbumArtist;
+import com.simplecity.amp_library.model.Genre;
+import com.simplecity.amp_library.model.Playlist;
+import com.simplecity.amp_library.ui.activities.BaseCastActivity;
 import com.simplecity.amp_library.ui.activities.ToolbarListener;
 import com.simplecity.amp_library.ui.adapters.PagerAdapter;
 import com.simplecity.amp_library.ui.views.SlidingTabLayout;
@@ -21,13 +33,20 @@ import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.ThemeUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import test.com.androidnavigation.fragment.BaseController;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import test.com.androidnavigation.fragment.FragmentInfo;
 
 
-public class LibraryController extends BaseController {
+public class LibraryController extends BaseFragment implements
+        AlbumArtistFragment.AlbumArtistClickListener,
+        AlbumFragment.AlbumClickListener,
+        SuggestedFragment.SuggestedClickListener,
+        PlaylistFragment.PlaylistClickListener,
+        GenreFragment.GenreClickListener {
 
     private static final String TAG = "LibraryController";
 
@@ -47,21 +66,18 @@ public class LibraryController extends BaseController {
     private static final String SHOW_FOLDERS = "show_folders";
     private static final String SHOW_PLAYLISTS = "show_playlists";
 
-    private SharedPreferences prefs;
-    private SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceChangeListener;
-
     private int defaultPage;
 
     private PagerAdapter adapter;
-    private SlidingTabLayout slidingTabLayout;
-    private ViewPager pager;
 
-    public interface OtherClickListener {
-        void onItemClick(String transitionName, List<Pair<View, String>> sharedElements);
-    }
+    @BindView(R.id.tabs)
+    SlidingTabLayout slidingTabLayout;
 
+    @BindView(R.id.pager)
+    ViewPager pager;
 
-    private int prevOffset = 0;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     public static FragmentInfo fragmentInfo() {
         return new FragmentInfo(LibraryController.class, null, "LibraryController");
@@ -73,8 +89,6 @@ public class LibraryController extends BaseController {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        prefs = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
 
@@ -147,13 +161,13 @@ public class LibraryController extends BaseController {
             }
         }
 
-        sharedPreferenceChangeListener = (sharedPreferences, key) -> {
+        SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceChangeListener = (sharedPreferences, key) -> {
             if (key.equals("pref_theme_highlight_color") || key.equals("pref_theme_accent_color") || key.equals("pref_theme_white_accent")) {
                 themeUIComponents();
             }
         };
 
-        this.prefs.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
+        prefs.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
     }
 
     @Nullable
@@ -161,32 +175,22 @@ public class LibraryController extends BaseController {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_library, container, false);
 
-        final Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        ViewCompat.setTransitionName(toolbar, "toolbar");
+        ButterKnife.bind(this, rootView);
 
+        toolbar.inflateMenu(R.menu.menu_library);
+        setupCastToolbar(toolbar);
 
-        AppBarLayout appBarLayout = (AppBarLayout) rootView.findViewById(R.id.app_bar);
-        appBarLayout.addOnOffsetChangedListener((appBarLayout1, verticalOffset) -> {
+        if (getActivity() instanceof BaseCastActivity) {
+            BaseCastManager castManager = ((BaseCastActivity) getActivity()).castManager;
+            if (castManager != null) {
+                castManager.addMediaRouterButton(toolbar.getMenu(), R.id.media_route_menu_item);
+            }
+        }
 
-            prevOffset = verticalOffset;
-
-//                if (-verticalOffset >= appBarLayout.getTotalScrollRange()) {
-//                    if (toolbar.getVisibility() == View.VISIBLE) {
-//                        ViewUtils.fadeOut(toolbar, 100, View.INVISIBLE);
-//                    }
-//                } else {
-//                    if (toolbar.getVisibility() != View.VISIBLE) {
-//                        ViewUtils.fadeIn(toolbar, 100);
-//                    }
-//                }
-        });
-
-        pager = (ViewPager) rootView.findViewById(R.id.pager);
         pager.setAdapter(adapter);
         pager.setOffscreenPageLimit(adapter.getCount() - 1);
         pager.setCurrentItem(defaultPage);
 
-        slidingTabLayout = (SlidingTabLayout) rootView.findViewById(R.id.tabs);
         ThemeUtils.themeTabLayout(getActivity(), slidingTabLayout);
         slidingTabLayout.setViewPager(pager);
 
@@ -195,7 +199,6 @@ public class LibraryController extends BaseController {
                 DialogUtils.showRateSnackbar(getActivity(), pager);
             }
         }, 1000);
-
 
         themeUIComponents();
 
@@ -220,4 +223,52 @@ public class LibraryController extends BaseController {
             ThemeUtils.themeViewPager(pager);
         }
     }
+
+    @Override
+    public void onAlbumArtistClicked(AlbumArtist albumArtist, View transitionView) {
+        String transitionName = ViewCompat.getTransitionName(transitionView);
+        ArtistDetailFragment detailFragment = ArtistDetailFragment.newInstance(albumArtist, transitionName);
+        pushDetailFragment(detailFragment, transitionView);
+    }
+
+    @Override
+    public void onAlbumClicked(Album album, View transitionView) {
+        String transitionName = ViewCompat.getTransitionName(transitionView);
+        AlbumDetailFragment detailFragment = AlbumDetailFragment.newInstance(album, transitionName);
+        pushDetailFragment(detailFragment, transitionView);
+    }
+
+    @Override
+    public void onGenreClicked(Genre genre) {
+        pushDetailFragment(GenreDetailFragment.newInstance(genre), null);
+    }
+
+    @Override
+    public void onPlaylistClicked(Playlist playlist) {
+        pushDetailFragment(PlaylistDetailFragment.newInstance(playlist), null);
+    }
+
+    void pushDetailFragment(BaseDetailFragment detailFragment, @Nullable View transitionView) {
+
+        List<Pair<View, String>> transitions = new ArrayList<>();
+
+        if (transitionView != null) {
+            String transitionName = ViewCompat.getTransitionName(transitionView);
+            transitions.add(new Pair<>(transitionView, transitionName));
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                Transition moveTransition = TransitionInflater.from(getContext()).inflateTransition(R.transition.image_transition);
+                detailFragment.setSharedElementEnterTransition(moveTransition);
+                detailFragment.setSharedElementReturnTransition(moveTransition);
+            }
+        }
+
+        getNavigationController().pushViewController(detailFragment, "DetailFragment", transitions);
+    }
+
+    @Override
+    protected String screenName() {
+        return "LibraryController";
+    }
+
 }

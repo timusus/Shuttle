@@ -3,9 +3,7 @@ package com.simplecity.amp_library.ui.adapters;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
-import android.view.MotionEvent;
 import android.view.View;
 
 import com.annimon.stream.Collectors;
@@ -13,11 +11,12 @@ import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.CategoryItem;
 import com.simplecity.amp_library.ui.modelviews.TabView;
+import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TabsAdapter extends ItemAdapter {
+public class TabsAdapter extends ViewModelAdapter {
 
     private TabListener mListener;
 
@@ -96,29 +95,29 @@ public class TabsAdapter extends ItemAdapter {
                 .collect(Collectors.toList()));
     }
 
-    @Override
-    protected void attachListeners(RecyclerView.ViewHolder viewHolder) {
-        super.attachListeners(viewHolder);
-
-        if (viewHolder instanceof TabView.ViewHolder) {
-
-            viewHolder.itemView.setOnClickListener(v -> {
-
-                if (mListener != null && viewHolder.getAdapterPosition() != -1) {
-                    mListener.onItemClick(v, viewHolder.getAdapterPosition(), ((TabView) items.get(viewHolder.getAdapterPosition())).categoryItem);
-                }
-            });
-
-            if (((TabView.ViewHolder) viewHolder).dragHandle != null) {
-                ((TabView.ViewHolder) viewHolder).dragHandle.setOnTouchListener((v, event) -> {
-                    if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
-                        mListener.onStartDrag(viewHolder);
-                    }
-                    return false;
-                });
-            }
-        }
-    }
+//    @Override
+//    protected void attachListeners(RecyclerView.ViewHolder viewHolder) {
+//        super.attachListeners(viewHolder);
+//
+//        if (viewHolder instanceof TabView.ViewHolder) {
+//
+//            viewHolder.itemView.setOnClickListener(v -> {
+//
+//                if (mListener != null && viewHolder.getAdapterPosition() != -1) {
+//                    mListener.onItemClick(v, viewHolder.getAdapterPosition(), ((TabView) items.get(viewHolder.getAdapterPosition())).categoryItem);
+//                }
+//            });
+//
+//            if (((TabView.ViewHolder) viewHolder).dragHandle != null) {
+//                ((TabView.ViewHolder) viewHolder).dragHandle.setOnTouchListener((v, event) -> {
+//                    if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
+//                        mListener.onStartDrag(viewHolder);
+//                    }
+//                    return false;
+//                });
+//            }
+//        }
+//    }
 
     public void updatePreferences() {
 

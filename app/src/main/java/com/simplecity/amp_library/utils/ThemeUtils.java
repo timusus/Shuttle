@@ -43,7 +43,6 @@ import android.widget.TextView;
 import com.doomonafireball.betterpickers.hmspicker.HmsPicker;
 import com.doomonafireball.betterpickers.hmspicker.HmsView;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.ui.activities.MainActivity2;
 import com.simplecity.amp_library.ui.activities.PlayerActivity;
 import com.simplecity.amp_library.ui.activities.WidgetConfigureExtraLarge;
 import com.simplecity.amp_library.ui.activities.WidgetConfigureLarge;
@@ -181,12 +180,12 @@ public class ThemeUtils {
             activity.getSupportActionBar().setBackgroundDrawable(
                     DrawableUtils.getColoredDrawable(activity, CompatUtils.getDrawableCompat(activity, R.drawable.ab_transparent)));
         }
-        if (activity instanceof MainActivity2 || isActionBarSolid(activity)) {
-            ActionBar actionBar = activity.getSupportActionBar();
-            Drawable actionBarDrawable = DrawableUtils.getColoredDrawable(activity, CompatUtils.getDrawableCompat(activity, R.drawable.action_bar_bg));
-            actionBar.setBackgroundDrawable(actionBarDrawable);
-            return actionBarDrawable;
-        }
+//        if (activity instanceof MainActivity2 || isActionBarSolid(activity)) {
+//            ActionBar actionBar = activity.getSupportActionBar();
+//            Drawable actionBarDrawable = DrawableUtils.getColoredDrawable(activity, CompatUtils.getDrawableCompat(activity, R.drawable.action_bar_bg));
+//            actionBar.setBackgroundDrawable(actionBarDrawable);
+//            return actionBarDrawable;
+//        }
         return null;
     }
 
@@ -202,7 +201,7 @@ public class ThemeUtils {
             return;
         }
         if (canTheme) {
-            activity.getWindow().setNavigationBarColor(ColorUtils.getPrimaryColorDark(activity));
+            activity.getWindow().setNavigationBarColor(ColorUtils.getPrimaryColorDark());
         } else {
             activity.getWindow().setNavigationBarColor(Color.BLACK);
         }
@@ -340,29 +339,29 @@ public class ThemeUtils {
             return;
         }
 
-        if (activity instanceof MainActivity2) {
-            if (ThemeUtils.getInstance().themeType == ThemeType.TYPE_SOLID_DARK
-                    || ThemeUtils.getInstance().themeType == ThemeType.TYPE_SOLID_LIGHT
-                    || ThemeUtils.getInstance().themeType == ThemeType.TYPE_SOLID_BLACK) {
-                slidingTabLayout.setBackgroundColor(ColorUtils.getPrimaryColor());
-                slidingTabLayout.setIndicatorColor(ColorUtils.getAccentColor() == ColorUtils.getPrimaryColor() ?
-                        activity.getResources().getColor(R.color.white) : ColorUtils.getAccentColor());
-                slidingTabLayout.setTextColor(activity.getResources().getColor(R.color.white));
-            } else if (ThemeUtils.getInstance().themeType == ThemeType.TYPE_DARK || ThemeUtils.getInstance().themeType == ThemeType.TYPE_BLACK) {
-                slidingTabLayout.setIndicatorColor(ColorUtils.getAccentColor() == ColorUtils.getPrimaryColor() ?
-                        activity.getResources().getColor(R.color.white) : ColorUtils.getAccentColor());
-                slidingTabLayout.setTextColor(activity.getResources().getColor(R.color.white));
-            } else if (ThemeUtils.getInstance().themeType == ThemeType.TYPE_LIGHT) {
-                slidingTabLayout.setIndicatorColor(ColorUtils.getAccentColor() == ColorUtils.getPrimaryColor() ?
-                        activity.getResources().getColor(R.color.white) : ColorUtils.getAccentColor());
-                slidingTabLayout.setTextColor(activity.getResources().getColor(R.color.black));
-            }
-        } else {
-            slidingTabLayout.setBackgroundColor(ColorUtils.getPrimaryColor());
-            slidingTabLayout.setIndicatorColor(ColorUtils.getAccentColor() == ColorUtils.getPrimaryColor() ?
-                    activity.getResources().getColor(R.color.tab_underline_white) : ColorUtils.getAccentColor());
-            slidingTabLayout.setTextColor(activity.getResources().getColor(R.color.white));
-        }
+//        if (activity instanceof MainActivity2) {
+//            if (ThemeUtils.getInstance().themeType == ThemeType.TYPE_SOLID_DARK
+//                    || ThemeUtils.getInstance().themeType == ThemeType.TYPE_SOLID_LIGHT
+//                    || ThemeUtils.getInstance().themeType == ThemeType.TYPE_SOLID_BLACK) {
+//                slidingTabLayout.setBackgroundColor(ColorUtils.getPrimaryColor());
+//                slidingTabLayout.setIndicatorColor(ColorUtils.getAccentColor() == ColorUtils.getPrimaryColor() ?
+//                        activity.getResources().getColor(R.color.white) : ColorUtils.getAccentColor());
+//                slidingTabLayout.setTextColor(activity.getResources().getColor(R.color.white));
+//            } else if (ThemeUtils.getInstance().themeType == ThemeType.TYPE_DARK || ThemeUtils.getInstance().themeType == ThemeType.TYPE_BLACK) {
+//                slidingTabLayout.setIndicatorColor(ColorUtils.getAccentColor() == ColorUtils.getPrimaryColor() ?
+//                        activity.getResources().getColor(R.color.white) : ColorUtils.getAccentColor());
+//                slidingTabLayout.setTextColor(activity.getResources().getColor(R.color.white));
+//            } else if (ThemeUtils.getInstance().themeType == ThemeType.TYPE_LIGHT) {
+//                slidingTabLayout.setIndicatorColor(ColorUtils.getAccentColor() == ColorUtils.getPrimaryColor() ?
+//                        activity.getResources().getColor(R.color.white) : ColorUtils.getAccentColor());
+//                slidingTabLayout.setTextColor(activity.getResources().getColor(R.color.black));
+//            }
+//        } else {
+//            slidingTabLayout.setBackgroundColor(ColorUtils.getPrimaryColor());
+//            slidingTabLayout.setIndicatorColor(ColorUtils.getAccentColor() == ColorUtils.getPrimaryColor() ?
+//                    activity.getResources().getColor(R.color.tab_underline_white) : ColorUtils.getAccentColor());
+//            slidingTabLayout.setTextColor(activity.getResources().getColor(R.color.white));
+//        }
     }
 
     public static void themeEditText(EditText editText) {
@@ -577,7 +576,7 @@ public class ThemeUtils {
                 if (bottom != null) {
                     bottom.setColorFilter(ColorUtils.getAccentColor(), PorterDuff.Mode.SRC_ATOP);
                 }
-                Drawable background = new ColorDrawable(ColorUtils.getPrimaryColorDark(activity));
+                Drawable background = new ColorDrawable(ColorUtils.getPrimaryColorDark());
                 LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{background, bottom});
                 v.setBackgroundDrawable(layerDrawable);
             }

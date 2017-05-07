@@ -1,7 +1,5 @@
 package com.simplecity.amp_library.search;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.PopupMenu;
@@ -18,20 +16,17 @@ import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.format.PrefixHighlighter;
-import com.simplecity.amp_library.model.AdaptableItem;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Header;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.tagger.TaggerDialog;
-import com.simplecity.amp_library.ui.activities.MainActivity2;
 import com.simplecity.amp_library.ui.adapters.SearchAdapter;
 import com.simplecity.amp_library.ui.modelviews.AlbumArtistView;
 import com.simplecity.amp_library.ui.modelviews.AlbumView;
 import com.simplecity.amp_library.ui.modelviews.SearchHeaderView;
 import com.simplecity.amp_library.ui.modelviews.SongView;
-import com.simplecity.amp_library.ui.modelviews.ViewType;
 import com.simplecity.amp_library.ui.presenters.Presenter;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.DialogUtils;
@@ -41,6 +36,8 @@ import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.StringUtils;
+import com.simplecityapps.recycler_adapter.model.ViewModel;
+import com.simplecity.amp_library.ui.adapters.ViewType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -111,24 +108,24 @@ class SearchPresenter extends Presenter<SearchView> implements
 
             boolean searchArtists = SettingsManager.getInstance().getSearchArtists();
 
-            Observable<List<AdaptableItem>> albumArtistsObservable = searchArtists ? DataManager.getInstance().getAlbumArtistsRelay()
+            Observable<List<ViewModel>> albumArtistsObservable = searchArtists ? DataManager.getInstance().getAlbumArtistsRelay()
                     .first()
                     .lift(new AlbumArtistFilterOperator(query, requestManager, prefixHighlighter)) : Observable.just(Collections.emptyList());
 
             boolean searchAlbums = SettingsManager.getInstance().getSearchAlbums();
 
-            Observable<List<AdaptableItem>> albumsObservable = searchAlbums ? DataManager.getInstance().getAlbumsRelay()
+            Observable<List<ViewModel>> albumsObservable = searchAlbums ? DataManager.getInstance().getAlbumsRelay()
                     .first()
                     .lift(new AlbumFilterOperator(query, requestManager, prefixHighlighter)) : Observable.just(Collections.emptyList());
 
-            Observable<List<AdaptableItem>> songsObservable = DataManager.getInstance().getSongsRelay()
+            Observable<List<ViewModel>> songsObservable = DataManager.getInstance().getSongsRelay()
                     .first()
                     .lift(new SongFilterOperator(query, requestManager, prefixHighlighter));
 
             performSearchSubscription = Observable.combineLatest(
                     albumArtistsObservable, albumsObservable, songsObservable,
                     (adaptableItems, adaptableItems2, adaptableItems3) -> {
-                        List<AdaptableItem> list = new ArrayList<>();
+                        List<ViewModel> list = new ArrayList<>();
                         list.addAll(adaptableItems);
                         list.addAll(adaptableItems2);
                         list.addAll(adaptableItems3);
@@ -176,25 +173,27 @@ class SearchPresenter extends Presenter<SearchView> implements
     @Override
     public void onItemClick(AlbumArtist albumArtist) {
 
-        SearchView view = getView();
-
-        Intent intent = new Intent();
-        intent.putExtra(MainActivity2.ARG_MODEL, albumArtist);
-        if (view != null) {
-            view.finish(Activity.RESULT_OK, intent);
-        }
+        //Todo:
+//        SearchView view = getView();
+//
+//        Intent intent = new Intent();
+//        intent.putExtra(MainActivity2.ARG_MODEL, albumArtist);
+//        if (view != null) {
+//            view.finish(Activity.RESULT_OK, intent);
+//        }
     }
 
     @Override
     public void onItemClick(Album album) {
 
-        SearchView view = getView();
-
-        Intent intent = new Intent();
-        intent.putExtra(MainActivity2.ARG_MODEL, album);
-        if (view != null) {
-            view.finish(Activity.RESULT_OK, intent);
-        }
+        //Todo:
+//        SearchView view = getView();
+//
+//        Intent intent = new Intent();
+//        intent.putExtra(MainActivity2.ARG_MODEL, album);
+//        if (view != null) {
+//            view.finish(Activity.RESULT_OK, intent);
+//        }
     }
 
     @Override
@@ -204,9 +203,9 @@ class SearchPresenter extends Presenter<SearchView> implements
 
         int index = allSongs.indexOf(song);
 
-        MusicUtils.playAll(allSongs, index, false, () -> {
+        MusicUtils.playAll(allSongs, index, false, (String message) -> {
             if (view != null) {
-                view.showEmptyPlaylistToast();
+                view.showToast(message);
             }
         });
 
@@ -243,9 +242,9 @@ class SearchPresenter extends Presenter<SearchView> implements
                             songsObservable
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> MusicUtils.playAll(songs, () -> {
+                                    .subscribe(songs -> MusicUtils.playAll(songs, (String message) -> {
                                         if (view != null) {
-                                            view.showEmptyPlaylistToast();
+                                            view.showToast(message);
                                         }
                                     }));
                             return true;
@@ -253,7 +252,12 @@ class SearchPresenter extends Presenter<SearchView> implements
                             songsObservable
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> MusicUtils.playNext(v.getContext(), songs));
+                                    .subscribe(songs -> MusicUtils.playNext(songs, message -> {
+                                        SearchView searchView = getView();
+                                        if (searchView != null) {
+                                            searchView.showToast(message);
+                                        }
+                                    }));
                             return true;
                         case MusicUtils.Defs.NEW_PLAYLIST:
                             songsObservable
@@ -274,7 +278,12 @@ class SearchPresenter extends Presenter<SearchView> implements
                             songsObservable
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> MusicUtils.addToQueue(v.getContext(), songs));
+                                    .subscribe(songs -> MusicUtils.addToQueue(songs, message -> {
+                                        SearchView searchView = getView();
+                                        if (searchView != null) {
+                                            searchView.showToast(message);
+                                        }
+                                    }));
                             return true;
                         case MusicUtils.Defs.TAGGER:
                             if (view != null) {
@@ -329,9 +338,9 @@ class SearchPresenter extends Presenter<SearchView> implements
                             songsObservable
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> MusicUtils.playAll(songs, () -> {
+                                    .subscribe(songs -> MusicUtils.playAll(songs, (String message) -> {
                                         if (view != null) {
-                                            view.showEmptyPlaylistToast();
+                                            view.showToast(message);
                                         }
                                     }));
                             return true;
@@ -339,7 +348,12 @@ class SearchPresenter extends Presenter<SearchView> implements
                             songsObservable
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> MusicUtils.playNext(v.getContext(), songs));
+                                    .subscribe(songs -> MusicUtils.playNext(songs, message -> {
+                                        SearchView searchView = getView();
+                                        if (searchView != null) {
+                                            searchView.showToast(message);
+                                        }
+                                    }));
                             return true;
                         case MusicUtils.Defs.NEW_PLAYLIST:
                             songsObservable
@@ -360,7 +374,12 @@ class SearchPresenter extends Presenter<SearchView> implements
                             songsObservable
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> MusicUtils.addToQueue(v.getContext(), songs));
+                                    .subscribe(songs -> MusicUtils.addToQueue(songs, message -> {
+                                        SearchView searchView = getView();
+                                        if (searchView != null) {
+                                            searchView.showToast(message);
+                                        }
+                                    }));
                             return true;
                         case MusicUtils.Defs.TAGGER:
                             if (view != null) {
@@ -414,9 +433,9 @@ class SearchPresenter extends Presenter<SearchView> implements
                             songsObservable
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> MusicUtils.playAll(songs, () -> {
+                                    .subscribe(songs -> MusicUtils.playAll(songs, (String message) -> {
                                         if (view != null) {
-                                            view.showEmptyPlaylistToast();
+                                            view.showToast(message);
                                         }
                                     }));
                             return true;
@@ -424,7 +443,12 @@ class SearchPresenter extends Presenter<SearchView> implements
                             songsObservable
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> MusicUtils.playNext(v.getContext(), songs));
+                                    .subscribe(songs -> MusicUtils.playNext(songs, message -> {
+                                        SearchView searchView = getView();
+                                        if (searchView != null) {
+                                            searchView.showToast(message);
+                                        }
+                                    }));
                             return true;
                         case MusicUtils.Defs.NEW_PLAYLIST:
                             songsObservable
@@ -450,7 +474,12 @@ class SearchPresenter extends Presenter<SearchView> implements
                             songsObservable
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> MusicUtils.addToQueue(v.getContext(), songs));
+                                    .subscribe(songs -> MusicUtils.addToQueue(songs, message -> {
+                                        SearchView searchView = getView();
+                                        if (searchView != null) {
+                                            searchView.showToast(message);
+                                        }
+                                    }));
                             return true;
                         case MusicUtils.Defs.TAGGER:
                             if (view != null) {
@@ -475,7 +504,7 @@ class SearchPresenter extends Presenter<SearchView> implements
         menu.show();
     }
 
-    private static class SongFilterOperator implements Observable.Operator<List<AdaptableItem>, List<Song>> {
+    private static class SongFilterOperator implements Observable.Operator<List<ViewModel>, List<Song>> {
 
         private String filterString;
 
@@ -494,7 +523,7 @@ class SearchPresenter extends Presenter<SearchView> implements
         }
 
         @Override
-        public Subscriber<List<Song>> call(Subscriber<? super List<AdaptableItem>> subscriber) {
+        public Subscriber<List<Song>> call(Subscriber<? super List<ViewModel>> subscriber) {
             return new Subscriber<List<Song>>() {
                 @Override
                 public void onNext(List<Song> songs) {
@@ -516,19 +545,19 @@ class SearchPresenter extends Presenter<SearchView> implements
 
                     Stream<Song> filteredStream = fuzzy ? applyJaroWinklerFilter(songStream) : applySongFilter(songStream);
 
-                    List<AdaptableItem> adaptableItems = filteredStream.map(song -> {
-                        SongView songView = new SongView(song, dummySelector, requestManager);
+                    List<ViewModel> viewModels = filteredStream.map(song -> {
+                        SongView songView = new SongView(song, requestManager);
                         songView.setPrefix(prefixHighlighter, prefix);
                         return songView;
                     })
                             .collect(Collectors.toList());
 
-                    if (!adaptableItems.isEmpty()) {
-                        adaptableItems.add(0, songsHeader);
+                    if (!viewModels.isEmpty()) {
+                        viewModels.add(0, songsHeader);
                     }
 
                     if (!subscriber.isUnsubscribed()) {
-                        subscriber.onNext(adaptableItems);
+                        subscriber.onNext(viewModels);
                     }
                 }
 
@@ -558,7 +587,7 @@ class SearchPresenter extends Presenter<SearchView> implements
         }
     }
 
-    private static class AlbumFilterOperator implements Observable.Operator<List<AdaptableItem>, List<Album>> {
+    private static class AlbumFilterOperator implements Observable.Operator<List<ViewModel>, List<Album>> {
 
         private String filterString;
 
@@ -575,7 +604,7 @@ class SearchPresenter extends Presenter<SearchView> implements
         }
 
         @Override
-        public Subscriber<? super List<Album>> call(Subscriber<? super List<AdaptableItem>> subscriber) {
+        public Subscriber<? super List<Album>> call(Subscriber<? super List<ViewModel>> subscriber) {
             return new Subscriber<List<Album>>() {
                 @Override
                 public void onNext(List<Album> albums) {
@@ -593,18 +622,18 @@ class SearchPresenter extends Presenter<SearchView> implements
 
                     Stream<Album> filteredStream = fuzzy ? applyJaroWinklerAlbumFilter(albumStream) : applyAlbumFilter(albumStream);
 
-                    List<AdaptableItem> adaptableItems = filteredStream.map(album -> {
+                    List<ViewModel> viewModels = filteredStream.map(album -> {
                         AlbumView albumView = new AlbumView(album, ViewType.ALBUM_LIST, requestManager);
                         albumView.setPrefix(prefixHighlighter, prefix);
                         return albumView;
                     }).collect(Collectors.toList());
 
-                    if (!adaptableItems.isEmpty()) {
-                        adaptableItems.add(0, albumsHeader);
+                    if (!viewModels.isEmpty()) {
+                        viewModels.add(0, albumsHeader);
                     }
 
                     if (!subscriber.isUnsubscribed()) {
-                        subscriber.onNext(adaptableItems);
+                        subscriber.onNext(viewModels);
                     }
                 }
 
@@ -634,7 +663,7 @@ class SearchPresenter extends Presenter<SearchView> implements
         }
     }
 
-    private static class AlbumArtistFilterOperator implements Observable.Operator<List<AdaptableItem>, List<AlbumArtist>> {
+    private static class AlbumArtistFilterOperator implements Observable.Operator<List<ViewModel>, List<AlbumArtist>> {
 
         private String filterString;
 
@@ -651,7 +680,7 @@ class SearchPresenter extends Presenter<SearchView> implements
         }
 
         @Override
-        public Subscriber<? super List<AlbumArtist>> call(Subscriber<? super List<AdaptableItem>> subscriber) {
+        public Subscriber<? super List<AlbumArtist>> call(Subscriber<? super List<ViewModel>> subscriber) {
             return new Subscriber<List<AlbumArtist>>() {
                 @Override
                 public void onNext(List<AlbumArtist> albumArtists) {
@@ -669,20 +698,20 @@ class SearchPresenter extends Presenter<SearchView> implements
 
                     Stream<AlbumArtist> filteredStream = fuzzy ? applyJaroWinklerAlbumArtistFilter(albumArtistStream) : applyAlbumArtistFilter(albumArtistStream);
 
-                    List<AdaptableItem> adaptableItems = filteredStream
+                    List<ViewModel> viewModels = filteredStream
                             .map(albumArtist -> {
                                 AlbumArtistView albumArtistView = new AlbumArtistView(albumArtist, ViewType.ARTIST_LIST, requestManager);
                                 albumArtistView.setPrefix(prefixHighlighter, prefix);
-                                return (AdaptableItem) albumArtistView;
+                                return (ViewModel) albumArtistView;
                             })
                             .collect(Collectors.toList());
 
-                    if (!adaptableItems.isEmpty()) {
-                        adaptableItems.add(0, artistsHeader);
+                    if (!viewModels.isEmpty()) {
+                        viewModels.add(0, artistsHeader);
                     }
 
                     if (!subscriber.isUnsubscribed()) {
-                        subscriber.onNext(adaptableItems);
+                        subscriber.onNext(viewModels);
                     }
                 }
 

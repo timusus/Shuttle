@@ -10,7 +10,7 @@ import com.google.android.apps.dashclock.api.DashClockExtension;
 import com.google.android.apps.dashclock.api.ExtensionData;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.playback.MusicService;
-import com.simplecity.amp_library.ui.activities.MainActivity2;
+import com.simplecity.amp_library.ui.activities.MainActivity;
 
 /**
  * @see <a href="https://code.google.com/p/dashclock/">DashClock</a>
@@ -47,7 +47,7 @@ public class DashClockService extends DashClockExtension {
     @Override
     public void onCreate() {
         super.onCreate();
-        mIntent = new Intent(this, MainActivity2.class);
+        mIntent = new Intent(this, MainActivity.class);
         mFilter.addAction(MusicService.InternalIntents.PLAY_STATE_CHANGED);
         mFilter.addAction(MusicService.InternalIntents.META_CHANGED);
         registerReceiver(mStatusListener, mFilter);

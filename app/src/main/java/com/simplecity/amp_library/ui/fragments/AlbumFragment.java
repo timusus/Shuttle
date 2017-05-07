@@ -8,6 +8,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.GridLayoutManager;
@@ -20,6 +22,7 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
@@ -28,14 +31,12 @@ import com.bignerdranch.android.multiselector.MultiSelector;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.model.AdaptableItem;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
-import com.simplecity.amp_library.ui.adapters.AlbumAdapter;
+import com.simplecity.amp_library.ui.adapters.SectionedAdapter;
 import com.simplecity.amp_library.ui.modelviews.AlbumView;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
-import com.simplecity.amp_library.ui.modelviews.ViewType;
 import com.simplecity.amp_library.ui.recyclerview.GridDividerDecoration;
 import com.simplecity.amp_library.utils.ColorUtils;
 import com.simplecity.amp_library.utils.DataManager;
@@ -48,6 +49,9 @@ import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.SortManager;
 import com.simplecity.amp_library.utils.ThemeUtils;
+import com.simplecityapps.recycler_adapter.model.ViewModel;
+import com.simplecity.amp_library.ui.adapters.ViewType;
+import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.Collections;
@@ -59,12 +63,11 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class AlbumFragment extends BaseFragment implements
         MusicUtils.Defs,
-        RecyclerView.RecyclerListener,
-        AlbumAdapter.AlbumListener {
+        AlbumView.ClickListener {
 
-    public interface AlbumClickListener {
+    interface AlbumClickListener {
 
-        void onItemClicked(Album album, View transitionView);
+        void onAlbumClicked(Album album, View transitionView);
     }
 
     private final static String TAG = "AlbumFragment";
@@ -76,13 +79,14 @@ public class AlbumFragment extends BaseFragment implements
 
     private SharedPreferences prefs;
 
+    @Nullable
     private AlbumClickListener albumClickListener;
 
     private FastScrollRecyclerView recyclerView;
 
     private GridLayoutManager layoutManager;
 
-    AlbumAdapter albumAdapter;
+    SectionedAdapter adapter;
 
     MultiSelector multiSelector = new MultiSelector();
 
@@ -116,7 +120,10 @@ public class AlbumFragment extends BaseFragment implements
     public void onAttach(Context context) {
         super.onAttach(context);
 
-//        albumClickListener = (AlbumClickListener) getActivity();
+        Fragment parentFragment = getParentFragment();
+        if (parentFragment instanceof AlbumClickListener) {
+            albumClickListener = (AlbumClickListener) parentFragment;
+        }
     }
 
     @Override
@@ -125,8 +132,7 @@ public class AlbumFragment extends BaseFragment implements
 
         setHasOptionsMenu(true);
 
-        albumAdapter = new AlbumAdapter();
-        albumAdapter.setListener(this);
+        adapter = new SectionedAdapter();
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
 
@@ -182,7 +188,7 @@ public class AlbumFragment extends BaseFragment implements
             layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
-                    if (albumAdapter.items.get(position) instanceof EmptyView) {
+                    if (adapter.items.get(position) instanceof EmptyView) {
                         return spanCount;
                     }
                     return 1;
@@ -192,8 +198,8 @@ public class AlbumFragment extends BaseFragment implements
             recyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.addItemDecoration(new GridDividerDecoration(getResources(), 4, true));
-            recyclerView.setRecyclerListener(this);
-            recyclerView.setAdapter(albumAdapter);
+            recyclerView.setRecyclerListener(new RecyclerListener());
+            recyclerView.setAdapter(adapter);
 
             actionMode = null;
 
@@ -250,16 +256,20 @@ public class AlbumFragment extends BaseFragment implements
                                 Collections.reverse(albums);
                             }
                             return Observable.from(albums)
-                                    .map(album -> (AdaptableItem) new AlbumView(album, albumDisplayType, requestManager, multiSelector))
+                                    .map(album -> {
+                                        AlbumView albumView = new AlbumView(album, albumDisplayType, requestManager, multiSelector);
+                                        albumView.setClickListener(this);
+                                        return (ViewModel) albumView;
+                                    })
                                     .toList();
                         })
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(items -> {
 
                             if (items.isEmpty()) {
-                                albumAdapter.setEmpty(new EmptyView(R.string.empty_albums));
+                                adapter.setEmpty(new EmptyView(R.string.empty_albums));
                             } else {
-                                albumAdapter.setItems(items);
+                                adapter.setItems(items);
                             }
 
                             //Move the RV back to the top if we've had a sort order change.
@@ -371,26 +381,26 @@ public class AlbumFragment extends BaseFragment implements
             case R.id.view_as_list:
                 SettingsManager.getInstance().setAlbumDisplayType(ViewType.ALBUM_LIST);
                 layoutManager.setSpanCount(getResources().getInteger(R.integer.list_num_columns));
-                albumAdapter.updateItemViewType();
-                albumAdapter.notifyItemRangeChanged(0, albumAdapter.getItemCount());
+//                adapter.updateItemViewType();
+                adapter.notifyItemRangeChanged(0, adapter.getItemCount());
                 break;
             case R.id.view_as_grid:
                 SettingsManager.getInstance().setAlbumDisplayType(ViewType.ALBUM_GRID);
                 layoutManager.setSpanCount(SettingsManager.getInstance().getAlbumColumnCount(getResources()));
-                albumAdapter.updateItemViewType();
-                albumAdapter.notifyItemRangeChanged(0, albumAdapter.getItemCount());
+//                adapter.updateItemViewType();
+                adapter.notifyItemRangeChanged(0, adapter.getItemCount());
                 break;
             case R.id.view_as_grid_card:
                 SettingsManager.getInstance().setAlbumDisplayType(ViewType.ALBUM_CARD);
                 layoutManager.setSpanCount(SettingsManager.getInstance().getAlbumColumnCount(getResources()));
-                albumAdapter.updateItemViewType();
-                albumAdapter.notifyItemRangeChanged(0, albumAdapter.getItemCount());
+//                adapter.updateItemViewType();
+                adapter.notifyItemRangeChanged(0, adapter.getItemCount());
                 break;
             case R.id.view_as_grid_palette:
                 SettingsManager.getInstance().setAlbumDisplayType(ViewType.ALBUM_PALETTE);
                 layoutManager.setSpanCount(SettingsManager.getInstance().getAlbumColumnCount(getResources()));
-                albumAdapter.updateItemViewType();
-                albumAdapter.notifyItemRangeChanged(0, albumAdapter.getItemCount());
+//                adapter.updateItemViewType();
+                adapter.notifyItemRangeChanged(0, adapter.getItemCount());
                 break;
         }
 
@@ -400,7 +410,7 @@ public class AlbumFragment extends BaseFragment implements
 
             if (SettingsManager.getInstance().getAlbumDisplayType() != ViewType.ALBUM_LIST) {
                 ((GridLayoutManager) recyclerView.getLayoutManager()).setSpanCount(SettingsManager.getInstance().getAlbumColumnCount(getResources()));
-                albumAdapter.notifyItemRangeChanged(0, albumAdapter.getItemCount());
+                adapter.notifyItemRangeChanged(0, adapter.getItemCount());
             }
         }
 
@@ -410,51 +420,48 @@ public class AlbumFragment extends BaseFragment implements
     }
 
     @Override
-    public void onItemClick(View v, int position, Album album) {
-        if (inActionMode) {
-            multiSelector.setSelected(position, albumAdapter.getItemId(position), !multiSelector.isSelected(position, albumAdapter.getItemId(position)));
-
-            if (multiSelector.getSelectedPositions().size() == 0) {
-                if (actionMode != null) {
-                    actionMode.finish();
-                }
-            }
-
-            updateActionModeSelectionCount();
-        } else {
-            albumClickListener.onItemClicked(album, v.findViewById(R.id.image));
+    public void onAlbumClick(Album album, AlbumView.ViewHolder holder) {
+        //        if (inActionMode) {
+//            multiSelector.setSelected(viewHolder.getAdapterPosition(), adapter.getItemId(viewHolder.getAdapterPosition()), !multiSelector.isSelected(viewHolder.getAdapterPosition(), adapter.getItemId(viewHolder.getAdapterPosition())));
+//
+//            if (multiSelector.getSelectedPositions().size() == 0) {
+//                if (actionMode != null) {
+//                    actionMode.finish();
+//                }
+//            }
+//
+//            updateActionModeSelectionCount();
+//        } else {
+        if (albumClickListener != null) {
+            albumClickListener.onAlbumClicked(album, holder.imageOne);
         }
+//        }
     }
 
     @Override
-    public void onOverflowClick(View v, int position, Album album) {
+    public boolean onAlbumLongClick(Album album) {
+//        if (inActionMode) {
+//            return;
+//        }
+//
+//        if (multiSelector.getSelectedPositions().size() == 0) {
+//            actionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(mActionModeCallback);
+//            inActionMode = true;
+//        }
+//
+//        multiSelector.setSelected(viewHolder.getAdapterPosition(), adapter.getItemId(viewHolder.getAdapterPosition()), !multiSelector.isSelected(viewHolder.getAdapterPosition(), adapter.getItemId(viewHolder.getAdapterPosition())));
+//
+//        updateActionModeSelectionCount();
+
+        return false;
+    }
+
+    @Override
+    public void onAlbumOverflowClicked(View v, Album album) {
         PopupMenu menu = new PopupMenu(AlbumFragment.this.getActivity(), v);
         MenuUtils.addAlbumMenuOptions(getActivity(), menu);
         MenuUtils.addClickHandler((AppCompatActivity) getActivity(), menu, album);
         menu.show();
-    }
-
-    @Override
-    public void onLongClick(View v, int position, Album album) {
-        if (inActionMode) {
-            return;
-        }
-
-        if (multiSelector.getSelectedPositions().size() == 0) {
-            actionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(mActionModeCallback);
-            inActionMode = true;
-        }
-
-        multiSelector.setSelected(position, albumAdapter.getItemId(position), !multiSelector.isSelected(position, albumAdapter.getItemId(position)));
-
-        updateActionModeSelectionCount();
-    }
-
-    @Override
-    public void onViewRecycled(RecyclerView.ViewHolder holder) {
-        if (holder.getAdapterPosition() != -1) {
-            albumAdapter.items.get(holder.getAdapterPosition()).recycle(holder);
-        }
     }
 
     private void updateActionModeSelectionCount() {
@@ -522,7 +529,8 @@ public class AlbumFragment extends BaseFragment implements
                 case R.id.menu_add_to_queue: {
                     songsObservable
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(songs -> MusicUtils.addToQueue(getActivity(), songs));
+                            .subscribe(songs -> MusicUtils.addToQueue(songs, message ->
+                                    Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show()));
                     break;
                 }
             }
@@ -540,7 +548,7 @@ public class AlbumFragment extends BaseFragment implements
 
     List<Album> getCheckedAlbums() {
         return Stream.of(multiSelector.getSelectedPositions())
-                .map(i -> ((AlbumView) albumAdapter.items.get(i)).album)
+                .map(i -> ((AlbumView) adapter.items.get(i)).album)
                 .collect(Collectors.toList());
 
     }

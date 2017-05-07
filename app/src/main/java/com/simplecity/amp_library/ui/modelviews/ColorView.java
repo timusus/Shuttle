@@ -1,14 +1,22 @@
 package com.simplecity.amp_library.ui.modelviews;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ui.views.CircleView;
+import com.simplecityapps.recycler_adapter.model.BaseViewModel;
+import com.simplecity.amp_library.ui.adapters.ViewType;
+import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 
-public class ColorView extends BaseAdaptableItem<Integer, ColorView.ViewHolder> {
+import static com.simplecity.amp_library.R.id;
+import static com.simplecity.amp_library.R.id.image;
+import static com.simplecity.amp_library.R.layout;
+import static com.simplecity.amp_library.R.layout.list_item_color;
+import static com.simplecity.amp_library.ui.adapters.ViewType.COLOR;
+
+public class ColorView extends BaseViewModel<ColorView.ViewHolder> {
 
     public int color;
 
@@ -20,37 +28,34 @@ public class ColorView extends BaseAdaptableItem<Integer, ColorView.ViewHolder> 
 
     @Override
     public int getViewType() {
-        return ViewType.COLOR;
+        return COLOR;
     }
 
     @Override
     public int getLayoutResId() {
-        return R.layout.list_item_color;
+        return list_item_color;
     }
 
     @Override
     public void bindView(ViewHolder holder) {
+        super.bindView(holder);
+
         holder.circleView.setColor(color);
         holder.circleView.setActivated(selected);
     }
 
     @Override
-    public ViewHolder getViewHolder(ViewGroup parent) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutResId(), parent, false));
+    public ViewHolder createViewHolder(ViewGroup parent) {
+        return new ViewHolder(createView(parent));
     }
 
-    @Override
-    public Integer getItem() {
-        return color;
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends BaseViewHolder {
 
         CircleView circleView;
 
         public ViewHolder(final View itemView) {
             super(itemView);
-            circleView = (CircleView) itemView.findViewById(R.id.image);
+            circleView = (CircleView) itemView.findViewById(image);
         }
 
         @Override

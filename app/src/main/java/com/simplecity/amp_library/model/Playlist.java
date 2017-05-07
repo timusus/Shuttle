@@ -160,17 +160,16 @@ public class Playlist implements Serializable {
         }
     }
 
-    public Observable<List<Song>> getSongsObservable(Context context) {
+    public Observable<List<Song>> getSongsObservable() {
 
         if (id == MusicUtils.PlaylistIds.RECENTLY_ADDED_PLAYLIST) {
-            int numWeeks = MusicUtils.getIntPref(context, "numweeks", 2) * (3600 * 24 * 7);
+            int numWeeks = MusicUtils.getIntPref(ShuttleApplication.getInstance(), "numweeks", 2) * (3600 * 24 * 7);
             return DataManager.getInstance().getSongsRelay()
                     .first()
                     .map(allSongs -> {
                         List<Song> songs = Stream.of(allSongs)
                                 .filter(song -> song.dateAdded > (System.currentTimeMillis() / 1000 - numWeeks))
                                 .collect(Collectors.toList());
-
 
 
                         Collections.sort(songs, (a, b) -> ComparisonUtils.compare(a.albumArtistName, b.albumArtistName));
@@ -201,7 +200,7 @@ public class Playlist implements Serializable {
                     .sort(PlayCountTable.COLUMN_PLAY_COUNT + " DESC")
                     .build();
 
-            return SqlBriteUtils.createQuery(context, cursor ->
+            return SqlBriteUtils.createQuery(ShuttleApplication.getInstance(), cursor ->
                     new Pair<>(
                             cursor.getInt(cursor.getColumnIndexOrThrow(PlayCountTable.COLUMN_ID)),
                             cursor.getInt(cursor.getColumnIndexOrThrow(PlayCountTable.COLUMN_PLAY_COUNT))
@@ -213,7 +212,7 @@ public class Playlist implements Serializable {
                                         .map(value -> String.valueOf(value.first))
                                         .collect(Collectors.joining(",")) +
                                 ")";
-                        return SqlBriteUtils.createQuery(context, Song::new, songsQuery)
+                        return SqlBriteUtils.createQuery(ShuttleApplication.getInstance(), Song::new, songsQuery)
                                 .map(songs -> {
                                     Stream.of(songs)
                                             .forEach(song ->
@@ -238,7 +237,7 @@ public class Playlist implements Serializable {
                     .sort(PlayCountTable.COLUMN_TIME_PLAYED + " DESC")
                     .build();
 
-            return SqlBriteUtils.createQuery(context, cursor ->
+            return SqlBriteUtils.createQuery(ShuttleApplication.getInstance(), cursor ->
                     new Pair<>(
                             cursor.getLong(cursor.getColumnIndexOrThrow(PlayCountTable.COLUMN_ID)),
                             cursor.getLong(cursor.getColumnIndexOrThrow(PlayCountTable.COLUMN_TIME_PLAYED))
@@ -250,7 +249,7 @@ public class Playlist implements Serializable {
                                         .map(value -> String.valueOf(value.first))
                                         .collect(Collectors.joining(",")) +
                                 ")";
-                        return SqlBriteUtils.createQuery(context, Song::new, songsQuery)
+                        return SqlBriteUtils.createQuery(ShuttleApplication.getInstance(), Song::new, songsQuery)
                                 .map(songs -> {
                                     Stream.of(songs)
                                             .forEach(song -> Stream.of(pairs)
@@ -275,7 +274,7 @@ public class Playlist implements Serializable {
             projection.add(MediaStore.Audio.Playlists.Members.AUDIO_ID);
             projection.add(MediaStore.Audio.Playlists.Members.PLAY_ORDER);
             query.projection = projection.toArray(new String[projection.size()]);
-            return SqlBriteUtils.createQuery(context, Playlist::createSongFromPlaylistCursor, query).map(songs -> {
+            return SqlBriteUtils.createQuery(ShuttleApplication.getInstance(), Playlist::createSongFromPlaylistCursor, query).map(songs -> {
                 Collections.sort(songs, (a, b) -> ComparisonUtils.compareLong(a.playlistSongPlayOrder, b.playlistSongPlayOrder));
                 return songs;
             });

@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +43,8 @@ import com.simplecity.amp_library.utils.ThemeUtils;
 
 import java.util.concurrent.TimeUnit;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -54,22 +57,41 @@ public class PlayerFragment extends BaseFragment implements PlayerView {
 
     private boolean isSeeking;
 
-    private PlayPauseView playPauseView;
+    @BindView(R.id.play)
+    PlayPauseView playPauseView;
 
-    private ImageButton shuffleButton;
-    private ImageButton repeatButton;
+    @BindView(R.id.shuffle)
+    ImageButton shuffleButton;
 
-    private RepeatingImageButton nextButton;
-    private RepeatingImageButton prevButton;
+    @BindView(R.id.repeat)
+    ImageButton repeatButton;
 
-    private TextView artist;
-    private TextView album;
-    private TextView track;
-    private TextView currentTime;
-    private TextView totalTime;
-    private TextView queuePosition;
+    @BindView(R.id.next)
+    RepeatingImageButton nextButton;
 
-    private View backgroundView;
+    @BindView(R.id.prev)
+    RepeatingImageButton prevButton;
+
+    @BindView(R.id.current_time)
+    TextView currentTime;
+
+    @BindView(R.id.total_time)
+    TextView totalTime;
+
+    @BindView(R.id.text1)
+    TextView track;
+
+    @BindView(R.id.text2)
+    TextView album;
+
+    @Nullable @BindView(R.id.text3)
+    TextView artist;
+
+    @Nullable @BindView(R.id.queue_position)
+    TextView queuePosition;
+
+    @BindView(R.id.backgroundView)
+    View backgroundView;
 
     private SharedPreferences sharedPreferences;
 
@@ -78,8 +100,6 @@ public class PlayerFragment extends BaseFragment implements PlayerView {
     private static final String LYRICS_FRAGMENT = "lyrics_fragment";
 
     private SharedPreferences.OnSharedPreferenceChangeListener mSharedPreferenceChangeListener;
-
-    boolean fabIsAnimating = false;
 
     private CompositeSubscription subscriptions;
 
@@ -117,45 +137,35 @@ public class PlayerFragment extends BaseFragment implements PlayerView {
 
         View rootView = inflater.inflate(R.layout.fragment_player, container, false);
 
-        playPauseView = (PlayPauseView) rootView.findViewById(R.id.play);
+        ButterKnife.bind(this, rootView);
+
+        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
+
         playPauseView.setOnClickListener(v -> {
             playPauseView.toggle();
             playPauseView.postDelayed(() -> presenter.togglePlayback(), 200);
         });
 
-        repeatButton = (ImageButton) rootView.findViewById(R.id.repeat);
         repeatButton.setOnClickListener(v -> presenter.toggleRepeat());
 
         shuffleButton = (ImageButton) rootView.findViewById(R.id.shuffle);
         shuffleButton.setOnClickListener(v -> presenter.toggleShuffle());
 
-        nextButton = (RepeatingImageButton) rootView.findViewById(R.id.next);
         nextButton.setOnClickListener(v -> presenter.skip());
         nextButton.setRepeatListener((v, duration, repeatcount) -> presenter.scanForward(repeatcount, duration));
 
-        prevButton = (RepeatingImageButton) rootView.findViewById(R.id.prev);
         prevButton.setOnClickListener(v -> presenter.prev(true));
         prevButton.setRepeatListener((v, duration, repeatcount) -> presenter.scanBackward(repeatcount, duration));
-
-        currentTime = (TextView) rootView.findViewById(R.id.current_time);
-        totalTime = (TextView) rootView.findViewById(R.id.total_time);
-        queuePosition = (TextView) rootView.findViewById(R.id.queue_position);
-        track = (TextView) rootView.findViewById(R.id.text1);
-        album = (TextView) rootView.findViewById(R.id.text2);
-        artist = (TextView) rootView.findViewById(R.id.text3);
-
-        backgroundView = rootView.findViewById(R.id.backgroundView);
 
         seekBar = (SizableSeekBar) rootView.findViewById(R.id.seekbar);
         seekBar.setMax(1000);
 
         themeUIComponents();
 
-        Fragment queuePagerFragment = getChildFragmentManager().findFragmentByTag(QUEUE_PAGER_FRAGMENT);
-
-        if (queuePagerFragment == null) {
+        if (savedInstanceState == null) {
             getChildFragmentManager().beginTransaction()
-                    .replace(R.id.main_container, QueuePagerFragment.newInstance(), QUEUE_PAGER_FRAGMENT)
+                    .add(R.id.main_container, QueuePagerFragment.newInstance(), QUEUE_PAGER_FRAGMENT)
                     .commit();
         }
 

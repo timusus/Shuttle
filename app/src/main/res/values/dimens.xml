@@ -10,8 +10,6 @@
     <dimen name="app_bar_height">240dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
-
-
     <dimen name="pause_bar_width">4dp</dimen>
     <dimen name="pause_bar_distance">6dp</dimen>
     <dimen name="pause_bar_height">20dp</dimen>

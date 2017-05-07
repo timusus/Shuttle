@@ -2,17 +2,23 @@ package com.simplecity.amp_library.ui.fragments;
 
 import android.content.res.Resources;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import com.google.android.libraries.cast.companionlibrary.cast.BaseCastManager;
+import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.ui.activities.BaseCastActivity;
 import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.squareup.leakcanary.RefWatcher;
 
 import java.lang.reflect.Field;
 
-public abstract class BaseFragment extends Fragment {
+import test.com.androidnavigation.fragment.BaseController;
+
+public abstract class BaseFragment extends BaseController {
 
     private static final String TAG = "BaseFragment";
 
@@ -85,4 +91,13 @@ public abstract class BaseFragment extends Fragment {
     }
 
     protected abstract String screenName();
+
+    protected void setupCastToolbar(Toolbar toolbar) {
+        if (getActivity() instanceof BaseCastActivity) {
+            BaseCastManager castManager = ((BaseCastActivity) getActivity()).castManager;
+            if (castManager != null) {
+                castManager.addMediaRouterButton(toolbar.getMenu(), R.id.media_route_menu_item);
+            }
+        }
+    }
 }

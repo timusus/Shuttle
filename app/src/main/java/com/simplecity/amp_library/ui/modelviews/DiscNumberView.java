@@ -1,14 +1,18 @@
 package com.simplecity.amp_library.ui.modelviews;
 
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.simplecity.amp_library.R;
+import com.simplecityapps.recycler_adapter.model.BaseViewModel;
+import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 
-public class DiscNumberView extends BaseAdaptableItem<Integer, DiscNumberView.ViewHolder> {
+import static com.simplecity.amp_library.R.id;
+import static com.simplecity.amp_library.R.layout.list_item_disc_number;
+import static com.simplecity.amp_library.R.string.disc_number_label;
+import static com.simplecity.amp_library.ui.adapters.ViewType.DISC_NUMBER;
+
+public class DiscNumberView extends BaseViewModel<DiscNumberView.ViewHolder> {
 
     private int discNumber = 0;
 
@@ -18,37 +22,33 @@ public class DiscNumberView extends BaseAdaptableItem<Integer, DiscNumberView.Vi
 
     @Override
     public int getViewType() {
-        return ViewType.DISC_NUMBER;
+        return DISC_NUMBER;
     }
 
     @Override
     public int getLayoutResId() {
-        return R.layout.list_item_disc_number;
+        return list_item_disc_number;
     }
 
     @Override
     public void bindView(ViewHolder holder) {
-        holder.textView.setText(holder.itemView.getContext().getString(R.string.disc_number_label, discNumber));
+        super.bindView(holder);
+        holder.textView.setText(holder.itemView.getContext().getString(disc_number_label, discNumber));
     }
 
     @Override
-    public ViewHolder getViewHolder(ViewGroup parent) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutResId(), parent, false));
+    public ViewHolder createViewHolder(ViewGroup parent) {
+        return new ViewHolder(createView(parent));
     }
 
-    @Override
-    public Integer getItem() {
-        return discNumber;
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends BaseViewHolder {
 
         TextView textView;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            textView = (TextView) itemView.findViewById(R.id.textView);
+            textView = (TextView) itemView.findViewById(id.textView);
         }
     }
 

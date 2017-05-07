@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.simplecity.amp_library.model.AdaptableItem;
+import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public interface SearchView {
 
     void setEmpty(boolean empty);
 
-    Subscription setItems(@NonNull List<AdaptableItem> items);
+    Subscription setItems(@NonNull List<ViewModel> items);
 
     void setFilterFuzzyChecked(boolean checked);
 
@@ -26,7 +26,7 @@ public interface SearchView {
 
     void setFilterAlbumsChecked(boolean checked);
 
-    void showEmptyPlaylistToast();
+    void showToast(String message);
 
     void showTaggerDialog(@NonNull TaggerDialog taggerDialog);
 

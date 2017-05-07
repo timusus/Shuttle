@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/headerView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:layout_gravity="bottom"
+        android:background="?attr/bg_card"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingBottom="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="8dp"
+        android:paddingTop="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/line_one"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginRight="16dp"
+                    android:lines="1"
+                    android:textColor="#000"
+                    android:textSize="18sp"
+                    tools:text="Tool"/>
+
+                <TextView
+                    android:id="@+id/line_two"
+                    style="?attr/secondaryTextViewStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:lines="1"
+                    android:textColor="#000"
+                    android:textSize="16sp"
+                    tools:text="Lateralus"/>
+            </LinearLayout>
+
+            <com.simplecity.amp_library.ui.views.NonScrollImageButton
+                android:id="@+id/btn_overflow"
+                android:layout_width="40dp"
+                android:layout_height="48dp"
+                android:layout_marginLeft="-16dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginTop="8dp"
+                android:alpha="0.8"
+                android:background="@null"
+                android:paddingTop="4dp"
+                android:src="@drawable/ic_overflow_white"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:layout_marginBottom="46dp"
+        android:contentDescription="@string/btn_fab_shuffle"
+        android:src="@drawable/ic_shuffle_24dp"
+        app:fabSize="normal"
+        app:useCompatPadding="true"
+        tools:tint="#fff"/>
+
+</FrameLayout>

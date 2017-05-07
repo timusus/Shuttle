@@ -3,6 +3,7 @@ package com.simplecity.amp_library.ui.modelviews;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Album;
+import com.simplecity.amp_library.ui.adapters.ViewType;
 
 public class HorizontalAlbumView extends AlbumView {
 

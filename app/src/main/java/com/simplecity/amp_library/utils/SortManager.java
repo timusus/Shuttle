@@ -87,111 +87,119 @@ public class SortManager {
 
     //Detail Fragment:
 
-    public void setDetailSongsSortOrder(@SongSort int sortOrder) {
-        setSortOrder(Key.DETAIL_SONGS, sortOrder);
+    public void setArtistDetailSongsSortOrder(@SongSort int sortOrder) {
+        setSortOrder(Key.ARTIST_DETAIL_SONGS, sortOrder);
     }
 
-    public int getDetailSongsSortOrder() {
-        return mPrefs.getInt(Key.DETAIL_SONGS, SongSort.DETAIL_DEFAULT);
+    public int getArtistDetailSongsSortOrder() {
+        return mPrefs.getInt(Key.ARTIST_DETAIL_SONGS, SongSort.DETAIL_DEFAULT);
     }
 
-    public void setDetailAlbumSongsSortOrder(@SongSort int sortOrder) {
-        setSortOrder(Key.DETAIL_ALBUM_SONGS, sortOrder);
+    public void setAlbumDetailSongsSortOrder(@SongSort int sortOrder) {
+        setSortOrder(Key.ALBUM_DETAIL_SONGS, sortOrder);
     }
 
-    public int getDetailAlbumSongsSortOrder() {
-        return mPrefs.getInt(Key.DETAIL_ALBUM_SONGS, SongSort.DETAIL_DEFAULT);
+    public int getAlbumDetailSongsSortOrder() {
+        return mPrefs.getInt(Key.ALBUM_DETAIL_SONGS, SongSort.DETAIL_DEFAULT);
     }
 
-    public void setDetailPlaylistSongsSortOrder(@SongSort int sortOrder) {
-        setSortOrder(Key.DETAIL_PLAYLIST_SONGS, sortOrder);
+    public void setPlaylistDetailSongsSortOrder(@SongSort int sortOrder) {
+        setSortOrder(Key.PLAYLIST_DETAIL_SONGS, sortOrder);
     }
 
-    public int getDetailPlaylistSongsSortOrder() {
-        return mPrefs.getInt(Key.DETAIL_PLAYLIST_SONGS, SongSort.DETAIL_DEFAULT);
+    public int getPlaylistDetailSongsSortOrder() {
+        return mPrefs.getInt(Key.PLAYLIST_DETAIL_SONGS, SongSort.DETAIL_DEFAULT);
     }
 
-    public void setDetailGenreSongsSortOrder(@SongSort int sortOrder) {
-        setSortOrder(Key.DETAIL_GENRE_SONGS, sortOrder);
+    public void setGenreDetailSongsSortOrder(@SongSort int sortOrder) {
+        setSortOrder(Key.GENRE_DETAIL_SONGS, sortOrder);
     }
 
-    public int getDetailGenreSongsSortOrder() {
-        return mPrefs.getInt(Key.DETAIL_GENRE_SONGS, SongSort.DEFAULT);
-    }
-
-
-    public void setDetailAlbumsSortOrder(@AlbumSort int sortOrder) {
-        setSortOrder(Key.DETAIL_ALBUMS, sortOrder);
-    }
-
-    public int getDetailAlbumsSortOrder() {
-        return mPrefs.getInt(Key.DETAIL_ALBUMS, AlbumSort.DEFAULT);
-    }
-
-    public void setDetailPlaylistAlbumsSortOrder(@AlbumSort int sortOrder) {
-        setSortOrder(Key.DETAIL_PLAYLIST_ALBUMS, sortOrder);
-    }
-
-    public int getDetailPlaylistAlbumsSortOrder() {
-        return mPrefs.getInt(Key.DETAIL_PLAYLIST_ALBUMS, AlbumSort.DEFAULT);
-    }
-
-    public void setDetailGenreAlbumsSortOrder(@AlbumSort int sortOrder) {
-        setSortOrder(Key.DETAIL_GENRE_ALBUMS, sortOrder);
-    }
-
-    public int getDetailGenreAlbumsSortOrder() {
-        return mPrefs.getInt(Key.DETAIL_GENRE_ALBUMS, AlbumSort.DEFAULT);
+    public int getGenreDetailSongsSortOrder() {
+        return mPrefs.getInt(Key.GENRE_DETAIL_SONGS, SongSort.DEFAULT);
     }
 
 
-    public void setDetailSongsAscending(boolean ascending) {
-        setAscending(Key.DETAIL_SONGS_ASC, ascending);
+    public void setArtistDetailAlbumsSortOrder(@AlbumSort int sortOrder) {
+        setSortOrder(Key.ARTIST_DETAIL_ALBUMS, sortOrder);
     }
 
-    public boolean getDetailSongsAscending() {
-        return mPrefs.getBoolean(Key.DETAIL_SONGS_ASC, true);
+    public int getArtistDetailAlbumsSortOrder() {
+        return mPrefs.getInt(Key.ARTIST_DETAIL_ALBUMS, AlbumSort.DEFAULT);
     }
 
-    public void setDetailPlaylistSongsAscending(boolean ascending) {
-        setAscending(Key.DETAIL_PLAYLIST_SONGS_ASC, ascending);
+    public void setPlaylistDetailAlbumsSortOrder(@AlbumSort int sortOrder) {
+        setSortOrder(Key.PLAYLIST_DETAIL_ALBUMS, sortOrder);
     }
 
-    public boolean getDetailPlaylistSongsAscending() {
-        return mPrefs.getBoolean(Key.DETAIL_PLAYLIST_SONGS_ASC, true);
+    public int getPlaylistDetailAlbumsSortOrder() {
+        return mPrefs.getInt(Key.PLAYLIST_DETAIL_ALBUMS, AlbumSort.DEFAULT);
     }
 
-    public void setDetailGenreSongsAscending(boolean ascending) {
-        setAscending(Key.DETAIL_GENRE_SONGS_ASC, ascending);
+    public void setGenreDetailAlbumsSortOrder(@AlbumSort int sortOrder) {
+        setSortOrder(Key.GENRE_DETAIL_ALBUMS, sortOrder);
     }
 
-    public boolean getDetailGenreSongsAscending() {
-        return mPrefs.getBoolean(Key.DETAIL_GENRE_SONGS_ASC, true);
+    public int getGenreDetailAlbumsSortOrder() {
+        return mPrefs.getInt(Key.GENRE_DETAIL_ALBUMS, AlbumSort.DEFAULT);
     }
 
 
-    public void setDetailAlbumsAscending(boolean ascending) {
-        setAscending(Key.DETAIL_ALBUMS_ASC, ascending);
+    public void setArtistDetailSongsAscending(boolean ascending) {
+        setAscending(Key.ARTIST_DETAIL_SONGS_ASC, ascending);
     }
 
-    public boolean getDetailAlbumsAscending() {
-        return mPrefs.getBoolean(Key.DETAIL_ALBUMS_ASC, true);
+    public boolean getArtistDetailSongsAscending() {
+        return mPrefs.getBoolean(Key.ARTIST_DETAIL_SONGS_ASC, true);
     }
 
-    public void setDetailPlaylistAlbumsAscending(boolean ascending) {
-        setAscending(Key.DETAIL_PLAYLIST_ALBUMS_ASC, ascending);
+    public void setAlbumDetailSongsAscending(boolean ascending) {
+        setAscending(Key.ALBUM_DETAIL_SONGS_ASC, ascending);
     }
 
-    public boolean getDetailPlaylistAlbumsAscending() {
-        return mPrefs.getBoolean(Key.DETAIL_PLAYLIST_ALBUMS_ASC, true);
+    public boolean getAlbumDetailSongsAscending() {
+        return mPrefs.getBoolean(Key.ALBUM_DETAIL_SONGS_ASC, true);
     }
 
-    public void setDetailGenreAlbumsAscending(boolean ascending) {
-        setAscending(Key.DETAIL_GENRE_ALBUMS_ASC, ascending);
+    public void setPlaylistDetailSongsAscending(boolean ascending) {
+        setAscending(Key.PLAYLIST_DETAIL_SONGS_ASC, ascending);
     }
 
-    public boolean getDetailGenreAlbumsAscending() {
-        return mPrefs.getBoolean(Key.DETAIL_GENRE_ALBUMS_ASC, true);
+    public boolean getPlaylistDetailSongsAscending() {
+        return mPrefs.getBoolean(Key.PLAYLIST_DETAIL_SONGS_ASC, true);
+    }
+
+    public void setGenreDetailSongsAscending(boolean ascending) {
+        setAscending(Key.GENRE_DETAIL_SONGS_ASC, ascending);
+    }
+
+    public boolean getGenreDetailSongsAscending() {
+        return mPrefs.getBoolean(Key.GENRE_DETAIL_SONGS_ASC, true);
+    }
+
+
+    public void setArtistDetailAlbumsAscending(boolean ascending) {
+        setAscending(Key.ARTIST_DETAIL_ALBUMS_ASC, ascending);
+    }
+
+    public boolean getArtistDetailAlbumsAscending() {
+        return mPrefs.getBoolean(Key.ARTIST_DETAIL_ALBUMS_ASC, true);
+    }
+
+    public void setPlaylistDetailAlbumsAscending(boolean ascending) {
+        setAscending(Key.PLAYLIST_DETAIL_ALBUMS_ASC, ascending);
+    }
+
+    public boolean getPlaylistDetailAlbumsAscending() {
+        return mPrefs.getBoolean(Key.PLAYLIST_DETAIL_ALBUMS_ASC, true);
+    }
+
+    public void setGenreDetailAlbumsAscending(boolean ascending) {
+        setAscending(Key.GENRE_DETAIL_ALBUMS_ASC, ascending);
+    }
+
+    public boolean getGenreDetailAlbumsAscending() {
+        return mPrefs.getBoolean(Key.GENRE_DETAIL_ALBUMS_ASC, true);
     }
 
     static int PREF_VERSION = 0;
@@ -201,26 +209,27 @@ public class SortManager {
         String ALBUMS = "key_albums_sort_order_" + PREF_VERSION;
         String SONGS = "key_songs_sort_order_" + PREF_VERSION;
 
-        String DETAIL_ALBUMS = "key_detail_albums_sort_order_" + PREF_VERSION;
-        String DETAIL_PLAYLIST_ALBUMS = "key_detail_playlist_albums_sort_order_" + PREF_VERSION;
-        String DETAIL_GENRE_ALBUMS = "key_genre_albums_sort_order_" + PREF_VERSION;
+        String ARTIST_DETAIL_ALBUMS = "key_detail_albums_sort_order_" + PREF_VERSION;
+        String PLAYLIST_DETAIL_ALBUMS = "key_detail_playlist_albums_sort_order_" + PREF_VERSION;
+        String GENRE_DETAIL_ALBUMS = "key_genre_albums_sort_order_" + PREF_VERSION;
 
-        String DETAIL_SONGS = "key_detail_songs_sort_order_" + PREF_VERSION;
-        String DETAIL_ALBUM_SONGS = "key_detail_album_songs_sort_order_" + PREF_VERSION;
-        String DETAIL_PLAYLIST_SONGS = "key_detail_playlist_songs_sort_order_" + PREF_VERSION;
-        String DETAIL_GENRE_SONGS = "key_genre_songs_sort_order_" + PREF_VERSION;
+        String ARTIST_DETAIL_SONGS = "key_detail_songs_sort_order_" + PREF_VERSION;
+        String ALBUM_DETAIL_SONGS = "key_detail_album_songs_sort_order_" + PREF_VERSION;
+        String PLAYLIST_DETAIL_SONGS = "key_detail_playlist_songs_sort_order_" + PREF_VERSION;
+        String GENRE_DETAIL_SONGS = "key_genre_songs_sort_order_" + PREF_VERSION;
 
         String ARTISTS_ASC = "key_artists_sort_order_asc_" + PREF_VERSION;
         String ALBUMS_ASC = "key_albums_sort_order_asc_" + PREF_VERSION;
         String SONGS_ASC = "key_songs_sort_order_asc_" + PREF_VERSION;
 
-        String DETAIL_SONGS_ASC = "key_detail_songs_sort_order_asc_" + PREF_VERSION;
-        String DETAIL_PLAYLIST_SONGS_ASC = "key_playlist_songs_sort_order_asc_" + PREF_VERSION;
-        String DETAIL_GENRE_SONGS_ASC = "key_genre_songs_sort_order_asc_" + PREF_VERSION;
+        String ARTIST_DETAIL_SONGS_ASC = "key_artist_detail_songs_sort_order_asc_" + PREF_VERSION;
+        String ALBUM_DETAIL_SONGS_ASC = "key_album_detail_songs_sort_order_asc_" + PREF_VERSION;
+        String PLAYLIST_DETAIL_SONGS_ASC = "key_playlist_songs_sort_order_asc_" + PREF_VERSION;
+        String GENRE_DETAIL_SONGS_ASC = "key_genre_songs_sort_order_asc_" + PREF_VERSION;
 
-        String DETAIL_ALBUMS_ASC = "key_detail_albums_sort_order_asc_" + PREF_VERSION;
-        String DETAIL_PLAYLIST_ALBUMS_ASC = "key_detail_playlist_albums_sort_order_asc_" + PREF_VERSION;
-        String DETAIL_GENRE_ALBUMS_ASC = "key_detail_genre_albums_sort_order_asc_" + PREF_VERSION;
+        String ARTIST_DETAIL_ALBUMS_ASC = "key_detail_albums_sort_order_asc_" + PREF_VERSION;
+        String PLAYLIST_DETAIL_ALBUMS_ASC = "key_detail_playlist_albums_sort_order_asc_" + PREF_VERSION;
+        String GENRE_DETAIL_ALBUMS_ASC = "key_detail_genre_albums_sort_order_asc_" + PREF_VERSION;
     }
 
     public @interface ArtistSort {

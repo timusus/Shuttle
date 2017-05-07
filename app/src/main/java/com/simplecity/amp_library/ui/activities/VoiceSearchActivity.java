@@ -8,7 +8,6 @@ import android.os.IBinder;
 import android.widget.Toast;
 
 import com.annimon.stream.Stream;
-import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.utils.ComparisonUtils;
@@ -107,10 +106,8 @@ public class VoiceSearchActivity extends BaseActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(songs -> {
                     if (songs != null) {
-                        MusicUtils.playAll(songs, position, () -> {
-                            final String message = getString(R.string.emptyplaylist);
-                            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-                        });
+                        MusicUtils.playAll(songs, position, (String message) ->
+                                Toast.makeText(this, message, Toast.LENGTH_SHORT).show());
                     }
                     finish();
                 });

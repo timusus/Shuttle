@@ -1,35 +1,32 @@
 package com.simplecity.amp_library.ui.modelviews;
 
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.simplecity.amp_library.R;
+import com.simplecityapps.recycler_adapter.model.BaseViewModel;
+import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 
-public class ArtworkLoadingView extends BaseAdaptableItem<Object, ArtworkLoadingView.ViewHolder> {
+import static com.simplecity.amp_library.R.layout.list_item_artwork_loading;
+import static com.simplecity.amp_library.ui.adapters.ViewType.LOADING;
+
+public class ArtworkLoadingView extends BaseViewModel<ArtworkLoadingView.ViewHolder> {
 
     @Override
     public int getViewType() {
-        return ViewType.LOADING;
+        return LOADING;
     }
 
     @Override
     public int getLayoutResId() {
-        return R.layout.list_item_artwork_loading;
+        return list_item_artwork_loading;
     }
 
     @Override
-    public ViewHolder getViewHolder(ViewGroup parent) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutResId(), parent, false));
+    public ViewHolder createViewHolder(ViewGroup parent) {
+        return new ViewHolder(createView(parent));
     }
 
-    @Override
-    public Object getItem() {
-        return null;
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends BaseViewHolder {
 
         public ViewHolder(View itemView) {
             super(itemView);

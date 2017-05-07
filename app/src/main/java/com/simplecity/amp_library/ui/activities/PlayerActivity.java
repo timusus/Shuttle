@@ -129,7 +129,7 @@ public class PlayerActivity extends BaseCastActivity implements
         }
 
         if (SettingsManager.getInstance().canTintNavBar()) {
-            getWindow().setNavigationBarColor(ColorUtils.getPrimaryColorDark(this));
+            getWindow().setNavigationBarColor(ColorUtils.getPrimaryColorDark());
         }
 
         super.onCreate(savedInstanceState);
@@ -285,8 +285,8 @@ public class PlayerActivity extends BaseCastActivity implements
         if (!ShuttleUtils.isUpgraded()) {
             menu.findItem(R.id.media_route_menu_item).setVisible(false);
         } else {
-            if (mCastManager != null) {
-                mCastManager.addMediaRouterButton(menu, R.id.media_route_menu_item);
+            if (castManager != null) {
+                castManager.addMediaRouterButton(menu, R.id.media_route_menu_item);
             }
         }
 
@@ -320,7 +320,7 @@ public class PlayerActivity extends BaseCastActivity implements
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        PlaylistUtils.isFavorite(this, MusicUtils.getSong())
+        PlaylistUtils.isFavorite(MusicUtils.getSong())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(isFavorite -> {
@@ -412,7 +412,7 @@ public class PlayerActivity extends BaseCastActivity implements
             }
             case CLEAR_QUEUE: {
                 MusicUtils.clearQueue();
-                Intent intent = new Intent(this, MainActivity2.class);
+                Intent intent = new Intent(this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
@@ -461,7 +461,7 @@ public class PlayerActivity extends BaseCastActivity implements
             ThemeUtils.themeSeekBar(this, mSeekBar, true);
         }
         if (mTextViewContainer != null) {
-            mTextViewContainer.setBackgroundColor(ColorUtils.getPrimaryColorDark(this));
+            mTextViewContainer.setBackgroundColor(ColorUtils.getPrimaryColorDark());
         }
         if (mButtonContainer != null) {
             mButtonContainer.setBackgroundColor(ColorUtils.getPrimaryColor());
@@ -536,12 +536,6 @@ public class PlayerActivity extends BaseCastActivity implements
         super.onServiceConnected(componentName, iBinder);
         updateTrackInfo();
         setPauseButtonImage();
-
-        QueuePagerFragment queuePagerFragment = (QueuePagerFragment) getSupportFragmentManager().findFragmentByTag(QUEUE_PAGER_FRAGMENT);
-        if (queuePagerFragment != null) {
-            queuePagerFragment.resetAdapter();
-            queuePagerFragment.updateQueuePosition();
-        }
     }
 
     @Override
@@ -553,7 +547,7 @@ public class PlayerActivity extends BaseCastActivity implements
 
         private final WeakReference<PlayerActivity> mNowPlayingActivity;
 
-        public TimeHandler(final PlayerActivity playingActivity) {
+        TimeHandler(final PlayerActivity playingActivity) {
             mNowPlayingActivity = new WeakReference<>(playingActivity);
         }
 

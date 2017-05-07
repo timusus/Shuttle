@@ -1,53 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context=".ui.activities.MainActivity">
+    android:orientation="vertical">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar"
+    <com.simplecity.amp_library.ui.views.StatusBarView
         android:layout_width="match_parent"
-        android:layout_height="112dp"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="wrap_content"/>
 
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/toolbar_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|enterAlways"
-            app:titleEnabled="false">
-
-            <com.simplecity.amp_library.ui.views.SlidingTabLayout
-                android:id="@+id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:clipToPadding="false"
-                android:elevation="4dp"
-                android:paddingLeft="44dp"/>
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                android:transitionName="toolbar"
-                app:layout_collapseMode="none"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:title="Fragment 1"/>
-
-        </android.support.design.widget.CollapsingToolbarLayout>
-    </android.support.design.widget.AppBarLayout>
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/pager"
+    <android.support.design.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        android:fitsSystemWindows="true"
+        tools:context=".ui.activities.MainActivity">
 
-</android.support.design.widget.CoordinatorLayout>
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="112dp"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/toolbar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed|enterAlways"
+                app:titleEnabled="false">
+
+                <com.simplecity.amp_library.ui.views.SlidingTabLayout
+                    android:id="@+id/tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:clipToPadding="false"
+                    android:elevation="4dp"
+                    android:paddingLeft="44dp"/>
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="?attr/colorPrimary"
+                    android:transitionName="toolbar"
+                    app:layout_collapseMode="none"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                    app:title="@string/library_title"/>
+
+            </android.support.design.widget.CollapsingToolbarLayout>
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+    </android.support.design.widget.CoordinatorLayout>
+</LinearLayout>

@@ -1,6 +1,6 @@
 package com.simplecity.amp_library.utils;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.res.TypedArray;
 
 /**
@@ -20,25 +20,23 @@ public final class ActionBarUtils {
     }
 
     /**
-     * @param activity The {@link android.app.Activity} to use
      * @return The height of the {@link android.app.ActionBar}
      */
-    public static float getActionBarHeight(Activity activity) {
-        final TypedArray actionBarSize = activity.obtainStyledAttributes(ACTION_BAR_SIZE);
+    public static float getActionBarHeight(Context context) {
+        final TypedArray actionBarSize = context.obtainStyledAttributes(ACTION_BAR_SIZE);
         final int actionBarHeight = actionBarSize.getDimensionPixelSize(0, 0);
         actionBarSize.recycle();
         return actionBarHeight;
     }
 
     /**
-     * @param activity The {@link android.app.Activity} to use
      * @return The height of the StatusBar
      */
-    public static float getStatusBarHeight(Activity activity) {
+    public static float getStatusBarHeight(Context context) {
         int result = 0;
-        int resourceId = activity.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0) {
-            result = activity.getResources().getDimensionPixelSize(resourceId);
+            result = context.getResources().getDimensionPixelSize(resourceId);
         }
         return result;
     }

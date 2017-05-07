@@ -700,6 +700,8 @@
     <string name="unknown_genre_name">Unknown genre</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
     <string name="unknown_album_artist_name">Unknown album artist</string>
+    <!-- Default value if album year unknown -->
+    <string name="unknown_year">Year unknown</string>
     <!-- Song Info overflow option-->
     <string name="song_info">Song Info</string>
 

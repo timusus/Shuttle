@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.model.AdaptableItem;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.ui.adapters.PlaylistAdapter;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
@@ -25,6 +24,8 @@ import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.ThemeUtils;
+import com.simplecityapps.recycler_adapter.model.ViewModel;
+import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.ArrayList;
@@ -37,12 +38,11 @@ import rx.schedulers.Schedulers;
 
 public class PlaylistFragment extends BaseFragment implements
         MusicUtils.Defs,
-        PlaylistAdapter.PlaylistListener,
-        RecyclerView.RecyclerListener {
+        PlaylistAdapter.PlaylistListener {
 
     public interface PlaylistClickListener {
 
-        void onItemClicked(Playlist playlist);
+        void onPlaylistClicked(Playlist playlist);
     }
 
     private static final String TAG = "PlaylistFragment";
@@ -53,6 +53,7 @@ public class PlaylistFragment extends BaseFragment implements
 
     private PlaylistAdapter mPlaylistAdapter;
 
+    @Nullable
     private PlaylistClickListener playlistClickListener;
 
     private Subscription subscription;
@@ -73,7 +74,9 @@ public class PlaylistFragment extends BaseFragment implements
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        playlistClickListener = (PlaylistClickListener) getActivity();
+        if (getParentFragment() instanceof PlaylistClickListener) {
+            playlistClickListener = (PlaylistClickListener) getParentFragment();
+        }
     }
 
     @Override
@@ -97,7 +100,7 @@ public class PlaylistFragment extends BaseFragment implements
         if (mRecyclerView == null) {
             mRecyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            mRecyclerView.setRecyclerListener(this);
+            mRecyclerView.setRecyclerListener(new RecyclerListener());
             mRecyclerView.setAdapter(mPlaylistAdapter);
             themeUIComponents();
         }
@@ -154,7 +157,7 @@ public class PlaylistFragment extends BaseFragment implements
                         .map(playlists -> Stream.of(playlists)
                                 .sorted((a, b) -> ComparisonUtils.compare(a.name, b.name))
                                 .sorted((a, b) -> ComparisonUtils.compareInt(a.type, b.type))
-                                .map(playlist -> (AdaptableItem) new PlaylistView(playlist))
+                                .map(playlist -> (ViewModel) new PlaylistView(playlist))
                                 .collect(Collectors.toList()))
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(items -> {
@@ -185,7 +188,9 @@ public class PlaylistFragment extends BaseFragment implements
 
     @Override
     public void onItemClick(View v, int position, Playlist playlist) {
-        playlistClickListener.onItemClicked(playlist);
+        if (playlistClickListener != null) {
+            playlistClickListener.onPlaylistClicked(playlist);
+        }
     }
 
     @Override
@@ -194,13 +199,6 @@ public class PlaylistFragment extends BaseFragment implements
         MenuUtils.addPlaylistMenuOptions(menu, playlist);
         MenuUtils.addClickHandler(getContext(), menu, playlist, null, null);
         menu.show();
-    }
-
-    @Override
-    public void onViewRecycled(RecyclerView.ViewHolder holder) {
-        if (holder.getAdapterPosition() != -1) {
-            mPlaylistAdapter.items.get(holder.getAdapterPosition()).recycle(holder);
-        }
     }
 
     @Override

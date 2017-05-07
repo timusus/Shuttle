@@ -83,9 +83,9 @@ I've started to recently adopt `RXJava`, which is best demonstrated in the `Data
 Any time you need to get to a song/album/artist, `DataManager.getInstance()` is a good place to start.
 
 
-##### ItemAdapter/AdaptableItem
+##### ViewModelAdapter/ViewModel
 
-There's a very loose implementation of the VM from MVVM when displaying items in a RecyclerView. Models are wrapped in an `AdaptableItem` which defines how the model should be presented in the `RecyclerView`. `AdaptableItem`s are passed to `ItemAdapter` (the base `RecyclerView.Adapter` used to back most `RecyclerView`s in Shuttle). The `ItemAdapter` uses `DiffUtil` to determine which changes to notify the `RecyclerView` of. The `ContentsComparator` interface is an interesting component here - it helps the `DiffUtil` decide whether two different `AdaptableItem`s represent the same underlying data (so it can potentially partially-refresh the view if need be)
+There's a very loose implementation of the VM from MVVM when displaying items in a RecyclerView. Models are wrapped in an `AdaptableItem` which defines how the model should be presented in the `RecyclerView`. `AdaptableItem`s are passed to `ViewModelAdapter` (the base `RecyclerView.Adapter` used to back most `RecyclerView`s in Shuttle). The `ViewModelAdapter` uses `DiffUtil` to determine which changes to notify the `RecyclerView` of. The `ContentsComparator` interface is an interesting component here - it helps the `DiffUtil` decide whether two different `AdaptableItem`s represent the same underlying data (so it can potentially partially-refresh the view if need be)
 
 ##### MusicService
 

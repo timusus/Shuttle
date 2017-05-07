@@ -130,8 +130,7 @@ public class StringUtils {
             if (numSubfiles == 1) {
                 string.append(context.getString(R.string.onesong));
             } else {
-                final String f = r.getQuantityText(R.plurals.Nsongs, numSubfiles)
-                        .toString();
+                final String f = r.getQuantityText(R.plurals.Nsongs, numSubfiles).toString();
                 sFormatBuilder.setLength(0);
                 sFormatter.format(f, numSubfiles);
                 string.append(sFormatBuilder);
@@ -170,6 +169,35 @@ public class StringUtils {
             stringBuilder.append(sFormatBuilder);
         }
         return stringBuilder.toString();
+    }
+
+    public static String makeAlbumsLabel(Context context, int numAlbums) {
+        final StringBuilder stringBuilder = new StringBuilder();
+        String formatString = context.getResources().getQuantityText(R.plurals.Nalbums, numAlbums).toString();
+        sFormatBuilder.setLength(0);
+        sFormatter.format(formatString, numAlbums);
+        stringBuilder.append(sFormatBuilder);
+
+        return stringBuilder.toString();
+    }
+
+    public static String makeSongsLabel(Context context, int numSongs) {
+        final StringBuilder stringBuilder = new StringBuilder();
+        String formatString = context.getResources().getQuantityText(R.plurals.Nsongs, numSongs).toString();
+        sFormatBuilder.setLength(0);
+        sFormatter.format(formatString, numSongs);
+        stringBuilder.append(sFormatBuilder);
+
+        return stringBuilder.toString();
+    }
+
+    public static String makeYearLabel(Context context, int year) {
+
+        if (year <= 0) {
+            return context.getResources().getString(R.string.unknown_year);
+        }
+
+        return String.format("%s", year);
     }
 
     /**

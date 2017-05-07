@@ -1,21 +1,42 @@
 package com.simplecity.amp_library.ui.modelviews;
 
-import android.support.v4.view.ViewCompat;
+import android.support.annotation.Nullable;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.bignerdranch.android.multiselector.MultiSelector;
 import com.bumptech.glide.RequestManager;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.github.florent37.glidepalette.GlidePalette;
-import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.format.PrefixHighlighter;
-import com.simplecity.amp_library.glide.utils.GlideUtils;
 import com.simplecity.amp_library.model.AlbumArtist;
-import com.simplecity.amp_library.model.ContentsComparator;
+import com.simplecity.amp_library.ui.adapters.ViewType;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class AlbumArtistView extends MultiItemView<AlbumArtist> implements ContentsComparator {
+import static android.support.v4.view.ViewCompat.setTransitionName;
+import static android.text.TextUtils.isEmpty;
+import static com.bumptech.glide.load.engine.DiskCacheStrategy.ALL;
+import static com.github.florent37.glidepalette.BitmapPalette.Profile.MUTED_DARK;
+import static com.github.florent37.glidepalette.GlidePalette.with;
+import static com.simplecity.amp_library.R.string.btn_options;
+import static com.simplecity.amp_library.glide.utils.GlideUtils.getPlaceHolderDrawable;
+import static com.simplecity.amp_library.ui.adapters.ViewType.ARTIST_PALETTE;
+import static com.simplecity.amp_library.utils.SortManager.AlbumSort.ARTIST_NAME;
+import static com.simplecity.amp_library.utils.SortManager.ArtistSort.DEFAULT;
+import static com.simplecity.amp_library.utils.SortManager.getInstance;
+import static com.simplecity.amp_library.utils.StringUtils.keyFor;
+
+public class AlbumArtistView extends MultiItemView<AlbumArtistView.ViewHolder> implements
+        SectionedView {
+
+    public interface ClickListener {
+
+        void onAlbumArtistClick(AlbumArtist albumArtist, ViewHolder holder);
+
+        boolean onAlbumArtistLongClick(AlbumArtist albumArtist);
+
+        void onAlbumArtistOverflowClicked(View v, AlbumArtist albumArtist);
+    }
 
     private static final String TAG = "AlbumArtistView";
 
@@ -28,6 +49,9 @@ public class AlbumArtistView extends MultiItemView<AlbumArtist> implements Conte
     private PrefixHighlighter prefixHighlighter;
 
     private char[] prefix;
+
+    @Nullable
+    private ClickListener listener;
 
     public AlbumArtistView(AlbumArtist albumArtist, @ViewType int viewType, RequestManager requestManager) {
         this.albumArtist = albumArtist;
@@ -42,9 +66,25 @@ public class AlbumArtistView extends MultiItemView<AlbumArtist> implements Conte
         this.multiSelector = multiSelector;
     }
 
+    public void setClickListener(@Nullable ClickListener listener) {
+        this.listener = listener;
+    }
+
     public void setPrefix(PrefixHighlighter prefixHighlighter, char[] prefix) {
         this.prefixHighlighter = prefixHighlighter;
         this.prefix = prefix;
+    }
+
+    private void onItemClick(ViewHolder holder) {
+        if (listener != null) {
+            listener.onAlbumArtistClick(albumArtist, holder);
+        }
+    }
+
+    private void onOverflowClick(View v) {
+        if (listener != null) {
+            listener.onAlbumArtistOverflowClicked(v, albumArtist);
+        }
     }
 
     @Override
@@ -59,30 +99,32 @@ public class AlbumArtistView extends MultiItemView<AlbumArtist> implements Conte
     @Override
     public void bindView(final ViewHolder holder) {
 
+        super.bindView(holder);
+
         holder.lineOne.setText(albumArtist.name);
         holder.lineTwo.setText(albumArtist.getNumAlbumsSongsLabel());
 
-        if (getViewType() == ViewType.ARTIST_PALETTE) {
+        if (getViewType() == ARTIST_PALETTE) {
             holder.bottomContainer.setBackgroundColor(0x20000000);
         }
 
         requestManager.load(albumArtist)
-                .listener(getViewType() == ViewType.ARTIST_PALETTE ? GlidePalette.with(albumArtist.getArtworkKey())
-                        .use(GlidePalette.Profile.MUTED_DARK)
+                .listener(getViewType() == ARTIST_PALETTE ? with(albumArtist.getArtworkKey())
+                        .use(MUTED_DARK)
                         .intoBackground(holder.bottomContainer)
                         .crossfade(true)
                         : null)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .placeholder(GlideUtils.getPlaceHolderDrawable(albumArtist.name, false))
+                .diskCacheStrategy(ALL)
+                .placeholder(getPlaceHolderDrawable(albumArtist.name, false))
                 .into(holder.imageOne);
 
-        holder.overflowButton.setContentDescription(holder.itemView.getResources().getString(R.string.btn_options, albumArtist.name));
+        holder.overflowButton.setContentDescription(holder.itemView.getResources().getString(btn_options, albumArtist.name));
 
         if (prefixHighlighter != null) {
             prefixHighlighter.setText(holder.lineOne, prefix);
         }
 
-        ViewCompat.setTransitionName(holder.imageOne, albumArtist.getArtworkKey());
+        setTransitionName(holder.imageOne, albumArtist.getArtworkKey());
     }
 
     @Override
@@ -95,8 +137,31 @@ public class AlbumArtistView extends MultiItemView<AlbumArtist> implements Conte
     }
 
     @Override
-    public AlbumArtist getItem() {
-        return albumArtist;
+    public ViewHolder createViewHolder(ViewGroup parent) {
+        return new ViewHolder(createView(parent));
+    }
+
+    @Override
+    public String getSectionName() {
+        int sortOrder = getInstance().getArtistsSortOrder();
+
+        String string = null;
+        switch (sortOrder) {
+            case DEFAULT:
+                string = keyFor(albumArtist.name);
+                break;
+            case ARTIST_NAME:
+                string = albumArtist.name;
+                break;
+        }
+
+        if (!isEmpty(string)) {
+            string = string.substring(0, 1).toUpperCase();
+        } else {
+            string = " ";
+        }
+
+        return string;
     }
 
     @Override
@@ -120,5 +185,16 @@ public class AlbumArtistView extends MultiItemView<AlbumArtist> implements Conte
     @Override
     public boolean areContentsEqual(Object other) {
         return this.equals(other) && Arrays.equals(prefix, ((AlbumArtistView) other).prefix);
+    }
+
+    public static class ViewHolder extends MultiItemView.ViewHolder<AlbumArtistView> {
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+
+            itemView.setOnClickListener(v -> viewModel.onItemClick(this));
+
+            overflowButton.setOnClickListener(v -> viewModel.onOverflowClick(v));
+        }
     }
 }

@@ -1,10 +1,9 @@
 package com.simplecity.amp_library.ui.adapters;
 
-import android.support.v7.widget.RecyclerView;
-
 import com.simplecity.amp_library.ui.modelviews.ColorView;
+import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 
-public class ColorAdapter extends ItemAdapter {
+public class ColorAdapter extends ViewModelAdapter {
 
     public interface ColorListener {
         void onColorSelected(int position, int color, boolean isSubColor);
@@ -34,14 +33,14 @@ public class ColorAdapter extends ItemAdapter {
         notifyItemChanged(position);
     }
 
-    @Override
-    protected void attachListeners(RecyclerView.ViewHolder viewHolder) {
-        super.attachListeners(viewHolder);
-
-        viewHolder.itemView.setOnClickListener(v -> {
-            if (colorListener != null && viewHolder.getAdapterPosition() != -1) {
-                colorListener.onColorSelected(viewHolder.getAdapterPosition(), ((ColorView) items.get(viewHolder.getAdapterPosition())).color, isSubColor);
-            }
-        });
-    }
+//    @Override
+//    protected void attachListeners(RecyclerView.ViewHolder viewHolder) {
+//        super.attachListeners(viewHolder);
+//
+//        viewHolder.itemView.setOnClickListener(v -> {
+//            if (colorListener != null && viewHolder.getAdapterPosition() != -1) {
+//                colorListener.onColorSelected(viewHolder.getAdapterPosition(), ((ColorView) items.get(viewHolder.getAdapterPosition())).color, isSubColor);
+//            }
+//        });
+//    }
 }

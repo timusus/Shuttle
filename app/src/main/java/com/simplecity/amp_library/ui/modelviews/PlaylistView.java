@@ -1,18 +1,24 @@
 package com.simplecity.amp_library.ui.modelviews;
 
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Playlist;
-import com.simplecity.amp_library.ui.fragments.PlaylistFragment;
 import com.simplecity.amp_library.ui.views.NonScrollImageButton;
-import com.simplecity.amp_library.utils.DrawableUtils;
+import com.simplecityapps.recycler_adapter.model.BaseViewModel;
+import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 
-public class PlaylistView extends BaseAdaptableItem<Playlist, PlaylistView.ViewHolder> {
+import static com.simplecity.amp_library.R.drawable.ic_overflow_white;
+import static com.simplecity.amp_library.R.id.btn_overflow;
+import static com.simplecity.amp_library.R.id.line_one;
+import static com.simplecity.amp_library.R.layout.list_item_one_line;
+import static com.simplecity.amp_library.R.string.btn_options;
+import static com.simplecity.amp_library.ui.adapters.ViewType.PLAYLIST;
+import static com.simplecity.amp_library.ui.fragments.PlaylistFragment.PlaylistClickListener;
+import static com.simplecity.amp_library.utils.DrawableUtils.getColoredStateListDrawable;
+
+public class PlaylistView extends BaseViewModel<PlaylistView.ViewHolder> {
 
     public Playlist playlist;
 
@@ -22,42 +28,39 @@ public class PlaylistView extends BaseAdaptableItem<Playlist, PlaylistView.ViewH
 
     @Override
     public int getViewType() {
-        return ViewType.PLAYLIST;
+        return PLAYLIST;
     }
 
     @Override
     public int getLayoutResId() {
-        return R.layout.list_item_one_line;
+        return list_item_one_line;
     }
 
     @Override
     public void bindView(ViewHolder holder) {
+        super.bindView(holder);
+
         holder.lineOne.setText(playlist.name);
-        holder.overflowButton.setContentDescription(holder.itemView.getResources().getString(R.string.btn_options, playlist.name));
+        holder.overflowButton.setContentDescription(holder.itemView.getResources().getString(btn_options, playlist.name));
     }
 
     @Override
-    public ViewHolder getViewHolder(ViewGroup parent) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutResId(), parent, false));
+    public ViewHolder createViewHolder(ViewGroup parent) {
+        return new ViewHolder(createView(parent));
     }
 
-    @Override
-    public Playlist getItem() {
-        return playlist;
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends BaseViewHolder {
 
         public TextView lineOne;
         public NonScrollImageButton overflowButton;
-        public PlaylistFragment.PlaylistClickListener listener;
+        public PlaylistClickListener listener;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            lineOne = (TextView) itemView.findViewById(R.id.line_one);
-            overflowButton = (NonScrollImageButton) itemView.findViewById(R.id.btn_overflow);
-            overflowButton.setImageDrawable(DrawableUtils.getColoredStateListDrawable(itemView.getContext(), R.drawable.ic_overflow_white));
+            lineOne = (TextView) itemView.findViewById(line_one);
+            overflowButton = (NonScrollImageButton) itemView.findViewById(btn_overflow);
+            overflowButton.setImageDrawable(getColoredStateListDrawable(itemView.getContext(), ic_overflow_white));
         }
 
         @Override
