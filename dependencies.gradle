@@ -70,6 +70,8 @@ ext.versions = [
         streams                       : "1.1.7",
         butterknife                   : "8.5.1",
         butterknifeAnnotationProcessor: "8.5.1",
+        dagger                        : "2.10",
+        daggerAnnotationProcessor     : "2.10",
 
         // //////////////////////////////////////////////////////////////////////////
         // MultiDex
@@ -185,6 +187,9 @@ ext.libs = [
         // Butterknife
         butterknife                   : "com.jakewharton:butterknife:$versions.butterknife",
         butterknifeAnnotationProcessor: "com.jakewharton:butterknife-compiler:$versions.butterknifeAnnotationProcessor",
+        // Dagger
+        dagger                        : "com.google.dagger:dagger:$versions.dagger",
+        daggerAnnotationProcessor     : "com.google.dagger:dagger-compiler:$versions.daggerAnnotationProcessor",
 
         // //////////////////////////////////////////////////////////////////////////
         // MultiDex

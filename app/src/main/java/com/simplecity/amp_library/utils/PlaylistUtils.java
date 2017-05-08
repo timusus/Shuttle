@@ -14,7 +14,6 @@ import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -42,7 +41,6 @@ import com.simplecity.amp_library.model.BaseFileObject;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Query;
 import com.simplecity.amp_library.model.Song;
-import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.sql.SqlUtils;
 import com.simplecity.amp_library.sql.providers.PlayCountTable;
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
@@ -55,7 +53,7 @@ import java.util.List;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 public class PlaylistUtils {
@@ -460,14 +458,14 @@ public class PlaylistUtils {
         }
     }
 
-    public static void toggleFavorite(Context context) {
+    public static void toggleFavorite(Action1<String> action) {
         MusicUtils.isFavorite()
                 .subscribeOn(Schedulers.io())
                 .subscribe(isFavorite -> {
                     if (!isFavorite) {
-                        addToFavorites(context);
+                        addToFavorites(action);
                     } else {
-                        removeFromFavorites(context);
+                        removeFromFavorites(action);
                     }
                 });
     }
@@ -475,7 +473,7 @@ public class PlaylistUtils {
     /**
      * Add a song to the favourites playlist
      */
-    public static void addToFavorites(final Context context) {
+    public static void addToFavorites(Action1<String> action) {
 
         Song song = MusicUtils.getSong();
 
@@ -485,29 +483,20 @@ public class PlaylistUtils {
 
         Observable.fromCallable(Playlist::favoritesPlaylist)
                 .flatMap(playlist -> playlist.getSongsObservable()
-                        .flatMap(new Func1<List<Song>, Observable<Playlist>>() {
-                            @Override
-                            public Observable<Playlist> call(List<Song> songs) {
-                                Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlist.id);
-                                ContentValues values = new ContentValues();
-                                values.put(MediaStore.Audio.Playlists.Members.AUDIO_ID, song.id);
-                                values.put(MediaStore.Audio.Playlists.Members.PLAY_ORDER, songs.size() + 1);
-                                context.getContentResolver().insert(uri, values);
-                                return Observable.just(playlist);
-                            }
+                        .flatMap(songs -> {
+                            Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlist.id);
+                            ContentValues values = new ContentValues();
+                            values.put(MediaStore.Audio.Playlists.Members.AUDIO_ID, song.id);
+                            values.put(MediaStore.Audio.Playlists.Members.PLAY_ORDER, songs.size() + 1);
+                            ShuttleApplication.getInstance().getContentResolver().insert(uri, values);
+                            return Observable.just(playlist);
                         }))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(playlist -> {
-                    Toast.makeText(context,
-                            context.getResources().getString(R.string.song_to_favourites, song.name),
-                            Toast.LENGTH_SHORT).show();
-
-                    LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(MusicService.InternalIntents.FAVORITE_CHANGED));
-                });
+                .subscribe(playlist -> action.call(ShuttleApplication.getInstance().getResources().getString(R.string.song_to_favourites, song.name)));
     }
 
-    public static void removeFromFavorites(Context context) {
+    public static void removeFromFavorites(Action1<String> action) {
 
         Song song = MusicUtils.getSong();
 
@@ -520,18 +509,15 @@ public class PlaylistUtils {
                     Playlist favoritesPlaylist = Playlist.favoritesPlaylist();
                     if (favoritesPlaylist.id >= 0) {
                         final Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", favoritesPlaylist.id);
-                        return context.getContentResolver().delete(uri, MediaStore.Audio.Playlists.Members.AUDIO_ID + "=" + song.id, null);
+                        return ShuttleApplication.getInstance().getContentResolver().delete(uri, MediaStore.Audio.Playlists.Members.AUDIO_ID + "=" + song.id, null);
                     }
                     return 0;
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(numTracksAdded -> {
-                    if (numTracksAdded > 0) {
-                        Toast.makeText(context,
-                                context.getResources().getString(R.string.song_removed_from_favourites, song.name),
-                                Toast.LENGTH_SHORT).show();
-                        LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(MusicService.InternalIntents.FAVORITE_CHANGED));
+                .subscribe(numTracksRemoved -> {
+                    if (numTracksRemoved > 0) {
+                        action.call(ShuttleApplication.getInstance().getResources().getString(R.string.song_removed_from_favourites, song.name));
                     }
                 });
     }

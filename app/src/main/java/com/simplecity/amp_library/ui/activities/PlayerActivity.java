@@ -280,7 +280,7 @@ public class PlayerActivity extends BaseCastActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.menu_player_activity, menu);
+        getMenuInflater().inflate(R.menu.menu_now_playing, menu);
 
         if (!ShuttleUtils.isUpgraded()) {
             menu.findItem(R.id.media_route_menu_item).setVisible(false);
@@ -309,11 +309,11 @@ public class PlayerActivity extends BaseCastActivity implements
 
         menu.add(0, DELETE_ITEM, 8, R.string.delete_item);
 
-        if (ShuttleUtils.isTablet()) {
-            if (menu.findItem(R.id.menu_list) != null) {
-                menu.removeItem(R.id.menu_list);
-            }
-        }
+//        if (ShuttleUtils.isTablet()) {
+//            if (menu.findItem(R.id.menu_list) != null) {
+//                menu.removeItem(R.id.menu_list);
+//            }
+//        }
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -349,31 +349,31 @@ public class PlayerActivity extends BaseCastActivity implements
         }
 
         if (item.getItemId() == R.id.menu_favorite) {
-            PlaylistUtils.toggleFavorite(this);
+//            PlaylistUtils.toggleFavorite();
             supportInvalidateOptionsMenu();
             return true;
         }
 
-        if (item.getItemId() == R.id.menu_list) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.setCustomAnimations(R.anim.abc_fade_in, R.anim.abc_fade_out, R.anim.abc_fade_in, R.anim.abc_fade_out);
-
-            //Remove the lyrics fragment
-            Fragment lyricsFragment = getSupportFragmentManager().findFragmentByTag(LYRICS_FRAGMENT);
-            if (lyricsFragment != null) {
-                ft.remove(lyricsFragment);
-            }
-
-            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.queue_container);
-            if (fragment instanceof QueueFragment) {
-                ft.remove(getSupportFragmentManager().findFragmentByTag(QUEUE_FRAGMENT));
-            } else {
-                ft.add(R.id.queue_container, QueueFragment.newInstance(), QUEUE_FRAGMENT);
-            }
-
-            ft.commit();
-            return true;
-        }
+//        if (item.getItemId() == R.id.menu_list) {
+//            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//            ft.setCustomAnimations(R.anim.abc_fade_in, R.anim.abc_fade_out, R.anim.abc_fade_in, R.anim.abc_fade_out);
+//
+//            //Remove the lyrics fragment
+//            Fragment lyricsFragment = getSupportFragmentManager().findFragmentByTag(LYRICS_FRAGMENT);
+//            if (lyricsFragment != null) {
+//                ft.remove(lyricsFragment);
+//            }
+//
+//            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.queue_container);
+//            if (fragment instanceof QueueFragment) {
+//                ft.remove(getSupportFragmentManager().findFragmentByTag(QUEUE_FRAGMENT));
+//            } else {
+//                ft.add(R.id.queue_container, QueueFragment.newInstance(), QUEUE_FRAGMENT);
+//            }
+//
+//            ft.commit();
+//            return true;
+//        }
 
         switch (item.getItemId()) {
             case EQUALIZER: {

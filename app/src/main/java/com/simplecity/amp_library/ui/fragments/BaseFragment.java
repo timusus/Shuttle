@@ -2,7 +2,6 @@ package com.simplecity.amp_library.ui.fragments;
 
 import android.content.res.Resources;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -92,10 +91,6 @@ public abstract class BaseFragment extends BaseController {
     }
 
     protected abstract String screenName();
-
-    protected void setupCastToolbar(Toolbar toolbar) {
-        setupCastMenu(toolbar.getMenu());
-    }
 
     protected void setupCastMenu(Menu menu) {
         if (getActivity() instanceof BaseCastActivity) {

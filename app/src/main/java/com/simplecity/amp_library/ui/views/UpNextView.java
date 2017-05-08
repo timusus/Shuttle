@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.utils.ColorUtils;
 
 import butterknife.BindView;
@@ -22,8 +23,13 @@ public class UpNextView extends LinearLayout {
     @BindView(R.id.arrow)
     ImageView arrow;
 
-    @BindView(R.id.textView)
-    TextView textView;
+    @BindView(R.id.queueText)
+    TextView queueText;
+
+    @BindView(R.id.queuePosition)
+    TextView queuePositionTextVuew;
+
+    PlayerPresenter playerPresenter = new PlayerPresenter();
 
     public UpNextView(Context context) {
         this(context, null);
@@ -47,7 +53,29 @@ public class UpNextView extends LinearLayout {
         Drawable arrowDrawable = DrawableCompat.wrap(arrow.getDrawable());
         DrawableCompat.setTint(arrowDrawable, ColorUtils.getTextColorPrimary());
         arrow.setImageDrawable(arrowDrawable);
-
-        textView.setTextColor(ColorUtils.getTextColorPrimary());
     }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
+        playerPresenter.bindView(playerViewAdapter);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+
+        playerPresenter.unbindView(playerViewAdapter);
+    }
+
+    private PlayerViewAdapter playerViewAdapter = new PlayerViewAdapter() {
+        @Override
+        public void queueChanged(int queuePosition, int queueLength) {
+            super.queueChanged(queuePosition, queueLength);
+
+            queuePositionTextVuew.setText(String.format("%d / %d", queuePosition, queueLength));
+        }
+    };
+
 }

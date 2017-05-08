@@ -47,6 +47,8 @@ import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import rx.Observable;
 import test.com.multisheetview.ui.view.MultiSheetView;
 
@@ -55,20 +57,27 @@ public class QueueFragment extends BaseFragment implements
 
     private static final String TAG = "QueueFragment";
 
-    private SharedPreferences prefs;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
-    private FastScrollRecyclerView recyclerView;
+    @BindView(R.id.line1)
+    TextView lineOne;
+
+    @BindView(R.id.line2)
+    TextView lineTwo;
+
+    @BindView(R.id.recyclerView)
+    FastScrollRecyclerView recyclerView;
+
+    private SharedPreferences prefs;
 
     private ItemTouchHelper itemTouchHelper;
 
     private ViewModelAdapter adapter;
 
-    private TextView lineOne;
-    private TextView lineTwo;
+    private MultiSelector multiSelector = new MultiSelector();
 
-    MultiSelector multiSelector = new MultiSelector();
-
-    ActionMode actionMode;
+    private ActionMode actionMode;
 
     boolean inActionMode = false;
 
@@ -79,9 +88,7 @@ public class QueueFragment extends BaseFragment implements
     private RequestManager requestManager;
 
     public static QueueFragment newInstance() {
-
         Bundle args = new Bundle();
-
         QueueFragment fragment = new QueueFragment();
         fragment.setArguments(args);
         return fragment;
@@ -153,13 +160,10 @@ public class QueueFragment extends BaseFragment implements
 
         View rootView = inflater.inflate(R.layout.fragment_queue, container, false);
 
-        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        ButterKnife.bind(this, rootView);
+
         toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
 
-        lineOne = (TextView) rootView.findViewById(R.id.line1);
-        lineTwo = (TextView) rootView.findViewById(R.id.line2);
-
-        recyclerView = (FastScrollRecyclerView) rootView.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setRecyclerListener(new RecyclerListener());
         recyclerView.setAdapter(adapter);

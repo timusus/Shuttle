@@ -10,26 +10,29 @@
 
     <item
         android:id="@+id/menu_favorite"
-        android:icon="@drawable/ic_fav"
         android:title="@string/fav_add"
+        app:actionLayout="@layout/action_bar_favorite"
         app:showAsAction="ifRoom"/>
-
-    <item
-        android:id="@+id/menu_list"
-        android:icon="?attr/btn_queue"
-        android:title="@string/btn_queue"
-        app:showAsAction="ifRoom"/>
-
-    <item
-        android:id="@+id/menu_share"
-        android:icon="?attr/btn_share"
-        android:title="@string/share_title"
-        app:showAsAction="never"/>
 
     <item
         android:id="@+id/menu_lyrics"
         android:icon="?attr/btn_lyrics"
         android:title="@string/lyrics"
         app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/go_to"
+        android:title="@string/go_to"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/edit_tags"
+        android:title="@string/edit_tags"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/song_info"
+        android:title="@string/song_info"
+        app:showAsAction="never"/>
 
 </menu>

@@ -527,7 +527,7 @@ public class MusicService extends Service {
                         pausedByTransientLossOfFocus = false;
                         releaseServiceUiAndStop();
                     } else if (MediaButtonCommand.TOGGLE_FAVORITE.equals(cmd)) {
-                        PlaylistUtils.toggleFavorite(MusicService.this);
+                        PlaylistUtils.toggleFavorite(message -> Toast.makeText(MusicService.this, message, Toast.LENGTH_SHORT).show());
                         notifyChange(InternalIntents.FAVORITE_CHANGED);
                     }
                     if (WidgetProviderSmall.CMDAPPWIDGETUPDATE.equals(cmd)) {
@@ -921,7 +921,7 @@ public class MusicService extends Service {
             } else if (ServiceCommand.REPEAT_ACTION.equals(action)) {
                 toggleRepeat();
             } else if (MediaButtonCommand.TOGGLE_FAVORITE.equals(action)) {
-                PlaylistUtils.toggleFavorite(this);
+                PlaylistUtils.toggleFavorite(message -> Toast.makeText(MusicService.this, message, Toast.LENGTH_SHORT).show());
                 notifyChange(InternalIntents.FAVORITE_CHANGED);
             } else if (ExternalIntents.PLAY_STATUS_REQUEST.equals(action)) {
                 notifyChange(ExternalIntents.PLAY_STATUS_RESPONSE);

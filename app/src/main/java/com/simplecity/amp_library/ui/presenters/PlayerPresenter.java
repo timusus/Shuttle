@@ -2,6 +2,7 @@ package com.simplecity.amp_library.ui.presenters;
 
 import android.content.IntentFilter;
 import android.support.annotation.NonNull;
+import android.widget.Toast;
 
 import com.f2prateek.rx.receivers.RxBroadcastReceiver;
 import com.simplecity.amp_library.ShuttleApplication;
@@ -9,6 +10,7 @@ import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.playback.PlaybackMonitor;
 import com.simplecity.amp_library.ui.views.PlayerView;
 import com.simplecity.amp_library.utils.MusicUtils;
+import com.simplecity.amp_library.utils.PlaylistUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -113,13 +115,23 @@ public class PlayerPresenter extends Presenter<PlayerView> {
         currentPlaybackTimeVisible = visible;
     }
 
+    private void updateFavorite() {
+        PlayerView view = getView();
+        if (view != null) {
+            addSubcscription(PlaylistUtils.isFavorite(MusicUtils.getSong())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(view::favoriteChanged));
+        }
+    }
+
     public void updateTrackInfo() {
         PlayerView view = getView();
         if (view != null) {
-            view.favoriteChanged();
             view.trackInfoChanged(MusicUtils.getSong());
             view.currentTimeChanged(MusicUtils.getPosition() / 1000);
             view.queueChanged(MusicUtils.getQueuePosition() + 1, MusicUtils.getQueue().size());
+
+            updateFavorite();
         }
     }
 
@@ -148,6 +160,17 @@ public class PlayerPresenter extends Presenter<PlayerView> {
     public void togglePlayback() {
         MusicUtils.playOrPause();
         updatePlaystate();
+    }
+
+    public void toggleFavorite() {
+        PlaylistUtils.toggleFavorite(message -> {
+            updateFavorite();
+
+            PlayerView playerView = getView();
+            if (playerView != null) {
+                playerView.showToast(message, Toast.LENGTH_SHORT);
+            }
+        });
     }
 
     public void skip() {

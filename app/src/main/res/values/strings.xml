@@ -211,7 +211,7 @@
     <!-- Menu option 'clear queue' -->
     <string name="clear_queue">Clear queue</string>
     <!-- -->
-    <string name="fav_add">Add to Favorites</string>
+    <string name="fav_add">Favorite</string>
     <!-- Context menu item -->
     <string name="play_selection">Play</string>
     <!-- Context menu item -->

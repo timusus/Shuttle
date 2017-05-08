@@ -22,7 +22,9 @@ public interface PlayerView {
 
     void repeatChanged(@MusicService.RepeatMode int repeatMode);
 
-    void favoriteChanged();
+    void favoriteChanged(boolean isFavorite);
 
     void trackInfoChanged(@Nullable Song song);
+
+    void showToast(String message, int duration);
 }

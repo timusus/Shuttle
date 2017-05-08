@@ -185,7 +185,7 @@ public class ArtworkFragment extends BaseFragment {
                     playingFragment = parentFragment.getParentFragment();
                 }
                 if (playingFragment != null && playingFragment instanceof PlayerFragment) {
-                    ((PlayerFragment) playingFragment).toggleLyrics();
+//                    ((PlayerFragment) playingFragment).toggleLyrics();
                 }
             }
             return false;

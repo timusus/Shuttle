@@ -275,6 +275,8 @@ dependencies {
     }
     compile libs.butterknife
     annotationProcessor libs.butterknifeAnnotationProcessor
+    compile libs.dagger
+    annotationProcessor libs.daggerAnnotationProcessor
 
     // //////////////////////////////////////////////////////////////////////////
     // Multidex (Only used in non-proguard pre-21 builds)

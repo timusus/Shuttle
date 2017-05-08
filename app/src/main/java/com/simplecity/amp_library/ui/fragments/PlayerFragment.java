@@ -10,10 +10,12 @@ import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -31,6 +33,7 @@ import com.simplecity.amp_library.lyrics.LyricsFragment;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
+import com.simplecity.amp_library.ui.views.FavoriteActionBarView;
 import com.simplecity.amp_library.ui.views.PlayPauseView;
 import com.simplecity.amp_library.ui.views.PlayerView;
 import com.simplecity.amp_library.ui.views.RepeatingImageButton;
@@ -49,13 +52,16 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class PlayerFragment extends BaseFragment implements PlayerView {
+public class PlayerFragment extends BaseFragment implements PlayerView, Toolbar.OnMenuItemClickListener {
 
     private final String TAG = ((Object) this).getClass().getSimpleName();
 
     private SizableSeekBar seekBar;
 
     private boolean isSeeking;
+
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     @BindView(R.id.play)
     PlayPauseView playPauseView;
@@ -139,8 +145,14 @@ public class PlayerFragment extends BaseFragment implements PlayerView {
 
         ButterKnife.bind(this, rootView);
 
-        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
+        toolbar.inflateMenu(R.menu.menu_now_playing);
+        setupCastMenu(toolbar.getMenu());
+
+        MenuItem favoriteMenuItem = toolbar.getMenu().findItem(R.id.menu_favorite);
+        FavoriteActionBarView menuActionView = (FavoriteActionBarView) favoriteMenuItem.getActionView();
+        menuActionView.setOnClickListener(v -> onMenuItemClick(favoriteMenuItem));
+        toolbar.setOnMenuItemClickListener(this);
 
         playPauseView.setOnClickListener(v -> {
             playPauseView.toggle();
@@ -255,7 +267,7 @@ public class PlayerFragment extends BaseFragment implements PlayerView {
         super.onDestroy();
     }
 
-    public void toggleLyrics() {
+    private void toggleLyrics() {
         Fragment fragment = getChildFragmentManager().findFragmentById(R.id.main_container);
         if (fragment instanceof LyricsFragment) {
             return;
@@ -297,7 +309,7 @@ public class PlayerFragment extends BaseFragment implements PlayerView {
 
     @Override
     public void queueChanged(int queuePosition, int queueLength) {
-//        this.queuePosition.setText(String.format("%s / %s", queuePosition, queueLength));
+
     }
 
     @Override
@@ -348,8 +360,9 @@ public class PlayerFragment extends BaseFragment implements PlayerView {
     }
 
     @Override
-    public void favoriteChanged() {
-        getActivity().supportInvalidateOptionsMenu();
+    public void favoriteChanged(boolean isFavorite) {
+        FavoriteActionBarView favoriteActionBarView = (FavoriteActionBarView) toolbar.getMenu().findItem(R.id.menu_favorite).getActionView();
+        favoriteActionBarView.setIsFavorite(isFavorite);
     }
 
     @Override
@@ -396,5 +409,33 @@ public class PlayerFragment extends BaseFragment implements PlayerView {
                         }
                     }
                 });
+    }
+
+    @Override
+    public void showToast(String message, int duration) {
+        Toast.makeText(getContext(), message, duration).show();
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_favorite:
+                ((FavoriteActionBarView) item.getActionView()).toggle();
+                presenter.toggleFavorite();
+                return true;
+            case R.id.menu_lyrics:
+
+                return true;
+            case R.id.go_to:
+
+                return true;
+            case R.id.edit_tags:
+
+                return true;
+            case R.id.song_info:
+
+                return true;
+        }
+        return false;
     }
 }

@@ -278,7 +278,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     private void setupToolbarMenu(Toolbar toolbar) {
         toolbar.inflateMenu(R.menu.menu_detail_sort);
 
-        setupCastToolbar(toolbar);
+        setupCastMenu(toolbar.getMenu());
 
         toolbar.setOnMenuItemClickListener(this);
 

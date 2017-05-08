@@ -21,10 +21,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.glide.utils.GlideUtils;
 import com.simplecity.amp_library.model.Song;
-import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.ui.views.PlayPauseView;
-import com.simplecity.amp_library.ui.views.PlayerView;
+import com.simplecity.amp_library.ui.views.PlayerViewAdapter;
 import com.simplecity.amp_library.utils.ColorUtils;
 import com.simplecity.amp_library.utils.DrawableUtils;
 
@@ -32,7 +31,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import test.com.multisheetview.ui.view.MultiSheetView;
 
-public class MiniPlayerFragment extends BaseFragment implements PlayerView {
+public class MiniPlayerFragment extends BaseFragment {
 
     private static final String TAG = "MiniPlayerFragment";
 
@@ -115,7 +114,7 @@ public class MiniPlayerFragment extends BaseFragment implements PlayerView {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        presenter.bindView(this);
+        presenter.bindView(playerViewAdapter);
     }
 
     @Override
@@ -136,7 +135,7 @@ public class MiniPlayerFragment extends BaseFragment implements PlayerView {
     public void onDestroyView() {
         super.onDestroyView();
 
-        presenter.unbindView(this);
+        presenter.unbindView(playerViewAdapter);
     }
 
     @Override
@@ -170,7 +169,7 @@ public class MiniPlayerFragment extends BaseFragment implements PlayerView {
         }
 
         public boolean onTouch(View v, MotionEvent event) {
-            
+
             boolean consumed = gestureDetector.onTouchEvent(event);
 
             if (!consumed) {
@@ -216,70 +215,44 @@ public class MiniPlayerFragment extends BaseFragment implements PlayerView {
         return TAG;
     }
 
-    @Override
-    public void setSeekProgress(int progress) {
-        progressBar.setProgress(progress);
-    }
+    PlayerViewAdapter playerViewAdapter = new PlayerViewAdapter() {
 
-    @Override
-    public void currentTimeVisibilityChanged(boolean visible) {
-        // Nothing to do
-    }
+        @Override
+        public void setSeekProgress(int progress) {
+            progressBar.setProgress(progress);
+        }
 
-    @Override
-    public void currentTimeChanged(long seconds) {
-        // Nothing to do
-    }
 
-    @Override
-    public void queueChanged(int queuePosition, int queueLength) {
-        // Nothing to do
-    }
-
-    @Override
-    public void playbackChanged(boolean isPlaying) {
-        if (isPlaying) {
-            if (playPauseView.isPlay()) {
-                playPauseView.toggle();
-            }
-        } else {
-            if (!playPauseView.isPlay()) {
-                playPauseView.toggle();
+        @Override
+        public void playbackChanged(boolean isPlaying) {
+            if (isPlaying) {
+                if (playPauseView.isPlay()) {
+                    playPauseView.toggle();
+                }
+            } else {
+                if (!playPauseView.isPlay()) {
+                    playPauseView.toggle();
+                }
             }
         }
-    }
 
-    @Override
-    public void shuffleChanged(@MusicService.ShuffleMode int shuffleMode) {
-        // Nothing to do
-    }
+        @Override
+        public void trackInfoChanged(@Nullable Song song) {
 
-    @Override
-    public void repeatChanged(@MusicService.RepeatMode int repeatMode) {
-        // Nothing to do
-    }
+            if (song == null) return;
 
-    @Override
-    public void favoriteChanged() {
-        // Nothing to do
-    }
+            trackName.setText(song.name);
+            artistName.setText(String.format("%s | %s", song.artistName, song.albumName));
 
-    @Override
-    public void trackInfoChanged(@Nullable Song song) {
+            Glide.with(getContext())
+                    .load(song)
+                    .priority(Priority.HIGH)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .placeholder(GlideUtils.getMediumPlaceHolderResId())
+                    .into(miniArtwork);
 
-        if (song == null) return;
+            rootView.setContentDescription(getString(R.string.btn_now_playing, song.name, song.artistName));
 
-        trackName.setText(song.name);
-        artistName.setText(String.format("%s | %s", song.artistName, song.albumName));
-
-        Glide.with(getContext())
-                .load(song)
-                .priority(Priority.HIGH)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .placeholder(GlideUtils.getMediumPlaceHolderResId())
-                .into(miniArtwork);
-
-        rootView.setContentDescription(getString(R.string.btn_now_playing, song.name, song.artistName));
-
-    }
+        }
+    };
 }
