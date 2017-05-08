@@ -2,20 +2,13 @@ package com.simplecity.amp_library.ui.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -70,12 +63,6 @@ public class NavigationDrawerFragment extends BaseFragment implements
      */
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
 
-    /**
-     * Helper component that ties the action bar to the navigation drawer.
-     */
-    private ActionBarDrawerToggle mDrawerToggle;
-
-    private DrawerLayout mDrawerLayout;
     private AnimatedExpandableListView mListView;
 
     private DrawerGroupItem mCurrentSelectedGroupItem = null;
@@ -248,109 +235,6 @@ public class NavigationDrawerFragment extends BaseFragment implements
         }
     }
 
-    public boolean isDrawerOpen() {
-        return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START);
-    }
-
-    /**
-     * Users of this fragment must call this method to set up the navigation drawer interactions.
-     *
-     * @param drawerLayout The DrawerLayout containing this fragment's UI.
-     */
-    public void setup(DrawerLayout drawerLayout) {
-
-        mDrawerLayout = drawerLayout;
-
-        // set a custom shadow that overlays the main content when the drawer opens
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        // set up the drawer's list view with items and click listener
-
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
-        }
-
-        // ActionBarDrawerToggle ties together the the proper interactions
-        // between the navigation drawer and the action bar app icon.
-        mDrawerToggle = new ActionBarDrawerToggle(
-                getActivity(),                    /* host Activity */
-                mDrawerLayout,                    /* DrawerLayout object */
-                R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
-                R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
-        ) {
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
-                if (!isAdded()) {
-                    return;
-                }
-
-                getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-
-                if (!isAdded()) {
-                    return;
-                }
-
-                if (!mUserLearnedDrawer) {
-                    // The user manually opened the drawer; store this flag to prevent auto-showing
-                    // the navigation drawer automatically in the future.
-                    mUserLearnedDrawer = true;
-                    SharedPreferences sp = PreferenceManager
-                            .getDefaultSharedPreferences(getActivity());
-                    sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
-                }
-
-                getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
-            }
-
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-                // Prevent the animation from occurring unless the passed in drawer view is null. (We pass in null from our sliding up panel,
-                // which is the only view which should cause animation)
-                if (drawerView != null) {
-                    slideOffset = 0;
-                }
-                super.onDrawerSlide(drawerView, slideOffset); // this disables the animation
-            }
-        };
-
-        // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
-        // per the navigation drawer design guidelines.
-        if (!mUserLearnedDrawer && !mFromSavedInstanceState) {
-            mDrawerLayout.openDrawer(GravityCompat.START);
-        }
-
-        // Defer code dependent on restoration of previous instance state.
-        mDrawerLayout.post(() -> mDrawerToggle.syncState());
-
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // If the drawer is open, show the global app actions in the action bar. See also
-        // showGlobalContextActionBar, which controls the top-left area of the action bar.
-        if (mDrawerLayout != null && isDrawerOpen()) {
-            inflater.inflate(R.menu.menu_global, menu);
-            showGlobalContextActionBar();
-        }
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     @Override
     public void onDestroy() {
         mPrefs.unregisterOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
@@ -364,12 +248,6 @@ public class NavigationDrawerFragment extends BaseFragment implements
         outState.putSerializable(STATE_SELECTED_PLAYLIST, mCurrentSelectedPlaylist);
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        // Forward the new configuration the drawer toggle component.
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
 
     /**
      * Per the navigation drawer design guidelines, updates the action bar to show the global app
@@ -390,21 +268,8 @@ public class NavigationDrawerFragment extends BaseFragment implements
         return ((AppCompatActivity) getActivity()).getSupportActionBar();
     }
 
-    public void toggleDrawerLock(boolean lock) {
-        if (lock) {
-            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        } else {
-            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-        }
-    }
-
-    public void animateDrawerToggle(float slideOffset) {
-        mDrawerToggle.onDrawerSlide(null, slideOffset);
-    }
-
     @Override
     public void onDrawerItemClick(final DrawerGroupItem drawerGroupItem) {
-        mDrawerLayout.closeDrawer(GravityCompat.START);
 
         //Settings and support should not be selected, since we'll return from them back to whatever was previously selected anyway.
         if (drawerGroupItem.type != DrawerGroupItem.Type.SETTINGS
@@ -419,7 +284,6 @@ public class NavigationDrawerFragment extends BaseFragment implements
 
     @Override
     public void onPlaylistItemClick(final DrawerGroupItem drawerGroupItem, final Playlist playlist) {
-        mDrawerLayout.closeDrawer(GravityCompat.START);
         Handler handler = new Handler();
 //        handler.postDelayed(() -> drawerClickListener.onItemClicked(playlist), 200);
     }

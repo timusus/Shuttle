@@ -15,7 +15,7 @@ import test.com.multisheetview.R;
 
 public class MultiSheetView extends FrameLayout {
 
-    @interface Sheet {
+    public @interface Sheet {
         int NONE = 0;
         int FIRST = 1;
         int SECOND = 2;
@@ -69,12 +69,7 @@ public class MultiSheetView extends FrameLayout {
             }
         });
 
-        findViewById(getSheet1PeekViewResId()).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSheet(Sheet.FIRST);
-            }
-        });
+        findViewById(getSheet1PeekViewResId()).setOnClickListener(v -> showSheet(Sheet.FIRST));
     }
 
     @Sheet
@@ -173,6 +168,28 @@ public class MultiSheetView extends FrameLayout {
 
         if (v.getParent() instanceof View) {
             return getParentSlidingUpPanelLayout((View) v.getParent());
+        }
+
+        return null;
+    }
+
+    /**
+     * A helper method to return the first MultiSheetView parent of the passed in View,
+     * or null if none can be found.
+     *
+     * @param v the view whose hierarchy will be traversed.
+     * @return the first MultiSheetView of the passed in view, or null if none can be found.
+     */
+    @Nullable
+    public static MultiSheetView getParentMultiSheetView(@Nullable View v) {
+        if (v == null) return null;
+
+        if (v instanceof MultiSheetView) {
+            return (MultiSheetView) v;
+        }
+
+        if (v.getParent() instanceof View) {
+            return getParentMultiSheetView((View) v.getParent());
         }
 
         return null;

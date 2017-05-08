@@ -1,11 +1,14 @@
 package com.simplecity.amp_library.ui.fragments;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -27,6 +30,7 @@ import com.simplecity.amp_library.utils.DrawableUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import test.com.multisheetview.ui.view.MultiSheetView;
 
 public class MiniPlayerFragment extends BaseFragment implements PlayerView {
 
@@ -86,7 +90,14 @@ public class MiniPlayerFragment extends BaseFragment implements PlayerView {
         ButterKnife.bind(this, rootView);
 
         rootView.setBackgroundColor(ColorUtils.getPrimaryColor());
-//        rootView.setOnTouchListener(new OnSwipeTouchListener(getActivity()));
+        rootView.setOnClickListener(v -> {
+            MultiSheetView multiSheetView = MultiSheetView.getParentMultiSheetView(rootView);
+            if (multiSheetView != null) {
+                multiSheetView.showSheet(MultiSheetView.Sheet.FIRST);
+            }
+
+        });
+        rootView.setOnTouchListener(new OnSwipeTouchListener(getActivity()));
 
         playPauseView.setOnClickListener(v -> {
             playPauseView.toggle();
@@ -142,84 +153,68 @@ public class MiniPlayerFragment extends BaseFragment implements PlayerView {
         rootView.setBackgroundColor(ColorUtils.getPrimaryColor());
     }
 
-//    private class OnSwipeTouchListener implements View.OnTouchListener {
-//
-//        private final GestureDetector gestureDetector;
-//
-//        OnSwipeTouchListener(Context context) {
-//            gestureDetector = new GestureDetector(context, new GestureListener());
-//        }
-//
-//        void onSwipeLeft() {
-//            presenter.skip();
-//        }
-//
-//        void onSwipeRight() {
-//            presenter.prev(false);
-//        }
-//
-//        public boolean onTouch(View v, MotionEvent event) {
-//
-////            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-////                rootView.setPressed(true);
-////            } else if (event.getAction() == MotionEvent.ACTION_UP) {
-////                rootView.setPressed(false);
-////            }
-//
-//            return gestureDetector.onTouchEvent(event);
-//        }
-//
-//        private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
-//
-//            private static final int SWIPE_DISTANCE_THRESHOLD = 100;
-//            private static final int SWIPE_VELOCITY_THRESHOLD = 100;
-//
-//            GestureListener() {
-//            }
-//
-//            @Override
-//            public boolean onDown(MotionEvent e) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onSingleTapUp(MotionEvent e) {
-//
-//                //Todo:
-//
-////                Activity parent = getActivity();
-////                if (getResources().getBoolean(R.bool.isSlidingEnabled)) {
-////                    if (parent instanceof MainActivity2) {
-////                        ((MainActivity2) parent).showPanel(MainActivity2.Panel.PLAYER);
-////                    }
-////                } else {
-////                    Intent intent = new Intent(parent, PlayerActivity.class);
-////                    parent.startActivityForResult(intent, MainActivity2.REQUEST_SEARCH);
-////                }
-//                return super.onSingleTapUp(e);
-//            }
-//
-//            @Override
-//            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-//                float distanceX = e2.getX() - e1.getX();
-//                float distanceY = e2.getY() - e1.getY();
-//                if (Math.abs(distanceX) > Math.abs(distanceY) && Math.abs(distanceX) > SWIPE_DISTANCE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-//                    if (distanceX > 0)
-//                        onSwipeRight();
-//                    else
-//                        onSwipeLeft();
-//                    return true;
-//                }
-//                return false;
-//            }
-//        }
-//    }
+    private class OnSwipeTouchListener implements View.OnTouchListener {
+
+        private final GestureDetector gestureDetector;
+
+        OnSwipeTouchListener(Context context) {
+            gestureDetector = new GestureDetector(context, new GestureListener());
+        }
+
+        void onSwipeLeft() {
+            presenter.skip();
+        }
+
+        void onSwipeRight() {
+            presenter.prev(false);
+        }
+
+        public boolean onTouch(View v, MotionEvent event) {
+            
+            boolean consumed = gestureDetector.onTouchEvent(event);
+
+            if (!consumed) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    v.performClick();
+                }
+            }
+
+            return consumed;
+        }
+
+        private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
+
+            private static final int SWIPE_DISTANCE_THRESHOLD = 100;
+            private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+
+            GestureListener() {
+            }
+
+            @Override
+            public boolean onDown(MotionEvent e) {
+                return true;
+            }
+
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                float distanceX = e2.getX() - e1.getX();
+                float distanceY = e2.getY() - e1.getY();
+                if (Math.abs(distanceX) > Math.abs(distanceY) && Math.abs(distanceX) > SWIPE_DISTANCE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                    if (distanceX > 0)
+                        onSwipeRight();
+                    else
+                        onSwipeLeft();
+                    return true;
+                }
+                return false;
+            }
+        }
+    }
 
     @Override
     protected String screenName() {
         return TAG;
     }
-
 
     @Override
     public void setSeekProgress(int progress) {

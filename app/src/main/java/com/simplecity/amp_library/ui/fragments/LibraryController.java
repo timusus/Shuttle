@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.ui.fragments;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -7,14 +8,17 @@ import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.libraries.cast.companionlibrary.cast.BaseCastManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.detail.AlbumDetailFragment;
 import com.simplecity.amp_library.detail.ArtistDetailFragment;
@@ -25,7 +29,7 @@ import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Playlist;
-import com.simplecity.amp_library.ui.activities.BaseCastActivity;
+import com.simplecity.amp_library.search.SearchActivity;
 import com.simplecity.amp_library.ui.activities.ToolbarListener;
 import com.simplecity.amp_library.ui.adapters.PagerAdapter;
 import com.simplecity.amp_library.ui.views.SlidingTabLayout;
@@ -168,6 +172,8 @@ public class LibraryController extends BaseFragment implements
         };
 
         prefs.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
+
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -177,15 +183,7 @@ public class LibraryController extends BaseFragment implements
 
         ButterKnife.bind(this, rootView);
 
-        toolbar.inflateMenu(R.menu.menu_library);
-        setupCastToolbar(toolbar);
-
-        if (getActivity() instanceof BaseCastActivity) {
-            BaseCastManager castManager = ((BaseCastActivity) getActivity()).castManager;
-            if (castManager != null) {
-                castManager.addMediaRouterButton(toolbar.getMenu(), R.id.media_route_menu_item);
-            }
-        }
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         pager.setAdapter(adapter);
         pager.setOffscreenPageLimit(adapter.getCount() - 1);
@@ -212,6 +210,28 @@ public class LibraryController extends BaseFragment implements
         if (getActivity() instanceof ToolbarListener) {
             ((ToolbarListener) getActivity()).toolbarAttached((Toolbar) view.findViewById(R.id.toolbar));
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        inflater.inflate(R.menu.menu_library, menu);
+        setupCastMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                openSearch();
+                return true;
+        }
+        return false;
+    }
+
+    private void openSearch() {
+        startActivity(new Intent(getContext(), SearchActivity.class));
     }
 
     private void themeUIComponents() {
