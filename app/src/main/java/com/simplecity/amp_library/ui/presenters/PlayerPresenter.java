@@ -14,6 +14,8 @@ import com.simplecity.amp_library.utils.PlaylistUtils;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -25,6 +27,10 @@ public class PlayerPresenter extends Presenter<PlayerView> {
 
     private long currentPlaybackTime;
     private boolean currentPlaybackTimeVisible;
+
+    @Inject
+    public PlayerPresenter() {
+    }
 
     @Override
     public void unbindView(@NonNull PlayerView view) {

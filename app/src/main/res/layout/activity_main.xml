@@ -22,7 +22,7 @@
 
         <fragment
             android:id="@+id/navDrawerFragment"
-            android:name="com.simplecity.amp_library.ui.fragments.NavigationDrawerFragment"
+            android:name="com.simplecity.amp_library.ui.drawer.DrawerFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </android.support.design.internal.ScrimInsetsFrameLayout>

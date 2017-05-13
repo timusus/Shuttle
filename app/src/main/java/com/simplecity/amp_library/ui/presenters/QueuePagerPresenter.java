@@ -1,15 +1,16 @@
 package com.simplecity.amp_library.ui.presenters;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
+import com.bumptech.glide.RequestManager;
 import com.f2prateek.rx.receivers.RxBroadcastReceiver;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.playback.MusicService;
-import com.simplecity.amp_library.ui.fragments.RequestManagerProvider;
 import com.simplecity.amp_library.ui.modelviews.QueuePagerItemView;
 import com.simplecity.amp_library.ui.views.QueuePagerView;
 import com.simplecity.amp_library.utils.MusicUtils;
@@ -17,14 +18,18 @@ import com.simplecityapps.recycler_adapter.model.ViewModel;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import rx.android.schedulers.AndroidSchedulers;
 
 public class QueuePagerPresenter extends Presenter<QueuePagerView> {
 
-    private RequestManagerProvider requestManagerProvider;
+    @Inject
+    RequestManager requestManager;
 
-    public QueuePagerPresenter(RequestManagerProvider provider) {
-        requestManagerProvider = provider;
+    @Inject
+    public QueuePagerPresenter(Context context) {
+
     }
 
     @Override
@@ -61,7 +66,7 @@ public class QueuePagerPresenter extends Presenter<QueuePagerView> {
                             case MusicService.InternalIntents.SERVICE_CONNECTED:
 
                                 List<ViewModel> items = Stream.of(MusicUtils.getQueue())
-                                        .map(song -> new QueuePagerItemView(song, requestManagerProvider))
+                                        .map(song -> new QueuePagerItemView(song, requestManager))
                                         .collect(Collectors.toList());
 
                                 queuePagerView.loadData(items, MusicUtils.getQueuePosition());

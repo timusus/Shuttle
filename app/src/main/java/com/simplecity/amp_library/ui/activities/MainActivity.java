@@ -18,6 +18,8 @@ public class MainActivity extends BaseCastActivity implements
         ToolbarListener,
         BackPressHandler {
 
+    private static final String TAG = "MainActivity";
+
     private NavigationController backPressListener;
 
     private DrawerLayout drawerLayout;
@@ -27,6 +29,7 @@ public class MainActivity extends BaseCastActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         Permiso.getInstance().setActivity(this);
@@ -53,11 +56,9 @@ public class MainActivity extends BaseCastActivity implements
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-
             if (backPressListener != null && backPressListener.consumeBackPress()) {
                 return;
             }
-
             super.onBackPressed();
         }
     }
@@ -65,7 +66,12 @@ public class MainActivity extends BaseCastActivity implements
     @Override
     public void toolbarAttached(Toolbar toolbar) {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, 0);
+            }
+        };
         drawer.addDrawerListener(toggle);
         toggle.syncState();
     }

@@ -277,6 +277,7 @@ dependencies {
     annotationProcessor libs.butterknifeAnnotationProcessor
     compile libs.dagger
     annotationProcessor libs.daggerAnnotationProcessor
+    compile libs.expandableRecyclerView
 
     // //////////////////////////////////////////////////////////////////////////
     // Multidex (Only used in non-proguard pre-21 builds)

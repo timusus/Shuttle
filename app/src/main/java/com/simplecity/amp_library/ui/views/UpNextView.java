@@ -12,8 +12,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.utils.ColorUtils;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,9 +30,10 @@ public class UpNextView extends LinearLayout {
     TextView queueText;
 
     @BindView(R.id.queuePosition)
-    TextView queuePositionTextVuew;
+    TextView queuePositionTextView;
 
-    PlayerPresenter playerPresenter = new PlayerPresenter();
+    @Inject
+    PlayerPresenter playerPresenter;
 
     public UpNextView(Context context) {
         this(context, null);
@@ -59,6 +63,8 @@ public class UpNextView extends LinearLayout {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
+        ShuttleApplication.getInstance().getAppComponent().inject(this);
+
         playerPresenter.bindView(playerViewAdapter);
     }
 
@@ -74,7 +80,7 @@ public class UpNextView extends LinearLayout {
         public void queueChanged(int queuePosition, int queueLength) {
             super.queueChanged(queuePosition, queueLength);
 
-            queuePositionTextVuew.setText(String.format("%d / %d", queuePosition, queueLength));
+            queuePositionTextView.setText(String.format("%d / %d", queuePosition, queueLength));
         }
     };
 

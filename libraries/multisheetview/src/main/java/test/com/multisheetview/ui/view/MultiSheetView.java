@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.sothree.slidinguppanel.ScrollableViewHelper;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import test.com.multisheetview.R;
@@ -198,14 +199,30 @@ public class MultiSheetView extends FrameLayout {
     /**
      * A helper method to set the passed in View as the 'scrollable view' for the parent SlidingUpPanelLayout.
      *
-     * @param v the View to be set as the scrollable view.
+     * @param rootView the View whose hierarchy will be traversed to find the SlidingUpPanelLayout
+     * @param scrollableView the View to be set as the scrollable view.
      */
-    public static void setScrollableView(@NonNull View v) {
-        SlidingUpPanelLayout slidingUpPanelLayout = getParentSlidingUpPanelLayout(v);
+    public static void setScrollableView(@NonNull View rootView, @Nullable View scrollableView) {
+        SlidingUpPanelLayout slidingUpPanelLayout = getParentSlidingUpPanelLayout(rootView);
         if (slidingUpPanelLayout != null) {
-            slidingUpPanelLayout.setScrollableView(v);
+            slidingUpPanelLayout.setScrollableView(scrollableView);
         } else {
             Log.e(TAG, "setScrollableView failed. No parent SlidingUpPanelLayout found");
+        }
+    }
+
+    /**
+     * A helper method to set the passed in View as the 'scrollable view' for the parent SlidingUpPanelLayout.
+     *
+     * @param rootView             the View whose hierarchy will be traversed to find the SlidingUpPanelLayout
+     * @param scrollableViewHelper the ScrollableViewHelper to be set
+     */
+    public static void setScrollableViewHelper(View rootView, @Nullable ScrollableViewHelper scrollableViewHelper) {
+        SlidingUpPanelLayout slidingUpPanelLayout = getParentSlidingUpPanelLayout(rootView);
+        if (slidingUpPanelLayout != null) {
+            slidingUpPanelLayout.setScrollableViewHelper(scrollableViewHelper);
+        } else {
+            Log.e(TAG, "setScrollableViewHelper failed. No parent SlidingUpPanelLayout found");
         }
     }
 

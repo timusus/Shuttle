@@ -72,6 +72,7 @@ ext.versions = [
         butterknifeAnnotationProcessor: "8.5.1",
         dagger                        : "2.10",
         daggerAnnotationProcessor     : "2.10",
+        expandableRecyclerView        : "3.0.0-RC1",
 
         // //////////////////////////////////////////////////////////////////////////
         // MultiDex
@@ -190,6 +191,8 @@ ext.libs = [
         // Dagger
         dagger                        : "com.google.dagger:dagger:$versions.dagger",
         daggerAnnotationProcessor     : "com.google.dagger:dagger-compiler:$versions.daggerAnnotationProcessor",
+        // Expandable Recycler View - https://github.com/thoughtbot/expandable-recycler-view
+        expandableRecyclerView        : "com.bignerdranch.android:expandablerecyclerview:$versions.expandableRecyclerView",
 
         // //////////////////////////////////////////////////////////////////////////
         // MultiDex

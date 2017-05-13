@@ -4,8 +4,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.model.Song;
-import com.simplecity.amp_library.ui.fragments.RequestManagerProvider;
 import com.simplecityapps.recycler_adapter.model.BaseViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 
@@ -16,11 +16,11 @@ import static com.simplecity.amp_library.ui.adapters.ViewType.QUEUE_PAGER_ITEM;
 public class QueuePagerItemView extends BaseViewModel<QueuePagerItemView.ViewHolder> {
 
     private Song song;
-    private RequestManagerProvider requestManagerProvider;
+    private RequestManager requestManager;
 
-    public QueuePagerItemView(Song song, RequestManagerProvider provider) {
+    public QueuePagerItemView(Song song, RequestManager requestManager) {
         this.song = song;
-        this.requestManagerProvider = provider;
+        this.requestManager = requestManager;
     }
 
     @Override
@@ -42,9 +42,7 @@ public class QueuePagerItemView extends BaseViewModel<QueuePagerItemView.ViewHol
     public void bindView(ViewHolder holder) {
         super.bindView(holder);
 
-        requestManagerProvider.getRequestManager()
-                .load(song)
-                .into((ImageView) holder.itemView);
+        requestManager.load(song).into((ImageView) holder.itemView);
     }
 
     static class ViewHolder extends BaseViewHolder<QueuePagerItemView> {

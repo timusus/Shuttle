@@ -257,7 +257,7 @@ public class ArtistDetailFragment extends BaseDetailFragment implements
     }
 
     @Override
-    public void onStartDrag() {
+    public void onStartDrag(SongView.ViewHolder viewHolder) {
 
     }
 

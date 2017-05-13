@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clickable="true">
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:background="?attr/bg_drawer"
+             android:layout_height="wrap_content"
+             android:clickable="true">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -13,7 +15,8 @@
             android:id="@+id/background_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop" />
+            tools:background="@color/colorPrimaryDark"
+            android:scaleType="centerCrop"/>
     </FrameLayout>
 
     <LinearLayout
@@ -34,7 +37,8 @@
                 android:id="@+id/artist_image"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:elevation="2dp" />
+                android:elevation="2dp"
+                tools:src="@mipmap/ic_launcher_round"/>
 
             <TextView
                 android:id="@+id/placeholder_text"
@@ -43,12 +47,12 @@
                 android:layout_margin="16dp"
                 android:gravity="center_vertical"
                 android:lines="1"
+                android:maxLines="1"
                 android:shadowColor="#50000000"
                 android:shadowRadius="2"
                 android:textColor="#ffffff"
                 android:textSize="20sp"
-                android:visibility="gone"
-                android:maxLines="1" />
+                android:visibility="gone"/>
 
         </LinearLayout>
 
@@ -64,22 +68,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:lines="1"
+                android:maxLines="1"
                 android:shadowColor="#50000000"
                 android:shadowRadius="2"
                 android:textColor="#ffffff"
                 android:textSize="14sp"
-                android:maxLines="1" />
+                tools:text="Line 1"/>
 
             <TextView
                 android:id="@+id/line2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:lines="1"
+                android:maxLines="1"
                 android:shadowColor="#50000000"
                 android:shadowRadius="2"
                 android:textColor="#ffffff"
                 android:textSize="14sp"
-                android:maxLines="1" />
+                tools:text="Line 2"/>
         </LinearLayout>
 
     </LinearLayout>

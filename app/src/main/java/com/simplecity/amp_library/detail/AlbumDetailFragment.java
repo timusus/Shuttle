@@ -281,7 +281,7 @@ public class AlbumDetailFragment extends BaseDetailFragment implements Toolbar.O
     }
 
     @Override
-    public void onStartDrag() {
+    public void onStartDrag(SongView.ViewHolder viewHolder) {
 
     }
 }

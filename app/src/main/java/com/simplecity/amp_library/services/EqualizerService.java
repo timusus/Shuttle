@@ -15,6 +15,7 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.simplecity.amp_library.utils.SettingsManager;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -329,8 +330,12 @@ public class EqualizerService extends Service {
      * Push new configuration to audio stack.
      */
     public synchronized void update() {
-        for (Integer sessionId : mAudioSessions.keySet()) {
-            updateDsp(mAudioSessions.get(sessionId));
+        try {
+            for (Integer sessionId : mAudioSessions.keySet()) {
+                updateDsp(mAudioSessions.get(sessionId));
+            }
+        } catch (NoSuchMethodError e) {
+            Crashlytics.log("No such method error thrown when updating equalizer.. " + e.getMessage());
         }
     }
 

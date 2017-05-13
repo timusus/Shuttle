@@ -468,7 +468,7 @@ public class SongFragment extends BaseFragment implements
     }
 
     @Override
-    public void onStartDrag() {
+    public void onStartDrag(SongView.ViewHolder viewHolder) {
         // Nothing to do
     }
 

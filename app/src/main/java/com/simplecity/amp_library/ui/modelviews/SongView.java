@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.RequestManager;
+import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.format.PrefixHighlighter;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.ui.views.NonScrollImageButton;
@@ -29,14 +30,7 @@ import static com.bumptech.glide.Glide.clear;
 import static com.bumptech.glide.load.engine.DiskCacheStrategy.ALL;
 import static com.simplecity.amp_library.R.drawable.ic_drag_grip;
 import static com.simplecity.amp_library.R.drawable.ic_overflow_white;
-import static com.simplecity.amp_library.R.id;
 import static com.simplecity.amp_library.R.id.btn_overflow;
-import static com.simplecity.amp_library.R.id.drag_handle;
-import static com.simplecity.amp_library.R.id.image;
-import static com.simplecity.amp_library.R.id.line_one;
-import static com.simplecity.amp_library.R.id.line_three;
-import static com.simplecity.amp_library.R.id.line_two;
-import static com.simplecity.amp_library.R.id.play_count;
 import static com.simplecity.amp_library.R.layout.list_item_edit;
 import static com.simplecity.amp_library.R.layout.list_item_two_lines;
 import static com.simplecity.amp_library.R.string.btn_options;
@@ -47,7 +41,6 @@ import static com.simplecity.amp_library.utils.DrawableUtils.getBaseDrawable;
 import static com.simplecity.amp_library.utils.DrawableUtils.getColoredAccentDrawable;
 import static com.simplecity.amp_library.utils.DrawableUtils.getColoredDrawable;
 import static com.simplecity.amp_library.utils.DrawableUtils.getColoredStateListDrawable;
-import static com.simplecity.amp_library.utils.MusicUtils.getSongId;
 import static com.simplecity.amp_library.utils.SettingsManager.getInstance;
 import static com.simplecity.amp_library.utils.SortManager.SongSort.ALBUM_NAME;
 import static com.simplecity.amp_library.utils.SortManager.SongSort.ARTIST_NAME;
@@ -72,7 +65,7 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
 
         void onOverflowClick(View v, Song song);
 
-        void onStartDrag();
+        void onStartDrag(ViewHolder holder);
     }
 
     private static final String TAG = "SongView";
@@ -90,6 +83,8 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
     private boolean showAlbumArt;
 
     private boolean showTrackNumber;
+
+    private boolean isCurrentTrack;
 
     @Nullable
     private ClickListener listener;
@@ -120,6 +115,14 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
         this.showTrackNumber = showTrackNumber;
     }
 
+    public void setCurrentTrack(boolean isCurrentTrack) {
+        this.isCurrentTrack = isCurrentTrack;
+    }
+
+    public boolean isCurrentTrack() {
+        return isCurrentTrack;
+    }
+
     private void onItemClick(ViewHolder holder) {
         if (listener != null) {
             listener.onItemClick(song, holder);
@@ -139,9 +142,9 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
         return false;
     }
 
-    private void onStartDrag() {
+    private void onStartDrag(ViewHolder holder) {
         if (listener != null) {
-            listener.onStartDrag();
+            listener.onStartDrag(holder);
         }
     }
 
@@ -174,7 +177,7 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
         holder.lineThree.setText(song.getDurationLabel());
 
         if (holder.dragHandle != null) {
-            if (getSongId() == song.id) {
+            if (isCurrentTrack) {
                 holder.dragHandle.setImageDrawable(getColoredAccentDrawable(holder.itemView.getContext(), holder.itemView.getResources().getDrawable(ic_drag_grip)));
             } else {
                 holder.dragHandle.setImageDrawable(getBaseDrawable(holder.itemView.getContext(), ic_drag_grip));
@@ -200,10 +203,6 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
             prefixHighlighter.setText(holder.lineTwo, prefix);
         }
 
-//        if (((ViewHolder) holder).dragHandle != null) {
-//            ((ViewHolder) holder).dragHandle.setVisibility(editable ? View.VISIBLE : View.GONE);
-//        }
-
         if (holder.trackNumber != null) {
             if (showTrackNumber) {
                 holder.trackNumber.setVisibility(VISIBLE);
@@ -221,6 +220,14 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
         if (prefixHighlighter != null) {
             prefixHighlighter.setText(holder.lineOne, prefix);
             prefixHighlighter.setText(holder.lineTwo, prefix);
+        }
+
+        if (holder.dragHandle != null) {
+            if (isCurrentTrack) {
+                holder.dragHandle.setImageDrawable(getColoredAccentDrawable(holder.itemView.getContext(), holder.itemView.getResources().getDrawable(ic_drag_grip)));
+            } else {
+                holder.dragHandle.setImageDrawable(getBaseDrawable(holder.itemView.getContext(), ic_drag_grip));
+            }
         }
     }
 
@@ -307,28 +314,28 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
 
     public static class ViewHolder extends BaseViewHolder<SongView> {
 
-        @BindView(line_one)
+        @BindView(R.id.line_one)
         TextView lineOne;
 
-        @BindView(line_two)
+        @BindView(R.id.line_two)
         TextView lineTwo;
 
-        @BindView(line_three)
+        @BindView(R.id.line_three)
         TextView lineThree;
 
-        @Nullable @BindView(id.trackNumber)
+        @Nullable @BindView(R.id.trackNumber)
         TextView trackNumber;
 
-        @Nullable @BindView(play_count)
+        @Nullable @BindView(R.id.play_count)
         TextView playCount;
 
         @BindView(btn_overflow)
         public NonScrollImageButton overflowButton;
 
-        @Nullable @BindView(drag_handle)
+        @Nullable @BindView(R.id.drag_handle)
         ImageView dragHandle;
 
-        @Nullable @BindView(image)
+        @Nullable @BindView(R.id.image)
         ImageView artwork;
 
         ViewHolder(View itemView) {
@@ -353,9 +360,9 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
             if (dragHandle != null) {
                 dragHandle.setOnTouchListener((v, event) -> {
                     if (getActionMasked(event) == ACTION_DOWN) {
-                        viewModel.onStartDrag();
+                        viewModel.onStartDrag(this);
                     }
-                    return false;
+                    return true;
                 });
             }
         }

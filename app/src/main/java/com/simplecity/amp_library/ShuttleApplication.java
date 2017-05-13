@@ -27,6 +27,9 @@ import com.google.android.libraries.cast.companionlibrary.cast.CastConfiguration
 import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.simplecity.amp_library.constants.Config;
+import com.simplecity.amp_library.dagger.component.AppComponent;
+import com.simplecity.amp_library.dagger.component.DaggerAppComponent;
+import com.simplecity.amp_library.dagger.module.AppModule;
 import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Query;
 import com.simplecity.amp_library.model.UserSelectedArtwork;
@@ -77,6 +80,8 @@ public class ShuttleApplication extends Application {
     private static Logger jaudioTaggerLogger1 = Logger.getLogger("org.jaudiotagger.audio");
     private static Logger jaudioTaggerLogger2 = Logger.getLogger("org.jaudiotagger");
 
+    private AppComponent appComponent;
+
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
@@ -89,6 +94,8 @@ public class ShuttleApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        appComponent = initDagger(this);
 
         refWatcher = LeakCanary.install(this);
         sInstance = this;
@@ -186,6 +193,16 @@ public class ShuttleApplication extends Application {
         super.onLowMemory();
 
         Glide.get(this).clearMemory();
+    }
+
+    public AppComponent getAppComponent() {
+        return appComponent;
+    }
+
+    protected AppComponent initDagger(ShuttleApplication application) {
+        return DaggerAppComponent.builder()
+                .appModule(new AppModule(application))
+                .build();
     }
 
     public static String getVersion() {

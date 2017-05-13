@@ -27,6 +27,7 @@ import com.jakewharton.rxbinding.widget.SeekBarProgressChangeEvent;
 import com.jakewharton.rxbinding.widget.SeekBarStartChangeEvent;
 import com.jakewharton.rxbinding.widget.SeekBarStopChangeEvent;
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.glide.palette.PaletteBitmap;
 import com.simplecity.amp_library.glide.palette.PaletteBitmapTranscoder;
 import com.simplecity.amp_library.lyrics.LyricsFragment;
@@ -45,6 +46,8 @@ import com.simplecity.amp_library.utils.StringUtils;
 import com.simplecity.amp_library.utils.ThemeUtils;
 
 import java.util.concurrent.TimeUnit;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -109,9 +112,9 @@ public class PlayerFragment extends BaseFragment implements PlayerView, Toolbar.
 
     private CompositeSubscription subscriptions;
 
-    private PlayerPresenter presenter = new PlayerPresenter();
-
     private int backgroundColor;
+
+    @Inject PlayerPresenter presenter;
 
     public PlayerFragment() {
     }
@@ -126,6 +129,8 @@ public class PlayerFragment extends BaseFragment implements PlayerView, Toolbar.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ShuttleApplication.getInstance().getAppComponent().inject(this);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
 
