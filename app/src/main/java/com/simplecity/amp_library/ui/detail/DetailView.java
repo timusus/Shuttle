@@ -1,4 +1,4 @@
-package com.simplecity.amp_library.detail;
+package com.simplecity.amp_library.ui.detail;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.simplecity.amp_library.tagger.TaggerDialog;

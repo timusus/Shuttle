@@ -20,7 +20,7 @@ import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.detail.PlaylistDetailFragment;
+import com.simplecity.amp_library.ui.detail.PlaylistDetailFragment;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Playlist;

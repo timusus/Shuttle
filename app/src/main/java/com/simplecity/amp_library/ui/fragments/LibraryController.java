@@ -20,11 +20,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.detail.AlbumDetailFragment;
-import com.simplecity.amp_library.detail.ArtistDetailFragment;
-import com.simplecity.amp_library.detail.BaseDetailFragment;
-import com.simplecity.amp_library.detail.GenreDetailFragment;
-import com.simplecity.amp_library.detail.PlaylistDetailFragment;
+import com.simplecity.amp_library.ui.detail.AlbumDetailFragment;
+import com.simplecity.amp_library.ui.detail.ArtistDetailFragment;
+import com.simplecity.amp_library.ui.detail.BaseDetailFragment;
+import com.simplecity.amp_library.ui.detail.GenreDetailFragment;
+import com.simplecity.amp_library.ui.detail.PlaylistDetailFragment;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Genre;

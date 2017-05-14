@@ -18,6 +18,7 @@ public class AlwaysCrossFade extends DrawableCrossFadeFactory<GlideDrawable> {
      * @see <a href="https://github.com/bumptech/glide/issues/943">#943</a>
      */
     public AlwaysCrossFade(boolean transparentImagesPossible) {
+        super(600);
         this.transparentImagesPossible = transparentImagesPossible;
     }
 

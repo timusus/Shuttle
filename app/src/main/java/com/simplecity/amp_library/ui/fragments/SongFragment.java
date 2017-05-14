@@ -409,7 +409,7 @@ public class SongFragment extends BaseFragment implements
     }
 
     @Override
-    public void onItemClick(Song song, SongView.ViewHolder Holder) {
+    public void onSongClick(Song song, SongView.ViewHolder Holder) {
 //        if (inActionMode) {
 //            multiSelector.setSelected(position, songsAdapter.getItemId(position), !multiSelector.isSelected(position, songsAdapter.getItemId(position)));
 //
@@ -434,7 +434,7 @@ public class SongFragment extends BaseFragment implements
     }
 
     @Override
-    public void onOverflowClick(View v, Song song) {
+    public void onSongOverflowClick(View v, Song song) {
         PopupMenu menu = new PopupMenu(SongFragment.this.getActivity(), v);
         MenuUtils.addSongMenuOptions(getActivity(), menu);
         MenuUtils.addClickHandler((AppCompatActivity) getActivity(), menu, song, item -> {
@@ -450,7 +450,7 @@ public class SongFragment extends BaseFragment implements
     }
 
     @Override
-    public boolean onItemLongClick(Song song) {
+    public boolean onSongLongClick(Song song) {
 //        if (inActionMode) {
 //            return;
 //        }

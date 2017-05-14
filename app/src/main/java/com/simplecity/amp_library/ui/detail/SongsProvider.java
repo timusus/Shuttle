@@ -1,4 +1,4 @@
-package com.simplecity.amp_library.detail;
+package com.simplecity.amp_library.ui.detail;
 
 import android.support.annotation.NonNull;
 
@@ -14,6 +14,7 @@ public interface SongsProvider {
     @NonNull
     Observable<List<Song>> getSongs();
 
-    List<ViewModel> getAdaptableItems(List<Song> songs);
+    @NonNull
+    List<ViewModel> getSongViewModels(List<Song> songs);
 
 }

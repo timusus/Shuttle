@@ -124,6 +124,8 @@ public class PlaylistFragment extends BaseFragment implements
         refreshAdapterItems();
     }
 
+
+
     private void refreshAdapterItems() {
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {

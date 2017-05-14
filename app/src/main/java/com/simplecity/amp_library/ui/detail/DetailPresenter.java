@@ -1,8 +1,7 @@
-package com.simplecity.amp_library.detail;
+package com.simplecity.amp_library.ui.detail;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.MenuItem;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -26,26 +25,22 @@ class DetailPresenter extends Presenter<DetailView> {
     @NonNull
     private SongsProvider songsProvider;
 
-    @Nullable
+    @NonNull
     private AlbumsProvider albumsProvider;
 
-    DetailPresenter(@NonNull SongsProvider songsProvider, @Nullable AlbumsProvider albumsProvider) {
+    DetailPresenter(@NonNull SongsProvider songsProvider, @NonNull AlbumsProvider albumsProvider) {
         this.songsProvider = songsProvider;
         this.albumsProvider = albumsProvider;
     }
 
     void loadData() {
         PermissionUtils.RequestStoragePermissions(() ->
-                addSubcscription(songsProvider.getSongs()
-                        .map(songs -> {
-                            List<ViewModel> viewModels = new ArrayList<>();
-                            if (albumsProvider != null) {
-                                viewModels.addAll(albumsProvider.getAdaptableItems(songs));
-                            }
-                            viewModels.addAll(songsProvider.getAdaptableItems(songs));
-                            return viewModels;
-                        })
-                        .subscribeOn(Schedulers.io())
+                addSubcscription(songsProvider.getSongs().zipWith(albumsProvider.getAlbums(), (songs, albums) -> {
+                    List<ViewModel> viewModels = new ArrayList<>();
+                    viewModels.addAll(albumsProvider.getAlbumViewModels(albums));
+                    viewModels.addAll(songsProvider.getSongViewModels(songs));
+                    return viewModels;
+                }).subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(adaptableItems -> {
                             DetailView detailView = getView();

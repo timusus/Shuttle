@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
-import com.simplecity.amp_library.detail.PlaylistDetailFragment;
+import com.simplecity.amp_library.ui.detail.PlaylistDetailFragment;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.ui.drawer.DrawerEventRelay;
 import com.simplecity.amp_library.ui.views.UpNextView;

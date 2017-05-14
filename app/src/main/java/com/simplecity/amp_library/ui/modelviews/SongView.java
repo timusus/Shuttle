@@ -59,11 +59,11 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
 
     public interface ClickListener {
 
-        void onItemClick(Song song, ViewHolder holder);
+        void onSongClick(Song song, ViewHolder holder);
 
-        boolean onItemLongClick(Song song);
+        boolean onSongLongClick(Song song);
 
-        void onOverflowClick(View v, Song song);
+        void onSongOverflowClick(View v, Song song);
 
         void onStartDrag(ViewHolder holder);
     }
@@ -125,19 +125,19 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
 
     private void onItemClick(ViewHolder holder) {
         if (listener != null) {
-            listener.onItemClick(song, holder);
+            listener.onSongClick(song, holder);
         }
     }
 
     private void onOverflowClick(View v) {
         if (listener != null) {
-            listener.onOverflowClick(v, song);
+            listener.onSongOverflowClick(v, song);
         }
     }
 
     private boolean onItemLongClick() {
         if (listener != null) {
-            return listener.onItemLongClick(song);
+            return listener.onSongLongClick(song);
         }
         return false;
     }
