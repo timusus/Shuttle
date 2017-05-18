@@ -9,7 +9,7 @@ import java.util.List;
 
 import test.com.androidnavigation.fragment.BackPressHandler;
 
-public interface NavigationController<T extends Controller> {
+public interface NavigationController<T> extends Controller<T> {
 
     /**
      * Handle a back press click event from the {@link BackPressHandler}.

@@ -441,33 +441,34 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     }
 
     void startSlideShow() {
-        subscriptions.add(Observable.combineLatest(
-                getAlbums(),
-                Observable.interval(8, TimeUnit.SECONDS)
-                        // Load an image straight away
-                        .startWith(0L)
-                        // If we have a 'current slideshowAlbum' then we're coming back from onResume. Don't load a new one immediately.
-                        .delay(currentSlideShowAlbum == null ? 0 : 8, TimeUnit.SECONDS),
-                (albums, aLong) -> albums.get(new Random().nextInt(albums.size())))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(nextSlideShowAlbum -> {
-                    if (nextSlideShowAlbum != null && nextSlideShowAlbum != currentSlideShowAlbum) {
-                        //This crazy business is what's required to have a smooth Glide crossfade with no 'white flicker'
-                        requestManager.load(nextSlideShowAlbum)
-                                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                                .priority(Priority.HIGH)
-                                .error(GlideUtils.getPlaceHolderDrawable(nextSlideShowAlbum.name, true))
-                                .centerCrop()
-                                .thumbnail(Glide
-                                        .with(this)
-                                        .load(currentSlideShowAlbum)
-                                        .centerCrop())
-                                .animate(new AlwaysCrossFade(false))
-                                .into(headerImageView);
-                        currentSlideShowAlbum = nextSlideShowAlbum;
-                    }
-                }));
+        subscriptions.add(
+                Observable.combineLatest(
+                        getAlbums(),
+                        Observable.interval(8, TimeUnit.SECONDS)
+                                // Load an image straight away
+                                .startWith(0L)
+                                // If we have a 'current slideshowAlbum' then we're coming back from onResume. Don't load a new one immediately.
+                                .delay(currentSlideShowAlbum == null ? 0 : 8, TimeUnit.SECONDS),
+                        (albums, aLong) -> albums.get(new Random().nextInt(albums.size()))
+                ).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(nextSlideShowAlbum -> {
+                            if (nextSlideShowAlbum != null && nextSlideShowAlbum != currentSlideShowAlbum) {
+                                //This crazy business is what's required to have a smooth Glide crossfade with no 'white flicker'
+                                requestManager.load(nextSlideShowAlbum)
+                                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                        .priority(Priority.HIGH)
+                                        .error(GlideUtils.getPlaceHolderDrawable(nextSlideShowAlbum.name, true))
+                                        .centerCrop()
+                                        .thumbnail(Glide
+                                                .with(this)
+                                                .load(currentSlideShowAlbum)
+                                                .centerCrop())
+                                        .animate(new AlwaysCrossFade(false))
+                                        .into(headerImageView);
+                                currentSlideShowAlbum = nextSlideShowAlbum;
+                            }
+                        }));
     }
 
     @OnClick(R.id.fab)

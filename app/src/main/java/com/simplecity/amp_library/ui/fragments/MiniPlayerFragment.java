@@ -98,9 +98,8 @@ public class MiniPlayerFragment extends BaseFragment {
         rootView.setOnClickListener(v -> {
             MultiSheetView multiSheetView = MultiSheetView.getParentMultiSheetView(rootView);
             if (multiSheetView != null) {
-                multiSheetView.showSheet(MultiSheetView.Sheet.FIRST);
+                multiSheetView.expandSheet(MultiSheetView.Sheet.FIRST);
             }
-
         });
         rootView.setOnTouchListener(new OnSwipeTouchListener(getActivity()));
 

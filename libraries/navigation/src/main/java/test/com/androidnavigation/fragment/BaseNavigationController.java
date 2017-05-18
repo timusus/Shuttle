@@ -20,8 +20,8 @@ import test.com.androidnavigation.base.NavigationController;
  * An abstract implementation of {@link NavigationController}. Subclasses need only provide a {@link FragmentInfo} object
  * which will be used to instantiate the root view controller.
  */
-public abstract class BaseNavigationController extends Fragment
-        implements NavigationController<BaseController> {
+public abstract class BaseNavigationController extends BaseController
+        implements NavigationController<Fragment> {
 
     private static final String TAG = "BaseNavigationControlle";
 
@@ -30,16 +30,21 @@ public abstract class BaseNavigationController extends Fragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (savedInstanceState == null) {
-            addRootFragment();
-        }
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.navigation_fragment, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if (savedInstanceState == null) {
+            addRootFragment();
+        }
     }
 
     protected void addRootFragment() {
@@ -54,7 +59,7 @@ public abstract class BaseNavigationController extends Fragment
         super.onResume();
 
         if (getActivity() instanceof BackPressHandler) {
-            ((BackPressHandler) getActivity()).setBackPressListener(this);
+            ((BackPressHandler) getActivity()).addBackPressListener(this);
         }
     }
 
@@ -63,7 +68,7 @@ public abstract class BaseNavigationController extends Fragment
         super.onPause();
 
         if (getActivity() instanceof BackPressHandler) {
-            ((BackPressHandler) getActivity()).setBackPressListener(null);
+            ((BackPressHandler) getActivity()).removeBackPressListener(this);
         }
     }
 
@@ -77,10 +82,10 @@ public abstract class BaseNavigationController extends Fragment
     }
 
     @Override
-    public void pushViewController(@NonNull BaseController controller, @Nullable String tag, @Nullable List<Pair<View, String>> sharedElements) {
+    public void pushViewController(@NonNull Fragment fragment, @Nullable String tag, @Nullable List<Pair<View, String>> sharedElements) {
         FragmentTransaction fragmentTransaction = getChildFragmentManager()
                 .beginTransaction();
-
+        
         if (sharedElements != null) {
             for (Pair<View, String> pair : sharedElements) {
                 fragmentTransaction.addSharedElement(pair.first, pair.second);
@@ -88,12 +93,12 @@ public abstract class BaseNavigationController extends Fragment
         }
 
         fragmentTransaction.addToBackStack(null)
-                .replace(R.id.mainContainer, controller, tag)
+                .replace(R.id.mainContainer, fragment, tag)
                 .commit();
     }
 
     @Override
-    public void pushViewController(@NonNull BaseController controller, @Nullable String tag) {
+    public void pushViewController(@NonNull Fragment controller, @Nullable String tag) {
         pushViewController(controller, tag, null);
     }
 
@@ -106,4 +111,5 @@ public abstract class BaseNavigationController extends Fragment
     public void popToRootViewController() {
         getChildFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
+
 }

@@ -382,7 +382,7 @@ public class PlayerActivity extends BaseCastActivity implements
                 return true;
             }
             case OPTIONS: {
-                startActivity(new Intent(this, SettingsActivity.class));
+//                startActivity(new Intent(this, SettingsActivity.class));
                 return true;
             }
             case TIMER: {

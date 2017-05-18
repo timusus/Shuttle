@@ -122,6 +122,8 @@ ext.libs = [
         mediarouter                   : "com.android.support:mediarouter-v7:${versions.supportLib}",
         chromecast                    : "com.google.android.gms:play-services-cast:${versions.chromecast}",
         constraintLayout              : "com.android.support.constraint:constraint-layout:${versions.constraintLayout}",
+        prefCompat                    : "com.android.support:preference-v7:${versions.supportLib}",
+        prefCompatv14                 : "com.android.support:preference-v14:${versions.supportLib}",
 
         // //////////////////////////////////////////////////////////////////////////
         // Square libs https://github.com/square
@@ -183,8 +185,6 @@ ext.libs = [
         streams                       : "com.annimon:stream:$versions.streams",
         // Glide Palette - https://git.io/vix57 (Florent Champigny)
         glidePalette                  : project(":libraries/:glidepalette"),
-        // Preferences Compat
-        prefCompat                    : project(':libraries/:android-support-v4-preferencefragment'),
         // Butterknife
         butterknife                   : "com.jakewharton:butterknife:$versions.butterknife",
         butterknifeAnnotationProcessor: "com.jakewharton:butterknife-compiler:$versions.butterknifeAnnotationProcessor",

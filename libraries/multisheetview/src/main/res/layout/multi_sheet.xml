@@ -37,21 +37,7 @@
             <FrameLayout
                 android:id="@+id/sheet1PeekView"
                 android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:background="#2196F3">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:fontFamily="sans-serif"
-                    android:text="Sheet 1 Peek"
-                    android:textColor="#fff"
-                    android:textSize="24sp"/>
-
-            </FrameLayout>
-
-
+                android:layout_height="64dp"/>
         </FrameLayout>
 
         <FrameLayout
@@ -66,22 +52,8 @@
             <FrameLayout
                 android:id="@+id/sheet2PeekView"
                 android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:background="#009688">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:fontFamily="sans-serif"
-                    android:text="Sheet 2 Peek"
-                    android:textColor="#fff"
-                    android:textSize="24sp"/>
-
-            </FrameLayout>
+                android:layout_height="64dp"/>
         </FrameLayout>
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>
-
-

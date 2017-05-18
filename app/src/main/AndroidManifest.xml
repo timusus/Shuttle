@@ -19,7 +19,7 @@
     <!-- ## End 'Special' permissions ##-->
 
     <application
-        android:name="com.simplecity.amp_library.ShuttleApplication"
+        android:name=".ShuttleApplication"
         android:allowBackup="true"
         android:allowTaskReparenting="true"
         android:hardwareAccelerated="true"
@@ -136,7 +136,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.activities.SettingsActivity" />
         <activity android:name=".ui.activities.EqualizerActivity" />
         <activity
             android:name=".search.SearchActivity"
@@ -153,7 +152,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".ui.activities.VoiceSearchActivity"
+            android:name=".search.VoiceSearchActivity"
             android:excludeFromRecents="true"
             android:exported="true"
             android:theme="@style/Theme.Transparent">
@@ -214,7 +213,7 @@
 
         <!-- Config Activity for medium Widget -->
         <activity
-            android:name=".ui.activities.WidgetConfigureMedium"
+            android:name=".ui.appwidget.WidgetConfigureMedium"
             android:theme="@style/WallpaperTheme">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
@@ -223,7 +222,7 @@
 
         <!-- Config Activity for extra large Widget -->
         <activity
-            android:name=".ui.activities.WidgetConfigureExtraLarge"
+            android:name=".ui.appwidget.WidgetConfigureExtraLarge"
             android:theme="@style/WallpaperTheme">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
@@ -245,7 +244,7 @@
 
         <!-- Config Activity for small Widget -->
         <activity
-            android:name=".ui.activities.WidgetConfigureSmall"
+            android:name=".ui.appwidget.WidgetConfigureSmall"
             android:theme="@style/WallpaperTheme">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
@@ -267,7 +266,7 @@
 
         <!-- Config Activity for large Widget -->
         <activity
-            android:name=".ui.activities.WidgetConfigureLarge"
+            android:name=".ui.appwidget.WidgetConfigureLarge"
             android:theme="@style/WallpaperTheme">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />

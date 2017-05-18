@@ -10,5 +10,8 @@ import test.com.androidnavigation.base.NavigationController;
  * @see {@link BaseNavigationController#onResume()}
  */
 public interface BackPressHandler {
-    void setBackPressListener(NavigationController listener);
+
+    void addBackPressListener(NavigationController listener);
+
+    void removeBackPressListener(NavigationController listener);
 }

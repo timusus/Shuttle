@@ -10,10 +10,10 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.StrictMode;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.multidex.MultiDex;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -129,16 +129,16 @@ public class ShuttleApplication extends Application {
                         .build()
         );
 
-        final SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        setIsUpgraded(mPrefs.getBoolean("pref_theme_gold", false));
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        setIsUpgraded(prefs.getBoolean("pref_theme_gold", false));
 
         // we cannot call setDefaultValues for multiple fragment based XML preference
         // files with readAgain flag set to false, so always check KEY_HAS_SET_DEFAULT_VALUES
-        if (!mPrefs.getBoolean(PreferenceManager.KEY_HAS_SET_DEFAULT_VALUES, false)) {
+        if (!prefs.getBoolean(PreferenceManager.KEY_HAS_SET_DEFAULT_VALUES, false)) {
+            PreferenceManager.setDefaultValues(this, R.xml.settings_headers, true);
             PreferenceManager.setDefaultValues(this, R.xml.settings_artwork, true);
             PreferenceManager.setDefaultValues(this, R.xml.settings_blacklist, true);
             PreferenceManager.setDefaultValues(this, R.xml.settings_display, true);
-            PreferenceManager.setDefaultValues(this, R.xml.settings_headers, true);
             PreferenceManager.setDefaultValues(this, R.xml.settings_headset, true);
             PreferenceManager.setDefaultValues(this, R.xml.settings_scrobbling, true);
             PreferenceManager.setDefaultValues(this, R.xml.settings_themes, true);

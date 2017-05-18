@@ -11,6 +11,9 @@ import com.greysonparrelli.permiso.Permiso;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ui.fragments.MainController;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import test.com.androidnavigation.base.NavigationController;
 import test.com.androidnavigation.fragment.BackPressHandler;
 
@@ -20,7 +23,7 @@ public class MainActivity extends BaseCastActivity implements
 
     private static final String TAG = "MainActivity";
 
-    private NavigationController backPressListener;
+    private List<NavigationController> backPressListeners = new ArrayList<>();
 
     private DrawerLayout drawerLayout;
 
@@ -56,8 +59,13 @@ public class MainActivity extends BaseCastActivity implements
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            if (backPressListener != null && backPressListener.consumeBackPress()) {
-                return;
+            if (!backPressListeners.isEmpty()) {
+                for (int i = backPressListeners.size() - 1; i >= 0; i--) {
+                    NavigationController backPressListener = backPressListeners.get(i);
+                    if (backPressListener.consumeBackPress()) {
+                        return;
+                    }
+                }
             }
             super.onBackPressed();
         }
@@ -77,8 +85,17 @@ public class MainActivity extends BaseCastActivity implements
     }
 
     @Override
-    public void setBackPressListener(NavigationController listener) {
-        backPressListener = listener;
+    public void addBackPressListener(NavigationController listener) {
+        if (!backPressListeners.contains(listener)) {
+            backPressListeners.add(listener);
+        }
+    }
+
+    @Override
+    public void removeBackPressListener(NavigationController listener) {
+        if (backPressListeners.contains(listener)) {
+            backPressListeners.remove(listener);
+        }
     }
 
     @Override

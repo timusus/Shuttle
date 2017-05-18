@@ -29,11 +29,11 @@ import butterknife.ButterKnife;
 
 public class DrawerParent implements Parent<DrawerChild> {
 
-    static DrawerParent libraryParent = new DrawerParent(DrawerParent.Type.LIBRARY, R.string.library_title, R.drawable.ic_library_white, DrawerEventRelay.librarySelectedEvent);
-    static DrawerParent folderParent = new DrawerParent(DrawerParent.Type.FOLDERS, R.string.folders_title, R.drawable.ic_folders_many_white, DrawerEventRelay.foldersSelectedEvent);
-    static DrawerParent settingsParent = new DrawerParent(DrawerParent.Type.SETTINGS, R.string.settings, R.drawable.ic_action_settings, DrawerEventRelay.settingsSelectedEvent);
-    static DrawerParent supportParent = new DrawerParent(DrawerParent.Type.SUPPORT, R.string.pref_title_support, R.drawable.ic_settings_help, DrawerEventRelay.supportSelectedEvent);
-    static DrawerParent playlistsParent = new DrawerParent(DrawerParent.Type.PLAYLISTS, R.string.playlists_title, R.drawable.ic_action_toggle_queue, null);
+    static DrawerParent libraryParent = new DrawerParent(DrawerParent.Type.LIBRARY, R.string.library_title, R.drawable.ic_library_white, DrawerEventRelay.librarySelectedEvent, true);
+    static DrawerParent folderParent = new DrawerParent(DrawerParent.Type.FOLDERS, R.string.folders_title, R.drawable.ic_folders_many_white, DrawerEventRelay.foldersSelectedEvent, true);
+    static DrawerParent settingsParent = new DrawerParent(DrawerParent.Type.SETTINGS, R.string.settings, R.drawable.ic_action_settings, DrawerEventRelay.settingsSelectedEvent, false);
+    static DrawerParent supportParent = new DrawerParent(DrawerParent.Type.SUPPORT, R.string.pref_title_support, R.drawable.ic_settings_help, DrawerEventRelay.supportSelectedEvent, false);
+    static DrawerParent playlistsParent = new DrawerParent(DrawerParent.Type.PLAYLISTS, R.string.playlists_title, R.drawable.ic_action_toggle_queue, null, true);
 
     public @interface Type {
         int LIBRARY = 0;
@@ -42,6 +42,8 @@ public class DrawerParent implements Parent<DrawerChild> {
         int SETTINGS = 3;
         int SUPPORT = 4;
     }
+
+    boolean selectable = true;
 
     public interface ClickListener {
         void onClick(DrawerParent drawerParent);
@@ -67,11 +69,12 @@ public class DrawerParent implements Parent<DrawerChild> {
 
     boolean isSelected;
 
-    DrawerParent(@DrawerParent.Type int type, int titleResId, int iconResId, @Nullable DrawerEventRelay.DrawerEvent drawerEvent) {
+    DrawerParent(@DrawerParent.Type int type, int titleResId, int iconResId, @Nullable DrawerEventRelay.DrawerEvent drawerEvent, boolean selectable) {
         this.type = type;
         this.titleResId = titleResId;
         this.iconResId = iconResId;
         this.drawerEvent = drawerEvent;
+        this.selectable = selectable;
     }
 
     @Override

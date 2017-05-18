@@ -21,6 +21,7 @@ import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -61,15 +62,16 @@ public final class ShuttleUtils {
     public static final int NEW_ALBUM_PHOTO = 100;
     public static final int NEW_ARTIST_PHOTO = 200;
 
-    public static void openShuttleLink(Activity activity, String appPackageName) {
-        if (activity == null || appPackageName == null) {
-            return;
+    public static Intent getShuttleStoreIntent(String packageName) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(ShuttleUtils.getShuttleMarketUri(packageName)));
+        if (ShuttleApplication.getInstance().getPackageManager().resolveActivity(intent, 0) != null) {
+            return intent;
         }
-        try {
-            activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(ShuttleUtils.getShuttleMarketUri(appPackageName))));
-        } catch (android.content.ActivityNotFoundException ignored) {
-            activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(ShuttleUtils.getShuttleWebUri(appPackageName))));
-        }
+        return new Intent(Intent.ACTION_VIEW, Uri.parse(ShuttleUtils.getShuttleWebUri(packageName)));
+    }
+
+    public static void openShuttleLink(@NonNull Activity activity, String packageName) {
+        activity.startActivity(getShuttleStoreIntent(packageName));
     }
 
     public static boolean isAmazonBuild() {

@@ -1,5 +1,6 @@
 package test.com.multisheetview.ui.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -51,7 +52,7 @@ public class MultiSheetView extends FrameLayout {
 
             @Override
             public void onPanelSlide(View view, float offset) {
-                fadeView(findViewById(getSheet1PeekViewResId()), offset);
+                fadeView(findViewById(getSheetPeekViewResId(Sheet.FIRST)), offset);
             }
         });
 
@@ -66,13 +67,79 @@ public class MultiSheetView extends FrameLayout {
             @Override
             public void onPanelSlide(View view, float offset) {
                 panel1Layout.setTouchEnabled(false);
-                fadeView(findViewById(getSheet2PeekViewResId()), offset);
+                fadeView(findViewById(getSheetPeekViewResId(Sheet.SECOND)), offset);
             }
         });
 
-        findViewById(getSheet1PeekViewResId()).setOnClickListener(v -> showSheet(Sheet.FIRST));
+        findViewById(getSheetPeekViewResId(Sheet.FIRST)).setOnClickListener(v -> expandSheet(Sheet.FIRST));
     }
 
+    public void expandSheet(@Sheet int sheet) {
+        switch (sheet) {
+            case Sheet.FIRST:
+                panel1Layout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+                break;
+            case Sheet.SECOND:
+                panel2Layout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+                break;
+        }
+    }
+
+    public void collapseSheet(@Sheet int sheet) {
+        switch (sheet) {
+            case Sheet.FIRST:
+                panel1Layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                break;
+            case Sheet.SECOND:
+                panel2Layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                break;
+        }
+    }
+
+    public boolean isHidden(@Sheet int sheet) {
+        switch (sheet) {
+            case Sheet.FIRST:
+                return panel1Layout.getPanelState() == SlidingUpPanelLayout.PanelState.HIDDEN;
+            case Sheet.SECOND:
+                return panel2Layout.getPanelState() == SlidingUpPanelLayout.PanelState.HIDDEN;
+        }
+        return false;
+    }
+
+    public void hideSheet(@Sheet int sheet) {
+        switch (sheet) {
+            case Sheet.FIRST:
+                panel1Layout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                break;
+            case Sheet.SECOND:
+                panel2Layout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                break;
+        }
+    }
+
+    /**
+     * Expand the passed in sheet, collapsing/expanding the other sheet(s) as required.
+     */
+    public void goToSheet(@Sheet int sheet) {
+        switch (sheet) {
+            case Sheet.NONE:
+                collapseSheet(Sheet.FIRST);
+                collapseSheet(Sheet.SECOND);
+                break;
+            case Sheet.FIRST:
+                collapseSheet(Sheet.SECOND);
+                expandSheet(Sheet.FIRST);
+                break;
+            case Sheet.SECOND:
+                expandSheet(Sheet.FIRST);
+                expandSheet(Sheet.SECOND);
+                break;
+        }
+    }
+
+    /**
+     * @return the currently expanded Sheet
+     */
     @Sheet
     public int getCurrentSheet() {
         if (panel2Layout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
@@ -84,45 +151,14 @@ public class MultiSheetView extends FrameLayout {
         }
     }
 
-    void fadeView(View v, float offset) {
-        float alpha = 1 - offset;
-        v.setAlpha(alpha);
-        v.setVisibility(alpha == 0 ? View.GONE : View.VISIBLE);
-    }
-
-    public void showSheet(@Sheet int sheet) {
-
-        // if we are already at our target panel, then don't do anything
-        if (sheet == getCurrentSheet()) {
-            return;
-        }
-
-        switch (sheet) {
-            case Sheet.NONE:
-                panel2Layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                panel1Layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                break;
-            case Sheet.FIRST:
-                panel2Layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                panel1Layout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-                break;
-            case Sheet.SECOND:
-                panel2Layout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-                panel1Layout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-                break;
-        }
-    }
-
     public boolean consumeBackPress() {
         switch (getCurrentSheet()) {
             case Sheet.SECOND:
-                showSheet(Sheet.FIRST);
+                collapseSheet(Sheet.SECOND);
                 return true;
             case Sheet.FIRST:
-                showSheet(Sheet.NONE);
+                collapseSheet(Sheet.FIRST);
                 return true;
-            case Sheet.NONE:
-                break;
         }
         return false;
     }
@@ -132,24 +168,36 @@ public class MultiSheetView extends FrameLayout {
         return R.id.mainContainer;
     }
 
+    @SuppressLint("DefaultLocale")
     @IdRes
-    public int getSheet1ContainerResId() {
-        return R.id.sheet1Container;
+    public int getSheetContainerViewResId(@Sheet int sheet) {
+        switch (sheet) {
+            case Sheet.FIRST:
+                return R.id.sheet1Container;
+            case Sheet.SECOND:
+                return R.id.sheet2Container;
+        }
+
+        throw new IllegalStateException(String.format("No container view resId found for sheet: %d", sheet));
     }
 
+    @SuppressLint("DefaultLocale")
     @IdRes
-    public int getSheet2ContainerResId() {
-        return R.id.sheet2Container;
+    public int getSheetPeekViewResId(@Sheet int sheet) {
+        switch (sheet) {
+            case Sheet.FIRST:
+                return R.id.sheet1PeekView;
+            case Sheet.SECOND:
+                return R.id.sheet2PeekView;
+        }
+
+        throw new IllegalStateException(String.format("No peek view resId found for sheet: %d", sheet));
     }
 
-    @IdRes
-    public int getSheet1PeekViewResId() {
-        return R.id.sheet1PeekView;
-    }
-
-    @IdRes
-    public int getSheet2PeekViewResId() {
-        return R.id.sheet2PeekView;
+    void fadeView(View v, float offset) {
+        float alpha = 1 - offset;
+        v.setAlpha(alpha);
+        v.setVisibility(alpha == 0 ? View.GONE : View.VISIBLE);
     }
 
     /**
@@ -199,7 +247,7 @@ public class MultiSheetView extends FrameLayout {
     /**
      * A helper method to set the passed in View as the 'scrollable view' for the parent SlidingUpPanelLayout.
      *
-     * @param rootView the View whose hierarchy will be traversed to find the SlidingUpPanelLayout
+     * @param rootView       the View whose hierarchy will be traversed to find the SlidingUpPanelLayout
      * @param scrollableView the View to be set as the scrollable view.
      */
     public static void setScrollableView(@NonNull View rootView, @Nullable View scrollableView) {

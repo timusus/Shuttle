@@ -35,7 +35,7 @@ public class DrawerPresenter extends Presenter<DrawerView> {
 
     void onDrawerItemClicked(DrawerParent drawerParent) {
         DrawerView drawerView = getView();
-        if (drawerView != null) {
+        if (drawerView != null && drawerParent.selectable) {
             drawerView.setDrawerItemSelected(drawerParent.type);
         }
 
@@ -48,7 +48,7 @@ public class DrawerPresenter extends Presenter<DrawerView> {
 
     void onPlaylistClicked(Playlist playlist) {
         closeDrawer();
-        drawerEventRelay.sendEvent(new DrawerEventRelay.DrawerEvent(DrawerEventRelay.DrawerEvent.Type.PLAYLIST_SELECTED, playlist));
+        drawerEventRelay.sendEvent(new DrawerEventRelay.DrawerEvent(DrawerEventRelay.DrawerEvent.Type.PLAYLIST_SELECTED));
     }
 
     private void closeDrawer() {

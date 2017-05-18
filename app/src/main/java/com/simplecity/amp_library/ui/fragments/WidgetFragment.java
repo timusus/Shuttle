@@ -9,10 +9,10 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.ui.activities.WidgetConfigureExtraLarge;
-import com.simplecity.amp_library.ui.activities.WidgetConfigureLarge;
-import com.simplecity.amp_library.ui.activities.WidgetConfigureMedium;
-import com.simplecity.amp_library.ui.activities.WidgetConfigureSmall;
+import com.simplecity.amp_library.ui.appwidget.WidgetConfigureExtraLarge;
+import com.simplecity.amp_library.ui.appwidget.WidgetConfigureLarge;
+import com.simplecity.amp_library.ui.appwidget.WidgetConfigureMedium;
+import com.simplecity.amp_library.ui.appwidget.WidgetConfigureSmall;
 
 public class WidgetFragment extends BaseFragment {
 

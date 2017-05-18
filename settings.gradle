@@ -1,5 +1,4 @@
 include ':app',
-        'libraries/:android-support-v4-preferencefragment',
         'libraries/:glidepalette',
         'libraries/:ccl',
         'libraries/:navigation',

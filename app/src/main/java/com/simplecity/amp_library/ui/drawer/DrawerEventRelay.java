@@ -5,8 +5,6 @@ import android.support.annotation.Nullable;
 
 import com.jakewharton.rxrelay.PublishRelay;
 
-import java.util.concurrent.TimeUnit;
-
 import javax.inject.Inject;
 
 import rx.Observable;
@@ -31,7 +29,7 @@ public class DrawerEventRelay {
 
     public Observable<DrawerEvent> getEvents() {
         // Delay the event a tiny bit, to allow the drawer to close.
-        return relay.delay(250, TimeUnit.MILLISECONDS);
+        return relay;//.delay(250, TimeUnit.MILLISECONDS);
     }
 
     public static class DrawerEvent {
@@ -48,11 +46,18 @@ public class DrawerEventRelay {
 
         @Nullable public Object data;
 
+        /**
+         * @param type the {@link Type of event}
+         * @param data optional Object to be passed with this event
+         */
         DrawerEvent(int type, @Nullable Object data) {
             this.type = type;
             this.data = data;
         }
 
+        /**
+         * @param type the {@link Type of event}
+         */
         DrawerEvent(int type) {
             this.type = type;
         }

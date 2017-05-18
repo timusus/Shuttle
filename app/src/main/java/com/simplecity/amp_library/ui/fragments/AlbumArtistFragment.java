@@ -35,6 +35,7 @@ import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.ui.adapters.SectionedAdapter;
+import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.ui.modelviews.AlbumArtistView;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.recyclerview.GridDividerDecoration;
@@ -50,7 +51,6 @@ import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.SortManager;
 import com.simplecity.amp_library.utils.ThemeUtils;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
-import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
@@ -208,8 +208,6 @@ public class AlbumArtistFragment extends BaseFragment implements
     @Override
     public void onResume() {
         super.onResume();
-
-        Log.i(TAG, "OnResume");
 
         IntentFilter filter = new IntentFilter();
         filter.addAction("restartLoader");

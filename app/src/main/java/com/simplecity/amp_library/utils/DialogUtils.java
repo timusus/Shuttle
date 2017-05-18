@@ -15,7 +15,6 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.FileProvider;
 import android.support.v4.content.IntentCompat;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -51,11 +50,7 @@ import com.simplecity.amp_library.sql.databases.WhitelistHelper;
 import com.simplecity.amp_library.sql.providers.PlayCountTable;
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
 import com.simplecity.amp_library.ui.activities.MainActivity;
-import com.simplecity.amp_library.ui.activities.SettingsActivity;
-import com.simplecity.amp_library.ui.adapters.ColorAdapter;
-import com.simplecity.amp_library.ui.fragments.SettingsFragment;
 import com.simplecity.amp_library.ui.modelviews.BlacklistView;
-import com.simplecity.amp_library.ui.modelviews.ColorView;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.WhitelistView;
 import com.simplecity.amp_library.ui.views.CustomCheckBox;
@@ -107,7 +102,7 @@ public class DialogUtils {
                 .buttonRippleColor(accentColor);
     }
 
-    public static void showChangelog(Context context) {
+    public static MaterialDialog getChangelogDialog(Context context) {
         View customView = LayoutInflater.from(context).inflate(R.layout.dialog_changelog, null);
 
         WebView webView = (WebView) customView.findViewById(R.id.webView);
@@ -136,123 +131,122 @@ public class DialogUtils {
             webView.loadUrl("file:///android_asset/web/info_dark.html");
         }
 
-        getBuilder(context)
+        return getBuilder(context)
                 .title(R.string.pref_title_about)
                 .customView(customView, false)
                 .negativeText(R.string.close)
-                .show();
+                .build();
 
-        AnalyticsManager.logChangelogViewed();
     }
 
     public interface ColorSelectionListener {
         void colorSelected(int color);
     }
 
-    public static void showColorPickerDialog(SettingsFragment fragment, int selectedColor, ColorSelectionListener listener) {
-        showColorPickerDialog(fragment, selectedColor, ColorPalette.getPrimaryColors(), ColorPalette.getPrimaryColorsSub(), listener);
-    }
-
-    public static void showColorPickerDialog(SettingsFragment fragment, int selectedColor, int[] mainColors, int[][] subColors, ColorSelectionListener listener) {
-
-        View customView = LayoutInflater.from(fragment.getActivity()).inflate(R.layout.dialog_color_picker, null);
-
-        RecyclerView recyclerView = (RecyclerView) customView.findViewById(R.id.recyclerView);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(fragment.getActivity(), 5);
-        recyclerView.setLayoutManager(gridLayoutManager);
-        ThemeUtils.themeRecyclerView(recyclerView);
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                ThemeUtils.themeRecyclerView(recyclerView);
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-        });
-
-        ColorAdapter colorAdapter = new ColorAdapter();
-
-        List<ViewModel> colorViews = new ArrayList<>();
-        for (int i = 0, length = mainColors.length; i < length; i++) {
-            ColorView colorView = new ColorView(mainColors[i]);
-            boolean selected = false;
-
-            //If the sub colors array contains our selected color, then we set this colorView to selected.
-            for (int j = 0, jLength = subColors[i].length; j < jLength; j++) {
-                if (subColors[i][j] == selectedColor) {
-                    selected = true;
-                }
-            }
-            colorView.selected = selected;
-            colorViews.add(colorView);
-        }
-        colorAdapter.setItems(colorViews);
-        recyclerView.setAdapter(colorAdapter);
-
-        colorAdapter.setColorListener((position, color, isSubColor) -> {
-            if (isSubColor) {
-                colorAdapter.setSelectedPosition(position);
-            } else {
-                List<ViewModel> subColorViews = new ArrayList<>();
-                for (int i = 0, length = subColors[position].length; i < length; i++) {
-                    ColorView colorView = new ColorView(subColors[position][i]);
-                    colorView.selected = colorView.color == selectedColor;
-                    subColorViews.add(colorView);
-                    colorAdapter.isSubColor = true;
-                }
-                colorAdapter.setItems(subColorViews);
-            }
-        });
-
-        int neutralTextResId;
-        TextView textView = (TextView) customView.findViewById(R.id.text1);
-        if (ShuttleUtils.isUpgraded()) {
-            textView.setVisibility(View.GONE);
-            neutralTextResId = R.string.dialog_custom;
-        } else {
-            textView.setVisibility(View.VISIBLE);
-            if (ShuttleUtils.isAmazonBuild()) {
-                neutralTextResId = R.string.get_pro_button_amazon;
-            } else {
-                neutralTextResId = R.string.btn_upgrade;
-            }
-        }
-
-        getBuilder(fragment.getActivity())
-                .title(fragment.getActivity().getString(R.string.color_pick))
-                .negativeText(R.string.cancel)
-                .onNegative((dialog, which) -> dialog.dismiss())
-                .positiveText(R.string.button_done)
-                .onPositive((dialog, which) -> {
-                    int color = selectedColor;
-                    for (ViewModel item : colorAdapter.items) {
-                        if (((ColorView) item).selected) {
-                            color = ((ColorView) item).color;
-                            break;
-                        }
-                    }
-                    listener.colorSelected(color);
-                    dialog.dismiss();
-                })
-                .neutralText(neutralTextResId)
-                .autoDismiss(false)
-                .onNeutral((dialog, which) -> {
-                    if (ShuttleUtils.isUpgraded()) {
-                        showCustomColorPickerDialog(fragment.getActivity(), selectedColor, listener);
-                        dialog.dismiss();
-                    } else {
-                        showUpgradeDialog(fragment.getActivity(), (upgradeDialog, which1) -> {
-                            if (ShuttleUtils.isAmazonBuild()) {
-                                ShuttleUtils.openShuttleLink(fragment.getActivity(), "com.simplecity.amp_pro");
-                            } else {
-                                AnalyticsManager.logUpgrade(AnalyticsManager.UpgradeType.COLORS);
-                                ((SettingsActivity) fragment.getActivity()).purchasePremiumUpgrade();
-                            }
-                        });
-                    }
-                })
-                .customView(customView, false)
-                .show();
-    }
+//    public static void showColorPickerDialog(SettingsFragment fragment, int selectedColor, ColorSelectionListener listener) {
+//        showColorPickerDialog(fragment, selectedColor, ColorPalette.getPrimaryColors(), ColorPalette.getPrimaryColorsSub(), listener);
+//    }
+//
+//    public static void showColorPickerDialog(SettingsFragment fragment, int selectedColor, int[] mainColors, int[][] subColors, ColorSelectionListener listener) {
+//
+//        View customView = LayoutInflater.from(fragment.getActivity()).inflate(R.layout.dialog_color_picker, null);
+//
+//        RecyclerView recyclerView = (RecyclerView) customView.findViewById(R.id.recyclerView);
+//        GridLayoutManager gridLayoutManager = new GridLayoutManager(fragment.getActivity(), 5);
+//        recyclerView.setLayoutManager(gridLayoutManager);
+//        ThemeUtils.themeRecyclerView(recyclerView);
+//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//                ThemeUtils.themeRecyclerView(recyclerView);
+//                super.onScrollStateChanged(recyclerView, newState);
+//            }
+//        });
+//
+//        ColorAdapter colorAdapter = new ColorAdapter();
+//
+//        List<ViewModel> colorViews = new ArrayList<>();
+//        for (int i = 0, length = mainColors.length; i < length; i++) {
+//            ColorView colorView = new ColorView(mainColors[i]);
+//            boolean selected = false;
+//
+//            //If the sub colors array contains our selected color, then we set this colorView to selected.
+//            for (int j = 0, jLength = subColors[i].length; j < jLength; j++) {
+//                if (subColors[i][j] == selectedColor) {
+//                    selected = true;
+//                }
+//            }
+//            colorView.selected = selected;
+//            colorViews.add(colorView);
+//        }
+//        colorAdapter.setItems(colorViews);
+//        recyclerView.setAdapter(colorAdapter);
+//
+//        colorAdapter.setColorListener((position, color, isSubColor) -> {
+//            if (isSubColor) {
+//                colorAdapter.setSelectedPosition(position);
+//            } else {
+//                List<ViewModel> subColorViews = new ArrayList<>();
+//                for (int i = 0, length = subColors[position].length; i < length; i++) {
+//                    ColorView colorView = new ColorView(subColors[position][i]);
+//                    colorView.selected = colorView.color == selectedColor;
+//                    subColorViews.add(colorView);
+//                    colorAdapter.isSubColor = true;
+//                }
+//                colorAdapter.setItems(subColorViews);
+//            }
+//        });
+//
+//        int neutralTextResId;
+//        TextView textView = (TextView) customView.findViewById(R.id.text1);
+//        if (ShuttleUtils.isUpgraded()) {
+//            textView.setVisibility(View.GONE);
+//            neutralTextResId = R.string.dialog_custom;
+//        } else {
+//            textView.setVisibility(View.VISIBLE);
+//            if (ShuttleUtils.isAmazonBuild()) {
+//                neutralTextResId = R.string.get_pro_button_amazon;
+//            } else {
+//                neutralTextResId = R.string.btn_upgrade;
+//            }
+//        }
+//
+//        getBuilder(fragment.getActivity())
+//                .title(fragment.getActivity().getString(R.string.color_pick))
+//                .negativeText(R.string.cancel)
+//                .onNegative((dialog, which) -> dialog.dismiss())
+//                .positiveText(R.string.button_done)
+//                .onPositive((dialog, which) -> {
+//                    int color = selectedColor;
+//                    for (ViewModel item : colorAdapter.items) {
+//                        if (((ColorView) item).selected) {
+//                            color = ((ColorView) item).color;
+//                            break;
+//                        }
+//                    }
+//                    listener.colorSelected(color);
+//                    dialog.dismiss();
+//                })
+//                .neutralText(neutralTextResId)
+//                .autoDismiss(false)
+//                .onNeutral((dialog, which) -> {
+//                    if (ShuttleUtils.isUpgraded()) {
+//                        showCustomColorPickerDialog(fragment.getActivity(), selectedColor, listener);
+//                        dialog.dismiss();
+//                    } else {
+//                        showUpgradeDialog(fragment.getActivity(), (upgradeDialog, which1) -> {
+//                            if (ShuttleUtils.isAmazonBuild()) {
+//                                ShuttleUtils.openShuttleLink(fragment.getActivity(), "com.simplecity.amp_pro");
+//                            } else {
+//                                AnalyticsManager.logUpgrade(AnalyticsManager.UpgradeType.COLORS);
+//                                ((SettingsActivity) fragment.getActivity()).purchasePremiumUpgrade();
+//                            }
+//                        });
+//                    }
+//                })
+//                .customView(customView, false)
+//                .show();
+//    }
 
     public static void showCustomColorPickerDialog(Context context, int selectedColor, ColorSelectionListener listener) {
 
@@ -490,16 +484,14 @@ public class DialogUtils {
     /**
      * Displayed when the user chooses to upgrade
      */
-    public static void showUpgradeDialog(final Context context, MaterialDialog.SingleButtonCallback listener) {
-        getBuilder(context)
+    public static MaterialDialog getUpgradeDialog(final Context context, MaterialDialog.SingleButtonCallback listener) {
+        return getBuilder(context)
                 .title(context.getResources().getString(R.string.get_pro_title))
                 .content(context.getResources().getString(R.string.upgrade_dialog_message))
                 .positiveText(R.string.btn_upgrade)
                 .onPositive(listener)
                 .negativeText(R.string.get_pro_button_no)
-                .show();
-
-        AnalyticsManager.logUpgrade(AnalyticsManager.UpgradeType.UPGRADE);
+                .build();
     }
 
     /**
@@ -980,8 +972,7 @@ public class DialogUtils {
                 Snackbar snackbar = Snackbar.make(view, R.string.snackbar_rate_text, Snackbar.LENGTH_INDEFINITE)
                         .setDuration(15000)
                         .setAction(R.string.snackbar_rate_action, v -> {
-                            final String appPackageName = ShuttleApplication.getInstance().getPackageName();
-                            ShuttleUtils.openShuttleLink(activity, appPackageName);
+                            ShuttleUtils.openShuttleLink(activity, ShuttleApplication.getInstance().getPackageName());
                             SettingsManager.getInstance().setHasRated();
                         })
                         .setActionTextColor(ColorUtils.getAccentColor());

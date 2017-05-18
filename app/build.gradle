@@ -225,6 +225,7 @@ dependencies {
     compile libs.design
     compile libs.palette
     compile libs.prefCompat
+    compile libs.prefCompatv14
     compile libs.recyclerView
     compile libs.supportv4
     compile libs.firebaseCore

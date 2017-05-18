@@ -20,11 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.ui.detail.AlbumDetailFragment;
-import com.simplecity.amp_library.ui.detail.ArtistDetailFragment;
-import com.simplecity.amp_library.ui.detail.BaseDetailFragment;
-import com.simplecity.amp_library.ui.detail.GenreDetailFragment;
-import com.simplecity.amp_library.ui.detail.PlaylistDetailFragment;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Genre;
@@ -32,7 +27,13 @@ import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.search.SearchActivity;
 import com.simplecity.amp_library.ui.activities.ToolbarListener;
 import com.simplecity.amp_library.ui.adapters.PagerAdapter;
+import com.simplecity.amp_library.ui.detail.AlbumDetailFragment;
+import com.simplecity.amp_library.ui.detail.ArtistDetailFragment;
+import com.simplecity.amp_library.ui.detail.BaseDetailFragment;
+import com.simplecity.amp_library.ui.detail.GenreDetailFragment;
+import com.simplecity.amp_library.ui.detail.PlaylistDetailFragment;
 import com.simplecity.amp_library.ui.views.SlidingTabLayout;
+import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
 import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.ThemeUtils;
@@ -43,6 +44,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import test.com.androidnavigation.fragment.FragmentInfo;
+import test.com.multisheetview.ui.view.MultiSheetView;
 
 
 public class LibraryController extends BaseFragment implements
@@ -210,6 +212,13 @@ public class LibraryController extends BaseFragment implements
         if (getActivity() instanceof ToolbarListener) {
             ((ToolbarListener) getActivity()).toolbarAttached((Toolbar) view.findViewById(R.id.toolbar));
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        multiSheetEventRelay.sendEvent(new MultiSheetEventRelay.MultiSheetEvent(MultiSheetEventRelay.MultiSheetEvent.Action.GOTO, MultiSheetView.Sheet.NONE));
     }
 
     @Override

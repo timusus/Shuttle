@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<test.com.multisheetview.ui.view.MultiSheetView
+<com.simplecity.amp_library.ui.views.multisheet.CustomMultiSheetView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/multiSheetView"
     android:layout_width="match_parent"
