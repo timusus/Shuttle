@@ -25,8 +25,8 @@
             app:expandedTitleTextAppearance="@style/CollapsingToolbarExpandedTextAppearance"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:scrimAnimationDuration="400"
-            app:title="At The Drive In"
-            app:titleEnabled="true">
+            app:titleEnabled="true"
+            tools:title="At The Drive In">
 
             <FrameLayout
                 android:layout_width="match_parent"

@@ -177,9 +177,6 @@ public class MainFragment extends BaseFragment {
             }
         }, 1000);
 
-        dummyToolbar = rootView.findViewById(R.id.dummyToolbar);
-        dummyStatusBar = rootView.findViewById(R.id.dummyStatusBar);
-
         //We need to set the dummy status bar height.
         if (ShuttleUtils.hasKitKat()) {
             LinearLayout.LayoutParams statusBarParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) ActionBarUtils.getStatusBarHeight(getActivity()));

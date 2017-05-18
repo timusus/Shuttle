@@ -20,7 +20,6 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,7 +43,6 @@ import com.simplecity.amp_library.ui.modelviews.BreadcrumbsView;
 import com.simplecity.amp_library.ui.modelviews.FolderView;
 import com.simplecity.amp_library.ui.views.BreadcrumbItem;
 import com.simplecity.amp_library.ui.views.CustomEditText;
-import com.simplecity.amp_library.utils.ActionBarUtils;
 import com.simplecity.amp_library.utils.ColorUtils;
 import com.simplecity.amp_library.utils.CustomMediaScanner;
 import com.simplecity.amp_library.utils.DialogUtils;
@@ -66,6 +64,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -85,22 +85,22 @@ public class FolderFragment extends BaseFragment implements
 
     static final int FRAGMENT_GROUPID = FOLDER_FRAGMENT_GROUP_ID;
 
-    private RecyclerView recyclerView;
-
     ViewModelAdapter adapter;
 
-    private Toolbar toolbar;
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
 
-    private View dummyToolbar;
-    private View dummyStatusBar;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
+    @BindView(R.id.breadcrumb_view)
+    Breadcrumb breadcrumb;
 
     boolean isInActionMode = false;
 
     String currentDir;
 
     private SharedPreferences prefs;
-
-    Breadcrumb breadcrumb;
 
     private SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceChangeListener;
 
@@ -176,42 +176,23 @@ public class FolderFragment extends BaseFragment implements
 
         View rootView = inflater.inflate(R.layout.fragment_folder_browser, container, false);
 
-        toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-
-        dummyToolbar = rootView.findViewById(R.id.dummyToolbar);
-        dummyStatusBar = rootView.findViewById(R.id.dummyStatusBar);
-
-        //We need to set the dummy status bar height.
-        if (ShuttleUtils.hasKitKat()) {
-            LinearLayout.LayoutParams statusBarParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) ActionBarUtils.getStatusBarHeight(getActivity()));
-            dummyStatusBar.setLayoutParams(statusBarParams);
-        } else {
-            dummyStatusBar.setVisibility(View.GONE);
-        }
+        ButterKnife.bind(this, rootView);
 
         if (getParentFragment() == null || !(getParentFragment() instanceof MainFragment)) {
             showBreadcrumbsInList = false;
-            breadcrumb = (Breadcrumb) rootView.findViewById(R.id.breadcrumb_view);
             breadcrumb.setTextColor(Color.WHITE);
             breadcrumb.addBreadcrumbListener(this);
             if (!TextUtils.isEmpty(currentDir)) {
                 breadcrumb.changeBreadcrumbPath(currentDir);
             }
-            if (ShuttleUtils.hasKitKat()) {
-                dummyStatusBar.setVisibility(View.VISIBLE);
-            }
-            dummyToolbar.setVisibility(View.VISIBLE);
         } else {
             showBreadcrumbsInList = true;
             changeBreadcrumbPath();
             toolbar.setVisibility(View.GONE);
-            if (ShuttleUtils.hasKitKat()) {
-                dummyStatusBar.setVisibility(View.GONE);
-            }
-            dummyToolbar.setVisibility(View.GONE);
         }
 
-        recyclerView = (RecyclerView) rootView.findViewById(android.R.id.list);
+        toolbar.setOnClickListener(v -> getActivity().onBackPressed());
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
 
@@ -282,21 +263,10 @@ public class FolderFragment extends BaseFragment implements
 
     private void themeUIComponents() {
 
-        if (dummyStatusBar != null) {
-            //noinspection ResourceAsColor
-            dummyStatusBar.setBackgroundColor(ShuttleUtils.hasLollipop() ? ColorUtils.getPrimaryColorDark() : ColorUtils.getPrimaryColor());
-        }
-
-        if (dummyToolbar != null) {
-            dummyToolbar.setBackgroundColor(ColorUtils.getPrimaryColor());
-        }
-
-        if (toolbar != null) {
-            if (getParentFragment() != null && getParentFragment() instanceof MainFragment) {
-                toolbar.setBackgroundColor(Color.TRANSPARENT);
-            } else {
-                toolbar.setBackgroundColor(ColorUtils.getPrimaryColor());
-            }
+        if (getParentFragment() != null && getParentFragment() instanceof MainFragment) {
+            toolbar.setBackgroundColor(Color.TRANSPARENT);
+        } else {
+            toolbar.setBackgroundColor(ColorUtils.getPrimaryColor());
         }
 
         adapter.notifyItemRangeChanged(0, adapter.getItemCount());
