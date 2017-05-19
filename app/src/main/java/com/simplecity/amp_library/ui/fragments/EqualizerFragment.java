@@ -1,8 +1,7 @@
-package com.simplecity.amp_library.ui.activities;
+package com.simplecity.amp_library.ui.fragments;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -14,14 +13,13 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBar;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
@@ -29,15 +27,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.constants.OpenSLESConstants;
 import com.simplecity.amp_library.services.EqualizerService;
 import com.simplecity.amp_library.ui.adapters.RobotoSpinnerAdapter;
 import com.simplecity.amp_library.ui.views.CustomSwitch;
 import com.simplecity.amp_library.ui.views.SizableSeekBar;
-import com.simplecity.amp_library.utils.ColorUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
-import com.simplecity.amp_library.utils.SettingsManager;
-import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.ThemeUtils;
 
 import java.lang.ref.WeakReference;
@@ -45,9 +41,13 @@ import java.util.Formatter;
 import java.util.Locale;
 import java.util.UUID;
 
-public class EqualizerActivity extends BaseActivity {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
-    private static final String TAG = "EqualizerActivity";
+public class EqualizerFragment extends BaseFragment implements Toolbar.OnMenuItemClickListener, CompoundButton.OnCheckedChangeListener {
+
+    private static final String TAG = "EqualizerFragment";
 
     private static final String EFFECT_TYPE_EQUALIZER = "47382d60-ddd8-11db-bf3a-0002a5d5c51b";
 
@@ -55,7 +55,7 @@ public class EqualizerActivity extends BaseActivity {
 
     private static final String EFFECT_TYPE_VIRTUALIZER = "37cc2c00-dddd-11db-8577-0002a5d5c51b";
 
-    SharedPreferences mPrefs;
+    SharedPreferences prefs;
 
     /**
      * Max number of EQ bands supported
@@ -65,36 +65,49 @@ public class EqualizerActivity extends BaseActivity {
     /**
      * Indicates if Equalizer effect is supported.
      */
-    private boolean mEqualizerSupported;
+    private boolean equalizerSupported;
     /**
      * Indicates if BassBoost effect is supported.
      */
-    private boolean mBassBoostSupported;
+    private boolean bassBoostSupported;
     /**
      * Indicates if Virtualizer effect is supported.
      */
-    private boolean mVirtualizerSupported;
+    private boolean virtualizerSupported;
 
-    private ServiceConnection mServiceConnection;
+    private ServiceConnection serviceConnection;
 
     public EqualizerService service;
 
     // Equalizer fields
-    private int mNumberEqualizerBands;
-    int mEqCustomPresetPosition = 1;
-    int mEqPreset;
-    private String[] mEqPresetNames;
+    private int numberEqualizerBands;
+    int eqCustomPresetPosition = 1;
+    int eqPreset;
+    private String[] eqPresetNames;
 
     private final SizableSeekBar[] mEqualizerSeekBar = new SizableSeekBar[EQUALIZER_MAX_BANDS];
 
-    Spinner mSpinner;
-    RobotoSpinnerAdapter mSpinnerAdapter;
+    Unbinder unbinder;
 
-    private CustomSwitch mInternalEqSwitch;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
-    private StringBuilder mFormatBuilder = new StringBuilder();
-    private Formatter mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
+    @BindView(R.id.eqSpinner)
+    Spinner spinner;
 
+    @BindView(R.id.eqContainer)
+    View eqContainer;
+
+    @BindView(R.id.bb_strength)
+    SizableSeekBar baseBoostSeekbar;
+
+    @BindView(R.id.virtualizer_strength)
+    SizableSeekBar virtualizerSeekbar;
+
+    RobotoSpinnerAdapter spinnerAdapter;
+
+    private StringBuilder formatBuilder = new StringBuilder();
+    private Formatter formatter = new Formatter(formatBuilder, Locale.getDefault());
 
     /**
      * Mapping for the EQ widget ids per band
@@ -121,27 +134,41 @@ public class EqualizerActivity extends BaseActivity {
     };
 
     @Override
-    public void themeColorChanged() {
-
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_dsp:
+                Intent openDSP = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
+                if (getActivity().getPackageManager().resolveActivity(openDSP, 0) != null) {
+                    startActivityForResult(openDSP, 1000);
+                }
+                break;
+        }
+        return true;
     }
 
     @Override
-    protected String screenName() {
-        return TAG;
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        EqualizerService.closeEqualizerSessions(getContext(), !isChecked, MusicUtils.getAudioSessionId());
+
+        EqualizerService.openEqualizerSession(getContext(), isChecked, MusicUtils.getAudioSessionId());
+
+        // set parameter and state
+        prefs.edit().putBoolean("audiofx.global.enable", isChecked).apply();
+        updateService();
     }
 
     private static class UpdateHandler extends Handler {
-        private final WeakReference<EqualizerActivity> mActivity;
+        private final WeakReference<EqualizerFragment> fragment;
 
-        public UpdateHandler(EqualizerActivity equalizerActivity) {
-            mActivity = new WeakReference<>(equalizerActivity);
+        public UpdateHandler(EqualizerFragment equalizerFragment) {
+            fragment = new WeakReference<>(equalizerFragment);
         }
 
         @Override
         public void handleMessage(Message msg) {
 
-            final EqualizerActivity activity = mActivity.get();
-            if (activity == null) {
+            final EqualizerFragment fragment = this.fragment.get();
+            if (fragment == null) {
                 Log.w(TAG, "Active null");
                 return;
             }
@@ -149,8 +176,8 @@ public class EqualizerActivity extends BaseActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case MSG_UPDATE_SERVICE:
-                    if (activity.service != null) {
-                        activity.service.update();
+                    if (fragment.service != null) {
+                        fragment.service.update();
                     } else {
                         Log.w(TAG, "Service null");
                     }
@@ -162,41 +189,21 @@ public class EqualizerActivity extends BaseActivity {
 
     UpdateHandler mHandler = new UpdateHandler(this);
 
+    public static EqualizerFragment newInstance() {
+        Bundle args = new Bundle();
+        EqualizerFragment fragment = new EqualizerFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @SuppressLint("InlinedApi")
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-        ThemeUtils.setTheme(this);
-
-        if (!ShuttleUtils.hasLollipop() && ShuttleUtils.hasKitKat()) {
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
-        if (!ShuttleUtils.hasKitKat()) {
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        }
-
-        if (SettingsManager.getInstance().canTintNavBar()) {
-            getWindow().setNavigationBarColor(ColorUtils.getPrimaryColorDark());
-        }
-
         super.onCreate(savedInstanceState);
 
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-
-        setContentView(R.layout.activity_equalizer);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        ThemeUtils.themeActionBar(this);
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(getResources().getString(R.string.equalizer));
+        prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         try {
             //Query available effects
@@ -207,24 +214,52 @@ public class EqualizerActivity extends BaseActivity {
                 for (final AudioEffect.Descriptor effect : effects) {
                     //Equalizer
                     if (effect.type.equals(UUID.fromString(EFFECT_TYPE_EQUALIZER))) {
-                        mEqualizerSupported = true;
+                        equalizerSupported = true;
                     } else if (effect.type.equals(UUID.fromString(EFFECT_TYPE_BASS_BOOST))) {
-                        mBassBoostSupported = true;
+                        bassBoostSupported = true;
                     } else if (effect.type.equals(UUID.fromString(EFFECT_TYPE_VIRTUALIZER))) {
-                        mVirtualizerSupported = true;
+                        virtualizerSupported = true;
                     }
                 }
             }
         } catch (NoClassDefFoundError ignored) {
             //The user doesn't have the AudioEffect/AudioEffect.Descriptor class. How sad.
         }
+    }
 
-        mSpinner = (Spinner) findViewById(R.id.eqSpinner);
-        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        View rootView = inflater.inflate(R.layout.fragment_equalizer, container, false);
+
+        unbinder = ButterKnife.bind(this, rootView);
+
+        toolbar.inflateMenu(R.menu.menu_equalizer);
+        toolbar.setNavigationOnClickListener(v -> getNavigationController().popViewController());
+        toolbar.setOnMenuItemClickListener(this);
+
+        MenuItem item = toolbar.getMenu().findItem(R.id.action_equalizer);
+        CustomSwitch switchItem = (CustomSwitch) item.getActionView();
+
+        boolean isEnabled = prefs.getBoolean("audiofx.global.enable", false);
+        switchItem.setChecked(isEnabled);
+        switchItem.setOnCheckedChangeListener(this);
+
+        //Hide the 'open DSP' button if DSP/Other audio effects aren't available
+        final Intent intent = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
+        if (ShuttleApplication.getInstance().getPackageManager().resolveActivity(intent, 0) == null) {
+            MenuItem openDSPItem = toolbar.getMenu().findItem(R.id.menu_dsp);
+            if (openDSPItem != null) {
+                openDSPItem.setVisible(false);
+            }
+        }
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mEqPreset = position;
+                eqPreset = position;
                 equalizerSetPreset(position);
             }
 
@@ -234,17 +269,16 @@ public class EqualizerActivity extends BaseActivity {
         });
 
         setupPresets();
-        if (mSpinnerAdapter != null && mSpinnerAdapter.getCount() > mEqPreset) {
-            mSpinner.setSelection(mEqPreset);
+        if (spinnerAdapter != null && spinnerAdapter.getCount() > eqPreset) {
+            spinner.setSelection(eqPreset);
         }
 
         //Initialize the equalizer elements
-        View eqContainer = findViewById(R.id.eqContainer);
-        mNumberEqualizerBands = Integer.parseInt(mPrefs.getString("equalizer.number_of_bands", "5"));
+        numberEqualizerBands = Integer.parseInt(prefs.getString("equalizer.number_of_bands", "5"));
         final int[] centerFreqs = getCenterFreqs();
         final int[] bandLevelRange = getBandLevelRange();
 
-        for (int band = 0; band < mNumberEqualizerBands; band++) {
+        for (int band = 0; band < numberEqualizerBands; band++) {
             //Unit conversion from mHz to Hz and use k prefix if necessary to display
             float centerFreqHz = centerFreqs[band] / 1000;
             String unitPrefix = "";
@@ -258,7 +292,7 @@ public class EqualizerActivity extends BaseActivity {
             (eqContainer.findViewById(eqViewTextElementIds[band][1])).setVisibility(View.VISIBLE);
             ((TextView) eqContainer.findViewById(eqViewElementIds[band][0])).setText(format("%.0f ", centerFreqHz) + unitPrefix + "Hz");
             mEqualizerSeekBar[band] = (SizableSeekBar) eqContainer.findViewById(eqViewElementIds[band][1]);
-            ThemeUtils.themeSeekBar(this, mEqualizerSeekBar[band]);
+            ThemeUtils.themeSeekBar(getContext(), mEqualizerSeekBar[band]);
             mEqualizerSeekBar[band].setMax((bandLevelRange[1] / 100) - (bandLevelRange[0] / 100));
             mEqualizerSeekBar[band].setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
@@ -274,10 +308,10 @@ public class EqualizerActivity extends BaseActivity {
                             }
                         }
 
-                        if (mEqPreset != mEqCustomPresetPosition) {
+                        if (eqPreset != eqCustomPresetPosition) {
                             equalizerCopyToCustom();
-                            if (mSpinnerAdapter != null && mSpinnerAdapter.getCount() > mEqCustomPresetPosition) {
-                                mSpinner.setSelection(mEqCustomPresetPosition);
+                            if (spinnerAdapter != null && spinnerAdapter.getCount() > eqCustomPresetPosition) {
+                                spinner.setSelection(eqCustomPresetPosition);
                             }
                         } else {
                             int level = getBandLevelRange()[0] + (progress * 100);
@@ -302,20 +336,19 @@ public class EqualizerActivity extends BaseActivity {
 
         // Initialize the Bass Boost elements.
         // Set the SeekBar listener.
-        if (mBassBoostSupported) {
+        if (bassBoostSupported) {
 
-            final SizableSeekBar seekbar = (SizableSeekBar) findViewById(R.id.bb_strength);
-            ThemeUtils.themeSeekBar(this, seekbar);
-            seekbar.setMax(OpenSLESConstants.BASSBOOST_MAX_STRENGTH - OpenSLESConstants.BASSBOOST_MIN_STRENGTH);
+            ThemeUtils.themeSeekBar(getContext(), baseBoostSeekbar);
+            baseBoostSeekbar.setMax(OpenSLESConstants.BASSBOOST_MAX_STRENGTH - OpenSLESConstants.BASSBOOST_MIN_STRENGTH);
 
-            seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            baseBoostSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
                 @Override
                 public void onProgressChanged(final SeekBar seekBar, final int progress, final boolean fromUser) {
                     // set parameter and state
                     if (fromUser) {
-                        mPrefs.edit().putBoolean("audiofx.bass.enable", true).apply();
-                        mPrefs.edit().putString("audiofx.bass.strength", String.valueOf(progress)).apply();
+                        prefs.edit().putBoolean("audiofx.bass.enable", true).apply();
+                        prefs.edit().putString("audiofx.bass.strength", String.valueOf(progress)).apply();
                         mHandler.sendEmptyMessage(MSG_UPDATE_SERVICE);
                     }
                 }
@@ -324,7 +357,7 @@ public class EqualizerActivity extends BaseActivity {
                 @Override
                 public void onStartTrackingTouch(final SeekBar seekBar) {
                     if (seekBar.getProgress() == 0) {
-                        mPrefs.edit().putBoolean("audiofx.bass.enable", true).apply();
+                        prefs.edit().putBoolean("audiofx.bass.enable", true).apply();
                         mHandler.sendEmptyMessage(MSG_UPDATE_SERVICE);
                     }
                 }
@@ -334,7 +367,7 @@ public class EqualizerActivity extends BaseActivity {
                 public void onStopTrackingTouch(final SeekBar seekBar) {
                     if (seekBar.getProgress() == 0) {
                         // disable
-                        mPrefs.edit().putBoolean("audiofx.bass.enable", false).apply();
+                        prefs.edit().putBoolean("audiofx.bass.enable", false).apply();
                         mHandler.sendEmptyMessage(MSG_UPDATE_SERVICE);
                     }
                 }
@@ -343,20 +376,19 @@ public class EqualizerActivity extends BaseActivity {
 
         // Initialize the Virtualizer elements.
         // Set the SeekBar listener.
-        if (mVirtualizerSupported) {
+        if (virtualizerSupported) {
 
-            final SizableSeekBar seekbar = (SizableSeekBar) findViewById(R.id.virtualizer_strength);
-            ThemeUtils.themeSeekBar(this, seekbar);
-            seekbar.setMax(OpenSLESConstants.VIRTUALIZER_MAX_STRENGTH - OpenSLESConstants.VIRTUALIZER_MIN_STRENGTH);
+            ThemeUtils.themeSeekBar(getContext(), virtualizerSeekbar);
+            virtualizerSeekbar.setMax(OpenSLESConstants.VIRTUALIZER_MAX_STRENGTH - OpenSLESConstants.VIRTUALIZER_MIN_STRENGTH);
 
-            seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            virtualizerSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
                 @Override
                 public void onProgressChanged(final SeekBar seekBar, final int progress, final boolean fromUser) {
                     // set parameter and state
                     if (fromUser) {
-                        mPrefs.edit().putBoolean("audiofx.virtualizer.enable", true).apply();
-                        mPrefs.edit().putString("audiofx.virtualizer.strength", String.valueOf(progress)).apply();
+                        prefs.edit().putBoolean("audiofx.virtualizer.enable", true).apply();
+                        prefs.edit().putString("audiofx.virtualizer.strength", String.valueOf(progress)).apply();
                         mHandler.sendEmptyMessage(MSG_UPDATE_SERVICE);
                     }
                 }
@@ -365,7 +397,7 @@ public class EqualizerActivity extends BaseActivity {
                 @Override
                 public void onStartTrackingTouch(final SeekBar seekBar) {
                     if (seekBar.getProgress() == 0) {
-                        mPrefs.edit().putBoolean("audiofx.virtualizer.enable", true).apply();
+                        prefs.edit().putBoolean("audiofx.virtualizer.enable", true).apply();
                         mHandler.sendEmptyMessage(MSG_UPDATE_SERVICE);
                     }
                 }
@@ -375,20 +407,22 @@ public class EqualizerActivity extends BaseActivity {
                 public void onStopTrackingTouch(final SeekBar seekBar) {
                     if (seekBar.getProgress() == 0) {
                         // disable
-                        mPrefs.edit().putBoolean("audiofx.virtualizer.enable", false).apply();
+                        prefs.edit().putBoolean("audiofx.virtualizer.enable", false).apply();
                         mHandler.sendEmptyMessage(MSG_UPDATE_SERVICE);
                     }
                 }
             });
         }
+
+        return rootView;
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
 
-        if (mServiceConnection == null) {
-            mServiceConnection = new ServiceConnection() {
+        if (serviceConnection == null) {
+            serviceConnection = new ServiceConnection() {
                 @Override
                 public void onServiceConnected(ComponentName name, IBinder binder) {
                     service = ((EqualizerService.LocalBinder) binder).getService();
@@ -401,68 +435,25 @@ public class EqualizerActivity extends BaseActivity {
                 }
             };
         }
-        Intent serviceIntent = new Intent(this, EqualizerService.class);
-        bindService(serviceIntent, mServiceConnection, 0);
+        Intent serviceIntent = new Intent(getContext(), EqualizerService.class);
+        getActivity().bindService(serviceIntent, serviceConnection, 0);
 
         updateUI();
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
 
-        unbindService(mServiceConnection);
+        getActivity().unbindService(serviceConnection);
 
         super.onPause();
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_equalizer_activity, menu);
-        MenuItem switchItem = menu.findItem(R.id.action_equalizer);
-        mInternalEqSwitch = (CustomSwitch) MenuItemCompat.getActionView(switchItem);
-        mInternalEqSwitch.setOnCheckedChangeListener(mOnCheckedChangeListener);
+    public void onDestroyView() {
+        super.onDestroyView();
 
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-
-        final boolean isEnabled = mPrefs.getBoolean("audiofx.global.enable", false);
-        MenuItem switchItem = menu.findItem(R.id.action_equalizer);
-        mInternalEqSwitch = (CustomSwitch) MenuItemCompat.getActionView(switchItem);
-        if (mInternalEqSwitch != null) {
-            mInternalEqSwitch.setOnCheckedChangeListener(null);
-            mInternalEqSwitch.setChecked(isEnabled);
-            mInternalEqSwitch.setOnCheckedChangeListener(mOnCheckedChangeListener);
-        }
-
-        //Hide the 'open DSP' button if DSP/Other audio effects aren't available
-        final Intent intent = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
-        if (getPackageManager().resolveActivity(intent, 0) == null) {
-            MenuItem openDSPItem = menu.findItem(R.id.menu_DSP);
-            if (openDSPItem != null) {
-                openDSPItem.setVisible(false);
-            }
-        }
-
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        if (item.getItemId() == R.id.menu_DSP) {
-            try {
-                final Intent openDSP = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
-                startActivityForResult(openDSP, 1000);
-            } catch (final ActivityNotFoundException notFound) {
-                Log.e(TAG, "External EQ not found. " + notFound.getLocalizedMessage());
-            }
-        } else if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return true;
+        unbinder.unbind();
     }
 
     /**
@@ -471,17 +462,17 @@ public class EqualizerActivity extends BaseActivity {
      * @param preset EQ preset id.
      */
     void equalizerSetPreset(final int preset) {
-        mEqPreset = preset;
-        mPrefs.edit().putString("audiofx.eq.preset", String.valueOf(preset)).apply();
+        eqPreset = preset;
+        prefs.edit().putString("audiofx.eq.preset", String.valueOf(preset)).apply();
 
         String newLevels;
-        if (preset == mEqCustomPresetPosition) {
+        if (preset == eqCustomPresetPosition) {
             // load custom if possible
-            newLevels = mPrefs.getString("audiofx.eq.bandlevels.custom", EqualizerService.getZeroedBandsString(mNumberEqualizerBands));
+            newLevels = prefs.getString("audiofx.eq.bandlevels.custom", EqualizerService.getZeroedBandsString(numberEqualizerBands));
         } else {
-            newLevels = mPrefs.getString("equalizer.preset." + preset, EqualizerService.getZeroedBandsString(mNumberEqualizerBands));
+            newLevels = prefs.getString("equalizer.preset." + preset, EqualizerService.getZeroedBandsString(numberEqualizerBands));
         }
-        mPrefs.edit().putString("audiofx.eq.bandlevels", newLevels).apply();
+        prefs.edit().putString("audiofx.eq.bandlevels", newLevels).apply();
         updateUI();
 
         updateService();
@@ -491,23 +482,22 @@ public class EqualizerActivity extends BaseActivity {
 
         setupPresets();
 
-        supportInvalidateOptionsMenu();
-        if (mEqualizerSupported) {
+        if (equalizerSupported) {
             equalizerUpdateDisplay();
         }
-        if (mBassBoostSupported) {
-            ((SeekBar) findViewById(R.id.bb_strength)).setProgress(Integer.valueOf(mPrefs.getString("audiofx.bass.strength", "0")));
+        if (bassBoostSupported) {
+            baseBoostSeekbar.setProgress(Integer.valueOf(prefs.getString("audiofx.bass.strength", "0")));
         }
-        if (mVirtualizerSupported) {
-            ((SeekBar) findViewById(R.id.virtualizer_strength)).setProgress(Integer.valueOf(mPrefs.getString("audiofx.virtualizer.strength", "0")));
+        if (virtualizerSupported) {
+            virtualizerSeekbar.setProgress(Integer.valueOf(prefs.getString("audiofx.virtualizer.strength", "0")));
         }
 
         // Initialize the Equalizer elements.
-        if (mEqualizerSupported) {
-            String preset = String.valueOf(mNumberEqualizerBands);
-            mEqPreset = Integer.valueOf(mPrefs.getString("audiofx.eq.preset", preset));
-            if (mSpinnerAdapter != null && mSpinnerAdapter.getCount() > mEqPreset) {
-                mSpinner.setSelection(mEqPreset);
+        if (equalizerSupported) {
+            String preset = String.valueOf(numberEqualizerBands);
+            eqPreset = Integer.valueOf(prefs.getString("audiofx.eq.preset", preset));
+            if (spinnerAdapter != null && spinnerAdapter.getCount() > eqPreset) {
+                spinner.setSelection(eqPreset);
             }
         }
     }
@@ -520,11 +510,11 @@ public class EqualizerActivity extends BaseActivity {
         String levelsString;
         float[] floats;
 
-        if (mEqPreset == mEqCustomPresetPosition) {
+        if (eqPreset == eqCustomPresetPosition) {
             // load custom preset for current device
             // here mEQValues needs to be pre-populated with the user's preset values.
-            String[] customEq = mPrefs.getString("audiofx.eq.bandlevels.custom", EqualizerService.getZeroedBandsString(mNumberEqualizerBands)).split(";");
-            floats = new float[mNumberEqualizerBands];
+            String[] customEq = prefs.getString("audiofx.eq.bandlevels.custom", EqualizerService.getZeroedBandsString(numberEqualizerBands)).split(";");
+            floats = new float[numberEqualizerBands];
             for (int band = 0; band < floats.length; band++) {
                 final float level = Float.parseFloat(customEq[band]);
                 floats[band] = level / 100.0f;
@@ -532,7 +522,7 @@ public class EqualizerActivity extends BaseActivity {
             }
         } else {
             // try to load preset
-            levelsString = mPrefs.getString("equalizer.preset." + mEqPreset, EqualizerService.getZeroedBandsString(mNumberEqualizerBands));
+            levelsString = prefs.getString("equalizer.preset." + eqPreset, EqualizerService.getZeroedBandsString(numberEqualizerBands));
             String[] bandLevels = levelsString.split(";");
             floats = new float[bandLevels.length];
             for (int band = 0; band < bandLevels.length; band++) {
@@ -546,19 +536,19 @@ public class EqualizerActivity extends BaseActivity {
 
     void equalizerBandUpdate(final int band, final int level) {
 
-        String[] currentCustomLevels = mPrefs.getString("audiofx.eq.bandlevels.custom", EqualizerService.getZeroedBandsString(mNumberEqualizerBands)).split(";");
+        String[] currentCustomLevels = prefs.getString("audiofx.eq.bandlevels.custom", EqualizerService.getZeroedBandsString(numberEqualizerBands)).split(";");
 
         currentCustomLevels[band] = String.valueOf(level);
 
         // save
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < mNumberEqualizerBands; i++) {
+        for (int i = 0; i < numberEqualizerBands; i++) {
             builder.append(currentCustomLevels[i]);
             builder.append(";");
         }
         builder.deleteCharAt(builder.length() - 1);
-        mPrefs.edit().putString("audiofx.eq.bandlevels", builder.toString()).apply();
-        mPrefs.edit().putString("audiofx.eq.bandlevels.custom", builder.toString()).apply();
+        prefs.edit().putString("audiofx.eq.bandlevels", builder.toString()).apply();
+        prefs.edit().putString("audiofx.eq.bandlevels.custom", builder.toString()).apply();
 
         updateService();
     }
@@ -569,22 +559,22 @@ public class EqualizerActivity extends BaseActivity {
     void equalizerCopyToCustom() {
         Log.d(TAG, "equalizerCopyToCustom()");
         StringBuilder bandLevels = new StringBuilder();
-        for (int band = 0; band < mNumberEqualizerBands; band++) {
+        for (int band = 0; band < numberEqualizerBands; band++) {
             final float level = (getBandLevelRange()[0] / 100) + mEqualizerSeekBar[band].getProgress();
             bandLevels.append(level * 100);
             bandLevels.append(";");
         }
         // remove trailing ";"
         bandLevels.deleteCharAt(bandLevels.length() - 1);
-        mPrefs.edit().putString("audiofx.eq.bandlevels.custom", bandLevels.toString()).apply();
-        mPrefs.edit().putString("audiofx.eq.preset", String.valueOf(mEqCustomPresetPosition)).apply();
+        prefs.edit().putString("audiofx.eq.bandlevels.custom", bandLevels.toString()).apply();
+        prefs.edit().putString("audiofx.eq.preset", String.valueOf(eqCustomPresetPosition)).apply();
     }
 
 
     private String format(String format, Object... args) {
-        mFormatBuilder.setLength(0);
-        mFormatter.format(format, args);
-        return mFormatBuilder.toString();
+        formatBuilder.setLength(0);
+        formatter.format(format, args);
+        return formatBuilder.toString();
     }
 
     private static final int MSG_UPDATE_SERVICE = 1;
@@ -595,7 +585,7 @@ public class EqualizerActivity extends BaseActivity {
     }
 
     int[] getBandLevelRange() {
-        String savedCenterFreqs = mPrefs.getString("equalizer.band_level_range", null);
+        String savedCenterFreqs = prefs.getString("equalizer.band_level_range", null);
         if (savedCenterFreqs == null || savedCenterFreqs.isEmpty()) {
             return new int[]{-1500, 1500};
         } else {
@@ -609,7 +599,7 @@ public class EqualizerActivity extends BaseActivity {
     }
 
     private int[] getCenterFreqs() {
-        String savedCenterFreqs = mPrefs.getString("equalizer.center_freqs", EqualizerService.getZeroedBandsString(mNumberEqualizerBands));
+        String savedCenterFreqs = prefs.getString("equalizer.center_freqs", EqualizerService.getZeroedBandsString(numberEqualizerBands));
         String[] split = savedCenterFreqs.split(";");
         int[] freqs = new int[split.length];
         for (int i = 0; i < split.length; i++) {
@@ -620,34 +610,25 @@ public class EqualizerActivity extends BaseActivity {
 
     private void setupPresets() {
         // setup equalizer presets
-        final int numPresets = Integer.parseInt(mPrefs.getString("equalizer.number_of_presets", "0"));
-        mEqPresetNames = new String[numPresets + 1];
+        final int numPresets = Integer.parseInt(prefs.getString("equalizer.number_of_presets", "0"));
+        eqPresetNames = new String[numPresets + 1];
 
-        String[] presetNames = mPrefs.getString("equalizer.preset_names", "").split("\\|");
+        String[] presetNames = prefs.getString("equalizer.preset_names", "").split("\\|");
         for (short i = 0; i < numPresets; i++) {
-            mEqPresetNames[i] = presetNames[i];
+            eqPresetNames[i] = presetNames[i];
         }
-        mEqPresetNames[numPresets] = getString(R.string.custom);
-        mEqCustomPresetPosition = numPresets;
+        eqPresetNames[numPresets] = getString(R.string.custom);
+        eqCustomPresetPosition = numPresets;
 
-        if (mSpinnerAdapter == null || mSpinnerAdapter.getCount() != mEqPresetNames.length) {
-            mSpinnerAdapter = new RobotoSpinnerAdapter<>(this, R.layout.spinner_item, mEqPresetNames);
-            mSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            mSpinner.setAdapter(mSpinnerAdapter);
+        if (spinnerAdapter == null || spinnerAdapter.getCount() != eqPresetNames.length) {
+            spinnerAdapter = new RobotoSpinnerAdapter<>(getContext(), R.layout.spinner_item, eqPresetNames);
+            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(spinnerAdapter);
         }
     }
 
-    private CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-
-            EqualizerService.closeEqualizerSessions(EqualizerActivity.this, !isChecked, MusicUtils.getAudioSessionId());
-
-            EqualizerService.openEqualizerSession(EqualizerActivity.this, isChecked, MusicUtils.getAudioSessionId());
-
-            // set parameter and state
-            mPrefs.edit().putBoolean("audiofx.global.enable", isChecked).apply();
-            updateService();
-        }
-    };
+    @Override
+    protected String screenName() {
+        return TAG;
+    }
 }

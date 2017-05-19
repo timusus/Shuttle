@@ -137,6 +137,7 @@ public class DrawerFragment extends BaseFragment implements
         drawerParents.add(DrawerParent.folderParent);
         drawerParents.add(playlistDrawerParent);
         drawerParents.add(new DrawerDivider());
+        drawerParents.add(DrawerParent.equalizerParent);
         drawerParents.add(DrawerParent.settingsParent);
         drawerParents.add(DrawerParent.supportParent);
 

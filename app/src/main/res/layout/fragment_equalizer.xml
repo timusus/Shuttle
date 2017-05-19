@@ -7,14 +7,22 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
+    <com.simplecity.amp_library.ui.views.StatusBarView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:minHeight="?attr/actionBarSize"
-        app:popupTheme="?attr/toolbar_popup_theme"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:title="@string/equalizer"
+        android:transitionName="toolbar"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="?attr/toolbar_theme"/>
 
     <LinearLayout

@@ -13,6 +13,7 @@ public class DrawerEventRelay {
 
     static DrawerEvent librarySelectedEvent = new DrawerEvent(DrawerEvent.Type.LIBRARY_SELECTED);
     static DrawerEvent foldersSelectedEvent = new DrawerEvent(DrawerEvent.Type.FOLDERS_SELECTED);
+    static DrawerEvent equalizerSelectedEvent = new DrawerEvent(DrawerEvent.Type.EQUALIZER_SELECTED);
     static DrawerEvent settingsSelectedEvent = new DrawerEvent(DrawerEvent.Type.SETTINGS_SELECTED);
     static DrawerEvent supportSelectedEvent = new DrawerEvent(DrawerEvent.Type.SUPPORT_SELECTED);
 
@@ -37,6 +38,7 @@ public class DrawerEventRelay {
         public @interface Type {
             int LIBRARY_SELECTED = 0;
             int FOLDERS_SELECTED = 1;
+            int EQUALIZER_SELECTED = 5;
             int SETTINGS_SELECTED = 2;
             int SUPPORT_SELECTED = 3;
             int PLAYLIST_SELECTED = 4;

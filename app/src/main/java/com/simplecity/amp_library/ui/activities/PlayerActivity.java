@@ -40,6 +40,7 @@ import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.tagger.TaggerDialog;
+import com.simplecity.amp_library.ui.fragments.EqualizerFragment;
 import com.simplecity.amp_library.ui.fragments.QueueFragment;
 import com.simplecity.amp_library.ui.fragments.QueuePagerFragment;
 import com.simplecity.amp_library.ui.views.RepeatingImageButton;
@@ -377,7 +378,7 @@ public class PlayerActivity extends BaseCastActivity implements
 
         switch (item.getItemId()) {
             case EQUALIZER: {
-                final Intent equalizerIntent = new Intent(this, EqualizerActivity.class);
+                final Intent equalizerIntent = new Intent(this, EqualizerFragment.class);
                 startActivity(equalizerIntent);
                 return true;
             }

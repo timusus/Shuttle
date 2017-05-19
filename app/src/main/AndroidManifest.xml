@@ -136,7 +136,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.activities.EqualizerActivity" />
         <activity
             android:name=".search.SearchActivity"
             android:exported="true">

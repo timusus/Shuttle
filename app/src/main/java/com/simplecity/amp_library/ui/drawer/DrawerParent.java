@@ -31,6 +31,7 @@ public class DrawerParent implements Parent<DrawerChild> {
 
     static DrawerParent libraryParent = new DrawerParent(DrawerParent.Type.LIBRARY, R.string.library_title, R.drawable.ic_library_white, DrawerEventRelay.librarySelectedEvent, true);
     static DrawerParent folderParent = new DrawerParent(DrawerParent.Type.FOLDERS, R.string.folders_title, R.drawable.ic_folders_many_white, DrawerEventRelay.foldersSelectedEvent, true);
+    static DrawerParent equalizerParent = new DrawerParent(Type.EQUALIZER, R.string.equalizer, R.drawable.ic_equalizer_24dp, DrawerEventRelay.equalizerSelectedEvent, false);
     static DrawerParent settingsParent = new DrawerParent(DrawerParent.Type.SETTINGS, R.string.settings, R.drawable.ic_action_settings, DrawerEventRelay.settingsSelectedEvent, false);
     static DrawerParent supportParent = new DrawerParent(DrawerParent.Type.SUPPORT, R.string.pref_title_support, R.drawable.ic_settings_help, DrawerEventRelay.supportSelectedEvent, false);
     static DrawerParent playlistsParent = new DrawerParent(DrawerParent.Type.PLAYLISTS, R.string.playlists_title, R.drawable.ic_action_toggle_queue, null, true);
@@ -39,8 +40,9 @@ public class DrawerParent implements Parent<DrawerChild> {
         int LIBRARY = 0;
         int FOLDERS = 1;
         int PLAYLISTS = 2;
-        int SETTINGS = 3;
-        int SUPPORT = 4;
+        int EQUALIZER = 3;
+        int SETTINGS = 4;
+        int SUPPORT = 5;
     }
 
     boolean selectable = true;

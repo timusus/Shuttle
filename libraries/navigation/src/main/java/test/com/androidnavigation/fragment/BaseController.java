@@ -1,7 +1,6 @@
 package test.com.androidnavigation.fragment;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import test.com.androidnavigation.base.Controller;
@@ -13,7 +12,7 @@ import test.com.androidnavigation.base.NavigationController;
  */
 public abstract class BaseController extends Fragment implements Controller<Fragment> {
 
-    @Nullable
+    @NonNull
     @Override
     public NavigationController<Fragment> getNavigationController() {
         return findNavigationController(this);

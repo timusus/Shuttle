@@ -91,7 +91,11 @@ public class MainController extends BaseNavigationController {
                             popToRootViewController();
                             break;
                         case DrawerEventRelay.DrawerEvent.Type.FOLDERS_SELECTED:
-                            pushViewController(FolderFragment.newInstance("PageTitle"), "FolderFragment");
+                            delayHandler.postDelayed(() -> pushViewController(FolderFragment.newInstance("PageTitle"), "FolderFragment"), 250);
+                            break;
+                        case DrawerEventRelay.DrawerEvent.Type.EQUALIZER_SELECTED:
+                            delayHandler.postDelayed(() -> multiSheetEventRelay.sendEvent(new MultiSheetEventRelay.MultiSheetEvent(MultiSheetEventRelay.MultiSheetEvent.Action.HIDE, MultiSheetView.Sheet.FIRST)), 100);
+                            delayHandler.postDelayed(() -> pushViewController(EqualizerFragment.newInstance(), "EqualizerFragment"), 250);
                             break;
                         case DrawerEventRelay.DrawerEvent.Type.SETTINGS_SELECTED:
                             delayHandler.postDelayed(() -> multiSheetEventRelay.sendEvent(new MultiSheetEventRelay.MultiSheetEvent(MultiSheetEventRelay.MultiSheetEvent.Action.HIDE, MultiSheetView.Sheet.FIRST)), 100);
@@ -102,7 +106,7 @@ public class MainController extends BaseNavigationController {
                             delayHandler.postDelayed(() -> pushViewController(SettingsParentFragment.newInstance(R.xml.settings_support, R.string.pref_title_support), "Support Fragment"), 250);
                             break;
                         case DrawerEventRelay.DrawerEvent.Type.PLAYLIST_SELECTED:
-                            pushViewController(PlaylistDetailFragment.newInstance((Playlist) drawerEvent.data), "PlaylistDetailFragment");
+                            delayHandler.postDelayed(() -> pushViewController(PlaylistDetailFragment.newInstance((Playlist) drawerEvent.data), "PlaylistDetailFragment"), 250);
                             break;
                     }
                 }));
