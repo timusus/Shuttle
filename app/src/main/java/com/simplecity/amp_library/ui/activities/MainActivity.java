@@ -788,6 +788,11 @@ public class MainActivity extends BaseCastActivity implements
     @Override
     public void onBackPressed() {
 
+        if(mNavigationDrawerFragment.isDrawerOpen()){
+            mDrawerLayout.closeDrawers();
+            return;
+        }
+
         Fragment playingFragment = getSupportFragmentManager().findFragmentById(R.id.player_container);
         if (playingFragment != null) {
             Fragment childFragment = playingFragment.getChildFragmentManager().findFragmentById(R.id.queue_container);
