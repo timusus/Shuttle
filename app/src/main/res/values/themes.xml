@@ -15,9 +15,9 @@
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowActivityTransitions">true</item>
 
-        <item name="colorPrimary">@color/indigo_500</item>
-        <item name="colorPrimaryDark">@color/indigo_500</item>
-        <item name="colorAccent">@color/pink_a400</item>
+        <item name="colorPrimary">@color/pa_primaryColor</item>
+        <item name="colorPrimaryDark">@color/pa_primaryColorDark</item>
+        <item name="colorAccent">@color/pa_accentColor</item>
 
         <item name="windowActionModeOverlay">true</item>
 
@@ -64,9 +64,9 @@
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowActivityTransitions">true</item>
 
-        <item name="colorPrimary">@color/indigo_500</item>
-        <item name="colorPrimaryDark">@color/indigo_500</item>
-        <item name="colorAccent">@color/pink_a400</item>
+        <item name="colorPrimary">@color/pa_primaryColor</item>
+        <item name="colorPrimaryDark">@color/pa_primaryColorDark</item>
+        <item name="colorAccent">@color/pa_accentColor</item>
 
         <item name="windowActionModeOverlay">true</item>
 
@@ -112,9 +112,9 @@
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowActivityTransitions">true</item>
 
-        <item name="colorPrimary">@color/indigo_500</item>
-        <item name="colorPrimaryDark">@color/indigo_500</item>
-        <item name="colorAccent">@color/pink_a400</item>
+        <item name="colorPrimary">@color/pa_primaryColor</item>
+        <item name="colorPrimaryDark">@color/pa_primaryColorDark</item>
+        <item name="colorAccent">@color/pa_accentColor</item>
 
         <item name="windowActionModeOverlay">true</item>
 
@@ -149,9 +149,9 @@
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowActivityTransitions">true</item>
 
-        <item name="colorPrimary">@color/indigo_500</item>
-        <item name="colorPrimaryDark">@color/indigo_500</item>
-        <item name="colorAccent">@color/pink_a400</item>
+        <item name="colorPrimary">@color/pa_primaryColor</item>
+        <item name="colorPrimaryDark">@color/pa_primaryColorDark</item>
+        <item name="colorAccent">@color/pa_accentColor</item>
 
         <item name="windowActionModeOverlay">true</item>
 
@@ -331,6 +331,9 @@
         <item name="colorPrimaryDark">@color/bg_dark</item>
         <item name="android:actionBarStyle">@style/Widget.ActionBar.Launch</item>
         <item name="actionBarStyle">@style/Widget.ActionBar.Launch</item>
+        <item name="colorPrimary">@color/pa_primaryColor</item>
+        <item name="colorPrimaryDark">@color/pa_primaryColorDark</item>
+        <item name="colorAccent">@color/pa_accentColor</item>
     </style>
 
     <style name="Widget.ActionBar.Launch" parent="Widget.AppCompat.ActionBar.Solid">

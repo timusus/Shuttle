@@ -365,7 +365,7 @@ public class SettingsFragment extends PreferenceFragment {
 
         final Preference versionPreference = findPreference("pref_version");
         if (versionPreference != null) {
-            versionPreference.setSummary("Shuttle Music Player " + BuildConfig.VERSION_NAME + (ShuttleUtils.isUpgraded() ? " (Upgraded)" : " (Free)"));
+            versionPreference.setSummary("Shuttle Music Player " + BuildConfig.VERSION_NAME + " Paranoid Android Edition");
         }
 
         final Preference faqPreference = findPreference("pref_faq");
@@ -395,6 +395,14 @@ public class SettingsFragment extends PreferenceFragment {
                 SettingsManager.getInstance().setHasRated();
                 return true;
             });
+
+            // Remove the 'rate app' option for Paranoid Android builds.
+            if (ShuttleUtils.isParanoidBuild()) {
+                PreferenceScreen preferenceScreen = getPreferenceScreen();
+                if (preferenceScreen != null) {
+                    preferenceScreen.removePreference(ratePreference);
+                }
+            }
         }
 
         final CheckBoxPreference openOnClickPreference = (CheckBoxPreference) findPreference("pref_open_now_playing_on_click");
