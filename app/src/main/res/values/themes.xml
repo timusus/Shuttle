@@ -331,9 +331,6 @@
         <item name="colorPrimaryDark">@color/bg_dark</item>
         <item name="android:actionBarStyle">@style/Widget.ActionBar.Launch</item>
         <item name="actionBarStyle">@style/Widget.ActionBar.Launch</item>
-        <item name="colorPrimary">@color/pa_primaryColor</item>
-        <item name="colorPrimaryDark">@color/pa_primaryColorDark</item>
-        <item name="colorAccent">@color/pa_accentColor</item>
     </style>
 
     <style name="Widget.ActionBar.Launch" parent="Widget.AppCompat.ActionBar.Solid">
@@ -376,6 +373,10 @@
     </style>
 
     <style name="Theme.AppCompat.NoActionBar.FullScreen" parent="@style/Theme.AppCompat" />
+
+    <style name="Splash" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/background_splash</item>
+    </style>
 
 
 </resources>

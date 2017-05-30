@@ -77,4 +77,8 @@
     <!-- Default inner padding within controls -->
     <dimen name="control_padding_material">4dp</dimen>
 
+    <!-- Splash Screen stuff -->
+    <dimen name="splash_shuttle_icon_bottom">13.0dip</dimen>
+    <dimen name="splash_shuttle_logo_bottom">80.0dip</dimen>
+
 </resources>

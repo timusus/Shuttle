@@ -24,6 +24,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -32,6 +33,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.transition.Fade;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
@@ -129,6 +131,8 @@ public class MainActivity extends BaseCastActivity implements
 
     private static final String ARG_EXPANDED = "is_expanded";
 
+    private static final long DELAY = 1000;
+
     SharedPreferences mPrefs;
     private WeakReference<BackPressListener> mBackPressListenerReference;
     private SlidingUpPanelLayout mSlidingUpPanelLayout;
@@ -161,6 +165,9 @@ public class MainActivity extends BaseCastActivity implements
     private SystemBarTintManager mTintManager;
 
     private float mAlpha;
+
+    @Nullable
+    private Handler handler;
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -441,6 +448,10 @@ public class MainActivity extends BaseCastActivity implements
     @Override
     protected void onPause() {
         super.onPause();
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
+            handler = null;
+        }
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
@@ -459,6 +470,21 @@ public class MainActivity extends BaseCastActivity implements
         });
 
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(MusicService.InternalIntents.FAVORITE_CHANGED));
+
+        // Check if the Paranoid Android system property exists..
+        handler = new Handler();
+        if (TextUtils.isEmpty(getSystemProperty("ro.pa.version"))) {
+            // User doesn't have PA. Show alert & exit.
+            Toast.makeText(getApplicationContext(), R.string.non_aospa, Toast.LENGTH_SHORT).show();
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().setNavigationBarColor(getResources().getColor(R.color.red_500));
+                getWindow().setStatusBarColor(getResources().getColor(R.color.red_500));
+            }
+            setContentView(R.layout.splash_no_aospa);
+
+            handler.postDelayed(MainActivity.this::finish, DELAY);
+        }
     }
 
     @Override
@@ -1210,5 +1236,14 @@ public class MainActivity extends BaseCastActivity implements
     @Override
     protected String screenName() {
         return TAG;
+    }
+
+    public String getSystemProperty(String key) {
+        try {
+            return (String) Class.forName("android.os.SystemProperties").getMethod("get", String.class).invoke(null, key);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

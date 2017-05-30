@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Googlish alert screen -->
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:opacity="opaque">
+    <item android:drawable="@color/red_600" />
+    <item android:bottom="@dimen/splash_shuttle_icon_bottom">
+        <bitmap
+            android:gravity="center"
+            android:src="@drawable/ic_error_white_24dp" />
+    </item>
+</layer-list>
