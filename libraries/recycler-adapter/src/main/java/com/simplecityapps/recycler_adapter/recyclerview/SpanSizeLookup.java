@@ -21,7 +21,7 @@ public class SpanSizeLookup extends GridLayoutManager.SpanSizeLookup {
     public int getSpanSize(int position) {
 
         List<ViewModel> items = viewModelAdapter.items;
-        if (position > 0 && position < items.size()) {
+        if (position >= 0 && position < items.size()) {
             return items.get(position).getSpanSize(spanCount);
         }
 

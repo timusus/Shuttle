@@ -10,7 +10,6 @@ import com.bumptech.glide.Glide;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.ui.views.NonScrollImageButton;
-import com.simplecity.amp_library.utils.DrawableUtils;
 import com.simplecityapps.recycler_adapter.model.BaseViewModel;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
@@ -81,9 +80,7 @@ public abstract class MultiItemView<T extends BaseViewHolder> extends BaseViewMo
                     || viewType == ViewType.ARTIST_LIST_SMALL
                     || viewType == ViewType.ALBUM_LIST_SMALL
                     || viewType == ViewType.SUGGESTED_SONG) {
-                overflowButton.setImageDrawable(DrawableUtils.getBaseDrawable(itemView.getContext(), R.drawable.ic_overflow_white));
             } else {
-                overflowButton.setImageDrawable(DrawableUtils.getWhiteDrawable(itemView.getContext(), R.drawable.ic_overflow_white));
             }
             if (viewType == ViewType.ARTIST_GRID
                     || viewType == ViewType.ALBUM_GRID) {

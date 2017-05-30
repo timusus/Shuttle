@@ -37,9 +37,6 @@ public final class SleepTimer {
         final HmsPicker hmsPicker = (HmsPicker) view.findViewById(R.id.hms_picker);
         final HmsView hmsView = (HmsView) view.findViewById(R.id.hms_view);
 
-        ThemeUtils.themeHmsPicker(hmsPicker);
-        ThemeUtils.themeHmsView(hmsView);
-
         final long timeMillis = remaining - System.currentTimeMillis();
         final int minutes = (int) ((timeMillis / (1000 * 60)) % 60);
         final int hours = (int) ((timeMillis / (1000 * 60 * 60)) % 24);

@@ -21,12 +21,11 @@ import android.widget.TextView;
 
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.playback.MusicService;
-import com.simplecity.amp_library.utils.DrawableUtils;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
-import com.simplecity.amp_library.utils.ThemeUtils;
 
 
+//Todo: Reapply themes
 public class QCircleActivity extends BaseActivity {
 
     // [START]declared in LGIntent.java of LG Framework
@@ -227,9 +226,7 @@ public class QCircleActivity extends BaseActivity {
     private void initButtons() {
 
         prevBtn = (ImageButton) findViewById(R.id.btn_prev);
-        prevBtn.setImageDrawable(DrawableUtils.getColoredStateListDrawableWithThemeType(this, R.drawable.ic_prev_white, ThemeUtils.ThemeType.TYPE_DARK));
         skipBtn = (ImageButton) findViewById(R.id.btn_skip);
-        skipBtn.setImageDrawable(DrawableUtils.getColoredStateListDrawableWithThemeType(this, R.drawable.ic_skip_white, ThemeUtils.ThemeType.TYPE_DARK));
         pauseBtn = (ImageButton) findViewById(R.id.btn_pause);
         setPauseButtonImage();
 
@@ -256,15 +253,14 @@ public class QCircleActivity extends BaseActivity {
             return;
         }
         if (MusicServiceConnectionUtils.sServiceBinder != null && MusicUtils.isPlaying()) {
-            pauseBtn.setImageDrawable(DrawableUtils.getColoredStateListDrawableWithThemeType(this, R.drawable.ic_pause_white, ThemeUtils.ThemeType.TYPE_DARK));
+
         } else {
-            pauseBtn.setImageDrawable(DrawableUtils.getColoredStateListDrawableWithThemeType(this, R.drawable.ic_play_white, ThemeUtils.ThemeType.TYPE_DARK));
+
         }
     }
 
     private void initializeBackButton() {
         backBtn = (ImageButton) findViewById(R.id.back_btn);
-        backBtn.setImageDrawable(DrawableUtils.getColoredStateListDrawableWithThemeType(this, R.drawable.backbutton, ThemeUtils.ThemeType.TYPE_DARK));
         backBtn.setOnClickListener(v -> QCircleActivity.this.finish());
     }
 

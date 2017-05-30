@@ -15,7 +15,6 @@ import java.util.List;
 import static android.support.v7.widget.LinearLayoutManager.HORIZONTAL;
 import static com.simplecity.amp_library.R.layout.recycler_header;
 import static com.simplecity.amp_library.ui.adapters.ViewType.HORIZONTAL_RECYCLERVIEW;
-import static com.simplecity.amp_library.utils.ThemeUtils.themeRecyclerView;
 
 public class HorizontalRecyclerView extends BaseViewModel<HorizontalRecyclerView.ViewHolder> {
 
@@ -65,15 +64,6 @@ public class HorizontalRecyclerView extends BaseViewModel<HorizontalRecyclerView
             ((RecyclerView) itemView).setLayoutManager(layoutManager);
             //noinspection RedundantCast
             ((RecyclerView) itemView).setNestedScrollingEnabled(false);
-            themeRecyclerView(((RecyclerView) itemView));
-
-            ((RecyclerView) itemView).addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                    themeRecyclerView(recyclerView);
-                    super.onScrollStateChanged(recyclerView, newState);
-                }
-            });
         }
 
         @Override

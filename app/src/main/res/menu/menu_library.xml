@@ -6,12 +6,12 @@
     <item
         android:id="@+id/media_route_menu_item"
         android:title="@string/media_route_menu_title"
-        app:actionProviderClass="com.simplecity.amp_library.ui.views.MyMediaRouteActionProvider"
+        app:actionProviderClass="com.simplecity.amp_library.ui.views.CustomMediaRouteActionProvider"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/action_search"
-        android:icon="?attr/btn_search"
+        android:icon="@drawable/ic_action_search"
         android:title="@string/search_title"
         app:showAsAction="ifRoom"/>
 

@@ -12,7 +12,6 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.SettingsManager;
-import com.simplecity.amp_library.utils.ThemeUtils;
 
 public class GlideUtils {
 
@@ -22,12 +21,14 @@ public class GlideUtils {
 
     @DrawableRes
     public static int getMediumPlaceHolderResId() {
-        return ThemeUtils.getInstance().isThemeDark() ? R.drawable.ic_placeholder_dark_medium : R.drawable.ic_placeholder_light_medium;
+        //Todo: Return correctly themed placeholder
+        return  R.drawable.ic_placeholder_dark_medium;
     }
 
     @DrawableRes
     public static int getLargePlaceHolderResId() {
-        return ThemeUtils.getInstance().isThemeDark() ? R.drawable.ic_placeholder_dark_large : R.drawable.ic_placeholder_light_large;
+        //Todo: Return correctly themed placeholder
+        return R.drawable.ic_placeholder_dark_large ;
     }
 
     public static Drawable getPlaceHolderDrawable(@Nullable String displayName, boolean large) {

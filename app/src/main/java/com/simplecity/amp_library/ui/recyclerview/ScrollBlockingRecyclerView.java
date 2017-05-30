@@ -4,7 +4,7 @@
 //import android.support.annotation.Nullable;
 //import android.util.AttributeSet;
 //
-//import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
+//import com.simplecity.amp_library.ui.views.AestheticFastScrollRecyclerView;
 //import com.sothree.slidinguppanel.NestedScrollBlocker;
 //import com.sothree.slidinguppanel.ScrollableViewHelper;
 //

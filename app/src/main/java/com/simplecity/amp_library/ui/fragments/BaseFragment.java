@@ -12,6 +12,7 @@ import android.view.animation.AnimationUtils;
 import com.google.android.libraries.cast.companionlibrary.cast.BaseCastManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.ui.activities.BaseCastActivity;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
 import com.simplecity.amp_library.utils.AnalyticsManager;
@@ -36,7 +37,9 @@ public abstract class BaseFragment extends BaseController {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ShuttleApplication.getInstance().getAppComponent().inject(this);
+        ShuttleApplication.getInstance().getAppComponent()
+                .plus(new FragmentModule(this))
+                .inject(this);
     }
 
     @Override

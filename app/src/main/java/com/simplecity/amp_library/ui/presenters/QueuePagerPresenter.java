@@ -1,6 +1,5 @@
 package com.simplecity.amp_library.ui.presenters;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.annotation.NonNull;
@@ -28,7 +27,7 @@ public class QueuePagerPresenter extends Presenter<QueuePagerView> {
     RequestManager requestManager;
 
     @Inject
-    public QueuePagerPresenter(Context context) {
+    public QueuePagerPresenter() {
 
     }
 

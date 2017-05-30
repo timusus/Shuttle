@@ -10,11 +10,11 @@
     android:orientation="horizontal"
     android:paddingRight="8dp">
 
-    <ImageView
+    <com.simplecity.amp_library.ui.views.DragHandle
         android:id="@+id/drag_handle"
         android:layout_width="40dp"
         android:layout_height="match_parent"
-        android:alpha="0.5"
+        android:alpha="0.7"
         android:importantForAccessibility="no"
         android:paddingLeft="14dp"
         android:paddingRight="14dp"
@@ -43,6 +43,7 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
+            android:textColor="?android:textColorPrimary"
             android:textSize="16sp"
             tools:text="Feeling Kinda Anxious"/>
 
@@ -54,6 +55,7 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
+            android:textColor="?android:textColorSecondary"
             android:textSize="14sp"
             tools:text="Franz Ferdinand - Tonight"/>
     </LinearLayout>
@@ -67,16 +69,16 @@
         android:gravity="center"
         android:maxLines="1"
         android:minEms="3"
+        android:textColor="?android:textColorSecondary"
         android:textSize="14sp"
         tools:text="3:20"/>
 
-    <com.simplecity.amp_library.ui.views.NonScrollImageButton
+    <com.simplecity.amp_library.ui.views.OverflowButton
         android:id="@+id/btn_overflow"
         android:layout_width="40dp"
         android:layout_height="48dp"
         android:layout_marginLeft="-4dp"
         android:layout_marginRight="4dp"
-        android:alpha="0.8"
         android:background="@null"
         android:src="@drawable/ic_overflow_white"/>
 

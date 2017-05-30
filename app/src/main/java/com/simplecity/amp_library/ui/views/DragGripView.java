@@ -9,9 +9,15 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 
+import com.afollestad.aesthetic.Aesthetic;
 import com.simplecity.amp_library.R;
 
+import io.reactivex.disposables.Disposable;
+
 public class DragGripView extends View {
+
+    Disposable aestheticDisposable;
+
     private static final int[] ATTRS = new int[]{android.R.attr.gravity,
             android.R.attr.color,};
 
@@ -102,5 +108,25 @@ public class DragGripView extends View {
         super.onSizeChanged(w, h, oldw, oldh);
         mHeight = h;
         mWidth = w;
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
+        aestheticDisposable = Aesthetic.get()
+                .textColorSecondary()
+                .subscribe(color -> {
+                    mColor = color;
+                    mRidgePaint.setColor(color);
+                    invalidate();
+                });
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        aestheticDisposable.dispose();
+
+        super.onDetachedFromWindow();
     }
 }

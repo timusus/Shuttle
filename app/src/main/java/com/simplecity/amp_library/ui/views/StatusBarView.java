@@ -5,26 +5,25 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.utils.ActionBarUtils;
-import com.simplecity.amp_library.utils.ColorUtils;
-import com.simplecity.amp_library.utils.ResourceUtils;
 
-public class StatusBarView extends View implements Themable {
+import io.reactivex.disposables.Disposable;
+
+
+public class StatusBarView extends View {
+
+    private Disposable bgSubscription;
+
     public StatusBarView(Context context) {
-        this(context, null);
+        super(context);
     }
 
     public StatusBarView(Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, 0);
+        super(context, attrs);
     }
 
     public StatusBarView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
-        setElevation(ResourceUtils.toPixels(4));
-
-        updateTheme();
     }
 
     @Override
@@ -35,7 +34,20 @@ public class StatusBarView extends View implements Themable {
     }
 
     @Override
-    public void updateTheme() {
-        setBackgroundColor(isInEditMode() ? getResources().getColor(R.color.colorPrimaryDark) : ColorUtils.getPrimaryColorDark());
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
+//        bgSubscription = Aesthetic.get().colorStatusBar()
+//                .compose(Rx.<Integer>distinctToMainThread())
+//                .subscribe(
+//                        ViewBackgroundAction.create(this), onErrorLogAndRethrow()
+//                );
+    }
+
+
+    @Override
+    protected void onDetachedFromWindow() {
+//        bgSubscription.dispose();
+        super.onDetachedFromWindow();
     }
 }

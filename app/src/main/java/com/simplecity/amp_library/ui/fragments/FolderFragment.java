@@ -2,11 +2,7 @@ package com.simplecity.amp_library.ui.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +16,7 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,11 +39,8 @@ import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.modelviews.BreadcrumbsView;
 import com.simplecity.amp_library.ui.modelviews.FolderView;
 import com.simplecity.amp_library.ui.views.BreadcrumbItem;
-import com.simplecity.amp_library.ui.views.CustomEditText;
-import com.simplecity.amp_library.utils.ColorUtils;
 import com.simplecity.amp_library.utils.CustomMediaScanner;
 import com.simplecity.amp_library.utils.DialogUtils;
-import com.simplecity.amp_library.utils.DrawableUtils;
 import com.simplecity.amp_library.utils.FileBrowser;
 import com.simplecity.amp_library.utils.FileHelper;
 import com.simplecity.amp_library.utils.MusicUtils;
@@ -54,10 +48,10 @@ import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.SortManager;
-import com.simplecity.amp_library.utils.ThemeUtils;
 import com.simplecity.amp_library.utils.ViewUtils;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
+import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -99,10 +93,6 @@ public class FolderFragment extends BaseFragment implements
     boolean isInActionMode = false;
 
     String currentDir;
-
-    private SharedPreferences prefs;
-
-    private SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceChangeListener;
 
     FileBrowser fileBrowser;
 
@@ -150,17 +140,7 @@ public class FolderFragment extends BaseFragment implements
 
         subscriptions = new CompositeSubscription();
 
-        prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
-        sharedPreferenceChangeListener = (sharedPreferences, key) -> {
-            if (key.equals("pref_theme_highlight_color") || key.equals("pref_theme_accent_color") || key.equals("pref_theme_white_accent")) {
-                themeUIComponents();
-            }
-        };
-
         setHasOptionsMenu(true);
-
-        prefs.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
 
         adapter = new ViewModelAdapter();
 
@@ -178,25 +158,24 @@ public class FolderFragment extends BaseFragment implements
 
         ButterKnife.bind(this, rootView);
 
-        if (getParentFragment() == null || !(getParentFragment() instanceof MainFragment)) {
-            showBreadcrumbsInList = false;
-            breadcrumb.setTextColor(Color.WHITE);
-            breadcrumb.addBreadcrumbListener(this);
-            if (!TextUtils.isEmpty(currentDir)) {
-                breadcrumb.changeBreadcrumbPath(currentDir);
-            }
-        } else {
-            showBreadcrumbsInList = true;
-            changeBreadcrumbPath();
-            toolbar.setVisibility(View.GONE);
-        }
+//        if (getParentFragment() == null) {
+        showBreadcrumbsInList = false;
+//            breadcrumb.setTextColor(Color.WHITE);
+//            breadcrumb.addBreadcrumbListener(this);
+//            if (!TextUtils.isEmpty(currentDir)) {
+//                breadcrumb.changeBreadcrumbPath(currentDir);
+//            }
+//        } else {
+//            showBreadcrumbsInList = true;
+//            changeBreadcrumbPath();
+//            toolbar.setVisibility(View.GONE);
+//        }
 
         toolbar.setOnClickListener(v -> getActivity().onBackPressed());
 
+        recyclerView.setRecyclerListener(new RecyclerListener());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
-
-        themeUIComponents();
 
         return rootView;
     }
@@ -240,8 +219,6 @@ public class FolderFragment extends BaseFragment implements
     @Override
     public void onDestroy() {
 
-        prefs.unregisterOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
-
         if (actionMode != null) {
             actionMode.finish();
             actionMode = null;
@@ -259,27 +236,6 @@ public class FolderFragment extends BaseFragment implements
 //        if (getActivity() instanceof MainActivity2) {
 //            ((MainActivity2) getActivity()).setOnBackPressedListener(null);
 //        }
-    }
-
-    private void themeUIComponents() {
-
-        if (getParentFragment() != null && getParentFragment() instanceof MainFragment) {
-            toolbar.setBackgroundColor(Color.TRANSPARENT);
-        } else {
-            toolbar.setBackgroundColor(ColorUtils.getPrimaryColor());
-        }
-
-        adapter.notifyItemRangeChanged(0, adapter.getItemCount());
-
-        ThemeUtils.themeRecyclerView(recyclerView);
-
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                ThemeUtils.themeRecyclerView(recyclerView);
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-        });
     }
 
     @Override
@@ -590,7 +546,7 @@ public class FolderFragment extends BaseFragment implements
                 case DELETE_ITEM:
                     MaterialDialog.Builder builder = DialogUtils.getBuilder(getActivity())
                             .title(R.string.delete_item)
-                            .icon(DrawableUtils.getBlackDrawable(getActivity(), R.drawable.ic_dialog_alert));
+                            .iconRes(R.drawable.ic_dialog_alert);
                     if (fileObject.fileType == FileType.FILE) {
                         builder.content(String.format(getResources().getString(
                                 R.string.delete_file_confirmation_dialog), fileObject.name));
@@ -620,8 +576,7 @@ public class FolderFragment extends BaseFragment implements
                 case RENAME:
 
                     View customView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_rename, null);
-                    final CustomEditText editText = (CustomEditText) customView.findViewById(R.id.editText);
-                    ThemeUtils.themeEditText(editText);
+                    final EditText editText = (EditText) customView.findViewById(R.id.editText);
                     editText.setText(fileObject.name);
 
                     builder = DialogUtils.getBuilder(getActivity());
@@ -703,10 +658,7 @@ public class FolderFragment extends BaseFragment implements
                         pathsTextView.setText(fileObject.path);
 
                         ProgressBar indeterminateProgress = (ProgressBar) view.findViewById(R.id.indeterminateProgress);
-                        DrawableCompat.setTint(DrawableCompat.wrap(indeterminateProgress.getIndeterminateDrawable()), ColorUtils.getAccentColor());
-
                         ProgressBar horizontalProgress = (ProgressBar) view.findViewById(R.id.horizontalProgress);
-                        DrawableCompat.setTint(DrawableCompat.wrap(horizontalProgress.getProgressDrawable()), ColorUtils.getAccentColor());
 
                         MaterialDialog dialog = DialogUtils.getBuilder(getContext())
                                 .title(R.string.scanning)
@@ -767,7 +719,6 @@ public class FolderFragment extends BaseFragment implements
             actionModeCallback = new ActionMode.Callback() {
                 @Override
                 public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                    ThemeUtils.themeContextualActionBar(getActivity());
                     isInActionMode = true;
                     MenuInflater inflater = getActivity().getMenuInflater();
                     inflater.inflate(R.menu.menu_save_whitelist, menu);

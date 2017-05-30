@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -31,6 +30,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
@@ -54,14 +54,12 @@ import com.simplecity.amp_library.ui.modelviews.HorizontalRecyclerView;
 import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.modelviews.SubheaderView;
 import com.simplecity.amp_library.utils.ActionBarUtils;
-import com.simplecity.amp_library.utils.ColorUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.ResourceUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.SortManager;
 import com.simplecity.amp_library.utils.StringUtils;
-import com.simplecity.amp_library.utils.ThemeUtils;
 import com.simplecity.amp_library.utils.TypefaceManager;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
@@ -77,6 +75,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import io.reactivex.disposables.Disposable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -115,8 +114,6 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
 
-    private View rootView;
-
     private BroadcastReceiver receiver;
 
     private SharedPreferences prefs;
@@ -134,6 +131,8 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     private HorizontalRecyclerView horizontalRecyclerView;
 
     @Nullable Album currentSlideShowAlbum;
+
+    private Disposable aestheticDisposable;
 
     public BaseDetailFragment() {
     }
@@ -164,9 +163,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         };
 
         sharedPreferenceChangeListener = (sharedPreferences, key) -> {
-            if (key.equals("pref_theme_highlight_color") || key.equals("pref_theme_accent_color") || key.equals("pref_theme_white_accent")) {
-                themeUIComponents();
-            } else if (key.equals("songWhitelist")) {
+            if (key.equals("songWhitelist")) {
                 detailPresenter.loadData();
             }
         };
@@ -181,7 +178,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
         unbinder = ButterKnife.bind(this, rootView);
 
@@ -208,11 +205,13 @@ public abstract class BaseDetailFragment extends BaseFragment implements
             fadeInUi();
         }
 
-        themeUIComponents();
-
         detailPresenter.bindView(this);
 
         loadBackgroundImage();
+
+        aestheticDisposable = Aesthetic.get()
+                .colorPrimary()
+                .subscribe(primaryColor -> toolbarLayout.setContentScrimColor(primaryColor));
 
         return rootView;
     }
@@ -247,45 +246,19 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
+
+        aestheticDisposable.dispose();
 
         unbinder.unbind();
         detailPresenter.unbindView(this);
+
+        super.onDestroyView();
     }
 
     @Override
     public void onDestroy() {
         prefs.unregisterOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
         super.onDestroy();
-    }
-
-    private void themeUIComponents() {
-
-        if (rootView != null) {
-            int themeType = ThemeUtils.getThemeType(getActivity());
-            if (themeType == ThemeUtils.ThemeType.TYPE_DARK
-                    || themeType == ThemeUtils.ThemeType.TYPE_SOLID_DARK) {
-                rootView.setBackgroundColor(getResources().getColor(R.color.bg_dark));
-            } else if (themeType == ThemeUtils.ThemeType.TYPE_BLACK
-                    || themeType == ThemeUtils.ThemeType.TYPE_SOLID_BLACK) {
-                rootView.setBackgroundColor(getResources().getColor(R.color.bg_black));
-            } else {
-                rootView.setBackgroundColor(getResources().getColor(R.color.bg_light));
-            }
-        }
-
-        ThemeUtils.themeRecyclerView(recyclerView);
-
-        fab.setBackgroundTintList(ColorStateList.valueOf(ColorUtils.getAccentColor()));
-        fab.setRippleColor(ColorUtils.darkerise(ColorUtils.getAccentColor(), 0.85f));
-
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                ThemeUtils.themeRecyclerView(recyclerView);
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-        });
     }
 
     boolean showAlbumMenu() {
@@ -715,7 +688,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
     @Override
     public void setEmpty(boolean empty) {
-        adapter.setEmpty(new EmptyView(R.string.empty_songlist));
+        adapter.setItems(Collections.singletonList(new EmptyView(R.string.empty_songlist)));
     }
 
     @Override

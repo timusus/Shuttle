@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.simplecity.amp_library.ui.views.ForegroundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.simplecity.amp_library.ui.views.ForegroundLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="72dp"
@@ -14,7 +15,7 @@
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:scaleType="centerCrop"
-        tools:src="@mipmap/ic_launcher" />
+        tools:src="@mipmap/ic_launcher"/>
 
     <LinearLayout
         android:layout_width="0dp"
@@ -30,9 +31,10 @@
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
             android:gravity="center_vertical"
+            android:maxLines="1"
+            android:textColor="?android:textColorPrimary"
             android:textSize="16sp"
-            tools:text="Feeling Kinda Anxious"
-            android:maxLines="1" />
+            tools:text="Feeling Kinda Anxious"/>
 
         <TextView
             android:id="@+id/line_two"
@@ -41,20 +43,20 @@
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
             android:gravity="center_vertical"
+            android:maxLines="1"
+            android:textColor="?android:textColorSecondary"
             android:textSize="14sp"
-            tools:text="Franz Ferdinand - Tonight"
-            android:maxLines="1" />
+            tools:text="Franz Ferdinand - Tonight"/>
     </LinearLayout>
 
-    <com.simplecity.amp_library.ui.views.NonScrollImageButton
+    <com.simplecity.amp_library.ui.views.OverflowButton
         android:id="@+id/btn_overflow"
         android:layout_width="40dp"
         android:layout_height="48dp"
         android:layout_marginLeft="-4dp"
         android:layout_marginRight="4dp"
-        android:alpha="0.8"
         android:background="@null"
-        android:src="@drawable/ic_overflow_white" />
+        android:src="@drawable/ic_overflow_white"/>
 
 </com.simplecity.amp_library.ui.views.ForegroundLinearLayout>
 

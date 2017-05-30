@@ -54,18 +54,6 @@ android {
         }
     }
 
-    buildTypes {
-        debug {
-            libraryVariants.all { variant ->
-                variant.outputs.each { output ->
-                    output.outputFile = new File(output.outputFile.parent, output.outputFile.name.
-                            replace(".aar", "-${versionName}.aar"))
-                }
-            }
-        }
-
-    }
-
     lintOptions {
         abortOnError false
     }

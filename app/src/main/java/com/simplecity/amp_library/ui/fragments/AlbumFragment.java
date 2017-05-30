@@ -14,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,17 +27,18 @@ import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.bignerdranch.android.multiselector.ModalMultiSelectorCallback;
 import com.bignerdranch.android.multiselector.MultiSelector;
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.ui.adapters.SectionedAdapter;
+import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.ui.modelviews.AlbumView;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.recyclerview.GridDividerDecoration;
-import com.simplecity.amp_library.utils.ColorUtils;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
@@ -48,14 +48,14 @@ import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.SortManager;
-import com.simplecity.amp_library.utils.ThemeUtils;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
-import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.Collections;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import rx.Observable;
 import rx.Subscription;
@@ -102,7 +102,8 @@ public class AlbumFragment extends BaseFragment implements
 
     private Subscription subscription;
 
-    private RequestManager requestManager;
+    @Inject
+    RequestManager requestManager;
 
     public AlbumFragment() {
 
@@ -130,6 +131,10 @@ public class AlbumFragment extends BaseFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ShuttleApplication.getInstance().getAppComponent()
+                .plus(new FragmentModule(this))
+                .inject(this);
+
         setHasOptionsMenu(true);
 
         adapter = new SectionedAdapter();
@@ -146,35 +151,12 @@ public class AlbumFragment extends BaseFragment implements
         };
 
         sharedPreferenceChangeListener = (sharedPreferences, key) -> {
-            if (key.equals("pref_theme_highlight_color")
-                    || key.equals("pref_theme_accent_color")
-                    || key.equals("pref_theme_white_accent")) {
-                themeUIComponents();
-            } else if (key.equals("albumWhitelist")) {
+            if (key.equals("albumWhitelist")) {
                 refreshAdapterItems();
             }
         };
 
         prefs.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
-
-        if (requestManager == null) {
-            requestManager = Glide.with(this);
-        }
-    }
-
-    public void themeUIComponents() {
-        ThemeUtils.themeRecyclerView(recyclerView);
-        recyclerView.setThumbColor(ColorUtils.getAccentColor());
-        recyclerView.setPopupBgColor(ColorUtils.getAccentColor());
-        recyclerView.setPopupTextColor(ColorUtils.getAccentColorSensitiveTextColor(getContext()));
-
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                ThemeUtils.themeRecyclerView(recyclerView);
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-        });
     }
 
     @SuppressLint("NewApi")
@@ -202,8 +184,6 @@ public class AlbumFragment extends BaseFragment implements
             recyclerView.setAdapter(adapter);
 
             actionMode = null;
-
-            themeUIComponents();
         }
 
         return recyclerView;
@@ -267,7 +247,7 @@ public class AlbumFragment extends BaseFragment implements
                         .subscribe(items -> {
 
                             if (items.isEmpty()) {
-                                adapter.setEmpty(new EmptyView(R.string.empty_albums));
+                                adapter.setItems(Collections.singletonList(new EmptyView(R.string.empty_albums)));
                             } else {
                                 adapter.setItems(items);
                             }
@@ -473,7 +453,6 @@ public class AlbumFragment extends BaseFragment implements
     private ActionMode.Callback mActionModeCallback = new ModalMultiSelectorCallback(multiSelector) {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            ThemeUtils.themeContextualActionBar(getActivity());
             inActionMode = true;
             MenuInflater inflater = getActivity().getMenuInflater();
             inflater.inflate(R.menu.context_menu_songs, menu);

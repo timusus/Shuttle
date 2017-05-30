@@ -3,17 +3,11 @@ package com.simplecity.amp_library.ui.modelviews;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
+import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecityapps.recycler_adapter.model.BaseViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
-
-import static com.simplecity.amp_library.R.drawable.ic_shuffle_white;
-import static com.simplecity.amp_library.R.id.icon;
-import static com.simplecity.amp_library.R.layout.list_item_shuffle;
-import static com.simplecity.amp_library.ui.adapters.ViewType.SHUFFLE;
-import static com.simplecity.amp_library.utils.DrawableUtils.getColoredAccentDrawable;
-
 
 public class ShuffleView extends BaseViewModel<ShuffleView.ViewHolder> {
 
@@ -30,12 +24,12 @@ public class ShuffleView extends BaseViewModel<ShuffleView.ViewHolder> {
 
     @Override
     public int getViewType() {
-        return SHUFFLE;
+        return ViewType.SHUFFLE;
     }
 
     @Override
     public int getLayoutResId() {
-        return list_item_shuffle;
+        return R.layout.list_item_shuffle;
     }
 
     @Override
@@ -60,9 +54,6 @@ public class ShuffleView extends BaseViewModel<ShuffleView.ViewHolder> {
 
         public ViewHolder(View itemView) {
             super(itemView);
-
-            ImageView imageView = (ImageView) itemView.findViewById(icon);
-            imageView.setImageDrawable(getColoredAccentDrawable(itemView.getContext(), itemView.getResources().getDrawable(ic_shuffle_white)));
 
             itemView.setOnClickListener(v -> viewModel.onItemClick());
         }

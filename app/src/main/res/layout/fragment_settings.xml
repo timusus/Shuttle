@@ -8,6 +8,7 @@
     android:orientation="vertical">
 
     <com.simplecity.amp_library.ui.views.StatusBarView
+        android:background="?colorPrimaryDark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
@@ -16,7 +17,6 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary"
-        android:theme="@style/AppTheme.AppBarOverlay"
         app:navigationIcon="?attr/homeAsUpIndicator"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 

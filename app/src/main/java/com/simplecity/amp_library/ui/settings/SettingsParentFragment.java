@@ -2,14 +2,12 @@ package com.simplecity.amp_library.ui.settings;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.XmlRes;
 import android.support.v4.app.Fragment;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.widget.Toolbar;
@@ -20,7 +18,7 @@ import android.view.ViewGroup;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
-import com.simplecity.amp_library.utils.ColorUtils;
+import com.simplecity.amp_library.dagger.module.FragmentModule;
 
 import javax.inject.Inject;
 
@@ -123,7 +121,9 @@ public class SettingsParentFragment extends BaseNavigationController {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
 
-            ShuttleApplication.getInstance().getAppComponent().inject(this);
+            ShuttleApplication.getInstance().getAppComponent()
+                    .plus(new FragmentModule(this))
+                    .inject(this);
 
             // Support Preferences
 
@@ -150,10 +150,6 @@ public class SettingsParentFragment extends BaseNavigationController {
                     return true;
                 });
             }
-
-            // Settings Preferences
-
-            applyTheme();
         }
 
         @Override
@@ -201,24 +197,6 @@ public class SettingsParentFragment extends BaseNavigationController {
                     break;
             }
             return true;
-        }
-
-        void applyTheme() {
-            int preferenceCount = getPreferenceScreen().getPreferenceCount();
-            for (int i = 0; i < preferenceCount; i++) {
-                tintPreferenceIcon(getPreferenceScreen().getPreference(i));
-            }
-        }
-
-        void tintPreferenceIcon(Preference preference) {
-            if (preference != null) {
-                Drawable icon = preference.getIcon();
-                if (icon != null) {
-                    icon = DrawableCompat.wrap(icon);
-                    DrawableCompat.setTint(icon, ColorUtils.getAccentColor());
-                    preference.setIcon(icon);
-                }
-            }
         }
 
         // Support View

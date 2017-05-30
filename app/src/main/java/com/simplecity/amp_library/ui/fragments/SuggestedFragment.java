@@ -17,15 +17,17 @@ import android.widget.Toast;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.ui.detail.PlaylistDetailFragment;
+import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.model.SuggestedHeader;
+import com.simplecity.amp_library.ui.adapters.ViewType;
+import com.simplecity.amp_library.ui.detail.PlaylistDetailFragment;
 import com.simplecity.amp_library.ui.modelviews.AlbumView;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.HorizontalRecyclerView;
@@ -36,16 +38,16 @@ import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.Operators;
 import com.simplecity.amp_library.utils.PermissionUtils;
-import com.simplecity.amp_library.utils.ThemeUtils;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
-import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import javax.inject.Inject;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -78,7 +80,8 @@ public class SuggestedFragment extends BaseFragment implements
 
     private CompositeSubscription subscription;
 
-    private RequestManager requestManager;
+    @Inject
+    RequestManager requestManager;
 
     private HorizontalRecyclerView favoriteRecyclerView;
     private HorizontalRecyclerView mostPlayedRecyclerView;
@@ -117,6 +120,10 @@ public class SuggestedFragment extends BaseFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ShuttleApplication.getInstance().getAppComponent()
+                .plus(new FragmentModule(this))
+                .inject(this);
+
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
 
         mReceiver = new BroadcastReceiver() {
@@ -129,9 +136,7 @@ public class SuggestedFragment extends BaseFragment implements
         };
 
         mSharedPreferenceChangeListener = (sharedPreferences, key) -> {
-            if (key.equals("pref_theme_highlight_color") || key.equals("pref_theme_accent_color") || key.equals("pref_theme_white_accent")) {
-                themeUIComponents();
-            } else if (key.equals("albumWhitelist")) {
+            if (key.equals("albumWhitelist")) {
                 refreshAdapterItems();
             }
         };
@@ -139,10 +144,6 @@ public class SuggestedFragment extends BaseFragment implements
         mPrefs.registerOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
 
         ViewModelAdapter = new ViewModelAdapter();
-
-        if (requestManager == null) {
-            requestManager = Glide.with(this);
-        }
 
         mostPlayedRecyclerView = new HorizontalRecyclerView();
 
@@ -182,24 +183,9 @@ public class SuggestedFragment extends BaseFragment implements
             });
 
             recyclerView.setLayoutManager(gridLayoutManager);
-
-            themeUIComponents();
         }
 
         return recyclerView;
-    }
-
-    private void themeUIComponents() {
-        if (recyclerView != null) {
-            ThemeUtils.themeRecyclerView(recyclerView);
-            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                    ThemeUtils.themeRecyclerView(recyclerView);
-                    super.onScrollStateChanged(recyclerView, newState);
-                }
-            });
-        }
     }
 
     @Override
@@ -365,7 +351,7 @@ public class SuggestedFragment extends BaseFragment implements
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(adaptableItems -> {
                                     if (adaptableItems.isEmpty()) {
-                                        ViewModelAdapter.setEmpty(new EmptyView(R.string.empty_suggested));
+                                        ViewModelAdapter.setItems(Collections.singletonList((new EmptyView(R.string.empty_suggested))));
                                     } else {
                                         ViewModelAdapter.setItems(adaptableItems);
                                     }

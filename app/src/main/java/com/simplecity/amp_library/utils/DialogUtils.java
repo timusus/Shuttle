@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.RemoteException;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
@@ -23,6 +22,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.ProgressBar;
@@ -30,6 +30,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
@@ -53,7 +54,6 @@ import com.simplecity.amp_library.ui.activities.MainActivity;
 import com.simplecity.amp_library.ui.modelviews.BlacklistView;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.WhitelistView;
-import com.simplecity.amp_library.ui.views.CustomCheckBox;
 import com.simplecity.amp_library.ui.views.CustomColorPicker;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
@@ -73,6 +73,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+import static com.afollestad.aesthetic.Rx.distinctToMainThread;
 import static com.simplecity.amp_library.R.id.album;
 import static com.simplecity.amp_library.R.id.artist;
 
@@ -82,34 +83,25 @@ public class DialogUtils {
 
     public static MaterialDialog.Builder getBuilder(Context context) {
 
-        int themeType = ThemeUtils.getInstance().themeType;
-        boolean isDark = themeType == ThemeUtils.ThemeType.TYPE_BLACK
-                || themeType == ThemeUtils.ThemeType.TYPE_DARK
-                || themeType == ThemeUtils.ThemeType.TYPE_SOLID_BLACK
-                || themeType == ThemeUtils.ThemeType.TYPE_SOLID_DARK;
-
-        int accentColor = ColorUtils.getContrastAwareColorAccent(context);
-
         return new MaterialDialog.Builder(context)
-                .titleColorRes(isDark ? R.color.primary_text_dark : R.color.primary_text_light)
-                .contentColorRes(isDark ? R.color.primary_text_dark : R.color.primary_text_light)
-                .dividerColor(accentColor)
-                .backgroundColorRes(isDark ? R.color.bg_dark : R.color.bg_light)
-                .positiveColor(accentColor)
-                .neutralColor(accentColor)
-                .negativeColor(accentColor)
-                .widgetColor(accentColor)
-                .buttonRippleColor(accentColor);
+                .titleColorRes(R.color.primary_text_light)
+                .contentColorRes(R.color.primary_text_light)
+                .dividerColorRes(R.color.colorAccent)
+                .backgroundColorRes(R.color.bg_light)
+                .positiveColorRes(R.color.colorAccent)
+                .neutralColorRes(R.color.colorAccent)
+                .negativeColorRes(R.color.colorAccent)
+                .widgetColorRes(R.color.colorAccent)
+                .buttonRippleColorRes(R.color.colorAccent);
     }
 
     public static MaterialDialog getChangelogDialog(Context context) {
         View customView = LayoutInflater.from(context).inflate(R.layout.dialog_changelog, null);
 
         WebView webView = (WebView) customView.findViewById(R.id.webView);
-        int themeType = ThemeUtils.getThemeType(context);
         webView.setBackgroundColor(context.getResources().getColor(android.R.color.transparent));
 
-        CustomCheckBox checkBox = (CustomCheckBox) customView.findViewById(R.id.checkbox);
+        CheckBox checkBox = (CheckBox) customView.findViewById(R.id.checkbox);
         checkBox.setChecked(SettingsManager.getInstance().getShowChangelogOnLaunch());
         checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> SettingsManager.getInstance().setShowChangelogOnLaunch(isChecked));
 
@@ -125,11 +117,11 @@ public class DialogUtils {
             }
         });
 
-        if (themeType == ThemeUtils.ThemeType.TYPE_LIGHT || themeType == ThemeUtils.ThemeType.TYPE_SOLID_LIGHT) {
-            webView.loadUrl("file:///android_asset/web/info.html");
-        } else {
-            webView.loadUrl("file:///android_asset/web/info_dark.html");
-        }
+        Aesthetic.get()
+                .isDark()
+                .take(1)
+                .compose(distinctToMainThread())
+                .subscribe(isDark -> webView.loadUrl(isDark ? "file:///android_asset/web/info.html" : "file:///android_asset/web/info_dark.html"));
 
         return getBuilder(context)
                 .title(R.string.pref_title_about)
@@ -354,9 +346,8 @@ public class DialogUtils {
 
             String message = String.format(stringToFormat, names);
 
-            Drawable drawable = DrawableUtils.getBaseDrawable(context, R.drawable.ic_dialog_alert);
             return getBuilder(context)
-                    .icon(drawable)
+                    .iconRes(R.drawable.ic_dialog_alert)
                     .title(R.string.delete_item)
                     .content(message)
                     .positiveText(R.string.button_ok)
@@ -532,7 +523,6 @@ public class DialogUtils {
         final ProgressBar progressBar = (ProgressBar) customView.findViewById(R.id.progress);
         final TextView message = (TextView) customView.findViewById(R.id.message);
         final ScrollView scrollView = (ScrollView) customView.findViewById(R.id.scrollView);
-        ThemeUtils.themeScrollView(scrollView);
 
         Callback<LastFmArtist> artistCallback = new Callback<LastFmArtist>() {
             @Override
@@ -974,8 +964,7 @@ public class DialogUtils {
                         .setAction(R.string.snackbar_rate_action, v -> {
                             ShuttleUtils.openShuttleLink(activity, ShuttleApplication.getInstance().getPackageName());
                             SettingsManager.getInstance().setHasRated();
-                        })
-                        .setActionTextColor(ColorUtils.getAccentColor());
+                        });
                 snackbar.show();
 
                 TextView snackbarText = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);

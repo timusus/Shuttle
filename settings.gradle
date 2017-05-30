@@ -3,4 +3,5 @@ include ':app',
         'libraries/:ccl',
         'libraries/:navigation',
         'libraries/:recycler-adapter',
-        'libraries/:multisheetview'
+        'libraries/:multisheetview',
+        'libraries/:aesthetic'

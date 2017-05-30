@@ -8,6 +8,7 @@
     android:orientation="vertical">
 
     <com.simplecity.amp_library.ui.views.StatusBarView
+        android:background="?colorPrimaryDark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
@@ -18,7 +19,6 @@
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:minHeight="?attr/actionBarSize"
-        android:theme="@style/AppTheme.AppBarOverlay"
         android:title="@string/equalizer"
         android:transitionName="toolbar"
         app:navigationIcon="?attr/homeAsUpIndicator"

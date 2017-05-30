@@ -9,7 +9,7 @@
     android:paddingRight="24dp"
     android:paddingTop="16dp">
 
-    <com.simplecity.amp_library.ui.views.CustomEditText
+    <EditText
         android:id="@+id/editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

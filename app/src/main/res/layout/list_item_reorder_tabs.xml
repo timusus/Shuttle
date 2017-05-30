@@ -34,7 +34,7 @@
         tools:text="Line One"
         android:maxLines="1" />
 
-    <com.simplecity.amp_library.ui.views.CustomCheckBox
+    <CheckBox
         android:id="@+id/checkBox1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

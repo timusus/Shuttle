@@ -4,8 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/search"
+        android:icon="@drawable/ic_search_24dp"
+        android:title="@string/search_title"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="always|collapseActionView"/>
+
+    <item
         android:id="@+id/filter"
-        android:icon="?attr/btn_sort"
+        android:icon="@drawable/ic_action_sort"
         android:title="@string/search_filter"
         app:showAsAction="ifRoom">
         <menu>

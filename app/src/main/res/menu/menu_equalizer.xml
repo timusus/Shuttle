@@ -7,7 +7,7 @@
         android:id="@+id/action_equalizer"
         android:title="@string/equalizer"
         app:actionLayout="@layout/eq_switch"
-        app:actionViewClass="com.simplecity.amp_library.ui.views.CustomSwitch"
+        app:actionViewClass="android.support.v7.widget.SwitchCompat"
         app:showAsAction="ifRoom"/>
 
     <item

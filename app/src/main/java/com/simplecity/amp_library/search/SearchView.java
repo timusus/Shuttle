@@ -1,12 +1,10 @@
 package com.simplecity.amp_library.search;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecity.amp_library.tagger.TaggerDialog;
+import com.simplecityapps.recycler_adapter.model.ViewModel;
 
 import java.util.List;
 
@@ -31,8 +29,4 @@ public interface SearchView {
     void showTaggerDialog(@NonNull TaggerDialog taggerDialog);
 
     void showDeleteDialog(@NonNull MaterialDialog deleteDialog);
-
-    void finish(int resultCode, @Nullable Intent data);
-
-    void finish();
 }

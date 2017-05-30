@@ -78,6 +78,17 @@ public class ViewModelAdapter extends RecyclerView.Adapter {
      * @param items the new dataset ({@link List<ViewModel>})
      */
     public synchronized Subscription setItems(List<ViewModel> items) {
+        return setItems(items, null);
+    }
+
+    /**
+     * This method is used to transform the current dataset ({@link #items}) into the passed in list of items, performing
+     * logic to remove, add and rearrange items in a way that allows the RecyclerView to animate properly.
+     *
+     * @param items    the new dataset ({@link List<ViewModel>})
+     * @param callback an optional {@link ListUpdateCallback}
+     */
+    public synchronized Subscription setItems(List<ViewModel> items, @Nullable CompletionListUpdateCallback callback) {
 
         if (this.items == items) {
             return null;
@@ -90,29 +101,39 @@ public class ViewModelAdapter extends RecyclerView.Adapter {
                     ViewModelAdapter.this.items = items;
                     diffResult.dispatchUpdatesTo(ViewModelAdapter.this);
 
-                    if (BuildConfig.DEBUG)
-                        diffResult.dispatchUpdatesTo(new ListUpdateCallback() {
-                            @Override
-                            public void onInserted(int position, int count) {
-                                Log.i(TAG, String.format("onInserted: position: %d, count: %d", position, count));
-                            }
+                    if (BuildConfig.DEBUG) {
+                        logDiffResult(diffResult);
+                    }
 
-                            @Override
-                            public void onRemoved(int position, int count) {
-                                Log.i(TAG, String.format("onRemoved:position: %d, count: %d", position, count));
-                            }
-
-                            @Override
-                            public void onMoved(int fromPosition, int toPosition) {
-                                Log.i(TAG, String.format("onMoved: from: %d, to: %d", fromPosition, fromPosition));
-                            }
-
-                            @Override
-                            public void onChanged(int position, int count, Object payload) {
-                                Log.i(TAG, String.format("onChanged: position: %d, count: %d", position, count));
-                            }
-                        });
+                    if (callback != null) {
+                        callback.onComplete();
+                        diffResult.dispatchUpdatesTo(callback);
+                    }
                 });
+    }
+
+    private void logDiffResult(DiffUtil.DiffResult diffResult) {
+        diffResult.dispatchUpdatesTo(new ListUpdateCallback() {
+            @Override
+            public void onInserted(int position, int count) {
+                Log.i(TAG, String.format("onInserted: position: %d, count: %d", position, count));
+            }
+
+            @Override
+            public void onRemoved(int position, int count) {
+                Log.i(TAG, String.format("onRemoved:position: %d, count: %d", position, count));
+            }
+
+            @Override
+            public void onMoved(int fromPosition, int toPosition) {
+                Log.i(TAG, String.format("onMoved: from: %d, to: %d", fromPosition, fromPosition));
+            }
+
+            @Override
+            public void onChanged(int position, int count, Object payload) {
+                Log.i(TAG, String.format("onChanged: position: %d, count: %d", position, count));
+            }
+        });
     }
 
     /**
@@ -134,6 +155,17 @@ public class ViewModelAdapter extends RecyclerView.Adapter {
     public void addItem(ViewModel item) {
         items.add(item);
         notifyItemInserted(items.size());
+    }
+
+    /**
+     * Add a list of items to the dataset, notifying the adapter of the insert(s).
+     *
+     * @param items the {@link List<ViewModel>} to add
+     */
+    public void addItems(List<ViewModel> items) {
+        int previousItemCount = this.items.size();
+        this.items.addAll(items);
+        notifyItemRangeInserted(previousItemCount, items.size());
     }
 
     /**
@@ -176,12 +208,6 @@ public class ViewModelAdapter extends RecyclerView.Adapter {
         final ViewModel model = items.remove(fromPosition);
         items.add(toPosition, model);
         notifyItemMoved(fromPosition, toPosition);
-    }
-
-    public void setEmpty(ViewModel emptyView) {
-        List<ViewModel> items = new ArrayList<>(1);
-        items.add(emptyView);
-        setItems(items);
     }
 
     private static class DiffCallback extends DiffUtil.Callback {
@@ -241,7 +267,7 @@ public class ViewModelAdapter extends RecyclerView.Adapter {
         }
     }
 
-    static class DiffResultTask extends AsyncTask<Void, Void, DiffUtil.DiffResult> {
+    private static class DiffResultTask extends AsyncTask<Void, Void, DiffUtil.DiffResult> {
 
         interface Action0<R> {
             void call(R result);

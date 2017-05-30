@@ -5,13 +5,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.ui.adapters.ViewType;
 
-import static com.bumptech.glide.load.engine.DiskCacheStrategy.ALL;
-import static com.simplecity.amp_library.R.layout.grid_item_horizontal;
-import static com.simplecity.amp_library.R.string.btn_options;
 import static com.simplecity.amp_library.glide.utils.GlideUtils.getPlaceHolderDrawable;
-import static com.simplecity.amp_library.ui.adapters.ViewType.SUGGESTED_SONG;
 
 public class SuggestedSongView extends MultiItemView<SuggestedSongView.ViewHolder> {
 
@@ -54,12 +53,12 @@ public class SuggestedSongView extends MultiItemView<SuggestedSongView.ViewHolde
 
     @Override
     public int getLayoutResId() {
-        return grid_item_horizontal;
+        return R.layout.grid_item_horizontal;
     }
 
     @Override
     public int getViewType() {
-        return SUGGESTED_SONG;
+        return ViewType.SUGGESTED_SONG;
     }
 
     @Override
@@ -70,11 +69,11 @@ public class SuggestedSongView extends MultiItemView<SuggestedSongView.ViewHolde
         holder.lineTwo.setText(song.artistName);
 
         requestManager.load(song)
-                .diskCacheStrategy(ALL)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .placeholder(getPlaceHolderDrawable(song.albumName, false))
                 .into(holder.imageOne);
 
-        holder.overflowButton.setContentDescription(holder.itemView.getResources().getString(btn_options, song.name));
+        holder.overflowButton.setContentDescription(holder.itemView.getResources().getString(R.string.btn_options, song.name));
     }
 
     @Override

@@ -9,14 +9,12 @@ import com.simplecity.amp_library.ui.views.NonScrollImageButton;
 import com.simplecityapps.recycler_adapter.model.BaseViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 
-import static com.simplecity.amp_library.R.drawable.ic_overflow_white;
 import static com.simplecity.amp_library.R.id.btn_overflow;
 import static com.simplecity.amp_library.R.id.line_one;
 import static com.simplecity.amp_library.R.layout.list_item_one_line;
 import static com.simplecity.amp_library.R.string.btn_options;
 import static com.simplecity.amp_library.ui.adapters.ViewType.PLAYLIST;
 import static com.simplecity.amp_library.ui.fragments.PlaylistFragment.PlaylistClickListener;
-import static com.simplecity.amp_library.utils.DrawableUtils.getColoredStateListDrawable;
 
 public class PlaylistView extends BaseViewModel<PlaylistView.ViewHolder> {
 
@@ -60,7 +58,6 @@ public class PlaylistView extends BaseViewModel<PlaylistView.ViewHolder> {
 
             lineOne = (TextView) itemView.findViewById(line_one);
             overflowButton = (NonScrollImageButton) itemView.findViewById(btn_overflow);
-            overflowButton.setImageDrawable(getColoredStateListDrawable(itemView.getContext(), ic_overflow_white));
         }
 
         @Override

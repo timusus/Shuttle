@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,18 +16,17 @@ import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.ui.adapters.PlaylistAdapter;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.PlaylistView;
-import com.simplecity.amp_library.utils.ColorUtils;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
-import com.simplecity.amp_library.utils.ThemeUtils;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import rx.Observable;
@@ -97,13 +95,10 @@ public class PlaylistFragment extends BaseFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        if (mRecyclerView == null) {
-            mRecyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            mRecyclerView.setRecyclerListener(new RecyclerListener());
-            mRecyclerView.setAdapter(mPlaylistAdapter);
-            themeUIComponents();
-        }
+        mRecyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setRecyclerListener(new RecyclerListener());
+        mRecyclerView.setAdapter(mPlaylistAdapter);
 
         return mRecyclerView;
     }
@@ -123,7 +118,6 @@ public class PlaylistFragment extends BaseFragment implements
 
         refreshAdapterItems();
     }
-
 
 
     private void refreshAdapterItems() {
@@ -164,26 +158,11 @@ public class PlaylistFragment extends BaseFragment implements
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(items -> {
                             if (items.isEmpty()) {
-                                mPlaylistAdapter.setEmpty(new EmptyView(R.string.empty_playlist));
+                                mPlaylistAdapter.setItems(Collections.singletonList(new EmptyView(R.string.empty_playlist)));
                             } else {
                                 mPlaylistAdapter.setItems(items);
                             }
                         });
-            }
-        });
-    }
-
-    private void themeUIComponents() {
-        ThemeUtils.themeRecyclerView(mRecyclerView);
-        mRecyclerView.setThumbColor(ColorUtils.getAccentColor());
-        mRecyclerView.setPopupBgColor(ColorUtils.getAccentColor());
-        mRecyclerView.setPopupTextColor(ColorUtils.getAccentColorSensitiveTextColor(getContext()));
-
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                ThemeUtils.themeRecyclerView(recyclerView);
-                super.onScrollStateChanged(recyclerView, newState);
             }
         });
     }

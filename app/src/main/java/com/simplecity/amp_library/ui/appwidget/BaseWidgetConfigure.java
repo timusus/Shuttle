@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -33,13 +34,10 @@ import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.ui.activities.BaseActivity;
 import com.simplecity.amp_library.ui.fragments.WidgetFragment;
 import com.simplecity.amp_library.ui.views.SizableSeekBar;
-import com.simplecity.amp_library.ui.views.SlidingTabLayout;
 import com.simplecity.amp_library.ui.widgets.BaseWidgetProvider;
 import com.simplecity.amp_library.utils.ColorUtils;
 import com.simplecity.amp_library.utils.DialogUtils;
-import com.simplecity.amp_library.utils.DrawableUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
-import com.simplecity.amp_library.utils.ThemeUtils;
 
 public abstract class BaseWidgetConfigure extends BaseActivity implements
         View.OnClickListener,
@@ -96,8 +94,6 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
             finish();
         }
 
-        ThemeUtils.setTheme(this);
-
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         mLayoutId = mPrefs.getInt(getLayoutIdString() + mAppWidgetId, getWidgetLayouts()[0]);
         mBackgroundColor = mPrefs.getInt(BaseWidgetProvider.ARG_WIDGET_BACKGROUND_COLOR + mAppWidgetId, getResources().getColor(R.color.white));
@@ -111,8 +107,6 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ThemeUtils.themeActionBar(this);
-
         mLayouts = getWidgetLayouts();
 
         // Instantiate a ViewPager and a PagerAdapter.
@@ -120,11 +114,8 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
         mPagerAdapter = new WidgetPagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
 
-        SlidingTabLayout slidingTabLayout = (SlidingTabLayout) findViewById(R.id.tabs);
-        slidingTabLayout.setShouldExpand(true);
-        slidingTabLayout.setViewPager(mPager);
-        slidingTabLayout.setOnPageChangeListener(this);
-        ThemeUtils.themeTabLayout(this, slidingTabLayout);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mPager);
 
         Button doneButton = (Button) findViewById(R.id.btn_done);
         doneButton.setOnClickListener(this);
@@ -143,7 +134,6 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
 
         mSeekBar = (SizableSeekBar) findViewById(R.id.seekBar1);
         mSeekBar.setOnSeekBarChangeListener(this);
-        ThemeUtils.themeSeekBar(this, mSeekBar);
 
         updateWidgetUI();
     }
@@ -347,12 +337,10 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
 
         Drawable backgroundButtonDrawable = getResources().getDrawable(R.drawable.bg_rounded);
         backgroundButtonDrawable.setBounds(0, 0, 60, 60);
-        backgroundButtonDrawable = DrawableUtils.getColoredDrawable(backgroundButtonDrawable, mBackgroundColor);
         mBackgroundColorButton.setCompoundDrawables(backgroundButtonDrawable, null, null, null);
 
         Drawable textButtonDrawable = getResources().getDrawable(R.drawable.bg_rounded);
         textButtonDrawable.setBounds(0, 0, 60, 60);
-        textButtonDrawable = DrawableUtils.getColoredDrawable(textButtonDrawable, mTextColor);
         mTextColorButton.setCompoundDrawables(textButtonDrawable, null, null, null);
 
         Fragment fragment = mPagerAdapter.getRegisteredFragment(mPager.getCurrentItem());
@@ -386,22 +374,6 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
                 ImageButton playButton = (ImageButton) widgetLayout.findViewById(R.id.play_button);
                 ImageButton skipButton = (ImageButton) widgetLayout.findViewById(R.id.next_button);
                 ImageButton repeatButton = (ImageButton) widgetLayout.findViewById(R.id.repeat_button);
-
-                if (shuffleButton != null) {
-                    shuffleButton.setImageDrawable(DrawableUtils.getColoredStateListDrawable(this, shuffleButton.getDrawable(), mInvertIcons));
-                }
-                if (prevButton != null) {
-                    prevButton.setImageDrawable(DrawableUtils.getColoredStateListDrawable(this, prevButton.getDrawable(), mInvertIcons));
-                }
-                if (playButton != null) {
-                    playButton.setImageDrawable(DrawableUtils.getColoredStateListDrawable(this, playButton.getDrawable(), mInvertIcons));
-                }
-                if (skipButton != null) {
-                    skipButton.setImageDrawable(DrawableUtils.getColoredStateListDrawable(this, skipButton.getDrawable(), mInvertIcons));
-                }
-                if (repeatButton != null) {
-                    repeatButton.setImageDrawable(DrawableUtils.getColoredStateListDrawable(this, repeatButton.getDrawable(), mInvertIcons));
-                }
 
                 final ImageView albumArt = (ImageView) widgetLayout.findViewById(R.id.album_art);
                 if (albumArt != null) {

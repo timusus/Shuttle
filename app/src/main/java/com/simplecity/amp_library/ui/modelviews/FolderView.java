@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.ui.modelviews;
 
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -8,6 +9,8 @@ import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.afollestad.aesthetic.Aesthetic;
+import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.interfaces.FileType;
 import com.simplecity.amp_library.model.BaseFileObject;
 import com.simplecity.amp_library.model.FileObject;
@@ -26,7 +29,6 @@ import static android.view.View.VISIBLE;
 import static com.simplecity.amp_library.R.drawable.ic_folder_closed_white;
 import static com.simplecity.amp_library.R.drawable.ic_folder_open_white;
 import static com.simplecity.amp_library.R.drawable.ic_headphones_white;
-import static com.simplecity.amp_library.R.drawable.ic_overflow_white;
 import static com.simplecity.amp_library.R.id;
 import static com.simplecity.amp_library.R.id.btn_overflow;
 import static com.simplecity.amp_library.R.id.checkbox;
@@ -35,15 +37,10 @@ import static com.simplecity.amp_library.R.id.line_four;
 import static com.simplecity.amp_library.R.id.line_one;
 import static com.simplecity.amp_library.R.id.line_three;
 import static com.simplecity.amp_library.R.id.line_two;
-import static com.simplecity.amp_library.R.layout.list_item_folder;
 import static com.simplecity.amp_library.R.string.parent_folder;
 import static com.simplecity.amp_library.interfaces.FileType.FILE;
 import static com.simplecity.amp_library.interfaces.FileType.PARENT;
 import static com.simplecity.amp_library.ui.adapters.ViewType.FOLDER;
-import static com.simplecity.amp_library.utils.ColorUtils.getAccentColor;
-import static com.simplecity.amp_library.utils.ColorUtils.getPrimaryColor;
-import static com.simplecity.amp_library.utils.ColorUtils.isPrimaryColorLowContrast;
-import static com.simplecity.amp_library.utils.DrawableUtils.getColoredStateListDrawable;
 import static com.simplecity.amp_library.utils.SettingsManager.getInstance;
 import static com.simplecity.amp_library.utils.StringUtils.makeSubfoldersLabel;
 import static java.lang.String.format;
@@ -101,7 +98,7 @@ public class FolderView extends BaseViewModel<FolderView.ViewHolder> {
 
     @Override
     public int getLayoutResId() {
-        return list_item_folder;
+        return R.layout.list_item_folder;
     }
 
     @Override
@@ -121,7 +118,7 @@ public class FolderView extends BaseViewModel<FolderView.ViewHolder> {
 
         switch (baseFileObject.fileType) {
             case PARENT:
-                holder.imageView.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(ic_folder_open_white));
+                holder.imageView.setImageDrawable(holder.parentFolderDrawable);
                 holder.lineTwo.setText(holder.itemView.getContext().getString(parent_folder));
                 holder.overflow.setVisibility(GONE);
                 holder.lineThree.setVisibility(GONE);
@@ -129,14 +126,14 @@ public class FolderView extends BaseViewModel<FolderView.ViewHolder> {
                 break;
             case FileType.FOLDER:
                 holder.overflow.setVisibility(VISIBLE);
-                holder.imageView.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(ic_folder_closed_white));
+                holder.imageView.setImageDrawable(holder.folderDrawable);
                 holder.lineTwo.setText(makeSubfoldersLabel(holder.itemView.getContext(), ((FolderObject) baseFileObject).folderCount, ((FolderObject) baseFileObject).fileCount));
                 holder.lineThree.setVisibility(GONE);
                 holder.lineOne.setText(baseFileObject.name);
                 break;
             case FILE:
                 holder.overflow.setVisibility(VISIBLE);
-                holder.imageView.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(ic_headphones_white));
+                holder.imageView.setImageDrawable(holder.fileDrawable);
                 holder.lineThree.setVisibility(VISIBLE);
                 holder.lineOne.setText(((FileObject) baseFileObject).tagInfo.trackName);
                 holder.lineTwo.setText(format("%s - %s", ((FileObject) baseFileObject).tagInfo.artistName, ((FileObject) baseFileObject).tagInfo.albumName));
@@ -144,12 +141,6 @@ public class FolderView extends BaseViewModel<FolderView.ViewHolder> {
                 DurationTask durationTask = new DurationTask(holder.lineThree, (FileObject) baseFileObject);
                 durationTask.execute();
                 break;
-        }
-
-        if (isPrimaryColorLowContrast(holder.itemView.getContext())) {
-            holder.imageView.setColorFilter(getAccentColor());
-        } else {
-            holder.imageView.setColorFilter(getPrimaryColor());
         }
 
         if (mShowCheckboxes && baseFileObject.fileType == FileType.FOLDER) {
@@ -194,15 +185,25 @@ public class FolderView extends BaseViewModel<FolderView.ViewHolder> {
         @BindView(checkbox)
         public CheckBox checkBox;
 
+        Drawable folderDrawable;
+        Drawable parentFolderDrawable;
+        Drawable fileDrawable;
+
         public ViewHolder(final View itemView) {
             super(itemView);
 
             ButterKnife.bind(this, itemView);
 
-            overflow.setImageDrawable(getColoredStateListDrawable(itemView.getContext(), ic_overflow_white));
-
             itemView.setOnClickListener(v -> viewModel.onClick());
             overflow.setOnClickListener(v -> viewModel.onOverflowClick(v));
+
+            int colorPrimary = Aesthetic.get().colorPrimary().blockingFirst();
+
+            folderDrawable = itemView.getContext().getResources().getDrawable(ic_folder_closed_white);
+            parentFolderDrawable = itemView.getContext().getResources().getDrawable(ic_folder_open_white);
+            fileDrawable = itemView.getContext().getResources().getDrawable(ic_headphones_white);
+
+            imageView.setColorFilter(colorPrimary);
         }
 
         @Override

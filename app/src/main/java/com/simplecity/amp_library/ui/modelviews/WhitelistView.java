@@ -13,12 +13,10 @@ import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.simplecity.amp_library.R.drawable.ic_cancel;
 import static com.simplecity.amp_library.R.id.btn_overflow;
 import static com.simplecity.amp_library.R.id.line_one;
 import static com.simplecity.amp_library.R.layout.list_item_one_line;
 import static com.simplecity.amp_library.ui.adapters.ViewType.BLACKLIST;
-import static com.simplecity.amp_library.utils.DrawableUtils.getBaseDrawable;
 
 public class WhitelistView extends BaseViewModel<WhitelistView.ViewHolder> {
 
@@ -80,7 +78,6 @@ public class WhitelistView extends BaseViewModel<WhitelistView.ViewHolder> {
             ButterKnife.bind(this, itemView);
 
             lineOne.setSingleLine(false);
-            overflow.setImageDrawable(getBaseDrawable(itemView.getContext(), ic_cancel));
         }
 
         @Override

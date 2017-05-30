@@ -1,8 +1,9 @@
 package com.simplecity.amp_library.ui.fragments;
 
-import android.content.SharedPreferences;
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -13,10 +14,10 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.aesthetic.Util;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -28,6 +29,7 @@ import com.jakewharton.rxbinding.widget.SeekBarStartChangeEvent;
 import com.jakewharton.rxbinding.widget.SeekBarStopChangeEvent;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.glide.palette.PaletteBitmap;
 import com.simplecity.amp_library.glide.palette.PaletteBitmapTranscoder;
 import com.simplecity.amp_library.lyrics.LyricsFragment;
@@ -37,13 +39,11 @@ import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.ui.views.FavoriteActionBarView;
 import com.simplecity.amp_library.ui.views.PlayPauseView;
 import com.simplecity.amp_library.ui.views.PlayerView;
+import com.simplecity.amp_library.ui.views.RepeatButton;
 import com.simplecity.amp_library.ui.views.RepeatingImageButton;
+import com.simplecity.amp_library.ui.views.ShuffleButton;
 import com.simplecity.amp_library.ui.views.SizableSeekBar;
-import com.simplecity.amp_library.utils.ColorUtils;
-import com.simplecity.amp_library.utils.DrawableUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.StringUtils;
-import com.simplecity.amp_library.utils.ThemeUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -70,10 +70,10 @@ public class PlayerFragment extends BaseFragment implements PlayerView, Toolbar.
     PlayPauseView playPauseView;
 
     @BindView(R.id.shuffle)
-    ImageButton shuffleButton;
+    ShuffleButton shuffleButton;
 
     @BindView(R.id.repeat)
-    ImageButton repeatButton;
+    RepeatButton repeatButton;
 
     @BindView(R.id.next)
     RepeatingImageButton nextButton;
@@ -102,13 +102,9 @@ public class PlayerFragment extends BaseFragment implements PlayerView, Toolbar.
     @BindView(R.id.backgroundView)
     View backgroundView;
 
-    private SharedPreferences sharedPreferences;
-
     private static final String QUEUE_FRAGMENT = "queue_fragment";
     private static final String QUEUE_PAGER_FRAGMENT = "queue_pager_fragment";
     private static final String LYRICS_FRAGMENT = "lyrics_fragment";
-
-    private SharedPreferences.OnSharedPreferenceChangeListener mSharedPreferenceChangeListener;
 
     private CompositeSubscription subscriptions;
 
@@ -130,17 +126,9 @@ public class PlayerFragment extends BaseFragment implements PlayerView, Toolbar.
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ShuttleApplication.getInstance().getAppComponent().inject(this);
-
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
-
-        mSharedPreferenceChangeListener = (sharedPreferences, key) -> {
-            if (key.equals("pref_theme_highlight_color") || key.equals("pref_theme_accent_color") || key.equals("pref_theme_white_accent")) {
-                themeUIComponents();
-            }
-        };
-
-        sharedPreferences.registerOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
+        ShuttleApplication.getInstance().getAppComponent()
+                .plus(new FragmentModule(this))
+                .inject(this);
     }
 
     @Override
@@ -166,7 +154,7 @@ public class PlayerFragment extends BaseFragment implements PlayerView, Toolbar.
 
         repeatButton.setOnClickListener(v -> presenter.toggleRepeat());
 
-        shuffleButton = (ImageButton) rootView.findViewById(R.id.shuffle);
+        shuffleButton = (ShuffleButton) rootView.findViewById(R.id.shuffle);
         shuffleButton.setOnClickListener(v -> presenter.toggleShuffle());
 
         nextButton.setOnClickListener(v -> presenter.skip());
@@ -177,8 +165,6 @@ public class PlayerFragment extends BaseFragment implements PlayerView, Toolbar.
 
         seekBar = (SizableSeekBar) rootView.findViewById(R.id.seekbar);
         seekBar.setMax(1000);
-
-        themeUIComponents();
 
         if (savedInstanceState == null) {
             getChildFragmentManager().beginTransaction()
@@ -206,30 +192,6 @@ public class PlayerFragment extends BaseFragment implements PlayerView, Toolbar.
     public void update() {
         if (presenter != null) {
             presenter.updateTrackInfo();
-        }
-    }
-
-    public void themeUIComponents() {
-
-        if (nextButton != null) {
-            nextButton.setImageDrawable(DrawableUtils.getColoredStateListDrawableWithThemeColor(getActivity(), nextButton.getDrawable(), ThemeUtils.WHITE));
-        }
-        if (prevButton != null) {
-            prevButton.setImageDrawable(DrawableUtils.getColoredStateListDrawableWithThemeColor(getActivity(), prevButton.getDrawable(), ThemeUtils.WHITE));
-        }
-        if (seekBar != null) {
-            ThemeUtils.themeSeekBar(getContext(), seekBar, true);
-            if (seekBar != null) {
-                ThemeUtils.themeSeekBar(getContext(), seekBar, true);
-            }
-            if (backgroundView != null) {
-                backgroundView.setBackgroundColor(ColorUtils.getPrimaryColor());
-            }
-
-            if (presenter != null) {
-                shuffleChanged(MusicUtils.getShuffleMode());
-                repeatChanged(MusicUtils.getRepeatMode());
-            }
         }
     }
 
@@ -268,7 +230,6 @@ public class PlayerFragment extends BaseFragment implements PlayerView, Toolbar.
 
     @Override
     public void onDestroy() {
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
         super.onDestroy();
     }
 
@@ -334,34 +295,12 @@ public class PlayerFragment extends BaseFragment implements PlayerView, Toolbar.
 
     @Override
     public void shuffleChanged(@MusicService.ShuffleMode int shuffleMode) {
-        switch (MusicUtils.getShuffleMode()) {
-            case MusicService.ShuffleMode.OFF:
-                shuffleButton.setImageDrawable(DrawableUtils.getWhiteDrawable(getActivity(), R.drawable.ic_shuffle_white));
-                shuffleButton.setContentDescription(getString(R.string.btn_shuffle_off));
-                break;
-            case MusicService.ShuffleMode.ON:
-                shuffleButton.setImageDrawable(DrawableUtils.getColoredAccentDrawableNonWhite(getActivity(), getResources().getDrawable(R.drawable.ic_shuffle_white)));
-                shuffleButton.setContentDescription(getString(R.string.btn_shuffle_on));
-                break;
-        }
+        shuffleButton.setShuffleMode(shuffleMode);
     }
 
     @Override
     public void repeatChanged(@MusicService.RepeatMode int repeatMode) {
-        switch (MusicUtils.getRepeatMode()) {
-            case MusicService.RepeatMode.ALL:
-                repeatButton.setImageDrawable(DrawableUtils.getColoredAccentDrawableNonWhite(getActivity(), getResources().getDrawable(R.drawable.ic_repeat_white)));
-                repeatButton.setContentDescription(getResources().getString(R.string.btn_repeat_all));
-                break;
-            case MusicService.RepeatMode.ONE:
-                repeatButton.setImageDrawable(DrawableUtils.getColoredAccentDrawableNonWhite(getActivity(), getResources().getDrawable(R.drawable.ic_repeat_one_white)));
-                repeatButton.setContentDescription(getResources().getString(R.string.btn_repeat_current));
-                break;
-            case MusicService.RepeatMode.OFF:
-                repeatButton.setImageDrawable(DrawableUtils.getWhiteDrawable(getActivity(), R.drawable.ic_repeat_white));
-                repeatButton.setContentDescription(getResources().getString(R.string.btn_repeat_off));
-                break;
-        }
+        repeatButton.setRepeatMode(repeatMode);
     }
 
     @Override
@@ -375,9 +314,9 @@ public class PlayerFragment extends BaseFragment implements PlayerView, Toolbar.
 
         if (song == null) return;
 
-        String totalTime = StringUtils.makeTimeString(this.getActivity(), song.duration / 1000);
-        if (!TextUtils.isEmpty(totalTime)) {
-            this.totalTime.setText(totalTime);
+        String totalTimeString = StringUtils.makeTimeString(this.getActivity(), song.duration / 1000);
+        if (!TextUtils.isEmpty(totalTimeString)) {
+            totalTime.setText(totalTimeString);
         }
 
         track.setText(song.name);
@@ -397,7 +336,7 @@ public class PlayerFragment extends BaseFragment implements PlayerView, Toolbar.
 
                         Palette.Swatch swatch = resource.palette.getDarkMutedSwatch();
 
-                        int newColor = ColorUtils.getPrimaryColor();
+                        int newColor = Color.RED;
 
                         if (swatch != null) {
                             newColor = swatch.getRgb();
@@ -408,9 +347,27 @@ public class PlayerFragment extends BaseFragment implements PlayerView, Toolbar.
                             // This null check is only necessary because backgroundView is null in landscape mode.
                             // Can be removed when that problem is solved.
                             if (backgroundView != null) {
-                                ColorUtils.startBackgroundTransition(backgroundView, backgroundColor, newColor);
+                                ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), backgroundColor, newColor);
+                                colorAnimation.setDuration(350);
+                                colorAnimation.addUpdateListener(animator -> backgroundView.setBackgroundColor((Integer) animator.getAnimatedValue()));
+                                colorAnimation.start();
                             }
                             backgroundColor = newColor;
+
+//                            Aesthetic.get()
+//                                    .colorPrimary(newColor)
+//                                    .colorStatusBarAuto()
+//                                    .apply();
+                        }
+
+                        boolean isColorLight = Util.isColorLight(newColor);
+                        int textColor = isColorLight ? Color.BLACK : Color.WHITE;
+                        currentTime.setTextColor(textColor);
+                        totalTime.setTextColor(textColor);
+                        track.setTextColor(textColor);
+                        album.setTextColor(textColor);
+                        if (artist != null) {
+                            artist.setTextColor(textColor);
                         }
                     }
                 });

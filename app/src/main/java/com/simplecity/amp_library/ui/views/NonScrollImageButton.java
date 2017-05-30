@@ -9,7 +9,7 @@ import android.widget.ImageButton;
  * A custom {@link ImageButton} which prevents parent ScrollView scrolling when used as the
  * anchor for a {@link android.support.v7.widget.PopupMenu}
  */
-public class NonScrollImageButton extends ImageButton {
+public class NonScrollImageButton extends android.support.v7.widget.AppCompatImageButton {
 
     public NonScrollImageButton(Context context, AttributeSet attrs) {
         super(context, attrs);

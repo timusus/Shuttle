@@ -1,5 +1,7 @@
 package com.simplecity.amp_library.dagger.module;
 
+import com.simplecity.amp_library.search.SearchPresenter;
+import com.simplecity.amp_library.search.SearchView;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.ui.presenters.Presenter;
 import com.simplecity.amp_library.ui.presenters.QueuePagerPresenter;
@@ -23,4 +25,6 @@ public abstract class PresenterModule {
     @Binds
     abstract Presenter<QueueView> bindQueuePresenter(QueuePresenter queuePresenter);
 
+    @Binds
+    abstract Presenter<SearchView> bindSearchPresenter(SearchPresenter queuePresenter);
 }

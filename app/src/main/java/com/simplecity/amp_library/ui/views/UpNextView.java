@@ -1,7 +1,6 @@
 package com.simplecity.amp_library.ui.views;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -11,15 +10,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.afollestad.aesthetic.Aesthetic;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
-import com.simplecity.amp_library.utils.ColorUtils;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.disposables.Disposable;
 
 public class UpNextView extends LinearLayout {
 
@@ -34,6 +34,10 @@ public class UpNextView extends LinearLayout {
 
     @Inject
     PlayerPresenter playerPresenter;
+
+    private Drawable arrowDrawable;
+
+    private Disposable aestheticDisposable;
 
     public UpNextView(Context context) {
         this(context, null);
@@ -52,11 +56,7 @@ public class UpNextView extends LinearLayout {
 
         ButterKnife.bind(this);
 
-        setBackgroundColor(Color.WHITE);
-
-        Drawable arrowDrawable = DrawableCompat.wrap(arrow.getDrawable());
-        DrawableCompat.setTint(arrowDrawable, ColorUtils.getTextColorPrimary());
-        arrow.setImageDrawable(arrowDrawable);
+        arrowDrawable = DrawableCompat.wrap(arrow.getDrawable());
     }
 
     @Override
@@ -66,6 +66,12 @@ public class UpNextView extends LinearLayout {
         ShuttleApplication.getInstance().getAppComponent().inject(this);
 
         playerPresenter.bindView(playerViewAdapter);
+
+        aestheticDisposable = Aesthetic.get().textColorPrimary()
+                .subscribe(color -> {
+                    DrawableCompat.setTint(arrowDrawable, color);
+                    arrow.setImageDrawable(arrowDrawable);
+                });
     }
 
     @Override
@@ -73,6 +79,8 @@ public class UpNextView extends LinearLayout {
         super.onDetachedFromWindow();
 
         playerPresenter.unbindView(playerViewAdapter);
+
+        aestheticDisposable.dispose();
     }
 
     private PlayerViewAdapter playerViewAdapter = new PlayerViewAdapter() {

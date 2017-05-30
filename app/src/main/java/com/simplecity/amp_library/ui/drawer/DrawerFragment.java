@@ -1,9 +1,7 @@
 package com.simplecity.amp_library.ui.drawer;
 
-import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -23,6 +21,7 @@ import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.glide.utils.GlideUtils;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
@@ -30,8 +29,6 @@ import com.simplecity.amp_library.ui.fragments.BaseFragment;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.ui.views.CircleImageView;
 import com.simplecity.amp_library.ui.views.PlayerViewAdapter;
-import com.simplecity.amp_library.utils.ColorUtils;
-import com.simplecity.amp_library.utils.ThemeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,13 +44,17 @@ public class DrawerFragment extends BaseFragment implements
         DrawerParent.ClickListener,
         DrawerChild.ClickListener {
 
+    private static final String TAG = "DrawerFragment";
+
+    private static final String STATE_SELECTED_DRAWER_PARENT = "selected_drawer_parent";
+
+    private static final String STATE_SELECTED_PLAYLIST = "selected_drawer_playlist";
+
     private DrawerAdapter adapter;
 
     private DrawerParent playlistDrawerParent;
 
     private View rootView;
-
-    private static final String TAG = "DrawerFragment";
 
     @BindView(R.id.line1)
     TextView trackNameView;
@@ -73,18 +74,10 @@ public class DrawerFragment extends BaseFragment implements
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
 
-    private static final String STATE_SELECTED_DRAWER_PARENT = "selected_drawer_parent";
-
-    private static final String STATE_SELECTED_PLAYLIST = "selected_drawer_playlist";
-
     @DrawerParent.Type
     private int selectedDrawerParent = DrawerParent.Type.LIBRARY;
 
     private Playlist currentSelectedPlaylist = null;
-
-    private SharedPreferences prefs;
-
-    private SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceChangeListener;
 
     @Inject PlayerPresenter playerPresenter;
 
@@ -101,26 +94,18 @@ public class DrawerFragment extends BaseFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ShuttleApplication.getInstance().getAppComponent().inject(this);
-
-        prefs = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
-        prefs.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
+        ShuttleApplication.getInstance().getAppComponent()
+                .plus(new FragmentModule(this))
+                .inject(this);
 
         if (savedInstanceState != null) {
             selectedDrawerParent = savedInstanceState.getInt(STATE_SELECTED_DRAWER_PARENT, DrawerParent.Type.LIBRARY);
             currentSelectedPlaylist = (Playlist) savedInstanceState.get(STATE_SELECTED_PLAYLIST);
         }
 
-        sharedPreferenceChangeListener = (sharedPreferences, key) -> {
-            if (key.equals("pref_theme_highlight_color") || key.equals("pref_theme_accent_color") || key.equals("pref_theme_white_accent")) {
-                themeUIComponents();
-            }
-        };
-
         requestManager = Glide.with(this);
 
         backgroundPlaceholder = DrawableCompat.wrap(getResources().getDrawable(R.drawable.ic_drawer_header_placeholder));
-        DrawableCompat.setTint(backgroundPlaceholder, ColorUtils.getPrimaryColor());
     }
 
     @Override
@@ -151,8 +136,6 @@ public class DrawerFragment extends BaseFragment implements
 
         setDrawerItemSelected(selectedDrawerParent);
 
-        themeUIComponents();
-
         return rootView;
     }
 
@@ -180,22 +163,8 @@ public class DrawerFragment extends BaseFragment implements
         drawerPresenter.onPlaylistClicked(playlist);
     }
 
-    public void themeUIComponents() {
-        if (recyclerView != null) {
-            ThemeUtils.themeRecyclerView(recyclerView);
-            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                    ThemeUtils.themeRecyclerView(recyclerView);
-                    super.onScrollStateChanged(recyclerView, newState);
-                }
-            });
-        }
-    }
-
     @Override
     public void onDestroy() {
-        prefs.unregisterOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
         super.onDestroy();
     }
 

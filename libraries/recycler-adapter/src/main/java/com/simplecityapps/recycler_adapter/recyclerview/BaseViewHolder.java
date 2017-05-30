@@ -5,7 +5,9 @@ import android.view.View;
 
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 
-public abstract class BaseViewHolder<VM extends ViewModel> extends RecyclerView.ViewHolder implements RecyclingViewHolder {
+public abstract class BaseViewHolder<VM extends ViewModel> extends RecyclerView.ViewHolder implements
+        RecyclingViewHolder,
+        AttachStateViewHolder {
 
     protected VM viewModel;
 
@@ -26,6 +28,16 @@ public abstract class BaseViewHolder<VM extends ViewModel> extends RecyclerView.
 
     @Override
     public void recycle() {
+
+    }
+
+    @Override
+    public void onAttachedToWindow() {
+
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
 
     }
 }

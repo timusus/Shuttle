@@ -23,6 +23,7 @@ import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.adapters.SearchAdapter;
+import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.ui.modelviews.AlbumArtistView;
 import com.simplecity.amp_library.ui.modelviews.AlbumView;
 import com.simplecity.amp_library.ui.modelviews.SearchHeaderView;
@@ -37,11 +38,12 @@ import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.StringUtils;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
-import com.simplecity.amp_library.ui.adapters.ViewType;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -49,7 +51,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-class SearchPresenter extends Presenter<SearchView> implements
+public class SearchPresenter extends Presenter<SearchView> implements
         SearchAdapter.SearchListener,
         Toolbar.OnMenuItemClickListener {
 
@@ -64,7 +66,8 @@ class SearchPresenter extends Presenter<SearchView> implements
 
     private String query;
 
-    SearchPresenter(PrefixHighlighter prefixHighlighter, RequestManager requestManager) {
+    @Inject
+    public SearchPresenter(PrefixHighlighter prefixHighlighter, RequestManager requestManager) {
         this.prefixHighlighter = prefixHighlighter;
         this.requestManager = requestManager;
     }
@@ -84,8 +87,13 @@ class SearchPresenter extends Presenter<SearchView> implements
     }
 
     void queryChanged(@Nullable String query) {
+
         if (TextUtils.isEmpty(query)) {
             query = "";
+        }
+
+        if (query.equals(this.query)) {
+            return;
         }
 
         loadData(query);
@@ -208,10 +216,6 @@ class SearchPresenter extends Presenter<SearchView> implements
                 view.showToast(message);
             }
         });
-
-        if (view != null) {
-            view.finish();
-        }
     }
 
     @Override

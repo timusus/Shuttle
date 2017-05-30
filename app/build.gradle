@@ -212,6 +212,10 @@ android {
         ignore 'ExtraTranslation', 'MissingTranslation'
         abortOnError false
     }
+
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
+    }
 }
 
 dependencies {
@@ -279,6 +283,7 @@ dependencies {
     compile libs.dagger
     annotationProcessor libs.daggerAnnotationProcessor
     compile libs.expandableRecyclerView
+    compile libs.aesthetic
 
     // //////////////////////////////////////////////////////////////////////////
     // Multidex (Only used in non-proguard pre-21 builds)

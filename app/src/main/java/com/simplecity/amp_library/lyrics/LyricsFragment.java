@@ -19,7 +19,6 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.ui.fragments.BaseFragment;
 import com.simplecity.amp_library.utils.DialogUtils;
-import com.simplecity.amp_library.utils.ThemeUtils;
 import com.simplecity.amp_library.utils.ViewUtils;
 
 public class LyricsFragment extends BaseFragment implements LyricsView {
@@ -61,8 +60,6 @@ public class LyricsFragment extends BaseFragment implements LyricsView {
 
         final GestureDetector gestureDetector = new GestureDetector(this.getActivity(), new GestureListener());
         scrollView.setOnTouchListener((view, motionEvent) -> gestureDetector.onTouchEvent(motionEvent));
-
-        ThemeUtils.themeScrollView(scrollView);
 
         View quickLyricsLayout = rootView.findViewById(R.id.quickLyricLayout);
         if (!QuickLyricUtils.canDownloadQuickLyric()) {

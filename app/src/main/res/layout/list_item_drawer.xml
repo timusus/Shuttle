@@ -29,6 +29,7 @@
         android:layout_weight="1"
         android:ellipsize="end"
         android:gravity="center_vertical"
+        android:textColor="?android:textColorPrimary"
         android:maxLines="1"
         android:textSize="14sp"
         tools:text="Folders"/>
@@ -37,13 +38,11 @@
         android:layout_width="48dp"
         android:layout_height="wrap_content">
 
-        <com.simplecity.amp_library.ui.views.NonScrollImageButton
+        <com.simplecity.amp_library.ui.views.OverflowButton
             android:id="@+id/btn_overflow"
             android:layout_width="48dp"
             android:layout_height="44dp"
-            android:alpha="0.54"
             android:background="@null"
-            android:src="@drawable/ic_overflow_white"
             android:visibility="gone"
             tools:visibility="visible"/>
 

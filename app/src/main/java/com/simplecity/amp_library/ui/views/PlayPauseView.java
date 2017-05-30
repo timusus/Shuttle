@@ -18,21 +18,21 @@ public class PlayPauseView extends FrameLayout {
 
     private static final long PLAY_PAUSE_ANIMATION_DURATION = 200;
 
-    private final PlayPauseDrawable mDrawable;
-    private final Paint mPaint = new Paint();
+    private final PlayPauseDrawable drawable;
+    private final Paint paint = new Paint();
 
-    private Animator mAnimator;
-    private int mBackgroundColor;
-    private int mWidth;
-    private int mHeight;
+    private Animator animator;
+    private int backgroundColor;
+    private int width;
+    private int height;
 
     public PlayPauseView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setWillNotDraw(false);
-        mPaint.setAntiAlias(true);
-        mPaint.setStyle(Paint.Style.FILL);
-        mDrawable = new PlayPauseDrawable(context);
-        mDrawable.setCallback(this);
+        paint.setAntiAlias(true);
+        paint.setStyle(Paint.Style.FILL);
+        drawable = new PlayPauseDrawable(context);
+        drawable.setCallback(this);
     }
 
     @Override
@@ -45,9 +45,9 @@ public class PlayPauseView extends FrameLayout {
     @Override
     protected void onSizeChanged(final int w, final int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        mDrawable.setBounds(0, 0, w, h);
-        mWidth = w;
-        mHeight = h;
+        drawable.setBounds(0, 0, w, h);
+        width = w;
+        height = h;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setOutlineProvider(new ViewOutlineProvider() {
@@ -62,40 +62,40 @@ public class PlayPauseView extends FrameLayout {
     }
 
     private void setColor(int color) {
-        mBackgroundColor = color;
+        backgroundColor = color;
         invalidate();
     }
 
     private int getColor() {
-        return mBackgroundColor;
+        return backgroundColor;
     }
 
     @Override
     protected boolean verifyDrawable(Drawable who) {
-        return who == mDrawable || super.verifyDrawable(who);
+        return who == drawable || super.verifyDrawable(who);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        mPaint.setColor(mBackgroundColor);
-        final float radius = Math.min(mWidth, mHeight) / 2f;
-        canvas.drawCircle(mWidth / 2f, mHeight / 2f, radius, mPaint);
-        mDrawable.draw(canvas);
+        paint.setColor(backgroundColor);
+        final float radius = Math.min(width, height) / 2f;
+        canvas.drawCircle(width / 2f, height / 2f, radius, paint);
+        drawable.draw(canvas);
     }
 
     public void toggle() {
-        if (mAnimator != null) {
-            mAnimator.cancel();
+        if (animator != null) {
+            animator.cancel();
         }
 
-        mAnimator = mDrawable.getPausePlayAnimator();
-        mAnimator.setInterpolator(new DecelerateInterpolator());
-        mAnimator.setDuration(PLAY_PAUSE_ANIMATION_DURATION);
-        mAnimator.start();
+        animator = drawable.getPausePlayAnimator();
+        animator.setInterpolator(new DecelerateInterpolator());
+        animator.setDuration(PLAY_PAUSE_ANIMATION_DURATION);
+        animator.start();
     }
 
     public boolean isPlay() {
-        return mDrawable != null && mDrawable.isPlay();
+        return drawable != null && drawable.isPlay();
     }
 }

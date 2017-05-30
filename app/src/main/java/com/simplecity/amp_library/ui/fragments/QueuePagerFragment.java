@@ -9,10 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.ui.presenters.QueuePagerPresenter;
 import com.simplecity.amp_library.ui.views.QueuePagerView;
 import com.simplecity.amp_library.utils.MusicUtils;
@@ -37,7 +37,8 @@ public class QueuePagerFragment extends BaseFragment implements
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
 
-    private RequestManager requestManager;
+    @Inject
+    RequestManager requestManager;
 
     @Inject
     QueuePagerPresenter queuePagerPresenter;
@@ -58,9 +59,9 @@ public class QueuePagerFragment extends BaseFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ShuttleApplication.getInstance().getAppComponent().inject(this);
-
-        requestManager = Glide.with(this);
+        ShuttleApplication.getInstance().getAppComponent()
+                .plus(new FragmentModule(this))
+                .inject(this);
 
         ViewModelAdapter = new ViewModelAdapter();
     }

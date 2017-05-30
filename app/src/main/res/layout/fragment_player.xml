@@ -36,6 +36,7 @@
         android:indeterminate="false"
         android:paddingEnd="0dp"
         android:paddingStart="0dp"
+        android:tag=":aesthetic_ignore"
         app:layout_constraintBottom_toTopOf="@+id/backgroundView"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -111,8 +112,9 @@
         app:layout_constraintTop_toBottomOf="@+id/text1"
         tools:text="Nine Inch Nails"/>
 
-    <ImageButton
+    <include
         android:id="@+id/shuffle"
+        layout="@layout/shuffle_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
@@ -120,7 +122,6 @@
         android:background="?attr/circular_ripple"
         android:contentDescription="@string/shuffle_all"
         android:padding="12dp"
-        android:src="@drawable/ic_shuffle_white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text2"/>
@@ -153,16 +154,13 @@
         app:layout_constraintRight_toLeftOf="@+id/repeat"
         app:layout_constraintTop_toBottomOf="@+id/text2"/>
 
-    <ImageButton
+    <include
         android:id="@+id/repeat"
+        layout="@layout/repeat_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:background="?attr/circular_ripple"
-        android:contentDescription="@string/btn_repeat_all"
-        android:padding="12dp"
-        android:src="@drawable/ic_repeat_white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text2"/>
@@ -182,6 +180,7 @@
         android:id="@+id/statusBarView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="?colorPrimaryDark"
         android:visibility="invisible"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -191,7 +190,7 @@
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
-        android:theme="@style/AppTheme.AppBarOverlay"
+        android:tag=":aesthetic_ignore"
         android:transitionName="toolbar"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

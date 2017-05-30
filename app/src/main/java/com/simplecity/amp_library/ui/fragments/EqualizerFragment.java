@@ -14,6 +14,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,10 +32,8 @@ import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.constants.OpenSLESConstants;
 import com.simplecity.amp_library.services.EqualizerService;
 import com.simplecity.amp_library.ui.adapters.RobotoSpinnerAdapter;
-import com.simplecity.amp_library.ui.views.CustomSwitch;
 import com.simplecity.amp_library.ui.views.SizableSeekBar;
 import com.simplecity.amp_library.utils.MusicUtils;
-import com.simplecity.amp_library.utils.ThemeUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.Formatter;
@@ -240,7 +239,7 @@ public class EqualizerFragment extends BaseFragment implements Toolbar.OnMenuIte
         toolbar.setOnMenuItemClickListener(this);
 
         MenuItem item = toolbar.getMenu().findItem(R.id.action_equalizer);
-        CustomSwitch switchItem = (CustomSwitch) item.getActionView();
+        SwitchCompat switchItem = (SwitchCompat) item.getActionView();
 
         boolean isEnabled = prefs.getBoolean("audiofx.global.enable", false);
         switchItem.setChecked(isEnabled);
@@ -292,7 +291,6 @@ public class EqualizerFragment extends BaseFragment implements Toolbar.OnMenuIte
             (eqContainer.findViewById(eqViewTextElementIds[band][1])).setVisibility(View.VISIBLE);
             ((TextView) eqContainer.findViewById(eqViewElementIds[band][0])).setText(format("%.0f ", centerFreqHz) + unitPrefix + "Hz");
             mEqualizerSeekBar[band] = (SizableSeekBar) eqContainer.findViewById(eqViewElementIds[band][1]);
-            ThemeUtils.themeSeekBar(getContext(), mEqualizerSeekBar[band]);
             mEqualizerSeekBar[band].setMax((bandLevelRange[1] / 100) - (bandLevelRange[0] / 100));
             mEqualizerSeekBar[band].setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
@@ -338,7 +336,6 @@ public class EqualizerFragment extends BaseFragment implements Toolbar.OnMenuIte
         // Set the SeekBar listener.
         if (bassBoostSupported) {
 
-            ThemeUtils.themeSeekBar(getContext(), baseBoostSeekbar);
             baseBoostSeekbar.setMax(OpenSLESConstants.BASSBOOST_MAX_STRENGTH - OpenSLESConstants.BASSBOOST_MIN_STRENGTH);
 
             baseBoostSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -378,7 +375,6 @@ public class EqualizerFragment extends BaseFragment implements Toolbar.OnMenuIte
         // Set the SeekBar listener.
         if (virtualizerSupported) {
 
-            ThemeUtils.themeSeekBar(getContext(), virtualizerSeekbar);
             virtualizerSeekbar.setMax(OpenSLESConstants.VIRTUALIZER_MAX_STRENGTH - OpenSLESConstants.VIRTUALIZER_MIN_STRENGTH);
 
             virtualizerSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

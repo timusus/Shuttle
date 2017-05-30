@@ -4,17 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,9 +24,10 @@ import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.bignerdranch.android.multiselector.ModalMultiSelectorCallback;
 import com.bignerdranch.android.multiselector.MultiSelector;
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
@@ -39,7 +36,6 @@ import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.ui.modelviews.AlbumArtistView;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.recyclerview.GridDividerDecoration;
-import com.simplecity.amp_library.utils.ColorUtils;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
@@ -49,13 +45,14 @@ import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.SortManager;
-import com.simplecity.amp_library.utils.ThemeUtils;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.Collections;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import rx.Observable;
 import rx.Subscription;
@@ -78,8 +75,6 @@ public class AlbumArtistFragment extends BaseFragment implements
     private static final int MENU_GRID_SIZE = 100;
     private static final int MENU_GROUP_GRID = 1;
 
-    private SharedPreferences sharedPreferences;
-
     @Nullable
     private AlbumArtistClickListener albumArtistClickListener;
 
@@ -97,13 +92,12 @@ public class AlbumArtistFragment extends BaseFragment implements
 
     private BroadcastReceiver broadcastReceiver;
 
-    private SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener;
-
     private boolean sortOrderChanged = false;
 
     private Subscription subscription;
 
-    private RequestManager requestManager;
+    @Inject
+    RequestManager requestManager;
 
     public static AlbumArtistFragment newInstance(String pageTitle) {
         Bundle args = new Bundle();
@@ -127,13 +121,13 @@ public class AlbumArtistFragment extends BaseFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.i(TAG, "onCreate");
+        ShuttleApplication.getInstance().getAppComponent()
+                .plus(new FragmentModule(this))
+                .inject(this);
 
         setHasOptionsMenu(true);
 
         adapter = new SectionedAdapter();
-
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
 
         broadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -143,22 +137,6 @@ public class AlbumArtistFragment extends BaseFragment implements
                 }
             }
         };
-
-        onSharedPreferenceChangeListener = (sharedPreferences, key) -> {
-            if (key.equals("pref_theme_highlight_color")
-                    || key.equals("pref_theme_accent_color")
-                    || key.equals("pref_theme_white_accent")) {
-                themeUIComponents();
-            } else if (key.equals("artistWhitelist")) {
-                refreshAdapterItems();
-            }
-        };
-
-        sharedPreferences.registerOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
-
-        if (requestManager == null) {
-            requestManager = Glide.with(this);
-        }
     }
 
     @Nullable
@@ -185,8 +163,6 @@ public class AlbumArtistFragment extends BaseFragment implements
             recyclerView.setAdapter(adapter);
 
             actionMode = null;
-
-            themeUIComponents();
         }
 
         return recyclerView;
@@ -218,23 +194,7 @@ public class AlbumArtistFragment extends BaseFragment implements
 
     @Override
     public void onDestroy() {
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
         super.onDestroy();
-    }
-
-    private void themeUIComponents() {
-        ThemeUtils.themeRecyclerView(recyclerView);
-        recyclerView.setThumbColor(ColorUtils.getAccentColor());
-        recyclerView.setPopupBgColor(ColorUtils.getAccentColor());
-        recyclerView.setPopupTextColor(ColorUtils.getAccentColorSensitiveTextColor(getContext()));
-
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                ThemeUtils.themeRecyclerView(recyclerView);
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-        });
     }
 
     void refreshAdapterItems() {
@@ -266,7 +226,7 @@ public class AlbumArtistFragment extends BaseFragment implements
                         .subscribe(items -> {
 
                             if (items.isEmpty()) {
-                                adapter.setEmpty(new EmptyView(R.string.empty_artists));
+                                adapter.setItems(Collections.singletonList(new EmptyView(R.string.empty_artists)));
                             } else {
                                 adapter.setItems(items);
                             }
@@ -476,7 +436,6 @@ public class AlbumArtistFragment extends BaseFragment implements
     private ActionMode.Callback mActionModeCallback = new ModalMultiSelectorCallback(multiSelector) {
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-            ThemeUtils.themeContextualActionBar(getActivity());
             inActionMode = true;
             MenuInflater inflater = getActivity().getMenuInflater();
             inflater.inflate(R.menu.context_menu_songs, menu);

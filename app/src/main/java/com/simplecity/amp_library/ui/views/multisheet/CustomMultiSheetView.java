@@ -41,6 +41,11 @@ public class CustomMultiSheetView extends MultiSheetView {
                 case MultiSheetEventRelay.MultiSheetEvent.Action.HIDE:
                     hideSheet(event.sheet);
                     break;
+                case MultiSheetEventRelay.MultiSheetEvent.Action.SHOW_IF_HIDDEN:
+                    if (isHidden(getCurrentSheet())) {
+                        goToSheet(event.sheet);
+                    }
+                    break;
             }
         }));
     }

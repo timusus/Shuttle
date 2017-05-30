@@ -1,13 +1,11 @@
 package com.simplecity.amp_library.ui.fragments;
 
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
@@ -19,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.afollestad.aesthetic.Aesthetic;
+import com.afollestad.aesthetic.Util;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.bignerdranch.android.multiselector.ModalMultiSelectorCallback;
@@ -26,6 +26,7 @@ import com.bignerdranch.android.multiselector.MultiSelector;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.ui.modelviews.SongView;
@@ -34,13 +35,12 @@ import com.simplecity.amp_library.ui.presenters.QueuePresenter;
 import com.simplecity.amp_library.ui.recyclerview.ItemTouchHelperCallback;
 import com.simplecity.amp_library.ui.views.PlayerViewAdapter;
 import com.simplecity.amp_library.ui.views.QueueView;
-import com.simplecity.amp_library.utils.ColorUtils;
 import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
-import com.simplecity.amp_library.utils.ThemeUtils;
+import com.simplecityapps.recycler_adapter.adapter.CompletionListUpdateCallbackAdapter;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
@@ -53,6 +53,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.disposables.CompositeDisposable;
 import rx.Observable;
 import test.com.multisheetview.ui.view.MultiSheetView;
 
@@ -73,8 +74,6 @@ public class QueueFragment extends BaseFragment implements
     @BindView(R.id.recyclerView)
     FastScrollRecyclerView recyclerView;
 
-    private SharedPreferences prefs;
-
     private ItemTouchHelper itemTouchHelper;
 
     private ViewModelAdapter adapter;
@@ -85,8 +84,6 @@ public class QueueFragment extends BaseFragment implements
 
     boolean inActionMode = false;
 
-    private SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceChangeListener;
-
     @Inject
     RequestManager requestManager;
 
@@ -95,6 +92,8 @@ public class QueueFragment extends BaseFragment implements
     @Inject PlayerPresenter playerPresenter;
 
     private boolean canScroll = true;
+
+    private CompositeDisposable disposables = new CompositeDisposable();
 
     public static QueueFragment newInstance() {
         Bundle args = new Bundle();
@@ -116,21 +115,13 @@ public class QueueFragment extends BaseFragment implements
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ShuttleApplication.getInstance().getAppComponent().inject(this);
+        ShuttleApplication.getInstance().getAppComponent()
+                .plus(new FragmentModule(this))
+                .inject(this);
 
         setHasOptionsMenu(true);
 
         adapter = new ViewModelAdapter();
-
-        prefs = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
-
-        sharedPreferenceChangeListener = (sharedPreferences, key) -> {
-            if (key.equals("pref_theme_highlight_color") || key.equals("pref_theme_accent_color") || key.equals("pref_theme_white_accent")) {
-                themeUIComponents();
-            }
-        };
-
-        prefs.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
     }
 
     @Override
@@ -162,7 +153,13 @@ public class QueueFragment extends BaseFragment implements
 
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
-        themeUIComponents();
+        disposables.add(Aesthetic.get()
+                .colorPrimary()
+                .subscribe(color -> {
+                    boolean isLight = Util.isColorLight(color);
+                    lineOne.setTextColor(isLight ? Color.BLACK : Color.WHITE);
+                    lineTwo.setTextColor(isLight ? Color.BLACK : Color.WHITE);
+                }));
 
         return rootView;
     }
@@ -207,28 +204,13 @@ public class QueueFragment extends BaseFragment implements
 
         MultiSheetView.setScrollableView(recyclerView, null);
         MultiSheetView.setScrollableViewHelper(recyclerView, null);
+
+        disposables.clear();
     }
 
     @Override
     public void onDestroy() {
-        prefs.unregisterOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
         super.onDestroy();
-    }
-
-    private void themeUIComponents() {
-        ThemeUtils.themeRecyclerView(recyclerView);
-        recyclerView.setThumbColor(ColorUtils.getAccentColor());
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                ThemeUtils.themeRecyclerView(recyclerView);
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-        });
-
-//        if (header != null) {
-//            header.setBackgroundColor(ColorUtils.getPrimaryColor());
-//        }
     }
 
 //    @Override
@@ -302,11 +284,13 @@ public class QueueFragment extends BaseFragment implements
     public void loadData(List<ViewModel> items, int position) {
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {
-
-                adapter.setItems(items);
-
-                //Todo: Call after setItems() is complete.
-                recyclerView.scrollToPosition(position);
+                adapter.setItems(items, new CompletionListUpdateCallbackAdapter() {
+                    @Override
+                    public void onComplete() {
+                        setCurrentQueueItem(position);
+                        recyclerView.scrollToPosition(position);
+                    }
+                });
             }
         });
     }
@@ -329,6 +313,10 @@ public class QueueFragment extends BaseFragment implements
 
     @Override
     public void setCurrentQueueItem(int position) {
+
+        if (adapter.items.isEmpty()) {
+            return;
+        }
 
         int prevPosition = -1;
         int len = adapter.items.size();
@@ -365,7 +353,6 @@ public class QueueFragment extends BaseFragment implements
 
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            ThemeUtils.themeContextualActionBar(getActivity());
             inActionMode = true;
             MenuInflater inflater = getActivity().getMenuInflater();
             inflater.inflate(R.menu.context_menu_queue, menu);

@@ -44,7 +44,6 @@ import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.sql.SqlUtils;
 import com.simplecity.amp_library.sql.providers.PlayCountTable;
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
-import com.simplecity.amp_library.ui.views.CustomEditText;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -626,7 +625,7 @@ public class PlaylistUtils {
     public static void renamePlaylistDialog(final Context context, final Playlist playlist, final MaterialDialog.SingleButtonCallback listener) {
 
         View customView = LayoutInflater.from(context).inflate(R.layout.dialog_playlist, null);
-        final CustomEditText editText = (CustomEditText) customView.findViewById(R.id.editText);
+        final EditText editText = (EditText) customView.findViewById(R.id.editText);
         editText.setText(playlist.name);
 
         MaterialDialog.Builder builder = DialogUtils.getBuilder(context)

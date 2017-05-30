@@ -18,7 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -34,7 +33,6 @@ import com.simplecity.amp_library.utils.CustomMediaScanner;
 import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
-import com.simplecity.amp_library.utils.ThemeUtils;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -180,50 +178,35 @@ public class TaggerDialog extends DialogFragment {
 
     private void setupViews(View rootView) {
 
-        ScrollView scrollView = (ScrollView) rootView.findViewById(R.id.scrollview);
-        ThemeUtils.themeScrollView(scrollView);
-
         titleEditText = (EditText) rootView.findViewById(R.id.new_track_name);
         titleInputLayout = getParent(titleEditText);
-        ThemeUtils.themeEditText(titleEditText);
 
         albumEditText = (EditText) rootView.findViewById(R.id.new_album_name);
         albumInputLayout = getParent(albumEditText);
-        ThemeUtils.themeEditText(albumEditText);
 
         artistEditText = (EditText) rootView.findViewById(R.id.new_artist_name);
-        ThemeUtils.themeEditText(artistEditText);
 
         albumArtistEditText = (EditText) rootView.findViewById(R.id.new_album_artist_name);
-        ThemeUtils.themeEditText(albumArtistEditText);
 
         genreEditText = (EditText) rootView.findViewById(R.id.new_genre_name);
-        ThemeUtils.themeEditText(genreEditText);
 
         yearEditText = (EditText) rootView.findViewById(R.id.new_year_number);
-        ThemeUtils.themeEditText(yearEditText);
 
         trackEditText = (EditText) rootView.findViewById(R.id.new_track_number);
         trackInputLayout = getParent(trackEditText);
-        ThemeUtils.themeEditText(trackEditText);
 
         trackTotalEditText = (EditText) rootView.findViewById(R.id.new_track_total);
-        ThemeUtils.themeEditText(trackTotalEditText);
 
         discEditText = (EditText) rootView.findViewById(R.id.new_disc_number);
         discInputLayout = getParent(discEditText);
-        ThemeUtils.themeEditText(discEditText);
 
         discTotalEditText = (EditText) rootView.findViewById(R.id.new_disc_total);
-        ThemeUtils.themeEditText(discTotalEditText);
 
         lyricsEditText = (EditText) rootView.findViewById(R.id.new_lyrics);
         lyricsInputLayout = getParent(lyricsEditText);
-        ThemeUtils.themeEditText(lyricsEditText);
 
         commentEditText = (EditText) rootView.findViewById(R.id.new_comment);
         commentInputLayout = getParent(commentEditText);
-        ThemeUtils.themeEditText(commentEditText);
 
         if (albumArtist != null || album != null) {
             titleInputLayout.setVisibility(View.GONE);

@@ -11,7 +11,6 @@ import static android.text.TextUtils.isEmpty;
 import static com.simplecity.amp_library.R.id.breadcrumbs;
 import static com.simplecity.amp_library.R.layout.list_item_breadcrumbs;
 import static com.simplecity.amp_library.ui.adapters.ViewType.BREADCRUMBS;
-import static com.simplecity.amp_library.utils.ColorUtils.getTextColorPrimary;
 
 public class BreadcrumbsView extends BaseViewModel<BreadcrumbsView.ViewHolder> {
 
@@ -58,7 +57,6 @@ public class BreadcrumbsView extends BaseViewModel<BreadcrumbsView.ViewHolder> {
             super(itemView);
 
             breadcrumbView = (BreadcrumbView) itemView.findViewById(breadcrumbs);
-            breadcrumbView.setTextColor(getTextColorPrimary());
         }
 
         @Override

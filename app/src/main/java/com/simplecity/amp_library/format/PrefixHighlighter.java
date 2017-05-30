@@ -6,7 +6,9 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.widget.TextView;
 
-import com.simplecity.amp_library.utils.ColorUtils;
+import com.simplecity.amp_library.R;
+
+import javax.inject.Inject;
 
 /**
  * Highlights the text in a text field
@@ -17,8 +19,9 @@ public class PrefixHighlighter {
 
     private ForegroundColorSpan mPrefixColorSpan;
 
+    @Inject
     public PrefixHighlighter(Context context) {
-        mPrefixHighlightColor = ColorUtils.getContrastAwareColorAccent(context);
+        mPrefixHighlightColor = context.getResources().getColor(R.color.colorAccent);
     }
 
     /**

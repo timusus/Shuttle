@@ -32,7 +32,7 @@ public class QueuePresenter extends Presenter<QueueView> {
     RequestManager requestManager;
 
     @Inject
-    public QueuePresenter(Context context) {
+    public QueuePresenter() {
     }
 
     @Override

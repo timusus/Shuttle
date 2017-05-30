@@ -1,10 +1,8 @@
 package com.simplecity.amp_library.ui.fragments;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.drawable.LayerDrawable;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -15,24 +13,28 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.afollestad.aesthetic.Aesthetic;
+import com.afollestad.aesthetic.Util;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.glide.utils.GlideUtils;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.ui.views.PlayPauseView;
 import com.simplecity.amp_library.ui.views.PlayerViewAdapter;
-import com.simplecity.amp_library.utils.ColorUtils;
-import com.simplecity.amp_library.utils.DrawableUtils;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.disposables.CompositeDisposable;
 import test.com.multisheetview.ui.view.MultiSheetView;
+
+import static com.afollestad.aesthetic.Rx.distinctToMainThread;
 
 public class MiniPlayerFragment extends BaseFragment {
 
@@ -55,11 +57,10 @@ public class MiniPlayerFragment extends BaseFragment {
     @BindView(R.id.mini_album_artwork)
     ImageView miniArtwork;
 
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener;
-
     @Inject
     PlayerPresenter presenter;
+
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     public MiniPlayerFragment() {
 
@@ -76,16 +77,9 @@ public class MiniPlayerFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ShuttleApplication.getInstance().getAppComponent().inject(this);
-
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
-        onSharedPreferenceChangeListener = (sharedPreferences, key) -> {
-            if (key.equals("pref_theme_highlight_color") || key.equals("pref_theme_accent_color") || key.equals("pref_theme_white_accent")) {
-                themeUIComponents();
-            }
-        };
-        sharedPreferences.registerOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
+        ShuttleApplication.getInstance().getAppComponent()
+                .plus(new FragmentModule(this))
+                .inject(this);
     }
 
     @Override
@@ -94,7 +88,6 @@ public class MiniPlayerFragment extends BaseFragment {
 
         ButterKnife.bind(this, rootView);
 
-        rootView.setBackgroundColor(ColorUtils.getPrimaryColor());
         rootView.setOnClickListener(v -> {
             MultiSheetView multiSheetView = MultiSheetView.getParentMultiSheetView(rootView);
             if (multiSheetView != null) {
@@ -110,7 +103,14 @@ public class MiniPlayerFragment extends BaseFragment {
 
         progressBar.setMax(1000);
 
-        themeUIComponents();
+        disposable.add(Aesthetic.get()
+                .colorPrimary()
+                .map(color -> !Util.isColorLight(color))
+                .compose(distinctToMainThread())
+                .subscribe(isDark -> {
+                    trackName.setTextColor(isDark ? Color.WHITE : Color.BLACK);
+                    artistName.setTextColor(isDark ? Color.WHITE : Color.BLACK);
+                }));
 
         return rootView;
     }
@@ -138,23 +138,16 @@ public class MiniPlayerFragment extends BaseFragment {
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
-
         presenter.unbindView(playerViewAdapter);
+        disposable.clear();
+        super.onDestroyView();
     }
 
     @Override
     public void onDestroy() {
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
         rootView.setOnTouchListener(null);
 
         super.onDestroy();
-    }
-
-    private void themeUIComponents() {
-        progressBar.setProgressDrawable(DrawableUtils.getProgressDrawable(getActivity(), (LayerDrawable) progressBar.getProgressDrawable()));
-
-        rootView.setBackgroundColor(ColorUtils.getPrimaryColor());
     }
 
     private class OnSwipeTouchListener implements View.OnTouchListener {

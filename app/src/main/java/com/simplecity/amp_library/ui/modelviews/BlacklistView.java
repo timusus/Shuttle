@@ -14,14 +14,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.view.View.GONE;
-import static com.simplecity.amp_library.R.drawable.ic_cancel;
 import static com.simplecity.amp_library.R.id.btn_overflow;
 import static com.simplecity.amp_library.R.id.line_one;
 import static com.simplecity.amp_library.R.id.line_two;
 import static com.simplecity.amp_library.R.id.play_count;
 import static com.simplecity.amp_library.R.layout.list_item_two_lines;
 import static com.simplecity.amp_library.ui.adapters.ViewType.BLACKLIST;
-import static com.simplecity.amp_library.utils.DrawableUtils.getBaseDrawable;
 import static java.lang.String.format;
 
 public class BlacklistView extends BaseViewModel<BlacklistView.ViewHolder> {
@@ -98,7 +96,6 @@ public class BlacklistView extends BaseViewModel<BlacklistView.ViewHolder> {
             ButterKnife.bind(this, itemView);
 
             playCount.setVisibility(GONE);
-            overflow.setImageDrawable(getBaseDrawable(itemView.getContext(), ic_cancel));
 
             overflow.setOnClickListener(v -> viewModel.onDeleteClicked());
         }

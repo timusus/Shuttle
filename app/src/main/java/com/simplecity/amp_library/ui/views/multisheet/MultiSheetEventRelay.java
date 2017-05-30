@@ -28,6 +28,7 @@ public class MultiSheetEventRelay {
         public @interface Action {
             int GOTO = 0;
             int HIDE = 1;
+            int SHOW_IF_HIDDEN = 2;
         }
 
         @Action int action;

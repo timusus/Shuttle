@@ -73,6 +73,7 @@ ext.versions = [
         dagger                        : "2.10",
         daggerAnnotationProcessor     : "2.10",
         expandableRecyclerView        : "3.0.0-RC1",
+        aesthetic                     : "0.4.0",
 
         // //////////////////////////////////////////////////////////////////////////
         // MultiDex
@@ -193,6 +194,9 @@ ext.libs = [
         daggerAnnotationProcessor     : "com.google.dagger:dagger-compiler:$versions.daggerAnnotationProcessor",
         // Expandable Recycler View - https://github.com/thoughtbot/expandable-recycler-view
         expandableRecyclerView        : "com.bignerdranch.android:expandablerecyclerview:$versions.expandableRecyclerView",
+        // Aesthetic - Theming Engine
+//        aesthetic                     : "com.afollestad:aesthetic:$versions.aesthetic",
+        aesthetic                     : project(":libraries/:aesthetic"),
 
         // //////////////////////////////////////////////////////////////////////////
         // MultiDex

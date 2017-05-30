@@ -103,7 +103,7 @@ public class MultiSheetView extends FrameLayout {
             case Sheet.SECOND:
                 return panel2Layout.getPanelState() == SlidingUpPanelLayout.PanelState.HIDDEN;
         }
-        return false;
+        return true;
     }
 
     public void hideSheet(@Sheet int sheet) {

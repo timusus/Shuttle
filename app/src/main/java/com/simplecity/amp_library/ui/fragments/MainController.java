@@ -14,11 +14,12 @@ import com.simplecity.amp_library.ui.detail.PlaylistDetailFragment;
 import com.simplecity.amp_library.ui.drawer.DrawerEventRelay;
 import com.simplecity.amp_library.ui.settings.SettingsParentFragment;
 import com.simplecity.amp_library.ui.views.UpNextView;
-import com.simplecity.amp_library.ui.views.multisheet.CustomMultiSheetView;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 import test.com.androidnavigation.fragment.BaseNavigationController;
@@ -28,6 +29,8 @@ import test.com.multisheetview.ui.view.MultiSheetView;
 public class MainController extends BaseNavigationController {
 
     private static final String TAG = "MainController";
+
+    public static final String STATE_CURRENT_SHEET = "current_sheet";
 
     @Inject DrawerEventRelay drawerEventRelay;
 
@@ -48,19 +51,19 @@ public class MainController extends BaseNavigationController {
 
     }
 
-    private MultiSheetView multiSheetView;
+    @BindView(R.id.multiSheetView)
+    MultiSheetView multiSheetView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
+        ButterKnife.bind(this, rootView);
+
         ShuttleApplication.getInstance().getAppComponent().inject(this);
 
-        multiSheetView = (CustomMultiSheetView) rootView.findViewById(R.id.multiSheetView);
-
         if (savedInstanceState == null) {
-
             getChildFragmentManager()
                     .beginTransaction()
                     .add(multiSheetView.getSheetContainerViewResId(MultiSheetView.Sheet.FIRST), PlayerFragment.newInstance())
@@ -69,6 +72,8 @@ public class MainController extends BaseNavigationController {
                     .commit();
 
             ((ViewGroup) multiSheetView.findViewById(multiSheetView.getSheetPeekViewResId(MultiSheetView.Sheet.SECOND))).addView(new UpNextView(getContext()));
+        } else {
+            multiSheetView.goToSheet(savedInstanceState.getInt(STATE_CURRENT_SHEET));
         }
 
         return rootView;
@@ -121,6 +126,13 @@ public class MainController extends BaseNavigationController {
 
         subscriptions.clear();
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(STATE_CURRENT_SHEET, multiSheetView.getCurrentSheet());
+        super.onSaveInstanceState(outState);
+    }
+
 
     @Override
     public FragmentInfo getRootViewControllerInfo() {

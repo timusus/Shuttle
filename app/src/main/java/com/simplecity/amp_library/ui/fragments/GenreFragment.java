@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,15 +18,15 @@ import com.simplecity.amp_library.ui.adapters.SectionedAdapter;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.GenreView;
 import com.simplecity.amp_library.ui.recyclerview.GridDividerDecoration;
-import com.simplecity.amp_library.utils.ColorUtils;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
-import com.simplecity.amp_library.utils.ThemeUtils;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
+
+import java.util.Collections;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -86,12 +85,6 @@ public class GenreFragment extends BaseFragment implements
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
 
-        mSharedPreferenceChangeListener = (sharedPreferences, key) -> {
-            if (key.equals("pref_theme_highlight_color") || key.equals("pref_theme_accent_color") || key.equals("pref_theme_white_accent")) {
-                themeUIComponents();
-            }
-        };
-
         mPrefs.registerOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
     }
 
@@ -105,8 +98,6 @@ public class GenreFragment extends BaseFragment implements
             mRecyclerView.addItemDecoration(new GridDividerDecoration(getResources(), 4, true));
             mRecyclerView.setRecyclerListener(new RecyclerListener());
             mRecyclerView.setAdapter(adapter);
-
-            themeUIComponents();
         }
 
         return mRecyclerView;
@@ -150,7 +141,7 @@ public class GenreFragment extends BaseFragment implements
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(items -> {
                             if (items.isEmpty()) {
-                                adapter.setEmpty(new EmptyView(R.string.empty_genres));
+                                adapter.setItems(Collections.singletonList(new EmptyView(R.string.empty_genres)));
                             } else {
                                 adapter.setItems(items);
                             }
@@ -163,22 +154,6 @@ public class GenreFragment extends BaseFragment implements
     public void onItemClick(Genre genre) {
         if (genreClickListener != null) {
             genreClickListener.onGenreClicked(genre);
-        }
-    }
-
-    private void themeUIComponents() {
-        if (mRecyclerView != null) {
-            ThemeUtils.themeRecyclerView(mRecyclerView);
-            mRecyclerView.setThumbColor(ColorUtils.getAccentColor());
-            mRecyclerView.setPopupBgColor(ColorUtils.getAccentColor());
-            mRecyclerView.setPopupTextColor(ColorUtils.getAccentColorSensitiveTextColor(getContext()));
-            mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                    ThemeUtils.themeRecyclerView(recyclerView);
-                    super.onScrollStateChanged(recyclerView, newState);
-                }
-            });
         }
     }
 

@@ -1,24 +1,23 @@
 package com.simplecity.amp_library.ui.drawer;
 
 import android.animation.ObjectAnimator;
-import android.graphics.LightingColorFilter;
-import android.graphics.PorterDuff;
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.aesthetic.Aesthetic;
 import com.bignerdranch.expandablerecyclerview.ParentViewHolder;
 import com.bignerdranch.expandablerecyclerview.model.Parent;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.utils.ColorUtils;
-import com.simplecity.amp_library.utils.DrawableUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
-import com.simplecity.amp_library.utils.ThemeUtils;
 import com.simplecity.amp_library.utils.TypefaceManager;
 
 import java.util.ArrayList;
@@ -69,7 +68,7 @@ public class DrawerParent implements Parent<DrawerChild> {
 
     List<DrawerChild> children = new ArrayList<>();
 
-    boolean isSelected;
+    private boolean isSelected;
 
     DrawerParent(@DrawerParent.Type int type, int titleResId, int iconResId, @Nullable DrawerEventRelay.DrawerEvent drawerEvent, boolean selectable) {
         this.type = type;
@@ -99,6 +98,12 @@ public class DrawerParent implements Parent<DrawerChild> {
         }
     }
 
+    Drawable getDrawable(Context context) {
+        Drawable drawable = DrawableCompat.wrap(context.getResources().getDrawable(iconResId));
+        DrawableCompat.setTint(drawable, isSelected ? Aesthetic.get().colorPrimary().blockingFirst() : Aesthetic.get().textColorPrimary().blockingFirst());
+        return drawable;
+    }
+
     public void bindView(ParentHolder holder) {
 
         holder.bind(this);
@@ -107,8 +112,8 @@ public class DrawerParent implements Parent<DrawerChild> {
         holder.expandableIcon.setImageDrawable(holder.itemView.getResources().getDrawable(imageResourceId));
         holder.expandableIcon.setVisibility(getChildList().isEmpty() ? View.GONE : View.VISIBLE);
 
+        holder.icon.setImageDrawable(getDrawable(holder.itemView.getContext()));
         if (iconResId != -1) {
-            holder.icon.setImageDrawable(DrawableUtils.themeLightOrDark(holder.itemView.getContext(), holder.itemView.getResources().getDrawable(iconResId)));
             holder.icon.setVisibility(View.VISIBLE);
         } else {
             holder.icon.setVisibility(View.GONE);
@@ -121,17 +126,8 @@ public class DrawerParent implements Parent<DrawerChild> {
 
         if (isSelected) {
             holder.itemView.setActivated(true);
-            if (ColorUtils.isPrimaryColorLowContrast(holder.itemView.getContext())) {
-                holder.lineOne.setTextColor(ColorUtils.getAccentColor());
-                holder.icon.setColorFilter(ColorUtils.getAccentColor(), PorterDuff.Mode.MULTIPLY);
-            } else {
-                holder.lineOne.setTextColor(ColorUtils.getPrimaryColor());
-                holder.icon.setColorFilter(ColorUtils.getPrimaryColor(), PorterDuff.Mode.MULTIPLY);
-            }
         } else {
             holder.itemView.setActivated(false);
-            holder.lineOne.setTextColor(ColorUtils.getTextColorPrimary());
-            holder.icon.setColorFilter(new LightingColorFilter(ThemeUtils.getBaseColor(holder.itemView.getContext()), 0));
             holder.icon.setAlpha(0.6f);
         }
 
@@ -161,6 +157,7 @@ public class DrawerParent implements Parent<DrawerChild> {
 
         @BindView(R.id.expandable_icon)
         ImageView expandableIcon;
+
         private ObjectAnimator objectAnimator;
 
         ParentHolder(@NonNull View itemView) {

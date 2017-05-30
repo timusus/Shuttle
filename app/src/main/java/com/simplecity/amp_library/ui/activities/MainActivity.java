@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.afollestad.aesthetic.Aesthetic;
 import com.greysonparrelli.permiso.Permiso;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ui.fragments.MainController;
@@ -32,6 +33,20 @@ public class MainActivity extends BaseCastActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // If we haven't set any defaults, do that now
+//        if (Aesthetic.isFirstTime()) {
+        Aesthetic.get()
+                .isDark(false)
+                .colorPrimaryRes(R.color.blue_500)
+//                .colorPrimaryDark(0xff1976d2)
+                .colorAccentRes(R.color.amber_300)
+                .colorStatusBarAuto()
+//                .colorPrimaryRes(R.color.blue_grey_800)
+//                .colorAccentRes(R.color.deep_orange_a200)
+//                .colorStatusBarRes(R.color.blue_grey_900)
+                .apply();
+//        }
 
         setContentView(R.layout.activity_main);
 

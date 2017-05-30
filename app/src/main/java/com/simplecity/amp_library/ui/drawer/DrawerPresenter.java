@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.crashlytics.android.core.CrashlyticsCore;
-import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.PlaylistsModel;
 import com.simplecity.amp_library.ui.presenters.Presenter;
@@ -23,7 +22,6 @@ public class DrawerPresenter extends Presenter<DrawerView> {
 
     @Inject
     public DrawerPresenter() {
-        ShuttleApplication.getInstance().getAppComponent().inject(this);
     }
 
     @Override

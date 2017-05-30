@@ -17,10 +17,9 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:src="@drawable/ic_folder_closed_white"
-        app:border_color="?attr/circle_border"
         app:border_width="8dp"/>
 
-    <com.simplecity.amp_library.ui.views.CustomCheckBox
+    <CheckBox
         android:id="@+id/checkbox"
         android:layout_width="34dp"
         android:layout_height="48dp"

@@ -28,8 +28,6 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static com.bumptech.glide.Glide.clear;
 import static com.bumptech.glide.load.engine.DiskCacheStrategy.ALL;
-import static com.simplecity.amp_library.R.drawable.ic_drag_grip;
-import static com.simplecity.amp_library.R.drawable.ic_overflow_white;
 import static com.simplecity.amp_library.R.id.btn_overflow;
 import static com.simplecity.amp_library.R.layout.list_item_edit;
 import static com.simplecity.amp_library.R.layout.list_item_two_lines;
@@ -37,10 +35,6 @@ import static com.simplecity.amp_library.R.string.btn_options;
 import static com.simplecity.amp_library.glide.utils.GlideUtils.getPlaceHolderDrawable;
 import static com.simplecity.amp_library.ui.adapters.ViewType.SONG;
 import static com.simplecity.amp_library.ui.adapters.ViewType.SONG_EDITABLE;
-import static com.simplecity.amp_library.utils.DrawableUtils.getBaseDrawable;
-import static com.simplecity.amp_library.utils.DrawableUtils.getColoredAccentDrawable;
-import static com.simplecity.amp_library.utils.DrawableUtils.getColoredDrawable;
-import static com.simplecity.amp_library.utils.DrawableUtils.getColoredStateListDrawable;
 import static com.simplecity.amp_library.utils.SettingsManager.getInstance;
 import static com.simplecity.amp_library.utils.SortManager.SongSort.ALBUM_NAME;
 import static com.simplecity.amp_library.utils.SortManager.SongSort.ARTIST_NAME;
@@ -177,11 +171,7 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
         holder.lineThree.setText(song.getDurationLabel());
 
         if (holder.dragHandle != null) {
-            if (isCurrentTrack) {
-                holder.dragHandle.setImageDrawable(getColoredAccentDrawable(holder.itemView.getContext(), holder.itemView.getResources().getDrawable(ic_drag_grip)));
-            } else {
-                holder.dragHandle.setImageDrawable(getBaseDrawable(holder.itemView.getContext(), ic_drag_grip));
-            }
+            holder.dragHandle.setActivated(isCurrentTrack);
         }
 
         if (holder.artwork != null) {
@@ -223,11 +213,7 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
         }
 
         if (holder.dragHandle != null) {
-            if (isCurrentTrack) {
-                holder.dragHandle.setImageDrawable(getColoredAccentDrawable(holder.itemView.getContext(), holder.itemView.getResources().getDrawable(ic_drag_grip)));
-            } else {
-                holder.dragHandle.setImageDrawable(getBaseDrawable(holder.itemView.getContext(), ic_drag_grip));
-            }
+            holder.dragHandle.setActivated(isCurrentTrack);
         }
     }
 
@@ -344,12 +330,7 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
             ButterKnife.bind(this, itemView);
 
             if (playCount != null) {
-                playCount.setBackground(getColoredDrawable(itemView.getContext(), playCount.getBackground()));
-            }
-
-            overflowButton.setImageDrawable(getColoredStateListDrawable(itemView.getContext(), ic_overflow_white));
-            if (dragHandle != null) {
-                dragHandle.setImageDrawable(getBaseDrawable(itemView.getContext(), ic_drag_grip));
+                //Todo: Set background color of playCount
             }
 
             itemView.setOnClickListener(v -> viewModel.onItemClick(this));

@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:text="#"/>
 
-        <com.simplecity.amp_library.ui.views.CustomEditText
+        <EditText
             android:id="@+id/editText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

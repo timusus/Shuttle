@@ -102,7 +102,7 @@ public class ShuttleApplication extends Application {
 
         if (BuildConfig.DEBUG) {
             Log.w(TAG, "**Debug mode is ON**");
-            enableStrictMode();
+//            enableStrictMode();
         }
 
         //Crashlytics

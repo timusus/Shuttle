@@ -4,35 +4,27 @@ import android.Manifest;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.afollestad.aesthetic.AestheticActivity;
 import com.greysonparrelli.permiso.Permiso;
-import com.simplecity.amp_library.interfaces.ThemeCallbacks;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
-import com.simplecity.amp_library.utils.ThemeUtils;
 
 import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
 
-public abstract class BaseActivity extends AppCompatActivity implements
-        ServiceConnection,
-        ThemeCallbacks {
+public abstract class BaseActivity extends AestheticActivity implements ServiceConnection {
 
-    private SharedPreferences mPreferences;
-
-    private MusicServiceConnectionUtils.ServiceToken mToken;
+    private MusicServiceConnectionUtils.ServiceToken token;
 
     @CallSuper
     protected void onCreate(final Bundle savedInstanceState) {
@@ -41,9 +33,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
         Permiso.getInstance().setActivity(this);
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-
-        mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        mPreferences.registerOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
 
         Permiso.getInstance().requestPermissions(new Permiso.IOnPermissionResult() {
             @Override
@@ -64,7 +53,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     void bindToService() {
-        mToken = MusicServiceConnectionUtils.bindToService(this, this);
+        token = MusicServiceConnectionUtils.bindToService(this, this);
     }
 
     @Override
@@ -84,12 +73,10 @@ public abstract class BaseActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
 
-        if (mToken != null) {
-            MusicServiceConnectionUtils.unbindFromService(mToken);
-            mToken = null;
+        if (token != null) {
+            MusicServiceConnectionUtils.unbindFromService(token);
+            token = null;
         }
-
-        mPreferences.unregisterOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
 
         super.onDestroy();
     }
@@ -131,27 +118,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
         } else {
             window.clearFlags(FLAG_KEEP_SCREEN_ON);
         }
-    }
-
-    private SharedPreferences.OnSharedPreferenceChangeListener mSharedPreferenceChangeListener = (sharedPreferences, key) -> {
-        if (key.equals("pref_theme_highlight_color")
-                || key.equals("pref_theme_accent_color")
-                || key.equals("pref_theme_white_accent")) {
-            themeColorChanged();
-        }
-        if (key.equals("pref_nav_bar")) {
-            navBarThemeChanged(SettingsManager.getInstance().canTintNavBar());
-        }
-    };
-
-    @Override
-    public void themeColorChanged() {
-        navBarThemeChanged(SettingsManager.getInstance().canTintNavBar());
-    }
-
-    @Override
-    public void navBarThemeChanged(boolean canTheme) {
-        ThemeUtils.themeNavBar(this, canTheme);
     }
 
     protected abstract String screenName();

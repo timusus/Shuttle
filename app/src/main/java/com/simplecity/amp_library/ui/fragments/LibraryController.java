@@ -1,10 +1,10 @@
 package com.simplecity.amp_library.ui.fragments;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
@@ -24,7 +24,7 @@ import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Playlist;
-import com.simplecity.amp_library.search.SearchActivity;
+import com.simplecity.amp_library.search.SearchFragment;
 import com.simplecity.amp_library.ui.activities.ToolbarListener;
 import com.simplecity.amp_library.ui.adapters.PagerAdapter;
 import com.simplecity.amp_library.ui.detail.AlbumDetailFragment;
@@ -32,11 +32,9 @@ import com.simplecity.amp_library.ui.detail.ArtistDetailFragment;
 import com.simplecity.amp_library.ui.detail.BaseDetailFragment;
 import com.simplecity.amp_library.ui.detail.GenreDetailFragment;
 import com.simplecity.amp_library.ui.detail.PlaylistDetailFragment;
-import com.simplecity.amp_library.ui.views.SlidingTabLayout;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
 import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
-import com.simplecity.amp_library.utils.ThemeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +75,7 @@ public class LibraryController extends BaseFragment implements
     private PagerAdapter adapter;
 
     @BindView(R.id.tabs)
-    SlidingTabLayout slidingTabLayout;
+    TabLayout slidingTabLayout;
 
     @BindView(R.id.pager)
     ViewPager pager;
@@ -167,14 +165,6 @@ public class LibraryController extends BaseFragment implements
             }
         }
 
-        SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceChangeListener = (sharedPreferences, key) -> {
-            if (key.equals("pref_theme_highlight_color") || key.equals("pref_theme_accent_color") || key.equals("pref_theme_white_accent")) {
-                themeUIComponents();
-            }
-        };
-
-        prefs.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
-
         setHasOptionsMenu(true);
     }
 
@@ -191,16 +181,13 @@ public class LibraryController extends BaseFragment implements
         pager.setOffscreenPageLimit(adapter.getCount() - 1);
         pager.setCurrentItem(defaultPage);
 
-        ThemeUtils.themeTabLayout(getActivity(), slidingTabLayout);
-        slidingTabLayout.setViewPager(pager);
+        slidingTabLayout.setupWithViewPager(pager);
 
         pager.postDelayed(() -> {
             if (pager != null) {
                 DialogUtils.showRateSnackbar(getActivity(), pager);
             }
         }, 1000);
-
-        themeUIComponents();
 
         return rootView;
     }
@@ -218,7 +205,7 @@ public class LibraryController extends BaseFragment implements
     public void onResume() {
         super.onResume();
 
-        multiSheetEventRelay.sendEvent(new MultiSheetEventRelay.MultiSheetEvent(MultiSheetEventRelay.MultiSheetEvent.Action.GOTO, MultiSheetView.Sheet.NONE));
+        multiSheetEventRelay.sendEvent(new MultiSheetEventRelay.MultiSheetEvent(MultiSheetEventRelay.MultiSheetEvent.Action.SHOW_IF_HIDDEN, MultiSheetView.Sheet.NONE));
     }
 
     @Override
@@ -240,17 +227,7 @@ public class LibraryController extends BaseFragment implements
     }
 
     private void openSearch() {
-        startActivity(new Intent(getContext(), SearchActivity.class));
-    }
-
-    private void themeUIComponents() {
-
-        if (slidingTabLayout != null) {
-            ThemeUtils.themeTabLayout(getActivity(), slidingTabLayout);
-        }
-        if (pager != null) {
-            ThemeUtils.themeViewPager(pager);
-        }
+        getNavigationController().pushViewController(SearchFragment.newInstance(null), "SearchFragment");
     }
 
     @Override

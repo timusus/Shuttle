@@ -1,9 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/bottom_container"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/bottom_container"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/textContainer"
@@ -21,10 +21,11 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:gravity="center_vertical"
+            android:maxLines="1"
+            android:tag=":aesthetic_ignore"
             android:textColor="#ffffff"
             android:textSize="16sp"
-            tools:text="Feeling Kinda Anxious"
-            android:maxLines="1" />
+            tools:text="Feeling Kinda Anxious"/>
 
         <TextView
             android:id="@+id/line_two"
@@ -33,10 +34,11 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:gravity="center_vertical"
+            android:maxLines="1"
+            android:tag=":aesthetic_ignore"
             android:textColor="#ffffff"
             android:textSize="12sp"
-            tools:text="Franz Ferdinand - Tonight"
-            android:maxLines="1" />
+            tools:text="Franz Ferdinand - Tonight"/>
     </LinearLayout>
 
     <com.simplecity.amp_library.ui.views.NonScrollImageButton
@@ -47,5 +49,5 @@
         android:layout_marginLeft="-16dp"
         android:alpha="0.8"
         android:background="@null"
-        android:src="@drawable/ic_overflow_white" />
+        android:src="@drawable/ic_overflow_white"/>
 </LinearLayout>

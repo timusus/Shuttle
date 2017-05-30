@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,7 +32,6 @@ import com.simplecity.amp_library.ui.adapters.SectionedAdapter;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.ShuffleView;
 import com.simplecity.amp_library.ui.modelviews.SongView;
-import com.simplecity.amp_library.utils.ColorUtils;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
@@ -42,7 +40,6 @@ import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.SortManager;
-import com.simplecity.amp_library.utils.ThemeUtils;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
@@ -119,10 +116,7 @@ public class SongFragment extends BaseFragment implements
         };
 
         mSharedPreferenceChangeListener = (sharedPreferences, key) -> {
-            if (key.equals("pref_theme_highlight_color") || key.equals("pref_theme_accent_color") || key.equals("pref_theme_white_accent")) {
-                songsAdapter.notifyItemRangeChanged(0, songsAdapter.getItemCount());
-                themeUIComponents();
-            } else if (key.equals("songWhitelist")) {
+            if (key.equals("songWhitelist")) {
                 refreshAdapterItems();
             }
         };
@@ -133,33 +127,13 @@ public class SongFragment extends BaseFragment implements
         shuffleView.setClickListener(this);
     }
 
-    private void themeUIComponents() {
-        ThemeUtils.themeRecyclerView(mRecyclerView);
-        mRecyclerView.setThumbColor(ColorUtils.getAccentColor());
-        mRecyclerView.setPopupBgColor(ColorUtils.getAccentColor());
-        mRecyclerView.setPopupTextColor(ColorUtils.getAccentColorSensitiveTextColor(getContext()));
-
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                ThemeUtils.themeRecyclerView(recyclerView);
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-        });
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        if (mRecyclerView == null) {
-
-            mRecyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            mRecyclerView.setRecyclerListener(new RecyclerListener());
-            mRecyclerView.setAdapter(songsAdapter);
-
-            themeUIComponents();
-        }
+        mRecyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setRecyclerListener(new RecyclerListener());
+        mRecyclerView.setAdapter(songsAdapter);
 
         return mRecyclerView;
     }
@@ -200,7 +174,7 @@ public class SongFragment extends BaseFragment implements
                                 .subscribe(items -> {
 
                                     if (items.isEmpty()) {
-                                        songsAdapter.setEmpty(new EmptyView(R.string.empty_songlist));
+                                        songsAdapter.setItems(Collections.singletonList(new EmptyView(R.string.empty_songlist)));
                                     } else {
                                         items.add(0, shuffleView);
                                         songsAdapter.setItems(items);
@@ -340,7 +314,6 @@ public class SongFragment extends BaseFragment implements
 
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            ThemeUtils.themeContextualActionBar(getActivity());
             inActionMode = true;
             getActivity().getMenuInflater().inflate(R.menu.context_menu_songs, menu);
             SubMenu sub = menu.getItem(0).getSubMenu();
@@ -396,7 +369,7 @@ public class SongFragment extends BaseFragment implements
     };
 
     List<Song> getCheckedSongs() {
-        return  null;
+        return null;
 
 //        Stream.of(multiSelector.getSelectedPositions())
 //                .map(i -> songsAdapter.getSong(i))

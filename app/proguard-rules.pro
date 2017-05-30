@@ -23,7 +23,7 @@
 -keep class !android.support.v7.internal.view.menu.**,android.support.** {*;}
 
 # Custom MediaRouteActionProvider, referenced via menu action view class
--keep class com.simplecity.amp_library.ui.views.MyMediaRouteActionProvider { *; }
+-keep class com.simplecity.amp_library.ui.views.CustomMediaRouteActionProvider { *; }
 
 # Glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
