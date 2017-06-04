@@ -4,7 +4,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="64dp">
+    android:layout_height="64dp"
+    >
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -20,7 +21,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="16dp"
-                android:layout_toLeftOf="@+id/text3"
+                android:layout_toLeftOf="@+id/button"
+                android:gravity="center_vertical"
                 android:orientation="vertical">
 
                 <TextView
@@ -28,10 +30,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:textColor="?android:textColorPrimary"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     tools:text="Line one"/>
 
                 <TextView
@@ -40,26 +41,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:textColor="?android:textColorSecondary"
                     android:textSize="16sp"
                     tools:text="Line two"/>
             </LinearLayout>
 
-            <Button
+            <com.simplecity.amp_library.ui.views.SuggestedHeaderButton
                 android:id="@+id/button"
-                style="@style/Widget.AppCompat.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="16dp"
-                android:clickable="false"
                 android:contentDescription="@string/heading_more"
+                android:elevation="0dp"
                 android:gravity="center"
-                android:minHeight="36dp"
+                android:minHeight="28dp"
                 android:minWidth="72dp"
                 android:text="@string/heading_more"
                 android:textSize="12sp"/>

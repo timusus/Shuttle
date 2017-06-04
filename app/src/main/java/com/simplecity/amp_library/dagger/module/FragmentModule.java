@@ -34,6 +34,6 @@ public class FragmentModule {
     @Provides
     @FragmentScope
     PrefixHighlighter providePrefixHighlighter() {
-        return new PrefixHighlighter(fragment.getContext());
+        return new PrefixHighlighter();
     }
 }

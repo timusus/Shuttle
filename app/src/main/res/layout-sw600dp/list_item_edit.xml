@@ -47,13 +47,11 @@
         android:id="@+id/line_three"
         android:layout_width="56dp"
         android:layout_height="match_parent"
-        android:ellipsize="marquee"
-        android:fadingEdge="horizontal"
         android:gravity="center"
-        android:maxLines="1"
+        android:lines="1"
         android:textSize="12sp"/>
 
-    <com.simplecity.amp_library.ui.views.NonScrollImageButton
+    <com.simplecity.amp_library.ui.views.OverflowButton
         android:id="@+id/btn_overflow"
         android:layout_width="40dp"
         android:layout_height="48dp"

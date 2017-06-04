@@ -18,10 +18,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="?colorPrimary"
+            app:collapsedSubtitleTextAppearance="@style/CollapsedSubtitleAppearance"
+            app:collapsedTitleTextAppearance="@style/CollapsingToolbarCollapsedTextAppearance"
             app:contentScrim="?colorPrimary"
+            app:expandedSubtitleTextAppearance="@style/ExpandedSubtitleAppearance"
             app:expandedTitleMarginStart="16dp"
             app:expandedTitleTextAppearance="@style/CollapsingToolbarExpandedTextAppearance"
-            app:collapsedTitleTextAppearance="@style/CollapsingToolbarCollapsedTextAppearance"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:scrimAnimationDuration="400"
             app:titleEnabled="true"
@@ -64,11 +66,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:gravity="center_vertical"
-                android:tag=":aesthetic_ignore"
                 android:transitionName="toolbar"
                 app:layout_collapseMode="pin"
                 app:navigationIcon="?attr/homeAsUpIndicator"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+                app:transparentBackground="true"/>
 
         </android.support.design.widget.CustomCollapsingToolbarLayout>
 

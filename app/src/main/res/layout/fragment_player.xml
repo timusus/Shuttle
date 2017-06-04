@@ -30,13 +30,12 @@
 
     <com.simplecity.amp_library.ui.views.SizableSeekBar
         android:id="@+id/seekbar"
-        style="@style/SeekBar"
+        style="@style/SeekBar.NoBackground"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:indeterminate="false"
         android:paddingEnd="0dp"
         android:paddingStart="0dp"
-        android:tag=":aesthetic_ignore"
         app:layout_constraintBottom_toTopOf="@+id/backgroundView"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -135,7 +134,6 @@
         android:padding="16dp"
         android:src="@drawable/ic_prev_white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.433"
         app:layout_constraintLeft_toRightOf="@+id/shuffle"
         app:layout_constraintRight_toLeftOf="@+id/play"
         app:layout_constraintTop_toBottomOf="@+id/text2"/>
@@ -149,7 +147,6 @@
         android:padding="16dp"
         android:src="@drawable/ic_skip_white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.517"
         app:layout_constraintLeft_toRightOf="@+id/play"
         app:layout_constraintRight_toLeftOf="@+id/repeat"
         app:layout_constraintTop_toBottomOf="@+id/text2"/>
@@ -180,7 +177,7 @@
         android:id="@+id/statusBarView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="?colorPrimaryDark"
+        android:background="@color/colorPrimaryDark"
         android:visibility="invisible"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -190,13 +187,13 @@
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
-        android:tag=":aesthetic_ignore"
         android:transitionName="toolbar"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/statusBarView"
         app:navigationIcon="?attr/homeAsUpIndicator"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:title="@string/nowplaying_title"/>
+        app:title="@string/nowplaying_title"
+        app:transparentBackground="true"/>
 
 </android.support.constraint.ConstraintLayout>

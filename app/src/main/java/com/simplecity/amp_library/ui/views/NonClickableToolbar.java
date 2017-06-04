@@ -2,14 +2,15 @@ package com.simplecity.amp_library.ui.views;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+
+import com.afollestad.aesthetic.AestheticToolbar;
 
 /**
  * A Toolbar which does not consume touch events.
  */
-public class NonClickableToolbar extends Toolbar {
+public class NonClickableToolbar extends AestheticToolbar {
     public NonClickableToolbar(Context context) {
         super(context);
     }

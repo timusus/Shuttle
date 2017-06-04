@@ -26,10 +26,8 @@
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:fadingEdge="horizontal"
                 android:fontFamily="sans-serif"
-                android:maxLines="1"
+                android:lines="1"
                 android:textAppearance="@android:style/TextAppearance.StatusBar.EventContent.Title"
                 tools:text="Ticks &amp; Leeches"/>
 
@@ -39,10 +37,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="2dp"
-                android:ellipsize="marquee"
-                android:fadingEdge="horizontal"
                 android:fontFamily="sans-serif"
-                android:maxLines="1"
+                android:lines="1"
                 android:textAppearance="@android:style/TextAppearance.StatusBar.EventContent"
                 tools:text="Tool | Lateralus"/>
         </LinearLayout>

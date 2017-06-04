@@ -40,7 +40,7 @@ public class RepeatButton extends android.support.v7.widget.AppCompatImageButton
 
         offDrawable = getResources().getDrawable(R.drawable.ic_repeat_white);
         oneDrawable = DrawableCompat.wrap(getResources().getDrawable(R.drawable.ic_repeat_one_white));
-        allDrawable = DrawableCompat.wrap(getResources().getDrawable(R.drawable.ic_repeat_white));
+        allDrawable = DrawableCompat.wrap(getResources().getDrawable(R.drawable.ic_repeat_white)).mutate();
 
         setRepeatMode(MusicService.RepeatMode.OFF);
     }

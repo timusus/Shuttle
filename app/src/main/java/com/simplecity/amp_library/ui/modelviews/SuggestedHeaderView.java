@@ -3,7 +3,6 @@ package com.simplecity.amp_library.ui.modelviews;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.simplecity.amp_library.R;
@@ -79,7 +78,7 @@ public class SuggestedHeaderView extends BaseViewModel<SuggestedHeaderView.ViewH
         TextView titleTwo;
 
         @BindView(R.id.button)
-        Button button;
+        TextView button;
 
         public ViewHolder(View itemView) {
             super(itemView);

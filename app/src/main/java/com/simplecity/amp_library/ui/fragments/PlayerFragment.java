@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.Util;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -336,7 +337,7 @@ public class PlayerFragment extends BaseFragment implements PlayerView, Toolbar.
 
                         Palette.Swatch swatch = resource.palette.getDarkMutedSwatch();
 
-                        int newColor = Color.RED;
+                        int newColor = Aesthetic.get().colorPrimary().blockingFirst();
 
                         if (swatch != null) {
                             newColor = swatch.getRgb();

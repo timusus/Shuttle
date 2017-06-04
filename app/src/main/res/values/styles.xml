@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+
         <item name="colorPrimaryDark">@color/grey_600</item>
         <item name="colorPrimary">@color/grey_500</item>
         <item name="colorAccent">@color/grey_250</item>
 
-        <item name="list_selector">@drawable/list_selector_light</item>
-        <item name="listDividerColor">@color/list_divider_light</item>
-        <item name="circular_ripple">@drawable/ripple_circular_light</item>
+        <item name="list_selector">@drawable/list_selector_dark</item>
+        <item name="listDividerColor">@color/list_divider_dark</item>
+        <item name="circular_ripple">@drawable/ripple_circular_dark</item>
 
         <!--<item name="android:textViewStyle">@style/PrimaryTextLight</item>-->
         <!--<item name="android:checkboxStyle">@style/CheckboxStyle</item>-->
@@ -23,10 +22,22 @@
         </item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="AppTheme.Light" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <item name="colorPrimaryDark">@color/grey_600</item>
+        <item name="colorPrimary">@color/grey_500</item>
+        <item name="colorAccent">@color/grey_250</item>
+
+        <item name="list_selector">@drawable/list_selector_light</item>
+        <item name="listDividerColor">@color/list_divider_light</item>
+        <item name="circular_ripple">@drawable/ripple_circular_light</item>
     </style>
+
+    <style name="AppTheme.Black" parent="AppTheme">
+        <item name="android:windowBackground">@color/black</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <style name="CollapsingToolbarExpandedTextAppearance" parent="TextAppearance.AppCompat.Title">
         <item name="android:textSize">30sp</item>
@@ -39,9 +50,13 @@
 
     <style name="CustomCollapsingToolbarLayout" parent="@style/Widget.Design.CollapsingToolbar"/>
 
-    <style name="CollapsedSubtitleAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
+    <style name="CollapsedSubtitleAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Subtitle">
+        <item name="android:textColor">#fff</item>
+    </style>
 
-    <style name="ExpandedSubtitleAppearance" parent="TextAppearance.AppCompat.Headline"/>
+    <style name="ExpandedSubtitleAppearance" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textColor">#fff</item>
+    </style>
 
     <!-- Swipe dismiss list view animation -->
 
@@ -55,7 +70,8 @@
 
     <style name="SeekBar" parent="android:Widget.SeekBar">
         <item name="android:progressDrawable">@drawable/scrubber_progress_horizontal_material</item>
-        <item name="android:indeterminateDrawable">@drawable/scrubber_progress_horizontal_material</item>
+        <item name="android:indeterminateDrawable">@drawable/scrubber_progress_horizontal_material
+        </item>
         <item name="android:thumb">@drawable/scrubber_control_from_pressed_mtrl_000</item>
         <item name="android:splitTrack">false</item>
         <item name="android:focusable">true</item>
@@ -63,6 +79,12 @@
         <item name="android:paddingRight">16dip</item>
         <item name="android:mirrorForRtl">true</item>
         <!--<item name="android:background">?attr/selectableItemBackgroundBorderless</item>-->
+    </style>
+
+    <style name="SeekBar.NoBackground">
+        <item name="android:progressDrawable">
+            @drawable/scrubber_progress_horizontal_material_no_background
+        </item>
     </style>
 
     <style name="CustomProgressBar" parent="android:Widget.ProgressBar.Horizontal">

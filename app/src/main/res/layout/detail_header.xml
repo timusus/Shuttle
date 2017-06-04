@@ -53,7 +53,7 @@
                     tools:text="Lateralus"/>
             </LinearLayout>
 
-            <com.simplecity.amp_library.ui.views.NonScrollImageButton
+            <com.simplecity.amp_library.ui.views.OverflowButton
                 android:id="@+id/btn_overflow"
                 android:layout_width="40dp"
                 android:layout_height="48dp"

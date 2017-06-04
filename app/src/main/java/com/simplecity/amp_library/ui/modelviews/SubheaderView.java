@@ -13,8 +13,6 @@ import butterknife.ButterKnife;
 import static com.simplecity.amp_library.R.id;
 import static com.simplecity.amp_library.R.layout.list_item_subheader;
 import static com.simplecity.amp_library.ui.adapters.ViewType.SUBHEADER;
-import static com.simplecity.amp_library.utils.TypefaceManager.SANS_SERIF_MEDIUM;
-import static com.simplecity.amp_library.utils.TypefaceManager.getInstance;
 
 public class SubheaderView extends BaseViewModel<SubheaderView.ViewHolder> {
 
@@ -70,8 +68,6 @@ public class SubheaderView extends BaseViewModel<SubheaderView.ViewHolder> {
             super(itemView);
 
             ButterKnife.bind(this, itemView);
-
-            textView.setTypeface(getInstance().getTypeface(SANS_SERIF_MEDIUM));
         }
     }
 }

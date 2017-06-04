@@ -1,6 +1,7 @@
 package com.afollestad.aesthetic;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
@@ -24,21 +25,35 @@ public class AestheticToolbar extends Toolbar {
   private Disposable subscription;
   private PublishSubject<Integer> onColorUpdated;
 
+  private boolean transparentBackground = false;
+
   public AestheticToolbar(Context context) {
     super(context);
   }
 
   public AestheticToolbar(Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
+
+    init(context, attrs);
   }
 
   public AestheticToolbar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
+
+    init(context, attrs);
+  }
+
+  private void init(Context context, @Nullable AttributeSet attrs){
+    TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AestheticToolbar);
+    transparentBackground = a.getBoolean(R.styleable.AestheticToolbar_transparentBackground, false);
+    a.recycle();
   }
 
   private void invalidateColors(BgIconColorState state) {
     lastState = state;
-    setBackgroundColor(state.bgColor());
+    if (!transparentBackground) {
+        setBackgroundColor(state.bgColor());
+    }
     setTitleTextColor(state.iconTitleColor().activeColor());
     setOverflowButtonColor(this, state.iconTitleColor().activeColor());
     if (getNavigationIcon() != null) {

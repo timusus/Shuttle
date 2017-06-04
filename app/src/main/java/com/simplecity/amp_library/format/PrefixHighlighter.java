@@ -1,12 +1,11 @@
 package com.simplecity.amp_library.format;
 
-import android.content.Context;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.widget.TextView;
 
-import com.simplecity.amp_library.R;
+import com.afollestad.aesthetic.Aesthetic;
 
 import javax.inject.Inject;
 
@@ -20,8 +19,8 @@ public class PrefixHighlighter {
     private ForegroundColorSpan mPrefixColorSpan;
 
     @Inject
-    public PrefixHighlighter(Context context) {
-        mPrefixHighlightColor = context.getResources().getColor(R.color.colorAccent);
+    public PrefixHighlighter() {
+        mPrefixHighlightColor = Aesthetic.get().colorAccent().blockingFirst();
     }
 
     /**

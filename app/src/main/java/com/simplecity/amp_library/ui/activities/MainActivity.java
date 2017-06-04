@@ -36,16 +36,13 @@ public class MainActivity extends BaseCastActivity implements
 
         // If we haven't set any defaults, do that now
 //        if (Aesthetic.isFirstTime()) {
-        Aesthetic.get()
-                .isDark(false)
-                .colorPrimaryRes(R.color.blue_500)
-//                .colorPrimaryDark(0xff1976d2)
-                .colorAccentRes(R.color.amber_300)
-                .colorStatusBarAuto()
-//                .colorPrimaryRes(R.color.blue_grey_800)
-//                .colorAccentRes(R.color.deep_orange_a200)
-//                .colorStatusBarRes(R.color.blue_grey_900)
-                .apply();
+            Aesthetic.get()
+                    .activityTheme(R.style.AppTheme_Black)
+                    .isDark(true)
+                    .colorPrimaryRes(R.color.blue_500)
+                    .colorAccentRes(R.color.amber_300)
+                    .colorStatusBarAuto()
+                    .apply();
 //        }
 
         setContentView(R.layout.activity_main);

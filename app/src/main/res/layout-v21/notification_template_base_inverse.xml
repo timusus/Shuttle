@@ -32,10 +32,8 @@
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:fadingEdge="horizontal"
                 android:fontFamily="sans-serif"
-                android:maxLines="1"
+                android:lines="1"
                 android:textAppearance="@style/TextAppearance.Material.Notification.Title.Inverse"
                 tools:ignore="NewApi"
                 tools:text="Ticks &amp; Leeches"/>
@@ -46,10 +44,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="4dp"
-                android:ellipsize="marquee"
-                android:fadingEdge="horizontal"
                 android:fontFamily="sans-serif"
-                android:maxLines="1"
+                android:lines="1"
                 android:textAppearance="@style/TextAppearance.Material.Notification.Inverse"
                 tools:ignore="NewApi"
                 tools:text="Tool | LAteralus"/>

@@ -5,9 +5,14 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.afollestad.aesthetic.Aesthetic;
+import com.afollestad.aesthetic.Rx;
+import com.afollestad.aesthetic.ViewBackgroundAction;
 import com.simplecity.amp_library.utils.ActionBarUtils;
 
 import io.reactivex.disposables.Disposable;
+
+import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
 
 
 public class StatusBarView extends View {
@@ -37,17 +42,17 @@ public class StatusBarView extends View {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-//        bgSubscription = Aesthetic.get().colorStatusBar()
-//                .compose(Rx.<Integer>distinctToMainThread())
-//                .subscribe(
-//                        ViewBackgroundAction.create(this), onErrorLogAndRethrow()
-//                );
+        bgSubscription = Aesthetic.get().colorStatusBar()
+                .compose(Rx.<Integer>distinctToMainThread())
+                .subscribe(
+                        ViewBackgroundAction.create(this), onErrorLogAndRethrow()
+                );
     }
 
 
     @Override
     protected void onDetachedFromWindow() {
-//        bgSubscription.dispose();
+        bgSubscription.dispose();
         super.onDetachedFromWindow();
     }
 }

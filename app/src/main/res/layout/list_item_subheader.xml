@@ -9,10 +9,10 @@
 
     <TextView
         android:id="@+id/textView"
-        style="?attr/secondaryTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
+        android:textColor="?android:textColorSecondary"
         android:textSize="14sp"
         tools:text="Subheader"/>
 

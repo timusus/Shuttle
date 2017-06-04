@@ -29,9 +29,8 @@
             android:id="@+id/line_one"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="marquee"
             android:gravity="center_vertical"
-            android:maxLines="1"
+            android:lines="1"
             android:textColor="?android:textColorPrimary"
             android:textSize="16sp"
             tools:text="Feeling Kinda Anxious"/>
@@ -41,9 +40,8 @@
             style="?attr/secondaryTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="marquee"
             android:gravity="center_vertical"
-            android:maxLines="1"
+            android:lines="1"
             android:textColor="?android:textColorSecondary"
             android:textSize="14sp"
             tools:text="Franz Ferdinand - Tonight"/>

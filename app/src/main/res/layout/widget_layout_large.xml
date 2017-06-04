@@ -39,9 +39,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:ellipsize="end"
-                    android:fadingEdge="horizontal"
                     android:gravity="center_vertical"
-
                     android:maxLines="1"
                     android:textSize="14sp"/>
 
@@ -52,10 +50,8 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:ellipsize="end"
-                    android:fadingEdge="horizontal"
                     android:gravity="center_vertical"
-
-                    android:maxLines="1"
+                    android:lines="1"
                     android:textSize="14sp"/>
 
                 <TextView
@@ -65,9 +61,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:ellipsize="end"
-                    android:fadingEdge="horizontal"
                     android:gravity="center_vertical"
-
                     android:maxLines="1"
                     android:textSize="14sp"/>
             </LinearLayout>

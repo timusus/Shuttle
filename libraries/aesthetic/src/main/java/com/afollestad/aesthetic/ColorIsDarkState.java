@@ -14,7 +14,7 @@ public final class ColorIsDarkState {
   private final int color;
   private final boolean isDark;
 
-  private ColorIsDarkState(int color, boolean isDark) {
+  public ColorIsDarkState(int color, boolean isDark) {
     this.color = color;
     this.isDark = isDark;
   }
@@ -23,7 +23,7 @@ public final class ColorIsDarkState {
     return new ColorIsDarkState(color, isDark);
   }
 
-  static BiFunction<Integer, Boolean, ColorIsDarkState> creator() {
+  public static BiFunction<Integer, Boolean, ColorIsDarkState> creator() {
     return new BiFunction<Integer, Boolean, ColorIsDarkState>() {
       @Override
       public ColorIsDarkState apply(Integer integer, Boolean aBoolean) {
@@ -33,11 +33,11 @@ public final class ColorIsDarkState {
   }
 
   @ColorInt
-  int color() {
+  public int color() {
     return color;
   }
 
-  boolean isDark() {
+  public boolean isDark() {
     return isDark;
   }
 }

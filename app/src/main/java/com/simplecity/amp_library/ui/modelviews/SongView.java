@@ -1,17 +1,26 @@
 package com.simplecity.amp_library.ui.modelviews;
 
 import android.support.annotation.Nullable;
+import android.support.v4.view.MotionEventCompat;
+import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.format.PrefixHighlighter;
+import com.simplecity.amp_library.glide.utils.GlideUtils;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.ui.views.NonScrollImageButton;
+import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.SortManager;
+import com.simplecity.amp_library.utils.StringUtils;
 import com.simplecityapps.recycler_adapter.model.BaseViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 
@@ -20,33 +29,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.support.v4.view.MotionEventCompat.getActionMasked;
-import static android.text.TextUtils.isEmpty;
-import static android.view.MotionEvent.ACTION_DOWN;
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-import static com.bumptech.glide.Glide.clear;
-import static com.bumptech.glide.load.engine.DiskCacheStrategy.ALL;
-import static com.simplecity.amp_library.R.id.btn_overflow;
-import static com.simplecity.amp_library.R.layout.list_item_edit;
-import static com.simplecity.amp_library.R.layout.list_item_two_lines;
-import static com.simplecity.amp_library.R.string.btn_options;
-import static com.simplecity.amp_library.glide.utils.GlideUtils.getPlaceHolderDrawable;
-import static com.simplecity.amp_library.ui.adapters.ViewType.SONG;
-import static com.simplecity.amp_library.ui.adapters.ViewType.SONG_EDITABLE;
-import static com.simplecity.amp_library.utils.SettingsManager.getInstance;
-import static com.simplecity.amp_library.utils.SortManager.SongSort.ALBUM_NAME;
-import static com.simplecity.amp_library.utils.SortManager.SongSort.ARTIST_NAME;
-import static com.simplecity.amp_library.utils.SortManager.SongSort.DATE;
-import static com.simplecity.amp_library.utils.SortManager.SongSort.DEFAULT;
-import static com.simplecity.amp_library.utils.SortManager.SongSort.DURATION;
-import static com.simplecity.amp_library.utils.SortManager.SongSort.NAME;
-import static com.simplecity.amp_library.utils.SortManager.SongSort.TRACK_NUMBER;
-import static com.simplecity.amp_library.utils.SortManager.SongSort.YEAR;
-import static com.simplecity.amp_library.utils.StringUtils.keyFor;
-import static java.lang.String.format;
-import static java.lang.String.valueOf;
 
 public class SongView extends BaseViewModel<SongView.ViewHolder> implements
         SectionedView {
@@ -79,6 +61,8 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
     private boolean showTrackNumber;
 
     private boolean isCurrentTrack;
+
+    private boolean isChecked = true;
 
     @Nullable
     private ClickListener listener;
@@ -117,6 +101,10 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
         return isCurrentTrack;
     }
 
+    public void setChecked(boolean checked) {
+        isChecked = checked;
+    }
+
     private void onItemClick(ViewHolder holder) {
         if (listener != null) {
             listener.onSongClick(song, holder);
@@ -144,30 +132,32 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
 
     @Override
     public int getViewType() {
-        return editable ? SONG_EDITABLE : SONG;
+        return editable ? ViewType.SONG_EDITABLE : ViewType.SONG;
     }
 
     @Override
     public int getLayoutResId() {
-        return editable ? list_item_edit : list_item_two_lines;
+        return editable ? R.layout.list_item_edit : R.layout.list_item_two_lines;
     }
 
     @Override
     public void bindView(ViewHolder holder) {
         super.bindView(holder);
 
+        holder.itemView.setActivated(isChecked);
+
         holder.lineOne.setText(song.name);
 
         if (holder.playCount != null) {
             if (song.playCount > 1) {
-                holder.playCount.setVisibility(VISIBLE);
-                holder.playCount.setText(valueOf(song.playCount));
+                holder.playCount.setVisibility(View.VISIBLE);
+                holder.playCount.setText(String.valueOf(song.playCount));
             } else {
-                holder.playCount.setVisibility(GONE);
+                holder.playCount.setVisibility(View.GONE);
             }
         }
 
-        holder.lineTwo.setText(format("%s - %s", song.artistName, song.albumName));
+        holder.lineTwo.setText(String.format("%s - %s", song.artistName, song.albumName));
         holder.lineThree.setText(song.getDurationLabel());
 
         if (holder.dragHandle != null) {
@@ -175,18 +165,18 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
         }
 
         if (holder.artwork != null) {
-            if (showAlbumArt && getInstance().showArtworkInQueue()) {
-                holder.artwork.setVisibility(VISIBLE);
+            if (showAlbumArt && SettingsManager.getInstance().showArtworkInQueue()) {
+                holder.artwork.setVisibility(View.VISIBLE);
                 requestManager.load(song)
-                        .diskCacheStrategy(ALL)
-                        .placeholder(getPlaceHolderDrawable(song.albumName, false))
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .placeholder(GlideUtils.getPlaceHolderDrawable(song.albumName, false))
                         .into(holder.artwork);
             } else {
-                holder.artwork.setVisibility(GONE);
+                holder.artwork.setVisibility(View.GONE);
             }
         }
 
-        holder.overflowButton.setContentDescription(holder.itemView.getResources().getString(btn_options, song.name));
+        holder.overflowButton.setContentDescription(holder.itemView.getResources().getString(R.string.btn_options, song.name));
 
         if (prefixHighlighter != null) {
             prefixHighlighter.setText(holder.lineOne, prefix);
@@ -195,10 +185,10 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
 
         if (holder.trackNumber != null) {
             if (showTrackNumber) {
-                holder.trackNumber.setVisibility(VISIBLE);
-                holder.trackNumber.setText(valueOf(song.track));
+                holder.trackNumber.setVisibility(View.VISIBLE);
+                holder.trackNumber.setText(String.valueOf(song.track));
             } else {
-                holder.trackNumber.setVisibility(GONE);
+                holder.trackNumber.setVisibility(View.GONE);
             }
         }
     }
@@ -215,6 +205,8 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
         if (holder.dragHandle != null) {
             holder.dragHandle.setActivated(isCurrentTrack);
         }
+
+        holder.itemView.setActivated(isChecked);
     }
 
     @Override
@@ -226,21 +218,21 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
     public String getSectionName() {
         int sortOrder = SortManager.getInstance().getSongsSortOrder();
 
-        if (sortOrder != DATE
-                && sortOrder != DURATION
-                && sortOrder != TRACK_NUMBER) {
+        if (sortOrder != SortManager.SongSort.DATE
+                && sortOrder != SortManager.SongSort.DURATION
+                && sortOrder != SortManager.SongSort.TRACK_NUMBER) {
 
             String string = null;
             boolean requiresSubstring = true;
             switch (sortOrder) {
-                case DEFAULT:
-                    string = keyFor(song.name);
+                case SortManager.SongSort.DEFAULT:
+                    string = StringUtils.keyFor(song.name);
                     break;
-                case NAME:
+                case SortManager.SongSort.NAME:
                     string = song.name;
                     break;
-                case YEAR:
-                    string = valueOf(song.year);
+                case SortManager.SongSort.YEAR:
+                    string = String.valueOf(song.year);
                     if (string.length() != 4) {
                         string = "-";
                     } else {
@@ -248,16 +240,16 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
                     }
                     requiresSubstring = false;
                     break;
-                case ALBUM_NAME:
-                    string = keyFor(song.albumName);
+                case SortManager.SongSort.ALBUM_NAME:
+                    string = StringUtils.keyFor(song.albumName);
                     break;
-                case ARTIST_NAME:
-                    string = keyFor(song.artistName);
+                case SortManager.SongSort.ARTIST_NAME:
+                    string = StringUtils.keyFor(song.artistName);
                     break;
             }
 
             if (requiresSubstring) {
-                if (!isEmpty(string)) {
+                if (!TextUtils.isEmpty(string)) {
                     string = string.substring(0, 1).toUpperCase();
                 } else {
                     string = " ";
@@ -315,7 +307,7 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
         @Nullable @BindView(R.id.play_count)
         TextView playCount;
 
-        @BindView(btn_overflow)
+        @BindView(R.id.btn_overflow)
         public NonScrollImageButton overflowButton;
 
         @Nullable @BindView(R.id.drag_handle)
@@ -340,7 +332,7 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
 
             if (dragHandle != null) {
                 dragHandle.setOnTouchListener((v, event) -> {
-                    if (getActionMasked(event) == ACTION_DOWN) {
+                    if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
                         viewModel.onStartDrag(this);
                     }
                     return true;
@@ -358,7 +350,7 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
             super.recycle();
 
             if (artwork != null) {
-                clear(artwork);
+                Glide.clear(artwork);
             }
         }
     }

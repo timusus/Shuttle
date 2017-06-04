@@ -10,7 +10,7 @@
     <com.simplecity.amp_library.ui.views.StatusBarView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?colorPrimaryDark"/>
+        android:background="@color/colorPrimaryDark"/>
 
     <android.support.design.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -42,6 +42,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
+                    app:tabIndicatorHeight="3dp"
                     app:tabMode="scrollable"/>
 
                 <android.support.v7.widget.Toolbar

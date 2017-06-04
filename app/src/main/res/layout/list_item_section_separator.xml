@@ -7,9 +7,7 @@
     android:layout_centerVertical="true"
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
-    android:ellipsize="marquee"
-    android:fadingEdge="horizontal"
     android:fontFamily="sans-serif"
     android:gravity="center_vertical"
     android:textSize="20sp"
-    android:maxLines="1" />
+    android:lines="1" />

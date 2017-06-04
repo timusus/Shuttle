@@ -11,13 +11,12 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="16dp"
         android:layout_weight="1"
-        android:ellipsize="marquee"
         android:gravity="center_vertical"
         android:scrollHorizontally="true"
         android:textSize="16sp"
-        android:maxLines="1" />
+        android:lines="1" />
 
-    <com.simplecity.amp_library.ui.views.NonScrollImageButton
+    <com.simplecity.amp_library.ui.views.OverflowButton
         android:id="@+id/btn_overflow"
         android:layout_width="40dp"
         android:layout_height="48dp"

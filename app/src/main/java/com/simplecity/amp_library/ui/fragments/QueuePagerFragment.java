@@ -43,7 +43,7 @@ public class QueuePagerFragment extends BaseFragment implements
     @Inject
     QueuePagerPresenter queuePagerPresenter;
 
-    private ViewModelAdapter ViewModelAdapter;
+    private ViewModelAdapter viewModelAdapter;
 
     public static QueuePagerFragment newInstance() {
         Bundle args = new Bundle();
@@ -63,7 +63,7 @@ public class QueuePagerFragment extends BaseFragment implements
                 .plus(new FragmentModule(this))
                 .inject(this);
 
-        ViewModelAdapter = new ViewModelAdapter();
+        viewModelAdapter = new ViewModelAdapter();
     }
 
     @Override
@@ -74,7 +74,7 @@ public class QueuePagerFragment extends BaseFragment implements
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(ViewModelAdapter);
+        recyclerView.setAdapter(viewModelAdapter);
         SnapHelper snapHelper = new PagerSnapHelper() {
             @Override
             public int findTargetSnapPosition(RecyclerView.LayoutManager layoutManager, int velocityX, int velocityY) {
@@ -120,11 +120,9 @@ public class QueuePagerFragment extends BaseFragment implements
 
     @Override
     public void loadData(List<ViewModel> viewModels, int position) {
-        ViewModelAdapter.items.clear();
-        ViewModelAdapter.items.addAll(viewModels);
-        ViewModelAdapter.notifyDataSetChanged();
-//        ViewModelAdapter.setItems(viewModels);
-        // Might need to wait for setItems() to complete..
+        viewModelAdapter.items.clear();
+        viewModelAdapter.items.addAll(viewModels);
+        viewModelAdapter.notifyDataSetChanged();
         recyclerView.getLayoutManager().scrollToPosition(position);
     }
 
@@ -132,16 +130,6 @@ public class QueuePagerFragment extends BaseFragment implements
     public void updateQueuePosition(int position) {
         recyclerView.getLayoutManager().scrollToPosition(position);
     }
-
-//    @Override
-//    public void onPageSelected(int position) {
-//        int oldPos = MusicUtils.getQueuePosition();
-//        if (position > oldPos) {
-//            MusicUtils.next();
-//        } else if (position < oldPos) {
-//            MusicUtils.previous(false);
-//        }
-//    }
 
     @Override
     protected String screenName() {

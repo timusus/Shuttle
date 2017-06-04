@@ -231,7 +231,6 @@ public class DrawerFragment extends BaseFragment implements
             requestManager.load(song)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .error(backgroundPlaceholder)
-                    .fallback(backgroundPlaceholder)
                     .into(backgroundImage);
 
             requestManager.load(song.getAlbumArtist())

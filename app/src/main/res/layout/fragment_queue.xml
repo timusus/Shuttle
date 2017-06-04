@@ -11,7 +11,7 @@
     <com.simplecity.amp_library.ui.views.StatusBarView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?colorPrimaryDark"/>
+        android:background="@color/colorPrimaryDark"/>
 
     <!-- Regular Toolbar steals touch events, but we need the events to be passed to our peek view -->
     <com.simplecity.amp_library.ui.views.NonClickableToolbar

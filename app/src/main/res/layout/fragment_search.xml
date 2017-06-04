@@ -15,7 +15,7 @@
         <com.simplecity.amp_library.ui.views.StatusBarView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?colorPrimaryDark"/>
+            android:background="@color/colorPrimaryDark"/>
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"

@@ -59,9 +59,9 @@ public class FolderView extends BaseViewModel<FolderView.ViewHolder> {
     @Nullable
     private ClickListener listener;
 
-    private boolean mShowCheckboxes;
+    private boolean showCheckboxes;
 
-    private boolean mIsChecked;
+    private boolean isChecked;
 
     public FolderView(BaseFileObject baseFileObject) {
         this.baseFileObject = baseFileObject;
@@ -72,11 +72,11 @@ public class FolderView extends BaseViewModel<FolderView.ViewHolder> {
     }
 
     public void setShowCheckboxes(boolean show) {
-        mShowCheckboxes = show;
+        showCheckboxes = show;
     }
 
     public void setChecked(boolean checked) {
-        mIsChecked = checked;
+        isChecked = checked;
     }
 
     private void onClick() {
@@ -137,13 +137,12 @@ public class FolderView extends BaseViewModel<FolderView.ViewHolder> {
                 holder.lineThree.setVisibility(VISIBLE);
                 holder.lineOne.setText(((FileObject) baseFileObject).tagInfo.trackName);
                 holder.lineTwo.setText(format("%s - %s", ((FileObject) baseFileObject).tagInfo.artistName, ((FileObject) baseFileObject).tagInfo.albumName));
-
                 DurationTask durationTask = new DurationTask(holder.lineThree, (FileObject) baseFileObject);
                 durationTask.execute();
                 break;
         }
 
-        if (mShowCheckboxes && baseFileObject.fileType == FileType.FOLDER) {
+        if (showCheckboxes && baseFileObject.fileType == FileType.FOLDER) {
             holder.checkBox.setVisibility(VISIBLE);
             holder.imageView.setVisibility(GONE);
         } else {
@@ -151,7 +150,7 @@ public class FolderView extends BaseViewModel<FolderView.ViewHolder> {
             holder.imageView.setVisibility(VISIBLE);
         }
 
-        holder.checkBox.setChecked(mIsChecked);
+        holder.checkBox.setChecked(isChecked);
     }
 
     @Override

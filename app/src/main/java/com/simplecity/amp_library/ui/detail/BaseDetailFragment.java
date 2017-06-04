@@ -437,7 +437,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
                                                 .with(this)
                                                 .load(currentSlideShowAlbum)
                                                 .centerCrop())
-                                        .animate(new AlwaysCrossFade(false))
+                                        .crossFade(600)
                                         .into(headerImageView);
                                 currentSlideShowAlbum = nextSlideShowAlbum;
                             }

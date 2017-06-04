@@ -286,6 +286,7 @@ public class SuggestedFragment extends BaseFragment implements
 
                             SuggestedHeader favoriteHeader = new SuggestedHeader(getString(R.string.fav_title), getString(R.string.suggested_favorite_subtitle), playlist);
                             SuggestedHeaderView favoriteHeaderView = new SuggestedHeaderView(favoriteHeader);
+                            favoriteHeaderView.setClickListener(this);
 
                             return favouritesSongsObservable
                                     .map(songs -> {
@@ -306,6 +307,7 @@ public class SuggestedFragment extends BaseFragment implements
 
                             SuggestedHeader recentlyAddedHeader = new SuggestedHeader(getString(R.string.recentlyadded), getString(R.string.suggested_recently_added_subtitle), playlist);
                             SuggestedHeaderView recentlyAddedHeaderView = new SuggestedHeaderView(recentlyAddedHeader);
+                            recentlyAddedHeaderView.setClickListener(this);
 
                             return playlist.getSongsObservable()
                                     .flatMap(songs -> Observable.just(Operators.songsToAlbums(songs)))

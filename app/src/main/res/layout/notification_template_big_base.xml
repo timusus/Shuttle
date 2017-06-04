@@ -56,9 +56,7 @@
                         android:layout_width="0dip"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:ellipsize="marquee"
-                        android:fadingEdge="horizontal"
-                        android:maxLines="1"
+                        android:lines="1"
                         android:textAppearance="@android:style/TextAppearance.StatusBar.EventContent.Title"
                         tools:text="Ticks &amp; Leeches"/>
                 </LinearLayout>
@@ -71,9 +69,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginTop="-2dp"
-                    android:ellipsize="marquee"
-                    android:fadingEdge="horizontal"
-                    android:maxLines="1"
+                    android:lines="1"
                     android:visibility="gone"
                     tools:text="Text 2"/>
 
@@ -100,9 +96,7 @@
                         android:layout_gravity="center"
                         android:layout_marginTop="2dp"
                         android:layout_weight="1"
-                        android:ellipsize="marquee"
-                        android:fadingEdge="horizontal"
-                        android:maxLines="1"
+                        android:lines="1"
                         android:textAppearance="@android:style/TextAppearance.StatusBar.EventContent"
                         tools:text="Tool | Lateralus"/>
                 </LinearLayout>
