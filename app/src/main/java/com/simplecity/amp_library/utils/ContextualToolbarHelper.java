@@ -48,8 +48,10 @@ public class ContextualToolbarHelper<T> {
      * and sets isActive to false.
      */
     public void finish() {
-        Stream.of(items).forEach(viewModel -> viewModel.setSelected(false));
-        callback.notifyDatasetChanged();
+        if (!items.isEmpty()) {
+            Stream.of(items).forEach(viewModel -> viewModel.setSelected(false));
+            callback.notifyDatasetChanged();
+        }
 
         items.clear();
 

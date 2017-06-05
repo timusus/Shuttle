@@ -75,8 +75,6 @@ public class LibraryController extends BaseFragment implements
     private static final String SHOW_FOLDERS = "show_folders";
     private static final String SHOW_PLAYLISTS = "show_playlists";
 
-    private int defaultPage;
-
     private PagerAdapter adapter;
 
     @BindView(R.id.tabs)
@@ -90,6 +88,8 @@ public class LibraryController extends BaseFragment implements
 
     @BindView(R.id.contextualToolbar)
     ContextualToolbar contextualToolbar;
+
+    private int currentPage = 0;
 
     public static FragmentInfo fragmentInfo() {
         return new FragmentInfo(LibraryController.class, null, "LibraryController");
@@ -157,19 +157,19 @@ public class LibraryController extends BaseFragment implements
             }
         }
 
-        defaultPage = 2;
+        currentPage = 2;
 
         String defaultPage = prefs.getString("pref_default_page", null);
         for (int i = 0; i < adapter.getCount(); i++) {
             if (adapter.getPageTitle(i).equals(defaultPage)) {
-                this.defaultPage = i;
+                this.currentPage = i;
             }
         }
-        if (this.defaultPage > adapter.getCount()) {
+        if (this.currentPage > adapter.getCount()) {
             if (adapter.getCount() > 3) {
-                this.defaultPage = 2;
+                this.currentPage = 2;
             } else {
-                this.defaultPage = 0;
+                this.currentPage = 0;
             }
         }
 
@@ -187,7 +187,7 @@ public class LibraryController extends BaseFragment implements
 
         pager.setAdapter(adapter);
         pager.setOffscreenPageLimit(adapter.getCount() - 1);
-        pager.setCurrentItem(defaultPage);
+        pager.setCurrentItem(currentPage);
         pager.addOnPageChangeListener(new PagerListenerAdapter() {
             @Override
             public void onPageSelected(int position) {
@@ -197,11 +197,12 @@ public class LibraryController extends BaseFragment implements
                     if (fragment instanceof PageSelectedListener) {
                         if (i == position) {
                             ((PageSelectedListener) fragment).onPageSelected();
-                        } else {
+                        } else if (i == currentPage) {
                             ((PageSelectedListener) fragment).onPageDeselected();
                         }
                     }
                 }
+                currentPage = position;
             }
         });
 
