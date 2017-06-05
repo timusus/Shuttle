@@ -107,8 +107,6 @@ public abstract class BaseFragment extends BaseController {
         refWatcher.watch(this);
     }
 
-    protected abstract String screenName();
-
     protected void setupCastMenu(Menu menu) {
         if (getActivity() instanceof BaseCastActivity) {
             BaseCastManager castManager = ((BaseCastActivity) getActivity()).castManager;
@@ -118,4 +116,5 @@ public abstract class BaseFragment extends BaseController {
         }
     }
 
+    protected abstract String screenName();
 }

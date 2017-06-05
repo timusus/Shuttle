@@ -3,7 +3,8 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:icon="?attr/btn_add"
+        android:id="@+id/menu_add_to_playlist"
+        android:icon="@drawable/ic_action_add"
         android:title="@string/add_to_playlist"
         app:showAsAction="ifRoom">
         <menu>
@@ -13,13 +14,13 @@
 
     <item
         android:id="@+id/menu_add_to_queue"
-        android:icon="?attr/btn_queue"
+        android:icon="@drawable/ic_action_add_queue"
         android:title="@string/add_to_queue"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/delete"
-        android:icon="?attr/btn_delete"
+        android:icon="@drawable/ic_action_delete"
         android:title="@string/delete_item"
         app:showAsAction="ifRoom"/>
 </menu>

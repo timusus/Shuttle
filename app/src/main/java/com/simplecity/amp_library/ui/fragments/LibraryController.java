@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
@@ -32,6 +33,9 @@ import com.simplecity.amp_library.ui.detail.ArtistDetailFragment;
 import com.simplecity.amp_library.ui.detail.BaseDetailFragment;
 import com.simplecity.amp_library.ui.detail.GenreDetailFragment;
 import com.simplecity.amp_library.ui.detail.PlaylistDetailFragment;
+import com.simplecity.amp_library.ui.views.ContextualToolbar;
+import com.simplecity.amp_library.ui.views.ContextualToolbarHost;
+import com.simplecity.amp_library.ui.views.PagerListenerAdapter;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
 import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
@@ -50,7 +54,8 @@ public class LibraryController extends BaseFragment implements
         AlbumFragment.AlbumClickListener,
         SuggestedFragment.SuggestedClickListener,
         PlaylistFragment.PlaylistClickListener,
-        GenreFragment.GenreClickListener {
+        GenreFragment.GenreClickListener,
+        ContextualToolbarHost {
 
     private static final String TAG = "LibraryController";
 
@@ -82,6 +87,9 @@ public class LibraryController extends BaseFragment implements
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+
+    @BindView(R.id.contextualToolbar)
+    ContextualToolbar contextualToolbar;
 
     public static FragmentInfo fragmentInfo() {
         return new FragmentInfo(LibraryController.class, null, "LibraryController");
@@ -180,6 +188,22 @@ public class LibraryController extends BaseFragment implements
         pager.setAdapter(adapter);
         pager.setOffscreenPageLimit(adapter.getCount() - 1);
         pager.setCurrentItem(defaultPage);
+        pager.addOnPageChangeListener(new PagerListenerAdapter() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                for (int i = 0; i < adapter.getCount(); i++) {
+                    Fragment fragment = adapter.getItem(i);
+                    if (fragment instanceof PageSelectedListener) {
+                        if (i == position) {
+                            ((PageSelectedListener) fragment).onPageSelected();
+                        } else {
+                            ((PageSelectedListener) fragment).onPageDeselected();
+                        }
+                    }
+                }
+            }
+        });
 
         slidingTabLayout.setupWithViewPager(pager);
 
@@ -277,4 +301,8 @@ public class LibraryController extends BaseFragment implements
         return "LibraryController";
     }
 
+    @Override
+    public ContextualToolbar getContextualToolbar() {
+        return contextualToolbar;
+    }
 }

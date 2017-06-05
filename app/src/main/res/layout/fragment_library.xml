@@ -53,6 +53,10 @@
                     app:layout_collapseMode="none"
                     app:title="@string/library_title"/>
 
+                <include
+                    android:id="@+id/contextualToolbar"
+                    layout="@layout/contextual_toolbar"/>
+
             </android.support.design.widget.CollapsingToolbarLayout>
         </android.support.design.widget.AppBarLayout>
 

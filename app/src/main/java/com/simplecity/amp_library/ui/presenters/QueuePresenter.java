@@ -109,16 +109,16 @@ public class QueuePresenter extends Presenter<QueueView> {
 
     private SongView.ClickListener clickListener = new SongView.ClickListener() {
         @Override
-        public void onSongClick(Song song, SongView.ViewHolder holder) {
-            MusicUtils.setQueuePosition(holder.getAdapterPosition());
+        public void onSongClick(int position, SongView songView) {
+            MusicUtils.setQueuePosition(position);
             QueueView queueView = getView();
             if (queueView != null) {
-                queueView.setCurrentQueueItem(holder.getAdapterPosition());
+                queueView.setCurrentQueueItem(position);
             }
         }
 
         @Override
-        public boolean onSongLongClick(Song song) {
+        public boolean onSongLongClick(int position, SongView songView) {
             return false;
         }
 

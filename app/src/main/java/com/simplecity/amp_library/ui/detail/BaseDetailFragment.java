@@ -721,18 +721,15 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     }
 
     @Override
-    public void onSongClick(Song song, SongView.ViewHolder holder) {
+    public void onSongClick(int position, SongView songView) {
         subscriptions.add(getSongs()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(songs -> {
-                    int position = songs.indexOf(song);
-                    MusicUtils.playAll(songs, position, message -> Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show());
-                }));
+                .subscribe(songs -> MusicUtils.playAll(songs, songs.indexOf(songView.song), message -> Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show())));
     }
 
     @Override
-    public boolean onSongLongClick(Song song) {
+    public boolean onSongLongClick(int position, SongView songView) {
         return false;
     }
 

@@ -84,15 +84,15 @@ public class DialogUtils {
     public static MaterialDialog.Builder getBuilder(Context context) {
 
         return new MaterialDialog.Builder(context)
-                .titleColorRes(R.color.primary_text_light)
-                .contentColorRes(R.color.primary_text_light)
-                .dividerColorRes(R.color.colorAccent)
-                .backgroundColorRes(R.color.bg_light)
-                .positiveColorRes(R.color.colorAccent)
-                .neutralColorRes(R.color.colorAccent)
-                .negativeColorRes(R.color.colorAccent)
-                .widgetColorRes(R.color.colorAccent)
-                .buttonRippleColorRes(R.color.colorAccent);
+                .titleColor(Aesthetic.get().textColorPrimary().blockingFirst())
+                .contentColor(Aesthetic.get().textColorPrimary().blockingFirst())
+                .dividerColor(Aesthetic.get().colorAccent().blockingFirst())
+                .backgroundColor(Aesthetic.get().colorWindowBackground().blockingFirst())
+                .positiveColor(Aesthetic.get().colorAccent().blockingFirst())
+                .neutralColor(Aesthetic.get().colorAccent().blockingFirst())
+                .negativeColor(Aesthetic.get().colorAccent().blockingFirst())
+                .widgetColor(Aesthetic.get().colorAccent().blockingFirst())
+                .buttonRippleColor(Aesthetic.get().colorAccent().blockingFirst());
     }
 
     public static MaterialDialog getChangelogDialog(Context context) {
@@ -258,10 +258,11 @@ public class DialogUtils {
 
         private Context context;
 
-        private
-        @StringRes int deleteSingleMessageId;
-        private
-        @StringRes int deleteMultipleMessageId;
+        @StringRes
+        private int deleteSingleMessageId;
+
+        @StringRes
+        private int deleteMultipleMessageId;
 
         private List<String> itemNames;
         private Observable<List<Song>> songsObservable;

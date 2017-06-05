@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_activated="true">
-        <color android:color="@color/ripple_material_light"/>
+        <color android:color="@color/ripple_material_dark"/>
     </item>
     <item android:state_selected="true">
-        <color android:color="@color/ripple_material_light"/>
+        <color android:color="@color/ripple_material_dark"/>
     </item>
     <item>
         <color android:color="@color/transparent"/>

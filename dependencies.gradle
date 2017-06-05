@@ -74,7 +74,6 @@ ext.versions = [
         daggerAnnotationProcessor     : "2.10",
         expandableRecyclerView        : "3.0.0-RC1",
         aesthetic                     : "0.4.0",
-        materialCab                   : "0.1.12",
 
         // //////////////////////////////////////////////////////////////////////////
         // MultiDex
@@ -198,8 +197,6 @@ ext.libs = [
         // Aesthetic - Theming Engine
 //        aesthetic                     : "com.afollestad:aesthetic:$versions.aesthetic",
         aesthetic                     : project(":libraries/:aesthetic"),
-        // Material CAB
-        materialCab                   : "com.afollestad:material-cab:$versions.materialCab",
 
         // //////////////////////////////////////////////////////////////////////////
         // MultiDex

@@ -31,13 +31,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SongView extends BaseViewModel<SongView.ViewHolder> implements
-        SectionedView {
+        SectionedView,
+        SelectableViewModel<Song> {
 
     public interface ClickListener {
 
-        void onSongClick(Song song, ViewHolder holder);
+        void onSongClick(int position, SongView songView);
 
-        boolean onSongLongClick(Song song);
+        boolean onSongLongClick(int position, SongView songView);
 
         void onSongOverflowClick(View v, Song song);
 
@@ -62,7 +63,7 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
 
     private boolean isCurrentTrack;
 
-    private boolean isChecked = true;
+    private boolean isSelected;
 
     @Nullable
     private ClickListener listener;
@@ -101,13 +102,9 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
         return isCurrentTrack;
     }
 
-    public void setChecked(boolean checked) {
-        isChecked = checked;
-    }
-
-    private void onItemClick(ViewHolder holder) {
+    private void onItemClick(int position) {
         if (listener != null) {
-            listener.onSongClick(song, holder);
+            listener.onSongClick(position, this);
         }
     }
 
@@ -117,9 +114,9 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
         }
     }
 
-    private boolean onItemLongClick() {
+    private boolean onItemLongClick(int position) {
         if (listener != null) {
-            return listener.onSongLongClick(song);
+            return listener.onSongLongClick(position, this);
         }
         return false;
     }
@@ -144,7 +141,7 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
     public void bindView(ViewHolder holder) {
         super.bindView(holder);
 
-        holder.itemView.setActivated(isChecked);
+        holder.itemView.setActivated(isSelected);
 
         holder.lineOne.setText(song.name);
 
@@ -206,7 +203,7 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
             holder.dragHandle.setActivated(isCurrentTrack);
         }
 
-        holder.itemView.setActivated(isChecked);
+        holder.itemView.setActivated(isSelected);
     }
 
     @Override
@@ -262,7 +259,26 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
 
     @Override
     public boolean areContentsEqual(Object other) {
-        return this.equals(other) && Arrays.equals(prefix, ((SongView) other).prefix);
+        if (other instanceof SongView) {
+            return this.song.equals(((SongView) other).song);
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
+    @Override
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    @Override
+    public Song getItem() {
+        return song;
     }
 
     @Override
@@ -275,9 +291,10 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
         if (editable != songView.editable) return false;
         if (showAlbumArt != songView.showAlbumArt) return false;
         if (showTrackNumber != songView.showTrackNumber) return false;
+        if (isCurrentTrack != songView.isCurrentTrack) return false;
+        if (isSelected != songView.isSelected) return false;
         if (song != null ? !song.equals(songView.song) : songView.song != null) return false;
         return Arrays.equals(prefix, songView.prefix);
-
     }
 
     @Override
@@ -287,6 +304,8 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
         result = 31 * result + (editable ? 1 : 0);
         result = 31 * result + (showAlbumArt ? 1 : 0);
         result = 31 * result + (showTrackNumber ? 1 : 0);
+        result = 31 * result + (isCurrentTrack ? 1 : 0);
+        result = 31 * result + (isSelected ? 1 : 0);
         return result;
     }
 
@@ -325,8 +344,8 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
                 //Todo: Set background color of playCount
             }
 
-            itemView.setOnClickListener(v -> viewModel.onItemClick(this));
-            itemView.setOnLongClickListener(v -> viewModel.onItemLongClick());
+            itemView.setOnClickListener(v -> viewModel.onItemClick(getAdapterPosition()));
+            itemView.setOnLongClickListener(v -> viewModel.onItemLongClick(getAdapterPosition()));
 
             overflowButton.setOnClickListener(v -> viewModel.onOverflowClick(v));
 
