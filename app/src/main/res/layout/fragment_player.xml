@@ -192,7 +192,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/statusBarView"
         app:navigationIcon="?attr/homeAsUpIndicator"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:title="@string/nowplaying_title"
         app:transparentBackground="true"/>
 
