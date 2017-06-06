@@ -27,9 +27,9 @@ public class MenuUtils implements MusicUtils.Defs {
 
     public static void addSongMenuOptions(final Context context, final PopupMenu menu) {
         menu.getMenu().add(SONG_FRAGMENT_GROUP_ID, PLAY_NEXT, 0, R.string.play_next);
-        SubMenu sub = menu.getMenu().addSubMenu(SONG_FRAGMENT_GROUP_ID, ADD_TO_PLAYLIST, 1, R.string.add_to_playlist);
+        SubMenu sub = menu.getMenu().addSubMenu(SONG_FRAGMENT_GROUP_ID, ADD_TO_PLAYLIST, 1, R.string.menu_playlist);
         PlaylistUtils.makePlaylistMenu(context, sub, SONG_FRAGMENT_GROUP_ID);
-        menu.getMenu().add(SONG_FRAGMENT_GROUP_ID, QUEUE, 2, R.string.add_to_queue);
+        menu.getMenu().add(SONG_FRAGMENT_GROUP_ID, QUEUE, 2, R.string.menu_queue);
         if (ShuttleUtils.isUpgraded()) {
             menu.getMenu().add(SONG_FRAGMENT_GROUP_ID, TAGGER, 3, R.string.edit_tags);
         }

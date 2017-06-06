@@ -21,7 +21,6 @@ import com.simplecity.amp_library.ui.views.NonScrollImageButton;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.SortManager;
 import com.simplecity.amp_library.utils.StringUtils;
-import com.simplecityapps.recycler_adapter.model.BaseViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 
 import java.util.Arrays;
@@ -30,7 +29,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SongView extends BaseViewModel<SongView.ViewHolder> implements
+public class SongView extends BaseSelectableViewModel<SongView.ViewHolder, Song> implements
         SectionedView,
         SelectableViewModel<Song> {
 
@@ -62,8 +61,6 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
     private boolean showTrackNumber;
 
     private boolean isCurrentTrack;
-
-    private boolean isSelected;
 
     @Nullable
     private ClickListener listener;
@@ -141,8 +138,6 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
     public void bindView(ViewHolder holder) {
         super.bindView(holder);
 
-        holder.itemView.setActivated(isSelected);
-
         holder.lineOne.setText(song.name);
 
         if (holder.playCount != null) {
@@ -192,6 +187,8 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
 
     @Override
     public void bindView(ViewHolder holder, int position, List payloads) {
+        super.bindView(holder, position, payloads);
+
         //A partial bind. Due to the areContentsEqual implementation, the only reason this is called
         //is because the prefix changed. Update accordingly.
         if (prefixHighlighter != null) {
@@ -202,8 +199,6 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
         if (holder.dragHandle != null) {
             holder.dragHandle.setActivated(isCurrentTrack);
         }
-
-        holder.itemView.setActivated(isSelected);
     }
 
     @Override
@@ -260,20 +255,9 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
     @Override
     public boolean areContentsEqual(Object other) {
         if (other instanceof SongView) {
-            return this.song.equals(((SongView) other).song);
-        } else {
-            return false;
+            return this.song.equals(((SongView) other).song) && Arrays.equals(prefix, ((SongView) other).prefix);
         }
-    }
-
-    @Override
-    public void setSelected(boolean selected) {
-        isSelected = selected;
-    }
-
-    @Override
-    public boolean isSelected() {
-        return isSelected;
+        return false;
     }
 
     @Override
@@ -285,6 +269,7 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
         SongView songView = (SongView) o;
 
@@ -292,20 +277,19 @@ public class SongView extends BaseViewModel<SongView.ViewHolder> implements
         if (showAlbumArt != songView.showAlbumArt) return false;
         if (showTrackNumber != songView.showTrackNumber) return false;
         if (isCurrentTrack != songView.isCurrentTrack) return false;
-        if (isSelected != songView.isSelected) return false;
         if (song != null ? !song.equals(songView.song) : songView.song != null) return false;
         return Arrays.equals(prefix, songView.prefix);
     }
 
     @Override
     public int hashCode() {
-        int result = song != null ? song.hashCode() : 0;
+        int result = super.hashCode();
+        result = 31 * result + (song != null ? song.hashCode() : 0);
         result = 31 * result + Arrays.hashCode(prefix);
         result = 31 * result + (editable ? 1 : 0);
         result = 31 * result + (showAlbumArt ? 1 : 0);
         result = 31 * result + (showTrackNumber ? 1 : 0);
         result = 31 * result + (isCurrentTrack ? 1 : 0);
-        result = 31 * result + (isSelected ? 1 : 0);
         return result;
     }
 

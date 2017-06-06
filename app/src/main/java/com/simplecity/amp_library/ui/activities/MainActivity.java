@@ -37,8 +37,8 @@ public class MainActivity extends BaseCastActivity implements
         // If we haven't set any defaults, do that now
 //        if (Aesthetic.isFirstTime()) {
             Aesthetic.get()
-                    .activityTheme(R.style.AppTheme_Black)
-                    .isDark(true)
+                    .activityTheme(R.style.AppTheme_Light)
+                    .isDark(false)
                     .colorPrimaryRes(R.color.blue_500)
                     .colorAccentRes(R.color.amber_300)
                     .colorStatusBarAuto()

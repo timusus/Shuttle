@@ -11,7 +11,6 @@ import android.view.View;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
-import com.bignerdranch.android.multiselector.MultiSelector;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
@@ -515,8 +514,6 @@ public class SearchPresenter extends Presenter<SearchView> implements
         private RequestManager requestManager;
 
         private PrefixHighlighter prefixHighlighter;
-
-        private MultiSelector dummySelector = new MultiSelector();
 
         private SearchHeaderView songsHeader = new SearchHeaderView(new Header(ShuttleApplication.getInstance().getString(R.string.tracks_title)));
 

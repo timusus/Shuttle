@@ -214,8 +214,14 @@
     <string name="fav_add">Favorite</string>
     <!-- Context menu item -->
     <string name="play_selection">Play</string>
+    <!-- Multi select menu item-->
+    <string name="menu_add_to">Add to…</string>
+    <!-- Multi select menu item-->
+    <string name="menu_playlist">Playlist</string>
+    <!-- Multi select menu item-->
+    <string name="menu_queue">Queue</string>
     <!-- Context menu item -->
-    <string name="add_to_playlist">Add to playlist</string>
+    <string name="add_to_playlist">Playlist</string>
     <!-- Context menu item -->
     <string name="new_playlist">New</string>
     <!-- menu item to save the current list as a new playlist -->
@@ -256,8 +262,6 @@
     <string name="nowplaying_title">Now Playing</string>
     <!-- -->
     <string name="up_next_title">Up Next</string>
-    <!-- Context menu item -->
-    <string name="add_to_queue">Add to queue</string>
     <!-- Popup menu item -->
     <string name="go_to">Go to…</string>
     <!-- 'More' button -->

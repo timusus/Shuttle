@@ -103,7 +103,7 @@ public class SearchFragment extends BaseFragment implements com.simplecity.amp_l
 
         ButterKnife.bind(this, rootView);
 
-        toolbar.inflateMenu(R.menu.menu_search_activity);
+        toolbar.inflateMenu(R.menu.menu_search);
         toolbar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.search_fuzzy:

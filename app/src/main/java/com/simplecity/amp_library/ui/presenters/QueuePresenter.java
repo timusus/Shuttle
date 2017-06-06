@@ -16,24 +16,28 @@ import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.views.QueueView;
+import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import rx.android.schedulers.AndroidSchedulers;
 
 public class QueuePresenter extends Presenter<QueueView> {
 
-    @Inject
-    RequestManager requestManager;
+    private RequestManager requestManager;
 
-    @Inject
-    public QueuePresenter() {
+    private ContextualToolbarHelper<Song> contextualToolbarHelper;
+
+    public QueuePresenter(RequestManager requestManager, ContextualToolbarHelper<Song> contextualToolbarHelper) {
+        this.requestManager = requestManager;
+        this.contextualToolbarHelper = contextualToolbarHelper;
     }
+
+    private List<ViewModel> data = new ArrayList<>();
 
     @Override
     public void bindView(@NonNull QueueView view) {
@@ -93,33 +97,45 @@ public class QueuePresenter extends Presenter<QueueView> {
 
     private void loadData() {
         QueueView queueView = getView();
-        List<ViewModel> items = Stream.of(MusicUtils.getQueue())
+        data = Stream.of(MusicUtils.getQueue())
                 .map(song -> {
-                    SongView songView = new SongView(song, requestManager);
-                    songView.setClickListener(clickListener);
-                    songView.setShowAlbumArt(true);
-                    songView.setEditable(true);
+
+                    // Look for an existing SongView wrapping the song, we'll reuse it if it exists.
+                    SongView songView = (SongView) Stream.of(data)
+                            .filter(viewModel -> viewModel instanceof SongView && (((SongView) viewModel).song.equals(song)))
+                            .findFirst()
+                            .orElse(null);
+
+                    if (songView == null) {
+                        songView = new SongView(song, requestManager);
+                        songView.setClickListener(clickListener);
+                        songView.setShowAlbumArt(true);
+                        songView.setEditable(true);
+                    }
+
                     return songView;
                 })
                 .collect(Collectors.toList());
         if (queueView != null) {
-            queueView.loadData(items, MusicUtils.getQueuePosition());
+            queueView.loadData(data, MusicUtils.getQueuePosition());
         }
     }
 
     private SongView.ClickListener clickListener = new SongView.ClickListener() {
         @Override
         public void onSongClick(int position, SongView songView) {
-            MusicUtils.setQueuePosition(position);
-            QueueView queueView = getView();
-            if (queueView != null) {
-                queueView.setCurrentQueueItem(position);
+            if (!contextualToolbarHelper.handleClick(position, songView)) {
+                MusicUtils.setQueuePosition(position);
+                QueueView queueView = getView();
+                if (queueView != null) {
+                    queueView.setCurrentQueueItem(position);
+                }
             }
         }
 
         @Override
         public boolean onSongLongClick(int position, SongView songView) {
-            return false;
+            return contextualToolbarHelper.handleLongClick(position, songView);
         }
 
         @Override

@@ -12,7 +12,7 @@ import com.simplecity.amp_library.ui.adapters.ViewType;
 
 import static com.simplecity.amp_library.glide.utils.GlideUtils.getPlaceHolderDrawable;
 
-public class SuggestedSongView extends MultiItemView<SuggestedSongView.ViewHolder> {
+public class SuggestedSongView extends MultiItemView<SuggestedSongView.ViewHolder, Song> {
 
     public interface ClickListener {
 
@@ -59,6 +59,11 @@ public class SuggestedSongView extends MultiItemView<SuggestedSongView.ViewHolde
     @Override
     public int getViewType() {
         return ViewType.SUGGESTED_SONG;
+    }
+
+    @Override
+    public Song getItem() {
+        return song;
     }
 
     @Override

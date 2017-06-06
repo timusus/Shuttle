@@ -4,13 +4,10 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
@@ -21,20 +18,21 @@ import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.Util;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
-import com.bignerdranch.android.multiselector.ModalMultiSelectorCallback;
-import com.bignerdranch.android.multiselector.MultiSelector;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
 import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.ui.presenters.QueuePresenter;
 import com.simplecity.amp_library.ui.recyclerview.ItemTouchHelperCallback;
+import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.ui.views.PlayerViewAdapter;
 import com.simplecity.amp_library.ui.views.QueueView;
+import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
@@ -58,7 +56,7 @@ import rx.Observable;
 import test.com.multisheetview.ui.view.MultiSheetView;
 
 public class QueueFragment extends BaseFragment implements
-        MusicUtils.Defs, QueueView, Toolbar.OnMenuItemClickListener {
+        QueueView {
 
     private static final String TAG = "QueueFragment";
 
@@ -74,26 +72,25 @@ public class QueueFragment extends BaseFragment implements
     @BindView(R.id.recyclerView)
     FastScrollRecyclerView recyclerView;
 
+    @BindView(R.id.contextualToolbar)
+    ContextualToolbar contextualToolbar;
+
     private ItemTouchHelper itemTouchHelper;
 
     private ViewModelAdapter adapter;
 
-    private MultiSelector multiSelector = new MultiSelector();
-
-    private ActionMode actionMode;
-
-    boolean inActionMode = false;
-
     @Inject
     RequestManager requestManager;
 
-    @Inject QueuePresenter queuePresenter;
+    QueuePresenter queuePresenter;
 
     @Inject PlayerPresenter playerPresenter;
 
     private boolean canScroll = true;
 
     private CompositeDisposable disposables = new CompositeDisposable();
+
+    private ContextualToolbarHelper<Song> contextualToolbarHelper;
 
     public static QueueFragment newInstance() {
         Bundle args = new Bundle();
@@ -134,10 +131,10 @@ public class QueueFragment extends BaseFragment implements
         toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
         toolbar.inflateMenu(R.menu.menu_queue);
 
-        SubMenu sub = toolbar.getMenu().addSubMenu(0, ADD_TO_PLAYLIST, 1, R.string.save_as_playlist);
+        SubMenu sub = toolbar.getMenu().addSubMenu(0, MusicUtils.Defs.ADD_TO_PLAYLIST, 1, R.string.save_as_playlist);
         PlaylistUtils.makePlaylistMenu(getContext(), sub, 0);
 
-        toolbar.setOnMenuItemClickListener(this);
+        toolbar.setOnMenuItemClickListener(toolbarListener);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setRecyclerListener(new RecyclerListener());
@@ -160,6 +157,10 @@ public class QueueFragment extends BaseFragment implements
                     lineOne.setTextColor(isLight ? Color.BLACK : Color.WHITE);
                     lineTwo.setTextColor(isLight ? Color.BLACK : Color.WHITE);
                 }));
+
+        setupContextualToolbar();
+
+        queuePresenter = new QueuePresenter(requestManager, contextualToolbarHelper);
 
         return rootView;
     }
@@ -213,20 +214,24 @@ public class QueueFragment extends BaseFragment implements
         super.onDestroy();
     }
 
-//    @Override
-//    public void onItemClick(View v, int position, Song song) {
-//        if (inActionMode) {
-//            multiSelector.setSelected(position, songAdapter.getItemId(position), !multiSelector.isSelected(position, songAdapter.getItemId(position)));
-//            if (multiSelector.getSelectedPositions().size() == 0) {
-//                if (actionMode != null) {
-//                    actionMode.finish();
-//                }
-//            }
-//        } else {
-//            MusicUtils.setQueuePosition(position);
-//            songAdapter.notifyDataSetChanged();
-//        }
-//    }
+    private void setupContextualToolbar() {
+        contextualToolbar.getMenu().clear();
+        contextualToolbar.inflateMenu(R.menu.context_menu_queue);
+        SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
+        PlaylistUtils.makePlaylistMenu(getActivity(), sub, MusicUtils.Defs.SONG_FRAGMENT_GROUP_ID);
+        contextualToolbar.setOnMenuItemClickListener(contextualToolbarListener);
+        contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
+            @Override
+            public void notifyItemChanged(int position) {
+                adapter.notifyItemChanged(position, 0);
+            }
+
+            @Override
+            public void notifyDatasetChanged() {
+                adapter.notifyItemRangeChanged(0, adapter.items.size(), 0);
+            }
+        });
+    }
 
 //    @Override
 //    public void onOverflowClick(View v, int position, Song song) {
@@ -250,29 +255,6 @@ public class QueueFragment extends BaseFragment implements
 //        });
 //
 //        menu.show();
-//    }
-
-//    @Override
-//    public void onAlbumLongClick(View v, int position, Song song) {
-//        if (inActionMode) {
-//            return;
-//        }
-//
-//        if (multiSelector.getSelectedPositions().size() == 0) {
-//            actionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(mActionModeCallback);
-//            inActionMode = true;
-//        }
-//
-//        multiSelector.setSelected(position, songAdapter.getItemId(position), !multiSelector.isSelected(position, songAdapter.getItemId(position)));
-//    }
-
-//    @Override
-//    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-//        if (itemTouchHelper != null) {
-//            //We've started a drag event, so don't allow the SlidingUpPanel to intercept touch events
-////            recyclerView.setBlockScroll(false);
-//            itemTouchHelper.onStartDrag(viewHolder);
-//        }
 //    }
 
     @Override
@@ -348,85 +330,57 @@ public class QueueFragment extends BaseFragment implements
         }
     };
 
-
-    private ActionMode.Callback mActionModeCallback = new ModalMultiSelectorCallback(multiSelector) {
-
+    Toolbar.OnMenuItemClickListener toolbarListener = new Toolbar.OnMenuItemClickListener() {
         @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            inActionMode = true;
-            MenuInflater inflater = getActivity().getMenuInflater();
-            inflater.inflate(R.menu.context_menu_queue, menu);
-            SubMenu sub = menu.getItem(0).getSubMenu();
-            PlaylistUtils.makePlaylistMenu(QueueFragment.this.getActivity(), sub, SONG_FRAGMENT_GROUP_ID);
-            return true;
-        }
-
-        private List<Song> getCheckedSongs() {
-            return null;
-
-//            Stream.of(multiSelector.getSelectedPositions())
-//                    .map(i -> adapter.getSong(i))
-//                    .collect(Collectors.toList());
-        }
-
-        @Override
-        public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
-
-            final List<Song> checkedSongs = getCheckedSongs();
-
-            if (checkedSongs == null || checkedSongs.size() == 0) {
-                return true;
+        public boolean onMenuItemClick(MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.menu_clear:
+                    queuePresenter.clearQueue();
+                    return true;
+                case MusicUtils.Defs.NEW_PLAYLIST: {
+                    queuePresenter.saveQueue(getContext());
+                    return true;
+                }
+                case MusicUtils.Defs.PLAYLIST_SELECTED: {
+                    queuePresenter.saveQueue(getContext(), (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST));
+                    return true;
+                }
             }
+            return false;
+        }
+    };
+
+    Toolbar.OnMenuItemClickListener contextualToolbarListener = new Toolbar.OnMenuItemClickListener() {
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+
+            List<Song> songs = Stream.of(contextualToolbarHelper.getItems())
+                    .map(SelectableViewModel::getItem)
+                    .collect(Collectors.toList());
 
             switch (item.getItemId()) {
-                case NEW_PLAYLIST:
-                    PlaylistUtils.createPlaylistDialog(getActivity(), checkedSongs);
+                case MusicUtils.Defs.NEW_PLAYLIST:
+                    PlaylistUtils.createPlaylistDialog(getActivity(), songs);
                     break;
-                case PLAYLIST_SELECTED:
+                case MusicUtils.Defs.PLAYLIST_SELECTED:
                     Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
-                    PlaylistUtils.addToPlaylist(getContext(), playlist, checkedSongs);
+                    PlaylistUtils.addToPlaylist(getContext(), playlist, songs);
                     break;
                 case R.id.delete:
                     new DialogUtils.DeleteDialogBuilder()
                             .context(getContext())
                             .singleMessageId(R.string.delete_song_desc)
                             .multipleMessage(R.string.delete_song_desc_multiple)
-                            .itemNames(Stream.of(checkedSongs)
+                            .itemNames(Stream.of(songs)
                                     .map(song -> song.name)
                                     .collect(Collectors.toList()))
-                            .songsToDelete(Observable.just(checkedSongs))
+                            .songsToDelete(Observable.just(songs))
                             .build()
                             .show();
-                    mode.finish();
+                    contextualToolbarHelper.finish();
                     break;
             }
             return true;
         }
-
-        @Override
-        public void onDestroyActionMode(ActionMode actionMode) {
-            super.onDestroyActionMode(actionMode);
-            inActionMode = false;
-            QueueFragment.this.actionMode = null;
-            multiSelector.clearSelections();
-        }
     };
-
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_clear:
-                queuePresenter.clearQueue();
-                return true;
-            case NEW_PLAYLIST: {
-                queuePresenter.saveQueue(getContext());
-                return true;
-            }
-            case PLAYLIST_SELECTED: {
-                queuePresenter.saveQueue(getContext(), (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST));
-                return true;
-            }
-        }
-        return false;
-    }
 }

@@ -1,12 +1,7 @@
 package com.simplecity.amp_library.ui.fragments;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -70,13 +65,7 @@ public class SuggestedFragment extends BaseFragment implements
 
     private RecyclerView recyclerView;
 
-    ViewModelAdapter ViewModelAdapter;
-
-    private BroadcastReceiver mReceiver;
-
-    private SharedPreferences mPrefs;
-
-    private SharedPreferences.OnSharedPreferenceChangeListener mSharedPreferenceChangeListener;
+    private ViewModelAdapter ViewModelAdapter;
 
     private CompositeSubscription subscription;
 
@@ -123,25 +112,6 @@ public class SuggestedFragment extends BaseFragment implements
         ShuttleApplication.getInstance().getAppComponent()
                 .plus(new FragmentModule(this))
                 .inject(this);
-
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
-
-        mReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (intent.getAction() != null && intent.getAction().equals("restartLoader")) {
-                    refreshAdapterItems();
-                }
-            }
-        };
-
-        mSharedPreferenceChangeListener = (sharedPreferences, key) -> {
-            if (key.equals("albumWhitelist")) {
-                refreshAdapterItems();
-            }
-        };
-
-        mPrefs.registerOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
 
         ViewModelAdapter = new ViewModelAdapter();
 
@@ -191,10 +161,6 @@ public class SuggestedFragment extends BaseFragment implements
     @Override
     public void onResume() {
         super.onResume();
-
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("restartLoader");
-        getActivity().registerReceiver(mReceiver, filter);
 
         refreshAdapterItems();
     }
@@ -391,9 +357,6 @@ public class SuggestedFragment extends BaseFragment implements
 
     @Override
     public void onPause() {
-        if (mReceiver != null) {
-            getActivity().unregisterReceiver(mReceiver);
-        }
 
         if (subscription != null) {
             subscription.unsubscribe();
@@ -401,13 +364,6 @@ public class SuggestedFragment extends BaseFragment implements
 
         super.onPause();
     }
-
-    @Override
-    public void onDestroy() {
-        mPrefs.unregisterOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
-        super.onDestroy();
-    }
-
 
     @Override
     public void onSongClick(Song song, SuggestedSongView.ViewHolder holder) {
@@ -425,14 +381,14 @@ public class SuggestedFragment extends BaseFragment implements
     }
 
     @Override
-    public void onAlbumClick(Album album, AlbumView.ViewHolder holder) {
+    public void onAlbumClick(int position, AlbumView albumView, AlbumView.ViewHolder viewHolder) {
         if (suggestedClickListener != null) {
-            suggestedClickListener.onAlbumClicked(album, holder.imageOne);
+            suggestedClickListener.onAlbumClicked(albumView.album, viewHolder.imageOne);
         }
     }
 
     @Override
-    public boolean onAlbumLongClick(Album album) {
+    public boolean onAlbumLongClick(int position, AlbumView albumView) {
         return false;
     }
 

@@ -1,19 +1,15 @@
 package com.simplecity.amp_library.ui.fragments;
 
 import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ActionMode;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,8 +21,6 @@ import android.widget.Toast;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
-import com.bignerdranch.android.multiselector.ModalMultiSelectorCallback;
-import com.bignerdranch.android.multiselector.MultiSelector;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
@@ -38,7 +32,10 @@ import com.simplecity.amp_library.ui.adapters.SectionedAdapter;
 import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.ui.modelviews.AlbumView;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
+import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
 import com.simplecity.amp_library.ui.recyclerview.GridDividerDecoration;
+import com.simplecity.amp_library.ui.views.ContextualToolbar;
+import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
@@ -60,10 +57,13 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class AlbumFragment extends BaseFragment implements
         MusicUtils.Defs,
-        AlbumView.ClickListener {
+        AlbumView.ClickListener,
+        Toolbar.OnMenuItemClickListener,
+        PageSelectedListener {
 
     interface AlbumClickListener {
 
@@ -77,8 +77,6 @@ public class AlbumFragment extends BaseFragment implements
     private static final int MENU_GRID_SIZE = 100;
     private static final int MENU_GROUP_GRID = 1;
 
-    private SharedPreferences prefs;
-
     @Nullable
     private AlbumClickListener albumClickListener;
 
@@ -86,24 +84,18 @@ public class AlbumFragment extends BaseFragment implements
 
     private GridLayoutManager layoutManager;
 
-    SectionedAdapter adapter;
-
-    MultiSelector multiSelector = new MultiSelector();
-
-    ActionMode actionMode;
-
-    boolean inActionMode = false;
-
-    private BroadcastReceiver receiver;
-
-    private SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceChangeListener;
+    private SectionedAdapter adapter;
 
     private boolean sortOrderChanged = false;
 
     private Subscription subscription;
 
+    private boolean isCurrentPage = false;
+
     @Inject
     RequestManager requestManager;
+
+    private ContextualToolbarHelper<Album> contextualToolbarHelper;
 
     public AlbumFragment() {
 
@@ -138,25 +130,6 @@ public class AlbumFragment extends BaseFragment implements
         setHasOptionsMenu(true);
 
         adapter = new SectionedAdapter();
-
-        prefs = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
-
-        receiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (intent.getAction() != null && intent.getAction().equals("restartLoader")) {
-                    refreshAdapterItems();
-                }
-            }
-        };
-
-        sharedPreferenceChangeListener = (sharedPreferences, key) -> {
-            if (key.equals("albumWhitelist")) {
-                refreshAdapterItems();
-            }
-        };
-
-        prefs.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
     }
 
     @SuppressLint("NewApi")
@@ -182,8 +155,6 @@ public class AlbumFragment extends BaseFragment implements
             recyclerView.addItemDecoration(new GridDividerDecoration(getResources(), 4, true));
             recyclerView.setRecyclerListener(new RecyclerListener());
             recyclerView.setAdapter(adapter);
-
-            actionMode = null;
         }
 
         return recyclerView;
@@ -191,9 +162,6 @@ public class AlbumFragment extends BaseFragment implements
 
     @Override
     public void onPause() {
-        if (receiver != null) {
-            getActivity().unregisterReceiver(receiver);
-        }
 
         if (subscription != null) {
             subscription.unsubscribe();
@@ -205,17 +173,10 @@ public class AlbumFragment extends BaseFragment implements
     @Override
     public void onResume() {
         super.onResume();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("restartLoader");
-        getActivity().registerReceiver(receiver, filter);
 
         refreshAdapterItems();
-    }
 
-    @Override
-    public void onDestroy() {
-        prefs.unregisterOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
-        super.onDestroy();
+        setupContextualToolbar();
     }
 
     void refreshAdapterItems() {
@@ -237,8 +198,18 @@ public class AlbumFragment extends BaseFragment implements
                             }
                             return Observable.from(albums)
                                     .map(album -> {
-                                        AlbumView albumView = new AlbumView(album, albumDisplayType, requestManager, multiSelector);
-                                        albumView.setClickListener(this);
+
+                                        // Look for an existing AlbumView wrapping the album, we'll reuse it if it exists.
+                                        AlbumView albumView = (AlbumView) Stream.of(adapter.items)
+                                                .filter(viewModel -> viewModel instanceof AlbumView && (((AlbumView) viewModel).album.equals(album)))
+                                                .findFirst()
+                                                .orElse(null);
+
+                                        if (albumView == null) {
+                                            albumView = new AlbumView(album, albumDisplayType, requestManager);
+                                            albumView.setClickListener(this);
+                                        }
+
                                         return (ViewModel) albumView;
                                     })
                                     .toList();
@@ -361,24 +332,28 @@ public class AlbumFragment extends BaseFragment implements
             case R.id.view_as_list:
                 SettingsManager.getInstance().setAlbumDisplayType(ViewType.ALBUM_LIST);
                 layoutManager.setSpanCount(getResources().getInteger(R.integer.list_num_columns));
+                //Todo:
 //                adapter.updateItemViewType();
                 adapter.notifyItemRangeChanged(0, adapter.getItemCount());
                 break;
             case R.id.view_as_grid:
                 SettingsManager.getInstance().setAlbumDisplayType(ViewType.ALBUM_GRID);
                 layoutManager.setSpanCount(SettingsManager.getInstance().getAlbumColumnCount(getResources()));
+                //Todo:
 //                adapter.updateItemViewType();
                 adapter.notifyItemRangeChanged(0, adapter.getItemCount());
                 break;
             case R.id.view_as_grid_card:
                 SettingsManager.getInstance().setAlbumDisplayType(ViewType.ALBUM_CARD);
                 layoutManager.setSpanCount(SettingsManager.getInstance().getAlbumColumnCount(getResources()));
+                //Todo:
 //                adapter.updateItemViewType();
                 adapter.notifyItemRangeChanged(0, adapter.getItemCount());
                 break;
             case R.id.view_as_grid_palette:
                 SettingsManager.getInstance().setAlbumDisplayType(ViewType.ALBUM_PALETTE);
                 layoutManager.setSpanCount(SettingsManager.getInstance().getAlbumColumnCount(getResources()));
+                //Todo:
 //                adapter.updateItemViewType();
                 adapter.notifyItemRangeChanged(0, adapter.getItemCount());
                 break;
@@ -400,40 +375,17 @@ public class AlbumFragment extends BaseFragment implements
     }
 
     @Override
-    public void onAlbumClick(Album album, AlbumView.ViewHolder holder) {
-        //        if (inActionMode) {
-//            multiSelector.setSelected(viewHolder.getAdapterPosition(), adapter.getItemId(viewHolder.getAdapterPosition()), !multiSelector.isSelected(viewHolder.getAdapterPosition(), adapter.getItemId(viewHolder.getAdapterPosition())));
-//
-//            if (multiSelector.getSelectedPositions().size() == 0) {
-//                if (actionMode != null) {
-//                    actionMode.finish();
-//                }
-//            }
-//
-//            updateActionModeSelectionCount();
-//        } else {
-        if (albumClickListener != null) {
-            albumClickListener.onAlbumClicked(album, holder.imageOne);
+    public void onAlbumClick(int position, AlbumView albumView, AlbumView.ViewHolder viewHolder) {
+        if (!contextualToolbarHelper.handleClick(position, albumView)) {
+            if (albumClickListener != null) {
+                albumClickListener.onAlbumClicked(albumView.album, viewHolder.imageOne);
+            }
         }
-//        }
     }
 
     @Override
-    public boolean onAlbumLongClick(Album album) {
-//        if (inActionMode) {
-//            return;
-//        }
-//
-//        if (multiSelector.getSelectedPositions().size() == 0) {
-//            actionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(mActionModeCallback);
-//            inActionMode = true;
-//        }
-//
-//        multiSelector.setSelected(viewHolder.getAdapterPosition(), adapter.getItemId(viewHolder.getAdapterPosition()), !multiSelector.isSelected(viewHolder.getAdapterPosition(), adapter.getItemId(viewHolder.getAdapterPosition())));
-//
-//        updateActionModeSelectionCount();
-
-        return false;
+    public boolean onAlbumLongClick(int position, AlbumView albumView) {
+        return contextualToolbarHelper.handleLongClick(position, albumView);
     }
 
     @Override
@@ -444,92 +396,100 @@ public class AlbumFragment extends BaseFragment implements
         menu.show();
     }
 
-    private void updateActionModeSelectionCount() {
-        if (actionMode != null && multiSelector != null) {
-            actionMode.setTitle(getString(R.string.action_mode_selection_count, multiSelector.getSelectedPositions().size()));
-        }
-    }
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
 
-    private ActionMode.Callback mActionModeCallback = new ModalMultiSelectorCallback(multiSelector) {
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            inActionMode = true;
-            MenuInflater inflater = getActivity().getMenuInflater();
-            inflater.inflate(R.menu.context_menu_songs, menu);
-            SubMenu sub = menu.getItem(0).getSubMenu();
-            PlaylistUtils.makePlaylistMenu(AlbumFragment.this.getActivity(), sub, ALBUM_FRAGMENT_GROUP_ID);
-            return true;
-        }
-
-        @Override
-        public boolean onActionItemClicked(final ActionMode mode, MenuItem menuItem) {
-
-            List<Album> checkedAlbums = getCheckedAlbums();
-
-            if (checkedAlbums == null || checkedAlbums.size() == 0) {
-                return true;
-            }
-
-            Observable<List<Song>> songsObservable = Observable.defer(() ->
-                    Observable.merge(Stream.of(checkedAlbums)
-                            .map(Album::getSongsObservable)
-                            .collect(Collectors.toList()))
-                            .reduce((songs, songs2) -> Stream.concat(Stream.of(songs), Stream.of(songs2))
-                                    .collect(Collectors.toList())));
-
-            switch (menuItem.getItemId()) {
-                case NEW_PLAYLIST:
-                    songsObservable
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(songs -> PlaylistUtils.createPlaylistDialog(getActivity(), songs));
-                    return true;
-                case PLAYLIST_SELECTED:
-                    songsObservable
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(songs -> {
-                                Playlist playlist = (Playlist) menuItem.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
-                                PlaylistUtils.addToPlaylist(getContext(), playlist, songs);
-                            });
-                    return true;
-                case R.id.delete: {
-                    new DialogUtils.DeleteDialogBuilder()
-                            .context(getContext())
-                            .singleMessageId(R.string.delete_album_artist_desc)
-                            .multipleMessage(R.string.delete_album_artist_desc_multiple)
-                            .itemNames(Stream.of(checkedAlbums)
-                                    .map(album -> album.name)
-                                    .collect(Collectors.toList()))
-                            .songsToDelete(songsObservable)
-                            .build()
-                            .show();
-                    mode.finish();
-                    return true;
-                }
-                case R.id.menu_add_to_queue: {
-                    songsObservable
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(songs -> MusicUtils.addToQueue(songs, message ->
-                                    Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show()));
-                    break;
-                }
-            }
-            return true;
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode actionMode) {
-            super.onDestroyActionMode(actionMode);
-            inActionMode = false;
-            AlbumFragment.this.actionMode = null;
-            multiSelector.clearSelections();
-        }
-    };
-
-    List<Album> getCheckedAlbums() {
-        return Stream.of(multiSelector.getSelectedPositions())
-                .map(i -> ((AlbumView) adapter.items.get(i)).album)
+        List<Album> albums = Stream.of(contextualToolbarHelper.getItems())
+                .map(SelectableViewModel::getItem)
                 .collect(Collectors.toList());
 
+        Observable<List<Song>> songsObservable = Observable.defer(() ->
+                Observable.from(albums)
+                        .flatMap(Album::getSongsObservable)
+                        .reduce((songs, songs2) -> Stream.concat(Stream.of(songs), Stream.of(songs2))
+                                .collect(Collectors.toList()))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread()));
+
+        switch (item.getItemId()) {
+            case NEW_PLAYLIST:
+                songsObservable
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(songs -> PlaylistUtils.createPlaylistDialog(getActivity(), songs));
+                return true;
+            case PLAYLIST_SELECTED:
+                songsObservable
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(songs -> {
+                            Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
+                            PlaylistUtils.addToPlaylist(getContext(), playlist, songs);
+                        });
+                return true;
+            case R.id.delete: {
+                new DialogUtils.DeleteDialogBuilder()
+                        .context(getContext())
+                        .singleMessageId(R.string.delete_album_desc)
+                        .multipleMessage(R.string.delete_album_desc_multiple)
+                        .itemNames(Stream.of(albums)
+                                .map(album -> album.name)
+                                .collect(Collectors.toList()))
+                        .songsToDelete(songsObservable)
+                        .build()
+                        .show();
+                contextualToolbarHelper.finish();
+                return true;
+            }
+            case R.id.addToQueue: {
+                songsObservable
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(songs -> MusicUtils.addToQueue(songs, message ->
+                                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show()));
+                break;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void onPageSelected() {
+        isCurrentPage = true;
+        setupContextualToolbar();
+    }
+
+    @Override
+    public void onPageDeselected() {
+        isCurrentPage = false;
+        new Handler().postDelayed(() -> {
+            if (contextualToolbarHelper != null) {
+                contextualToolbarHelper.finish();
+            }
+        }, 250);
+    }
+
+    private void setupContextualToolbar() {
+
+        if (!isCurrentPage) return;
+
+        ContextualToolbar contextualToolbar = ContextualToolbar.findContextualToolbar(this);
+        if (contextualToolbar != null) {
+
+            contextualToolbar.getMenu().clear();
+            contextualToolbar.inflateMenu(R.menu.context_menu_songs);
+            SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
+            PlaylistUtils.makePlaylistMenu(getActivity(), sub, SONG_FRAGMENT_GROUP_ID);
+            contextualToolbar.setOnMenuItemClickListener(this);
+            contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
+                @Override
+                public void notifyItemChanged(int position) {
+                    adapter.notifyItemChanged(position, 0);
+                }
+
+                @Override
+                public void notifyDatasetChanged() {
+                    adapter.notifyItemRangeChanged(0, adapter.items.size(), 0);
+                }
+            });
+        }
     }
 
     @Override

@@ -5,21 +5,19 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bignerdranch.android.multiselector.MultiSelector;
 import com.bumptech.glide.Glide;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.ui.views.NonScrollImageButton;
-import com.simplecityapps.recycler_adapter.model.BaseViewModel;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public abstract class MultiItemView<T extends BaseViewHolder> extends BaseViewModel<T> {
-
-    protected MultiSelector multiSelector;
+public abstract class MultiItemView<VH extends MultiItemView.ViewHolder, T> extends BaseSelectableViewModel<VH, T> {
 
     @Override
     public int getLayoutResId() {
@@ -64,6 +62,9 @@ public abstract class MultiItemView<T extends BaseViewHolder> extends BaseViewMo
         @Nullable @BindView(R.id.bottom_container)
         View bottomContainer;
 
+        @Nullable @BindView(R.id.tickImage)
+        ImageView tickImageView;
+
         public ViewHolder(View itemView) {
             super(itemView);
 
@@ -82,9 +83,10 @@ public abstract class MultiItemView<T extends BaseViewHolder> extends BaseViewMo
                     || viewType == ViewType.SUGGESTED_SONG) {
             } else {
             }
-            if (viewType == ViewType.ARTIST_GRID
-                    || viewType == ViewType.ALBUM_GRID) {
-                bottomContainer.setBackgroundColor(0x90000000);
+            if (viewType == ViewType.ARTIST_GRID || viewType == ViewType.ALBUM_GRID) {
+                if (bottomContainer != null) {
+                    bottomContainer.setBackgroundColor(0x90000000);
+                }
             }
         }
 
@@ -98,6 +100,24 @@ public abstract class MultiItemView<T extends BaseViewHolder> extends BaseViewMo
             super.recycle();
 
             Glide.clear(imageOne);
+        }
+    }
+
+    @Override
+    public void bindView(VH holder) {
+        super.bindView(holder);
+
+        if (holder.tickImageView != null) {
+            holder.tickImageView.setVisibility(isSelected() ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    @Override
+    public void bindView(VH holder, int position, List payloads) {
+        super.bindView(holder, position, payloads);
+
+        if (holder.tickImageView != null) {
+            holder.tickImageView.setVisibility(isSelected() ? View.VISIBLE : View.GONE);
         }
     }
 }

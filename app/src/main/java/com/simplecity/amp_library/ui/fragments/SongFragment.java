@@ -2,7 +2,6 @@ package com.simplecity.amp_library.ui.fragments;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -61,7 +60,7 @@ public class SongFragment extends BaseFragment implements
 
     private FastScrollRecyclerView recyclerView;
 
-    private SectionedAdapter songsAdapter;
+    private SectionedAdapter adapter;
 
     private boolean sortOrderChanged = false;
 
@@ -70,6 +69,8 @@ public class SongFragment extends BaseFragment implements
     private ShuffleView shuffleView;
 
     private ContextualToolbarHelper<Song> contextualToolbarHelper;
+
+    private boolean isCurrentPage = false;
 
     public SongFragment() {
 
@@ -91,7 +92,7 @@ public class SongFragment extends BaseFragment implements
 
         setHasOptionsMenu(true);
 
-        songsAdapter = new SectionedAdapter();
+        adapter = new SectionedAdapter();
 
         shuffleView = new ShuffleView();
         shuffleView.setClickListener(this);
@@ -102,36 +103,17 @@ public class SongFragment extends BaseFragment implements
         recyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setRecyclerListener(new RecyclerListener());
-        recyclerView.setAdapter(songsAdapter);
+        recyclerView.setAdapter(adapter);
         return recyclerView;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        ContextualToolbar contextualToolbar = ContextualToolbar.findContextualToolbar(this);
-        contextualToolbar.inflateMenu(R.menu.context_menu_songs);
-        SubMenu sub = contextualToolbar.getMenu().findItem(R.id.menu_add_to_playlist).getSubMenu();
-        PlaylistUtils.makePlaylistMenu(getActivity(), sub, SONG_FRAGMENT_GROUP_ID);
-        contextualToolbar.setOnMenuItemClickListener(this);
-        contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
-            @Override
-            public void notifyItemChanged(int position) {
-                songsAdapter.notifyItemChanged(position, 0);
-            }
-
-            @Override
-            public void notifyDatasetChanged() {
-                songsAdapter.notifyItemRangeChanged(0, songsAdapter.items.size(), 0);
-            }
-        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
         refreshAdapterItems();
+
+        setupContextualToolbar();
     }
 
     @Override
@@ -157,7 +139,7 @@ public class SongFragment extends BaseFragment implements
                                             .map(song -> {
 
                                                 // Look for an existing SongView wrapping the song, we'll reuse it if it exists.
-                                                SongView songView = (SongView) Stream.of(songsAdapter.items)
+                                                SongView songView = (SongView) Stream.of(adapter.items)
                                                         .filter(viewModel -> viewModel instanceof SongView && (((SongView) viewModel).song.equals(song)))
                                                         .findFirst()
                                                         .orElse(null);
@@ -175,10 +157,10 @@ public class SongFragment extends BaseFragment implements
                                 .subscribe(items -> {
 
                                     if (items.isEmpty()) {
-                                        songsAdapter.setItems(Collections.singletonList(new EmptyView(R.string.empty_songlist)));
+                                        adapter.setItems(Collections.singletonList(new EmptyView(R.string.empty_songlist)));
                                     } else {
                                         items.add(0, shuffleView);
-                                        songsAdapter.setItems(items);
+                                        adapter.setItems(items);
                                     }
 
                                     //Move the RV back to the top if we've had a sort order change.
@@ -304,7 +286,7 @@ public class SongFragment extends BaseFragment implements
     @Override
     public void onSongClick(int position, SongView songView) {
         if (!contextualToolbarHelper.handleClick(position, songView)) {
-            List<Song> songs = Stream.of(songsAdapter.items)
+            List<Song> songs = Stream.of(adapter.items)
                     .filter(adaptableItem -> adaptableItem instanceof SongView)
                     .map(adaptableItem -> ((SongView) adaptableItem).song)
                     .collect(Collectors.toList());
@@ -373,31 +355,58 @@ public class SongFragment extends BaseFragment implements
                         .show();
                 contextualToolbarHelper.finish();
                 break;
-            case R.id.menu_add_to_queue:
+            case R.id.addToQueue:
                 MusicUtils.addToQueue(songs, message ->
                         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show());
                 break;
         }
-
         return true;
     }
 
     @Override
-    protected String screenName() {
-        return TAG;
-    }
-
-    @Override
     public void onPageSelected() {
-        // Nothing to do
+        isCurrentPage = true;
+        setupContextualToolbar();
     }
 
     @Override
     public void onPageDeselected() {
+        isCurrentPage = false;
+
         new Handler().postDelayed(() -> {
             if (contextualToolbarHelper != null) {
                 contextualToolbarHelper.finish();
             }
         }, 250);
+    }
+
+    private void setupContextualToolbar() {
+
+        if (!isCurrentPage) return;
+
+        ContextualToolbar contextualToolbar = ContextualToolbar.findContextualToolbar(this);
+        if (contextualToolbar != null) {
+            contextualToolbar.getMenu().clear();
+            contextualToolbar.inflateMenu(R.menu.context_menu_songs);
+            SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
+            PlaylistUtils.makePlaylistMenu(getActivity(), sub, SONG_FRAGMENT_GROUP_ID);
+            contextualToolbar.setOnMenuItemClickListener(this);
+            contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
+                @Override
+                public void notifyItemChanged(int position) {
+                    adapter.notifyItemChanged(position, 0);
+                }
+
+                @Override
+                public void notifyDatasetChanged() {
+                    adapter.notifyItemRangeChanged(0, adapter.items.size(), 0);
+                }
+            });
+        }
+    }
+
+    @Override
+    protected String screenName() {
+        return TAG;
     }
 }

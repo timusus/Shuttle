@@ -3,9 +3,6 @@ package com.simplecity.amp_library.ui.detail;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -153,21 +150,6 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        receiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (intent.getAction() != null && intent.getAction().equals("restartLoader")) {
-                    detailPresenter.loadData();
-                }
-            }
-        };
-
-        sharedPreferenceChangeListener = (sharedPreferences, key) -> {
-            if (key.equals("songWhitelist")) {
-                detailPresenter.loadData();
-            }
-        };
-
         prefs.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
 
         if (requestManager == null) {
@@ -219,10 +201,6 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     @Override
     public void onResume() {
         super.onResume();
-
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("restartLoader");
-        getActivity().registerReceiver(receiver, filter);
 
         subscriptions = new CompositeSubscription();
 
@@ -739,12 +717,12 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     }
 
     @Override
-    public void onAlbumClick(Album album, AlbumView.ViewHolder holder) {
-        pushDetailController(AlbumDetailFragment.newInstance(album, ViewCompat.getTransitionName(holder.imageOne)), "AlbumDetailFragment", holder.imageOne);
+    public void onAlbumClick(int position, AlbumView albumView, AlbumView.ViewHolder viewHolder) {
+        pushDetailController(AlbumDetailFragment.newInstance(albumView.album, ViewCompat.getTransitionName(viewHolder.imageOne)), "AlbumDetailFragment", viewHolder.imageOne);
     }
 
     @Override
-    public boolean onAlbumLongClick(Album album) {
+    public boolean onAlbumLongClick(int position, AlbumView albumView) {
         return false;
     }
 

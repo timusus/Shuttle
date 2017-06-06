@@ -58,7 +58,6 @@ ext.versions = [
         glideOkhttp                   : "1.4.0@aar",
         lambdaBackport                : "2.5.1",
         materialDialogs               : "0.9.4.3",
-        multiSelViewHolder            : "0.2",
         permiso                       : "0.3.0",
         rxAndroid                     : "1.2.1",
         rxBindings                    : "0.4.0",
@@ -164,8 +163,6 @@ ext.libs = [
         glideOkhttp                   : "com.github.bumptech.glide:okhttp3-integration:$versions.glideOkhttp",
         // Material Dialogs - https://git.io/vixHf (Aidan Follestad)
         materialDialogs               : "com.afollestad.material-dialogs:core:$versions.materialDialogs",
-        // Multiselect ViewHolder - https://git.io/vix5l (Big Nerd Ranch)
-        multiSelViewHolder            : "com.bignerdranch.android:recyclerview-multiselect:$versions.multiSelViewHolder",
         // Permiso - https://git.io/vixQ4 (Greyson Parrelli)
         permiso                       : "com.greysonparrelli.permiso:permiso:$versions.permiso",
         // RxJava - https://git.io/vihv0 (ReactiveX)

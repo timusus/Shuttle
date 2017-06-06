@@ -4,7 +4,6 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bignerdranch.android.multiselector.MultiSelector;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.format.PrefixHighlighter;
 import com.simplecity.amp_library.model.AlbumArtist;
@@ -26,14 +25,14 @@ import static com.simplecity.amp_library.utils.SortManager.ArtistSort.DEFAULT;
 import static com.simplecity.amp_library.utils.SortManager.getInstance;
 import static com.simplecity.amp_library.utils.StringUtils.keyFor;
 
-public class AlbumArtistView extends MultiItemView<AlbumArtistView.ViewHolder> implements
+public class AlbumArtistView extends MultiItemView<AlbumArtistView.ViewHolder, AlbumArtist> implements
         SectionedView {
 
     public interface ClickListener {
 
-        void onAlbumArtistClick(AlbumArtist albumArtist, ViewHolder holder);
+        void onAlbumArtistClick(int position, AlbumArtistView albumArtistView, ViewHolder viewholder);
 
-        boolean onAlbumArtistLongClick(AlbumArtist albumArtist);
+        boolean onAlbumArtistLongClick(int position, AlbumArtistView albumArtistView);
 
         void onAlbumArtistOverflowClicked(View v, AlbumArtist albumArtist);
     }
@@ -59,13 +58,6 @@ public class AlbumArtistView extends MultiItemView<AlbumArtistView.ViewHolder> i
         this.requestManager = requestManager;
     }
 
-    public AlbumArtistView(AlbumArtist albumArtist, @ViewType int viewType, MultiSelector multiSelector, RequestManager requestManager) {
-        this.albumArtist = albumArtist;
-        this.viewType = viewType;
-        this.requestManager = requestManager;
-        this.multiSelector = multiSelector;
-    }
-
     public void setClickListener(@Nullable ClickListener listener) {
         this.listener = listener;
     }
@@ -75,9 +67,9 @@ public class AlbumArtistView extends MultiItemView<AlbumArtistView.ViewHolder> i
         this.prefix = prefix;
     }
 
-    private void onItemClick(ViewHolder holder) {
+    private void onItemClick(int position, ViewHolder holder) {
         if (listener != null) {
-            listener.onAlbumArtistClick(albumArtist, holder);
+            listener.onAlbumArtistClick(position, this, holder);
         }
     }
 
@@ -85,6 +77,13 @@ public class AlbumArtistView extends MultiItemView<AlbumArtistView.ViewHolder> i
         if (listener != null) {
             listener.onAlbumArtistOverflowClicked(v, albumArtist);
         }
+    }
+
+    private boolean onItemLongClick(int positon) {
+        if (listener != null) {
+            return listener.onAlbumArtistLongClick(positon, this);
+        }
+        return false;
     }
 
     @Override
@@ -128,7 +127,13 @@ public class AlbumArtistView extends MultiItemView<AlbumArtistView.ViewHolder> i
     }
 
     @Override
+    public AlbumArtist getItem() {
+        return albumArtist;
+    }
+
+    @Override
     public void bindView(ViewHolder holder, int position, List payloads) {
+        super.bindView(holder, position, payloads);
         //A partial bind. Due to the areContentsEqual implementation, the only reason this is called
         //is because the prefix changed. Update accordingly.
         if (prefixHighlighter != null) {
@@ -184,7 +189,10 @@ public class AlbumArtistView extends MultiItemView<AlbumArtistView.ViewHolder> i
 
     @Override
     public boolean areContentsEqual(Object other) {
-        return this.equals(other) && Arrays.equals(prefix, ((AlbumArtistView) other).prefix);
+        if (other instanceof AlbumArtistView) {
+            return albumArtist.equals(((AlbumArtistView) other).albumArtist) && Arrays.equals(prefix, ((AlbumArtistView) other).prefix);
+        }
+        return false;
     }
 
     public static class ViewHolder extends MultiItemView.ViewHolder<AlbumArtistView> {
@@ -192,7 +200,9 @@ public class AlbumArtistView extends MultiItemView<AlbumArtistView.ViewHolder> i
         public ViewHolder(View itemView) {
             super(itemView);
 
-            itemView.setOnClickListener(v -> viewModel.onItemClick(this));
+            itemView.setOnClickListener(v -> viewModel.onItemClick(getAdapterPosition(), this));
+
+            itemView.setOnLongClickListener(v -> viewModel.onItemLongClick(getAdapterPosition()));
 
             overflowButton.setOnClickListener(v -> viewModel.onOverflowClick(v));
         }

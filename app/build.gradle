@@ -262,7 +262,6 @@ dependencies {
     compile libs.glide
     compile libs.glideOkhttp
     compile libs.glidePalette
-    compile libs.multiSelViewHolder
     compile libs.permiso
     compile libs.rxAndroid
     compile libs.rxBindings

@@ -4,7 +4,6 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bignerdranch.android.multiselector.MultiSelector;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.format.PrefixHighlighter;
 import com.simplecity.amp_library.model.Album;
@@ -32,13 +31,13 @@ import static com.simplecity.amp_library.utils.StringUtils.makeYearLabel;
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
 
-public class AlbumView extends MultiItemView<AlbumView.ViewHolder> implements SectionedView {
+public class AlbumView extends MultiItemView<AlbumView.ViewHolder, Album> implements SectionedView {
 
     public interface ClickListener {
 
-        void onAlbumClick(Album album, ViewHolder holder);
+        void onAlbumClick(int position, AlbumView albumView, ViewHolder viewHolder);
 
-        boolean onAlbumLongClick(Album album);
+        boolean onAlbumLongClick(int position, AlbumView albumView);
 
         void onAlbumOverflowClicked(View v, Album album);
     }
@@ -66,13 +65,6 @@ public class AlbumView extends MultiItemView<AlbumView.ViewHolder> implements Se
         this.requestManager = requestManager;
     }
 
-    public AlbumView(Album album, @ViewType int viewType, RequestManager requestManager, MultiSelector multiSelector) {
-        this.album = album;
-        this.viewType = viewType;
-        this.requestManager = requestManager;
-        this.multiSelector = multiSelector;
-    }
-
     public void setClickListener(@Nullable ClickListener listener) {
         this.listener = listener;
     }
@@ -82,9 +74,9 @@ public class AlbumView extends MultiItemView<AlbumView.ViewHolder> implements Se
         this.prefix = prefix;
     }
 
-    private void onItemClick(ViewHolder holder) {
+    private void onItemClick(int position, ViewHolder holder) {
         if (listener != null) {
-            listener.onAlbumClick(album, holder);
+            listener.onAlbumClick(position, this, holder);
         }
     }
 
@@ -92,6 +84,13 @@ public class AlbumView extends MultiItemView<AlbumView.ViewHolder> implements Se
         if (listener != null) {
             listener.onAlbumOverflowClicked(v, album);
         }
+    }
+
+    private boolean onAlbumLongclick(int position) {
+        if (listener != null) {
+            return listener.onAlbumLongClick(position, this);
+        }
+        return false;
     }
 
     public void setShowYear(boolean showYear) {
@@ -105,6 +104,11 @@ public class AlbumView extends MultiItemView<AlbumView.ViewHolder> implements Se
 
     public void setViewType(int viewType) {
         this.viewType = viewType;
+    }
+
+    @Override
+    public Album getItem() {
+        return album;
     }
 
     @Override
@@ -148,6 +152,7 @@ public class AlbumView extends MultiItemView<AlbumView.ViewHolder> implements Se
 
     @Override
     public void bindView(ViewHolder holder, int position, List payloads) {
+        super.bindView(holder, position, payloads);
         //A partial bind. Due to the areContentsEqual implementation, the only reason this is called
         //is because the prefix changed. Update accordingly.
         if (prefixHighlighter != null) {
@@ -220,8 +225,10 @@ public class AlbumView extends MultiItemView<AlbumView.ViewHolder> implements Se
 
     @Override
     public boolean areContentsEqual(Object other) {
-        return this.equals(other) && Arrays.equals(prefix, ((AlbumView) other).prefix);
-
+        if (other instanceof AlbumView) {
+            return album.equals(((AlbumView) other).album) && Arrays.equals(prefix, ((AlbumView) other).prefix);
+        }
+        return false;
     }
 
     public static class ViewHolder extends MultiItemView.ViewHolder<AlbumView> {
@@ -229,7 +236,9 @@ public class AlbumView extends MultiItemView<AlbumView.ViewHolder> implements Se
         public ViewHolder(View itemView) {
             super(itemView);
 
-            itemView.setOnClickListener(v -> viewModel.onItemClick(this));
+            itemView.setOnClickListener(v -> viewModel.onItemClick(getAdapterPosition(), this));
+
+            itemView.setOnLongClickListener(v -> viewModel.onAlbumLongclick(getAdapterPosition()));
 
             overflowButton.setOnClickListener(v -> viewModel.onOverflowClick(v));
         }

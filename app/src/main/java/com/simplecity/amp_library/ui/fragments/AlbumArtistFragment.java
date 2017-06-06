@@ -1,16 +1,14 @@
 package com.simplecity.amp_library.ui.fragments;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ActionMode;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,8 +20,6 @@ import android.widget.Toast;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
-import com.bignerdranch.android.multiselector.ModalMultiSelectorCallback;
-import com.bignerdranch.android.multiselector.MultiSelector;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
@@ -35,7 +31,10 @@ import com.simplecity.amp_library.ui.adapters.SectionedAdapter;
 import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.ui.modelviews.AlbumArtistView;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
+import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
 import com.simplecity.amp_library.ui.recyclerview.GridDividerDecoration;
+import com.simplecity.amp_library.ui.views.ContextualToolbar;
+import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
@@ -61,7 +60,9 @@ import rx.schedulers.Schedulers;
 
 public class AlbumArtistFragment extends BaseFragment implements
         MusicUtils.Defs,
-        AlbumArtistView.ClickListener {
+        AlbumArtistView.ClickListener,
+        Toolbar.OnMenuItemClickListener,
+        PageSelectedListener {
 
     interface AlbumArtistClickListener {
 
@@ -84,17 +85,13 @@ public class AlbumArtistFragment extends BaseFragment implements
 
     SectionedAdapter adapter;
 
-    MultiSelector multiSelector = new MultiSelector();
-
-    ActionMode actionMode;
-
-    boolean inActionMode = false;
-
-    private BroadcastReceiver broadcastReceiver;
-
     private boolean sortOrderChanged = false;
 
     private Subscription subscription;
+
+    private ContextualToolbarHelper<AlbumArtist> contextualToolbarHelper;
+
+    private boolean isCurrentPage = false;
 
     @Inject
     RequestManager requestManager;
@@ -128,15 +125,6 @@ public class AlbumArtistFragment extends BaseFragment implements
         setHasOptionsMenu(true);
 
         adapter = new SectionedAdapter();
-
-        broadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (intent.getAction() != null && intent.getAction().equals("restartLoader")) {
-                    refreshAdapterItems();
-                }
-            }
-        };
     }
 
     @Nullable
@@ -161,8 +149,6 @@ public class AlbumArtistFragment extends BaseFragment implements
             recyclerView.addItemDecoration(new GridDividerDecoration(getResources(), 4, true));
             recyclerView.setRecyclerListener(new RecyclerListener());
             recyclerView.setAdapter(adapter);
-
-            actionMode = null;
         }
 
         return recyclerView;
@@ -170,9 +156,6 @@ public class AlbumArtistFragment extends BaseFragment implements
 
     @Override
     public void onPause() {
-        if (broadcastReceiver != null) {
-            getActivity().unregisterReceiver(broadcastReceiver);
-        }
 
         if (subscription != null) {
             subscription.unsubscribe();
@@ -185,16 +168,9 @@ public class AlbumArtistFragment extends BaseFragment implements
     public void onResume() {
         super.onResume();
 
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("restartLoader");
-        getActivity().registerReceiver(broadcastReceiver, filter);
-
         refreshAdapterItems();
-    }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
+        setupContextualToolbar();
     }
 
     void refreshAdapterItems() {
@@ -216,8 +192,19 @@ public class AlbumArtistFragment extends BaseFragment implements
                             }
                             return Observable.from(albumArtists)
                                     .map(albumArtist -> {
-                                        AlbumArtistView albumArtistView = new AlbumArtistView(albumArtist, artistDisplayType, multiSelector, requestManager);
-                                        albumArtistView.setClickListener(this);
+
+                                        // Look for an existing AlbumArtistView wrapping the song, we'll reuse it if it exists.
+                                        AlbumArtistView albumArtistView = (AlbumArtistView) Stream.of(adapter.items)
+                                                .filter(viewModel -> viewModel instanceof AlbumArtistView && (((AlbumArtistView) viewModel).albumArtist.equals(albumArtist)))
+                                                .findFirst()
+                                                .orElse(null);
+
+
+                                        if (albumArtistView == null) {
+                                            albumArtistView = new AlbumArtistView(albumArtist, artistDisplayType, requestManager);
+                                            albumArtistView.setClickListener(this);
+                                        }
+
                                         return (ViewModel) albumArtistView;
                                     })
                                     .toList();
@@ -345,24 +332,28 @@ public class AlbumArtistFragment extends BaseFragment implements
             case R.id.view_as_list:
                 SettingsManager.getInstance().setArtistDisplayType(ViewType.ARTIST_LIST);
                 layoutManager.setSpanCount(getResources().getInteger(R.integer.list_num_columns));
+                // Todo:
 //                adapter.updateItemViewType();
                 adapter.notifyItemRangeChanged(0, adapter.getItemCount());
                 break;
             case R.id.view_as_grid:
                 SettingsManager.getInstance().setArtistDisplayType(ViewType.ARTIST_GRID);
                 layoutManager.setSpanCount(SettingsManager.getInstance().getArtistColumnCount(getResources()));
+                // Todo:
 //                adapter.updateItemViewType();
                 adapter.notifyItemRangeChanged(0, adapter.getItemCount());
                 break;
             case R.id.view_as_grid_card:
                 SettingsManager.getInstance().setArtistDisplayType(ViewType.ARTIST_CARD);
                 layoutManager.setSpanCount(SettingsManager.getInstance().getArtistColumnCount(getResources()));
+                // Todo:
 //                adapter.updateItemViewType();
                 adapter.notifyItemRangeChanged(0, adapter.getItemCount());
                 break;
             case R.id.view_as_grid_palette:
                 SettingsManager.getInstance().setArtistDisplayType(ViewType.ARTIST_PALETTE);
                 layoutManager.setSpanCount(SettingsManager.getInstance().getArtistColumnCount(getResources()));
+                // Todo:
 //                adapter.updateItemViewType();
                 adapter.notifyItemRangeChanged(0, adapter.getItemCount());
                 break;
@@ -383,40 +374,17 @@ public class AlbumArtistFragment extends BaseFragment implements
     }
 
     @Override
-    public void onAlbumArtistClick(AlbumArtist albumArtist, AlbumArtistView.ViewHolder holder) {
-//        if (inActionMode) {
-//            multiSelector.setSelected(holder.getAdapterPosition(), albumArtistAdapter.getItemId(holder.getAdapterPosition()), !multiSelector.isSelected(holder.getAdapterPosition(), albumArtistAdapter.getItemId(holder.getAdapterPosition())));
-//
-//            if (multiSelector.getSelectedPositions().size() == 0) {
-//                if (actionMode != null) {
-//                    actionMode.finish();
-//                }
-//            }
-//            updateActionModeSelectionCount();
-//
-//        } else if (albumArtistClickListener != null) {
-        if (albumArtistClickListener != null) {
-            albumArtistClickListener.onAlbumArtistClicked(albumArtist, holder.imageOne);
+    public void onAlbumArtistClick(int position, AlbumArtistView albumArtistView, AlbumArtistView.ViewHolder viewholder) {
+        if (!contextualToolbarHelper.handleClick(position, albumArtistView)) {
+            if (albumArtistClickListener != null) {
+                albumArtistClickListener.onAlbumArtistClicked(albumArtistView.albumArtist, viewholder.imageOne);
+            }
         }
-//        }
     }
 
     @Override
-    public boolean onAlbumArtistLongClick(AlbumArtist albumArtist) {
-
-//        if (inActionMode) {
-//            return false;
-//        }
-
-//        if (multiSelector.getSelectedPositions().size() == 0) {
-//            actionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(mActionModeCallback);
-//            inActionMode = true;
-//        }
-//
-//        multiSelector.setSelected(viewHolder.getAdapterPosition(), albumArtistAdapter.getItemId(viewHolder.getAdapterPosition()), !multiSelector.isSelected(viewHolder.getAdapterPosition(), albumArtistAdapter.getItemId(viewHolder.getAdapterPosition())));
-//
-//        updateActionModeSelectionCount();
-        return false;
+    public boolean onAlbumArtistLongClick(int position, AlbumArtistView albumArtistView) {
+        return contextualToolbarHelper.handleLongClick(position, albumArtistView);
     }
 
     @Override
@@ -427,89 +395,95 @@ public class AlbumArtistFragment extends BaseFragment implements
         menu.show();
     }
 
-    private void updateActionModeSelectionCount() {
-        if (actionMode != null && multiSelector != null) {
-            actionMode.setTitle(getString(R.string.action_mode_selection_count, multiSelector.getSelectedPositions().size()));
-        }
-    }
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
 
-    private ActionMode.Callback mActionModeCallback = new ModalMultiSelectorCallback(multiSelector) {
-        @Override
-        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-            inActionMode = true;
-            MenuInflater inflater = getActivity().getMenuInflater();
-            inflater.inflate(R.menu.context_menu_songs, menu);
-            SubMenu sub = menu.getItem(0).getSubMenu();
-            PlaylistUtils.makePlaylistMenu(AlbumArtistFragment.this.getActivity(), sub, ARTIST_FRAGMENT_GROUP_ID);
-            return true;
-        }
+        List<AlbumArtist> albumArtists = Stream.of(contextualToolbarHelper.getItems())
+                .map(SelectableViewModel::getItem)
+                .collect(Collectors.toList());
 
-        @Override
-        public boolean onActionItemClicked(final ActionMode mode, MenuItem menuItem) {
+        Observable<List<Song>> songsObservable = Observable.defer(() ->
+                Observable.from(albumArtists)
+                        .flatMap(AlbumArtist::getSongsObservable)
+                        .reduce((songs, songs2) -> Stream.concat(Stream.of(songs), Stream.of(songs2))
+                                .collect(Collectors.toList()))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread()));
 
-            List<AlbumArtist> checkedAlbumArtists = getCheckedAlbumArtists();
-
-            if (checkedAlbumArtists == null || checkedAlbumArtists.size() == 0) {
+        switch (item.getItemId()) {
+            case NEW_PLAYLIST:
+                songsObservable.subscribe(songs -> PlaylistUtils.createPlaylistDialog(getActivity(), songs));
+                return true;
+            case PLAYLIST_SELECTED:
+                songsObservable
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(songs -> {
+                            Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
+                            PlaylistUtils.addToPlaylist(getContext(), playlist, songs);
+                        });
+                return true;
+            case R.id.delete:
+                new DialogUtils.DeleteDialogBuilder()
+                        .context(getContext())
+                        .singleMessageId(R.string.delete_album_artist_desc)
+                        .multipleMessage(R.string.delete_album_artist_desc_multiple)
+                        .itemNames(Stream.of(albumArtists)
+                                .map(albumArtist -> albumArtist.name)
+                                .collect(Collectors.toList()))
+                        .songsToDelete(songsObservable)
+                        .build()
+                        .show();
+                contextualToolbarHelper.finish();
+                return true;
+            case R.id.addToQueue: {
+                songsObservable.subscribe(songs -> MusicUtils.addToQueue(songs, message ->
+                        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show()));
                 return true;
             }
+        }
+        return true;
+    }
 
-            Observable<List<Song>> songsObservable = Observable.defer(() ->
-                    Observable.from(checkedAlbumArtists)
-                            .flatMap(AlbumArtist::getSongsObservable)
-                            .reduce((songs, songs2) -> Stream.concat(Stream.of(songs), Stream.of(songs2))
-                                    .collect(Collectors.toList()))
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-            );
+    @Override
+    public void onPageSelected() {
+        isCurrentPage = true;
+        setupContextualToolbar();
+    }
 
-            switch (menuItem.getItemId()) {
-                case NEW_PLAYLIST:
-                    songsObservable.subscribe(songs -> PlaylistUtils.createPlaylistDialog(getActivity(), songs));
-                    return true;
-                case PLAYLIST_SELECTED:
-                    songsObservable
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(songs -> {
-                                Playlist playlist = (Playlist) menuItem.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
-                                PlaylistUtils.addToPlaylist(getContext(), playlist, songs);
-                            });
-                    return true;
-                case R.id.delete:
-                    new DialogUtils.DeleteDialogBuilder()
-                            .context(getContext())
-                            .singleMessageId(R.string.delete_album_artist_desc)
-                            .multipleMessage(R.string.delete_album_artist_desc_multiple)
-                            .itemNames(Stream.of(checkedAlbumArtists)
-                                    .map(albumArtist -> albumArtist.name)
-                                    .collect(Collectors.toList()))
-                            .songsToDelete(songsObservable)
-                            .build()
-                            .show();
-                    mode.finish();
-                    return true;
-                case R.id.menu_add_to_queue: {
-                    songsObservable.subscribe(songs -> MusicUtils.addToQueue(songs, message ->
-                            Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show()));
-                    return true;
-                }
+    @Override
+    public void onPageDeselected() {
+        isCurrentPage = false;
+        new Handler().postDelayed(() -> {
+            if (contextualToolbarHelper != null) {
+                contextualToolbarHelper.finish();
             }
-            return false;
-        }
+        }, 250);
+    }
 
-        @Override
-        public void onDestroyActionMode(ActionMode actionMode) {
-            super.onDestroyActionMode(actionMode);
-            inActionMode = false;
-            AlbumArtistFragment.this.actionMode = null;
-            multiSelector.clearSelections();
-        }
-    };
+    private void setupContextualToolbar() {
 
-    List<AlbumArtist> getCheckedAlbumArtists() {
-        return Stream.of(multiSelector.getSelectedPositions())
-                .map(i -> ((AlbumArtistView) adapter.items.get(i)).albumArtist)
-                .collect(Collectors.toList());
+        if (!isCurrentPage) return;
+
+        ContextualToolbar contextualToolbar = ContextualToolbar.findContextualToolbar(this);
+        if (contextualToolbar != null) {
+            contextualToolbar.getMenu().clear();
+            contextualToolbar.inflateMenu(R.menu.context_menu_songs);
+            SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
+            PlaylistUtils.makePlaylistMenu(getActivity(), sub, SONG_FRAGMENT_GROUP_ID);
+            contextualToolbar.setOnMenuItemClickListener(this);
+            contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
+                @Override
+                public void notifyItemChanged(int position) {
+                    adapter.notifyItemChanged(position, 0);
+                }
+
+                @Override
+                public void notifyDatasetChanged() {
+                    adapter.notifyItemRangeChanged(0, adapter.items.size(), 0);
+                }
+            });
+        }
     }
 
     @Override

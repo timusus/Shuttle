@@ -187,7 +187,6 @@ public class LibraryController extends BaseFragment implements
 
         pager.setAdapter(adapter);
         pager.setOffscreenPageLimit(adapter.getCount() - 1);
-        pager.setCurrentItem(currentPage);
         pager.addOnPageChangeListener(new PagerListenerAdapter() {
             @Override
             public void onPageSelected(int position) {
@@ -205,6 +204,7 @@ public class LibraryController extends BaseFragment implements
                 currentPage = position;
             }
         });
+        pager.setCurrentItem(currentPage);
 
         slidingTabLayout.setupWithViewPager(pager);
 

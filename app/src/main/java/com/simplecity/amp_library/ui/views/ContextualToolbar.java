@@ -35,6 +35,7 @@ public class ContextualToolbar extends AestheticToolbar {
      *
      * @return {@link ContextualToolbar} or null if none can be found in the fragment hierarchy.
      */
+    @Nullable
     public static ContextualToolbar findContextualToolbar(Fragment fragment) {
         if (fragment instanceof ContextualToolbarHost) {
             return ((ContextualToolbarHost) fragment).getContextualToolbar();
@@ -44,6 +45,6 @@ public class ContextualToolbar extends AestheticToolbar {
                 return findContextualToolbar(parentFragment);
             }
         }
-        throw new IllegalStateException("Couldn't find contextual toolbar. What were you thinking?");
+        return null;
     }
 }

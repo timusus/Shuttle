@@ -13,6 +13,13 @@
         android:scaleType="fitCenter"
         tools:background="@mipmap/ic_launcher"/>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center"
+        android:indeterminate="true"/>
+
     <LinearLayout
         android:id="@+id/textContainer"
         android:layout_width="match_parent"
@@ -40,10 +47,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
                 android:ellipsize="end"
+                android:maxLines="1"
                 android:textColor="#ffffff"
                 android:textSize="16sp"
-                tools:text="cover.jpeg"
-                android:maxLines="1" />
+                tools:text="cover.jpeg"/>
 
             <TextView
                 android:id="@+id/line_two"
@@ -52,10 +59,10 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
+                android:maxLines="1"
                 android:textColor="#ffffff"
                 android:textSize="12sp"
-                tools:text="500x500px"
-                android:maxLines="1" />
+                tools:text="500x500px"/>
         </LinearLayout>
 
         <FrameLayout
@@ -76,12 +83,5 @@
 
         </FrameLayout>
     </LinearLayout>
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_gravity="center"
-        android:indeterminate="true"/>
 
 </FrameLayout>
