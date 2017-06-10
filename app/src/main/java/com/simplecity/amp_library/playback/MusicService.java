@@ -1469,6 +1469,9 @@ public class MusicService extends Service {
     public void open(List<Song> songs, final int position) {
         synchronized (this) {
 
+            boolean notifyQueueChange = false;
+            boolean notifyMetaChange = false;
+
             final long oldId = getSongId();
             boolean newList = false;
 
@@ -1480,7 +1483,7 @@ public class MusicService extends Service {
                 playlist.clear();
                 shuffleList.clear();
                 playlist.addAll(songs);
-                notifyChange(InternalIntents.QUEUE_CHANGED);
+                notifyQueueChange = true;
             }
 
             if (position >= 0) {
@@ -1491,13 +1494,21 @@ public class MusicService extends Service {
 
             if (shuffleMode == ShuffleMode.ON) {
                 makeShuffleList();
-                notifyChange(InternalIntents.QUEUE_CHANGED);
-                notifyChange(InternalIntents.META_CHANGED);
+                notifyQueueChange = true;
+                notifyMetaChange = true;
             }
 
             openCurrentAndNext();
             if (oldId != getSongId()) {
+                notifyMetaChange = true;
+            }
+
+            if (notifyMetaChange) {
                 notifyChange(InternalIntents.META_CHANGED);
+            }
+
+            if (notifyQueueChange) {
+                notifyChange(InternalIntents.QUEUE_CHANGED);
             }
         }
     }
