@@ -1,6 +1,5 @@
 package com.simplecityapps.recycler_adapter.adapter;
 
-import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.util.ListUpdateCallback;
@@ -12,7 +11,6 @@ import com.simplecityapps.recycler_adapter.BuildConfig;
 import com.simplecityapps.recycler_adapter.model.ContentsComparator;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +32,6 @@ public class ViewModelAdapter extends RecyclerView.Adapter {
      * The dataset for this RecyclerView Adapter
      */
     public List<ViewModel> items = new ArrayList<>();
-
 
     @Override
     public int getItemViewType(int position) {
@@ -88,6 +85,7 @@ public class ViewModelAdapter extends RecyclerView.Adapter {
      * @param items    the new dataset ({@link List<ViewModel>})
      * @param callback an optional {@link ListUpdateCallback}
      */
+    @Nullable
     public synchronized Subscription setItems(List<ViewModel> items, @Nullable CompletionListUpdateCallback callback) {
 
         if (this.items == items) {
@@ -264,39 +262,6 @@ public class ViewModelAdapter extends RecyclerView.Adapter {
         @Override
         public Object getChangePayload(int oldItemPosition, int newItemPosition) {
             return 0;
-        }
-    }
-
-    private static class DiffResultTask extends AsyncTask<Void, Void, DiffUtil.DiffResult> {
-
-        interface Action0<R> {
-            void call(R result);
-        }
-
-        List<ViewModel> oldItems;
-        List<ViewModel> newItems;
-
-        WeakReference<Action0<DiffUtil.DiffResult>> callBackReference;
-
-        DiffResultTask(List<ViewModel> oldItems, List<ViewModel> newItems, Action0<DiffUtil.DiffResult> callBack) {
-            this.oldItems = oldItems;
-            this.newItems = newItems;
-            this.callBackReference = new WeakReference<>(callBack);
-        }
-
-        @Override
-        protected DiffUtil.DiffResult doInBackground(Void... voids) {
-            return DiffUtil.calculateDiff(new DiffCallback(oldItems, newItems));
-        }
-
-        @Override
-        protected void onPostExecute(DiffUtil.DiffResult diffResult) {
-            super.onPostExecute(diffResult);
-
-            Action0<DiffUtil.DiffResult> callback = callBackReference.get();
-            if (callback != null) {
-                callback.call(diffResult);
-            }
         }
     }
 }
