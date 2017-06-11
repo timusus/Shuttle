@@ -160,14 +160,12 @@
     <string name="delete_file_confirmation_dialog">Bist Du sicher, dass Du die Datei \"<xliff:g id="file">%s</xliff:g>\" endgültig löschen willst?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">Bist du sicher, dass du alle Bilder endgültig löschen willst?</string>
-    <!-- QuickLyric button -->
-    <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
     <string name="dialog_title_set_ringtone">Klingelton festlegen</string>
     <!-- "Set Ringtone" message -->
     <string name="dialog_message_set_ringtone">Shuttle benötigt Schreibrechte damit ein Klingelton gesetzt werden kann.\n\nVersuche das einstellen erneut, wenn diese Rechte gewährt wurden.</string>
     <!-- Message displayed in dialog when attempting to add duplicates to playlist -->
-    <string name="dialog_message_playlist_add_duplicate">"<xliff:g id="artist">%s</xliff:g> - <xliff:g id="song">%s</xliff:g> existiert bereits in dieser Playlist. Trotzdem hinzufügen? "</string>
+    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%1$s</xliff:g> - <xliff:g id="song">%2$s</xliff:g> existiert bereits in dieser Playlist. Trotzdem hinzufügen?</string>
     <!-- Checkbox text 'apply to all' -->
     <string name="dialog_checkbox_playlist_duplicate_apply_all">Auf alle anwenden (<xliff:g id="number">%d</xliff:g>)</string>
     <!-- Title displayed in dialog when attempting to add duplicates to playlist -->
@@ -197,17 +195,18 @@
     <string name="fav_add">Zu Favoriten hinzufügen</string>
     <!-- Context menu item -->
     <string name="play_selection">Wiedergeben</string>
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
     <!-- Context menu item -->
     <string name="add_to_playlist">Zur Playlist hinzufügen</string>
     <!-- Context menu item -->
     <string name="new_playlist">Neu</string>
-    <!-- Button for lyrics -->
-    <string name="lyrics">Songtext</string>
     <!-- menu item to save the current list as a new playlist -->
     <string name="save_as_playlist">Als Playlist speichern</string>
     <!-- Context menu item to remove the selected item from the playlist -->
     <string name="remove_from_playlist">Von Playlist entfernen</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
+    <!-- Context menu item to remove the selected item from the queue -->
     <string name="remove_from_queue">Aus Warteschlange entfernen</string>
     <!-- Context menu item -->
     <string name="play_next">Nächster Titel</string>
@@ -238,8 +237,6 @@
     <string name="nowplaying_title">Aktuelle Wiedergabe</string>
     <!-- -->
     <string name="up_next_title">als Nächstes</string>
-    <!-- Context menu item -->
-    <string name="add_to_queue">Zur Warteschlange hinzufügen</string>
     <!-- Popup menu item -->
     <string name="go_to">Gehe zu...</string>
     <!-- 'More' button -->
@@ -464,7 +461,7 @@
     <string name="disc_number">Album \#</string>
     <string name="disc_total">Gesamtanzahl Alben</string>
     <!-- Track count. i.e "1 of 15" -->
-    <string name="track_count"><xliff:g id="track">%s</xliff:g> von <xliff:g id="total tracks">%s</xliff:g></string>
+    <string name="track_count"><xliff:g id="track">%1$s</xliff:g> von <xliff:g id="total tracks">%2$s</xliff:g></string>
     <!-- Button text for saving tags  -->
     <string name="save">Speichern</string>
     <!-- Message displayed when tag editing fails -->
@@ -539,9 +536,6 @@
     <string name="genre_title">Genre</string>
     <!-- Album artist (singular)-->
     <string name="album_artist_title">Album-Interpret</string>
-    <!-- ## Lyrics ## -->
-    <!-- -->
-    <string name="no_lyrics">Keine eingebetteten Songtexte gefunden</string>
     <!-- ## Equalizer ## -->
     <!-- Menu item to open the equalizer -->
     <string name="equalizer">Equalizer</string>
@@ -664,6 +658,8 @@
     <string name="unknown_genre_name">Unbekanntes Genre</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
     <string name="unknown_album_artist_name">Unbekannter Album-Interpret</string>
+    <!-- Default value if album year unknown -->
+    <string name="unknown_year">Unbekanntes Jahr</string>
     <!-- Song Info overflow option-->
     <string name="song_info">Titel-Info</string>
     <!-- Artwork Download Service Label-->
@@ -763,6 +759,17 @@
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">Album <xliff:g id="number">%d</xliff:g></string>
     <!-- Search Filter-->
+    <string name="search_fuzzy">Fuzzy</string>
+    <string name="search_artists">Interpreten</string>
+    <string name="search_albums">Alben</string>
     <!-- Changelog -->
     <string name="changelog_show_on_launch">Beim Appstart anzeigen</string>
+    <!-- Lyrics -->
+    <!-- QuickLyric button -->
+    <string name="quicklyric">QuickLyric</string>
+    <!-- Button for lyrics -->
+    <string name="lyrics">Songtext</string>
+    <!-- Shown when there are no lyrics -->
+    <string name="no_lyrics">Keine eingebetteten Songtexte gefunden</string>
+    <!-- QuickLyric info dialog message-->
 </resources>

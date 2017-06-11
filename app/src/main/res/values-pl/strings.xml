@@ -172,15 +172,12 @@
     <string name="delete_file_confirmation_dialog">Usunąć trwale plik „<xliff:g id="file">%s</xliff:g>”?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">Usunąć trwale z urządzenia wszystkie obrazy?</string>
-    <!-- QuickLyric Play Store Link -->
-    <!-- QuickLyric button -->
-    <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
     <string name="dialog_title_set_ringtone">Ustalanie dzwonka</string>
     <!-- "Set Ringtone" message -->
     <string name="dialog_message_set_ringtone">Do ustawienia dzwonka wymagany jest dostęp do \'\'Ustawień Zapisu\'\'. Po przyznaniu uprawnienia, spróbuj ustawić go raz jeszcze</string>
     <!-- Message displayed in dialog when attempting to add duplicates to playlist -->
-    <string name="dialog_message_playlist_add_duplicate">Utwór <xliff:g id="song">%s</xliff:g> wykonawcy <xliff:g id="artist">%s</xliff:g> już znajduje się na liście odtwarzania. Dodać go mimo to?</string>
+    <string name="dialog_message_playlist_add_duplicate">Utwór <xliff:g id="song">%1$s</xliff:g> wykonawcy <xliff:g id="artist">%2$s</xliff:g> już znajduje się na liście odtwarzania. Dodać go mimo to?</string>
     <!-- Checkbox text 'apply to all' -->
     <string name="dialog_checkbox_playlist_duplicate_apply_all">Zastosuj do wszystkich (<xliff:g id="number">%d</xliff:g>)</string>
     <!-- Title displayed in dialog when attempting to add duplicates to playlist -->
@@ -210,17 +207,18 @@
     <string name="fav_add">Dodaj do ulubionych</string>
     <!-- Context menu item -->
     <string name="play_selection">Odtwarzaj</string>
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
     <!-- Context menu item -->
     <string name="add_to_playlist">Dodaj do listy odtwarzania</string>
     <!-- Context menu item -->
     <string name="new_playlist">Nowa</string>
-    <!-- Button for lyrics -->
-    <string name="lyrics">Teksty</string>
     <!-- menu item to save the current list as a new playlist -->
     <string name="save_as_playlist">Zapisz jako listę odtwarzania</string>
     <!-- Context menu item to remove the selected item from the playlist -->
     <string name="remove_from_playlist">Usuń z listy odtwarzania</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
+    <!-- Context menu item to remove the selected item from the queue -->
     <string name="remove_from_queue">Usuń z kolejki</string>
     <!-- Context menu item -->
     <string name="play_next">Odtwarzaj następny</string>
@@ -234,6 +232,7 @@
     <string name="share_title">Udostępnij</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Wyszukaj</string>
+    <string name="search_filter">Filtr</string>
     <!-- Playlist context menu item to delete the selected playlist. -->
     <string name="delete_playlist_menu">Usuń</string>
     <!-- Playlist context menu item to clear the selected playlist. -->
@@ -250,8 +249,6 @@
     <string name="nowplaying_title">Aktualnie odtwarzane</string>
     <!-- -->
     <string name="up_next_title">Następne</string>
-    <!-- Context menu item -->
-    <string name="add_to_queue">Dodaj do kolejki</string>
     <!-- Popup menu item -->
     <string name="go_to">Przejdź do...</string>
     <!-- 'More' button -->
@@ -461,8 +458,11 @@ Po wyłączeniu, jako obraz zastępczy będzie używana ikona programu.</string>
     <string name="saving_tags">Zapisywanie znaczników</string>
     <!-- -->
     <string name="track_number">Nr ścieżki</string>
+    <string name="track_total">Liczba ścieżek</string>
+    <string name="disc_number">Płyta nr</string>
+    <string name="disc_total">Liczba płyt</string>
     <!-- Track count. i.e "1 of 15" -->
-    <string name="track_count"><xliff:g id="track">%s</xliff:g> z <xliff:g id="total tracks">%s</xliff:g></string>
+    <string name="track_count"><xliff:g id="track">%1$s</xliff:g> z <xliff:g id="total tracks">%2$s</xliff:g></string>
     <!-- Button text for saving tags  -->
     <string name="save">Zapisz</string>
     <!-- Message displayed when tag editing fails -->
@@ -537,9 +537,6 @@ Po wyłączeniu, jako obraz zastępczy będzie używana ikona programu.</string>
     <string name="genre_title">Gatunek</string>
     <!-- Album artist (singular)-->
     <string name="album_artist_title">Wykonawca albumu</string>
-    <!-- ## Lyrics ## -->
-    <!-- -->
-    <string name="no_lyrics">Nie odnaleziono dołączonego tekstu.</string>
     <!-- ## Equalizer ## -->
     <!-- Menu item to open the equalizer -->
     <string name="equalizer">Korektor</string>
@@ -566,6 +563,7 @@ Po wyłączeniu, jako obraz zastępczy będzie używana ikona programu.</string>
     <string name="empty_songlist">Nie odnaleziono żadnego utworu. Proszę skopiować utwory na urządzenie.</string>
     <!-- -->
     <string name="empty_suggested">Proszę odtworzyć trochę więcej muzyki a sugestie pojawią się w tym miejscu.</string>
+    <string name="empty_search">Brak wyników wyszukiwania.</string>
     <!-- ## Sort options ## -->
     <string name="sorting">Sortowanie</string>
     <string name="sort_default">Domyślnie</string>
@@ -665,6 +663,7 @@ Po wyłączeniu, jako obraz zastępczy będzie używana ikona programu.</string>
     <string name="unknown_genre_name">Nieznany gatunek</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
     <string name="unknown_album_artist_name">Nieznany  wykonawca</string>
+    <!-- Default value if album year unknown -->
     <!-- Song Info overflow option-->
     <string name="song_info">Informacje o utworze</string>
     <!-- Artwork Download Service Label-->
@@ -685,6 +684,7 @@ Po wyłączeniu, jako obraz zastępczy będzie używana ikona programu.</string>
     <!-- Accessibility button description -->
     <string name="btn_queue">Wyświetl kolejkę odtwarzania</string>
     <!-- Accessibility button description -->
+    <string name="btn_close">Zamknij</string>
     <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
     <string name="btn_options">Opcje %s</string>
     <!-- Accessibility button description -->
@@ -738,10 +738,14 @@ Po wyłączeniu, jako obraz zastępczy będzie używana ikona programu.</string>
     <!-- "Shuffle" Shortcut label. Max 10 characters.-->
     <string name="shortcut_shuffle_short_label">Wylosuj</string>
     <!-- "Shuffle" Shortcut long label. Max 25 characters.-->
+    <string name="shortcut_shuffle_long_label">Wymieszaj wszystkie</string>
     <!-- "Shuffle" Shortcut label disabled. Shows when shuffle not available (I don't think this ever happens)-->
     <!-- "Play" Shortcut label. Max 10 characters.-->
+    <string name="shortcut_play_short_label">Odtwórz</string>
     <!-- "Play" Shortcut long label. Max 25 characters.-->
+    <string name="shortcut_play_long_label">Odtwórz</string>
     <!-- "Play" Shortcut label disabled. Shows when music is already playing-->
+    <string name="shortcut_play_disabled">Odtwarzanie już trwa</string>
     <!-- "Folders" Shortcut label. Max 10 characters.-->
     <string name="shortcut_folders_short_label">Katalogi</string>
     <!-- "Folders" Shortcut long label. Max 25 characters.-->
@@ -755,5 +759,16 @@ Po wyłączeniu, jako obraz zastępczy będzie używana ikona programu.</string>
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">Płyta <xliff:g id="number">%d</xliff:g></string>
     <!-- Search Filter-->
+    <string name="search_title_only">Tylko tytuły</string>
+    <string name="search_artists">Wykonawcy</string>
+    <string name="search_albums">Albumy</string>
     <!-- Changelog -->
+    <!-- Lyrics -->
+    <!-- QuickLyric button -->
+    <string name="quicklyric">QuickLyric</string>
+    <!-- Button for lyrics -->
+    <string name="lyrics">Teksty</string>
+    <!-- Shown when there are no lyrics -->
+    <string name="no_lyrics">Nie odnaleziono dołączonego tekstu.</string>
+    <!-- QuickLyric info dialog message-->
 </resources>

@@ -163,16 +163,12 @@
     <string name="delete_file_confirmation_dialog">Jeste li sigurni da želite trajno izbrisati \"<xliff:g id="file">%s</xliff:g>\"?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">Jeste li sigurni da želite trajno izbrisati sve omote sa uređaja?</string>
-    <!-- QuickLyric Play Store Link -->
-    <!-- QuickLyric button -->
-    <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
     <string name="dialog_title_set_ringtone">Postavi zvuk zvona</string>
     <!-- "Set Ringtone" message -->
     <string name="dialog_message_set_ringtone">Shuttle zahtijeva dopuštenje \"write settings\" kako bi postavio vaš zvuk zvona\n\nNakon što ste dopustili dopuštenje, pokušajte ponovno postaviti zvuk zvona.</string>
     <!-- Message displayed in dialog when attempting to add duplicates to playlist -->
-    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%s</xliff:g> - <xliff:g id="song">%s</xliff:g> već postoji na popisu naslova.
-Svejedno dodati?</string>
+    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%1$s</xliff:g> - <xliff:g id="song">%2$s</xliff:g> već postoji na popisu naslova. Svejedno dodati?</string>
     <!-- Checkbox text 'apply to all' -->
     <string name="dialog_checkbox_playlist_duplicate_apply_all">Primijeni na sve (<xliff:g id="number">%d</xliff:g>)</string>
     <!-- Title displayed in dialog when attempting to add duplicates to playlist -->
@@ -202,17 +198,18 @@ Svejedno dodati?</string>
     <string name="fav_add">Dodaj u Favorite</string>
     <!-- Context menu item -->
     <string name="play_selection">Reproduciraj</string>
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
     <!-- Context menu item -->
     <string name="add_to_playlist">Dodaj na popis naslova</string>
     <!-- Context menu item -->
     <string name="new_playlist">Novo</string>
-    <!-- Button for lyrics -->
-    <string name="lyrics">Tekstovi pjes.</string>
     <!-- menu item to save the current list as a new playlist -->
     <string name="save_as_playlist">Spremi kao popis naslova</string>
     <!-- Context menu item to remove the selected item from the playlist -->
     <string name="remove_from_playlist">Ukloni s popisa naslova</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
+    <!-- Context menu item to remove the selected item from the queue -->
     <string name="remove_from_queue">Ukloni iz reda čekanja</string>
     <!-- Context menu item -->
     <string name="play_next">Reproduciraj sljedeće</string>
@@ -242,8 +239,6 @@ Svejedno dodati?</string>
     <string name="nowplaying_title">Trenutna rep.</string>
     <!-- -->
     <string name="up_next_title">Sljedeće na redu</string>
-    <!-- Context menu item -->
-    <string name="add_to_queue">Dodaj u red čekanja</string>
     <!-- Popup menu item -->
     <string name="go_to">Idi na...</string>
     <!-- 'More' button -->
@@ -457,7 +452,7 @@ Ako nije označeno, Shuttle ikona će se koristiti kao sličica</string>
     <string name="disc_number">Disk \#</string>
     <string name="disc_total">Ukupno diskova</string>
     <!-- Track count. i.e "1 of 15" -->
-    <string name="track_count"><xliff:g id="track">%s</xliff:g> od<xliff:g id="total tracks">%s</xliff:g></string>
+    <string name="track_count"><xliff:g id="track">%1$s</xliff:g> od<xliff:g id="total tracks">%2$s</xliff:g></string>
     <!-- Button text for saving tags  -->
     <string name="save">Spremi</string>
     <!-- Message displayed when tag editing fails -->
@@ -528,9 +523,6 @@ mapa</item>
     <string name="genre_title">Žanr</string>
     <!-- Album artist (singular)-->
     <string name="album_artist_title">Izvođač albuma</string>
-    <!-- ## Lyrics ## -->
-    <!-- -->
-    <string name="no_lyrics">Nisu pronađeni ugrađeni tekstovi pjesama</string>
     <!-- ## Equalizer ## -->
     <!-- Menu item to open the equalizer -->
     <string name="equalizer">Ekvalizator</string>
@@ -654,6 +646,7 @@ mapa</item>
     <string name="unknown_genre_name">Nepoznati žanr</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
     <string name="unknown_album_artist_name">Nepoznati izvođač albuma</string>
+    <!-- Default value if album year unknown -->
     <!-- Song Info overflow option-->
     <string name="song_info">Informacije o pjesmi</string>
     <!-- Artwork Download Service Label-->
@@ -752,4 +745,12 @@ mapa</item>
     <string name="disc_number_label">Disk <xliff:g id="number">%d</xliff:g></string>
     <!-- Search Filter-->
     <!-- Changelog -->
+    <!-- Lyrics -->
+    <!-- QuickLyric button -->
+    <string name="quicklyric">QuickLyric</string>
+    <!-- Button for lyrics -->
+    <string name="lyrics">Tekstovi pjes.</string>
+    <!-- Shown when there are no lyrics -->
+    <string name="no_lyrics">Nisu pronađeni ugrađeni tekstovi pjesama</string>
+    <!-- QuickLyric info dialog message-->
 </resources>

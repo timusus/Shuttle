@@ -155,15 +155,12 @@
     <string name="delete_file_confirmation_dialog">您確定要永久刪除「<xliff:g id="file">%s</xliff:g>」嗎？</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">您確定要永久刪除裝置中的所有專輯封面嗎？</string>
-    <!-- QuickLyric Play Store Link -->
-    <!-- QuickLyric button -->
-    <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
     <string name="dialog_title_set_ringtone">設為鈴聲</string>
     <!-- "Set Ringtone" message -->
     <string name="dialog_message_set_ringtone">Shuttle 需要「寫入設定」權限才能設定鈴聲。\n\n請在您允許權限後再一次設定鈴聲</string>
     <!-- Message displayed in dialog when attempting to add duplicates to playlist -->
-    <string name="dialog_message_playlist_add_duplicate">「<xliff:g id="artist">%s</xliff:g>—<xliff:g id="song">%s</xliff:g>」已存在於這個播放清單中。要繼續加入嗎？</string>
+    <string name="dialog_message_playlist_add_duplicate">「<xliff:g id="artist">%1$s</xliff:g>—<xliff:g id="song">%2$s</xliff:g>」已存在於這個播放清單中。要繼續加入嗎？</string>
     <!-- Checkbox text 'apply to all' -->
     <string name="dialog_checkbox_playlist_duplicate_apply_all">全部套用 (<xliff:g id="number">%d</xliff:g>)</string>
     <!-- Title displayed in dialog when attempting to add duplicates to playlist -->
@@ -193,17 +190,18 @@
     <string name="fav_add">加入我的最愛</string>
     <!-- Context menu item -->
     <string name="play_selection">播放</string>
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
     <!-- Context menu item -->
     <string name="add_to_playlist">加入至播放清單</string>
     <!-- Context menu item -->
     <string name="new_playlist">新增</string>
-    <!-- Button for lyrics -->
-    <string name="lyrics">歌詞</string>
     <!-- menu item to save the current list as a new playlist -->
     <string name="save_as_playlist">另存播放清單</string>
     <!-- Context menu item to remove the selected item from the playlist -->
     <string name="remove_from_playlist">從播放清單中移除</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
+    <!-- Context menu item to remove the selected item from the queue -->
     <string name="remove_from_queue">從佇列中移除</string>
     <!-- Context menu item -->
     <string name="play_next">播放下一首</string>
@@ -217,6 +215,7 @@
     <string name="share_title">分享</string>
     <!-- Library screen, menu item -->
     <string name="search_title">搜尋</string>
+    <string name="search_filter">篩選器</string>
     <!-- Playlist context menu item to delete the selected playlist. -->
     <string name="delete_playlist_menu">刪除</string>
     <!-- Playlist context menu item to clear the selected playlist. -->
@@ -233,8 +232,6 @@
     <string name="nowplaying_title">現正播放</string>
     <!-- -->
     <string name="up_next_title">Up Next</string>
-    <!-- Context menu item -->
-    <string name="add_to_queue">新增至佇列</string>
     <!-- Popup menu item -->
     <string name="go_to">前往</string>
     <!-- 'More' button -->
@@ -254,7 +251,9 @@
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">導覽</string>
     <!--Settings category for 'notification' items -->
+    <string name="pref_category_notif_drawer">通知介面</string>
     <!-- Settings title for inverting the notification drawer text & icons -->
+    <string name="pref_title_invert_notif_icons">反轉通知圖示與文字的色彩</string>
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">其他</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
@@ -404,6 +403,8 @@
     <string name="pref_summary_gplus">我們在 Google+ 上有個非常活躍的 Shuttle 社群，若您有任何問題或需要協助，您可拜訪這個好地方</string>
     <string name="pref_title_rate">感謝與評分</string>
     <string name="pref_summary_rate">若您喜歡 Shuttle，您可給予評價</string>
+    <string name="pref_title_headset_beep">略過提醒</string>
+    <string name="pref_summary_headset_beep">透過耳機跳過曲目時發出提示音</string>
     <!-- Settings title for ignore playlist duplicates -->
     <string name="pref_title_ignore_duplicates">略過播放清單重複項目</string>
     <!-- Settings summary for ignore playlist duplicates -->
@@ -448,7 +449,7 @@
     <string name="disc_number">唱片 \#</string>
     <string name="disc_total">唱片總計</string>
     <!-- Track count. i.e "1 of 15" -->
-    <string name="track_count"><xliff:g id="total tracks">%s</xliff:g> 中的 <xliff:g id="track">%s</xliff:g></string>
+    <string name="track_count"><xliff:g id="total tracks">%2$s</xliff:g> 中的 <xliff:g id="track">%1$s</xliff:g></string>
     <!-- Button text for saving tags  -->
     <string name="save">儲存</string>
     <!-- Message displayed when tag editing fails -->
@@ -516,9 +517,6 @@
     <string name="genre_title">類型</string>
     <!-- Album artist (singular)-->
     <string name="album_artist_title">專輯-演出者</string>
-    <!-- ## Lyrics ## -->
-    <!-- -->
-    <string name="no_lyrics">找不到歌詞</string>
     <!-- ## Equalizer ## -->
     <!-- Menu item to open the equalizer -->
     <string name="equalizer">等化器</string>
@@ -545,6 +543,7 @@
     <string name="empty_songlist">尚未搜尋到任何曲目。請複製一些曲目至您的裝置</string>
     <!-- -->
     <string name="empty_suggested">播放一些音樂後，這裡將會顯示建議</string>
+    <string name="empty_search">找不到任何項目</string>
     <!-- ## Sort options ## -->
     <string name="sorting">排序</string>
     <string name="sort_default">預設</string>
@@ -638,6 +637,7 @@
     <string name="unknown_genre_name">未知的類型</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
     <string name="unknown_album_artist_name">未知的專輯演出者</string>
+    <!-- Default value if album year unknown -->
     <!-- Song Info overflow option-->
     <string name="song_info">音樂資訊</string>
     <!-- Artwork Download Service Label-->
@@ -651,6 +651,7 @@
     <!-- Accessibility button description -->
     <string name="btn_pause">暫停</string>
     <!-- Accessibility button description -->
+    <string name="btn_play_pause">播放 / 暫停</string>
     <!-- Accessibility button description -->
     <string name="btn_skip">跳過</string>
     <!-- Accessibility button description -->
@@ -658,6 +659,7 @@
     <!-- Accessibility button description -->
     <string name="btn_queue">顯示播放佇列</string>
     <!-- Accessibility button description -->
+    <string name="btn_close">關閉</string>
     <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
     <string name="btn_options">%s 選項</string>
     <!-- Accessibility button description -->
@@ -735,5 +737,18 @@
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label"><xliff:g id="number">%d</xliff:g> 張唱片</string>
     <!-- Search Filter-->
+    <string name="search_fuzzy">模糊</string>
+    <string name="search_title_only">僅標題</string>
+    <string name="search_artists">演出者</string>
+    <string name="search_albums">專輯</string>
     <!-- Changelog -->
+    <string name="changelog_show_on_launch">啟動時顯示</string>
+    <!-- Lyrics -->
+    <!-- QuickLyric button -->
+    <string name="quicklyric">QuickLyric</string>
+    <!-- Button for lyrics -->
+    <string name="lyrics">歌詞</string>
+    <!-- Shown when there are no lyrics -->
+    <string name="no_lyrics">找不到歌詞</string>
+    <!-- QuickLyric info dialog message-->
 </resources>

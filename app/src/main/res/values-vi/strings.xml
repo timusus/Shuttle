@@ -155,14 +155,12 @@
     <string name="delete_file_confirmation_dialog">Bạn chắc muốn xoá vĩnh viễn \"<xliff:g id="file">%s</xliff:g>\"?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">Bạn chắc muốn xoá vĩnh viễn tất cả ảnh bìa khỏi thiết bị?</string>
-    <!-- QuickLyric button -->
-    <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
     <string name="dialog_title_set_ringtone">Đặt làm nhạc chuông</string>
     <!-- "Set Ringtone" message -->
     <string name="dialog_message_set_ringtone">Shuttle yêu cầu quyền \'ghi thiết lập\' để đặt nhạc chuông.\n\nSau khi cấp quyền, hãy thử đặt nhạc chuông lần nữa.</string>
     <!-- Message displayed in dialog when attempting to add duplicates to playlist -->
-    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%s</xliff:g> - <xliff:g id="song">%s</xliff:g> đã có trong danh sách. Vẫn cứ thêm vào?</string>
+    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%1$s</xliff:g> - <xliff:g id="song">%2$s</xliff:g> đã có trong danh sách. Vẫn cứ thêm vào?</string>
     <!-- Checkbox text 'apply to all' -->
     <string name="dialog_checkbox_playlist_duplicate_apply_all">Áp dụng cho tất cả (<xliff:g id="number">%d</xliff:g>)</string>
     <!-- Title displayed in dialog when attempting to add duplicates to playlist -->
@@ -192,17 +190,18 @@
     <string name="fav_add">Thêm vào Yêu thích</string>
     <!-- Context menu item -->
     <string name="play_selection">Phát</string>
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
     <!-- Context menu item -->
     <string name="add_to_playlist">Thêm vào danh sách</string>
     <!-- Context menu item -->
     <string name="new_playlist">Mới</string>
-    <!-- Button for lyrics -->
-    <string name="lyrics">Lời bài hát</string>
     <!-- menu item to save the current list as a new playlist -->
     <string name="save_as_playlist">Lưu danh sách</string>
     <!-- Context menu item to remove the selected item from the playlist -->
     <string name="remove_from_playlist">Xoá khỏi danh sách</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
+    <!-- Context menu item to remove the selected item from the queue -->
     <string name="remove_from_queue">Xoá khỏi danh sách chờ</string>
     <!-- Context menu item -->
     <string name="play_next">Phát kế tiếp</string>
@@ -233,8 +232,6 @@
     <string name="nowplaying_title">Đang phát</string>
     <!-- -->
     <string name="up_next_title">Tiếp theo</string>
-    <!-- Context menu item -->
-    <string name="add_to_queue">Thêm vào danh sách chờ</string>
     <!-- Popup menu item -->
     <string name="go_to">Chuyển đến...</string>
     <!-- 'More' button -->
@@ -453,7 +450,7 @@
     <string name="disc_number">Đĩa \#</string>
     <string name="disc_total">Tổng số đĩa</string>
     <!-- Track count. i.e "1 of 15" -->
-    <string name="track_count"><xliff:g id="track">%s</xliff:g> trên <xliff:g id="total tracks">%s</xliff:g></string>
+    <string name="track_count"><xliff:g id="track">%1$s</xliff:g> trên <xliff:g id="total tracks">%2$s</xliff:g></string>
     <!-- Button text for saving tags  -->
     <string name="save">Lưu</string>
     <!-- Message displayed when tag editing fails -->
@@ -524,9 +521,6 @@
     <string name="genre_title">Thể loại</string>
     <!-- Album artist (singular)-->
     <string name="album_artist_title">Album-Nghệ sĩ</string>
-    <!-- ## Lyrics ## -->
-    <!-- -->
-    <string name="no_lyrics">Không tìm thấy lời nhúng sẵn</string>
     <!-- ## Equalizer ## -->
     <!-- Menu item to open the equalizer -->
     <string name="equalizer">Bộ chỉnh âm</string>
@@ -647,6 +641,8 @@
     <string name="unknown_genre_name">Thể loại chưa xác định</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
     <string name="unknown_album_artist_name">Nghê sĩ album chưa xác định</string>
+    <!-- Default value if album year unknown -->
+    <string name="unknown_year">Năm chưa rõ</string>
     <!-- Song Info overflow option-->
     <string name="song_info">Thông tin bài hát</string>
     <!-- Artwork Download Service Label-->
@@ -752,4 +748,13 @@
     <string name="search_albums">Album</string>
     <!-- Changelog -->
     <string name="changelog_show_on_launch">Hiện lúc khởi động</string>
+    <!-- Lyrics -->
+    <!-- QuickLyric button -->
+    <string name="quicklyric">QuickLyric</string>
+    <!-- Button for lyrics -->
+    <string name="lyrics">Lời bài hát</string>
+    <!-- Shown when there are no lyrics -->
+    <string name="no_lyrics">Không tìm thấy lời nhúng sẵn</string>
+    <!-- QuickLyric info dialog message-->
+    <string name="quicklyric_info">QuickLyric là một tiện ích tải lời bài hát mã nguồn mở trên CH Play.\n\nKhi được cài đặt, QuickLyric sẽ được mở từ Shuttle lúc bạn chọn nút menu \'QuickLyric\'.</string>
 </resources>

@@ -25,7 +25,7 @@
     <string name="repeat_current_notif">Repeating current song.</string>
     <!-- Toast after turning repeat all on -->
     <!-- Individual song context menu item -->
-    <string name="ringtone_menu">Use as phone ringtone</string>
+    <string name="ringtone_menu">Set as ringtone</string>
     <!-- Toast after setting a song as phone ringtone -->
     <!-- Toast if setting ringtone fails -->
     <!-- Toasts after adding song(s) to playlists -->
@@ -83,8 +83,6 @@
     <!-- -->
     <!-- -->
     <!-- Displayed when user presses 'delete artwork' -->
-    <!-- QuickLyric Play Store Link -->
-    <!-- QuickLyric button -->
     <!--"Set Ringtone" title -->
     <!-- "Set Ringtone" message -->
     <!-- Message displayed in dialog when attempting to add duplicates to playlist -->
@@ -103,12 +101,14 @@
     <!-- -->
     <string name="fav_add">Add to Favourites</string>
     <!-- Context menu item -->
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
     <!-- Context menu item -->
     <!-- Context menu item -->
-    <!-- Button for lyrics -->
     <!-- menu item to save the current list as a new playlist -->
     <!-- Context menu item to remove the selected item from the playlist -->
-    <!-- Context menu item to remove the selected item from the playlist -->
+    <!-- Context menu item to remove the selected item from the queue -->
     <!-- Context menu item -->
     <!-- Menu text for the settings item -->
     <!-- Playing screen, menu item -->
@@ -124,7 +124,6 @@
     <!-- Menu item to play back all the songs in the currently showing list in shuffle mode -->
     <!-- title of the "current playlist" screen when not in party shuffle mode -->
     <!-- -->
-    <!-- Context menu item -->
     <!-- Popup menu item -->
     <!-- 'More' button -->
     <!-- Share option-->
@@ -263,8 +262,6 @@
     <!-- Year (singular)-->
     <!-- Genre (singular)-->
     <!-- Album artist (singular)-->
-    <!-- ## Lyrics ## -->
-    <!-- -->
     <!-- ## Equalizer ## -->
     <!-- Menu item to open the equalizer -->
     <string name="equalizer">Equaliser</string>
@@ -318,6 +315,7 @@
     <!-- Default name of album artist that doesn't have a name in the metadata -->
     <!-- Default name of genre that doesn't have a name in the metadata -->
     <!-- Default name of album artist that doesn't have a name in the metadata -->
+    <!-- Default value if album year unknown -->
     <!-- Song Info overflow option-->
     <!-- Artwork Download Service Label-->
     <!-- ## Better Pickers Strings ## -->
@@ -355,4 +353,9 @@
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <!-- Search Filter-->
     <!-- Changelog -->
+    <!-- Lyrics -->
+    <!-- QuickLyric button -->
+    <!-- Button for lyrics -->
+    <!-- Shown when there are no lyrics -->
+    <!-- QuickLyric info dialog message-->
 </resources>

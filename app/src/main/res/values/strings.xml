@@ -182,7 +182,7 @@
     <string name="dialog_message_set_ringtone">Shuttle requires permission to \'write settings\' in order to set your ringtone.\n\nAfter granting permission, try setting your ringtone again.</string>
 
     <!-- Message displayed in dialog when attempting to add duplicates to playlist -->
-    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%s</xliff:g> - <xliff:g id="song">%s</xliff:g> already exists in this playlist. Add it anyway?</string>
+    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%1$s</xliff:g> - <xliff:g id="song">%2$s</xliff:g> already exists in this playlist. Add it anyway?</string>
     <!-- Checkbox text 'apply to all' -->
     <string name="dialog_checkbox_playlist_duplicate_apply_all">Apply to all (<xliff:g id="number">%d</xliff:g>)</string>
     <!-- Title displayed in dialog when attempting to add duplicates to playlist -->
@@ -206,7 +206,7 @@
 
     <!-- ## Menu Headings ## -->
     <!-- Context menu in navigation drawer - option to save playlist as M3U -->
-    <string name="export_playlist">Export playlist</string>
+    <string name="export_playlist">Export</string>
     <!-- context menu item to remove the selected item from the playlist -->
     <!-- Menu option 'clear queue' -->
     <string name="clear_queue">Clear queue</string>
@@ -228,8 +228,8 @@
     <string name="save_as_playlist">Save as playlist</string>
     <!-- Context menu item to remove the selected item from the playlist -->
     <string name="remove_from_playlist">Remove from playlist</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
-    <string name="remove_from_queue">Remove from queue</string>
+    <!-- Context menu item to remove the selected item from the queue -->
+    <string name="remove_from_queue">Remove</string>
     <!-- Context menu item -->
     <string name="play_next">Play next</string>
     <!-- Menu text for the settings item -->
@@ -490,7 +490,7 @@
     <string name="disc_total">Total discs</string>
 
     <!-- Track count. i.e "1 of 15" -->
-    <string name="track_count"><xliff:g id="track">%s</xliff:g> of <xliff:g id="total tracks">%s</xliff:g></string>
+    <string name="track_count"><xliff:g id="track">%1$s</xliff:g> of <xliff:g id="total tracks">%2$s</xliff:g></string>
 
     <!-- Button text for saving tags  -->
     <string name="save">Save</string>

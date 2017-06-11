@@ -154,15 +154,12 @@
     <string name="delete_file_confirmation_dialog">Сигурни ли сте, че искате да изтриете окончателно \"<xliff:g id="file">%s</xliff:g>\"?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">Сигурни ли сте, че искате да изтриете всички корици от устройството?</string>
-    <!-- QuickLyric Play Store Link -->
-    <!-- QuickLyric button -->
-    <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
     <string name="dialog_title_set_ringtone">Задай тон на звънене</string>
     <!-- "Set Ringtone" message -->
     <string name="dialog_message_set_ringtone">Shuttle има нужда от допълнително разрешение, за да настрои тон на звънене.\n\nСлед като дадете разрешение, опитайте да промените тона на звънене повторно.</string>
     <!-- Message displayed in dialog when attempting to add duplicates to playlist -->
-    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%s</xliff:g> - <xliff:g id="song">%s</xliff:g> вече е в този плейлист. Добавяне все пак?</string>
+    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%1$s</xliff:g> - <xliff:g id="song">%2$s</xliff:g> вече е в този плейлист. Добавяне все пак?</string>
     <!-- Checkbox text 'apply to all' -->
     <string name="dialog_checkbox_playlist_duplicate_apply_all">Приложи за всички (<xliff:g id="number">%d</xliff:g>)</string>
     <!-- Title displayed in dialog when attempting to add duplicates to playlist -->
@@ -192,17 +189,18 @@
     <string name="fav_add">Добави в \"Любими\"</string>
     <!-- Context menu item -->
     <string name="play_selection">Старт</string>
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
     <!-- Context menu item -->
     <string name="add_to_playlist">Добавяне към плейлиста</string>
     <!-- Context menu item -->
     <string name="new_playlist">Ново</string>
-    <!-- Button for lyrics -->
-    <string name="lyrics">Текстове</string>
     <!-- menu item to save the current list as a new playlist -->
     <string name="save_as_playlist">Запазване като плейлист</string>
     <!-- Context menu item to remove the selected item from the playlist -->
     <string name="remove_from_playlist">Премахване от плейлиста</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
+    <!-- Context menu item to remove the selected item from the queue -->
     <string name="remove_from_queue">Премахни от опашката</string>
     <!-- Context menu item -->
     <string name="play_next">Пусни следваща песен</string>
@@ -232,8 +230,6 @@
     <string name="nowplaying_title">Възпроизвежда се сега</string>
     <!-- -->
     <string name="up_next_title">Следва</string>
-    <!-- Context menu item -->
-    <string name="add_to_queue">Добави към опашката за слушане</string>
     <!-- Popup menu item -->
     <string name="go_to">Отиди...</string>
     <!-- 'More' button -->
@@ -451,7 +447,7 @@
     <string name="disc_number">Диск №</string>
     <string name="disc_total">Общ брой дискове</string>
     <!-- Track count. i.e "1 of 15" -->
-    <string name="track_count"><xliff:g id="track">%s</xliff:g> от <xliff:g id="total tracks">%s</xliff:g></string>
+    <string name="track_count"><xliff:g id="track">%1$s</xliff:g> от <xliff:g id="total tracks">%2$s</xliff:g></string>
     <!-- Button text for saving tags  -->
     <string name="save">Запази</string>
     <!-- Message displayed when tag editing fails -->
@@ -520,9 +516,6 @@
     <string name="genre_title">Жанр</string>
     <!-- Album artist (singular)-->
     <string name="album_artist_title">Изпълнител на албума</string>
-    <!-- ## Lyrics ## -->
-    <!-- -->
-    <string name="no_lyrics">Не е открит вграден текст на песента</string>
     <!-- ## Equalizer ## -->
     <!-- Menu item to open the equalizer -->
     <string name="equalizer">Еквалайзер</string>
@@ -644,6 +637,7 @@
     <string name="unknown_genre_name">Неизвестен жанр</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
     <string name="unknown_album_artist_name">Незивестен изпълнител на албума</string>
+    <!-- Default value if album year unknown -->
     <!-- Song Info overflow option-->
     <string name="song_info">Инфо за песента</string>
     <!-- Artwork Download Service Label-->
@@ -742,4 +736,12 @@
     <string name="disc_number_label">Диск <xliff:g id="number">%d</xliff:g></string>
     <!-- Search Filter-->
     <!-- Changelog -->
+    <!-- Lyrics -->
+    <!-- QuickLyric button -->
+    <string name="quicklyric">QuickLyric</string>
+    <!-- Button for lyrics -->
+    <string name="lyrics">Текстове</string>
+    <!-- Shown when there are no lyrics -->
+    <string name="no_lyrics">Не е открит вграден текст на песента</string>
+    <!-- QuickLyric info dialog message-->
 </resources>

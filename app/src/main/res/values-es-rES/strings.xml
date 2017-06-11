@@ -147,14 +147,12 @@
     <string name="delete_file_confirmation_dialog">¿Seguro que deseas borrar permanentemente el archivo \"<xliff:g id="file">%s</xliff:g>\"?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">¿Estas seguro de querer eliminar permanentemente todas las carátulas de su dispositivo?</string>
-    <!-- QuickLyric button -->
-    <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
     <string name="dialog_title_set_ringtone">Establecer tono de llamada</string>
     <!-- "Set Ringtone" message -->
     <string name="dialog_message_set_ringtone">Shuttle requiere permisos de escritura para poder establecer tu tono de llamada.\n\nTras haber dado los permisos, intenta establecer el tono de llamada de nuevo.</string>
     <!-- Message displayed in dialog when attempting to add duplicates to playlist -->
-    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%s</xliff:g> - <xliff:g id="song">%s</xliff:g> ya existe en la lista de reproducción. Añadir de todos modos?</string>
+    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%1$s</xliff:g> - <xliff:g id="song">%2$s</xliff:g> ya existe en la lista de reproducción. Añadir de todos modos?</string>
     <!-- Checkbox text 'apply to all' -->
     <string name="dialog_checkbox_playlist_duplicate_apply_all">Aplicar a todos (<xliff:g id="number">%d</xliff:g>)</string>
     <!-- Title displayed in dialog when attempting to add duplicates to playlist -->
@@ -184,17 +182,18 @@
     <string name="fav_add">Añadir a favoritos</string>
     <!-- Context menu item -->
     <string name="play_selection">Reproducir</string>
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
     <!-- Context menu item -->
     <string name="add_to_playlist">Añadir a lista de reproducción</string>
     <!-- Context menu item -->
     <string name="new_playlist">Nuevo</string>
-    <!-- Button for lyrics -->
-    <string name="lyrics">Letras</string>
     <!-- menu item to save the current list as a new playlist -->
     <string name="save_as_playlist">Guardar como lista de reproducción</string>
     <!-- Context menu item to remove the selected item from the playlist -->
     <string name="remove_from_playlist">Eliminar de lista de reproducción</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
+    <!-- Context menu item to remove the selected item from the queue -->
     <string name="remove_from_queue">Eliminar de la cola</string>
     <!-- Context menu item -->
     <string name="play_next">Reproducir a continuación</string>
@@ -225,8 +224,6 @@
     <string name="nowplaying_title">Reproduciendo</string>
     <!-- -->
     <string name="up_next_title">A continuación</string>
-    <!-- Context menu item -->
-    <string name="add_to_queue">Añadir a la cola</string>
     <!-- Popup menu item -->
     <string name="go_to">Ir a...</string>
     <!-- 'More' button -->
@@ -448,7 +445,7 @@ Si no está seleccionado, se usará el icono de Shuttle en su lugar</string>
     <string name="disc_number">Disco \#</string>
     <string name="disc_total">Discos totales</string>
     <!-- Track count. i.e "1 of 15" -->
-    <string name="track_count"><xliff:g id="track">%s</xliff:g> de <xliff:g id="total tracks">%s</xliff:g></string>
+    <string name="track_count"><xliff:g id="track">%1$s</xliff:g> de <xliff:g id="total tracks">%2$s</xliff:g></string>
     <!-- Button text for saving tags  -->
     <string name="save">Guardar</string>
     <!-- Message displayed when tag editing fails -->
@@ -518,9 +515,6 @@ carpetas</item>
     <string name="genre_title">Género</string>
     <!-- Album artist (singular)-->
     <string name="album_artist_title">Álbum-Artista</string>
-    <!-- ## Lyrics ## -->
-    <!-- -->
-    <string name="no_lyrics">No se han encontrado letras para esta canción</string>
     <!-- ## Equalizer ## -->
     <!-- Menu item to open the equalizer -->
     <string name="equalizer">Ecualizador</string>
@@ -643,6 +637,8 @@ carpetas</item>
     <string name="unknown_genre_name">Género desconocido</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
     <string name="unknown_album_artist_name">Artista desconocido</string>
+    <!-- Default value if album year unknown -->
+    <string name="unknown_year">Año desconocido</string>
     <!-- Song Info overflow option-->
     <string name="song_info">Información de canción</string>
     <!-- Artwork Download Service Label-->
@@ -748,4 +744,13 @@ carpetas</item>
     <string name="search_albums">Álbumes</string>
     <!-- Changelog -->
     <string name="changelog_show_on_launch">Mostrar al inicio</string>
+    <!-- Lyrics -->
+    <!-- QuickLyric button -->
+    <string name="quicklyric">QuickLyric</string>
+    <!-- Button for lyrics -->
+    <string name="lyrics">Letras</string>
+    <!-- Shown when there are no lyrics -->
+    <string name="no_lyrics">No se han encontrado letras para esta canción</string>
+    <!-- QuickLyric info dialog message-->
+    <string name="quicklyric_info">QuickLyric es un buscador de letras de canciones open-source que hay  en Google Play Store.\n\nUna vez instalado, QuickLyric se abrira desde Shuttle cada vez que pulses el botón de menú de \'QuickLyric\'</string>
 </resources>

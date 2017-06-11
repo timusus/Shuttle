@@ -147,15 +147,12 @@
     <string name="delete_file_confirmation_dialog">\"<xliff:g id="file">%s</xliff:g>\"を完全に削除しますか?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">本当に端末から全てのアートワークを完全に削除しますか?</string>
-    <!-- QuickLyric Play Store Link -->
-    <!-- QuickLyric button -->
-    <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
     <string name="dialog_title_set_ringtone">着信音を設定</string>
     <!-- "Set Ringtone" message -->
     <string name="dialog_message_set_ringtone">着信音を設定するためには書き込み権限の許可が必要です。\n\n許可をして頂いてから、再度着信音を設定してみてください。</string>
     <!-- Message displayed in dialog when attempting to add duplicates to playlist -->
-    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%s</xliff:g> - <xliff:g id="song">%s</xliff:g> は既にプレイリストに存在します。本当に追加しますか？</string>
+    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%1$s</xliff:g> - <xliff:g id="song">%2$s</xliff:g> は既にプレイリストに存在します。本当に追加しますか？</string>
     <!-- Checkbox text 'apply to all' -->
     <string name="dialog_checkbox_playlist_duplicate_apply_all">全て適応 <xliff:g id="number">%d</xliff:g></string>
     <!-- Title displayed in dialog when attempting to add duplicates to playlist -->
@@ -185,17 +182,18 @@
     <string name="fav_add">お気に入りに追加</string>
     <!-- Context menu item -->
     <string name="play_selection">再生</string>
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
     <!-- Context menu item -->
     <string name="add_to_playlist">プレイリストに追加</string>
     <!-- Context menu item -->
     <string name="new_playlist">新規作成</string>
-    <!-- Button for lyrics -->
-    <string name="lyrics">歌詞</string>
     <!-- menu item to save the current list as a new playlist -->
     <string name="save_as_playlist">プレイリストとして保存</string>
     <!-- Context menu item to remove the selected item from the playlist -->
     <string name="remove_from_playlist">プレイリストから削除</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
+    <!-- Context menu item to remove the selected item from the queue -->
     <string name="remove_from_queue">キューから削除</string>
     <!-- Context menu item -->
     <string name="play_next">次に再生</string>
@@ -225,8 +223,6 @@
     <string name="nowplaying_title">再生中</string>
     <!-- -->
     <string name="up_next_title">次へ</string>
-    <!-- Context menu item -->
-    <string name="add_to_queue">キューに追加</string>
     <!-- Popup menu item -->
     <string name="go_to">移動...</string>
     <!-- 'More' button -->
@@ -502,9 +498,6 @@
     <string name="genre_title">ジャンル</string>
     <!-- Album artist (singular)-->
     <string name="album_artist_title">アルバムアーティスト</string>
-    <!-- ## Lyrics ## -->
-    <!-- -->
-    <string name="no_lyrics">埋め込み歌詞はありません</string>
     <!-- ## Equalizer ## -->
     <!-- Menu item to open the equalizer -->
     <string name="equalizer">イコライザ</string>
@@ -620,6 +613,7 @@
     <string name="unknown_genre_name">不明なジャンル</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
     <string name="unknown_album_artist_name">不明なアルバムアーティスト</string>
+    <!-- Default value if album year unknown -->
     <!-- Song Info overflow option-->
     <string name="song_info">曲の詳細</string>
     <!-- Artwork Download Service Label-->
@@ -687,4 +681,12 @@
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <!-- Search Filter-->
     <!-- Changelog -->
+    <!-- Lyrics -->
+    <!-- QuickLyric button -->
+    <string name="quicklyric">QuickLyric</string>
+    <!-- Button for lyrics -->
+    <string name="lyrics">歌詞</string>
+    <!-- Shown when there are no lyrics -->
+    <string name="no_lyrics">埋め込み歌詞はありません</string>
+    <!-- QuickLyric info dialog message-->
 </resources>

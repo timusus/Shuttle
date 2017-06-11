@@ -160,14 +160,12 @@ abesti ilarara gehituak.</item>
     <string name="delete_file_confirmation_dialog">Seguru zaude \"<xliff:g id="file">%s</xliff:g>\" betirako ezabatu nahi duzula?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">Seguru zaude karatula guztiak ezabatu nahi dituzula zure telefonotik?</string>
-    <!-- QuickLyric button -->
-    <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
     <string name="dialog_title_set_ringtone">Dei-doinua ezarri</string>
     <!-- "Set Ringtone" message -->
     <string name="dialog_message_set_ringtone">Shuttle-ek idazketa baimenak behar ditu zure dei-doinua ezartzeko.\n\nBaimena eman ostean, saiatu dei-doinua berriro aukeratzen.</string>
     <!-- Message displayed in dialog when attempting to add duplicates to playlist -->
-    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%s</xliff:g> - <xliff:g id="song">%s</xliff:g> jada erreprodukzio-zerrendan existizen da. Gehitu nahi duzu?</string>
+    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%1$s</xliff:g> - <xliff:g id="song">%2$s</xliff:g> jada erreprodukzio-zerrendan existizen da. Gehitu nahi duzu?</string>
     <!-- Checkbox text 'apply to all' -->
     <string name="dialog_checkbox_playlist_duplicate_apply_all">Denei aplikatu (<xliff:g id="number">%d</xliff:g>)</string>
     <!-- Title displayed in dialog when attempting to add duplicates to playlist -->
@@ -194,20 +192,21 @@ abesti ilarara gehituak.</item>
     <!-- Menu option 'clear queue' -->
     <string name="clear_queue">Ilara garbitu</string>
     <!-- -->
-    <string name="fav_add">Gogokoetara gehitu</string>
+    <string name="fav_add">Gogokoa</string>
     <!-- Context menu item -->
     <string name="play_selection">Erreproduzitu</string>
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
     <!-- Context menu item -->
     <string name="add_to_playlist">Zerrendara gehitu</string>
     <!-- Context menu item -->
     <string name="new_playlist">Berria</string>
-    <!-- Button for lyrics -->
-    <string name="lyrics">Letrak</string>
     <!-- menu item to save the current list as a new playlist -->
     <string name="save_as_playlist">Zerrenda bezala gorde</string>
     <!-- Context menu item to remove the selected item from the playlist -->
     <string name="remove_from_playlist">Zerrendatik kendu</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
+    <!-- Context menu item to remove the selected item from the queue -->
     <string name="remove_from_queue">Ilaratik kendu</string>
     <!-- Context menu item -->
     <string name="play_next">Hurrengoa erreproduzitu</string>
@@ -238,8 +237,6 @@ abesti ilarara gehituak.</item>
     <string name="nowplaying_title">Orain entzuten</string>
     <!-- -->
     <string name="up_next_title">Hurrengoak</string>
-    <!-- Context menu item -->
-    <string name="add_to_queue">Ilarara gehitu</string>
     <!-- Popup menu item -->
     <string name="go_to">Joan...</string>
     <!-- 'More' button -->
@@ -458,7 +455,7 @@ Desaktibatzen bada, Shuttle-en ikonoa erabiliko da bere ordez</string>
     <string name="disc_number">Disko \#</string>
     <string name="disc_total">Disko totalak</string>
     <!-- Track count. i.e "1 of 15" -->
-    <string name="track_count"><xliff:g id="track">%s</xliff:g>/<xliff:g id="total tracks">%s</xliff:g></string>
+    <string name="track_count"><xliff:g id="track">%1$s</xliff:g>/<xliff:g id="total tracks">%2$s</xliff:g></string>
     <!-- Button text for saving tags  -->
     <string name="save">Gorde</string>
     <!-- Message displayed when tag editing fails -->
@@ -528,9 +525,6 @@ karpeta</item>
     <string name="genre_title">Generoa</string>
     <!-- Album artist (singular)-->
     <string name="album_artist_title">Album-Artista</string>
-    <!-- ## Lyrics ## -->
-    <!-- -->
-    <string name="no_lyrics">Ez dira txertatutako hitzak aurkitu</string>
     <!-- ## Equalizer ## -->
     <!-- Menu item to open the equalizer -->
     <string name="equalizer">Ekualizadorea</string>
@@ -653,6 +647,8 @@ karpeta</item>
     <string name="unknown_genre_name">Genero ezezaguna</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
     <string name="unknown_album_artist_name">Album-artista ezezaguna</string>
+    <!-- Default value if album year unknown -->
+    <string name="unknown_year">Urte ezezaguna</string>
     <!-- Song Info overflow option-->
     <string name="song_info">Abesti info.</string>
     <!-- Artwork Download Service Label-->
@@ -758,4 +754,13 @@ karpeta</item>
     <string name="search_albums">Albumak</string>
     <!-- Changelog -->
     <string name="changelog_show_on_launch">Erakutsi hasterakoan</string>
+    <!-- Lyrics -->
+    <!-- QuickLyric button -->
+    <string name="quicklyric">QuickLyric</string>
+    <!-- Button for lyrics -->
+    <string name="lyrics">Letrak</string>
+    <!-- Shown when there are no lyrics -->
+    <string name="no_lyrics">Ez dira txertatutako hitzak aurkitu.</string>
+    <!-- QuickLyric info dialog message-->
+    <string name="quicklyric_info">QuickLyric abesti-hitzak lortzeko kode zabalduko app bat da Google Play Storen.\n\nInstalatzerakoan, \'QuickLyric\' menuko botoiari ematerakoan Shuttle-etik zabalduko da.</string>
 </resources>

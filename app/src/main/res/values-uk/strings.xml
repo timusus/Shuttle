@@ -167,15 +167,12 @@
     <string name="delete_file_confirmation_dialog">Ви впевнені, що хочете назавжди видалити \"<xliff:g id="file">%s</xliff:g>\"?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">Ви впевнені що хочете назавжди видалити всі обкладинки альбомів з пристрою?</string>
-    <!-- QuickLyric Play Store Link -->
-    <!-- QuickLyric button -->
-    <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
     <string name="dialog_title_set_ringtone">Поставити на дзвінок</string>
     <!-- "Set Ringtone" message -->
     <string name="dialog_message_set_ringtone">Shuttle потребує дозволу на \"запис налаштувань\", щоб налаштувати ваш рингтон.\n\nПісля надання дозволу, спробуйте налаштувати ваш рингтон ще раз.</string>
     <!-- Message displayed in dialog when attempting to add duplicates to playlist -->
-    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%s</xliff:g> - <xliff:g id="song">%s</xliff:g> вже є у цьому плейлісті. Додати пропри все?</string>
+    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%1$s</xliff:g> - <xliff:g id="song">%2$s</xliff:g> вже є у цьому плейлісті. Додати пропри все?</string>
     <!-- Checkbox text 'apply to all' -->
     <string name="dialog_checkbox_playlist_duplicate_apply_all">Застосувати до всіх (<xliff:g id="number">%d</xliff:g>)</string>
     <!-- Title displayed in dialog when attempting to add duplicates to playlist -->
@@ -205,17 +202,18 @@
     <string name="fav_add">Додати в вибрані</string>
     <!-- Context menu item -->
     <string name="play_selection">Відтворити</string>
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
     <!-- Context menu item -->
     <string name="add_to_playlist">Додати в плейлист</string>
     <!-- Context menu item -->
     <string name="new_playlist">Новий</string>
-    <!-- Button for lyrics -->
-    <string name="lyrics">Тексти пісень</string>
     <!-- menu item to save the current list as a new playlist -->
     <string name="save_as_playlist">Зберегти як плейлист</string>
     <!-- Context menu item to remove the selected item from the playlist -->
     <string name="remove_from_playlist">Видалити з плейлисту</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
+    <!-- Context menu item to remove the selected item from the queue -->
     <string name="remove_from_queue">Вилучити з черги</string>
     <!-- Context menu item -->
     <string name="play_next">Відтворити наступний</string>
@@ -229,6 +227,7 @@
     <string name="share_title">Поділитися</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Пошук</string>
+    <string name="search_filter">Фільтр</string>
     <!-- Playlist context menu item to delete the selected playlist. -->
     <string name="delete_playlist_menu">Видалити</string>
     <!-- Playlist context menu item to clear the selected playlist. -->
@@ -245,8 +244,6 @@
     <string name="nowplaying_title">Зараз відтворюється</string>
     <!-- -->
     <string name="up_next_title">Наступний</string>
-    <!-- Context menu item -->
-    <string name="add_to_queue">Додати в чергу</string>
     <!-- Popup menu item -->
     <string name="go_to">Перейти до..</string>
     <!-- 'More' button -->
@@ -529,9 +526,6 @@
     <string name="genre_title">Жанр</string>
     <!-- Album artist (singular)-->
     <string name="album_artist_title">Виконавець альбому</string>
-    <!-- ## Lyrics ## -->
-    <!-- -->
-    <string name="no_lyrics">Вбудованих текстів для цього треку не знайдено</string>
     <!-- ## Equalizer ## -->
     <!-- Menu item to open the equalizer -->
     <string name="equalizer">Еквалайзер</string>
@@ -558,6 +552,7 @@
     <string name="empty_songlist">Треки не знайдені. Скопіюйте кілька пісень на ваш пристрій.</string>
     <!-- -->
     <string name="empty_suggested">Прослухайте більше музики і пропозиції з\'являться тут.</string>
+    <string name="empty_search">Результатів не знайдено.</string>
     <!-- ## Sort options ## -->
     <string name="sorting">Сортування</string>
     <string name="sort_default">Типовий</string>
@@ -657,6 +652,8 @@
     <string name="unknown_genre_name">Невідомий жанр</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
     <string name="unknown_album_artist_name">Невідомий виконавець альбому</string>
+    <!-- Default value if album year unknown -->
+    <string name="unknown_year">Невідомий рік</string>
     <!-- Song Info overflow option-->
     <string name="song_info">Про трек</string>
     <!-- Artwork Download Service Label-->
@@ -670,6 +667,7 @@
     <!-- Accessibility button description -->
     <string name="btn_pause">Пауза</string>
     <!-- Accessibility button description -->
+    <string name="btn_play_pause">Відтв./Призуп.</string>
     <!-- Accessibility button description -->
     <string name="btn_skip">Пропустити</string>
     <!-- Accessibility button description -->
@@ -677,6 +675,7 @@
     <!-- Accessibility button description -->
     <string name="btn_queue">Переглянути чергу відтворення</string>
     <!-- Accessibility button description -->
+    <string name="btn_close">Закрити</string>
     <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
     <string name="btn_options">параметри %s</string>
     <!-- Accessibility button description -->
@@ -753,5 +752,17 @@
     <string name="shortcut_playlist_disabled">Плейлист недоступний</string>
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <!-- Search Filter-->
+    <string name="search_title_only">Тільки назва</string>
+    <string name="search_artists">Виконавці</string>
+    <string name="search_albums">Альбоми</string>
     <!-- Changelog -->
+    <string name="changelog_show_on_launch">Показати при запуску</string>
+    <!-- Lyrics -->
+    <!-- QuickLyric button -->
+    <string name="quicklyric">QuickLyric</string>
+    <!-- Button for lyrics -->
+    <string name="lyrics">Тексти пісень</string>
+    <!-- Shown when there are no lyrics -->
+    <string name="no_lyrics">Вбудованих текстів для цього треку не знайдено</string>
+    <!-- QuickLyric info dialog message-->
 </resources>

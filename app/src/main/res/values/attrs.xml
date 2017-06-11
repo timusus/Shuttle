@@ -6,14 +6,6 @@
     <attr name="shortcutLongLabel">reference</attr>
     <attr name="shortcutShortLabel">reference</attr>
 
-    <!-- Used for ForegroundLinearLayout -->
-    <!-- Refer to https://gist.github.com/chrisbanes/9091754 for original code -->
-    <declare-styleable name="ForegroundLinearLayout">
-        <attr name="android:foreground" />
-        <attr name="android:foregroundInsidePadding" />
-        <attr name="android:foregroundGravity" />
-    </declare-styleable>
-
     <attr name="notification_control_tint">reference|color</attr>
 
     <declare-styleable name="ScrimInsetsView">

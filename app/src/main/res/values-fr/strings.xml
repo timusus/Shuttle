@@ -148,14 +148,11 @@
     <string name="delete_file_confirmation_dialog">Êtes vous-sûr de vouloir définitivement supprimer \"<xliff:g id="file">%s</xliff:g>\"?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">Êtes-vous sûr de vouloir supprimer définitivement toutes les illustrations de l\'appareil?</string>
-    <!-- QuickLyric Play Store Link -->
-    <!-- QuickLyric button -->
-    <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
     <string name="dialog_title_set_ringtone">Choisir comme sonnerie</string>
     <!-- "Set Ringtone" message -->
     <!-- Message displayed in dialog when attempting to add duplicates to playlist -->
-    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%s</xliff:g> - <xliff:g id="song">%s</xliff:g> existe déjà dans la liste de lecture. L\'ajouter quand même ?</string>
+    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%1$s</xliff:g> - <xliff:g id="song">%2$s</xliff:g> existe déjà dans la liste de lecture. L\'ajouter quand même ?</string>
     <!-- Checkbox text 'apply to all' -->
     <string name="dialog_checkbox_playlist_duplicate_apply_all">Appliquer à tous (<xliff:g id="number">%d</xliff:g>)</string>
     <!-- Title displayed in dialog when attempting to add duplicates to playlist -->
@@ -185,17 +182,18 @@
     <string name="fav_add">Ajouter aux favoris</string>
     <!-- Context menu item -->
     <string name="play_selection">Écouter</string>
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
     <!-- Context menu item -->
     <string name="add_to_playlist">Ajouter à la playlist</string>
     <!-- Context menu item -->
     <string name="new_playlist">Nouvelle</string>
-    <!-- Button for lyrics -->
-    <string name="lyrics">Paroles</string>
     <!-- menu item to save the current list as a new playlist -->
     <string name="save_as_playlist">Enregistrer comme playlist</string>
     <!-- Context menu item to remove the selected item from the playlist -->
     <string name="remove_from_playlist">Supprimer de la playlist</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
+    <!-- Context menu item to remove the selected item from the queue -->
     <string name="remove_from_queue">Supprimer de la file d\'attente</string>
     <!-- Context menu item -->
     <string name="play_next">Piste suivante</string>
@@ -225,8 +223,6 @@
     <string name="nowplaying_title">Lecture en cours</string>
     <!-- -->
     <string name="up_next_title">File d\'attente</string>
-    <!-- Context menu item -->
-    <string name="add_to_queue">Ajouter à la file d\'attente</string>
     <!-- Popup menu item -->
     <string name="go_to">Aller à...</string>
     <!-- 'More' button -->
@@ -512,9 +508,6 @@
     <string name="genre_title">Genre</string>
     <!-- Album artist (singular)-->
     <string name="album_artist_title">Album-Artiste</string>
-    <!-- ## Lyrics ## -->
-    <!-- -->
-    <string name="no_lyrics">Paroles incorporées introuvables</string>
     <!-- ## Equalizer ## -->
     <!-- Menu item to open the equalizer -->
     <string name="equalizer">Égaliseur</string>
@@ -635,6 +628,7 @@
     <string name="unknown_genre_name">Genre inconnu</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
     <string name="unknown_album_artist_name">Artiste de l\'album inconnu</string>
+    <!-- Default value if album year unknown -->
     <!-- Song Info overflow option-->
     <string name="song_info">Info de la chanson</string>
     <!-- Artwork Download Service Label-->
@@ -712,4 +706,12 @@
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <!-- Search Filter-->
     <!-- Changelog -->
+    <!-- Lyrics -->
+    <!-- QuickLyric button -->
+    <string name="quicklyric">QuickLyric</string>
+    <!-- Button for lyrics -->
+    <string name="lyrics">Paroles</string>
+    <!-- Shown when there are no lyrics -->
+    <string name="no_lyrics">Paroles incorporées introuvables</string>
+    <!-- QuickLyric info dialog message-->
 </resources>
