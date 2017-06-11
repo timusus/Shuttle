@@ -1,37 +1,60 @@
 package com.simplecity.amp_library.ui.views;
 
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
 
 import com.afollestad.aesthetic.Aesthetic;
+import com.afollestad.aesthetic.LightDarkColorState;
 import com.simplecity.amp_library.R;
 
+import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 
 public class OverflowButton extends NonScrollImageButton {
 
-    Disposable aestheticDisposable;
+    private Disposable aestheticDisposable;
+
     private final Drawable drawable;
+
+    private boolean dark = false;
 
     public OverflowButton(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        drawable = DrawableCompat.wrap(getResources().getDrawable(R.drawable.ic_overflow_white)).mutate();
-        setImageDrawable(drawable);
+        TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.OverflowButton, 0, 0);
+        if (typedArray.hasValue(R.styleable.OverflowButton_isDark)) {
+            dark = typedArray.getBoolean(R.styleable.OverflowButton_isDark, false);
+        }
+
+        drawable = DrawableCompat.wrap(getResources().getDrawable(R.drawable.ic_overflow_20dp)).mutate();
+    }
+
+    private Observable<Integer> getColorObservable() {
+        if (dark) {
+            return Aesthetic.get().textColorSecondaryInverse();
+        } else {
+            return Aesthetic.get().textColorSecondary();
+
+        }
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        aestheticDisposable = Aesthetic.get()
-                .textColorSecondary()
-                .subscribe(color -> {
-                    DrawableCompat.setTint(drawable, color);
-                    setImageDrawable(drawable);
-                });
+        aestheticDisposable = Observable.combineLatest(
+                Aesthetic.get().textColorSecondary(),
+                Observable.just(Color.WHITE),
+                Observable.just(dark),
+                LightDarkColorState.creator()
+        ).subscribe(lightDarkColorState -> {
+            DrawableCompat.setTint(drawable, lightDarkColorState.color());
+            setImageDrawable(drawable);
+        });
     }
 
     @Override

@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.PopupMenu;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.annimon.stream.Collectors;
@@ -17,8 +20,10 @@ import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.views.QueueView;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
+import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
+import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 
 import java.util.ArrayList;
@@ -27,6 +32,8 @@ import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 
 public class QueuePresenter extends Presenter<QueueView> {
+
+    private static final String TAG = "QueuePresenter";
 
     private RequestManager requestManager;
 
@@ -70,12 +77,14 @@ public class QueuePresenter extends Presenter<QueueView> {
 
                             case MusicService.InternalIntents.QUEUE_CHANGED:
                                 if (!intent.getBooleanExtra(MusicService.FROM_USER, false)) {
+                                    Log.i(TAG, "Queue changed, loading data");
                                     loadData();
                                 }
                                 break;
                             case MusicService.InternalIntents.SERVICE_CONNECTED:
                             case MusicService.InternalIntents.REPEAT_CHANGED:
                             case MusicService.InternalIntents.SHUFFLE_CHANGED:
+                                Log.i(TAG, "Shuffle changed, loading data");
                                 loadData();
                                 break;
                         }
@@ -87,7 +96,8 @@ public class QueuePresenter extends Presenter<QueueView> {
         PlaylistUtils.createPlaylistDialog(context, MusicUtils.getQueue());
     }
 
-    public void saveQueue(Context context, Playlist playlist) {
+    public void saveQueue(Context context, MenuItem item) {
+        Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
         PlaylistUtils.addToPlaylist(context, playlist, MusicUtils.getQueue());
     }
 
@@ -139,8 +149,16 @@ public class QueuePresenter extends Presenter<QueueView> {
         }
 
         @Override
-        public void onSongOverflowClick(View v, Song song) {
-
+        public void onSongOverflowClick(int position, View v, Song song) {
+            PopupMenu menu = new PopupMenu(v.getContext(), v);
+            MenuUtils.setupSongMenu(v.getContext(), menu, true);
+            menu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(v.getContext(), song, taggerDialog -> {
+                QueueView queueView = getView();
+                if (queueView != null) {
+                    queueView.showTaggerDialog(taggerDialog);
+                }
+            }));
+            menu.show();
         }
 
         @Override

@@ -39,7 +39,7 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder, Song>
 
         boolean onSongLongClick(int position, SongView songView);
 
-        void onSongOverflowClick(View v, Song song);
+        void onSongOverflowClick(int position, View v, Song song);
 
         void onStartDrag(ViewHolder holder);
     }
@@ -105,9 +105,9 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder, Song>
         }
     }
 
-    private void onOverflowClick(View v) {
+    private void onOverflowClick(int position, View v) {
         if (listener != null) {
-            listener.onSongOverflowClick(v, song);
+            listener.onSongOverflowClick(position, v, song);
         }
     }
 
@@ -331,7 +331,7 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder, Song>
             itemView.setOnClickListener(v -> viewModel.onItemClick(getAdapterPosition()));
             itemView.setOnLongClickListener(v -> viewModel.onItemLongClick(getAdapterPosition()));
 
-            overflowButton.setOnClickListener(v -> viewModel.onOverflowClick(v));
+            overflowButton.setOnClickListener(v -> viewModel.onOverflowClick(getAdapterPosition(), v));
 
             if (dragHandle != null) {
                 dragHandle.setOnTouchListener((v, event) -> {

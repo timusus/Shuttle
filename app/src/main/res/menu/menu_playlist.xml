@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/playPlaylist"
+        android:title="@string/play_selection"/>
+
+    <item
+        android:id="@+id/renamePlaylist"
+        android:title="@string/rename_playlist_menu"/>
+
+    <item
+        android:id="@+id/editPlaylist"
+        android:title="@string/edit_playlist_menu"/>
+
+    <item
+        android:id="@+id/exportPlaylist"
+        android:title="@string/export_playlist"/>
+
+    <item
+        android:id="@+id/clearPlaylist"
+        android:title="@string/clear_playlist_menu"/>
+
+    <item
+        android:id="@+id/deletePlaylist"
+        android:title="@string/delete_item"/>
+
+</menu>

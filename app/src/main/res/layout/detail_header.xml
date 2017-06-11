@@ -62,8 +62,7 @@
                 android:layout_marginTop="8dp"
                 android:alpha="0.8"
                 android:background="@null"
-                android:paddingTop="4dp"
-                android:src="@drawable/ic_overflow_white"/>
+                android:paddingTop="4dp"/>
         </LinearLayout>
     </LinearLayout>
 

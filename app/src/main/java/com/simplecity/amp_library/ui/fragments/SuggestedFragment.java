@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,7 @@ import com.simplecity.amp_library.ui.modelviews.SuggestedHeaderView;
 import com.simplecity.amp_library.ui.modelviews.SuggestedSongView;
 import com.simplecity.amp_library.ui.views.SuggestedDividerDecoration;
 import com.simplecity.amp_library.utils.ComparisonUtils;
+import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.Operators;
 import com.simplecity.amp_library.utils.PermissionUtils;
@@ -50,13 +52,41 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 public class SuggestedFragment extends BaseFragment implements
-        MusicUtils.Defs, SuggestedSongView.ClickListener, SuggestedHeaderView.ClickListener, AlbumView.ClickListener {
+        SuggestedHeaderView.ClickListener,
+        AlbumView.ClickListener {
 
     public interface SuggestedClickListener {
 
         void onAlbumArtistClicked(AlbumArtist albumArtist, View transitionView);
 
         void onAlbumClicked(Album album, View transitionView);
+    }
+
+    public class SongClickListener implements SuggestedSongView.ClickListener {
+
+        List<Song> songs;
+
+        public SongClickListener(List<Song> songs) {
+            this.songs = songs;
+        }
+
+        @Override
+        public void onSongClick(Song song, SuggestedSongView.ViewHolder holder) {
+            MusicUtils.playAll(songs, songs.indexOf(song), (String message) -> Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show());
+        }
+
+        @Override
+        public boolean onSongLongClick(Song song) {
+            return false;
+        }
+
+        @Override
+        public void onSongOverflowClicked(View v, Song song) {
+            PopupMenu popupMenu = new PopupMenu(getContext(), v);
+            MenuUtils.setupSongMenu(getContext(), popupMenu, false);
+            popupMenu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), song, taggerDialog -> taggerDialog.show(getFragmentManager())));
+            popupMenu.show();
+        }
     }
 
     private static final String TAG = "SuggestedFragment";
@@ -328,10 +358,11 @@ public class SuggestedFragment extends BaseFragment implements
                 subscription.add(mostPlayedSongsObservable
                         .map(songs -> {
                             Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(b.playCount, a.playCount));
+                            SongClickListener songClickListener = new SongClickListener(songs);
                             return Stream.of(songs)
                                     .map(song -> {
                                         SuggestedSongView suggestedSongView = new SuggestedSongView(song, requestManager);
-                                        suggestedSongView.setClickListener(this);
+                                        suggestedSongView.setClickListener(songClickListener);
                                         return (ViewModel) suggestedSongView;
                                     })
                                     .limit(20)
@@ -341,14 +372,17 @@ public class SuggestedFragment extends BaseFragment implements
                         .subscribe(adaptableItems -> mostPlayedRecyclerView.ViewModelAdapter.setItems(adaptableItems)));
 
                 subscription.add(favouritesSongsObservable
-                        .map(songs -> Stream.of(songs)
-                                .map(song -> {
-                                    SuggestedSongView suggestedSongView = new SuggestedSongView(song, requestManager);
-                                    suggestedSongView.setClickListener(this);
-                                    return (ViewModel) suggestedSongView;
-                                })
-                                .limit(20)
-                                .collect(Collectors.toList()))
+                        .map(songs -> {
+                            SongClickListener songClickListener = new SongClickListener(songs);
+                            return Stream.of(songs)
+                                    .map(song -> {
+                                        SuggestedSongView suggestedSongView = new SuggestedSongView(song, requestManager);
+                                        suggestedSongView.setClickListener(songClickListener);
+                                        return (ViewModel) suggestedSongView;
+                                    })
+                                    .limit(20)
+                                    .collect(Collectors.toList());
+                        })
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(adaptableItems -> favoriteRecyclerView.ViewModelAdapter.setItems(adaptableItems)));
             }
@@ -366,21 +400,6 @@ public class SuggestedFragment extends BaseFragment implements
     }
 
     @Override
-    public void onSongClick(Song song, SuggestedSongView.ViewHolder holder) {
-        Toast.makeText(getContext(), song.name + " clicked", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public boolean onSongLongClick(Song song) {
-        return false;
-    }
-
-    @Override
-    public void onSongOverflowClicked(View v, Song song) {
-
-    }
-
-    @Override
     public void onAlbumClick(int position, AlbumView albumView, AlbumView.ViewHolder viewHolder) {
         if (suggestedClickListener != null) {
             suggestedClickListener.onAlbumClicked(albumView.album, viewHolder.imageOne);
@@ -394,80 +413,16 @@ public class SuggestedFragment extends BaseFragment implements
 
     @Override
     public void onAlbumOverflowClicked(View v, Album album) {
-
+        PopupMenu menu = new PopupMenu(getContext(), v);
+        menu.inflate(R.menu.menu_album);
+        menu.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(getContext(), album, taggerDialog -> taggerDialog.show(getFragmentManager())));
+        menu.show();
     }
 
     @Override
     public void onSuggestedHeaderClick(SuggestedHeader suggestedHeader) {
         getNavigationController().pushViewController(PlaylistDetailFragment.newInstance(suggestedHeader.playlist), "PlaylistFrasgment");
     }
-
-//    @Override
-//    public void onItemClick(ViewModelAdapter adapter, View v, int position, final Object item) {
-//        if (item instanceof Song) {
-//
-//            Observable<List<Song>> songsObservable;
-//            if (adapter instanceof HorizontalRecyclerView.HorizontalAdapter) {
-//                //The user tapped a song belonging to a HorizontalRecyclerView adapter. Play it amongst the
-//                //other songs within that adapter.
-//                songsObservable = Observable.fromCallable(() ->
-//                        Stream.of(((HorizontalRecyclerView.HorizontalAdapter) adapter).items)
-//                                .map(adaptableItem -> (Song) adaptableItem.getItem())
-//                                .collect(Collectors.toList()));
-//            } else {
-//                //Otherwise, play the song amongst other songs from the same album
-//                songsObservable = ((Song) item).getAlbum()
-//                        .getSongsObservable()
-//                        .map(songs -> {
-//                            Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(a.track, b.track));
-//                            Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(a.discNumber, b.discNumber));
-//                            return songs;
-//                        });
-//            }
-//
-//            songsObservable.observeOn(AndroidSchedulers.mainThread())
-//                    .subscribe(songs -> MusicUtils.playAll(songs, songs.indexOf((Song) item), (String message) -> {
-//                        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-//                    }));
-//        } else {
-//            Object model = item;
-//            if (suggestedClickListener != null) {
-//                if (item instanceof SuggestedHeader) {
-//                    model = ((SuggestedHeader) item).playlist;
-//                }
-//                suggestedClickListener.onItemClicked((Serializable) model, v.findViewById(R.id.image));
-//            }
-//        }
-//    }
-//
-//    @Override
-//    public void onOverflowClick(View v, int position, Object item) {
-//        if (item instanceof AlbumArtist) {
-//            PopupMenu menu = new PopupMenu(SuggestedFragment.this.getActivity(), v);
-//            MenuUtils.addAlbumArtistMenuOptions(getActivity(), menu);
-//            MenuUtils.addClickHandler((AppCompatActivity) getActivity(), menu, (AlbumArtist) item);
-//            menu.show();
-//        } else if (item instanceof Album) {
-//            PopupMenu menu = new PopupMenu(SuggestedFragment.this.getActivity(), v);
-//            MenuUtils.addAlbumMenuOptions(getActivity(), menu);
-//            MenuUtils.addClickHandler((AppCompatActivity) getActivity(), menu, (Album) item);
-//            menu.show();
-//        } else if (item instanceof Song) {
-//            PopupMenu menu = new PopupMenu(SuggestedFragment.this.getActivity(), v);
-//            MenuUtils.addSongMenuOptions(getActivity(), menu);
-//            MenuUtils.addClickHandler((AppCompatActivity) getActivity(), menu, (Song) item, menuItem -> {
-//                switch (menuItem.getItemId()) {
-//                    case BLACKLIST: {
-//                        BlacklistHelper.addToBlacklist(((Song) item));
-//                        ViewModelAdapter.removeItem(position);
-//                        return true;
-//                    }
-//                }
-//                return false;
-//            });
-//            menu.show();
-//        }
-//    }
 
     @Override
     protected String screenName() {

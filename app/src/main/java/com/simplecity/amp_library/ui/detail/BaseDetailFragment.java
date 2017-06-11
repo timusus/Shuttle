@@ -2,11 +2,8 @@ package com.simplecity.amp_library.ui.detail;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.content.BroadcastReceiver;
-import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CustomCollapsingToolbarLayout;
@@ -15,6 +12,7 @@ import android.support.v4.app.SharedElementCallback;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
@@ -51,6 +49,7 @@ import com.simplecity.amp_library.ui.modelviews.HorizontalRecyclerView;
 import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.modelviews.SubheaderView;
 import com.simplecity.amp_library.utils.ActionBarUtils;
+import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.ResourceUtils;
@@ -75,6 +74,7 @@ import butterknife.Unbinder;
 import io.reactivex.disposables.Disposable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -111,12 +111,6 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
 
-    private BroadcastReceiver receiver;
-
-    private SharedPreferences prefs;
-
-    private SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceChangeListener;
-
     protected CompositeSubscription subscriptions;
 
     protected RequestManager requestManager;
@@ -147,10 +141,6 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         setHasOptionsMenu(true);
 
         setEnterSharedElementCallback(enterSharedElementCallback);
-
-        prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
-        prefs.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
 
         if (requestManager == null) {
             requestManager = Glide.with(this);
@@ -214,9 +204,6 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     @Override
     public void onPause() {
 
-        if (receiver != null) {
-            getActivity().unregisterReceiver(receiver);
-        }
         subscriptions.unsubscribe();
 
         super.onPause();
@@ -231,12 +218,6 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         detailPresenter.unbindView(this);
 
         super.onDestroyView();
-    }
-
-    @Override
-    public void onDestroy() {
-        prefs.unregisterOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
-        super.onDestroy();
     }
 
     boolean showAlbumMenu() {
@@ -400,7 +381,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
                                 .startWith(0L)
                                 // If we have a 'current slideshowAlbum' then we're coming back from onResume. Don't load a new one immediately.
                                 .delay(currentSlideShowAlbum == null ? 0 : 8, TimeUnit.SECONDS),
-                        (albums, aLong) -> albums.get(new Random().nextInt(albums.size()))
+                        (albums, aLong) -> albums.isEmpty() ? currentSlideShowAlbum : albums.get(new Random().nextInt(albums.size()))
                 ).subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(nextSlideShowAlbum -> {
@@ -436,7 +417,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
         // Create playlist menu
         final SubMenu sub = toolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-        PlaylistUtils.makePlaylistMenu(getActivity(), sub, MusicUtils.Defs.SONG_FRAGMENT_GROUP_ID);
+        PlaylistUtils.makePlaylistMenu(getActivity(), sub);
 
         // Inflate sorting menus
         MenuItem item = toolbar.getMenu().findItem(R.id.sorting);
@@ -712,8 +693,16 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     }
 
     @Override
-    public void onSongOverflowClick(View v, Song song) {
-
+    public void onSongOverflowClick(int position, View v, Song song) {
+        PopupMenu popupMenu = new PopupMenu(getContext(), v);
+        MenuUtils.setupSongMenu(getContext(), popupMenu, false);
+        popupMenu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), song, new Action1<TaggerDialog>() {
+            @Override
+            public void call(TaggerDialog taggerDialog) {
+                taggerDialog.show(getFragmentManager());
+            }
+        }));
+        popupMenu.show();
     }
 
     @Override
@@ -728,7 +717,15 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
     @Override
     public void onAlbumOverflowClicked(View v, Album album) {
-
+        PopupMenu popupMenu = new PopupMenu(getContext(), v);
+        popupMenu.inflate(R.menu.menu_album);
+        popupMenu.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(getContext(), album, new Action1<TaggerDialog>() {
+            @Override
+            public void call(TaggerDialog taggerDialog) {
+                taggerDialog.show(getFragmentManager());
+            }
+        }));
+        popupMenu.show();
     }
 
     @Override

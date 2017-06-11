@@ -5,10 +5,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,7 +14,6 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
@@ -25,8 +22,6 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.AlbumArtist;
-import com.simplecity.amp_library.model.Playlist;
-import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.ui.adapters.SectionedAdapter;
 import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.ui.modelviews.AlbumArtistView;
@@ -36,32 +31,27 @@ import com.simplecity.amp_library.ui.recyclerview.GridDividerDecoration;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.DataManager;
-import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
-import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.SortManager;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.Collections;
-import java.util.List;
 
 import javax.inject.Inject;
 
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class AlbumArtistFragment extends BaseFragment implements
         MusicUtils.Defs,
         AlbumArtistView.ClickListener,
-        Toolbar.OnMenuItemClickListener,
         PageSelectedListener {
 
     interface AlbumArtistClickListener {
@@ -390,59 +380,9 @@ public class AlbumArtistFragment extends BaseFragment implements
     @Override
     public void onAlbumArtistOverflowClicked(View v, AlbumArtist albumArtist) {
         PopupMenu menu = new PopupMenu(AlbumArtistFragment.this.getActivity(), v);
-        MenuUtils.addAlbumArtistMenuOptions(getActivity(), menu);
-        MenuUtils.addClickHandler((AppCompatActivity) getActivity(), menu, albumArtist);
+        menu.inflate(R.menu.menu_artist);
+        menu.setOnMenuItemClickListener(MenuUtils.getAlbumArtistClickListener(getContext(), albumArtist, taggerDialog -> taggerDialog.show(getFragmentManager())));
         menu.show();
-    }
-
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-
-        List<AlbumArtist> albumArtists = Stream.of(contextualToolbarHelper.getItems())
-                .map(SelectableViewModel::getItem)
-                .collect(Collectors.toList());
-
-        Observable<List<Song>> songsObservable = Observable.defer(() ->
-                Observable.from(albumArtists)
-                        .flatMap(AlbumArtist::getSongsObservable)
-                        .reduce((songs, songs2) -> Stream.concat(Stream.of(songs), Stream.of(songs2))
-                                .collect(Collectors.toList()))
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread()));
-
-        switch (item.getItemId()) {
-            case NEW_PLAYLIST:
-                songsObservable.subscribe(songs -> PlaylistUtils.createPlaylistDialog(getActivity(), songs));
-                return true;
-            case PLAYLIST_SELECTED:
-                songsObservable
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(songs -> {
-                            Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
-                            PlaylistUtils.addToPlaylist(getContext(), playlist, songs);
-                        });
-                return true;
-            case R.id.delete:
-                new DialogUtils.DeleteDialogBuilder()
-                        .context(getContext())
-                        .singleMessageId(R.string.delete_album_artist_desc)
-                        .multipleMessage(R.string.delete_album_artist_desc_multiple)
-                        .itemNames(Stream.of(albumArtists)
-                                .map(albumArtist -> albumArtist.name)
-                                .collect(Collectors.toList()))
-                        .songsToDelete(songsObservable)
-                        .build()
-                        .show();
-                contextualToolbarHelper.finish();
-                return true;
-            case R.id.addToQueue: {
-                songsObservable.subscribe(songs -> MusicUtils.addToQueue(songs, message ->
-                        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show()));
-                return true;
-            }
-        }
-        return true;
     }
 
     @Override
@@ -470,8 +410,12 @@ public class AlbumArtistFragment extends BaseFragment implements
             contextualToolbar.getMenu().clear();
             contextualToolbar.inflateMenu(R.menu.context_menu_songs);
             SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-            PlaylistUtils.makePlaylistMenu(getActivity(), sub, SONG_FRAGMENT_GROUP_ID);
-            contextualToolbar.setOnMenuItemClickListener(this);
+            PlaylistUtils.makePlaylistMenu(getActivity(), sub);
+            contextualToolbar.setOnMenuItemClickListener(MenuUtils.getAlbumArtistMenuClickListener(
+                    getContext(),
+                    () -> Stream.of(contextualToolbarHelper.getItems())
+                            .map(SelectableViewModel::getItem)
+                            .collect(Collectors.toList())));
             contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
                 @Override
                 public void notifyItemChanged(int position) {

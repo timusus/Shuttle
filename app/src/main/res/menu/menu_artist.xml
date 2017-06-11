@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/play"
+        android:title="@string/play_selection"/>
+
+    <item
+        android:title="@string/menu_add_to">
+        <menu>
+            <item
+                android:id="@+id/addToPlaylist"
+                android:title="@string/menu_playlist">
+                <menu/>
+            </item>
+
+            <item
+                android:id="@+id/addToQueue"
+                android:title="@string/menu_queue"/>
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/editTags"
+        android:title="@string/edit_tags"/>
+
+    <item
+        android:id="@+id/info"
+        android:title="@string/info"/>
+
+    <item
+        android:id="@+id/artwork"
+        android:title="@string/artwork_edit"/>
+
+    <item
+        android:id="@+id/blacklist"
+        android:title="@string/blacklist_title"/>
+
+    <item
+        android:id="@+id/delete"
+        android:title="@string/delete_item"/>
+
+</menu>

@@ -2,10 +2,8 @@ package com.simplecity.amp_library.ui.fragments;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,9 +16,7 @@ import android.widget.Toast;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
-import com.simplecity.amp_library.sql.databases.BlacklistHelper;
 import com.simplecity.amp_library.ui.adapters.SectionedAdapter;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
@@ -29,12 +25,10 @@ import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.DataManager;
-import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
-import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.SortManager;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
@@ -46,12 +40,12 @@ import java.util.List;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func0;
 
 public class SongFragment extends BaseFragment implements
         MusicUtils.Defs,
         SongView.ClickListener,
         ShuffleView.ShuffleClickListener,
-        Toolbar.OnMenuItemClickListener,
         PageSelectedListener {
 
     private static final String TAG = "SongFragment";
@@ -77,12 +71,10 @@ public class SongFragment extends BaseFragment implements
     }
 
     public static SongFragment newInstance(String pageTitle) {
-
         SongFragment fragment = new SongFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PAGE_TITLE, pageTitle);
         fragment.setArguments(args);
-
         return fragment;
     }
 
@@ -297,18 +289,10 @@ public class SongFragment extends BaseFragment implements
     }
 
     @Override
-    public void onSongOverflowClick(View v, Song song) {
+    public void onSongOverflowClick(int position, View v, Song song) {
         PopupMenu menu = new PopupMenu(SongFragment.this.getActivity(), v);
-        MenuUtils.addSongMenuOptions(getActivity(), menu);
-        MenuUtils.addClickHandler((AppCompatActivity) getActivity(), menu, song, item -> {
-            switch (item.getItemId()) {
-                case BLACKLIST: {
-                    BlacklistHelper.addToBlacklist(song);
-                    return true;
-                }
-            }
-            return false;
-        });
+        MenuUtils.setupSongMenu(getContext(), menu, false);
+        menu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), song, taggerDialog -> taggerDialog.show(getFragmentManager())));
         menu.show();
     }
 
@@ -325,42 +309,6 @@ public class SongFragment extends BaseFragment implements
     @Override
     public void onShuffleItemClick() {
         MusicUtils.shuffleAll(message -> Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show());
-    }
-
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-
-        List<Song> songs = Stream.of(contextualToolbarHelper.getItems())
-                .map(SelectableViewModel::getItem)
-                .collect(Collectors.toList());
-
-        switch (item.getItemId()) {
-            case NEW_PLAYLIST:
-                PlaylistUtils.createPlaylistDialog(getActivity(), songs);
-                break;
-            case PLAYLIST_SELECTED:
-                Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
-                PlaylistUtils.addToPlaylist(getContext(), playlist, songs);
-                break;
-            case R.id.delete:
-                new DialogUtils.DeleteDialogBuilder()
-                        .context(getContext())
-                        .singleMessageId(R.string.delete_song_desc)
-                        .multipleMessage(R.string.delete_song_desc_multiple)
-                        .itemNames(Stream.of(songs)
-                                .map(song -> song.name)
-                                .collect(Collectors.toList()))
-                        .songsToDelete(Observable.just(songs))
-                        .build()
-                        .show();
-                contextualToolbarHelper.finish();
-                break;
-            case R.id.addToQueue:
-                MusicUtils.addToQueue(songs, message ->
-                        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show());
-                break;
-        }
-        return true;
     }
 
     @Override
@@ -389,8 +337,15 @@ public class SongFragment extends BaseFragment implements
             contextualToolbar.getMenu().clear();
             contextualToolbar.inflateMenu(R.menu.context_menu_songs);
             SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-            PlaylistUtils.makePlaylistMenu(getActivity(), sub, SONG_FRAGMENT_GROUP_ID);
-            contextualToolbar.setOnMenuItemClickListener(this);
+            PlaylistUtils.makePlaylistMenu(getActivity(), sub);
+            contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), new Func0<List<Song>>() {
+                @Override
+                public List<Song> call() {
+                    return Stream.of(contextualToolbarHelper.getItems())
+                            .map(SelectableViewModel::getItem)
+                            .collect(Collectors.toList());
+                }
+            }));
             contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
                 @Override
                 public void notifyItemChanged(int position) {

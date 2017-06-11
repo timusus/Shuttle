@@ -41,8 +41,7 @@ import butterknife.ButterKnife;
 public class DrawerFragment extends BaseFragment implements
         DrawerView,
         View.OnCreateContextMenuListener,
-        DrawerParent.ClickListener,
-        DrawerChild.ClickListener {
+        DrawerParent.ClickListener {
 
     private static final String TAG = "DrawerFragment";
 
@@ -159,11 +158,6 @@ public class DrawerFragment extends BaseFragment implements
     }
 
     @Override
-    public void onClick(Playlist playlist) {
-        drawerPresenter.onPlaylistClicked(playlist);
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
     }
@@ -174,14 +168,6 @@ public class DrawerFragment extends BaseFragment implements
         outState.putSerializable(STATE_SELECTED_DRAWER_PARENT, selectedDrawerParent);
         outState.putSerializable(STATE_SELECTED_PLAYLIST, currentSelectedPlaylist);
     }
-
-//    @Override
-//    public void onOverflowButtonClick(View v, final Playlist playlist) {
-//        PopupMenu popupMenu = new PopupMenu(getActivity(), v);
-//        MenuUtils.addPlaylistMenuOptions(popupMenu, playlist);
-//        MenuUtils.addClickHandler(getActivity(), popupMenu, playlist, null, null);
-//        popupMenu.show();
-//    }
 
     @Override
     public void setItems(List<DrawerChild> drawerChildren) {

@@ -1,153 +1,243 @@
 package com.simplecity.amp_library.utils;
 
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.SubMenu;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
+import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.sql.databases.BlacklistHelper;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func0;
+import rx.schedulers.Schedulers;
 
 public class MenuUtils implements MusicUtils.Defs {
 
-    public static void addSongMenuOptions(final Context context, final PopupMenu menu) {
-        menu.getMenu().add(SONG_FRAGMENT_GROUP_ID, PLAY_NEXT, 0, R.string.play_next);
-        SubMenu sub = menu.getMenu().addSubMenu(SONG_FRAGMENT_GROUP_ID, ADD_TO_PLAYLIST, 1, R.string.menu_playlist);
-        PlaylistUtils.makePlaylistMenu(context, sub, SONG_FRAGMENT_GROUP_ID);
-        menu.getMenu().add(SONG_FRAGMENT_GROUP_ID, QUEUE, 2, R.string.menu_queue);
-        if (ShuttleUtils.isUpgraded()) {
-            menu.getMenu().add(SONG_FRAGMENT_GROUP_ID, TAGGER, 3, R.string.edit_tags);
-        }
-        menu.getMenu().add(SONG_FRAGMENT_GROUP_ID, USE_AS_RINGTONE, 5, R.string.ringtone_menu);
+    // Songs
 
-        menu.getMenu().add(SONG_FRAGMENT_GROUP_ID, VIEW_INFO, 6, R.string.song_info);
-
-        menu.getMenu().add(SONG_FRAGMENT_GROUP_ID, SHARE, 7, R.string.share);
-
-        menu.getMenu().add(SONG_FRAGMENT_GROUP_ID, BLACKLIST, 8, R.string.blacklist_title);
-
-        menu.getMenu().add(SONG_FRAGMENT_GROUP_ID, DELETE_ITEM, 9, R.string.delete_item);
+    public static void playNext(Context context, Song song) {
+        MusicUtils.playNext(Collections.singletonList(song), string ->
+                Toast.makeText(context, string, Toast.LENGTH_SHORT).show());
     }
 
-    public static void addClickHandler(final AppCompatActivity activity, final PopupMenu menu, final Song song, final PopupMenu.OnMenuItemClickListener onMenuItemClickListener) {
-        PopupMenu.OnMenuItemClickListener listener = item -> {
+    public static void newPlaylist(Context context, List<Song> songs) {
+        PlaylistUtils.createPlaylistDialog(context, songs);
+    }
+
+    public static void addToPlaylist(Context context, MenuItem item, List<Song> songs) {
+        Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
+        PlaylistUtils.addToPlaylist(context, playlist, songs);
+    }
+
+    public static void showSongInfo(Context context, Song song) {
+        DialogUtils.showSongInfoDialog(context, song);
+    }
+
+    public static void setRingtone(Context context, Song song) {
+        ShuttleUtils.setRingtone(context, song);
+    }
+
+    public static TaggerDialog editTags(Song song) {
+        return TaggerDialog.newInstance(song);
+    }
+
+    public static void addToQueue(Context context, List<Song> songs) {
+        MusicUtils.addToQueue(songs, message -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show());
+    }
+
+    public static void delete(Context context, List<Song> songs) {
+        new DialogUtils.DeleteDialogBuilder()
+                .context(context)
+                .singleMessageId(R.string.delete_song_desc)
+                .multipleMessage(R.string.delete_song_desc_multiple)
+                .itemNames(Stream.of(songs)
+                        .map(song -> song.name)
+                        .collect(Collectors.toList()))
+                .songsToDelete(Observable.just(songs))
+                .build()
+                .show();
+    }
+
+    public static void setupSongMenu(Context context, PopupMenu menu, boolean showRemoveButton) {
+        menu.inflate(R.menu.menu_song);
+
+        if (!showRemoveButton) {
+            menu.getMenu().findItem(R.id.remove).setVisible(false);
+        }
+
+        // Add playlist menu
+        SubMenu sub = menu.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
+        PlaylistUtils.makePlaylistMenu(context, sub);
+    }
+
+    public static Toolbar.OnMenuItemClickListener getSongMenuClickListener(Context context, Func0<List<Song>> func) {
+        return item -> {
+            List<Song> songs = func.call();
             switch (item.getItemId()) {
-                case QUEUE:
-                    List<Song> songs = new ArrayList<>();
-                    songs.add(song);
-                    MusicUtils.addToQueue(songs, new Action1<String>() {
-                        @Override
-                        public void call(String s) {
-
-                        }
-                    });
-                    break;
-                case PLAY_NEXT:
-                    songs = new ArrayList<>();
-                    songs.add(song);
-                    MusicUtils.playNext(songs, new Action1<String>() {
-                        @Override
-                        public void call(String s) {
-
-                        }
-                    });
-                    break;
                 case NEW_PLAYLIST:
-                    songs = new ArrayList<>();
-                    songs.add(song);
-                    PlaylistUtils.createPlaylistDialog(activity, songs);
-                    break;
+                    newPlaylist(context, songs);
+                    return true;
                 case PLAYLIST_SELECTED:
-                    songs = new ArrayList<>();
-                    songs.add(song);
-                    Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
-                    PlaylistUtils.addToPlaylist(activity, playlist, songs);
-                    break;
-                case USE_AS_RINGTONE:
-                    // Set the system setting to make this the current ringtone
-                    ShuttleUtils.setRingtone(activity, song);
-                    break;
-                case DELETE_ITEM:
-                    new DialogUtils.DeleteDialogBuilder()
-                            .context(activity)
-                            .singleMessageId(R.string.delete_song_desc)
-                            .multipleMessage(R.string.delete_song_desc_multiple)
-                            .itemNames(Collections.singletonList(song.name))
-                            .songsToDelete(Observable.just(Collections.singletonList(song)))
-                            .build()
-                            .show();
-                    break;
-                case TAGGER:
-                    TaggerDialog.newInstance(song)
-                            .show(activity.getSupportFragmentManager());
-                    break;
-                case VIEW_INFO:
-                    DialogUtils.showSongInfoDialog(activity, song);
-                    break;
-                case SHARE:
-                    song.share(activity);
-                    break;
+                    addToPlaylist(context, item, songs);
+                    return true;
+                case R.id.addToQueue:
+                    addToQueue(context, songs);
+                    return true;
+                case R.id.blacklist:
+                    BlacklistHelper.addToBlacklist(songs);
+                    return true;
+                case R.id.delete:
+                    delete(context, songs);
+                    return true;
             }
-            return onMenuItemClickListener.onMenuItemClick(item);
+            return false;
         };
-        menu.setOnMenuItemClickListener(listener);
     }
 
-    public static void addQueueMenuOptions(final Context context, final PopupMenu menu) {
-        menu.getMenu().add(QUEUE_FRAGMENT_GROUP_ID, PLAY_NEXT, 0, R.string.play_next);
-        SubMenu sub = menu.getMenu().addSubMenu(SONG_FRAGMENT_GROUP_ID, ADD_TO_PLAYLIST, 1, R.string.add_to_playlist);
-        PlaylistUtils.makePlaylistMenu(context, sub, SONG_FRAGMENT_GROUP_ID);
-        if (ShuttleUtils.isUpgraded()) {
-            menu.getMenu().add(QUEUE_FRAGMENT_GROUP_ID, TAGGER, 3, R.string.edit_tags);
-        }
-        menu.getMenu().add(QUEUE_FRAGMENT_GROUP_ID, USE_AS_RINGTONE, 5, R.string.ringtone_menu);
-
-        menu.getMenu().add(QUEUE_FRAGMENT_GROUP_ID, REMOVE, 6, R.string.remove_from_queue);
-
-        menu.getMenu().add(QUEUE_FRAGMENT_GROUP_ID, VIEW_INFO, 7, R.string.song_info);
-
-        menu.getMenu().add(SONG_FRAGMENT_GROUP_ID, SHARE, 8, R.string.share);
-
-        menu.getMenu().add(QUEUE_FRAGMENT_GROUP_ID, BLACKLIST, 9, R.string.blacklist_title);
-
-        menu.getMenu().add(QUEUE_FRAGMENT_GROUP_ID, DELETE_ITEM, 10, R.string.delete_item);
-
+    public static PopupMenu.OnMenuItemClickListener getSongMenuClickListener(Context context, Song song, Action1<TaggerDialog> tagEditorCallback) {
+        return item -> {
+            switch (item.getItemId()) {
+                case R.id.playNext:
+                    playNext(context, song);
+                    return true;
+                case NEW_PLAYLIST:
+                    newPlaylist(context, Collections.singletonList(song));
+                    return true;
+                case PLAYLIST_SELECTED:
+                    addToPlaylist(context, item, Collections.singletonList(song));
+                    return true;
+                case R.id.addToQueue:
+                    addToQueue(context, Collections.singletonList(song));
+                    return true;
+                case R.id.editTags:
+                    tagEditorCallback.call(editTags(song));
+                    return true;
+                case R.id.share:
+                    song.share(context);
+                    return true;
+                case R.id.ringtone:
+                    setRingtone(context, song);
+                    return true;
+                case R.id.songInfo:
+                    showSongInfo(context, song);
+                    return true;
+                case R.id.blacklist:
+                    BlacklistHelper.addToBlacklist(song);
+                    return true;
+                case R.id.delete:
+                    delete(context, Collections.singletonList(song));
+                    return true;
+            }
+            return false;
+        };
     }
 
-    public static void addAlbumMenuOptions(Context context, PopupMenu menu) {
-        menu.getMenu().add(ALBUM_FRAGMENT_GROUP_ID, PLAY_SELECTION, 0, R.string.play_selection);
-        SubMenu sub = menu.getMenu().addSubMenu(ALBUM_FRAGMENT_GROUP_ID, 1, 0, R.string.add_to_playlist);
-        PlaylistUtils.makePlaylistMenu(context, sub, ALBUM_FRAGMENT_GROUP_ID);
-        menu.getMenu().add(ALBUM_FRAGMENT_GROUP_ID, QUEUE, 2, R.string.add_to_queue);
-        if (ShuttleUtils.isUpgraded()) {
-            menu.getMenu().add(ALBUM_FRAGMENT_GROUP_ID, TAGGER, 3, R.string.edit_tags);
-        }
+    // Albums
 
-        menu.getMenu().add(ALBUM_FRAGMENT_GROUP_ID, EDIT_ARTWORK, 4, R.string.artwork_edit);
-
-        menu.getMenu().add(QUEUE_FRAGMENT_GROUP_ID, BLACKLIST, 5, R.string.blacklist_title);
-
-        menu.getMenu().add(ALBUM_FRAGMENT_GROUP_ID, DELETE_ITEM, 6, R.string.delete_item);
+    public static void play(Context context, Observable<List<Song>> observable) {
+        MusicUtils.playAll(observable, message -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show());
     }
 
-    public static void addClickHandler(final AppCompatActivity activity, final PopupMenu menu, final Album album) {
-        PopupMenu.OnMenuItemClickListener listener = item -> {
+    public static void newPlaylist(Context context, Observable<List<Song>> observable) {
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(songs -> PlaylistUtils.createPlaylistDialog(context, songs));
+    }
 
+    public static void addToPlaylist(Context context, MenuItem item, Observable<List<Song>> observable) {
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(songs -> {
+                    Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
+                    PlaylistUtils.addToPlaylist(context, playlist, songs);
+                });
+    }
+
+    public static void addToQueue(Context context, Observable<List<Song>> observable) {
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(songs -> MusicUtils.addToQueue(songs, message -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show()));
+    }
+
+    public static TaggerDialog editTags(Album album) {
+        return TaggerDialog.newInstance(album);
+    }
+
+    public static void albumInfo(Context context, Album album) {
+        DialogUtils.showAlbumBiographyDialog(context, album.albumArtistName, album.name);
+    }
+
+    public static void showArtworkChooserDialog(Context context, Album album) {
+        ArtworkDialog.build(context, album).show();
+    }
+
+    public static void blackList(Observable<List<Song>> observable) {
+        observable.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(BlacklistHelper::addToBlacklist);
+    }
+
+    public static void deleteAlbums(Context context, List<Album> albums, Observable<List<Song>> songsObservable) {
+        new DialogUtils.DeleteDialogBuilder()
+                .context(context)
+                .singleMessageId(R.string.delete_album_desc)
+                .multipleMessage(R.string.delete_album_desc_multiple)
+                .itemNames(Stream.of(albums)
+                        .map(album -> album.name)
+                        .collect(Collectors.toList()))
+                .songsToDelete(songsObservable)
+                .build()
+                .show();
+    }
+
+    public static Toolbar.OnMenuItemClickListener getAlbumMenuClickListener(Context context, Func0<List<Album>> func) {
+        return item -> {
+
+            List<Album> albums = func.call();
+
+            Observable<List<Song>> songsObservable = Observable.defer(() ->
+                    Observable.from(albums)
+                            .flatMap(Album::getSongsObservable)
+                            .reduce((songs, songs2) -> Stream.concat(Stream.of(songs), Stream.of(songs2))
+                                    .collect(Collectors.toList()))
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread()));
+
+            switch (item.getItemId()) {
+                case NEW_PLAYLIST:
+                    newPlaylist(context, songsObservable);
+                    return true;
+                case PLAYLIST_SELECTED:
+                    addToPlaylist(context, item, songsObservable);
+                    return true;
+                case R.id.addToQueue:
+                    addToQueue(context, songsObservable);
+                    return true;
+                case R.id.delete:
+                    deleteAlbums(context, albums, songsObservable);
+                    return true;
+            }
+            return false;
+        };
+    }
+
+    public static PopupMenu.OnMenuItemClickListener getAlbumMenuClickListener(Context context, Album album, Action1<TaggerDialog> tagEditorCallback) {
+        return new PopupMenu.OnMenuItemClickListener() {
             Observable<List<Song>> songsObservable = album.getSongsObservable()
                     .doOnNext(songs -> {
                         Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(b.year, a.year));
@@ -155,222 +245,250 @@ public class MenuUtils implements MusicUtils.Defs {
                         Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(a.discNumber, b.discNumber));
                     });
 
-            switch (item.getItemId()) {
-                case PLAY_SELECTION:
-                    MusicUtils.playAll(songsObservable, new Action1<String>() {
-                        @Override
-                        public void call(String s) {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.play:
+                        play(context, songsObservable);
+                        return true;
+                    case NEW_PLAYLIST:
+                        newPlaylist(context, songsObservable);
+                        return true;
+                    case PLAYLIST_SELECTED:
+                        addToPlaylist(context, item, songsObservable);
+                        return true;
+                    case R.id.addToQueue:
+                        addToQueue(context, songsObservable);
+                        return true;
+                    case R.id.editTags:
+                        tagEditorCallback.call(editTags(album));
+                        return true;
+                    case R.id.info:
+                        albumInfo(context, album);
+                        return true;
+                    case R.id.artwork:
+                        showArtworkChooserDialog(context, album);
+                        return true;
+                    case R.id.blacklist:
+                        blackList(songsObservable);
+                        return true;
+                    case R.id.delete:
+                        deleteAlbums(context, Collections.singletonList(album), album.getSongsObservable());
+                        return true;
+                }
+                return false;
+            }
+        };
+    }
 
-                        }
-                    });
-                    return true;
+    // AlbumArtists
+
+    public static TaggerDialog editTags(AlbumArtist albumArtist) {
+        return TaggerDialog.newInstance(albumArtist);
+    }
+
+    public static void albumArtistInfo(Context context, AlbumArtist albumArtist) {
+        DialogUtils.showArtistBiographyDialog(context, albumArtist.name);
+    }
+
+    public static void showArtworkChooserDialog(Context context, AlbumArtist albumArtist) {
+        ArtworkDialog.build(context, albumArtist).show();
+    }
+
+    public static void deleteAlbumArtists(Context context, List<AlbumArtist> albumArtists, Observable<List<Song>> songsObservable) {
+        new DialogUtils.DeleteDialogBuilder()
+                .context(context)
+                .singleMessageId(R.string.delete_album_artist_desc)
+                .multipleMessage(R.string.delete_album_artist_desc_multiple)
+                .itemNames(Stream.of(albumArtists)
+                        .map(albumArtist -> albumArtist.name)
+                        .collect(Collectors.toList()))
+                .songsToDelete(songsObservable)
+                .build()
+                .show();
+    }
+
+    public static Toolbar.OnMenuItemClickListener getAlbumArtistMenuClickListener(Context context, Func0<List<AlbumArtist>> func) {
+        return item -> {
+
+            List<AlbumArtist> albumArtists = func.call();
+
+            Observable<List<Song>> songsObservable = Observable.defer(() ->
+                    Observable.from(albumArtists)
+                            .flatMap(AlbumArtist::getSongsObservable)
+                            .reduce((songs, songs2) -> Stream.concat(Stream.of(songs), Stream.of(songs2))
+                                    .collect(Collectors.toList()))
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread()));
+
+            switch (item.getItemId()) {
                 case NEW_PLAYLIST:
-                    songsObservable
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(songs -> PlaylistUtils.createPlaylistDialog(activity, songs));
+                    newPlaylist(context, songsObservable);
                     return true;
                 case PLAYLIST_SELECTED:
-                    songsObservable
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(songs -> {
-                                Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
-                                PlaylistUtils.addToPlaylist(activity, playlist, songs);
-                            });
+                    addToPlaylist(context, item, songsObservable);
                     return true;
-                case QUEUE:
-                    songsObservable
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(songs -> MusicUtils.addToQueue(songs, new Action1<String>() {
-                                @Override
-                                public void call(String s) {
-
-                                }
-                            }));
+                case R.id.addToQueue:
+                    addToQueue(context, songsObservable);
                     return true;
-                case TAGGER:
-                    TaggerDialog.newInstance(album)
-                            .show(activity.getSupportFragmentManager());
-                    return true;
-                case BLACKLIST:
-                    songsObservable
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(BlacklistHelper::addToBlacklist);
-                    return true;
-                case DELETE_ITEM:
-                    new DialogUtils.DeleteDialogBuilder()
-                            .context(activity)
-                            .singleMessageId(R.string.delete_album_desc)
-                            .multipleMessage(R.string.delete_album_desc_multiple)
-                            .itemNames(Collections.singletonList(album.name))
-                            .songsToDelete(album.getSongsObservable())
-                            .build()
-                            .show();
-                    return true;
-                case VIEW_INFO:
-                    DialogUtils.showAlbumBiographyDialog(activity, album.albumArtistName, album.name);
-                    return true;
-                case EDIT_ARTWORK:
-                    ArtworkDialog.build(activity, album);
+                case R.id.delete:
+                    deleteAlbumArtists(context, albumArtists, songsObservable);
                     return true;
             }
             return false;
         };
-        menu.setOnMenuItemClickListener(listener);
     }
 
-    public static void addAlbumArtistMenuOptions(Context context, PopupMenu menu) {
-        menu.getMenu().add(ARTIST_FRAGMENT_GROUP_ID, PLAY_SELECTION, 0, R.string.play_selection);
-        SubMenu sub = menu.getMenu().addSubMenu(ARTIST_FRAGMENT_GROUP_ID, ADD_TO_PLAYLIST, 1, R.string.add_to_playlist);
-        PlaylistUtils.makePlaylistMenu(context, sub, ARTIST_FRAGMENT_GROUP_ID);
-        menu.getMenu().add(ARTIST_FRAGMENT_GROUP_ID, QUEUE, 2, R.string.add_to_queue);
-        if (ShuttleUtils.isUpgraded()) {
-            menu.getMenu().add(ARTIST_FRAGMENT_GROUP_ID, TAGGER, 3, R.string.edit_tags);
-            menu.getMenu().add(ARTIST_FRAGMENT_GROUP_ID, EDIT_ARTWORK, 4, R.string.artwork_edit);
+    public static PopupMenu.OnMenuItemClickListener getAlbumArtistClickListener(Context context, AlbumArtist albumArtist, Action1<TaggerDialog> tagEditorCallback) {
+
+        Observable<List<Song>> songsObservable = albumArtist.getSongsObservable()
+                .map(songs -> {
+                    Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(b.year, a.year));
+                    Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(a.track, b.track));
+                    Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(a.discNumber, b.discNumber));
+                    Collections.sort(songs, (a, b) -> ComparisonUtils.compare(a.albumName, b.albumName));
+                    return songs;
+                });
+
+        return item -> {
+            switch (item.getItemId()) {
+                case R.id.play:
+                    play(context, songsObservable);
+                    return true;
+                case NEW_PLAYLIST:
+                    newPlaylist(context, songsObservable);
+                    return true;
+                case PLAYLIST_SELECTED:
+                    addToPlaylist(context, item, songsObservable);
+                    return true;
+                case R.id.addToQueue:
+                    addToQueue(context, songsObservable);
+                    return true;
+                case R.id.editTags:
+                    tagEditorCallback.call(editTags(albumArtist));
+                    return true;
+                case R.id.info:
+                    albumArtistInfo(context, albumArtist);
+                    return true;
+                case R.id.editArtwork:
+                    showArtworkChooserDialog(context, albumArtist);
+                    return true;
+                case R.id.blacklist:
+                    blackList(songsObservable);
+                    return true;
+                case R.id.delete:
+                    deleteAlbumArtists(context, Collections.singletonList(albumArtist), songsObservable);
+                    return true;
+            }
+            return false;
+        };
+    }
+
+    // Playlists
+
+    public static void delete(Context context, Playlist playlist) {
+        playlist.delete(context);
+        Toast.makeText(context, R.string.playlist_deleted_message, Toast.LENGTH_SHORT).show();
+    }
+
+    public static void edit(Context context, Playlist playlist) {
+        if (playlist.id == MusicUtils.PlaylistIds.RECENTLY_ADDED_PLAYLIST) {
+            DialogUtils.showWeekSelectorDialog(context);
+        }
+    }
+
+    public static void rename(Context context, Playlist playlist) {
+        PlaylistUtils.renamePlaylistDialog(context, playlist);
+    }
+
+    public static void export(Context context, Playlist playlist) {
+        PlaylistUtils.createM3uPlaylist(context, playlist);
+    }
+
+    public static void clear(Playlist playlist) {
+        playlist.clear();
+    }
+
+    public static void setupPlaylistMenu(PopupMenu menu, Playlist playlist) {
+        menu.inflate(R.menu.menu_playlist);
+
+        if (!playlist.canDelete) {
+            menu.getMenu().findItem(R.id.deletePlaylist).setVisible(false);
         }
 
-        menu.getMenu().add(QUEUE_FRAGMENT_GROUP_ID, BLACKLIST, 5, R.string.blacklist_title);
+        if (!playlist.canClear) {
+            menu.getMenu().findItem(R.id.clearPlaylist).setVisible(false);
+        }
 
-        menu.getMenu().add(ARTIST_FRAGMENT_GROUP_ID, DELETE_ITEM, 6, R.string.delete_item);
+        if (playlist.id != MusicUtils.PlaylistIds.RECENTLY_ADDED_PLAYLIST) {
+            menu.getMenu().findItem(R.id.editPlaylist).setVisible(false);
+        }
+
+        if (!playlist.canRename) {
+            menu.getMenu().findItem(R.id.renamePlaylist).setVisible(false);
+        }
+
+        if (playlist.id == MusicUtils.PlaylistIds.MOST_PLAYED_PLAYLIST) {
+            menu.getMenu().findItem(R.id.exportPlaylist).setVisible(false);
+        }
     }
 
-    public static void addClickHandler(final AppCompatActivity activity, final PopupMenu menu, final AlbumArtist albumArtist) {
-        PopupMenu.OnMenuItemClickListener listener = item -> {
+    public static PopupMenu.OnMenuItemClickListener getPlaylistClickListener(final Context context, final Playlist playlist) {
+        return item -> {
+            switch (item.getItemId()) {
+                case R.id.playPlaylist:
+                    play(context, playlist.getSongsObservable());
+                    return true;
+                case R.id.deletePlaylist:
+                    delete(context, playlist);
+                    return true;
+                case R.id.editPlaylist:
+                    edit(context, playlist);
+                    return true;
+                case R.id.renamePlaylist:
+                    rename(context, playlist);
+                    return true;
+                case R.id.exportPlaylist:
+                    export(context, playlist);
+                    return true;
+                case R.id.clearPlaylist:
+                    clear(playlist);
+                    return true;
+            }
+            return false;
+        };
+    }
 
-            Observable<List<Song>> songsObservable = albumArtist.getSongsObservable()
+    // Genres
+
+    public static PopupMenu.OnMenuItemClickListener getGenreClickListener(final Context context, final Genre genre) {
+        return item -> {
+
+            Observable<List<Song>> songsObservable = genre.getSongsObservable()
                     .map(songs -> {
                         Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(b.year, a.year));
                         Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(a.track, b.track));
                         Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(a.discNumber, b.discNumber));
                         Collections.sort(songs, (a, b) -> ComparisonUtils.compare(a.albumName, b.albumName));
+                        Collections.sort(songs, (a, b) -> ComparisonUtils.compare(a.albumArtistName, b.albumArtistName));
                         return songs;
                     });
 
             switch (item.getItemId()) {
-                case PLAY_SELECTION:
-                    MusicUtils.playAll(songsObservable, new Action1<String>() {
-                        @Override
-                        public void call(String s) {
-                            //Todo
-                        }
-                    });
+                case R.id.play:
+                    play(context, genre.getSongsObservable());
                     return true;
                 case NEW_PLAYLIST:
-                    songsObservable
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(songs -> PlaylistUtils.createPlaylistDialog(activity, songs));
+                    newPlaylist(context, songsObservable);
                     return true;
                 case PLAYLIST_SELECTED:
-                    songsObservable
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(songs -> {
-                                Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
-                                PlaylistUtils.addToPlaylist(activity, playlist, songs);
-                            });
+                    addToPlaylist(context, item, songsObservable);
                     return true;
-                case QUEUE:
-                    songsObservable
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(songs -> MusicUtils.addToQueue(songs, new Action1<String>() {
-                                @Override
-                                public void call(String s) {
-
-                                }
-                            }));
-                    return true;
-                case TAGGER:
-                    TaggerDialog.newInstance(albumArtist)
-                            .show(activity.getSupportFragmentManager());
-                    return true;
-                case BLACKLIST:
-                    songsObservable
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(BlacklistHelper::addToBlacklist);
-                    return true;
-                case DELETE_ITEM:
-                    new DialogUtils.DeleteDialogBuilder()
-                            .context(activity)
-                            .singleMessageId(R.string.delete_album_artist_desc)
-                            .multipleMessage(R.string.delete_album_artist_desc_multiple)
-                            .itemNames(Collections.singletonList(albumArtist.name))
-                            .songsToDelete(albumArtist.getSongsObservable())
-                            .build()
-                            .show();
-                    return true;
-                case VIEW_INFO:
-                    DialogUtils.showArtistBiographyDialog(activity, albumArtist.name);
-                    return true;
-                case EDIT_ARTWORK:
-                    ArtworkDialog.build(activity, albumArtist);
+                case R.id.addToQueue:
+                    addToQueue(context, songsObservable);
                     return true;
             }
             return false;
         };
-        menu.setOnMenuItemClickListener(listener);
     }
-
-    public static void addPlaylistMenuOptions(PopupMenu menu, Playlist playlist) {
-
-        menu.getMenu().add(PLAYLIST_FRAGMENT_GROUP_ID, PLAY_SELECTION, 0, R.string.play_selection);
-
-        if (playlist.canDelete) {
-            menu.getMenu().add(PLAYLIST_FRAGMENT_GROUP_ID, MusicUtils.PlaylistMenuOrder.DELETE_PLAYLIST, 0, R.string.delete_playlist_menu);
-        }
-
-        if (playlist.canClear) {
-            menu.getMenu().add(PLAYLIST_FRAGMENT_GROUP_ID, MusicUtils.PlaylistMenuOrder.CLEAR_PLAYLIST, 1, R.string.clear_playlist_menu);
-        }
-
-        if (playlist.id == MusicUtils.PlaylistIds.RECENTLY_ADDED_PLAYLIST) {
-            menu.getMenu().add(PLAYLIST_FRAGMENT_GROUP_ID, MusicUtils.PlaylistMenuOrder.EDIT_PLAYLIST, 0, R.string.edit_playlist_menu);
-        }
-
-        if (playlist.canRename) {
-            menu.getMenu().add(PLAYLIST_FRAGMENT_GROUP_ID, MusicUtils.PlaylistMenuOrder.RENAME_PLAYLIST, 0, R.string.rename_playlist_menu);
-        }
-
-        if (playlist.id != MusicUtils.PlaylistIds.MOST_PLAYED_PLAYLIST) {
-            menu.getMenu().add(PLAYLIST_FRAGMENT_GROUP_ID, MusicUtils.PlaylistMenuOrder.EXPORT_PLAYLIST, 0, R.string.export_playlist);
-        }
-
-    }
-
-    public static void addClickHandler(final Context context, final PopupMenu menu, final Playlist playlist, final MaterialDialog.SingleButtonCallback renameListener, final MaterialDialog.SingleButtonCallback editListener) {
-        final PopupMenu.OnMenuItemClickListener listener = item -> {
-            switch (item.getItemId()) {
-                case PLAY_SELECTION:
-                    MusicUtils.playAll(playlist.getSongsObservable(), new Action1<String>() {
-                        @Override
-                        public void call(String s) {
-
-                        }
-                    });
-                    break;
-                case MusicUtils.PlaylistMenuOrder.DELETE_PLAYLIST:
-                    playlist.delete(context);
-                    Toast.makeText(context, R.string.playlist_deleted_message, Toast.LENGTH_SHORT).show();
-                    break;
-                case MusicUtils.PlaylistMenuOrder.EDIT_PLAYLIST:
-                    if (playlist.id == MusicUtils.PlaylistIds.RECENTLY_ADDED_PLAYLIST) {
-                        DialogUtils.showWeekSelectorDialog(context, editListener);
-                    }
-                    break;
-                case MusicUtils.PlaylistMenuOrder.RENAME_PLAYLIST:
-                    PlaylistUtils.renamePlaylistDialog(context, playlist, renameListener);
-                    break;
-                case MusicUtils.PlaylistMenuOrder.EXPORT_PLAYLIST:
-                    PlaylistUtils.createM3uPlaylist(context, playlist);
-                    break;
-                case MusicUtils.PlaylistMenuOrder.CLEAR_PLAYLIST:
-                    if (playlist.id == Playlist.favoritesPlaylist().id) {
-                        PlaylistUtils.clearFavorites(context);
-                    } else if (playlist.id == MusicUtils.PlaylistIds.MOST_PLAYED_PLAYLIST) {
-                        PlaylistUtils.clearMostPlayed(context);
-                    }
-            }
-
-            return true;
-        };
-        menu.setOnMenuItemClickListener(listener);
-    }
-
 }

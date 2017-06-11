@@ -10,16 +10,13 @@
         <menu>
             <item
                 android:id="@+id/addToPlaylist"
-                android:title="@string/menu_playlist"
-                app:showAsAction="ifRoom">
-
+                android:title="@string/menu_playlist">
                 <menu/>
             </item>
 
             <item
                 android:id="@+id/addToQueue"
-                android:title="@string/menu_queue"
-                app:showAsAction="ifRoom"/>
+                android:title="@string/menu_queue"/>
         </menu>
     </item>
 

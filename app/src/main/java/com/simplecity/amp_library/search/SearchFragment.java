@@ -5,10 +5,14 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,15 +25,21 @@ import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
+import com.simplecity.amp_library.model.Album;
+import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.tagger.TaggerDialog;
-import com.simplecity.amp_library.ui.adapters.SearchAdapter;
+import com.simplecity.amp_library.ui.detail.AlbumDetailFragment;
+import com.simplecity.amp_library.ui.detail.ArtistDetailFragment;
+import com.simplecity.amp_library.ui.detail.BaseDetailFragment;
 import com.simplecity.amp_library.ui.fragments.BaseFragment;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.LoadingView;
 import com.simplecity.amp_library.utils.ResourceUtils;
+import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -41,7 +51,8 @@ import butterknife.ButterKnife;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
-public class SearchFragment extends BaseFragment implements com.simplecity.amp_library.search.SearchView {
+public class SearchFragment extends BaseFragment implements
+        com.simplecity.amp_library.search.SearchView {
 
     private static final String TAG = "SearchFragment";
 
@@ -55,7 +66,7 @@ public class SearchFragment extends BaseFragment implements com.simplecity.amp_l
     @BindView(R.id.recyclerView)
     FastScrollRecyclerView recyclerView;
 
-    private SearchAdapter adapter;
+    private ViewModelAdapter adapter;
 
     private LoadingView loadingView;
 
@@ -65,6 +76,8 @@ public class SearchFragment extends BaseFragment implements com.simplecity.amp_l
 
     @Inject
     SearchPresenter searchPresenter;
+
+    private View rootView;
 
     private SearchView searchView;
 
@@ -92,14 +105,14 @@ public class SearchFragment extends BaseFragment implements com.simplecity.amp_l
         emptyView = new EmptyView(R.string.empty_search);
         emptyView.setHeight(ResourceUtils.toPixels(96));
 
-        adapter = new SearchAdapter();
+        adapter = new ViewModelAdapter();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_search, container, false);
+        rootView = inflater.inflate(R.layout.fragment_search, container, false);
 
         ButterKnife.bind(this, rootView);
 
@@ -143,8 +156,6 @@ public class SearchFragment extends BaseFragment implements com.simplecity.amp_l
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
-
-        adapter.setListener(searchPresenter);
 
         return rootView;
     }
@@ -225,5 +236,39 @@ public class SearchFragment extends BaseFragment implements com.simplecity.amp_l
     @Override
     public void showDeleteDialog(@NonNull MaterialDialog deleteDialog) {
         deleteDialog.show();
+    }
+
+    @Override
+    public void goToArtist(AlbumArtist albumArtist, View transitionView) {
+        InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(rootView.getWindowToken(), 0);
+        String transitionName = ViewCompat.getTransitionName(transitionView);
+        searchView.getHandler().postDelayed(() -> pushDetailFragment(ArtistDetailFragment.newInstance(albumArtist, transitionName), transitionView), 50);
+    }
+
+    @Override
+    public void goToAlbum(Album album, View transitionView) {
+        InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(rootView.getWindowToken(), 0);
+        String transitionName = ViewCompat.getTransitionName(transitionView);
+        searchView.getHandler().postDelayed(() -> pushDetailFragment(AlbumDetailFragment.newInstance(album, transitionName), transitionView), 50);
+    }
+
+    void pushDetailFragment(BaseDetailFragment detailFragment, @Nullable View transitionView) {
+
+        List<Pair<View, String>> transitions = new ArrayList<>();
+
+        if (transitionView != null) {
+            String transitionName = ViewCompat.getTransitionName(transitionView);
+            transitions.add(new Pair<>(transitionView, transitionName));
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                Transition moveTransition = TransitionInflater.from(getContext()).inflateTransition(R.transition.image_transition);
+                detailFragment.setSharedElementEnterTransition(moveTransition);
+                detailFragment.setSharedElementReturnTransition(moveTransition);
+            }
+        }
+
+        getNavigationController().pushViewController(detailFragment, "DetailFragment", transitions);
     }
 }

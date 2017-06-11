@@ -200,18 +200,16 @@ public class PlaylistUtils {
 
     /**
      * Clears the 'most played' databse
-     *
-     * @param context Context
      */
-    public static void clearMostPlayed(Context context) {
-        context.getContentResolver().delete(PlayCountTable.URI, null, null);
+    public static void clearMostPlayed() {
+        ShuttleApplication.getInstance().getContentResolver().delete(PlayCountTable.URI, null, null);
     }
 
     interface OnSavePlaylistListener {
         void onSave(Playlist playlist);
     }
 
-    public static void makePlaylistMenu(Context context, SubMenu sub, int fragmentGroupId) {
+    public static void makePlaylistMenu(Context context, SubMenu sub) {
 
         Query query = new Query.Builder()
                 .uri(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI)
@@ -225,11 +223,11 @@ public class PlaylistUtils {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(playlists -> {
                     sub.clear();
-                    sub.add(fragmentGroupId, MusicUtils.Defs.NEW_PLAYLIST, 0, R.string.new_playlist);
+                    sub.add(0, MusicUtils.Defs.NEW_PLAYLIST, 0, R.string.new_playlist);
                     for (Playlist playlist : playlists) {
                         final Intent intent = new Intent();
                         intent.putExtra(ShuttleUtils.ARG_PLAYLIST, playlist);
-                        sub.add(fragmentGroupId, MusicUtils.Defs.PLAYLIST_SELECTED, 0, playlist.name).setIntent(intent);
+                        sub.add(0, MusicUtils.Defs.PLAYLIST_SELECTED, 0, playlist.name).setIntent(intent);
                     }
                 });
     }
@@ -390,12 +388,11 @@ public class PlaylistUtils {
     /**
      * Method clearPlaylist.
      *
-     * @param context    Context
      * @param playlistId int
      */
-    public static void clearPlaylist(Context context, int playlistId) {
+    public static void clearPlaylist(long playlistId) {
         final Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlistId);
-        context.getContentResolver().delete(uri, null, null);
+        ShuttleApplication.getInstance().getContentResolver().delete(uri, null, null);
     }
 
     public static Playlist createPlaylist(Context context, String name) {
@@ -449,11 +446,11 @@ public class PlaylistUtils {
     /**
      * Removes all entries from the 'favorites' playlist
      */
-    public static void clearFavorites(Context context) {
+    public static void clearFavorites() {
         Playlist favoritesPlaylist = Playlist.favoritesPlaylist();
         if (favoritesPlaylist.id >= 0) {
             final Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", favoritesPlaylist.id);
-            context.getContentResolver().delete(uri, null, null);
+            ShuttleApplication.getInstance().getContentResolver().delete(uri, null, null);
         }
     }
 
@@ -553,7 +550,7 @@ public class PlaylistUtils {
 
         MaterialDialog.Builder builder = DialogUtils.getBuilder(context)
                 .customView(customView, false)
-                .title(R.string.add_to_playlist)
+                .title(R.string.menu_playlist)
                 .positiveText(R.string.create_playlist_create_text)
                 .onPositive((materialDialog, dialogAction) -> {
                     String name = editText.getText().toString();
@@ -564,7 +561,7 @@ public class PlaylistUtils {
                                     Uri uri;
                                     if (id >= 0) {
                                         uri = ContentUris.withAppendedId(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, id);
-                                        clearPlaylist(context, id);
+                                        clearPlaylist(id);
                                     } else {
                                         ContentValues values = new ContentValues(1);
                                         values.put(MediaStore.Audio.Playlists.NAME, name);
@@ -622,7 +619,7 @@ public class PlaylistUtils {
         editText.addTextChangedListener(textWatcher);
     }
 
-    public static void renamePlaylistDialog(final Context context, final Playlist playlist, final MaterialDialog.SingleButtonCallback listener) {
+    public static void renamePlaylistDialog(final Context context, final Playlist playlist) {
 
         View customView = LayoutInflater.from(context).inflate(R.layout.dialog_playlist, null);
         final EditText editText = (EditText) customView.findViewById(R.id.editText);
@@ -646,9 +643,6 @@ public class PlaylistUtils {
                         );
                         playlist.name = name;
                         Toast.makeText(context, R.string.playlist_renamed_message, Toast.LENGTH_SHORT).show();
-                    }
-                    if (listener != null) {
-                        listener.onClick(materialDialog, dialogAction);
                     }
                 })
                 .negativeText(R.string.cancel);

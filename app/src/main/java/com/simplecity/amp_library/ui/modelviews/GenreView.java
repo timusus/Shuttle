@@ -30,6 +30,8 @@ public class GenreView extends BaseViewModel<GenreView.ViewHolder> implements
     public interface ClickListener {
 
         void onItemClick(Genre genre);
+
+        void onOverflowClick(View v, Genre genre);
     }
 
     public Genre genre;
@@ -48,6 +50,12 @@ public class GenreView extends BaseViewModel<GenreView.ViewHolder> implements
     private void onClick() {
         if (clickListener != null) {
             clickListener.onItemClick(genre);
+        }
+    }
+
+    private void onOverflowClick(View v) {
+        if (clickListener != null) {
+            clickListener.onOverflowClick(v, genre);
         }
     }
 
@@ -109,9 +117,9 @@ public class GenreView extends BaseViewModel<GenreView.ViewHolder> implements
 
             ButterKnife.bind(this, itemView);
 
-            overflowButton.setVisibility(GONE);
-
             itemView.setOnClickListener(v -> viewModel.onClick());
+
+            overflowButton.setOnClickListener(v -> viewModel.onOverflowClick(v));
         }
 
         @Override

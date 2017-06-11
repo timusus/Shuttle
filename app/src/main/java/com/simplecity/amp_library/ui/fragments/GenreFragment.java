@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,7 @@ import com.simplecity.amp_library.ui.modelviews.GenreView;
 import com.simplecity.amp_library.ui.recyclerview.GridDividerDecoration;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.DataManager;
-import com.simplecity.amp_library.utils.MusicUtils;
+import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
@@ -32,7 +33,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 public class GenreFragment extends BaseFragment implements
-        MusicUtils.Defs, GenreView.ClickListener {
+        GenreView.ClickListener {
 
     private static final String TAG = "GenreFragment";
 
@@ -155,6 +156,14 @@ public class GenreFragment extends BaseFragment implements
         if (genreClickListener != null) {
             genreClickListener.onGenreClicked(genre);
         }
+    }
+
+    @Override
+    public void onOverflowClick(View v, Genre genre) {
+        PopupMenu popupMenu = new PopupMenu(getContext(), v);
+        popupMenu.inflate(R.menu.menu_genre);
+        popupMenu.setOnMenuItemClickListener(MenuUtils.getGenreClickListener(getContext(), genre));
+        popupMenu.show();
     }
 
     @Override

@@ -398,6 +398,7 @@ public class FolderFragment extends BaseFragment implements
                     List<ViewModel> items = Stream.of(baseFileObjects)
                             .map(baseFileObject -> {
                                 FolderView folderView = new FolderView(baseFileObject);
+                                folderView.setClickListener(this);
                                 folderView.setChecked(showCheckboxes);
                                 return folderView;
                             })
@@ -480,17 +481,6 @@ public class FolderFragment extends BaseFragment implements
 
         if (fileObject.fileType == FileType.FILE) {
 
-            //Play this song next
-            menu.getMenu().add(FRAGMENT_GROUPID, PLAY_NEXT, 4, R.string.play_next);
-
-            //Tag editor
-            if (ShuttleUtils.isUpgraded()) {
-                menu.getMenu().add(FRAGMENT_GROUPID, TAGGER, 5, R.string.edit_tags);
-            }
-
-            //Set this song as the ringtone
-            menu.getMenu().add(FRAGMENT_GROUPID, USE_AS_RINGTONE, 6, R.string.ringtone_menu);
-
 
             if (FileHelper.canReadWrite(new File(fileObject.path))) {
                 //Rename File
@@ -518,11 +508,11 @@ public class FolderFragment extends BaseFragment implements
         }
 
         //Bring up the add to playlist menu
-        SubMenu sub = menu.getMenu().addSubMenu(FRAGMENT_GROUPID, ADD_TO_PLAYLIST, 2, R.string.add_to_playlist);
-        PlaylistUtils.makePlaylistMenu(getActivity(), sub, FRAGMENT_GROUPID);
+        SubMenu sub = menu.getMenu().addSubMenu(FRAGMENT_GROUPID, ADD_TO_PLAYLIST, 2, R.string.menu_playlist);
+        PlaylistUtils.makePlaylistMenu(getActivity(), sub);
 
         //Add to queue
-        menu.getMenu().add(FRAGMENT_GROUPID, QUEUE, 3, R.string.add_to_queue);
+        menu.getMenu().add(FRAGMENT_GROUPID, QUEUE, 3, R.string.menu_queue);
 
         menu.getMenu().add(FRAGMENT_GROUPID, RESCAN, 4, R.string.scan_file);
 

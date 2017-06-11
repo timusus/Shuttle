@@ -49,6 +49,5 @@
         android:layout_marginLeft="-24dp"
         android:alpha="0.8"
         android:background="@null"
-        android:paddingLeft="8dp"
-        android:src="@drawable/ic_overflow_white"/>
+        android:paddingLeft="8dp"/>
 </LinearLayout>

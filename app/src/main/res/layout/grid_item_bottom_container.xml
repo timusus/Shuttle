@@ -1,9 +1,11 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/bottom_container"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="horizontal">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/textContainer"
@@ -41,13 +43,13 @@
             tools:text="Franz Ferdinand - Tonight"/>
     </LinearLayout>
 
-    <com.simplecity.amp_library.ui.views.NonScrollImageButton
+    <com.simplecity.amp_library.ui.views.OverflowButton
         android:id="@+id/btn_overflow"
-        android:layout_width="40dp"
+        android:layout_width="36dp"
         android:layout_height="48dp"
         android:layout_gravity="center_vertical|right"
         android:layout_marginLeft="-16dp"
         android:alpha="0.8"
         android:background="@null"
-        android:src="@drawable/ic_overflow_white"/>
+        app:isDark="true"/>
 </LinearLayout>

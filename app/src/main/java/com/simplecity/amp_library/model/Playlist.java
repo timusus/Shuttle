@@ -83,10 +83,26 @@ public class Playlist implements Serializable {
         id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Playlists._ID));
         name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Playlists.NAME));
         type = Type.USER_CREATED;
+        canClear = true;
+
         if (ShuttleApplication.getInstance().getString(R.string.fav_title).equals(name)) {
             type = Type.FAVORITES;
             canDelete = false;
             canRename = false;
+        }
+    }
+
+    public void clear() {
+        switch (type) {
+            case Playlist.Type.FAVORITES:
+                PlaylistUtils.clearFavorites();
+                break;
+            case Playlist.Type.MOST_PLAYED:
+                PlaylistUtils.clearMostPlayed();
+                break;
+            case Playlist.Type.USER_CREATED:
+                PlaylistUtils.clearPlaylist(id);
+                break;
         }
     }
 

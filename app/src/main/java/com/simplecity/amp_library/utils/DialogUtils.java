@@ -929,7 +929,7 @@ public class DialogUtils {
                 .show();
     }
 
-    public static void showWeekSelectorDialog(final Context context, final MaterialDialog.SingleButtonCallback listener) {
+    public static void showWeekSelectorDialog(final Context context) {
 
         View view = LayoutInflater.from(context).inflate(R.layout.weekpicker, null);
 
@@ -948,9 +948,6 @@ public class DialogUtils {
                     int numweeks;
                     numweeks = numberPicker.getValue();
                     MusicUtils.setIntPref(context, "numweeks", numweeks);
-                    if (listener != null) {
-                        listener.onClick(materialDialog, dialogAction);
-                    }
                 })
                 .show();
     }

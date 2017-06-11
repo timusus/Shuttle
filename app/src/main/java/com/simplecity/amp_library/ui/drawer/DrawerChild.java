@@ -18,6 +18,8 @@ public class DrawerChild {
 
     interface ClickListener {
         void onClick(Playlist playlist);
+
+        void onOverflowClick(View v, Playlist playlist);
     }
 
     @NonNull
@@ -46,6 +48,12 @@ public class DrawerChild {
         }
     }
 
+    void onOverflowClick(View v) {
+        if (listener != null) {
+            listener.onOverflowClick(v, playlist);
+        }
+    }
+
     static class ChildHolder extends ChildViewHolder {
 
         DrawerChild drawerChild;
@@ -70,7 +78,11 @@ public class DrawerChild {
 
             lineOne.setAlpha(0.54f);
 
+            overFlow.setVisibility(View.VISIBLE);
+
             itemView.setOnClickListener(v -> drawerChild.onClick());
+
+            overFlow.setOnClickListener(v -> drawerChild.onOverflowClick(v));
         }
     }
 }

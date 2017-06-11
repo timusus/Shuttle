@@ -3,10 +3,7 @@ package com.simplecity.amp_library.search;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 
 import com.annimon.stream.Collectors;
@@ -18,10 +15,8 @@ import com.simplecity.amp_library.format.PrefixHighlighter;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Header;
-import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.tagger.TaggerDialog;
-import com.simplecity.amp_library.ui.adapters.SearchAdapter;
 import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.ui.modelviews.AlbumArtistView;
 import com.simplecity.amp_library.ui.modelviews.AlbumView;
@@ -29,12 +24,10 @@ import com.simplecity.amp_library.ui.modelviews.SearchHeaderView;
 import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.presenters.Presenter;
 import com.simplecity.amp_library.utils.DataManager;
-import com.simplecity.amp_library.utils.DialogUtils;
+import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.Operators;
-import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
-import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.StringUtils;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 
@@ -48,11 +41,11 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import rx.functions.Action1;
 
 public class SearchPresenter extends Presenter<SearchView> implements
-        SearchAdapter.SearchListener,
-        Toolbar.OnMenuItemClickListener {
+        AlbumView.ClickListener,
+        AlbumArtistView.ClickListener {
 
     private static final double SCORE_THRESHOLD = 0.80;
 
@@ -173,341 +166,64 @@ public class SearchPresenter extends Presenter<SearchView> implements
     }
 
     @Override
-    public boolean onMenuItemClick(MenuItem item) {
+    public void onAlbumArtistClick(int position, AlbumArtistView albumArtistView, AlbumArtistView.ViewHolder viewholder) {
+        SearchView view = getView();
+        if (view != null) {
+            view.goToArtist(albumArtistView.albumArtist, viewholder.imageOne);
+        }
+    }
+
+    @Override
+    public boolean onAlbumArtistLongClick(int position, AlbumArtistView albumArtistView) {
         return false;
     }
 
     @Override
-    public void onItemClick(AlbumArtist albumArtist) {
-
-        //Todo:
-//        SearchView view = getView();
-//
-//        Intent intent = new Intent();
-//        intent.putExtra(MainActivity2.ARG_MODEL, albumArtist);
-//        if (view != null) {
-//            view.finish(Activity.RESULT_OK, intent);
-//        }
-    }
-
-    @Override
-    public void onItemClick(Album album) {
-
-        //Todo:
-//        SearchView view = getView();
-//
-//        Intent intent = new Intent();
-//        intent.putExtra(MainActivity2.ARG_MODEL, album);
-//        if (view != null) {
-//            view.finish(Activity.RESULT_OK, intent);
-//        }
-    }
-
-    @Override
-    public void onItemClick(Song song, List<Song> allSongs) {
-
-        SearchView view = getView();
-
-        int index = allSongs.indexOf(song);
-
-        MusicUtils.playAll(allSongs, index, false, (String message) -> {
-            if (view != null) {
-                view.showToast(message);
+    public void onAlbumArtistOverflowClicked(View v, AlbumArtist albumArtist) {
+        PopupMenu menu = new PopupMenu(v.getContext(), v);
+        menu.inflate(R.menu.menu_artist);
+        menu.setOnMenuItemClickListener(MenuUtils.getAlbumArtistClickListener(v.getContext(), albumArtist, new Action1<TaggerDialog>() {
+            @Override
+            public void call(TaggerDialog taggerDialog) {
+                SearchView searchView = getView();
+                if (searchView != null) {
+                    searchView.showTaggerDialog(taggerDialog);
+                }
             }
-        });
-    }
-
-    @Override
-    public void onOverflowClick(View v, AlbumArtist albumArtist) {
-        PopupMenu menu = new PopupMenu(v.getContext(), v);
-
-        menu.getMenu().add(0, MusicUtils.Defs.PLAY_SELECTION, 0, R.string.play_selection);
-
-        SubMenu sub = menu.getMenu().addSubMenu(0, MusicUtils.Defs.ADD_TO_PLAYLIST, 1, R.string.add_to_playlist);
-        PlaylistUtils.makePlaylistMenu(v.getContext(), sub, 0);
-
-        menu.getMenu().add(0, MusicUtils.Defs.QUEUE, 2, R.string.add_to_queue);
-
-        if (ShuttleUtils.isUpgraded()) {
-            menu.getMenu().add(0, MusicUtils.Defs.TAGGER, 3, R.string.edit_tags);
-        }
-
-        menu.getMenu().add(0, MusicUtils.Defs.DELETE_ITEM, 6, R.string.delete_item);
-
-        menu.setOnMenuItemClickListener(item -> {
-
-                    SearchView view = getView();
-
-                    Observable<List<Song>> songsObservable = albumArtist.getSongsObservable();
-
-                    switch (item.getItemId()) {
-                        case MusicUtils.Defs.PLAY_SELECTION:
-                            songsObservable
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> MusicUtils.playAll(songs, (String message) -> {
-                                        if (view != null) {
-                                            view.showToast(message);
-                                        }
-                                    }));
-                            return true;
-                        case MusicUtils.Defs.PLAY_NEXT:
-                            songsObservable
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> MusicUtils.playNext(songs, message -> {
-                                        SearchView searchView = getView();
-                                        if (searchView != null) {
-                                            searchView.showToast(message);
-                                        }
-                                    }));
-                            return true;
-                        case MusicUtils.Defs.NEW_PLAYLIST:
-                            songsObservable
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> PlaylistUtils.createPlaylistDialog(v.getContext(), songs));
-                            return true;
-                        case MusicUtils.Defs.PLAYLIST_SELECTED:
-                            songsObservable
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> {
-                                        Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
-                                        PlaylistUtils.addToPlaylist(v.getContext(), playlist, songs);
-                                    });
-                            return true;
-                        case MusicUtils.Defs.QUEUE:
-                            songsObservable
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> MusicUtils.addToQueue(songs, message -> {
-                                        SearchView searchView = getView();
-                                        if (searchView != null) {
-                                            searchView.showToast(message);
-                                        }
-                                    }));
-                            return true;
-                        case MusicUtils.Defs.TAGGER:
-                            if (view != null) {
-                                view.showTaggerDialog(TaggerDialog.newInstance(albumArtist));
-                            }
-                            return true;
-                        case MusicUtils.Defs.DELETE_ITEM:
-                            if (view != null) {
-                                view.showDeleteDialog(new DialogUtils.DeleteDialogBuilder()
-                                        .context(v.getContext())
-                                        .songsToDelete(songsObservable)
-                                        .singleMessageId(R.string.delete_album_artist_desc)
-                                        .multipleMessage(R.string.delete_album_artist_desc_multiple)
-                                        .itemNames(Collections.singletonList((albumArtist.name)))
-                                        .build());
-                            }
-
-                            return true;
-                    }
-                    return false;
-                }
-        );
+        }));
         menu.show();
     }
 
     @Override
-    public void onOverflowClick(View v, Album album) {
-
-        PopupMenu menu = new PopupMenu(v.getContext(), v);
-
-        menu.getMenu().add(0, MusicUtils.Defs.PLAY_SELECTION, 0, R.string.play_selection);
-
-        SubMenu sub = menu.getMenu().addSubMenu(0, MusicUtils.Defs.ADD_TO_PLAYLIST, 1, R.string.add_to_playlist);
-        PlaylistUtils.makePlaylistMenu(v.getContext(), sub, 0);
-
-        menu.getMenu().add(0, MusicUtils.Defs.QUEUE, 2, R.string.add_to_queue);
-
-        if (ShuttleUtils.isUpgraded()) {
-            menu.getMenu().add(0, MusicUtils.Defs.TAGGER, 3, R.string.edit_tags);
+    public void onAlbumClick(int position, AlbumView albumView, AlbumView.ViewHolder viewHolder) {
+        SearchView view = getView();
+        if (view != null) {
+            view.goToAlbum(albumView.album, viewHolder.imageOne);
         }
-
-        menu.getMenu().add(0, MusicUtils.Defs.DELETE_ITEM, 6, R.string.delete_item);
-
-        menu.setOnMenuItemClickListener(item -> {
-
-                    SearchView view = getView();
-
-                    Observable<List<Song>> songsObservable = (album.getSongsObservable());
-
-                    switch (item.getItemId()) {
-                        case MusicUtils.Defs.PLAY_SELECTION:
-                            songsObservable
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> MusicUtils.playAll(songs, (String message) -> {
-                                        if (view != null) {
-                                            view.showToast(message);
-                                        }
-                                    }));
-                            return true;
-                        case MusicUtils.Defs.PLAY_NEXT:
-                            songsObservable
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> MusicUtils.playNext(songs, message -> {
-                                        SearchView searchView = getView();
-                                        if (searchView != null) {
-                                            searchView.showToast(message);
-                                        }
-                                    }));
-                            return true;
-                        case MusicUtils.Defs.NEW_PLAYLIST:
-                            songsObservable
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> PlaylistUtils.createPlaylistDialog(v.getContext(), songs));
-                            return true;
-                        case MusicUtils.Defs.PLAYLIST_SELECTED:
-                            songsObservable
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> {
-                                        Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
-                                        PlaylistUtils.addToPlaylist(v.getContext(), playlist, songs);
-                                    });
-                            return true;
-                        case MusicUtils.Defs.QUEUE:
-                            songsObservable
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> MusicUtils.addToQueue(songs, message -> {
-                                        SearchView searchView = getView();
-                                        if (searchView != null) {
-                                            searchView.showToast(message);
-                                        }
-                                    }));
-                            return true;
-                        case MusicUtils.Defs.TAGGER:
-                            if (view != null) {
-                                view.showTaggerDialog(TaggerDialog.newInstance(album));
-                            }
-                            return true;
-                        case MusicUtils.Defs.DELETE_ITEM:
-                            if (view != null) {
-                                view.showDeleteDialog(new DialogUtils.DeleteDialogBuilder()
-                                        .context(v.getContext())
-                                        .songsToDelete(songsObservable)
-                                        .singleMessageId(R.string.delete_album_desc)
-                                        .multipleMessage(R.string.delete_album_desc_multiple)
-                                        .itemNames(Collections.singletonList((album.name)))
-                                        .build());
-                            }
-                            return true;
-                    }
-                    return false;
-                }
-        );
-        menu.show();
     }
 
     @Override
-    public void onOverflowClick(View v, Song song) {
+    public boolean onAlbumLongClick(int position, AlbumView albumView) {
+        return false;
+    }
 
+    @Override
+    public void onAlbumOverflowClicked(View v, Album album) {
         PopupMenu menu = new PopupMenu(v.getContext(), v);
-        menu.getMenu().add(0, MusicUtils.Defs.PLAY_NEXT, 0, R.string.play_next);
-        menu.getMenu().add(0, MusicUtils.Defs.USE_AS_RINGTONE, 4, R.string.ringtone_menu);
-        SubMenu sub = menu.getMenu().addSubMenu(0, MusicUtils.Defs.ADD_TO_PLAYLIST, 1, R.string.add_to_playlist);
-
-        PlaylistUtils.makePlaylistMenu(v.getContext(), sub, 0);
-
-        menu.getMenu().add(0, MusicUtils.Defs.QUEUE, 2, R.string.add_to_queue);
-
-        if (ShuttleUtils.isUpgraded()) {
-            menu.getMenu().add(0, MusicUtils.Defs.TAGGER, 3, R.string.edit_tags);
-        }
-
-        menu.getMenu().add(0, MusicUtils.Defs.DELETE_ITEM, 6, R.string.delete_item);
-
-        menu.setOnMenuItemClickListener(item -> {
-
-                    SearchView view = getView();
-
-                    Observable<List<Song>> songsObservable = Observable.just(Collections.singletonList(song));
-
-                    switch (item.getItemId()) {
-                        case MusicUtils.Defs.PLAY_SELECTION:
-                            songsObservable
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> MusicUtils.playAll(songs, (String message) -> {
-                                        if (view != null) {
-                                            view.showToast(message);
-                                        }
-                                    }));
-                            return true;
-                        case MusicUtils.Defs.PLAY_NEXT:
-                            songsObservable
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> MusicUtils.playNext(songs, message -> {
-                                        SearchView searchView = getView();
-                                        if (searchView != null) {
-                                            searchView.showToast(message);
-                                        }
-                                    }));
-                            return true;
-                        case MusicUtils.Defs.NEW_PLAYLIST:
-                            songsObservable
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> PlaylistUtils.createPlaylistDialog(v.getContext(), songs));
-                            return true;
-                        case MusicUtils.Defs.PLAYLIST_SELECTED:
-                            songsObservable
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> {
-                                        Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
-                                        PlaylistUtils.addToPlaylist(v.getContext(), playlist, songs);
-                                    });
-                            return true;
-                        case MusicUtils.Defs.USE_AS_RINGTONE:
-                            // Set the system setting to make this the current
-                            // ringtone
-                            ShuttleUtils.setRingtone(v.getContext(), song);
-                            return true;
-                        case MusicUtils.Defs.QUEUE:
-                            songsObservable
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> MusicUtils.addToQueue(songs, message -> {
-                                        SearchView searchView = getView();
-                                        if (searchView != null) {
-                                            searchView.showToast(message);
-                                        }
-                                    }));
-                            return true;
-                        case MusicUtils.Defs.TAGGER:
-                            if (view != null) {
-                                view.showTaggerDialog(TaggerDialog.newInstance(song));
-                            }
-                            return true;
-                        case MusicUtils.Defs.DELETE_ITEM:
-                            if (view != null) {
-                                view.showDeleteDialog(new DialogUtils.DeleteDialogBuilder()
-                                        .context(v.getContext())
-                                        .songsToDelete(songsObservable)
-                                        .singleMessageId(R.string.delete_song_desc)
-                                        .multipleMessage(R.string.delete_song_desc_multiple)
-                                        .itemNames(Collections.singletonList((song.name)))
-                                        .build());
-                            }
-                            return true;
-                    }
-                    return false;
+        menu.inflate(R.menu.menu_album);
+        menu.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(v.getContext(), album, new Action1<TaggerDialog>() {
+            @Override
+            public void call(TaggerDialog taggerDialog) {
+                SearchView searchView = getView();
+                if (searchView != null) {
+                    searchView.showTaggerDialog(taggerDialog);
                 }
-        );
+            }
+        }));
         menu.show();
     }
 
-    private static class SongFilterOperator implements Observable.Operator<List<ViewModel>, List<Song>> {
+    private class SongFilterOperator implements Observable.Operator<List<ViewModel>, List<Song>> {
 
         private String filterString;
 
@@ -544,14 +260,16 @@ public class SearchPresenter extends Presenter<SearchView> implements
                     Stream<Song> songStream = Stream.of(songs)
                             .filter(song -> song.name != null);
 
-                    Stream<Song> filteredStream = fuzzy ? applyJaroWinklerFilter(songStream) : applySongFilter(songStream);
+                    songs = (fuzzy ? applyJaroWinklerFilter(songStream) : applySongFilter(songStream)).collect(Collectors.toList());
 
-                    List<ViewModel> viewModels = filteredStream.map(song -> {
+                    SongViewClickListener songViewClickListener = new SongViewClickListener(songs);
+
+                    List<ViewModel> viewModels = Stream.of(songs).map(song -> {
                         SongView songView = new SongView(song, requestManager);
+                        songView.setClickListener(songViewClickListener);
                         songView.setPrefix(prefixHighlighter, prefix);
                         return songView;
-                    })
-                            .collect(Collectors.toList());
+                    }).collect(Collectors.toList());
 
                     if (!viewModels.isEmpty()) {
                         viewModels.add(0, songsHeader);
@@ -588,7 +306,7 @@ public class SearchPresenter extends Presenter<SearchView> implements
         }
     }
 
-    private static class AlbumFilterOperator implements Observable.Operator<List<ViewModel>, List<Album>> {
+    private class AlbumFilterOperator implements Observable.Operator<List<ViewModel>, List<Album>> {
 
         private String filterString;
 
@@ -625,6 +343,7 @@ public class SearchPresenter extends Presenter<SearchView> implements
 
                     List<ViewModel> viewModels = filteredStream.map(album -> {
                         AlbumView albumView = new AlbumView(album, ViewType.ALBUM_LIST, requestManager);
+                        albumView.setClickListener(SearchPresenter.this);
                         albumView.setPrefix(prefixHighlighter, prefix);
                         return albumView;
                     }).collect(Collectors.toList());
@@ -664,7 +383,7 @@ public class SearchPresenter extends Presenter<SearchView> implements
         }
     }
 
-    private static class AlbumArtistFilterOperator implements Observable.Operator<List<ViewModel>, List<AlbumArtist>> {
+    private class AlbumArtistFilterOperator implements Observable.Operator<List<ViewModel>, List<AlbumArtist>> {
 
         private String filterString;
 
@@ -702,6 +421,7 @@ public class SearchPresenter extends Presenter<SearchView> implements
                     List<ViewModel> viewModels = filteredStream
                             .map(albumArtist -> {
                                 AlbumArtistView albumArtistView = new AlbumArtistView(albumArtist, ViewType.ARTIST_LIST, requestManager);
+                                albumArtistView.setClickListener(SearchPresenter.this);
                                 albumArtistView.setPrefix(prefixHighlighter, prefix);
                                 return (ViewModel) albumArtistView;
                             })
@@ -739,6 +459,54 @@ public class SearchPresenter extends Presenter<SearchView> implements
 
         private Stream<AlbumArtist> applyAlbumArtistFilter(Stream<AlbumArtist> stream) {
             return stream.filter(albumArtist -> StringUtils.containsIgnoreCase(albumArtist.name, filterString));
+        }
+    }
+
+    private class SongViewClickListener implements SongView.ClickListener {
+
+        List<Song> songs;
+
+        public SongViewClickListener(List<Song> songs) {
+            this.songs = songs;
+        }
+
+        @Override
+        public void onSongClick(int position, SongView songView) {
+            SearchView view = getView();
+
+            int index = songs.indexOf(songView.song);
+
+            MusicUtils.playAll(songs, index, false, (String message) -> {
+                if (view != null) {
+                    view.showToast(message);
+                }
+            });
+        }
+
+        @Override
+        public boolean onSongLongClick(int position, SongView songView) {
+            return false;
+        }
+
+        @Override
+        public void onSongOverflowClick(int position, View v, Song song) {
+            PopupMenu menu = new PopupMenu(v.getContext(), v);
+            menu.inflate(R.menu.menu_search);
+            menu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(v.getContext(), song, new Action1<TaggerDialog>() {
+                @Override
+                public void call(TaggerDialog taggerDialog) {
+                    SearchView searchView = getView();
+                    if (searchView != null) {
+                        searchView.showTaggerDialog(taggerDialog);
+                    }
+                }
+            }));
+            menu.show();
+        }
+
+        @Override
+        public void onStartDrag(SongView.ViewHolder holder) {
+
         }
     }
 }

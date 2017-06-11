@@ -177,8 +177,8 @@ public class PlaylistFragment extends BaseFragment implements
     @Override
     public void onOverflowClick(View v, int position, Playlist playlist) {
         PopupMenu menu = new PopupMenu(PlaylistFragment.this.getActivity(), v);
-        MenuUtils.addPlaylistMenuOptions(menu, playlist);
-        MenuUtils.addClickHandler(getContext(), menu, playlist, null, null);
+        MenuUtils.setupPlaylistMenu(menu, playlist);
+        menu.setOnMenuItemClickListener(MenuUtils.getPlaylistClickListener(getContext(), playlist));
         menu.show();
     }
 

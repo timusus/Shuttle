@@ -13,18 +13,16 @@ import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.Util;
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
-import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
-import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
+import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.ui.presenters.QueuePresenter;
@@ -33,11 +31,10 @@ import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.ui.views.PlayerViewAdapter;
 import com.simplecity.amp_library.ui.views.QueueView;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
-import com.simplecity.amp_library.utils.DialogUtils;
+import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
-import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecityapps.recycler_adapter.adapter.CompletionListUpdateCallbackAdapter;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
@@ -52,7 +49,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.CompositeDisposable;
-import rx.Observable;
+import rx.subscriptions.CompositeSubscription;
 import test.com.multisheetview.ui.view.MultiSheetView;
 
 public class QueueFragment extends BaseFragment implements
@@ -91,6 +88,8 @@ public class QueueFragment extends BaseFragment implements
     private CompositeDisposable disposables = new CompositeDisposable();
 
     private ContextualToolbarHelper<Song> contextualToolbarHelper;
+
+    private CompositeSubscription subscription = new CompositeSubscription();
 
     public static QueueFragment newInstance() {
         Bundle args = new Bundle();
@@ -132,7 +131,7 @@ public class QueueFragment extends BaseFragment implements
         toolbar.inflateMenu(R.menu.menu_queue);
 
         SubMenu sub = toolbar.getMenu().addSubMenu(0, MusicUtils.Defs.ADD_TO_PLAYLIST, 1, R.string.save_as_playlist);
-        PlaylistUtils.makePlaylistMenu(getContext(), sub, 0);
+        PlaylistUtils.makePlaylistMenu(getContext(), sub);
 
         toolbar.setOnMenuItemClickListener(toolbarListener);
 
@@ -197,6 +196,8 @@ public class QueueFragment extends BaseFragment implements
 
         playerPresenter.unbindView(playerViewAdapter);
         queuePresenter.unbindView(this);
+
+        subscription.clear();
     }
 
     @Override
@@ -218,8 +219,8 @@ public class QueueFragment extends BaseFragment implements
         contextualToolbar.getMenu().clear();
         contextualToolbar.inflateMenu(R.menu.context_menu_queue);
         SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-        PlaylistUtils.makePlaylistMenu(getActivity(), sub, MusicUtils.Defs.SONG_FRAGMENT_GROUP_ID);
-        contextualToolbar.setOnMenuItemClickListener(contextualToolbarListener);
+        PlaylistUtils.makePlaylistMenu(getActivity(), sub);
+        contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), MusicUtils::getQueue));
         contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
             @Override
             public void notifyItemChanged(int position) {
@@ -233,30 +234,6 @@ public class QueueFragment extends BaseFragment implements
         });
     }
 
-//    @Override
-//    public void onOverflowClick(View v, int position, Song song) {
-//        PopupMenu menu = new PopupMenu(QueueFragment.this.getActivity(), v);
-//        MenuUtils.addQueueMenuOptions(getActivity(), menu);
-//        MenuUtils.addClickHandler((AppCompatActivity) getActivity(), menu, song, item -> {
-//            switch (item.getItemId()) {
-//                case REMOVE: {
-//                    MusicUtils.removeFromQueue(song, true);
-//                    songAdapter.removeItem(position);
-//                    return true;
-//                }
-//                case BLACKLIST: {
-//                    BlacklistHelper.addToBlacklist(song);
-//                    MusicUtils.removeFromQueue(song, true);
-//                    songAdapter.removeItem(position);
-//                    return true;
-//                }
-//            }
-//            return false;
-//        });
-//
-//        menu.show();
-//    }
-
     @Override
     protected String screenName() {
         return TAG;
@@ -266,13 +243,13 @@ public class QueueFragment extends BaseFragment implements
     public void loadData(List<ViewModel> items, int position) {
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {
-                adapter.setItems(items, new CompletionListUpdateCallbackAdapter() {
+                subscription.add(adapter.setItems(items, new CompletionListUpdateCallbackAdapter() {
                     @Override
                     public void onComplete() {
                         setCurrentQueueItem(position);
                         recyclerView.scrollToPosition(position);
                     }
-                });
+                }));
             }
         });
     }
@@ -284,7 +261,7 @@ public class QueueFragment extends BaseFragment implements
 
     @Override
     public void showToast(String message, int duration) {
-
+        Toast.makeText(getContext(), message, duration).show();
     }
 
     @Override
@@ -318,6 +295,16 @@ public class QueueFragment extends BaseFragment implements
         adapter.notifyItemChanged(position, 1);
     }
 
+    @Override
+    public void showTaggerDialog(TaggerDialog taggerDialog) {
+        taggerDialog.show(getFragmentManager());
+    }
+
+    @Override
+    public void removeFromQueue(int position) {
+        adapter.removeItem(position);
+    }
+
     private PlayerViewAdapter playerViewAdapter = new PlayerViewAdapter() {
         @Override
         public void trackInfoChanged(@Nullable Song song) {
@@ -337,50 +324,14 @@ public class QueueFragment extends BaseFragment implements
                 case R.id.menu_clear:
                     queuePresenter.clearQueue();
                     return true;
-                case MusicUtils.Defs.NEW_PLAYLIST: {
+                case MusicUtils.Defs.NEW_PLAYLIST:
                     queuePresenter.saveQueue(getContext());
                     return true;
-                }
-                case MusicUtils.Defs.PLAYLIST_SELECTED: {
-                    queuePresenter.saveQueue(getContext(), (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST));
+                case MusicUtils.Defs.PLAYLIST_SELECTED:
+                    queuePresenter.saveQueue(getContext(), item);
                     return true;
-                }
             }
             return false;
-        }
-    };
-
-    Toolbar.OnMenuItemClickListener contextualToolbarListener = new Toolbar.OnMenuItemClickListener() {
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-
-            List<Song> songs = Stream.of(contextualToolbarHelper.getItems())
-                    .map(SelectableViewModel::getItem)
-                    .collect(Collectors.toList());
-
-            switch (item.getItemId()) {
-                case MusicUtils.Defs.NEW_PLAYLIST:
-                    PlaylistUtils.createPlaylistDialog(getActivity(), songs);
-                    break;
-                case MusicUtils.Defs.PLAYLIST_SELECTED:
-                    Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
-                    PlaylistUtils.addToPlaylist(getContext(), playlist, songs);
-                    break;
-                case R.id.delete:
-                    new DialogUtils.DeleteDialogBuilder()
-                            .context(getContext())
-                            .singleMessageId(R.string.delete_song_desc)
-                            .multipleMessage(R.string.delete_song_desc_multiple)
-                            .itemNames(Stream.of(songs)
-                                    .map(song -> song.name)
-                                    .collect(Collectors.toList()))
-                            .songsToDelete(Observable.just(songs))
-                            .build()
-                            .show();
-                    contextualToolbarHelper.finish();
-                    break;
-            }
-            return true;
         }
     };
 }

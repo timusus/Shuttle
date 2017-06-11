@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.simplecity.amp_library.ui.views.ForegroundLinearLayout
+<android.support.design.internal.ForegroundLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="56dp"
@@ -59,8 +59,7 @@
         android:background="@null"
         android:paddingBottom="16dp"
         android:paddingLeft="16dp"
-        android:paddingTop="16dp"
-        android:src="@drawable/ic_overflow_white"/>
+        android:paddingTop="16dp"/>
 
-</com.simplecity.amp_library.ui.views.ForegroundLinearLayout>
+</android.support.design.internal.ForegroundLinearLayout>
 
