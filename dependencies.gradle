@@ -13,14 +13,14 @@ ext.versions = [
         minSdk                        : 16,
         targetSdk                     : 25,
         compileSdk                    : 25,
-        buildTools                    : "25.0.2",
+        buildTools                    : "26.0.0",
 
         // //////////////////////////////////////////////////////////////////////////
         // Plugin versions
         // /////////////////////////////////////////////////////////////////////////
 
-        androidGradlePlugin           : "2.4.0-alpha7",
-        dexcountGradlePlugin          : "0.6.4",
+        androidGradlePlugin           : "3.0.0-alpha3",
+        dexcountGradlePlugin          : "0.7.0-SNAPSHOT",
         fabricGradlePlugin            : "1.+",
         googleServicesPlugin          : "3.0.0",
         playPublisher                 : "1.2.0",
