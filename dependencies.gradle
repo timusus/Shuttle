@@ -24,14 +24,15 @@ ext.versions = [
         fabricGradlePlugin            : "1.+",
         googleServicesPlugin          : "3.0.0",
         playPublisher                 : "1.2.0",
+        gradleVersions                : "0.15.0",
 
         // //////////////////////////////////////////////////////////////////////////
         // Google lib versions
         // /////////////////////////////////////////////////////////////////////////
 
         supportLib                    : "25.4.0",
-        firebaseCore                  : "10.2.1",
-        chromecast                    : "10.2.1",
+        firebaseCore                  : "11.0.0",
+        chromecast                    : "11.0.0",
         constraintLayout              : "1.0.2",
 
         // //////////////////////////////////////////////////////////////////////////
@@ -39,7 +40,7 @@ ext.versions = [
         // /////////////////////////////////////////////////////////////////////////
 
         haha                          : "2.0.3",
-        leakCanary                    : "1.5",
+        leakCanary                    : "1.5.1",
         okio                          : "1.12.0",
         okhttp                        : "3.7.0",
         retrofit                      : "2.2.0",
@@ -62,14 +63,14 @@ ext.versions = [
         rxBindings                    : "0.4.0",
         rxBindingsAppCompat           : "0.4.0",
         rxImageSel                    : "1.3.1",
-        rxJava                        : "1.2.0",
+        rxJava                        : "1.3.0",
         rxRelay                       : "1.2.0",
         rxReceivers                   : "0.1.0",
         streams                       : "1.1.7",
-        butterknife                   : "8.5.1",
-        butterknifeAnnotationProcessor: "8.5.1",
-        dagger                        : "2.10",
-        daggerAnnotationProcessor     : "2.10",
+        butterknife                   : "8.6.0",
+        butterknifeAnnotationProcessor: "8.6.0",
+        dagger                        : "2.11",
+        daggerAnnotationProcessor     : "2.11",
         expandableRecyclerView        : "3.0.0-RC1",
         aesthetic                     : "0.4.0",
 
@@ -101,7 +102,8 @@ ext.gradlePlugins = [
         dexcount      : "com.getkeepsafe.dexcount:dexcount-gradle-plugin:$versions.dexcountGradlePlugin",
         fabric        : "io.fabric.tools:gradle:$versions.fabricGradlePlugin",
         googleServices: "com.google.gms:google-services:$versions.googleServicesPlugin",
-        playPublisher : "com.github.triplet.gradle:play-publisher:$versions.playPublisher"
+        playPublisher : "com.github.triplet.gradle:play-publisher:$versions.playPublisher",
+        gradleVersions: "com.github.ben-manes:gradle-versions-plugin:$versions.gradleVersions"
 ]
 
 ext.libs = [
