@@ -508,6 +508,8 @@
     <string name="rename_folder">Rename folder</string>
     <!-- -->
     <string name="rename_file">Rename file</string>
+    <!-- -->
+    <string name="rename">Rename</string>
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">Set as initial directory</string>
     <!-- Label in folder view - number of folders within the current folder -->

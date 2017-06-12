@@ -143,7 +143,7 @@ public class PlayerFragment extends BaseFragment implements PlayerView, Toolbar.
         toolbar.inflateMenu(R.menu.menu_now_playing);
         setupCastMenu(toolbar.getMenu());
 
-        MenuItem favoriteMenuItem = toolbar.getMenu().findItem(R.id.menu_favorite);
+        MenuItem favoriteMenuItem = toolbar.getMenu().findItem(R.id.favorite);
         FavoriteActionBarView menuActionView = (FavoriteActionBarView) favoriteMenuItem.getActionView();
         menuActionView.setOnClickListener(v -> onMenuItemClick(favoriteMenuItem));
         toolbar.setOnMenuItemClickListener(this);
@@ -306,7 +306,7 @@ public class PlayerFragment extends BaseFragment implements PlayerView, Toolbar.
 
     @Override
     public void favoriteChanged(boolean isFavorite) {
-        FavoriteActionBarView favoriteActionBarView = (FavoriteActionBarView) toolbar.getMenu().findItem(R.id.menu_favorite).getActionView();
+        FavoriteActionBarView favoriteActionBarView = (FavoriteActionBarView) toolbar.getMenu().findItem(R.id.favorite).getActionView();
         favoriteActionBarView.setIsFavorite(isFavorite);
     }
 
@@ -382,20 +382,20 @@ public class PlayerFragment extends BaseFragment implements PlayerView, Toolbar.
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_favorite:
+            case R.id.favorite:
                 ((FavoriteActionBarView) item.getActionView()).toggle();
                 presenter.toggleFavorite();
                 return true;
-            case R.id.menu_lyrics:
+            case R.id.lyrics:
 
                 return true;
-            case R.id.go_to:
+            case R.id.goTo:
 
                 return true;
-            case R.id.edit_tags:
+            case R.id.editTags:
 
                 return true;
-            case R.id.song_info:
+            case R.id.songInfo:
 
                 return true;
         }

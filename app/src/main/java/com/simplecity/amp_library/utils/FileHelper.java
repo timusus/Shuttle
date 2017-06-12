@@ -196,6 +196,20 @@ public class FileHelper {
     }
 
     /**
+     * Recursively collects all the files for the given directory and
+     * all of its sub-directories. Must be called Asynchronously.
+     *
+     * @param file      the File to retrieve the song Id's from
+     * @param recursive whether to recursively check the sub-directories for song Id's
+     * @return long[] a list of the songId's for the given fileObject's directory & sub-directories
+     */
+    public static Observable<List<String>> getPathList(final File file, final boolean recursive, final boolean inSameDir) {
+        return Observable.fromCallable(
+                () -> walk(file, new ArrayList<>(), recursive, inSameDir))
+                .subscribeOn(Schedulers.io());
+    }
+
+    /**
      * Recursively collects all the song id's for the given directory and
      * all of its sub-directories. Must be called Asynchronously.
      *
@@ -204,12 +218,13 @@ public class FileHelper {
      * @return long[] a list of the songId's for the given fileObject's directory & sub-directories
      */
     public static Observable<List<Song>> getSongList(final File file, final boolean recursive, final boolean inSameDir) {
-
-        return Observable.fromCallable(() -> walk(file, new ArrayList<>(), recursive, inSameDir)).flatMap(filePaths -> DataManager.getInstance().getSongsRelay()
-                .map(songs -> Stream.of(songs)
-                        .filter(song -> filePaths.contains(song.path))
-                        .collect(Collectors.toList()))
-                .subscribeOn(Schedulers.io()));
+        return Observable.fromCallable(
+                () -> walk(file, new ArrayList<>(), recursive, inSameDir))
+                .flatMap(filePaths -> DataManager.getInstance().getSongsRelay().first()
+                        .map(songs -> Stream.of(songs)
+                                .filter(song -> filePaths.contains(song.path))
+                                .collect(Collectors.toList())))
+                .subscribeOn(Schedulers.io());
     }
 
     /**

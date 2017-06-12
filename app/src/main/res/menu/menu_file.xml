@@ -3,6 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/play"
+        android:title="@string/play_selection"/>
+
+    <item
         android:id="@+id/playNext"
         android:title="@string/play_next"/>
 
@@ -20,6 +24,14 @@
                 android:title="@string/menu_queue"/>
         </menu>
     </item>
+
+    <item
+        android:id="@+id/setInitialDir"
+        android:title="@string/set_initial_dir"/>
+
+    <item
+        android:id="@+id/scan"
+        android:title="@string/scan_file"/>
 
     <item
         android:id="@+id/editTags"
@@ -42,8 +54,8 @@
         android:title="@string/blacklist_title"/>
 
     <item
-        android:id="@+id/remove"
-        android:title="@string/remove_from_queue"/>
+        android:id="@+id/rename"
+        android:title="@string/rename"/>
 
     <item
         android:id="@+id/delete"

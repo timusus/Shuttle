@@ -166,6 +166,7 @@ final class InflationInterceptor implements LayoutInflaterFactory {
         view = new AestheticSeekBar(context, attrs);
         break;
       case "ProgressBar":
+      case "me.zhanghai.android.materialprogressbar.MaterialProgressBar":
         view = new AestheticProgressBar(context, attrs);
         break;
       case "android.support.v7.view.menu.ActionMenuItemView":

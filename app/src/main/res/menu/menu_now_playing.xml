@@ -9,29 +9,29 @@
         app:showAsAction="always"/>
 
     <item
-        android:id="@+id/menu_favorite"
+        android:id="@+id/favorite"
         android:title="@string/fav_add"
         app:actionLayout="@layout/action_bar_favorite"
         app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/menu_lyrics"
+        android:id="@+id/lyrics"
         android:icon="@drawable/ic_action_lyrics_24dp"
         android:title="@string/lyrics"
         app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/go_to"
+        android:id="@+id/goTo"
         android:title="@string/go_to"
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/edit_tags"
+        android:id="@+id/editTags"
         android:title="@string/edit_tags"
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/song_info"
+        android:id="@+id/songInfo"
         android:title="@string/song_info"
         app:showAsAction="never"/>
 

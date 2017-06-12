@@ -19,12 +19,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.afollestad.aesthetic.AestheticProgressBar
+        <me.zhanghai.android.materialprogressbar.MaterialProgressBar
             android:id="@+id/progressbar"
             style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:layout_toEndOf="@+id/mini_album_artwork"
+            android:layout_toRightOf="@+id/mini_album_artwork"
             android:background="#20000000"
             android:indeterminate="false"
             app:mpb_progressStyle="horizontal"

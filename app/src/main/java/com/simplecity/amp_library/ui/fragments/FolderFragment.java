@@ -1,6 +1,5 @@
 package com.simplecity.amp_library.ui.fragments;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,16 +12,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.annimon.stream.Collectors;
+import com.annimon.stream.IntStream;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.interfaces.BackPressListener;
@@ -30,32 +25,23 @@ import com.simplecity.amp_library.interfaces.Breadcrumb;
 import com.simplecity.amp_library.interfaces.BreadcrumbListener;
 import com.simplecity.amp_library.interfaces.FileType;
 import com.simplecity.amp_library.model.BaseFileObject;
-import com.simplecity.amp_library.model.FileObject;
-import com.simplecity.amp_library.model.FolderObject;
-import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.sql.databases.WhitelistHelper;
-import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.modelviews.BreadcrumbsView;
 import com.simplecity.amp_library.ui.modelviews.FolderView;
 import com.simplecity.amp_library.ui.views.BreadcrumbItem;
-import com.simplecity.amp_library.utils.CustomMediaScanner;
-import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.FileBrowser;
 import com.simplecity.amp_library.utils.FileHelper;
+import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
-import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
-import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.SortManager;
-import com.simplecity.amp_library.utils.ViewUtils;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -66,7 +52,6 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 public class FolderFragment extends BaseFragment implements
-        MusicUtils.Defs,
         BreadcrumbListener,
         BackPressListener,
         FolderView.ClickListener {
@@ -76,8 +61,6 @@ public class FolderFragment extends BaseFragment implements
     private static final String ARG_PAGE_TITLE = "page_title";
 
     private static final String ARG_CURRENT_DIR = "current_dir";
-
-    static final int FRAGMENT_GROUPID = FOLDER_FRAGMENT_GROUP_ID;
 
     ViewModelAdapter adapter;
 
@@ -476,231 +459,21 @@ public class FolderFragment extends BaseFragment implements
 
     @Override
     public void onFileObjectOverflowClick(View v, BaseFileObject fileObject) {
-
         PopupMenu menu = new PopupMenu(getActivity(), v);
-
-        if (fileObject.fileType == FileType.FILE) {
-
-
-            if (FileHelper.canReadWrite(new File(fileObject.path))) {
-                //Rename File
-                menu.getMenu().add(FRAGMENT_GROUPID, RENAME, 7, R.string.rename_file);
-                //Delete File
-                menu.getMenu().add(FRAGMENT_GROUPID, DELETE_ITEM, 8, R.string.delete_item);
-            }
-
-            menu.getMenu().add(FRAGMENT_GROUPID, VIEW_INFO, 9, R.string.song_info);
-
-        } else {
-
-            //Play all files in this dir
-            menu.getMenu().add(FRAGMENT_GROUPID, PLAY_SELECTION, 0, R.string.play_selection);
-
-            //Set this directory as initial directory
-            menu.getMenu().add(FRAGMENT_GROUPID, SET_INITIAL_DIR, 4, R.string.set_initial_dir);
-
-            if (FileHelper.canReadWrite(new File(fileObject.path))) {
-                //Rename dir
-                menu.getMenu().add(FRAGMENT_GROUPID, RENAME, 5, R.string.rename_folder);
-                //Delete dir
-                menu.getMenu().add(FRAGMENT_GROUPID, DELETE_ITEM, 6, R.string.delete_item);
-            }
-        }
-
-        //Bring up the add to playlist menu
-        SubMenu sub = menu.getMenu().addSubMenu(FRAGMENT_GROUPID, ADD_TO_PLAYLIST, 2, R.string.menu_playlist);
-        PlaylistUtils.makePlaylistMenu(getActivity(), sub);
-
-        //Add to queue
-        menu.getMenu().add(FRAGMENT_GROUPID, QUEUE, 3, R.string.menu_queue);
-
-        menu.getMenu().add(FRAGMENT_GROUPID, RESCAN, 4, R.string.scan_file);
-
-        menu.setOnMenuItemClickListener(item -> {
-
-            switch (item.getItemId()) {
-
-                case TAGGER:
-                    subscriptions.add(FileHelper.getSong(new File(fileObject.path))
-                            .subscribeOn(Schedulers.io())
-                            .subscribe(song -> TaggerDialog.newInstance(song).show(getFragmentManager())));
-                    return true;
-
-                case QUEUE:
-                    subscriptions.add(FileHelper.getSongList(new File(fileObject.path), true, false)
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(songs -> MusicUtils.addToQueue(songs, message ->
-                                    Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show())));
-                    return true;
-
-                case DELETE_ITEM:
-                    MaterialDialog.Builder builder = DialogUtils.getBuilder(getActivity())
-                            .title(R.string.delete_item)
-                            .iconRes(R.drawable.ic_dialog_alert);
-                    if (fileObject.fileType == FileType.FILE) {
-                        builder.content(String.format(getResources().getString(
-                                R.string.delete_file_confirmation_dialog), fileObject.name));
-                    } else {
-                        builder.content(String.format(getResources().getString(
-                                R.string.delete_folder_confirmation_dialog), fileObject.path));
-                    }
-                    builder.positiveText(R.string.button_ok)
-                            .onPositive((materialDialog, dialogAction) -> {
-                                if (FileHelper.deleteFile(new File(fileObject.path))) {
-                                    adapter.removeItem(Stream.of(adapter.items)
-                                            .filter(folderView -> folderView instanceof FolderView &&
-                                                    (((FolderView) folderView).baseFileObject.equals(fileObject)))
-                                            .findFirst()
-                                            .orElse(null));
-                                    CustomMediaScanner.scanFiles(Collections.singletonList(fileObject.path), null);
-                                } else {
-                                    Toast.makeText(getActivity(),
-                                            fileObject.fileType == FileType.FOLDER ? R.string.delete_folder_failed : R.string.delete_file_failed,
-                                            Toast.LENGTH_LONG).show();
-                                }
-                            });
-                    builder.negativeText(R.string.cancel)
-                            .show();
-                    return true;
-
-                case RENAME:
-
-                    View customView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_rename, null);
-                    final EditText editText = (EditText) customView.findViewById(R.id.editText);
-                    editText.setText(fileObject.name);
-
-                    builder = DialogUtils.getBuilder(getActivity());
-                    if (fileObject.fileType == FileType.FILE) {
-                        builder.title(R.string.rename_file);
-                    } else {
-                        builder.title(R.string.rename_folder);
-                    }
-
-                    builder.customView(customView, false);
-                    builder.positiveText(R.string.save)
-                            .onPositive((materialDialog, dialogAction) -> {
-                                if (editText.getText() != null) {
-                                    if (FileHelper.renameFile(getActivity(), fileObject, editText.getText().toString())) {
-                                        adapter.notifyDataSetChanged();
-                                    } else {
-                                        Toast.makeText(getActivity(),
-                                                fileObject.fileType == FileType.FOLDER ? R.string.rename_folder_failed : R.string.rename_file_failed,
-                                                Toast.LENGTH_LONG).show();
-                                    }
-                                }
-                            });
-                    builder.negativeText(R.string.cancel)
-                            .show();
-                    return true;
-                case USE_AS_RINGTONE:
-                    subscriptions.add(FileHelper.getSong(new File(fileObject.path))
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(song -> ShuttleUtils.setRingtone(getContext(), song)));
-                    return true;
-                case PLAY_NEXT:
-                    subscriptions.add(FileHelper.getSongList(new File(fileObject.path), false, false)
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(songs -> MusicUtils.playNext(songs, message ->
-                                    Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show())));
-
-                    return true;
-                case PLAY_SELECTION:
-                    final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", getString(R.string.gathering_songs), false);
-                    subscriptions.add(FileHelper.getSongList(new File(fileObject.path), true, fileObject.fileType == FileType.FILE)
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(songs -> {
-                                MusicUtils.playAll(songs, 0, (String message) ->
-                                        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show());
-
-                                if (isAdded() && progressDialog.isShowing()) {
-                                    progressDialog.dismiss();
-                                }
-                            }));
-                    return true;
-                case NEW_PLAYLIST:
-                    List<BaseFileObject> fileObjects = new ArrayList<>();
-                    fileObjects.add(fileObject);
-                    PlaylistUtils.createFileObjectPlaylistDialog(getActivity(), fileObjects);
-                    return true;
-                case PLAYLIST_SELECTED:
-                    final Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
-                    subscriptions.add(FileHelper.getSongList(new File(fileObject.path), true, false)
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(songs -> PlaylistUtils.addToPlaylist(getContext(), playlist, songs)));
-
-                    return true;
-                case SET_INITIAL_DIR:
-                    SettingsManager.getInstance().setFolderBrowserInitialDir(fileObject.path);
-                    Toast.makeText(getActivity(),
-                            fileObject.path + getResources().getString(R.string.initial_dir_set_message),
-                            Toast.LENGTH_SHORT).show();
-                    return true;
-                case RESCAN:
-
-                    if (fileObject instanceof FolderObject) {
-
-                        //Todo:
-                        // Abstract this away to DialogUtils or somewhere else, where it can be reused
-                        // by anyone else who wants to run a scan (like the Tagger)
-                        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_progress, null);
-                        TextView pathsTextView = (TextView) view.findViewById(R.id.paths);
-                        pathsTextView.setText(fileObject.path);
-
-                        ProgressBar indeterminateProgress = (ProgressBar) view.findViewById(R.id.indeterminateProgress);
-                        ProgressBar horizontalProgress = (ProgressBar) view.findViewById(R.id.horizontalProgress);
-
-                        MaterialDialog dialog = DialogUtils.getBuilder(getContext())
-                                .title(R.string.scanning)
-                                .customView(view, false)
-                                .negativeText(R.string.close)
-                                .show();
-
-                        subscriptions.add(FileHelper.getSongList(new File(fileObject.path), true, false)
-                                .map(songs -> Stream.of(songs)
-                                        .map(song -> song.path)
-                                        .collect(Collectors.toList()))
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(paths -> {
-                                    ViewUtils.fadeOut(indeterminateProgress, null);
-                                    ViewUtils.fadeIn(horizontalProgress, null);
-                                    horizontalProgress.setMax(paths.size());
-
-                                    CustomMediaScanner.scanFiles(paths, new CustomMediaScanner.ScanCompletionListener() {
-                                        @Override
-                                        public void onPathScanned(String path) {
-                                            horizontalProgress.setProgress(horizontalProgress.getProgress() + 1);
-                                            pathsTextView.setText(path);
-                                        }
-
-                                        @Override
-                                        public void onScanCompleted() {
-                                            if (isAdded() && dialog.isShowing()) {
-                                                dialog.dismiss();
-                                            }
-                                        }
-                                    });
-                                }));
-                    } else {
-                        CustomMediaScanner.scanFiles(Collections.singletonList(fileObject.path), new CustomMediaScanner.ScanCompletionListener() {
-                            @Override
-                            public void onPathScanned(String path) {
-
-                            }
-
-                            @Override
-                            public void onScanCompleted() {
-                                Toast.makeText(getContext(), R.string.scan_complete, Toast.LENGTH_LONG).show();
-                            }
-                        });
-                    }
-                    return true;
-                case VIEW_INFO:
-                    DialogUtils.showFileInfoDialog(getActivity(), (FileObject) fileObject);
-                    break;
-            }
-            return false;
-        });
+        MenuUtils.setupFolderMenu(getContext(), menu, fileObject);
+        menu.setOnMenuItemClickListener(MenuUtils.getFolderMenuClickListener(
+                getContext(),
+                fileObject, taggerDialog -> taggerDialog.show(getFragmentManager()),
+                () -> IntStream.range(0, adapter.getItemCount())
+                        .filter(i -> adapter.items.get(i) instanceof FolderView)
+                        .filter(i -> ((FolderView) adapter.items.get(i)).baseFileObject == fileObject)
+                        .findFirst()
+                        .ifPresent(i -> adapter.notifyItemChanged(i)),
+                () -> IntStream.range(0, adapter.getItemCount())
+                        .filter(i -> adapter.items.get(i) instanceof FolderView)
+                        .filter(i -> ((FolderView) adapter.items.get(i)).baseFileObject == fileObject)
+                        .findFirst()
+                        .ifPresent(i -> adapter.notifyItemRemoved(i))));
         menu.show();
     }
 
