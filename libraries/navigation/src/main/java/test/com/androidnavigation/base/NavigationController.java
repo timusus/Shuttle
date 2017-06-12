@@ -8,14 +8,16 @@ import android.view.View;
 import java.util.List;
 
 import test.com.androidnavigation.fragment.BackPressHandler;
+import test.com.androidnavigation.fragment.BackPressListener;
 
-public interface NavigationController<T> extends Controller<T> {
+public interface NavigationController<T> extends Controller<T>, BackPressHandler, BackPressListener {
 
     /**
      * Handle a back press click event from the {@link BackPressHandler}.
      *
      * @return true if the back press was consumed, else false.
      */
+    @Override
     boolean consumeBackPress();
 
     /**

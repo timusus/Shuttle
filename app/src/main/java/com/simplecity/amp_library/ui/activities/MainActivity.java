@@ -15,8 +15,8 @@ import com.simplecity.amp_library.ui.fragments.MainController;
 import java.util.ArrayList;
 import java.util.List;
 
-import test.com.androidnavigation.base.NavigationController;
 import test.com.androidnavigation.fragment.BackPressHandler;
+import test.com.androidnavigation.fragment.BackPressListener;
 
 public class MainActivity extends BaseCastActivity implements
         ToolbarListener,
@@ -24,7 +24,7 @@ public class MainActivity extends BaseCastActivity implements
 
     private static final String TAG = "MainActivity";
 
-    private List<NavigationController> backPressListeners = new ArrayList<>();
+    private List<BackPressListener> backPressListeners = new ArrayList<>();
 
     private DrawerLayout drawerLayout;
 
@@ -73,7 +73,7 @@ public class MainActivity extends BaseCastActivity implements
         } else {
             if (!backPressListeners.isEmpty()) {
                 for (int i = backPressListeners.size() - 1; i >= 0; i--) {
-                    NavigationController backPressListener = backPressListeners.get(i);
+                    BackPressListener backPressListener = backPressListeners.get(i);
                     if (backPressListener.consumeBackPress()) {
                         return;
                     }
@@ -97,14 +97,14 @@ public class MainActivity extends BaseCastActivity implements
     }
 
     @Override
-    public void addBackPressListener(NavigationController listener) {
+    public void addBackPressListener(BackPressListener listener) {
         if (!backPressListeners.contains(listener)) {
             backPressListeners.add(listener);
         }
     }
 
     @Override
-    public void removeBackPressListener(NavigationController listener) {
+    public void removeBackPressListener(BackPressListener listener) {
         if (backPressListeners.contains(listener)) {
             backPressListeners.remove(listener);
         }

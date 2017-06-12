@@ -1,8 +1,11 @@
 package com.simplecity.amp_library.ui.modelviews;
 
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.simplecity.amp_library.interfaces.BreadcrumbListener;
+import com.simplecity.amp_library.ui.views.BreadcrumbItem;
 import com.simplecity.amp_library.ui.views.BreadcrumbView;
 import com.simplecityapps.recycler_adapter.model.BaseViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
@@ -22,6 +25,13 @@ public class BreadcrumbsView extends BaseViewModel<BreadcrumbsView.ViewHolder> {
 
     public void setBreadcrumbsPath(String path) {
         breadcrumbPath = path;
+    }
+
+    @Nullable
+    private BreadcrumbListener listener;
+
+    public void setListener(@Nullable BreadcrumbListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -49,14 +59,21 @@ public class BreadcrumbsView extends BaseViewModel<BreadcrumbsView.ViewHolder> {
         return new ViewHolder(createView(parent));
     }
 
-    public static class ViewHolder extends BaseViewHolder {
+    public void onBreadcrumbClick(BreadcrumbItem breadcrumbItem) {
+        if (listener != null) {
+            listener.onBreadcrumbItemClick(breadcrumbItem);
+        }
+    }
+
+    public static class ViewHolder extends BaseViewHolder<BreadcrumbsView> {
 
         public BreadcrumbView breadcrumbView;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            breadcrumbView = (BreadcrumbView) itemView.findViewById(breadcrumbs);
+            breadcrumbView = itemView.findViewById(breadcrumbs);
+            breadcrumbView.addBreadcrumbListener(item -> viewModel.onBreadcrumbClick(item));
         }
 
         @Override

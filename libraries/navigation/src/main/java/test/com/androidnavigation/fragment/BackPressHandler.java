@@ -1,5 +1,7 @@
 package test.com.androidnavigation.fragment;
 
+import android.support.annotation.NonNull;
+
 import test.com.androidnavigation.base.NavigationController;
 
 /**
@@ -11,7 +13,7 @@ import test.com.androidnavigation.base.NavigationController;
  */
 public interface BackPressHandler {
 
-    void addBackPressListener(NavigationController listener);
+    void addBackPressListener(@NonNull BackPressListener listener);
 
-    void removeBackPressListener(NavigationController listener);
+    void removeBackPressListener(@NonNull BackPressListener listener);
 }

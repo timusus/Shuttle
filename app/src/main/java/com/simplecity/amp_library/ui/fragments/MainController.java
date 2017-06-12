@@ -22,11 +22,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
+import test.com.androidnavigation.fragment.BackPressHandler;
 import test.com.androidnavigation.fragment.BaseNavigationController;
 import test.com.androidnavigation.fragment.FragmentInfo;
 import test.com.multisheetview.ui.view.MultiSheetView;
 
-public class MainController extends BaseNavigationController {
+public class MainController extends BaseNavigationController implements BackPressHandler {
 
     private static final String TAG = "MainController";
 
@@ -144,6 +145,7 @@ public class MainController extends BaseNavigationController {
         if (multiSheetView.consumeBackPress()) {
             return true;
         }
+
         return super.consumeBackPress();
     }
 }

@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import test.com.androidnavigation.R;
@@ -26,6 +27,8 @@ public abstract class BaseNavigationController extends BaseController
     private static final String TAG = "BaseNavigationControlle";
 
     public abstract FragmentInfo getRootViewControllerInfo();
+
+    private List<BackPressListener> backPressListeners = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,10 +77,18 @@ public abstract class BaseNavigationController extends BaseController
 
     @Override
     public boolean consumeBackPress() {
+
+        for (int i = backPressListeners.size() - 1; i >= 0; i--) {
+            if (backPressListeners.get(i).consumeBackPress()) {
+                return true;
+            }
+        }
+
         if (getChildFragmentManager().getBackStackEntryCount() > 0) {
             popViewController();
             return true;
         }
+
         return false;
     }
 
@@ -85,7 +96,7 @@ public abstract class BaseNavigationController extends BaseController
     public void pushViewController(@NonNull Fragment fragment, @Nullable String tag, @Nullable List<Pair<View, String>> sharedElements) {
         FragmentTransaction fragmentTransaction = getChildFragmentManager()
                 .beginTransaction();
-        
+
         if (sharedElements != null) {
             for (Pair<View, String> pair : sharedElements) {
                 fragmentTransaction.addSharedElement(pair.first, pair.second);
@@ -112,4 +123,17 @@ public abstract class BaseNavigationController extends BaseController
         getChildFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
+    @Override
+    public void addBackPressListener(@NonNull BackPressListener listener) {
+        if (!backPressListeners.contains(listener)) {
+            backPressListeners.add(listener);
+        }
+    }
+
+    @Override
+    public void removeBackPressListener(@NonNull BackPressListener listener) {
+        if (backPressListeners.contains(listener)) {
+            backPressListeners.remove(listener);
+        }
+    }
 }

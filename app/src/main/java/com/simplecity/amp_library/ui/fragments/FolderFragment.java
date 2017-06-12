@@ -1,6 +1,5 @@
 package com.simplecity.amp_library.ui.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -20,7 +19,6 @@ import com.annimon.stream.Collectors;
 import com.annimon.stream.IntStream;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.interfaces.BackPressListener;
 import com.simplecity.amp_library.interfaces.Breadcrumb;
 import com.simplecity.amp_library.interfaces.BreadcrumbListener;
 import com.simplecity.amp_library.interfaces.FileType;
@@ -50,6 +48,7 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
+import test.com.androidnavigation.fragment.BackPressListener;
 
 public class FolderFragment extends BaseFragment implements
         BreadcrumbListener,
@@ -62,7 +61,7 @@ public class FolderFragment extends BaseFragment implements
 
     private static final String ARG_CURRENT_DIR = "current_dir";
 
-    ViewModelAdapter adapter;
+    private ViewModelAdapter adapter;
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
@@ -102,21 +101,6 @@ public class FolderFragment extends BaseFragment implements
         return fragment;
     }
 
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        //Todo:
-
-//        if (context instanceof MainActivity2) {
-//            ((MainActivity2) context).setOnBackPressedListener(this);
-//            if (!(getParentFragment() != null && getParentFragment() instanceof MainFragment)) {
-//                ((MainActivity2) context).onSectionAttached(getString(R.string.folders_title));
-//            }
-//        }
-    }
-
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,18 +127,17 @@ public class FolderFragment extends BaseFragment implements
 
 //        if (getParentFragment() == null) {
         showBreadcrumbsInList = false;
-//            breadcrumb.setTextColor(Color.WHITE);
-//            breadcrumb.addBreadcrumbListener(this);
-//            if (!TextUtils.isEmpty(currentDir)) {
-//                breadcrumb.changeBreadcrumbPath(currentDir);
-//            }
+        breadcrumb.addBreadcrumbListener(this);
+        if (!TextUtils.isEmpty(currentDir)) {
+            breadcrumb.changeBreadcrumbPath(currentDir);
+        }
 //        } else {
 //            showBreadcrumbsInList = true;
 //            changeBreadcrumbPath();
 //            toolbar.setVisibility(View.GONE);
 //        }
 
-        toolbar.setOnClickListener(v -> getActivity().onBackPressed());
+        toolbar.setOnClickListener(v -> getNavigationController().popViewController());
 
         recyclerView.setRecyclerListener(new RecyclerListener());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -178,6 +161,8 @@ public class FolderFragment extends BaseFragment implements
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this::changeDir));
         }
+
+        getNavigationController().addBackPressListener(this);
     }
 
     @Override
@@ -185,6 +170,8 @@ public class FolderFragment extends BaseFragment implements
         super.onPause();
 
         subscriptions.clear();
+
+        getNavigationController().removeBackPressListener(this);
     }
 
     @Override
@@ -209,16 +196,6 @@ public class FolderFragment extends BaseFragment implements
         actionModeCallback = null;
 
         super.onDestroy();
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-        //Todo:
-//        if (getActivity() instanceof MainActivity2) {
-//            ((MainActivity2) getActivity()).setOnBackPressedListener(null);
-//        }
     }
 
     @Override
@@ -390,6 +367,7 @@ public class FolderFragment extends BaseFragment implements
                     if (showBreadcrumbsInList) {
                         BreadcrumbsView breadcrumbsView = new BreadcrumbsView(currentDir);
                         breadcrumbsView.setBreadcrumbsPath(currentDir);
+                        breadcrumbsView.setListener(this);
                         items.add(0, breadcrumbsView);
                     }
                     return items;
@@ -397,11 +375,9 @@ public class FolderFragment extends BaseFragment implements
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(adaptableItems -> {
-
                     if (adapter != null) {
                         adapter.setItems(adaptableItems);
                     }
-
                     if (breadcrumb != null) {
                         breadcrumb.changeBreadcrumbPath(currentDir);
                     }
@@ -418,8 +394,7 @@ public class FolderFragment extends BaseFragment implements
     }
 
     @Override
-    public boolean onBackPressed() {
-
+    public boolean consumeBackPress() {
         if (fileBrowser.getCurrentDir() != null && fileBrowser.getRootDir() != null && fileBrowser.getCurrentDir().compareTo(fileBrowser.getRootDir()) != 0) {
             File parent = fileBrowser.getCurrentDir().getParentFile();
             changeDir(parent);
