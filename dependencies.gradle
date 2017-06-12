@@ -11,8 +11,8 @@ ext.versions = [
         // /////////////////////////////////////////////////////////////////////////
 
         minSdk                        : 16,
-        targetSdk                     : 25,
-        compileSdk                    : 25,
+        targetSdk                     : 26,
+        compileSdk                    : 26,
         buildTools                    : "26.0.0",
 
         // //////////////////////////////////////////////////////////////////////////
@@ -56,7 +56,6 @@ ext.versions = [
         fastScroll                    : "1.0.15",
         glide                         : "3.8.0-SNAPSHOT",
         glideOkhttp                   : "1.4.0@aar",
-        lambdaBackport                : "2.5.1",
         materialDialogs               : "0.9.4.3",
         permiso                       : "0.3.0",
         rxAndroid                     : "1.2.1",

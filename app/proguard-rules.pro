@@ -31,9 +31,6 @@
 # JAudioTagger
 -dontwarn org.jaudiotagger.**
 
-# RetroLambda
--dontwarn java.lang.invoke.*
-
 # OkHttp
 -keepattributes Signature
 -keepattributes *Annotation*
