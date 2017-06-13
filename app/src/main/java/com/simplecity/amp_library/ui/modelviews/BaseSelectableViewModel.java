@@ -38,17 +38,12 @@ public abstract class BaseSelectableViewModel<VH extends BaseViewHolder, T> exte
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean areContentsEqual(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
 
-        BaseSelectableViewModel<?, ?> that = (BaseSelectableViewModel<?, ?>) o;
+        BaseSelectableViewModel that = (BaseSelectableViewModel) other;
 
         return isSelected == that.isSelected;
-    }
-
-    @Override
-    public int hashCode() {
-        return (isSelected ? 1 : 0);
     }
 }

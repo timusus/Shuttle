@@ -1,12 +1,13 @@
 package com.simplecity.amp_library.ui.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.ActionMode;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +29,8 @@ import com.simplecity.amp_library.sql.databases.WhitelistHelper;
 import com.simplecity.amp_library.ui.modelviews.BreadcrumbsView;
 import com.simplecity.amp_library.ui.modelviews.FolderView;
 import com.simplecity.amp_library.ui.views.BreadcrumbItem;
+import com.simplecity.amp_library.ui.views.ContextualToolbar;
+import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.FileBrowser;
 import com.simplecity.amp_library.utils.FileHelper;
 import com.simplecity.amp_library.utils.MenuUtils;
@@ -53,7 +56,9 @@ import test.com.androidnavigation.fragment.BackPressListener;
 public class FolderFragment extends BaseFragment implements
         BreadcrumbListener,
         BackPressListener,
-        FolderView.ClickListener {
+        FolderView.ClickListener,
+        PageSelectedListener,
+        Toolbar.OnMenuItemClickListener {
 
     private static final String TAG = "FolderFragment";
 
@@ -72,6 +77,9 @@ public class FolderFragment extends BaseFragment implements
     @BindView(R.id.breadcrumb_view)
     Breadcrumb breadcrumb;
 
+    @BindView(R.id.contextualToolbar)
+    ContextualToolbar contextualToolbar;
+
     boolean isInActionMode = false;
 
     String currentDir;
@@ -84,11 +92,12 @@ public class FolderFragment extends BaseFragment implements
 
     boolean showBreadcrumbsInList;
 
-    private ActionMode actionMode;
-
-    ActionMode.Callback actionModeCallback;
-
     private CompositeSubscription subscriptions;
+
+    private boolean isCurrentPage = false;
+
+    private ContextualToolbarHelper<BaseFileObject> contextualToolbarHelper;
+
 
     public FolderFragment() {
     }
@@ -107,8 +116,6 @@ public class FolderFragment extends BaseFragment implements
 
         subscriptions = new CompositeSubscription();
 
-        setHasOptionsMenu(true);
-
         adapter = new ViewModelAdapter();
 
         fileBrowser = new FileBrowser();
@@ -126,6 +133,7 @@ public class FolderFragment extends BaseFragment implements
         ButterKnife.bind(this, rootView);
 
 //        if (getParentFragment() == null) {
+        isCurrentPage = true;
         showBreadcrumbsInList = false;
         breadcrumb.addBreadcrumbListener(this);
         if (!TextUtils.isEmpty(currentDir)) {
@@ -137,7 +145,10 @@ public class FolderFragment extends BaseFragment implements
 //            toolbar.setVisibility(View.GONE);
 //        }
 
-        toolbar.setOnClickListener(v -> getNavigationController().popViewController());
+        toolbar.inflateMenu(R.menu.menu_sort_folders);
+        toolbar.setNavigationOnClickListener(v -> getNavigationController().popViewController());
+        toolbar.setOnMenuItemClickListener(this);
+        updateMenuItems(toolbar.getMenu());
 
         recyclerView.setRecyclerListener(new RecyclerListener());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -163,6 +174,8 @@ public class FolderFragment extends BaseFragment implements
         }
 
         getNavigationController().addBackPressListener(this);
+
+        setupContextualToolbar();
     }
 
     @Override
@@ -177,23 +190,11 @@ public class FolderFragment extends BaseFragment implements
     @Override
     public void onDestroyView() {
 
-        if (actionMode != null) {
-            actionMode.finish();
-            actionMode = null;
-        }
-        actionModeCallback = null;
-
         super.onDestroyView();
     }
 
     @Override
     public void onDestroy() {
-
-        if (actionMode != null) {
-            actionMode.finish();
-            actionMode = null;
-        }
-        actionModeCallback = null;
 
         super.onDestroy();
     }
@@ -210,9 +211,7 @@ public class FolderFragment extends BaseFragment implements
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
+    private void updateMenuItems(Menu menu) {
 
         switch (SettingsManager.getInstance().getFolderBrowserFilesSortOrder()) {
             case SortManager.SortFiles.DEFAULT:
@@ -250,95 +249,9 @@ public class FolderFragment extends BaseFragment implements
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.sort_files_default:
-                SettingsManager.getInstance().setFolderBrowserFilesSortOrder(SortManager.SortFiles.DEFAULT);
-                reload();
-                getActivity().supportInvalidateOptionsMenu();
-                return true;
-            case R.id.sort_files_filename:
-                SettingsManager.getInstance().setFolderBrowserFilesSortOrder(SortManager.SortFiles.FILE_NAME);
-                reload();
-                getActivity().supportInvalidateOptionsMenu();
-                return true;
-            case R.id.sort_files_size:
-                SettingsManager.getInstance().setFolderBrowserFilesSortOrder(SortManager.SortFiles.SIZE);
-                reload();
-                getActivity().supportInvalidateOptionsMenu();
-                return true;
-            case R.id.sort_files_artist_name:
-                SettingsManager.getInstance().setFolderBrowserFilesSortOrder(SortManager.SortFiles.ARTIST_NAME);
-                reload();
-                getActivity().supportInvalidateOptionsMenu();
-                return true;
-            case R.id.sort_files_album_name:
-                SettingsManager.getInstance().setFolderBrowserFilesSortOrder(SortManager.SortFiles.ALBUM_NAME);
-                reload();
-                getActivity().supportInvalidateOptionsMenu();
-                return true;
-            case R.id.sort_files_track_name:
-                SettingsManager.getInstance().setFolderBrowserFilesSortOrder(SortManager.SortFiles.TRACK_NAME);
-                reload();
-                getActivity().supportInvalidateOptionsMenu();
-                return true;
-            case R.id.files_ascending:
-                SettingsManager.getInstance().setFolderBrowserFilesAscending(!item.isChecked());
-                reload();
-                getActivity().supportInvalidateOptionsMenu();
-                return true;
-            case R.id.sort_folder_count:
-                SettingsManager.getInstance().setFolderBrowserFoldersSortOrder(SortManager.SortFolders.COUNT);
-                reload();
-                getActivity().supportInvalidateOptionsMenu();
-                return true;
-            case R.id.sort_folder_default:
-                SettingsManager.getInstance().setFolderBrowserFoldersSortOrder(SortManager.SortFolders.DEFAULT);
-                reload();
-                getActivity().supportInvalidateOptionsMenu();
-                return true;
-            case R.id.folders_ascending:
-                SettingsManager.getInstance().setFolderBrowserFoldersAscending(!item.isChecked());
-                reload();
-                getActivity().supportInvalidateOptionsMenu();
-                return true;
-
-            case R.id.whitelist:
-                actionMode = recyclerView.startActionMode(getActionModeCallback());
-                isInActionMode = true;
-                updateWhitelist();
-                showCheckboxes(true);
-                break;
-
-            case R.id.show_filenames:
-                SettingsManager.getInstance().setFolderBrowserShowFileNames(!item.isChecked());
-                adapter.notifyItemRangeChanged(0, adapter.getItemCount());
-                break;
-
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void onBreadcrumbItemClick(BreadcrumbItem item) {
         changeDir(new File(item.getItemPath()));
     }
-
-//    @Override
-//    public void onCheckedChange(FolderView folderView, boolean isChecked) {
-//
-//        folderView.setChecked(isChecked);
-//
-//        if (isChecked) {
-//            if (!paths.contains(folderView.baseFileObject.path)) {
-//                paths.add(folderView.baseFileObject.path);
-//            }
-//        } else {
-//            if (paths.contains(folderView.baseFileObject.path)) {
-//                paths.remove(folderView.baseFileObject.path);
-//            }
-//        }
-//    }
 
     public void changeDir(File newDir) {
 
@@ -353,26 +266,33 @@ public class FolderFragment extends BaseFragment implements
             currentDir = path;
 
             return fileBrowser.loadDir(new File(path));
-        })
-                .map(baseFileObjects -> {
-                    List<ViewModel> items = Stream.of(baseFileObjects)
-                            .map(baseFileObject -> {
-                                FolderView folderView = new FolderView(baseFileObject);
-                                folderView.setClickListener(this);
-                                folderView.setChecked(showCheckboxes);
-                                return folderView;
-                            })
-                            .collect(Collectors.toList());
+        }).map(baseFileObjects -> {
+            List<ViewModel> items = Stream.of(baseFileObjects)
+                    .map(baseFileObject -> {
 
-                    if (showBreadcrumbsInList) {
-                        BreadcrumbsView breadcrumbsView = new BreadcrumbsView(currentDir);
-                        breadcrumbsView.setBreadcrumbsPath(currentDir);
-                        breadcrumbsView.setListener(this);
-                        items.add(0, breadcrumbsView);
-                    }
-                    return items;
-                })
-                .subscribeOn(Schedulers.io())
+                        // Look for an existing FolderView wrapping the BAseFileObject, we'll reuse it if it exists.
+                        FolderView folderView = (FolderView) Stream.of(adapter.items)
+                                .filter(viewModel -> viewModel instanceof FolderView && (((FolderView) viewModel).baseFileObject.equals(baseFileObject)))
+                                .findFirst()
+                                .orElse(null);
+
+                        if (folderView == null) {
+                            folderView = new FolderView(baseFileObject);
+                            folderView.setClickListener(this);
+                        }
+
+                        return folderView;
+                    })
+                    .collect(Collectors.toList());
+
+            if (showBreadcrumbsInList) {
+                BreadcrumbsView breadcrumbsView = new BreadcrumbsView(currentDir);
+                breadcrumbsView.setBreadcrumbsPath(currentDir);
+                breadcrumbsView.setListener(this);
+                items.add(0, breadcrumbsView);
+            }
+            return items;
+        }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(adaptableItems -> {
                     if (adapter != null) {
@@ -404,16 +324,16 @@ public class FolderFragment extends BaseFragment implements
     }
 
     @Override
-    public void onFileObjectClick(BaseFileObject fileObject) {
+    public void onFileObjectClick(int position, FolderView folderView) {
         if (!isInActionMode) {
-            if (fileObject.fileType == FileType.FILE) {
-                FileHelper.getSongList(new File(fileObject.path), false, true)
+            if (folderView.baseFileObject.fileType == FileType.FILE) {
+                FileHelper.getSongList(new File(folderView.baseFileObject.path), false, true)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(songs -> {
                             int index = -1;
                             for (int i = 0, songsSize = songs.size(); i < songsSize; i++) {
                                 Song song = songs.get(i);
-                                if (song.path.contains(fileObject.path)) {
+                                if (song.path.contains(folderView.baseFileObject.path)) {
                                     index = i;
                                     break;
                                 }
@@ -425,87 +345,34 @@ public class FolderFragment extends BaseFragment implements
                             });
                         });
             } else {
-                changeDir(new File(fileObject.path));
+                changeDir(new File(folderView.baseFileObject.path));
             }
-        } else if (fileObject.fileType != FileType.FILE) {
-            changeDir(new File(fileObject.path));
+        } else if (folderView.baseFileObject.fileType != FileType.FILE) {
+            changeDir(new File(folderView.baseFileObject.path));
         }
     }
 
     @Override
-    public void onFileObjectOverflowClick(View v, BaseFileObject fileObject) {
+    public void onFileObjectOverflowClick(View v, FolderView folderView) {
         PopupMenu menu = new PopupMenu(getActivity(), v);
-        MenuUtils.setupFolderMenu(getContext(), menu, fileObject);
+        MenuUtils.setupFolderMenu(getContext(), menu, folderView.baseFileObject);
         menu.setOnMenuItemClickListener(MenuUtils.getFolderMenuClickListener(
                 getContext(),
-                fileObject, taggerDialog -> taggerDialog.show(getFragmentManager()),
+                folderView.baseFileObject, taggerDialog -> taggerDialog.show(getFragmentManager()),
                 () -> IntStream.range(0, adapter.getItemCount())
-                        .filter(i -> adapter.items.get(i) instanceof FolderView)
-                        .filter(i -> ((FolderView) adapter.items.get(i)).baseFileObject == fileObject)
+                        .filter(i -> adapter.items.get(i) == folderView)
                         .findFirst()
                         .ifPresent(i -> adapter.notifyItemChanged(i)),
                 () -> IntStream.range(0, adapter.getItemCount())
-                        .filter(i -> adapter.items.get(i) instanceof FolderView)
-                        .filter(i -> ((FolderView) adapter.items.get(i)).baseFileObject == fileObject)
+                        .filter(i -> adapter.items.get(i) == folderView)
                         .findFirst()
                         .ifPresent(i -> adapter.notifyItemRemoved(i))));
         menu.show();
     }
 
-    public ActionMode.Callback getActionModeCallback() {
-        if (actionModeCallback == null) {
-            actionModeCallback = new ActionMode.Callback() {
-                @Override
-                public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                    isInActionMode = true;
-                    MenuInflater inflater = getActivity().getMenuInflater();
-                    inflater.inflate(R.menu.menu_save_whitelist, menu);
-                    return true;
-                }
-
-                @Override
-                public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                    return false;
-                }
-
-                @Override
-                public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                    switch (item.getItemId()) {
-                        case R.id.menu_save:
-                            WhitelistHelper.deleteAllFolders();
-                            WhitelistHelper.addToWhitelist(paths);
-                            showCheckboxes(false);
-                            adapter.notifyDataSetChanged();
-                            mode.finish();
-                            return true;
-                    }
-                    return false;
-                }
-
-                @Override
-                public void onDestroyActionMode(ActionMode actionMode) {
-                    isInActionMode = false;
-                    actionModeCallback = null;
-                    showCheckboxes(false);
-                    adapter.notifyDataSetChanged();
-                }
-            };
-        }
-        return actionModeCallback;
-    }
-
-    public void showCheckboxes(boolean show) {
-
-        showCheckboxes = show;
-
-        List<ViewModel> folderViews = Stream.of(adapter.items)
-                .filter(adaptableItem -> adaptableItem instanceof FolderView)
-                .collect(Collectors.toList());
-
-        for (ViewModel viewModel : folderViews) {
-            ((FolderView) viewModel).setShowCheckboxes(showCheckboxes);
-            adapter.notifyItemChanged(adapter.items.indexOf(viewModel));
-        }
+    @Override
+    public void onFileObjectCheckboxClick(View v, FolderView folderView) {
+        Log.i(TAG, "Clicked.. Selected: " + folderView.isSelected());
     }
 
     public void changeBreadcrumbPath() {
@@ -540,7 +407,144 @@ public class FolderFragment extends BaseFragment implements
     }
 
     @Override
+    public void onPageSelected() {
+        isCurrentPage = true;
+        setupContextualToolbar();
+    }
+
+    @Override
+    public void onPageDeselected() {
+        isCurrentPage = false;
+        new Handler().postDelayed(() -> {
+            if (contextualToolbarHelper != null) {
+                contextualToolbarHelper.finish();
+            }
+        }, 250);
+    }
+
+    private void setupContextualToolbar() {
+
+        if (!isCurrentPage) return;
+
+        if (contextualToolbar != null) {
+
+            contextualToolbar.getMenu().clear();
+            contextualToolbar.inflateMenu(R.menu.context_menu_folders);
+
+            contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
+                @Override
+                public void notifyItemChanged(int position) {
+                    adapter.notifyItemChanged(position, 0);
+                }
+
+                @Override
+                public void notifyDatasetChanged() {
+                    adapter.notifyItemRangeChanged(0, adapter.items.size(), 0);
+                }
+            });
+
+            contextualToolbar.setOnMenuItemClickListener(menuItem -> {
+                switch (menuItem.getItemId()) {
+                    case R.id.menu_save:
+//                            WhitelistHelper.deleteAllFolders();
+//                            WhitelistHelper.addToWhitelist(paths);
+//                            showCheckboxes(false);
+//                            adapter.notifyDataSetChanged();
+//                            mode.finish();
+                        return true;
+                }
+                return false;
+            });
+        }
+    }
+
+    @Override
     protected String screenName() {
         return TAG;
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.sort_files_default:
+                SettingsManager.getInstance().setFolderBrowserFilesSortOrder(SortManager.SortFiles.DEFAULT);
+                reload();
+                updateMenuItems(toolbar.getMenu());
+                return true;
+            case R.id.sort_files_filename:
+                SettingsManager.getInstance().setFolderBrowserFilesSortOrder(SortManager.SortFiles.FILE_NAME);
+                reload();
+                updateMenuItems(toolbar.getMenu());
+                return true;
+            case R.id.sort_files_size:
+                SettingsManager.getInstance().setFolderBrowserFilesSortOrder(SortManager.SortFiles.SIZE);
+                reload();
+                updateMenuItems(toolbar.getMenu());
+                return true;
+            case R.id.sort_files_artist_name:
+                SettingsManager.getInstance().setFolderBrowserFilesSortOrder(SortManager.SortFiles.ARTIST_NAME);
+                reload();
+                updateMenuItems(toolbar.getMenu());
+                return true;
+            case R.id.sort_files_album_name:
+                SettingsManager.getInstance().setFolderBrowserFilesSortOrder(SortManager.SortFiles.ALBUM_NAME);
+                reload();
+                updateMenuItems(toolbar.getMenu());
+                return true;
+            case R.id.sort_files_track_name:
+                SettingsManager.getInstance().setFolderBrowserFilesSortOrder(SortManager.SortFiles.TRACK_NAME);
+                reload();
+                updateMenuItems(toolbar.getMenu());
+                return true;
+            case R.id.files_ascending:
+                SettingsManager.getInstance().setFolderBrowserFilesAscending(!menuItem.isChecked());
+                reload();
+                updateMenuItems(toolbar.getMenu());
+                return true;
+            case R.id.sort_folder_count:
+                SettingsManager.getInstance().setFolderBrowserFoldersSortOrder(SortManager.SortFolders.COUNT);
+                reload();
+                updateMenuItems(toolbar.getMenu());
+                return true;
+            case R.id.sort_folder_default:
+                SettingsManager.getInstance().setFolderBrowserFoldersSortOrder(SortManager.SortFolders.DEFAULT);
+                reload();
+                updateMenuItems(toolbar.getMenu());
+                return true;
+            case R.id.folders_ascending:
+                SettingsManager.getInstance().setFolderBrowserFoldersAscending(!menuItem.isChecked());
+                reload();
+                getActivity().supportInvalidateOptionsMenu();
+                return true;
+            case R.id.whitelist:
+                contextualToolbarHelper.start();
+
+                Stream.of(adapter.items)
+                        .filter(viewModel -> viewModel instanceof FolderView)
+                        .forEach(viewModel -> ((FolderView) viewModel).setShowCheckboxes(true));
+
+                adapter.notifyItemRangeChanged(0, adapter.getItemCount(), 0);
+
+                WhitelistHelper.getWhitelistFolders()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(whitelistFolders -> {
+                                    Stream.of(adapter.items)
+                                            .filter(viewModel -> viewModel instanceof FolderView)
+                                            .filter(viewModel -> whitelistFolders.contains(((FolderView) viewModel).baseFileObject.path))
+                                            .forEach(viewModel -> ((FolderView) viewModel).setSelected(true));
+
+                                    adapter.notifyItemRangeChanged(0, adapter.getItemCount(), 0);
+                                }
+                        );
+                return true;
+            case R.id.show_filenames:
+                SettingsManager.getInstance().setFolderBrowserShowFileNames(!menuItem.isChecked());
+                adapter.notifyItemRangeChanged(0, adapter.getItemCount(), 0);
+                updateMenuItems(toolbar.getMenu());
+                return true;
+
+        }
+        return false;
     }
 }

@@ -30,6 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed|enterAlways"
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:titleEnabled="false">
 
                 <com.simplecity.amp_library.ui.views.BreadcrumbView
@@ -46,6 +47,10 @@
                     app:layout_collapseMode="none"
                     app:navigationIcon="?attr/homeAsUpIndicator"
                     app:title="@string/folders_title"/>
+
+                <include
+                    android:id="@+id/contextualToolbar"
+                    layout="@layout/contextual_toolbar"/>
 
             </android.support.design.widget.CollapsingToolbarLayout>
         </android.support.design.widget.AppBarLayout>

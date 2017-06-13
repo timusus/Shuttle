@@ -37,7 +37,7 @@ public class ContextualToolbarHelper<T> {
     /**
      * Call to show the Contextual Toolbar, and begin tracking item selections.
      */
-    private void start() {
+    public void start() {
         contextualToolbar.show();
         contextualToolbar.setNavigationOnClickListener(v -> finish());
         isActive = true;
