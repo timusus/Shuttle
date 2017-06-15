@@ -25,6 +25,9 @@
 # Custom MediaRouteActionProvider, referenced via menu action view class
 -keep class com.simplecity.amp_library.ui.views.MyMediaRouteActionProvider { *; }
 
+# Custom Switch, referenced via menu action view class
+-keep class com.simplecity.amp_library.ui.views.CustomSwitch { *; }
+
 # Glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
 
