@@ -610,7 +610,6 @@ public class DetailFragment extends BaseFragment implements
                                     slideShowObservable.unsubscribe();
                                 }
                                 slideShowObservable = Observable.interval(8, TimeUnit.SECONDS)
-                                        .onBackpressureDrop()
                                         .startWith(0L)
                                         .map(aLong -> {
                                             if (albums.isEmpty() || aLong == 0L && currentSlideShowAlbum != null) {
@@ -620,6 +619,7 @@ public class DetailFragment extends BaseFragment implements
                                             }
                                             return albums.get(new Random().nextInt(albums.size()));
                                         })
+                                        .onBackpressureDrop()
                                         .subscribeOn(Schedulers.io())
                                         .observeOn(AndroidSchedulers.mainThread())
                                         .subscribe(nextSlideShowAlbum -> {
