@@ -114,7 +114,7 @@ public class PlaylistUtils {
         Query query = new Query.Builder()
                 .uri(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI)
                 .projection(new String[]{MediaStore.Audio.Playlists._ID})
-                .selection(MediaStore.Audio.Playlists.NAME + "='" + name + "'")
+                .selection(MediaStore.Audio.Playlists.NAME + "='" + name.replaceAll("'", "\''") + "'")
                 .sort(MediaStore.Audio.Playlists.NAME)
                 .build();
 
