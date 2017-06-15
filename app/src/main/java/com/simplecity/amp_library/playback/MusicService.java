@@ -1439,11 +1439,22 @@ public class MusicService extends Service {
     public void enqueue(List<Song> songs, final int action) {
         synchronized (this) {
             if (action == EnqueueAction.NEXT && playPos + 1 < getCurrentPlaylist().size()) {
-                getCurrentPlaylist().addAll(playPos + 1, songs);
+                if (shuffleMode == ShuffleMode.ON) {
+                    // Insert the songs at our playPos, into the current list
+                    shuffleList.addAll(playPos + 1, songs);
+                    // Now insert them at the end of the other list
+                    playlist.addAll(songs);
+                } else {
+                    // Insert the songs at our playPos, into the current list
+                    playlist.addAll(playPos + 1, songs);
+                    // Now insert them at the end of the other list
+                    shuffleList.addAll(songs);
+                }
                 setNextTrack();
                 notifyChange(InternalIntents.QUEUE_CHANGED);
             } else {
-                getCurrentPlaylist().addAll(songs);
+                playlist.addAll(songs);
+                shuffleList.addAll(songs);
                 notifyChange(InternalIntents.QUEUE_CHANGED);
                 if (action == EnqueueAction.NOW) {
                     playPos = getCurrentPlaylist().size() - songs.size();

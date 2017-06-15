@@ -59,6 +59,7 @@ public class PlayerPresenter extends Presenter<PlayerView> {
 
         final IntentFilter filter = new IntentFilter();
         filter.addAction(MusicService.InternalIntents.META_CHANGED);
+        filter.addAction(MusicService.InternalIntents.QUEUE_CHANGED);
         filter.addAction(MusicService.InternalIntents.PLAY_STATE_CHANGED);
         filter.addAction(MusicService.InternalIntents.SHUFFLE_CHANGED);
         filter.addAction(MusicService.InternalIntents.REPEAT_CHANGED);
@@ -72,6 +73,9 @@ public class PlayerPresenter extends Presenter<PlayerView> {
                     if (action != null) {
                         switch (action) {
                             case MusicService.InternalIntents.META_CHANGED:
+                                updateTrackInfo();
+                                break;
+                                case MusicService.InternalIntents.QUEUE_CHANGED:
                                 updateTrackInfo();
                                 break;
                             case MusicService.InternalIntents.PLAY_STATE_CHANGED:
