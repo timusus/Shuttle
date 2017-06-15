@@ -468,6 +468,7 @@ Ako nije označeno, Shuttle ikona će se koristiti kao sličica</string>
     <string name="rename_folder">Preimenuj mapu</string>
     <!-- -->
     <string name="rename_file">Preimenuj datoteku</string>
+    <!-- -->
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">Postavi kao početni direktorij</string>
     <!-- Label in folder view - number of folders within the current folder -->

@@ -477,6 +477,7 @@
     <string name="rename_folder">Ordner umbenennen</string>
     <!-- -->
     <string name="rename_file">Datei umbenennen</string>
+    <!-- -->
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">Als Start-Verzeichnis einstellen</string>
     <!-- Label in folder view - number of folders within the current folder -->

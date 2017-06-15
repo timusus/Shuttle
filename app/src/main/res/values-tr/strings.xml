@@ -471,6 +471,7 @@ Bu seçenek işaretli değilse, Shuttle simgesi kullanılacaktır.</string>
     <string name="rename_folder">Klasörü yeniden adlandır</string>
     <!-- -->
     <string name="rename_file">Dosyayı yeniden adlandır</string>
+    <!-- -->
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">Başlangıç dizini olarak ayarla</string>
     <!-- Label in folder view - number of folders within the current folder -->

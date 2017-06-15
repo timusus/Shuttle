@@ -184,8 +184,11 @@
     <!-- Context menu item -->
     <string name="play_selection">Reproducir</string>
     <!-- Multi select menu item-->
+    <string name="menu_add_to">Añadir a</string>
     <!-- Multi select menu item-->
+    <string name="menu_playlist">Lista de reproducción</string>
     <!-- Multi select menu item-->
+    <string name="menu_queue">Cola</string>
     <!-- Context menu item -->
     <string name="add_to_playlist">Agregar a la lista</string>
     <!-- Context menu item -->
@@ -460,6 +463,7 @@
     <string name="rename_folder">Renombrar carpeta</string>
     <!-- -->
     <string name="rename_file">Renombrar archivo</string>
+    <!-- -->
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">Establecer como directorio inicial</string>
     <!-- Label in folder view - number of folders within the current folder -->
@@ -638,6 +642,7 @@
     <!-- Default name of album artist that doesn't have a name in the metadata -->
     <string name="unknown_album_artist_name">Artista de álbum desconocido</string>
     <!-- Default value if album year unknown -->
+    <string name="unknown_year">Año desconocido</string>
     <!-- Song Info overflow option-->
     <string name="song_info">Info de la canción</string>
     <!-- Artwork Download Service Label-->
@@ -737,6 +742,7 @@
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">Disco <xliff:g id="number">%d</xliff:g></string>
     <!-- Search Filter-->
+    <string name="search_fuzzy">Confuso</string>
     <string name="search_title_only">Solo título</string>
     <string name="search_artists">Artistas</string>
     <string name="search_albums">Álbumes</string>
@@ -750,4 +756,5 @@
     <!-- Shown when there are no lyrics -->
     <string name="no_lyrics">No se encontraron Letras incorporadas</string>
     <!-- QuickLyric info dialog message-->
+    <string name="quicklyric_info">QuickLyric es un buscador de letras de código abierto gratuito. \n\nUna vez instalado, tocando el botón \'QuickLyric\' le llevará directamente a sus letras dentro de la aplicación QuickLyric.</string>
 </resources>

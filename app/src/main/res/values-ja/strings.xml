@@ -445,6 +445,7 @@
     <string name="rename_folder">フォルダ名の変更</string>
     <!-- -->
     <string name="rename_file">ファイル名の変更</string>
+    <!-- -->
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">初期ディレクトリとして設定</string>
     <!-- Label in folder view - number of folders within the current folder -->

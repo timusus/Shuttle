@@ -478,6 +478,7 @@ Po wyłączeniu, jako obraz zastępczy będzie używana ikona programu.</string>
     <string name="rename_folder">Zmień nazwę katalogu</string>
     <!-- -->
     <string name="rename_file">Zmień nazwę pliku</string>
+    <!-- -->
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">Ustaw jako początkowy katalog</string>
     <!-- Label in folder view - number of folders within the current folder -->

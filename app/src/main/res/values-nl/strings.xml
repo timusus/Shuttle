@@ -185,7 +185,7 @@
     <string name="widget_show_artwork">Toon albumillustraties</string>
     <!-- ## Menu Headings ## -->
     <!-- Context menu in navigation drawer - option to save playlist as M3U -->
-    <string name="export_playlist">Afspeellijst Exporteren</string>
+    <string name="export_playlist">Exporteren</string>
     <!-- context menu item to remove the selected item from the playlist -->
     <!-- Menu option 'clear queue' -->
     <string name="clear_queue">Wachtrij legen</string>
@@ -194,10 +194,13 @@
     <!-- Context menu item -->
     <string name="play_selection">Afspelen</string>
     <!-- Multi select menu item-->
+    <string name="menu_add_to">Toev. aan...</string>
     <!-- Multi select menu item-->
+    <string name="menu_playlist">Afspeellijst</string>
     <!-- Multi select menu item-->
+    <string name="menu_queue">Wachtrij</string>
     <!-- Context menu item -->
-    <string name="add_to_playlist">Toevoegen aan afspeellijst</string>
+    <string name="add_to_playlist">Afspeellijst</string>
     <!-- Context menu item -->
     <string name="new_playlist">Nieuw</string>
     <!-- menu item to save the current list as a new playlist -->
@@ -205,7 +208,7 @@
     <!-- Context menu item to remove the selected item from the playlist -->
     <string name="remove_from_playlist">Verwijderen uit afspeellijst</string>
     <!-- Context menu item to remove the selected item from the queue -->
-    <string name="remove_from_queue">Verwijderen uit wachtrij</string>
+    <string name="remove_from_queue">Verwijderen</string>
     <!-- Context menu item -->
     <string name="play_next">Volgende afspelen</string>
     <!-- Menu text for the settings item -->
@@ -469,6 +472,7 @@ Indien uitgeschakeld wordt het Shuttle-icoon als plaatshouder gebruikt</string>
     <string name="rename_folder">Folder hernoemen</string>
     <!-- -->
     <string name="rename_file">Bestand hernoemen</string>
+    <!-- -->
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">Instellen als standaardmap</string>
     <!-- Label in folder view - number of folders within the current folder -->

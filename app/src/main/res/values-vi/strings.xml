@@ -191,8 +191,11 @@
     <!-- Context menu item -->
     <string name="play_selection">Phát</string>
     <!-- Multi select menu item-->
+    <string name="menu_add_to">Thêm vào...</string>
     <!-- Multi select menu item-->
+    <string name="menu_playlist">Danh sách</string>
     <!-- Multi select menu item-->
+    <string name="menu_queue">Danh sách chờ</string>
     <!-- Context menu item -->
     <string name="add_to_playlist">Thêm vào danh sách</string>
     <!-- Context menu item -->
@@ -466,6 +469,7 @@
     <string name="rename_folder">Đổi tên thư mục</string>
     <!-- -->
     <string name="rename_file">Đổi tên tập tin</string>
+    <!-- -->
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">Đặt làm thư mục khởi tạo</string>
     <!-- Label in folder view - number of folders within the current folder -->

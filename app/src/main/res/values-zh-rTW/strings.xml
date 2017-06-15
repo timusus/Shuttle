@@ -465,6 +465,7 @@
     <string name="rename_folder">重新命名資料夾</string>
     <!-- -->
     <string name="rename_file">重新命名檔案</string>
+    <!-- -->
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">設為起始位置</string>
     <!-- Label in folder view - number of folders within the current folder -->

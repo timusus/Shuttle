@@ -468,6 +468,7 @@
     <string name="rename_folder">Перейменувати папку</string>
     <!-- -->
     <string name="rename_file">Перейменувати файл</string>
+    <!-- -->
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">Встановити початкову папку</string>
     <!-- Label in folder view - number of folders within the current folder -->

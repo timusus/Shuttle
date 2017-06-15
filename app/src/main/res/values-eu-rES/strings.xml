@@ -471,6 +471,7 @@ Desaktibatzen bada, Shuttle-en ikonoa erabiliko da bere ordez</string>
     <string name="rename_folder">Karpeta berrizendatu</string>
     <!-- -->
     <string name="rename_file">Fitxategia berrizendatu</string>
+    <!-- -->
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">Hasierako karpeta bezala ezarri</string>
     <!-- Label in folder view - number of folders within the current folder -->

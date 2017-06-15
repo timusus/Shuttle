@@ -467,6 +467,7 @@
     <string name="rename_folder">폴더 이름 바꾸기</string>
     <!-- -->
     <string name="rename_file">파일 이름 바꾸기</string>
+    <!-- -->
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">초기 디렉토리로 설정</string>
     <!-- Label in folder view - number of folders within the current folder -->

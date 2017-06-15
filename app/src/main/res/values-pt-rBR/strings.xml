@@ -2,7 +2,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- ## Toast Messages ## -->
     <!-- Shown when a user attempts to edit tags, but they don't have a 'DocumentProvider' available to pick the directory of their music (and thus give permission to Shuttle)-->
-    <string name="R.string.toast_no_document_provider">Sem gerenciador de arquivos disponível para ganhar permissão e acessar o diretório</string>
+    <string name="R.string.toast_no_document_provider">Sem gerenciador de arquivos disponível para gerenciar permissão de acesso</string>
     <!-- Displayed when an M3U playlist is being saved, but it already exists -->
     <string name="playlist_save_exists">Playlist já existente</string>
     <!-- Displayed when an M3U playlist save fails -->
@@ -187,7 +187,7 @@ músicas adicionadas à fila.</item>
     <string name="widget_show_artwork">Mostrar capa</string>
     <!-- ## Menu Headings ## -->
     <!-- Context menu in navigation drawer - option to save playlist as M3U -->
-    <string name="export_playlist">Exportar playlist</string>
+    <string name="export_playlist">Exportar</string>
     <!-- context menu item to remove the selected item from the playlist -->
     <!-- Menu option 'clear queue' -->
     <string name="clear_queue">Limpar fila</string>
@@ -196,10 +196,13 @@ músicas adicionadas à fila.</item>
     <!-- Context menu item -->
     <string name="play_selection">Reproduzir</string>
     <!-- Multi select menu item-->
+    <string name="menu_add_to">Adicionar para...</string>
     <!-- Multi select menu item-->
+    <string name="menu_playlist">Playlist</string>
     <!-- Multi select menu item-->
+    <string name="menu_queue">Lista de Reprodução</string>
     <!-- Context menu item -->
-    <string name="add_to_playlist">Adicionar à playlist</string>
+    <string name="add_to_playlist">Playlist</string>
     <!-- Context menu item -->
     <string name="new_playlist">Novo</string>
     <!-- menu item to save the current list as a new playlist -->
@@ -207,7 +210,7 @@ músicas adicionadas à fila.</item>
     <!-- Context menu item to remove the selected item from the playlist -->
     <string name="remove_from_playlist">Remover da lista de reprodução</string>
     <!-- Context menu item to remove the selected item from the queue -->
-    <string name="remove_from_queue">Remover da fila</string>
+    <string name="remove_from_queue">Remover</string>
     <!-- Context menu item -->
     <string name="play_next">Reproduzir a seguir</string>
     <!-- Menu text for the settings item -->
@@ -471,6 +474,7 @@ Se estiver desmarcado, o ícone do Shuttle será usado como uma capa</string>
     <string name="rename_folder">Renomear pasta</string>
     <!-- -->
     <string name="rename_file">Renomear arquivo</string>
+    <!-- -->
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">Definir como pasta inicial</string>
     <!-- Label in folder view - number of folders within the current folder -->
@@ -648,6 +652,7 @@ pastas</item>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
     <string name="unknown_album_artist_name">Artista do álbum desconhecido</string>
     <!-- Default value if album year unknown -->
+    <string name="unknown_year">Ano desconhecido</string>
     <!-- Song Info overflow option-->
     <string name="song_info">Informações</string>
     <!-- Artwork Download Service Label-->
@@ -759,6 +764,7 @@ pastas</item>
     <!-- Button for lyrics -->
     <string name="lyrics">Letras</string>
     <!-- Shown when there are no lyrics -->
-    <string name="no_lyrics">Letras locais não foram encontradas</string>
+    <string name="no_lyrics">Nenhuma letra embutida encontrada.</string>
     <!-- QuickLyric info dialog message-->
+    <string name="quicklyric_info">O QuickLyric é um buscador open-source de letras disponível na Play Store.\n\nQuando instalado, o QuickLyric será aberto apartir do Shuttle sempre que você clicar no botão \'QuickLyric\' do menu.</string>
 </resources>

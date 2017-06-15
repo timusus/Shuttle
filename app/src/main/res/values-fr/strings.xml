@@ -452,6 +452,7 @@
     <string name="rename_folder">Renommer le dossier</string>
     <!-- -->
     <string name="rename_file">Renommer le fichier</string>
+    <!-- -->
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">Définir comme dossier par défaut</string>
     <!-- Label in folder view - number of folders within the current folder -->

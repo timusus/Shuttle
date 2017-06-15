@@ -183,8 +183,11 @@
     <!-- Context menu item -->
     <string name="play_selection">Reproducir</string>
     <!-- Multi select menu item-->
+    <string name="menu_add_to">Añadir a...</string>
     <!-- Multi select menu item-->
+    <string name="menu_playlist">Lista de reproducción</string>
     <!-- Multi select menu item-->
+    <string name="menu_queue">Cola</string>
     <!-- Context menu item -->
     <string name="add_to_playlist">Añadir a lista de reproducción</string>
     <!-- Context menu item -->
@@ -461,8 +464,9 @@ Si no está seleccionado, se usará el icono de Shuttle en su lugar</string>
     <string name="rename_folder">Renombrar carpeta</string>
     <!-- -->
     <string name="rename_file">Renombrar archivo</string>
+    <!-- -->
     <!-- Menu option to save current folder as initial (starting) directory -->
-    <string name="set_initial_dir">Establecer como directorio inicial</string>
+    <string name="set_initial_dir">Establecer como carpeta inicial</string>
     <!-- Label in folder view - number of folders within the current folder -->
     <string name="onefolder">1 carpeta</string>
     <plurals name="Nfolders">
@@ -471,7 +475,7 @@ carpetas</item>
         <item quantity="one"></item>
     </plurals>
     <!-- -->
-    <string name="parent_folder">Directorio superior</string>
+    <string name="parent_folder">Carpeta superior</string>
     <!-- -->
     <string name="show_filenames">Mostrar nombres de archivo</string>
     <!-- 'Scan'-->
@@ -534,7 +538,7 @@ carpetas</item>
     <!-- -->
     <string name="empty_albums">No hay álbumes. Agrega algunas canciones a tu dispositivo.</string>
     <!-- -->
-    <string name="empty_genres">No se han detectado géneros.</string>
+    <string name="empty_genres">No se han detectado géneros musicales</string>
     <!-- -->
     <string name="empty_playlist">Esta lista está vacía. Mantén pulsado sobre un artista, álbum o canción y elige \'añadir al lista de reproducción\', o el icono + para incluirla.</string>
     <!-- -->
@@ -543,7 +547,7 @@ carpetas</item>
     <string name="empty_suggested">Reproduce algunas canciones y las sugerencias aparecerán aquí.</string>
     <string name="empty_search">No hay resultados de la búsqueda.</string>
     <!-- ## Sort options ## -->
-    <string name="sorting">Clasificación</string>
+    <string name="sorting">Ordenar por</string>
     <string name="sort_default">Predeterminado</string>
     <string name="sort_ascending">Ascendente</string>
     <string name="sort_artist_name">Nombre de artísta</string>
@@ -552,7 +556,7 @@ carpetas</item>
     <string name="sort_song_name">Nombre de canción</string>
     <string name="sort_song_year">Año de canción</string>
     <string name="sort_song_duration">Duración de canción</string>
-    <string name="sort_song_track_number"># Pista</string>
+    <string name="sort_song_track_number">Número de canción</string>
     <string name="sort_song_date_added">Fecha añadida</string>
     <string name="sort_folders_default">Defecto</string>
     <string name="sort_folders_count">Contador</string>
@@ -623,7 +627,7 @@ carpetas</item>
     <string name="suggested_most_played_songs_subtitle">Top 20 Canciones</string>
     <!-- Displayed under the 'Recent' section of the 'suggested' tab.. Artist, Album, Song  -->
     <string name="suggested_recent_title">Reciente</string>
-    <string name="suggested_recent_subtitle">Albums reproducidos últimamente</string>
+    <string name="suggested_recent_subtitle">Álbumes reproducidos anteriormente</string>
     <string name="suggested_favorite_subtitle">Canciones favoritas</string>
     <string name="suggested_recently_added_subtitle">Álbumes añadidos recientemente</string>
     <!-- Shows when multiple items are selected after-long pressing-->
