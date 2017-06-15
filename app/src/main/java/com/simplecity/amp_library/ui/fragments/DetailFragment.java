@@ -529,7 +529,7 @@ public class DetailFragment extends BaseFragment implements
                                         SongView songView = new SongView(song, multiSelector, requestManager);
                                         songView.setShowAlbumArt(false);
                                         songView.setEditable(canEdit());
-                                        songView.setShowPlayCount(playlist.type == Playlist.Type.MOST_PLAYED);
+                                        songView.setShowPlayCount(playlist != null && playlist.type == Playlist.Type.MOST_PLAYED);
                                         songView.setShowTrackNumber(album != null && (songSort == SortManager.SongSort.DETAIL_DEFAULT || songSort == SortManager.SongSort.TRACK_NUMBER));
                                         return songView;
                                     })
