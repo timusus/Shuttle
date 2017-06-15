@@ -40,6 +40,7 @@ import com.simplecity.amp_library.ui.recyclerview.GridDividerDecoration;
 import com.simplecity.amp_library.utils.ColorUtils;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.DialogUtils;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
@@ -264,7 +265,7 @@ public class AlbumArtistFragment extends BaseFragment implements
                             }
 
                             sortOrderChanged = false;
-                        });
+                        }, error -> LogUtils.logException("AlbumArtistFragment: Error refreshing adapter items", error));
             }
         });
     }
@@ -496,7 +497,8 @@ public class AlbumArtistFragment extends BaseFragment implements
 
             switch (menuItem.getItemId()) {
                 case NEW_PLAYLIST:
-                    songsObservable.subscribe(songs -> PlaylistUtils.createPlaylistDialog(getActivity(), songs));
+                    songsObservable.subscribe(songs -> PlaylistUtils.createPlaylistDialog(getActivity(), songs),
+                            error -> LogUtils.logException("AlbumArtistFragment: Error creating new playlist", error));
                     return true;
                 case PLAYLIST_SELECTED:
                     songsObservable
@@ -505,7 +507,7 @@ public class AlbumArtistFragment extends BaseFragment implements
                             .subscribe(songs -> {
                                 Playlist playlist = (Playlist) menuItem.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
                                 PlaylistUtils.addToPlaylist(getContext(), playlist, songs);
-                            });
+                            }, error -> LogUtils.logException("AlbumArtistFragment: Error adding to playlist", error));
                     return true;
                 case R.id.delete:
                     new DialogUtils.DeleteDialogBuilder()
@@ -521,7 +523,8 @@ public class AlbumArtistFragment extends BaseFragment implements
                     mode.finish();
                     return true;
                 case R.id.menu_add_to_queue: {
-                    songsObservable.subscribe(songs -> MusicUtils.addToQueue(getActivity(), songs));
+                    songsObservable.subscribe(songs -> MusicUtils.addToQueue(getActivity(), songs),
+                            error -> LogUtils.logException("AlbumArtistFragment: Error adding to queue", error));
                     return true;
                 }
             }

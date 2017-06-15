@@ -73,6 +73,7 @@ import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.DrawableUtils;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.Operators;
@@ -642,7 +643,7 @@ public class DetailFragment extends BaseFragment implements
                                         });
                                 subscriptions.add(slideShowObservable);
                             }
-                        }));
+                        }, error -> LogUtils.logException("DetailFragment: Error refreshing adapter", error)));
             }
         });
     }

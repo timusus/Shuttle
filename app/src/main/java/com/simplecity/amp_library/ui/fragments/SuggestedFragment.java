@@ -38,6 +38,7 @@ import com.simplecity.amp_library.ui.modelviews.SuggestedSongView;
 import com.simplecity.amp_library.ui.modelviews.ViewType;
 import com.simplecity.amp_library.ui.views.SuggestedDividerDecoration;
 import com.simplecity.amp_library.utils.ComparisonUtils;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.Operators;
@@ -365,7 +366,7 @@ public class SuggestedFragment extends BaseFragment implements
                                     } else {
                                         suggestedAdapter.setItems(adaptableItems);
                                     }
-                                }));
+                                }, error -> LogUtils.logException("SuggestedFragment: Error setting items", error)));
 
                 subscription.add(mostPlayedSongsObservable
                         .map(songs -> {
@@ -378,7 +379,7 @@ public class SuggestedFragment extends BaseFragment implements
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(adaptableItems -> {
                             mostPlayedRecyclerView.itemAdapter.setItems(adaptableItems);
-                        }));
+                        }, error -> LogUtils.logException("SuggestedFragment: Error setting most played songs", error)));
 
                 subscription.add(favouritesSongsObservable
                         .map(songs -> Stream.of(songs)
@@ -388,7 +389,7 @@ public class SuggestedFragment extends BaseFragment implements
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(adaptableItems -> {
                             favoriteRecyclerView.itemAdapter.setItems(adaptableItems);
-                        }));
+                        }, error -> LogUtils.logException("SuggestedFragment: Error setting favourite songs", error)));
             }
         });
     }
@@ -446,7 +447,7 @@ public class SuggestedFragment extends BaseFragment implements
                     .subscribe(songs -> MusicUtils.playAll(songs, songs.indexOf((Song) item), () -> {
                         final String message = getContext().getString(R.string.emptyplaylist);
                         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-                    }));
+                    }), error -> LogUtils.logException("SuggestedFragment: Error playing all", error));
         } else {
             Object model = item;
             if (suggestedClickListener != null) {

@@ -37,6 +37,7 @@ import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.utils.ColorUtils;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.DialogUtils;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
@@ -207,7 +208,7 @@ public class SongFragment extends BaseFragment implements
                                     }
 
                                     sortOrderChanged = false;
-                                });
+                                }, error -> LogUtils.logException("SongFragment: Error refreshing adapter items", error));
                     }
                 }
         );

@@ -54,6 +54,7 @@ import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.DrawableUtils;
 import com.simplecity.amp_library.utils.FileBrowser;
 import com.simplecity.amp_library.utils.FileHelper;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
@@ -233,7 +234,8 @@ public class FolderFragment extends BaseFragment implements
                 }
             }).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(this::changeDir));
+                    .subscribe(this::changeDir,
+                            error -> LogUtils.logException("FolderFragment: Error in onResume", error)));
         }
     }
 
@@ -496,7 +498,7 @@ public class FolderFragment extends BaseFragment implements
                     if (adapter != null) {
                         changeBreadcrumbPath();
                     }
-                }));
+                }, error -> LogUtils.logException("FolderFragment: Error changing dir", error)));
     }
 
     public void reload() {
@@ -539,7 +541,7 @@ public class FolderFragment extends BaseFragment implements
                                     Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                                 }
                             });
-                        });
+                        }, error -> LogUtils.logException("FolderFragment: Error playing all", error));
             } else {
                 changeDir(new File(fileObject.path));
             }
@@ -608,13 +610,15 @@ public class FolderFragment extends BaseFragment implements
                 case TAGGER:
                     subscriptions.add(FileHelper.getSong(new File(fileObject.path))
                             .subscribeOn(Schedulers.io())
-                            .subscribe(song -> TaggerDialog.newInstance(song).show(getFragmentManager())));
+                            .subscribe(song -> TaggerDialog.newInstance(song).show(getFragmentManager()),
+                                    error -> LogUtils.logException("FolderFragment: Error editing tags", error)));
                     return true;
 
                 case QUEUE:
                     subscriptions.add(FileHelper.getSongList(new File(fileObject.path), true, false)
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(songs -> MusicUtils.addToQueue(getActivity(), songs)));
+                            .subscribe(songs -> MusicUtils.addToQueue(getActivity(), songs),
+                                    error -> LogUtils.logException("FolderFragment: Error adding to queue", error)));
                     return true;
 
                 case DELETE_ITEM:
@@ -677,12 +681,14 @@ public class FolderFragment extends BaseFragment implements
                     subscriptions.add(FileHelper.getSong(new File(fileObject.path))
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(song -> ShuttleUtils.setRingtone(getContext(), song)));
+                            .subscribe(song -> ShuttleUtils.setRingtone(getContext(), song),
+                                    error -> LogUtils.logException("FolderFragment: Error setting ringtone", error)));
                     return true;
                 case PLAY_NEXT:
                     subscriptions.add(FileHelper.getSongList(new File(fileObject.path), false, false)
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(songs -> MusicUtils.playNext(getActivity(), songs)));
+                            .subscribe(songs -> MusicUtils.playNext(getActivity(), songs),
+                                    error -> LogUtils.logException("FolderFragment: Error playing next", error)));
 
                     return true;
                 case PLAY_SELECTION:
@@ -698,7 +704,7 @@ public class FolderFragment extends BaseFragment implements
                                 if (isAdded() && progressDialog.isShowing()) {
                                     progressDialog.dismiss();
                                 }
-                            }));
+                            }, error -> LogUtils.logException("FolderFragment: Error playing selection", error)));
                     return true;
                 case NEW_PLAYLIST:
                     List<BaseFileObject> fileObjects = new ArrayList<>();
@@ -709,7 +715,8 @@ public class FolderFragment extends BaseFragment implements
                     final Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
                     subscriptions.add(FileHelper.getSongList(new File(fileObject.path), true, false)
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(songs -> PlaylistUtils.addToPlaylist(getContext(), playlist, songs)));
+                            .subscribe(songs -> PlaylistUtils.addToPlaylist(getContext(), playlist, songs),
+                                    error -> LogUtils.logException("FolderFragment: Error adding to playlist", error)));
 
                     return true;
                 case SET_INITIAL_DIR:
@@ -762,7 +769,7 @@ public class FolderFragment extends BaseFragment implements
                                             }
                                         }
                                     });
-                                }));
+                                }, error -> LogUtils.logException("FolderFragment: Error scanning paths", error)));
                     } else {
                         CustomMediaScanner.scanFiles(Collections.singletonList(fileObject.path), new CustomMediaScanner.ScanCompletionListener() {
                             @Override
@@ -871,7 +878,7 @@ public class FolderFragment extends BaseFragment implements
                     if (showCheckboxes) {
                         adapter.notifyItemRangeChanged(0, adapter.getItemCount());
                     }
-                });
+                }, error -> LogUtils.logException("FolderFragment: Error updating whitelist", error));
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 
 import rx.Observable;
@@ -46,7 +47,7 @@ public class ShortcutTrampolineActivity extends AppCompatActivity {
                             intent.putExtra(ShuttleUtils.ARG_PLAYLIST, Playlist.favoritesPlaylist());
                             startActivity(intent);
                             finish();
-                        });
+                        }, error -> LogUtils.logException("ShortcutTrampolineActivity: Error starting activity", error));
                 break;
         }
     }

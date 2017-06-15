@@ -19,6 +19,7 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.glide.loader.ArtworkModelLoader;
 import com.simplecity.amp_library.model.ArtworkProvider;
 import com.simplecity.amp_library.utils.DataManager;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 
 import java.io.File;
@@ -99,7 +100,7 @@ public class ArtworkDownloadService extends Service {
                 .subscribe(list -> {
                     max = list.size();
                     updateProgress();
-                }));
+                }, error -> LogUtils.logException("ArtworkDownloadService: Error determining max", error)));
 
 
         subscription.add(sharedItemsObservable.flatMap(Observable::from)
@@ -122,7 +123,7 @@ public class ArtworkDownloadService extends Service {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(item -> {
                     updateProgress();
-                }));
+                }, error -> LogUtils.logException("ArtworkDownloadService: Error downloading artwork", error)));
     }
 
     @Override

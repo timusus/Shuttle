@@ -151,7 +151,8 @@ public class MenuUtils implements MusicUtils.Defs {
                 case NEW_PLAYLIST:
                     songsObservable
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(songs -> PlaylistUtils.createPlaylistDialog(activity, songs));
+                            .subscribe(songs -> PlaylistUtils.createPlaylistDialog(activity, songs),
+                                    error -> LogUtils.logException("MenuUtils: Error creating playlist", error));
                     return true;
                 case PLAYLIST_SELECTED:
                     songsObservable
@@ -159,21 +160,23 @@ public class MenuUtils implements MusicUtils.Defs {
                             .subscribe(songs -> {
                                 Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
                                 PlaylistUtils.addToPlaylist(activity, playlist, songs);
-                            });
+                            }, error -> LogUtils.logException("MenuUtils: Error adding to playlist", error));
                     return true;
                 case QUEUE:
                     songsObservable
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(songs -> MusicUtils.addToQueue(activity, songs));
+                            .subscribe(songs -> MusicUtils.addToQueue(activity, songs),
+                                    error -> LogUtils.logException("MenuUtils: Error adding to queue", error));
                     return true;
                 case TAGGER:
                     TaggerDialog.newInstance(album)
                             .show(activity.getSupportFragmentManager());
                     return true;
                 case BLACKLIST:
-                        songsObservable
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(BlacklistHelper::addToBlacklist);
+                    songsObservable
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(BlacklistHelper::addToBlacklist,
+                                    error -> LogUtils.logException("MenuUtils: Error adding to blacklist", error));
                     return true;
                 case DELETE_ITEM:
                     new DialogUtils.DeleteDialogBuilder()
@@ -230,7 +233,8 @@ public class MenuUtils implements MusicUtils.Defs {
                 case NEW_PLAYLIST:
                     songsObservable
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(songs -> PlaylistUtils.createPlaylistDialog(activity, songs));
+                            .subscribe(songs -> PlaylistUtils.createPlaylistDialog(activity, songs),
+                                    error -> LogUtils.logException("MenuUtils: Error creating new playlist", error));
                     return true;
                 case PLAYLIST_SELECTED:
                     songsObservable
@@ -238,7 +242,7 @@ public class MenuUtils implements MusicUtils.Defs {
                             .subscribe(songs -> {
                                 Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
                                 PlaylistUtils.addToPlaylist(activity, playlist, songs);
-                            });
+                            }, error -> LogUtils.logException("MenuUtils: Error adding to playlist", error));
                     return true;
                 case QUEUE:
                     songsObservable
@@ -252,7 +256,8 @@ public class MenuUtils implements MusicUtils.Defs {
                 case BLACKLIST:
                     songsObservable
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(BlacklistHelper::addToBlacklist);
+                            .subscribe(BlacklistHelper::addToBlacklist,
+                                    error -> LogUtils.logException("MenuUtils: Error adding to blacklist", error));
                     return true;
                 case DELETE_ITEM:
                     new DialogUtils.DeleteDialogBuilder()

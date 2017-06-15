@@ -183,7 +183,8 @@ public final class ShuttleUtils {
                 .map(success -> success ? context.getString(R.string.ringtone_set, song.name) : context.getString(R.string.ringtone_set_failed))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(message -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show());
+                .subscribe(message -> Toast.makeText(context, message,
+                        Toast.LENGTH_SHORT).show(), error -> LogUtils.logException("ShuttleUtils: Error setting ringtone", error));
 
     }
 

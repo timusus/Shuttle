@@ -88,6 +88,7 @@ import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.ColorUtils;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.DialogUtils;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
@@ -587,7 +588,7 @@ public class MainActivity extends BaseCastActivity implements
                             }
                         }
                     }
-                });
+                }, error -> LogUtils.logException("MainActivity: Error preparing favourites menu", error));
 
         MenuItem whiteListItem = menu.findItem(R.id.whitelist);
         MenuItem sortingItem = menu.findItem(R.id.sort);
@@ -788,7 +789,7 @@ public class MainActivity extends BaseCastActivity implements
     @Override
     public void onBackPressed() {
 
-        if(mNavigationDrawerFragment.isDrawerOpen()){
+        if (mNavigationDrawerFragment.isDrawerOpen()) {
             mDrawerLayout.closeDrawers();
             return;
         }

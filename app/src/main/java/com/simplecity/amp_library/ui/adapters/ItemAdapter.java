@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.simplecity.amp_library.model.AdaptableItem;
 import com.simplecity.amp_library.model.ContentsComparator;
+import com.simplecity.amp_library.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +96,7 @@ public abstract class ItemAdapter extends RecyclerView.Adapter {
                 .subscribe(diffResult -> {
                     ItemAdapter.this.items = items;
                     diffResult.dispatchUpdatesTo(ItemAdapter.this);
-                });
+                }, error -> LogUtils.logException("ItemAdapter: Error dispatching updates", error));
     }
 
     /**

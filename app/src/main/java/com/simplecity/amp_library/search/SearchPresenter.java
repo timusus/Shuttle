@@ -35,6 +35,7 @@ import com.simplecity.amp_library.ui.modelviews.ViewType;
 import com.simplecity.amp_library.ui.presenters.Presenter;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.DialogUtils;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.Operators;
 import com.simplecity.amp_library.utils.PlaylistUtils;
@@ -147,7 +148,7 @@ class SearchPresenter extends Presenter<SearchView> implements
                         } else {
                             setItemsSubscription = searchView.setItems(adaptableItems);
                         }
-                    });
+                    }, error -> LogUtils.logException("SearchPresenter: Error refreshing adapter", error));
 
             addSubcscription(performSearchSubscription);
         }
@@ -247,19 +248,21 @@ class SearchPresenter extends Presenter<SearchView> implements
                                         if (view != null) {
                                             view.showEmptyPlaylistToast();
                                         }
-                                    }));
+                                    }), error -> LogUtils.logException("SearchPresenter: Error playing selection", error));
                             return true;
                         case MusicUtils.Defs.PLAY_NEXT:
                             songsObservable
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> MusicUtils.playNext(v.getContext(), songs));
+                                    .subscribe(songs -> MusicUtils.playNext(v.getContext(), songs),
+                                            error -> LogUtils.logException("SearchPresenter: Error playing next", error));
                             return true;
                         case MusicUtils.Defs.NEW_PLAYLIST:
                             songsObservable
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> PlaylistUtils.createPlaylistDialog(v.getContext(), songs));
+                                    .subscribe(songs -> PlaylistUtils.createPlaylistDialog(v.getContext(), songs),
+                                            error -> LogUtils.logException("SearchPresenter: Error creating playlist", error));
                             return true;
                         case MusicUtils.Defs.PLAYLIST_SELECTED:
                             songsObservable
@@ -268,13 +271,14 @@ class SearchPresenter extends Presenter<SearchView> implements
                                     .subscribe(songs -> {
                                         Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
                                         PlaylistUtils.addToPlaylist(v.getContext(), playlist, songs);
-                                    });
+                                    }, error -> LogUtils.logException("SearchPresenter: Error adding to playlist", error));
                             return true;
                         case MusicUtils.Defs.QUEUE:
                             songsObservable
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> MusicUtils.addToQueue(v.getContext(), songs));
+                                    .subscribe(songs -> MusicUtils.addToQueue(v.getContext(), songs),
+                                            error -> LogUtils.logException("SearchPresenter: Error adding to queue", error));
                             return true;
                         case MusicUtils.Defs.TAGGER:
                             if (view != null) {
@@ -333,19 +337,21 @@ class SearchPresenter extends Presenter<SearchView> implements
                                         if (view != null) {
                                             view.showEmptyPlaylistToast();
                                         }
-                                    }));
+                                    }), error -> LogUtils.logException("SearchPresenter: Error playing all", error));
                             return true;
                         case MusicUtils.Defs.PLAY_NEXT:
                             songsObservable
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> MusicUtils.playNext(v.getContext(), songs));
+                                    .subscribe(songs -> MusicUtils.playNext(v.getContext(), songs),
+                                            error -> LogUtils.logException("SearchPresenter: Error playing next", error));
                             return true;
                         case MusicUtils.Defs.NEW_PLAYLIST:
                             songsObservable
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> PlaylistUtils.createPlaylistDialog(v.getContext(), songs));
+                                    .subscribe(songs -> PlaylistUtils.createPlaylistDialog(v.getContext(), songs),
+                                            error -> LogUtils.logException("SearchPresenter: Error creating playlist", error));
                             return true;
                         case MusicUtils.Defs.PLAYLIST_SELECTED:
                             songsObservable
@@ -354,13 +360,14 @@ class SearchPresenter extends Presenter<SearchView> implements
                                     .subscribe(songs -> {
                                         Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
                                         PlaylistUtils.addToPlaylist(v.getContext(), playlist, songs);
-                                    });
+                                    }, error -> LogUtils.logException("SearchPresenter: Error adding to playlist", error));
                             return true;
                         case MusicUtils.Defs.QUEUE:
                             songsObservable
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> MusicUtils.addToQueue(v.getContext(), songs));
+                                    .subscribe(songs -> MusicUtils.addToQueue(v.getContext(), songs),
+                                            error -> LogUtils.logException("SearchPresenter: Error adding to queue", error));
                             return true;
                         case MusicUtils.Defs.TAGGER:
                             if (view != null) {
@@ -418,19 +425,21 @@ class SearchPresenter extends Presenter<SearchView> implements
                                         if (view != null) {
                                             view.showEmptyPlaylistToast();
                                         }
-                                    }));
+                                    }), error -> LogUtils.logException("SearchPresenter: playing all", error));
                             return true;
                         case MusicUtils.Defs.PLAY_NEXT:
                             songsObservable
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> MusicUtils.playNext(v.getContext(), songs));
+                                    .subscribe(songs -> MusicUtils.playNext(v.getContext(), songs)
+                                            , error -> LogUtils.logException("SearchPresenter: Error playing next", error));
                             return true;
                         case MusicUtils.Defs.NEW_PLAYLIST:
                             songsObservable
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> PlaylistUtils.createPlaylistDialog(v.getContext(), songs));
+                                    .subscribe(songs -> PlaylistUtils.createPlaylistDialog(v.getContext(), songs),
+                                            error -> LogUtils.logException("SearchPresenter: Error creating playlist", error));
                             return true;
                         case MusicUtils.Defs.PLAYLIST_SELECTED:
                             songsObservable
@@ -439,7 +448,7 @@ class SearchPresenter extends Presenter<SearchView> implements
                                     .subscribe(songs -> {
                                         Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
                                         PlaylistUtils.addToPlaylist(v.getContext(), playlist, songs);
-                                    });
+                                    }, error -> LogUtils.logException("SearchPresenter: Error adding to playlist", error));
                             return true;
                         case MusicUtils.Defs.USE_AS_RINGTONE:
                             // Set the system setting to make this the current
@@ -450,7 +459,8 @@ class SearchPresenter extends Presenter<SearchView> implements
                             songsObservable
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(songs -> MusicUtils.addToQueue(v.getContext(), songs));
+                                    .subscribe(songs -> MusicUtils.addToQueue(v.getContext(), songs),
+                                            error -> LogUtils.logException("SearchPresenter: Error adding to queue", error));
                             return true;
                         case MusicUtils.Defs.TAGGER:
                             if (view != null) {

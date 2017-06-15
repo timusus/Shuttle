@@ -2,7 +2,6 @@ package com.simplecity.amp_library.utils;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
-import com.crashlytics.android.Crashlytics;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Album;
@@ -111,7 +110,7 @@ public class DataManager {
                 }
 
                 return result;
-            }).subscribe(songsRelay, error -> Crashlytics.log("getSongsRelay error: " + error.getMessage()));
+            }).subscribe(songsRelay, error -> LogUtils.logException("getSongsRelay error", error));
         }
         return songsRelay.subscribeOn(Schedulers.io()).map(ArrayList::new);
     }
@@ -139,7 +138,7 @@ public class DataManager {
         if (albumsSubscription == null || albumsSubscription.isUnsubscribed()) {
             albumsSubscription = getSongsRelay()
                     .flatMap(songs -> Observable.just(Operators.songsToAlbums(songs)))
-                    .subscribe(albumsRelay, error -> Crashlytics.log("getAlbumsRelay error: " + error.getMessage()));
+                    .subscribe(albumsRelay, error -> LogUtils.logException("getAlbumsRelay error: ", error));
         }
         return albumsRelay.subscribeOn(Schedulers.io()).map(ArrayList::new);
     }
@@ -167,7 +166,7 @@ public class DataManager {
         if (albumArtistsSubscription == null || albumArtistsSubscription.isUnsubscribed()) {
             albumArtistsSubscription = getAlbumsRelay()
                     .flatMap(albums -> Observable.just(Operators.albumsToAlbumArtists(albums)))
-                    .subscribe(albumArtistsRelay, error -> Crashlytics.log("getAlbumArtistsRelay error: " + error.getMessage()));
+                    .subscribe(albumArtistsRelay, error -> LogUtils.logException("getAlbumArtistsRelay error", error));
         }
         return albumArtistsRelay.subscribeOn(Schedulers.io()).map(ArrayList::new);
     }
@@ -193,13 +192,13 @@ public class DataManager {
     public Observable<List<Genre>> getGenresRelay() {
         if (genresSubscription == null || genresSubscription.isUnsubscribed()) {
             genresSubscription = SqlBriteUtils.createContinuousQuery(ShuttleApplication.getInstance(), Genre::new, Genre.getQuery())
-                    .subscribe(genresRelay, error -> Crashlytics.log("getGenresRelay error: " + error.getMessage()));
+                    .subscribe(genresRelay, error -> LogUtils.logException("getGenresRelay error", error));
         }
 
         return genresRelay.subscribeOn(Schedulers.io()).map(ArrayList::new);
     }
 
-    public void updateGenresRelay(List<Genre> genres){
+    public void updateGenresRelay(List<Genre> genres) {
         genresRelay.call(genres);
     }
 
@@ -224,7 +223,7 @@ public class DataManager {
     public Observable<List<Playlist>> getPlaylistsRelay() {
         if (playlistsSubscription == null || playlistsSubscription.isUnsubscribed()) {
             playlistsSubscription = SqlBriteUtils.createContinuousQuery(ShuttleApplication.getInstance(), Playlist::new, Playlist.getQuery())
-                    .subscribe(playlistsRelay, error -> Crashlytics.log("getPlaylistRelay error: " + error.getMessage()));
+                    .subscribe(playlistsRelay, error -> LogUtils.logException("getPlaylistRelay ", error));
         }
         return playlistsRelay.subscribeOn(Schedulers.io()).map(ArrayList::new);
     }
@@ -260,7 +259,7 @@ public class DataManager {
             blacklistSubscription = getBlacklistDatabase()
                     .createQuery(BlacklistDbOpenHelper.TABLE_SONGS, "SELECT * FROM " + BlacklistDbOpenHelper.TABLE_SONGS)
                     .mapToList(BlacklistedSong::new)
-                    .subscribe(blacklistRelay, error -> Crashlytics.log("getBlacklistRelay error: " + error.getMessage()));
+                    .subscribe(blacklistRelay, error -> LogUtils.logException("getBlacklistRelay error", error));
         }
         return blacklistRelay.subscribeOn(Schedulers.io()).map(ArrayList::new);
     }
@@ -284,7 +283,7 @@ public class DataManager {
             whitelistSubscription = getWhitelistDatabase()
                     .createQuery(WhitelistDbOpenHelper.TABLE_FOLDERS, "SELECT * FROM " + WhitelistDbOpenHelper.TABLE_FOLDERS)
                     .mapToList(WhitelistFolder::new)
-                    .subscribe(whitelistRelay, error -> Crashlytics.log("getWhitelistRelay error: " + error.getMessage()));
+                    .subscribe(whitelistRelay, error -> LogUtils.logException("getWhitelistRelay error", error));
         }
         return whitelistRelay.subscribeOn(Schedulers.io()).map(ArrayList::new);
     }

@@ -13,6 +13,7 @@ import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.DataManager;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 
 import java.util.Collections;
@@ -113,7 +114,7 @@ public class VoiceSearchActivity extends BaseActivity {
                         });
                     }
                     finish();
-                });
+                }, error -> LogUtils.logException("VoiceSearchActivity, error attempting to playAll()", error));
     }
 
     @Override

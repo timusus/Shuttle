@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -20,8 +19,8 @@ import com.simplecity.amp_library.model.ArtworkProvider;
 import com.simplecity.amp_library.model.UserSelectedArtwork;
 import com.simplecity.amp_library.sql.databases.CustomArtworkTable;
 import com.simplecity.amp_library.ui.adapters.ItemAdapter;
-import com.simplecity.amp_library.ui.modelviews.ArtworkView;
 import com.simplecity.amp_library.ui.modelviews.ArtworkLoadingView;
+import com.simplecity.amp_library.ui.modelviews.ArtworkView;
 import com.simplecity.amp_library.ui.recyclerview.SpacesItemDecoration;
 
 import java.io.File;
@@ -112,9 +111,7 @@ public class ArtworkDialog {
                             artworkAdapter.addItem(new ArtworkView(ArtworkProvider.Type.FOLDER, artworkProvider, glideListener, file, false));
                         });
                     }
-                }, error -> {
-                    Log.e(TAG, "Error getting folder artwork files.. " + error.toString());
-                });
+                }, error -> LogUtils.logException("ArtworkDialog: Error getting artwork files", error));
 
         DialogUtils.getBuilder(context)
                 .title(context.getString(R.string.artwork_edit))
@@ -189,7 +186,7 @@ public class ArtworkDialog {
                             artworkAdapter.addItem(0, artworkView);
                             artworkAdapter.selectItem(0);
                             recyclerView.scrollToPosition(0);
-                        }))
+                        }, error -> LogUtils.logException("ArtworkDialog error picking from gallery", error)))
                 .cancelable(false)
                 .show();
     }

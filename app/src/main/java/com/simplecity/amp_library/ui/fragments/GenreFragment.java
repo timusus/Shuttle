@@ -22,6 +22,7 @@ import com.simplecity.amp_library.ui.recyclerview.GridDividerDecoration;
 import com.simplecity.amp_library.utils.ColorUtils;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.DataManager;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.ThemeUtils;
@@ -148,7 +149,7 @@ public class GenreFragment extends BaseFragment implements
                             } else {
                                 genreAdapter.setItems(items);
                             }
-                        });
+                        }, error -> LogUtils.logException("GenreFragment: Error refreshing adapter items", error));
             }
         });
     }

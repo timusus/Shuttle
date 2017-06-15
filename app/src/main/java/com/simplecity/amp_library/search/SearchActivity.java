@@ -27,6 +27,7 @@ import com.simplecity.amp_library.ui.adapters.SearchAdapter;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.LoadingView;
 import com.simplecity.amp_library.utils.ColorUtils;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.ResourceUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
@@ -119,7 +120,8 @@ public class SearchActivity extends BaseActivity implements
                 .skip(1)
                 .debounce(200, TimeUnit.MILLISECONDS)
                 .onBackpressureLatest()
-                .subscribe(searchViewQueryTextEvent -> searchPresenter.queryChanged(searchViewQueryTextEvent.queryText().toString())));
+                .subscribe(searchViewQueryTextEvent -> searchPresenter.queryChanged(searchViewQueryTextEvent.queryText().toString()),
+                        error -> LogUtils.logException("SearchActivity: Error processing text changed events", error)));
 
         recyclerView = (FastScrollRecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
