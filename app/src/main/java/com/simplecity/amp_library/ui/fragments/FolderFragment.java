@@ -741,10 +741,7 @@ public class FolderFragment extends BaseFragment implements
                                 .negativeText(R.string.close)
                                 .show();
 
-                        subscriptions.add(FileHelper.getSongList(new File(fileObject.path), true, false)
-                                .map(songs -> Stream.of(songs)
-                                        .map(song -> song.path)
-                                        .collect(Collectors.toList()))
+                        subscriptions.add(FileHelper.getPathList(new File(fileObject.path), true, false)
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(paths -> {
                                     ViewUtils.fadeOut(indeterminateProgress, null);
