@@ -52,12 +52,18 @@ public class SongView extends BaseAdaptableItem<Song, SongView.ViewHolder> {
 
     private boolean showAlbumArt;
 
+    private boolean showPlayCount;
+
     public void setEditable(boolean editable) {
         this.editable = editable;
     }
 
     public void setShowAlbumArt(boolean showAlbumArt) {
         this.showAlbumArt = showAlbumArt;
+    }
+
+    public void setShowPlayCount(boolean showPlayCount) {
+        this.showPlayCount = showPlayCount;
     }
 
     private boolean showTrackNumber = false;
@@ -82,7 +88,7 @@ public class SongView extends BaseAdaptableItem<Song, SongView.ViewHolder> {
         holder.lineOne.setText(song.name);
 
         if (holder.playCount != null) {
-            if (song.playCount > 1) {
+            if (showPlayCount && song.playCount > 1) {
                 holder.playCount.setVisibility(View.VISIBLE);
                 holder.playCount.setText(String.valueOf(song.playCount));
             } else {

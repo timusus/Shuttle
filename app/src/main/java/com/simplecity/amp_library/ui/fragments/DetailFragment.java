@@ -264,7 +264,7 @@ public class DetailFragment extends BaseFragment implements
                         long songViewCount = Stream.of(adapter.items)
                                 .filter(adaptableItem -> adaptableItem instanceof SongView).count();
                         int offset = (int) (adapter.getItemCount() - songViewCount);
-                        if(to >= offset) {
+                        if (to >= offset) {
                             adapter.moveItem(from, to);
                         }
                     },
@@ -279,7 +279,7 @@ public class DetailFragment extends BaseFragment implements
                         to -= offset;
 
                         try {
-                                MediaStore.Audio.Playlists.Members.moveItem(getActivity().getContentResolver(), playlist.id, from, to);
+                            MediaStore.Audio.Playlists.Members.moveItem(getActivity().getContentResolver(), playlist.id, from, to);
                         } catch (IllegalArgumentException e) {
                             CrashlyticsCore.getInstance().log(String.format("Failed to move playlist item from %s to %s. Adapter count: %s. Error:%s", from, to, adapter.getItemCount(), e.getMessage()));
                         }
@@ -528,6 +528,7 @@ public class DetailFragment extends BaseFragment implements
                                         SongView songView = new SongView(song, multiSelector, requestManager);
                                         songView.setShowAlbumArt(false);
                                         songView.setEditable(canEdit());
+                                        songView.setShowPlayCount(playlist.type == Playlist.Type.MOST_PLAYED);
                                         songView.setShowTrackNumber(album != null && (songSort == SortManager.SongSort.DETAIL_DEFAULT || songSort == SortManager.SongSort.TRACK_NUMBER));
                                         return songView;
                                     })

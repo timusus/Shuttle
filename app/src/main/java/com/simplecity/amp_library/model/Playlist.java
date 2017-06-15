@@ -217,6 +217,8 @@ public class Playlist implements Serializable {
                                 Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(b.playCount, a.playCount));
                                 return songs;
                             }));
+
+
         } else if (id == MusicUtils.PlaylistIds.RECENTLY_PLAYED_PLAYLIST) {
 
             Query query = new Query.Builder()
@@ -224,36 +226,24 @@ public class Playlist implements Serializable {
                     .projection(new String[]{PlayCountTable.COLUMN_ID, PlayCountTable.COLUMN_TIME_PLAYED})
                     .sort(PlayCountTable.COLUMN_TIME_PLAYED + " DESC")
                     .build();
-
+            
             return SqlBriteUtils.createQuery(context, cursor ->
                     new Pair<>(
                             cursor.getLong(cursor.getColumnIndexOrThrow(PlayCountTable.COLUMN_ID)),
                             cursor.getLong(cursor.getColumnIndexOrThrow(PlayCountTable.COLUMN_TIME_PLAYED))
                     ), query)
-                    .flatMap(pairs -> {
-                        Query songsQuery = Song.getQuery();
-                        songsQuery.selection += " AND " + MediaStore.Audio.Media._ID + " IN (" +
-                                Stream.of(pairs)
-                                        .map(value -> String.valueOf(value.first))
-                                        .collect(Collectors.joining(",")) +
-                                ")";
-                        return SqlBriteUtils.createQuery(context, Song::new, songsQuery)
-                                .map(songs -> {
-                                    Stream.of(songs)
-                                            .forEach(song -> Stream.of(pairs)
-                                                    .forEach(pair -> {
-                                                        if (pair.first == song.id) {
-                                                            song.lastPlayed = pair.second;
-                                                        }
-                                                    }));
-                                    return songs;
-                                });
-                    })
-
-                    .map(songs -> {
-                        Collections.sort(songs, (a, b) -> ComparisonUtils.compareLong(b.lastPlayed, a.lastPlayed));
-                        return songs;
-                    });
+                    .flatMap(pairs -> DataManager.getInstance().getSongsObservable(song ->
+                            Stream.of(pairs)
+                                    .filter(pair -> {
+                                        song.lastPlayed = pair.second;
+                                        return pair.first == song.id;
+                                    })
+                                    .findFirst()
+                                    .orElse(null) != null)
+                            .map(songs -> {
+                                Collections.sort(songs, (a, b) -> ComparisonUtils.compareLong(b.lastPlayed, a.lastPlayed));
+                                return songs;
+                            }));
         } else {
             Query query = Song.getQuery();
             query.uri = MediaStore.Audio.Playlists.Members.getContentUri("external", id);
