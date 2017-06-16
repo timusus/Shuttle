@@ -381,6 +381,8 @@ public class AlbumArtistFragment extends BaseFragment implements
     public void onAlbumArtistOverflowClicked(View v, AlbumArtist albumArtist) {
         PopupMenu menu = new PopupMenu(AlbumArtistFragment.this.getActivity(), v);
         menu.inflate(R.menu.menu_artist);
+        SubMenu sub = menu.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
+        PlaylistUtils.makePlaylistMenu(getActivity(), sub);
         menu.setOnMenuItemClickListener(MenuUtils.getAlbumArtistClickListener(getContext(), albumArtist, taggerDialog -> taggerDialog.show(getFragmentManager())));
         menu.show();
     }
