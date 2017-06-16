@@ -46,15 +46,19 @@ public class OverflowButton extends NonScrollImageButton {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        aestheticDisposable = Observable.combineLatest(
-                Aesthetic.get().textColorSecondary(),
-                Observable.just(Color.WHITE),
-                Observable.just(dark),
-                LightDarkColorState.creator()
-        ).subscribe(lightDarkColorState -> {
-            DrawableCompat.setTint(drawable, lightDarkColorState.color());
+        if (isInEditMode()) {
             setImageDrawable(drawable);
-        });
+        } else {
+            aestheticDisposable = Observable.combineLatest(
+                    Aesthetic.get().textColorSecondary(),
+                    Observable.just(Color.WHITE),
+                    Observable.just(dark),
+                    LightDarkColorState.creator()
+            ).subscribe(lightDarkColorState -> {
+                DrawableCompat.setTint(drawable, lightDarkColorState.color());
+                setImageDrawable(drawable);
+            });
+        }
     }
 
     @Override
