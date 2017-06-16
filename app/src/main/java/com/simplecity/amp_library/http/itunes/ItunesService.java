@@ -1,4 +1,4 @@
-package com.simplecity.amp_library.lastfm;
+package com.simplecity.amp_library.http.itunes;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

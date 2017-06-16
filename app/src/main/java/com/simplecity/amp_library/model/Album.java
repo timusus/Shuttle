@@ -6,8 +6,8 @@ import android.support.annotation.WorkerThread;
 
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.http.HttpClient;
-import com.simplecity.amp_library.lastfm.ItunesResult;
-import com.simplecity.amp_library.lastfm.LastFmResult;
+import com.simplecity.amp_library.http.itunes.ItunesResult;
+import com.simplecity.amp_library.http.lastfm.LastFmResult;
 import com.simplecity.amp_library.utils.ArtworkUtils;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.DataManager;

@@ -1,8 +1,8 @@
 package com.simplecity.amp_library.http;
 
 
-import com.simplecity.amp_library.lastfm.ItunesService;
-import com.simplecity.amp_library.lastfm.LastFmService;
+import com.simplecity.amp_library.http.itunes.ItunesService;
+import com.simplecity.amp_library.http.lastfm.LastFmService;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;

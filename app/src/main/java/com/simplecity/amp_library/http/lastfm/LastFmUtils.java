@@ -1,4 +1,4 @@
-package com.simplecity.amp_library.lastfm;
+package com.simplecity.amp_library.http.lastfm;
 
 import java.util.List;
 

@@ -30,9 +30,17 @@
 
 # Glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public class * extends com.bumptech.glide.AppGlideModule
+-keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
+-keepnames class com.simplecity.amp_library.glide.utils.CustomGlideModule
+-keep public class * implements com.bumptech.glide.module.GlideModule
 
 # JAudioTagger
 -dontwarn org.jaudiotagger.**
+-keep class org.jaudiotagger.** { *; }
 
 # RetroLambda
 -dontwarn java.lang.invoke.*
@@ -51,31 +59,46 @@
 -dontwarn okio.**
 
 # Retrofit
--dontwarn rx.**
--dontwarn retrofit2.**
--keep class retrofit2.** { *; }
--keepclasseswithmembers class * {
-    @retrofit2.http.* <methods>;
-}
+# Platform calls Class.forName on types which do not exist on Android to determine platform.
+-dontnote retrofit2.Platform
+# Platform used when running on Java 8 VMs. Will not be used at runtime.
+-dontwarn retrofit2.Platform$Java8
+# Retain generic type information for use by reflection by converters and adapters.
+-keepattributes Signature
+# Retain declared checked exceptions for use by a Proxy instance.
+-keepattributes Exceptions
 
-# Build is failing without the following.. Something to do with StreamSupport?
--dontwarn java8.**
+# GSON
+-keepattributes Signature
+# For using GSON @Expose annotation
+-keepattributes *Annotation*
+#--  Gson specific classes
+-keep class sun.misc.Unsafe { *; }
+#-keep class com.google.gson.stream.** { *; }
+# Application classes that will be serialized/deserialized over Gson
+-keep class com.simplecity.amp_library.http.itunes.** { *; }
+-keep class com.simplecity.amp_library.http.lastfm.** { *; }
+# Prevent proguard from stripping interface information from TypeAdapterFactory,
+# JsonSerializer, JsonDeserializer instances (so they can be used in @JsonAdapter)
+-keep class * implements com.google.gson.TypeAdapterFactory
+-keep class * implements com.google.gson.JsonSerializer
+-keep class * implements com.google.gson.JsonDeserializer
 
 # RXJava
 -dontwarn sun.misc.**
-
 -keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
    long producerIndex;
    long consumerIndex;
 }
-
 -keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
     rx.internal.util.atomic.LinkedQueueNode producerNode;
 }
-
 -keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
     rx.internal.util.atomic.LinkedQueueNode consumerNode;
 }
+
+# Build is failing without the following.. Something to do with StreamSupport?
+-dontwarn java8.**
 
 # Hide an annoying compilation warning
 # http://stackoverflow.com/questions/3308010/what-is-the-ignoring-innerclasses-attribute-warning-output-during-compilation

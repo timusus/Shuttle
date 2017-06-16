@@ -1,4 +1,4 @@
-package com.simplecity.amp_library.lastfm;
+package com.simplecity.amp_library.http.lastfm;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -6,27 +6,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("WeakerAccess")
-public class LastFmArtist implements LastFmResult {
+public class LastFmAlbum implements LastFmResult {
 
-    @SerializedName("artist")
-    public Artist artist;
+    @SerializedName("album")
+    public Album album;
 
-    public static class Artist {
+    public static class Album {
         public String name;
         @SerializedName("image")
         public List<LastFmImage> images = new ArrayList<>();
-        public Bio bio;
+        public Wiki wiki;
     }
 
     @Override
     public String getImageUrl() {
-        if (artist == null || artist.images == null || artist.images.isEmpty()) {
+        if (album != null) {
+            return LastFmUtils.getBestImageUrl(album.images);
+        } else {
             return null;
         }
-        return LastFmUtils.getBestImageUrl(artist.images);
     }
 
-    public static class Bio {
+    public static class Wiki {
         public String summary;
     }
 }
