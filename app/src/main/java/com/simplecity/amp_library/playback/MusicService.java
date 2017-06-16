@@ -89,6 +89,7 @@ import com.simplecity.amp_library.utils.ShuttleUtils;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -2921,7 +2922,7 @@ public class MusicService extends Service {
         try {
             mNotificationStateHandler.sendEmptyMessage(NotificationStateHandler.START_FOREGROUND);
             startForeground(id, notification);
-        } catch (NullPointerException e) {
+        } catch (NullPointerException | ConcurrentModificationException e) {
             Crashlytics.log("startForegroundImpl error: " + e.getMessage());
         }
     }
