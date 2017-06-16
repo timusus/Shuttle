@@ -7,15 +7,16 @@ import android.support.annotation.ColorInt;
 @SuppressWarnings("WeakerAccess")
 public final class ActiveInactiveColors {
 
-  private final int activeColor;
-  private final int inactiveColor;
+  @ColorInt private final int activeColor;
+  @ColorInt private final int inactiveColor;
 
-  private ActiveInactiveColors(int activeColor, int inactiveColor) {
+  private ActiveInactiveColors(@ColorInt int activeColor, @ColorInt int inactiveColor) {
     this.activeColor = activeColor;
     this.inactiveColor = inactiveColor;
   }
 
-  public static ActiveInactiveColors create(int activeColor, int inactiveColor) {
+  public static ActiveInactiveColors create(
+      @ColorInt int activeColor, @ColorInt int inactiveColor) {
     return new ActiveInactiveColors(activeColor, inactiveColor);
   }
 

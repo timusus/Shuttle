@@ -1,14 +1,13 @@
 package com.afollestad.aesthetic;
 
+import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
+import static com.afollestad.aesthetic.Util.resolveResId;
+
 import android.content.Context;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
-
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
-
-import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
-import static com.afollestad.aesthetic.Util.resolveResId;
 
 /** @author Aidan Follestad (afollestad) */
 public class AestheticTextView extends AppCompatTextView {

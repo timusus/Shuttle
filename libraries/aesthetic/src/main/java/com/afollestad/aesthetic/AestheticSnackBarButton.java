@@ -3,7 +3,6 @@ package com.afollestad.aesthetic;
 import android.content.Context;
 import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
-
 import io.reactivex.disposables.Disposable;
 
 /** @author Aidan Follestad (afollestad) */

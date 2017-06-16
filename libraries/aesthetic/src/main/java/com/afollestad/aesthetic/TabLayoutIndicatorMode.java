@@ -1,12 +1,11 @@
 package com.afollestad.aesthetic;
 
-import android.support.annotation.IntDef;
-
-import java.lang.annotation.Retention;
-
 import static com.afollestad.aesthetic.TabLayoutIndicatorMode.ACCENT;
 import static com.afollestad.aesthetic.TabLayoutIndicatorMode.PRIMARY;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
+
+import android.support.annotation.IntDef;
+import java.lang.annotation.Retention;
 
 /** @author Aidan Follestad (afollestad) */
 @SuppressWarnings("WeakerAccess")

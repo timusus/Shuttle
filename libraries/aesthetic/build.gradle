@@ -32,6 +32,12 @@ android {
 }
 
 dependencies {
+    repositories {
+        maven {
+            url 'https://maven.google.com'
+        }
+    }
+
     compile 'com.android.support:appcompat-v7:' + versions.supportLib
     compile 'com.android.support:cardview-v7:' + versions.supportLib
 

@@ -2,8 +2,6 @@ package com.afollestad.aesthetic;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.os.Handler;
 import android.support.annotation.ColorInt;
 import android.support.design.widget.TabLayout;
 import android.util.AttributeSet;
@@ -75,7 +73,7 @@ public class AestheticTabLayout extends TabLayout {
   protected void onAttachedToWindow() {
     super.onAttachedToWindow();
 
-    /* Begin workaround
+      /* Begin workaround
 
       In some certain situations, the time between onAttachedToWindow and the color change observables
       emitting is too much, and the view gets displayed momentarily using the original colors.
@@ -96,25 +94,25 @@ public class AestheticTabLayout extends TabLayout {
 
       Note: To reproduce this issue, it seems the TabLayout needs to belong to a nested fragment.
      */
-    final Integer primaryColor = Aesthetic.get()
-            .colorPrimary()
-            .blockingFirst();
-    ViewBackgroundAction.create(AestheticTabLayout.this).accept(primaryColor);
+      final Integer primaryColor = Aesthetic.get()
+              .colorPrimary()
+              .blockingFirst();
+      ViewBackgroundAction.create(AestheticTabLayout.this).accept(primaryColor);
 
-    getHandler().postDelayed(new Runnable() {
-      @Override
-      public void run() {
+      getHandler().postDelayed(new Runnable() {
+          @Override
+          public void run() {
 
-        ActiveInactiveColors activeInactiveColors = Aesthetic.get()
-                .colorIconTitle(Observable.just(primaryColor))
-                .blockingFirst();
+              ActiveInactiveColors activeInactiveColors = Aesthetic.get()
+                      .colorIconTitle(Observable.just(primaryColor))
+                      .blockingFirst();
 
-        setTabTextColors(
-                adjustAlpha(activeInactiveColors.inactiveColor(), UNFOCUSED_ALPHA),
-                activeInactiveColors.activeColor());
-      }
-    }, 5);
-    // End workaround
+              setTabTextColors(
+                      adjustAlpha(activeInactiveColors.inactiveColor(), UNFOCUSED_ALPHA),
+                      activeInactiveColors.activeColor());
+          }
+      }, 5);
+      // End workaround
 
     bgModeSubscription =
         Aesthetic.get()

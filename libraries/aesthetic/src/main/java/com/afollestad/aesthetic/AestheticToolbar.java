@@ -52,7 +52,7 @@ public class AestheticToolbar extends Toolbar {
   private void invalidateColors(BgIconColorState state) {
     lastState = state;
     if (!transparentBackground) {
-        setBackgroundColor(state.bgColor());
+      setBackgroundColor(state.bgColor());
     }
     setTitleTextColor(state.iconTitleColor().activeColor());
     setOverflowButtonColor(this, state.iconTitleColor().activeColor());
@@ -90,19 +90,19 @@ public class AestheticToolbar extends Toolbar {
     super.onAttachedToWindow();
     onColorUpdated = PublishSubject.create();
     subscription =
-        Observable.combineLatest(
-                Aesthetic.get().colorPrimary(),
-                Aesthetic.get().colorIconTitle(null),
-                BgIconColorState.creator())
-            .compose(Rx.<BgIconColorState>distinctToMainThread())
-            .subscribe(
-                new Consumer<BgIconColorState>() {
-                  @Override
-                  public void accept(@NonNull BgIconColorState bgIconColorState) {
-                    invalidateColors(bgIconColorState);
-                  }
-                },
-                onErrorLogAndRethrow());
+            Observable.combineLatest(
+                    Aesthetic.get().colorPrimary(),
+                    Aesthetic.get().colorIconTitle(null),
+                    BgIconColorState.creator())
+                    .compose(Rx.<BgIconColorState>distinctToMainThread())
+                    .subscribe(
+                            new Consumer<BgIconColorState>() {
+                              @Override
+                              public void accept(@NonNull BgIconColorState bgIconColorState) {
+                                invalidateColors(bgIconColorState);
+                              }
+                            },
+                            onErrorLogAndRethrow());
   }
 
   @Override

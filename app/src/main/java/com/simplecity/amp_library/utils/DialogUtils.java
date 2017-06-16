@@ -83,16 +83,7 @@ public class DialogUtils {
 
     public static MaterialDialog.Builder getBuilder(Context context) {
 
-        return new MaterialDialog.Builder(context)
-                .titleColor(Aesthetic.get().textColorPrimary().blockingFirst())
-                .contentColor(Aesthetic.get().textColorPrimary().blockingFirst())
-                .dividerColor(Aesthetic.get().colorAccent().blockingFirst())
-                .backgroundColor(Aesthetic.get().colorWindowBackground().blockingFirst())
-                .positiveColor(Aesthetic.get().colorAccent().blockingFirst())
-                .neutralColor(Aesthetic.get().colorAccent().blockingFirst())
-                .negativeColor(Aesthetic.get().colorAccent().blockingFirst())
-                .widgetColor(Aesthetic.get().colorAccent().blockingFirst())
-                .buttonRippleColor(Aesthetic.get().colorAccent().blockingFirst());
+        return new MaterialDialog.Builder(context);
     }
 
     public static MaterialDialog getChangelogDialog(Context context) {

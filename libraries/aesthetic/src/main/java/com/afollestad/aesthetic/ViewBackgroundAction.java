@@ -1,16 +1,12 @@
 package com.afollestad.aesthetic;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.RestrictTo;
 import android.view.View;
-
 import io.reactivex.functions.Consumer;
 
-import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
-
 /** @author Aidan Follestad (afollestad) */
-@RestrictTo(LIBRARY_GROUP)
-public class ViewBackgroundAction implements Consumer<Integer> {
+@SuppressWarnings("WeakerAccess")
+public final class ViewBackgroundAction implements Consumer<Integer> {
 
   private final View view;
 

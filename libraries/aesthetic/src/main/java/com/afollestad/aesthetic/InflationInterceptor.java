@@ -1,5 +1,8 @@
 package com.afollestad.aesthetic;
 
+import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
+import static com.afollestad.aesthetic.Util.resolveResId;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
@@ -14,14 +17,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
-
+import io.reactivex.Observable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-
-import io.reactivex.Observable;
-
-import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
-import static com.afollestad.aesthetic.Util.resolveResId;
 
 /** @author Aidan Follestad (afollestad) */
 @RestrictTo(LIBRARY_GROUP)

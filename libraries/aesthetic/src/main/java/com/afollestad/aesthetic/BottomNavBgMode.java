@@ -1,14 +1,13 @@
 package com.afollestad.aesthetic;
 
-import android.support.annotation.IntDef;
-
-import java.lang.annotation.Retention;
-
 import static com.afollestad.aesthetic.BottomNavBgMode.ACCENT;
 import static com.afollestad.aesthetic.BottomNavBgMode.BLACK_WHITE_AUTO;
 import static com.afollestad.aesthetic.BottomNavBgMode.PRIMARY;
 import static com.afollestad.aesthetic.BottomNavBgMode.PRIMARY_DARK;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
+
+import android.support.annotation.IntDef;
+import java.lang.annotation.Retention;
 
 /** @author Aidan Follestad (afollestad) */
 @SuppressWarnings("WeakerAccess")

@@ -255,6 +255,10 @@ public class Aesthetic {
                   }
                 },
                 onErrorLogAndRethrow()));
+
+    if (MaterialDialogsUtil.shouldSupport()) {
+      instance.subs.add(MaterialDialogsUtil.observe(instance));
+    }
   }
 
   /** Returns true if this method has never been called before. */

@@ -1,5 +1,7 @@
 package com.afollestad.aesthetic;
 
+import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -18,19 +20,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.View;
-
-import java.lang.reflect.Field;
-
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
+import java.lang.reflect.Field;
 
-import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
-
-/**
- * @author Aidan Follestad (afollestad)
- */
+/** @author Aidan Follestad (afollestad) */
 public class AestheticCoordinatorLayout extends CoordinatorLayout
     implements AppBarLayout.OnOffsetChangedListener {
 
@@ -132,16 +128,16 @@ public class AestheticCoordinatorLayout extends CoordinatorLayout
       this.appBarLayout.addOnOffsetChangedListener(this);
       toolbarColorSubscription =
           Observable.combineLatest(
-              toolbar.colorUpdated(),
-              Aesthetic.get().colorIconTitle(toolbar.colorUpdated()),
-              new BiFunction<
-                  Integer, ActiveInactiveColors, Pair<Integer, ActiveInactiveColors>>() {
-                @Override
-                public Pair<Integer, ActiveInactiveColors> apply(
-                    Integer integer, ActiveInactiveColors activeInactiveColors) {
-                  return Pair.create(integer, activeInactiveColors);
-                }
-              })
+                  toolbar.colorUpdated(),
+                  Aesthetic.get().colorIconTitle(toolbar.colorUpdated()),
+                  new BiFunction<
+                      Integer, ActiveInactiveColors, Pair<Integer, ActiveInactiveColors>>() {
+                    @Override
+                    public Pair<Integer, ActiveInactiveColors> apply(
+                        Integer integer, ActiveInactiveColors activeInactiveColors) {
+                      return Pair.create(integer, activeInactiveColors);
+                    }
+                  })
               .compose(Rx.<Pair<Integer, ActiveInactiveColors>>distinctToMainThread())
               .subscribe(
                   new Consumer<Pair<Integer, ActiveInactiveColors>>() {

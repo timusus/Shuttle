@@ -5,11 +5,15 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.AdaptiveIconDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.support.annotation.AttrRes;
 import android.support.annotation.ColorInt;
@@ -17,7 +21,7 @@ import android.support.annotation.FloatRange;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RestrictTo;
+import android.support.annotation.RequiresApi;
 import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
@@ -26,13 +30,10 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import java.util.ArrayList;
 
-import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
-
 /** @author Aidan Follestad (afollestad) */
-@RestrictTo(LIBRARY_GROUP)
+@SuppressWarnings("WeakerAccess")
 public final class Util {
 
   static void setInflaterFactory(@NonNull LayoutInflater li, @NonNull AppCompatActivity activity) {
@@ -41,6 +42,7 @@ public final class Util {
   }
 
   /** Taken from CollapsingToolbarLayout's CollapsingTextHelper class. */
+  @ColorInt
   static int blendColors(int color1, int color2, float ratio) {
     final float inverseRatio = 1f - ratio;
     float a = (Color.alpha(color1) * inverseRatio) + (Color.alpha(color2) * ratio);
@@ -71,7 +73,8 @@ public final class Util {
     }
   }
 
-  static int stripAlpha(@ColorInt int color) {
+  @ColorInt
+  public static int stripAlpha(@ColorInt int color) {
     return Color.rgb(Color.red(color), Color.green(color), Color.blue(color));
   }
 
@@ -102,6 +105,7 @@ public final class Util {
     }
   }
 
+  @IdRes
   public static int resolveResId(Context context, AttributeSet attrs, @AttrRes int attrId) {
     TypedArray ta = context.obtainStyledAttributes(attrs, new int[] {attrId});
     int result = ta.getResourceId(0, 0);
@@ -167,7 +171,7 @@ public final class Util {
   //  }
 
   @ColorInt
-  static int adjustAlpha(
+  public static int adjustAlpha(
       @ColorInt int color, @SuppressWarnings("SameParameterValue") float factor) {
     int alpha = Math.round(Color.alpha(color) * factor);
     int red = Color.red(color);
@@ -191,7 +195,7 @@ public final class Util {
   }
 
   @ColorInt
-  static int shiftColor(@ColorInt int color, @FloatRange(from = 0.0f, to = 2.0f) float by) {
+  public static int shiftColor(@ColorInt int color, @FloatRange(from = 0.0f, to = 2.0f) float by) {
     if (by == 1f) return color;
     float[] hsv = new float[3];
     Color.colorToHSV(color, hsv);
@@ -200,7 +204,7 @@ public final class Util {
   }
 
   @ColorInt
-  static int darkenColor(@ColorInt int color) {
+  public static int darkenColor(@ColorInt int color) {
     return shiftColor(color, 0.9f);
   }
 
@@ -256,13 +260,55 @@ public final class Util {
     // Task description requires fully opaque color
     color = stripAlpha(color);
     // Default is app's launcher icon
-    Bitmap icon =
-        ((BitmapDrawable) activity.getApplicationInfo().loadIcon(activity.getPackageManager()))
-            .getBitmap();
-    // Sets color of entry in the system recents page
-    ActivityManager.TaskDescription td =
-        new ActivityManager.TaskDescription((String) activity.getTitle(), icon, color);
-    activity.setTaskDescription(td);
+    Bitmap icon;
+    if (Build.VERSION.SDK_INT >= 26) {
+      icon = getAppIcon(activity.getPackageManager(), activity.getPackageName());
+    } else {
+      icon =
+          ((BitmapDrawable) activity.getApplicationInfo().loadIcon(activity.getPackageManager()))
+              .getBitmap();
+    }
+    if (icon != null) {
+      // Sets color of entry in the system recents page
+      ActivityManager.TaskDescription td =
+          new ActivityManager.TaskDescription((String) activity.getTitle(), icon, color);
+      activity.setTaskDescription(td);
+    }
+  }
+
+  @RequiresApi(api = Build.VERSION_CODES.O)
+  private static Bitmap getAppIcon(PackageManager mPackageManager, String packageName) {
+    try {
+      Drawable drawable = mPackageManager.getApplicationIcon(packageName);
+
+      if (drawable instanceof BitmapDrawable) {
+        return ((BitmapDrawable) drawable).getBitmap();
+      } else if (drawable instanceof AdaptiveIconDrawable) {
+        Drawable backgroundDr = ((AdaptiveIconDrawable) drawable).getBackground();
+        Drawable foregroundDr = ((AdaptiveIconDrawable) drawable).getForeground();
+
+        Drawable[] drr = new Drawable[2];
+        drr[0] = backgroundDr;
+        drr[1] = foregroundDr;
+
+        LayerDrawable layerDrawable = new LayerDrawable(drr);
+
+        int width = layerDrawable.getIntrinsicWidth();
+        int height = layerDrawable.getIntrinsicHeight();
+
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(bitmap);
+
+        layerDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        layerDrawable.draw(canvas);
+
+        return bitmap;
+      }
+    } catch (PackageManager.NameNotFoundException e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 
   //  @Nullable
