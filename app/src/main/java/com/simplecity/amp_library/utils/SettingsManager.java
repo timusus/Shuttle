@@ -22,6 +22,9 @@ public class SettingsManager {
         return sInstance;
     }
 
+    // Whether the 'rate' snackbar has been seen during this session
+    public boolean hasSeenRateSnackbar = false;
+
     private SettingsManager() {
 
     }

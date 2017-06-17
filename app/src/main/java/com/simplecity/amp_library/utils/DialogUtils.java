@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.RemoteException;
 import android.support.annotation.StringRes;
+import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.FileProvider;
 import android.support.v4.content.IntentCompat;
@@ -946,23 +947,34 @@ public class DialogUtils {
     }
 
     public static void showRateSnackbar(final Activity activity, final View view) {
-        //If the user hasn't pressed 'rate' in the past
-        if (!SettingsManager.getInstance().getHasRated()) {
+        //If the user hasn't dismissed the snackbar in the past, and we haven't already shown it for this session
+        if (!SettingsManager.getInstance().getHasRated() && !SettingsManager.getInstance().hasSeenRateSnackbar) {
             //If this is the tenth launch, or a multiple of 50
             if (SettingsManager.getInstance().getLaunchCount() == 10 || (SettingsManager.getInstance().getLaunchCount() != 0 && SettingsManager.getInstance().getLaunchCount() % 50 == 0)) {
                 Snackbar snackbar = Snackbar.make(view, R.string.snackbar_rate_text, Snackbar.LENGTH_INDEFINITE)
                         .setDuration(15000)
-                        .setAction(R.string.snackbar_rate_action, v -> {
-                            ShuttleUtils.openShuttleLink(activity, ShuttleApplication.getInstance().getPackageName());
-                            SettingsManager.getInstance().setHasRated();
+                        .setAction(R.string.snackbar_rate_action, v -> ShuttleUtils.openShuttleLink(activity, ShuttleApplication.getInstance().getPackageName()))
+                        .addCallback(new Snackbar.Callback() {
+                            @Override
+                            public void onDismissed(Snackbar transientBottomBar, int event) {
+                                super.onDismissed(transientBottomBar, event);
+
+                                if (event != BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_TIMEOUT) {
+                                    // We don't really care whether the user has rated or not. The snackbar was
+                                    // dismissed. Never show it again.
+                                    SettingsManager.getInstance().setHasRated();
+                                }
+                            }
                         });
                 snackbar.show();
 
-                TextView snackbarText = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
+                TextView snackbarText = snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
                 if (snackbarText != null) {
                     snackbarText.setTextColor(Color.WHITE);
                 }
             }
+
+            SettingsManager.getInstance().hasSeenRateSnackbar = true;
         }
     }
 }
