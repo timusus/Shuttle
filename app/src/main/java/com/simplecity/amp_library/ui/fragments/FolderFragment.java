@@ -26,6 +26,7 @@ import com.simplecity.amp_library.interfaces.FileType;
 import com.simplecity.amp_library.model.BaseFileObject;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.sql.databases.WhitelistHelper;
+import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
 import com.simplecity.amp_library.ui.modelviews.BreadcrumbsView;
 import com.simplecity.amp_library.ui.modelviews.FolderView;
 import com.simplecity.amp_library.ui.views.BreadcrumbItem;
@@ -178,15 +179,19 @@ public class FolderFragment extends BaseFragment implements
         getNavigationController().addBackPressListener(this);
 
         setupContextualToolbar();
+
+        DrawerLockManager.getInstance().addDrawerLock();
     }
 
     @Override
     public void onPause() {
-        super.onPause();
-
         subscriptions.clear();
 
         getNavigationController().removeBackPressListener(this);
+
+        DrawerLockManager.getInstance().removeDrawerLock();
+
+        super.onPause();
     }
 
     @Override

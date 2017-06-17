@@ -40,6 +40,7 @@ import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.ArtworkProvider;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.tagger.TaggerDialog;
+import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
 import com.simplecity.amp_library.ui.fragments.BaseFragment;
 import com.simplecity.amp_library.ui.fragments.TransitionListenerAdapter;
 import com.simplecity.amp_library.ui.modelviews.AlbumView;
@@ -199,12 +200,16 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         if (canPlaySlideshow()) {
             startSlideShow();
         }
+
+        DrawerLockManager.getInstance().addDrawerLock();
     }
 
     @Override
     public void onPause() {
 
         subscriptions.unsubscribe();
+
+        DrawerLockManager.getInstance().removeDrawerLock();
 
         super.onPause();
     }

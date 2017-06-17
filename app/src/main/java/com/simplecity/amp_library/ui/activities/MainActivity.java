@@ -10,6 +10,7 @@ import android.view.View;
 import com.afollestad.aesthetic.Aesthetic;
 import com.greysonparrelli.permiso.Permiso;
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.ui.drawer.DrawerProvider;
 import com.simplecity.amp_library.ui.fragments.MainController;
 
 import java.util.ArrayList;
@@ -20,7 +21,8 @@ import test.com.androidnavigation.fragment.BackPressListener;
 
 public class MainActivity extends BaseCastActivity implements
         ToolbarListener,
-        BackPressHandler {
+        BackPressHandler,
+        DrawerProvider {
 
     private static final String TAG = "MainActivity";
 
@@ -36,13 +38,13 @@ public class MainActivity extends BaseCastActivity implements
 
         // If we haven't set any defaults, do that now
         if (Aesthetic.isFirstTime()) {
-        Aesthetic.get()
-                .activityTheme(R.style.AppTheme_Light)
-                .isDark(false)
-                .colorPrimaryRes(R.color.blue_500)
-                .colorAccentRes(R.color.amber_300)
-                .colorStatusBarAuto()
-                .apply();
+            Aesthetic.get()
+                    .activityTheme(R.style.AppTheme_Light)
+                    .isDark(false)
+                    .colorPrimaryRes(R.color.blue_500)
+                    .colorAccentRes(R.color.amber_300)
+                    .colorStatusBarAuto()
+                    .apply();
         }
 
         setContentView(R.layout.activity_main);
@@ -113,5 +115,10 @@ public class MainActivity extends BaseCastActivity implements
     @Override
     protected String screenName() {
         return "MainActivity";
+    }
+
+    @Override
+    public DrawerLayout getDrawerLayout() {
+        return drawerLayout;
     }
 }

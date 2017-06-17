@@ -17,6 +17,10 @@ import test.com.multisheetview.R;
 
 public class MultiSheetView extends FrameLayout {
 
+    public interface SheetStateChangeListener {
+        void onSheetStateChanged(@Sheet int sheet, SlidingUpPanelLayout.PanelState state);
+    }
+
     public @interface Sheet {
         int NONE = 0;
         int FIRST = 1;
@@ -27,6 +31,9 @@ public class MultiSheetView extends FrameLayout {
 
     private SlidingUpPanelLayout panel1Layout;
     private SlidingUpPanelLayout panel2Layout;
+
+    @Nullable
+    private SheetStateChangeListener sheetStateChangeListener;
 
     public MultiSheetView(Context context) {
         this(context, null);
@@ -42,12 +49,12 @@ public class MultiSheetView extends FrameLayout {
         View.inflate(context, R.layout.multi_sheet, this);
 
         panel1Layout = (SlidingUpPanelLayout) findViewById(R.id.sheet1);
-        panel2Layout = (SlidingUpPanelLayout) findViewById(R.id.sheet2);
-
         panel1Layout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
-            public void onPanelStateChanged(View view, SlidingUpPanelLayout.PanelState panelState, SlidingUpPanelLayout.PanelState panelState1) {
-
+            public void onPanelStateChanged(View view, SlidingUpPanelLayout.PanelState oldState, SlidingUpPanelLayout.PanelState newState) {
+                if (sheetStateChangeListener != null && oldState != newState) {
+                    sheetStateChangeListener.onSheetStateChanged(Sheet.FIRST, newState);
+                }
             }
 
             @Override
@@ -56,11 +63,15 @@ public class MultiSheetView extends FrameLayout {
             }
         });
 
+        panel2Layout = (SlidingUpPanelLayout) findViewById(R.id.sheet2);
         panel2Layout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
-            public void onPanelStateChanged(View view, SlidingUpPanelLayout.PanelState panelState, SlidingUpPanelLayout.PanelState newState) {
+            public void onPanelStateChanged(View view, SlidingUpPanelLayout.PanelState oldState, SlidingUpPanelLayout.PanelState newState) {
                 if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                     panel1Layout.setTouchEnabled(true);
+                }
+                if (sheetStateChangeListener != null && oldState != newState) {
+                    sheetStateChangeListener.onSheetStateChanged(Sheet.SECOND, newState);
                 }
             }
 
@@ -72,6 +83,10 @@ public class MultiSheetView extends FrameLayout {
         });
 
         findViewById(getSheetPeekViewResId(Sheet.FIRST)).setOnClickListener(v -> expandSheet(Sheet.FIRST));
+    }
+
+    public void setSheetStateChangeListener(@Nullable SheetStateChangeListener sheetStateChangeListener) {
+        this.sheetStateChangeListener = sheetStateChangeListener;
     }
 
     public void expandSheet(@Sheet int sheet) {

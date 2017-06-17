@@ -3,6 +3,7 @@ package com.simplecity.amp_library.ui.fragments;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +13,13 @@ import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.ui.detail.PlaylistDetailFragment;
 import com.simplecity.amp_library.ui.drawer.DrawerEventRelay;
+import com.simplecity.amp_library.ui.drawer.DrawerLockController;
+import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
+import com.simplecity.amp_library.ui.drawer.DrawerProvider;
 import com.simplecity.amp_library.ui.settings.SettingsParentFragment;
 import com.simplecity.amp_library.ui.views.UpNextView;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import javax.inject.Inject;
 
@@ -27,7 +32,7 @@ import test.com.androidnavigation.fragment.BaseNavigationController;
 import test.com.androidnavigation.fragment.FragmentInfo;
 import test.com.multisheetview.ui.view.MultiSheetView;
 
-public class MainController extends BaseNavigationController implements BackPressHandler {
+public class MainController extends BaseNavigationController implements BackPressHandler, DrawerLockController {
 
     private static final String TAG = "MainController";
 
@@ -41,6 +46,9 @@ public class MainController extends BaseNavigationController implements BackPres
 
     private Handler delayHandler;
 
+    @BindView(R.id.multiSheetView)
+    MultiSheetView multiSheetView;
+
     public static MainController newInstance() {
         Bundle args = new Bundle();
         MainController fragment = new MainController();
@@ -52,9 +60,6 @@ public class MainController extends BaseNavigationController implements BackPres
 
     }
 
-    @BindView(R.id.multiSheetView)
-    MultiSheetView multiSheetView;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -63,6 +68,14 @@ public class MainController extends BaseNavigationController implements BackPres
         ButterKnife.bind(this, rootView);
 
         ShuttleApplication.getInstance().getAppComponent().inject(this);
+
+        multiSheetView.setSheetStateChangeListener((sheet, state) -> {
+            if (state == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                DrawerLockManager.getInstance().removeDrawerLock();
+            } else if (state == SlidingUpPanelLayout.PanelState.EXPANDED) {
+                DrawerLockManager.getInstance().addDrawerLock();
+            }
+        });
 
         if (savedInstanceState == null) {
             getChildFragmentManager()
@@ -116,16 +129,20 @@ public class MainController extends BaseNavigationController implements BackPres
                             break;
                     }
                 }));
+
+        DrawerLockManager.getInstance().setDrawerLockController(this);
     }
 
     @Override
     public void onPause() {
-        super.onPause();
-
         delayHandler.removeCallbacksAndMessages(null);
         delayHandler = null;
 
         subscriptions.clear();
+
+        DrawerLockManager.getInstance().setDrawerLockController(null);
+
+        super.onPause();
     }
 
     @Override
@@ -133,7 +150,6 @@ public class MainController extends BaseNavigationController implements BackPres
         outState.putInt(STATE_CURRENT_SHEET, multiSheetView.getCurrentSheet());
         super.onSaveInstanceState(outState);
     }
-
 
     @Override
     public FragmentInfo getRootViewControllerInfo() {
@@ -147,5 +163,20 @@ public class MainController extends BaseNavigationController implements BackPres
         }
 
         return super.consumeBackPress();
+    }
+
+    @Override
+    public void lockDrawer() {
+        ((DrawerProvider) getActivity()).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+    }
+
+    @Override
+    public void unlockDrawer() {
+        // Don't unlock the drawer if one of the sheets is expanded
+        if (multiSheetView.getCurrentSheet() == MultiSheetView.Sheet.FIRST || multiSheetView.getCurrentSheet() == MultiSheetView.Sheet.SECOND) {
+            return;
+        }
+
+        ((DrawerProvider) getActivity()).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
     }
 }

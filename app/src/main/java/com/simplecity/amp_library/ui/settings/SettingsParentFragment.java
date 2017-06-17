@@ -19,6 +19,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
+import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
 
 import javax.inject.Inject;
 
@@ -76,6 +77,18 @@ public class SettingsParentFragment extends BaseNavigationController {
         toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        DrawerLockManager.getInstance().addDrawerLock();
+    }
+
+    @Override
+    public void onPause() {
+        DrawerLockManager.getInstance().removeDrawerLock();
+        super.onPause();
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat implements
