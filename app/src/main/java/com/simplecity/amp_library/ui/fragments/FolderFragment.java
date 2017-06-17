@@ -33,6 +33,7 @@ import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.FileBrowser;
 import com.simplecity.amp_library.utils.FileHelper;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
@@ -170,7 +171,8 @@ public class FolderFragment extends BaseFragment implements
                 }
             }).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(this::changeDir));
+                    .subscribe(this::changeDir,
+                            error -> LogUtils.logException("FolderFragment: Error in onResume", error)));
         }
 
         getNavigationController().addBackPressListener(this);
@@ -304,7 +306,7 @@ public class FolderFragment extends BaseFragment implements
                     if (adapter != null) {
                         changeBreadcrumbPath();
                     }
-                }));
+                }, error -> LogUtils.logException("FolderFragment: Error changing dir", error)));
     }
 
     public void reload() {
@@ -343,7 +345,7 @@ public class FolderFragment extends BaseFragment implements
                                     Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                                 }
                             });
-                        });
+                        }, error -> LogUtils.logException("FolderFragment: Error playing all", error));
             } else {
                 changeDir(new File(folderView.baseFileObject.path));
             }
@@ -403,7 +405,7 @@ public class FolderFragment extends BaseFragment implements
                     if (showCheckboxes) {
                         adapter.notifyItemRangeChanged(0, adapter.getItemCount());
                     }
-                });
+                }, error -> LogUtils.logException("FolderFragment: Error updating whitelist", error));
     }
 
     @Override

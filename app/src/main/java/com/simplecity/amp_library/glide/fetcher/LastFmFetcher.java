@@ -3,7 +3,7 @@ package com.simplecity.amp_library.glide.fetcher;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.simplecity.amp_library.lastfm.LastFmResult;
+import com.simplecity.amp_library.http.lastfm.LastFmResult;
 import com.simplecity.amp_library.model.ArtworkProvider;
 
 import java.io.BufferedInputStream;

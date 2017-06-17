@@ -111,7 +111,7 @@ public class PlaylistUtils {
         Query query = new Query.Builder()
                 .uri(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI)
                 .projection(new String[]{MediaStore.Audio.Playlists._ID})
-                .selection(MediaStore.Audio.Playlists.NAME + "='" + name + "'")
+                .selection(MediaStore.Audio.Playlists.NAME + "='" + name.replaceAll("'", "\''") + "'")
                 .sort(MediaStore.Audio.Playlists.NAME)
                 .build();
 
@@ -195,7 +195,7 @@ public class PlaylistUtils {
                     } else {
                         Toast.makeText(context, R.string.playlist_save_failed, Toast.LENGTH_SHORT).show();
                     }
-                });
+                }, error -> LogUtils.logException("PlaylistUtils: Error saving m3u playlist", error));
     }
 
     /**
@@ -229,7 +229,7 @@ public class PlaylistUtils {
                         intent.putExtra(ShuttleUtils.ARG_PLAYLIST, playlist);
                         sub.add(0, MusicUtils.Defs.PLAYLIST_SELECTED, 0, playlist.name).setIntent(intent);
                     }
-                });
+                }, error -> LogUtils.logException("PlaylistUtils: Error making playlist menu", error));
     }
 
     /**
@@ -264,7 +264,7 @@ public class PlaylistUtils {
                         progressDialog.dismiss();
                     }
                     addToPlaylist(context, playlist, songs);
-                });
+                }, error -> LogUtils.logException("PlaylistUtils: Error getting songs for file object", error));
     }
 
     /**
@@ -351,7 +351,7 @@ public class PlaylistUtils {
                     } else {
                         insertPlaylistItems(context, playlist, songs, existingSongs.size());
                     }
-                });
+                }, error -> LogUtils.logException("PlaylistUtils: Error determining existing songs", error));
     }
 
     private static void insertPlaylistItems(@NonNull Context context, @NonNull Playlist playlist, @NonNull List<Song> songs, int songCount) {
@@ -463,7 +463,7 @@ public class PlaylistUtils {
                     } else {
                         removeFromFavorites(action);
                     }
-                });
+                }, error -> LogUtils.logException("PlaylistUtils: Error toggling favourites", error));
     }
 
     /**
@@ -515,7 +515,7 @@ public class PlaylistUtils {
                     if (numTracksRemoved > 0) {
                         action.call(ShuttleApplication.getInstance().getResources().getString(R.string.song_removed_from_favourites, song.name));
                     }
-                });
+                }, error -> LogUtils.logException("PlaylistUtils: Error Removing from favourites", error));
     }
 
     public static void showPlaylistToast(Context context, int numTracksAdded) {
@@ -546,7 +546,7 @@ public class PlaylistUtils {
                     if (!TextUtils.isEmpty(name)) {
                         editText.setSelection(name.length());
                     }
-                });
+                }, error -> LogUtils.logException("PlaylistUtils: Error Setting playlist name", error));
 
         MaterialDialog.Builder builder = DialogUtils.getBuilder(context)
                 .customView(customView, false)
@@ -576,7 +576,7 @@ public class PlaylistUtils {
                                     if (uri != null) {
                                         listener.onSave(new Playlist(Playlist.Type.USER_CREATED, Long.valueOf(uri.getLastPathSegment()), name, true, false, true, true, true));
                                     }
-                                });
+                                }, error -> LogUtils.logException("PlaylistUtils: Error Saving playlist", error));
                     }
                 })
                 .negativeText(R.string.cancel);
@@ -607,7 +607,7 @@ public class PlaylistUtils {
                                 } else {
                                     ((MaterialDialog) dialog).getActionButton(DialogAction.POSITIVE).setText(R.string.create_playlist_create_text);
                                 }
-                            });
+                            }, error -> LogUtils.logException("PlaylistUtils: Error handling text change", error));
                 }
             }
 

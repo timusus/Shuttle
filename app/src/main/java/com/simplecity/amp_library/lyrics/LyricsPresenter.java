@@ -14,6 +14,7 @@ import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.sql.SqlUtils;
 import com.simplecity.amp_library.ui.presenters.Presenter;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 
 import org.jaudiotagger.audio.AudioFile;
@@ -39,7 +40,7 @@ class LyricsPresenter extends Presenter<LyricsView> {
         updateLyrics();
 
         addSubcscription(RxBroadcastReceiver.create(ShuttleApplication.getInstance(), new IntentFilter(MusicService.InternalIntents.META_CHANGED))
-                .subscribe(intent -> updateLyrics()));
+                .subscribe(intent -> updateLyrics(), error -> LogUtils.logException("LyricsPresenter: Error receiving meta changed", error)));
     }
 
     void downloadOrLaunchQuickLyric() {
@@ -118,6 +119,6 @@ class LyricsPresenter extends Presenter<LyricsView> {
                 lyricsView.showNoLyricsView(lyrics == null);
                 lyricsView.showQuickLyricInfoButton(!QuickLyricUtils.isQLInstalled());
             }
-        }));
+        }, error -> LogUtils.logException("LyricsPresenter: Error getting lyrics", error)));
     }
 }

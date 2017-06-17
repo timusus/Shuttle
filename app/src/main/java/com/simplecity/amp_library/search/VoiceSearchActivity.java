@@ -13,6 +13,7 @@ import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.ui.activities.BaseActivity;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.DataManager;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 
 import java.util.Collections;
@@ -111,7 +112,7 @@ public class VoiceSearchActivity extends BaseActivity {
                                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show());
                     }
                     finish();
-                });
+                }, error -> LogUtils.logException("VoiceSearchActivity, error attempting to playAll()", error));
     }
 
     @Override

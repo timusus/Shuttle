@@ -24,6 +24,8 @@ import com.simplecity.amp_library.ui.modelviews.SearchHeaderView;
 import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.presenters.Presenter;
 import com.simplecity.amp_library.utils.DataManager;
+import com.simplecity.amp_library.utils.DialogUtils;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.Operators;
@@ -144,7 +146,7 @@ public class SearchPresenter extends Presenter<SearchView> implements
                         } else {
                             setItemsSubscription = searchView.setItems(adaptableItems);
                         }
-                    });
+                    }, error -> LogUtils.logException("SearchPresenter: Error refreshing adapter", error));
 
             addSubcscription(performSearchSubscription);
         }

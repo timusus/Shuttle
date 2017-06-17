@@ -58,6 +58,8 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder, Song>
 
     private boolean showAlbumArt;
 
+    private boolean showPlayCount;
+
     private boolean showTrackNumber;
 
     private boolean isCurrentTrack;
@@ -80,6 +82,10 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder, Song>
 
     public void setShowAlbumArt(boolean showAlbumArt) {
         this.showAlbumArt = showAlbumArt;
+    }
+
+    public void setShowPlayCount(boolean showPlayCount) {
+        this.showPlayCount = showPlayCount;
     }
 
     public void setPrefix(PrefixHighlighter prefixHighlighter, char[] prefix) {
@@ -141,7 +147,7 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder, Song>
         holder.lineOne.setText(song.name);
 
         if (holder.playCount != null) {
-            if (song.playCount > 1) {
+            if (showPlayCount && song.playCount > 1) {
                 holder.playCount.setVisibility(View.VISIBLE);
                 holder.playCount.setText(String.valueOf(song.playCount));
             } else {

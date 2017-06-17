@@ -31,6 +31,7 @@ import com.simplecity.amp_library.ui.modelviews.SuggestedHeaderView;
 import com.simplecity.amp_library.ui.modelviews.SuggestedSongView;
 import com.simplecity.amp_library.ui.views.SuggestedDividerDecoration;
 import com.simplecity.amp_library.utils.ComparisonUtils;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.Operators;
@@ -353,7 +354,7 @@ public class SuggestedFragment extends BaseFragment implements
                                     } else {
                                         ViewModelAdapter.setItems(adaptableItems);
                                     }
-                                }));
+                                }, error -> LogUtils.logException("SuggestedFragment: Error setting items", error)));
 
                 subscription.add(mostPlayedSongsObservable
                         .map(songs -> {
@@ -369,7 +370,8 @@ public class SuggestedFragment extends BaseFragment implements
                                     .collect(Collectors.toList());
                         })
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(adaptableItems -> mostPlayedRecyclerView.ViewModelAdapter.setItems(adaptableItems)));
+                        .subscribe(adaptableItems -> mostPlayedRecyclerView.ViewModelAdapter.setItems(adaptableItems),
+                                error -> LogUtils.logException("SuggestedFragment: Error setting most played songs", error)));
 
                 subscription.add(favouritesSongsObservable
                         .map(songs -> {
@@ -384,7 +386,8 @@ public class SuggestedFragment extends BaseFragment implements
                                     .collect(Collectors.toList());
                         })
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(adaptableItems -> favoriteRecyclerView.ViewModelAdapter.setItems(adaptableItems)));
+                        .subscribe(adaptableItems -> favoriteRecyclerView.ViewModelAdapter.setItems(adaptableItems),
+                                error -> LogUtils.logException("SuggestedFragment: Error setting favourite songs", error)));
             }
         });
     }

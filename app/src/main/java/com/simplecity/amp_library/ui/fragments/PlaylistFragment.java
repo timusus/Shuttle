@@ -18,6 +18,7 @@ import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.PlaylistView;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.DataManager;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
@@ -162,7 +163,7 @@ public class PlaylistFragment extends BaseFragment implements
                             } else {
                                 mPlaylistAdapter.setItems(items);
                             }
-                        });
+                        }, error -> LogUtils.logException("PlaylistFragment: Error refreshing adapter", error));
             }
         });
     }

@@ -80,6 +80,7 @@ import com.simplecity.amp_library.ui.widgets.WidgetProviderMedium;
 import com.simplecity.amp_library.ui.widgets.WidgetProviderSmall;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.DrawableUtils;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MediaButtonIntentReceiver;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
@@ -88,6 +89,7 @@ import com.simplecity.amp_library.utils.ShuttleUtils;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -368,7 +370,7 @@ public class MusicService extends Service {
                     } catch (Exception e) {
                         Log.e(TAG, "Failed to load media. " + e.toString());
                     }
-                });
+                }, error -> LogUtils.logException("MusicService: Error loading remote media", error));
     }
 
     void prepareChromeCastLoad(int position, boolean autoPlay) {
@@ -1192,7 +1194,7 @@ public class MusicService extends Service {
 
                         queueReloadComplete();
                     }
-                });
+                }, error -> LogUtils.logException("MusicService: Reloading queue", error));
     }
 
     void queueReloadComplete() {
@@ -1319,7 +1321,9 @@ public class MusicService extends Service {
                         ShuttleUtils.incrementPlayCount(this, finishedSong);
                         return null;
                     }).subscribeOn(Schedulers.io())
-                            .subscribe();
+                            .subscribe(o -> {
+                                // Nothing to do
+                            }, error -> LogUtils.logException("MusicService: Error incrementing play count", error));
                 }
                 scrobbleBroadcast(Status.COMPLETE, finishedSong);
             }
@@ -1338,7 +1342,7 @@ public class MusicService extends Service {
                     final Intent intent = new Intent(what);
                     intent.putExtras(extras);
                     sendBroadcast(intent);
-                });
+                }, error -> LogUtils.logException("MusicService: Error sending broadcast", error));
 
         //Tasker intent
         Intent taskerIntent = new Intent(ExternalIntents.TASKER);
@@ -1360,7 +1364,7 @@ public class MusicService extends Service {
                         final Intent intent = new Intent(ExternalIntents.AVRCP_PLAY_STATE_CHANGED);
                         intent.putExtras(extras);
                         sendBroadcast(intent);
-                    });
+                    }, error -> LogUtils.logException("ArtworkDownloadService: Error sending bluetooth intent", error));
 
             if (isPlaying()) {
                 if (currentSong != null) {
@@ -1402,7 +1406,7 @@ public class MusicService extends Service {
                         final Intent intent = new Intent(ExternalIntents.AVRCP_META_CHANGED);
                         intent.putExtras(extras);
                         sendBroadcast(intent);
-                    });
+                    }, error -> LogUtils.logException("MusicService: Error AVRCP meta changed event", error));
 
             //Pebble intent
             sendBroadcast(pebbleIntent);
@@ -1436,11 +1440,22 @@ public class MusicService extends Service {
     public void enqueue(List<Song> songs, final int action) {
         synchronized (this) {
             if (action == EnqueueAction.NEXT && playPos + 1 < getCurrentPlaylist().size()) {
-                getCurrentPlaylist().addAll(playPos + 1, songs);
+                if (shuffleMode == ShuffleMode.ON) {
+                    // Insert the songs at our playPos, into the current list
+                    shuffleList.addAll(playPos + 1, songs);
+                    // Now insert them at the end of the other list
+                    playlist.addAll(songs);
+                } else {
+                    // Insert the songs at our playPos, into the current list
+                    playlist.addAll(playPos + 1, songs);
+                    // Now insert them at the end of the other list
+                    shuffleList.addAll(songs);
+                }
                 setNextTrack();
                 notifyChange(InternalIntents.QUEUE_CHANGED);
             } else {
-                getCurrentPlaylist().addAll(songs);
+                playlist.addAll(songs);
+                shuffleList.addAll(songs);
                 notifyChange(InternalIntents.QUEUE_CHANGED);
                 if (action == EnqueueAction.NOW) {
                     playPos = getCurrentPlaylist().size() - songs.size();
@@ -1735,7 +1750,7 @@ public class MusicService extends Service {
                                 completion.call();
                             }
                         }
-                    });
+                    }, error -> LogUtils.logException("MusicService: Error opening file", error));
         }
     }
 
@@ -2396,7 +2411,7 @@ public class MusicService extends Service {
                         play();
                         notifyChange(InternalIntents.META_CHANGED);
                         saveQueue(false);
-                    });
+                    }, error -> LogUtils.logException("MusicService: Error playing auto shuffle list", error));
 
         } else {
             shuffleMode = ShuffleMode.OFF;
@@ -2907,7 +2922,7 @@ public class MusicService extends Service {
         try {
             mNotificationStateHandler.sendEmptyMessage(NotificationStateHandler.START_FOREGROUND);
             startForeground(id, notification);
-        } catch (NullPointerException e) {
+        } catch (NullPointerException | ConcurrentModificationException e) {
             Crashlytics.log("startForegroundImpl error: " + e.getMessage());
         }
     }

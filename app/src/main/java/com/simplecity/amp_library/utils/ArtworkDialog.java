@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -113,9 +112,7 @@ public class ArtworkDialog {
                             artworkAdapter.addItem(new ArtworkView(ArtworkProvider.Type.FOLDER, artworkProvider, glideListener, file, false));
                         });
                     }
-                }, error -> {
-                    Log.e(TAG, "Error getting folder artwork files.. " + error.toString());
-                });
+                }, error -> LogUtils.logException("ArtworkDialog: Error getting artwork files", error));
 
         return DialogUtils.getBuilder(context)
                 .title(context.getString(R.string.artwork_edit))
@@ -190,7 +187,7 @@ public class ArtworkDialog {
                             artworkAdapter.addItem(0, artworkView);
                             artworkAdapter.selectItem(0);
                             recyclerView.scrollToPosition(0);
-                        }))
+                        }, error -> LogUtils.logException("ArtworkDialog error picking from gallery", error)))
                 .cancelable(false)
                 .build();
     }

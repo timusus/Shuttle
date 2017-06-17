@@ -44,6 +44,7 @@ import com.simplecity.amp_library.ui.views.RepeatButton;
 import com.simplecity.amp_library.ui.views.RepeatingImageButton;
 import com.simplecity.amp_library.ui.views.ShuffleButton;
 import com.simplecity.amp_library.ui.views.SizableSeekBar;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.StringUtils;
 
 import java.util.concurrent.TimeUnit;
@@ -214,13 +215,14 @@ public class PlayerFragment extends BaseFragment implements PlayerView, Toolbar.
             } else if (seekBarChangeEvent instanceof SeekBarStopChangeEvent) {
                 isSeeking = false;
             }
-        }));
+        }, error -> LogUtils.logException("PlayerFragment: Error in seek change event", error)));
 
         subscriptions.add(sharedSeekBarEvents
                 .ofType(SeekBarProgressChangeEvent.class)
                 .filter(SeekBarProgressChangeEvent::fromUser)
                 .debounce(15, TimeUnit.MILLISECONDS)
-                .subscribe(seekBarChangeEvent -> presenter.seekTo(seekBarChangeEvent.progress())));
+                .subscribe(seekBarChangeEvent -> presenter.seekTo(seekBarChangeEvent.progress()),
+                        error -> LogUtils.logException("PlayerFragment: Error receiving seekbar progress", error)));
     }
 
     @Override

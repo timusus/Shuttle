@@ -41,8 +41,8 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.http.HttpClient;
-import com.simplecity.amp_library.lastfm.LastFmAlbum;
-import com.simplecity.amp_library.lastfm.LastFmArtist;
+import com.simplecity.amp_library.http.lastfm.LastFmAlbum;
+import com.simplecity.amp_library.http.lastfm.LastFmArtist;
 import com.simplecity.amp_library.model.BlacklistedSong;
 import com.simplecity.amp_library.model.FileObject;
 import com.simplecity.amp_library.model.Song;
@@ -318,7 +318,7 @@ public class DialogUtils {
                         } else {
                             Toast.makeText(context, R.string.delete_songs_failure_toast, Toast.LENGTH_SHORT).show();
                         }
-                    });
+                    }, error -> LogUtils.logException("DialogUtils: Error scanning files", error));
         }
 
         public MaterialDialog build() {
@@ -644,7 +644,7 @@ public class DialogUtils {
                     } else {
                         blacklistAdapter.setItems(blacklistViews);
                     }
-                });
+                }, error -> LogUtils.logException("DialogUtils: Error setting blacklist vies", error));
 
         dialog.setOnDismissListener(dialogInterface -> subscription.unsubscribe());
         dialog.show();
@@ -695,7 +695,7 @@ public class DialogUtils {
                     } else {
                         whitelistAdapter.setItems(whitelistViews);
                     }
-                });
+                }, error -> LogUtils.logException("DialogUtils: Error setting whitelist items", error));
 
         dialog.setOnDismissListener(dialogInterface -> subscription.unsubscribe());
         dialog.show();
@@ -740,7 +740,8 @@ public class DialogUtils {
         Observable.fromCallable(song::getGenre)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(genre -> genreValue.setText(genre == null ? null : genre.name));
+                .subscribe(genre -> genreValue.setText(genre == null ? null : genre.name),
+                        error -> LogUtils.logException("DialogUtils: Error getting genre", error));
 
         View albumArtistView = view.findViewById(R.id.album_artist);
         TextView albumArtistKey = (TextView) albumArtistView.findViewById(R.id.key);
@@ -797,7 +798,8 @@ public class DialogUtils {
         Observable.fromCallable(() -> song.getPlayCount(context))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(playCount -> playCountValue.setText(String.valueOf(playCount)));
+                .subscribe(playCount -> playCountValue.setText(String.valueOf(playCount)),
+                        error -> LogUtils.logException("DialogUtils:  Error getting play count", error));
 
         getBuilder(context)
                 .title(context.getString(R.string.dialog_song_info_title))
