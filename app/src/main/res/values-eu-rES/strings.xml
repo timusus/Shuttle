@@ -575,13 +575,13 @@ karpeta</item>
     <string name="sort_files_track_name">Abestiaren izena</string>
     <!-- ## Sleep Timer ## -->
     <!-- Options Menu - Sleep Timer Title -->
-    <string name="timer">Atsedeneko tenporizadorea</string>
+    <string name="sleep_timer">Atsedeneko tenporizadorea</string>
     <!-- -->
     <string name="sleep_timer_play_to_end">Azken abestia bukaeraraino erreproduzitu</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_set">Ezarri</string>
+    <string name="sleep_timer_set">Ezarri</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_stop">Gelditu</string>
+    <string name="sleep_timer_stop_button">Gelditu</string>
     <!-- Button name in time span picker -->
     <string name="button_done">Bukatuta</string>
     <!-- Title of time span picker -->

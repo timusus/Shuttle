@@ -576,13 +576,13 @@
     <string name="sort_files_track_name">Назва композиції</string>
     <!-- ## Sleep Timer ## -->
     <!-- Options Menu - Sleep Timer Title -->
-    <string name="timer">Таймер сну</string>
+    <string name="sleep_timer">Таймер сну</string>
     <!-- -->
     <string name="sleep_timer_play_to_end">Відтворити останній трек до кінця</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_set">Встановити</string>
+    <string name="sleep_timer_set">Встановити</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_stop">Стоп</string>
+    <string name="sleep_timer_stop_button">Стоп</string>
     <!-- Button name in time span picker -->
     <string name="button_done">Готово</string>
     <!-- Title of time span picker -->

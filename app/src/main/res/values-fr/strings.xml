@@ -556,13 +556,13 @@
     <string name="sort_files_track_name">Nom de la piste</string>
     <!-- ## Sleep Timer ## -->
     <!-- Options Menu - Sleep Timer Title -->
-    <string name="timer">Minuteur d\'arrêt</string>
+    <string name="sleep_timer">Minuteur d\'arrêt</string>
     <!-- -->
     <string name="sleep_timer_play_to_end">Lire le dernier titre jusqu\'à la fin</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_set">Définir</string>
+    <string name="sleep_timer_set">Définir</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_stop">Arrêter</string>
+    <string name="sleep_timer_stop_button">Arrêter</string>
     <!-- Button name in time span picker -->
     <string name="button_done">Terminé</string>
     <!-- Title of time span picker -->

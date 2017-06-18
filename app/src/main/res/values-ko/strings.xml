@@ -570,13 +570,13 @@
     <string name="sort_files_track_name">제목</string>
     <!-- ## Sleep Timer ## -->
     <!-- Options Menu - Sleep Timer Title -->
-    <string name="timer">종료 타이머</string>
+    <string name="sleep_timer">종료 타이머</string>
     <!-- -->
     <string name="sleep_timer_play_to_end">마지막 노래를 끝까지 재생</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_set">설정</string>
+    <string name="sleep_timer_set">설정</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_stop">정지</string>
+    <string name="sleep_timer_stop_button">정지</string>
     <!-- Button name in time span picker -->
     <string name="button_done">완료</string>
     <!-- Title of time span picker -->

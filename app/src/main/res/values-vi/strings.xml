@@ -574,13 +574,13 @@
     <string name="sort_files_track_name">Tên bài hát</string>
     <!-- ## Sleep Timer ## -->
     <!-- Options Menu - Sleep Timer Title -->
-    <string name="timer">Hẹn giờ</string>
+    <string name="sleep_timer">Hẹn giờ</string>
     <!-- -->
     <string name="sleep_timer_play_to_end">Phát hết bài cuối</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_set">Đặt</string>
+    <string name="sleep_timer_set">Đặt</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_stop">Dừng</string>
+    <string name="sleep_timer_stop_button">Dừng</string>
     <!-- Button name in time span picker -->
     <string name="button_done">Xong</string>
     <!-- Title of time span picker -->

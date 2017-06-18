@@ -64,6 +64,11 @@ final class MediaPlayerHandler extends Handler {
                 service.notifyChange(MusicService.InternalIntents.META_CHANGED);
                 service.updateNotification();
                 service.setNextTrack();
+
+                if (service.pauseOnTrackFinish) {
+                    service.pause();
+                    service.pauseOnTrackFinish = false;
+                }
                 break;
             case MusicService.PlayerHandler.TRACK_ENDED:
                 service.notifyChange(MusicService.InternalIntents.TRACK_ENDING);

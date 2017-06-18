@@ -486,39 +486,11 @@ public class MusicUtils {
         MusicServiceConnectionUtils.sServiceBinder.getService().clearQueue();
     }
 
-    public static void setTimer(int sleepNumber) {
-        if (MusicServiceConnectionUtils.sServiceBinder == null || MusicServiceConnectionUtils.sServiceBinder.getService() == null) {
-            return;
-        }
-        MusicServiceConnectionUtils.sServiceBinder.getService().sleep(sleepNumber);
-    }
-
-    public static void stopTimer() {
-        if (MusicServiceConnectionUtils.sServiceBinder == null || MusicServiceConnectionUtils.sServiceBinder.getService() == null) {
-            return;
-        }
-        MusicServiceConnectionUtils.sServiceBinder.getService().stopTimer();
-    }
-
     public static List<Song> getQueue() {
         if (MusicServiceConnectionUtils.sServiceBinder != null && MusicServiceConnectionUtils.sServiceBinder.getService() != null) {
             return MusicServiceConnectionUtils.sServiceBinder.getService().getQueue();
         }
         return new ArrayList<>();
-    }
-
-    public static boolean getTimerActive() {
-        if (MusicServiceConnectionUtils.sServiceBinder == null || MusicServiceConnectionUtils.sServiceBinder.getService() == null) {
-            return false;
-        }
-        return MusicServiceConnectionUtils.sServiceBinder.getService().isTimerActive();
-    }
-
-    public static long getTimeRemaining() {
-        if (MusicServiceConnectionUtils.sServiceBinder.getService() == null) {
-            return 0;
-        }
-        return MusicServiceConnectionUtils.sServiceBinder.getService().timeRemaining();
     }
 
     public static int getQueuePosition() {

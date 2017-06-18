@@ -49,7 +49,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.CompositeDisposable;
-import rx.subscriptions.CompositeSubscription;
+import rx.Subscription;
 import test.com.multisheetview.ui.view.MultiSheetView;
 
 public class QueueFragment extends BaseFragment implements
@@ -89,7 +89,7 @@ public class QueueFragment extends BaseFragment implements
 
     private ContextualToolbarHelper<Song> contextualToolbarHelper;
 
-    private CompositeSubscription subscription = new CompositeSubscription();
+    private Subscription loadDataSubscription;
 
     public static QueueFragment newInstance() {
         Bundle args = new Bundle();
@@ -197,7 +197,9 @@ public class QueueFragment extends BaseFragment implements
         playerPresenter.unbindView(playerViewAdapter);
         queuePresenter.unbindView(this);
 
-        subscription.clear();
+        if (loadDataSubscription != null) {
+            loadDataSubscription.unsubscribe();
+        }
     }
 
     @Override
@@ -243,13 +245,18 @@ public class QueueFragment extends BaseFragment implements
     public void loadData(List<ViewModel> items, int position) {
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {
-                subscription.add(adapter.setItems(items, new CompletionListUpdateCallbackAdapter() {
+
+                if (loadDataSubscription != null) {
+                    loadDataSubscription.unsubscribe();
+                }
+
+                loadDataSubscription = adapter.setItems(items, new CompletionListUpdateCallbackAdapter() {
                     @Override
                     public void onComplete() {
                         setCurrentQueueItem(position);
                         recyclerView.scrollToPosition(position);
                     }
-                }));
+                });
             }
         });
     }

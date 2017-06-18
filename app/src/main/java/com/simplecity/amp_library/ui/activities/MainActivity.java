@@ -12,6 +12,7 @@ import com.greysonparrelli.permiso.Permiso;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ui.drawer.DrawerProvider;
 import com.simplecity.amp_library.ui.fragments.MainController;
+import com.simplecity.amp_library.utils.SleepTimer;
 
 import java.util.ArrayList;
 import java.util.List;

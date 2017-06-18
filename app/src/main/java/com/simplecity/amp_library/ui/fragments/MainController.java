@@ -7,6 +7,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
@@ -19,6 +20,7 @@ import com.simplecity.amp_library.ui.drawer.DrawerProvider;
 import com.simplecity.amp_library.ui.settings.SettingsParentFragment;
 import com.simplecity.amp_library.ui.views.UpNextView;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
+import com.simplecity.amp_library.utils.SleepTimer;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import javax.inject.Inject;
@@ -26,6 +28,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.subscriptions.CompositeSubscription;
 import test.com.androidnavigation.fragment.BackPressHandler;
 import test.com.androidnavigation.fragment.BaseNavigationController;
@@ -111,6 +114,14 @@ public class MainController extends BaseNavigationController implements BackPres
                             break;
                         case DrawerEventRelay.DrawerEvent.Type.FOLDERS_SELECTED:
                             delayHandler.postDelayed(() -> pushViewController(FolderFragment.newInstance("PageTitle"), "FolderFragment"), 250);
+                            break;
+                        case DrawerEventRelay.DrawerEvent.Type.SLEEP_TIMER_SELECTED:
+                            Action0 showToast = () -> Toast.makeText(getContext(), R.string.sleep_timer_started, Toast.LENGTH_SHORT).show();
+                            SleepTimer.getInstance().getDialog(
+                                    getContext(),
+                                    () -> SleepTimer.getInstance().showTimeThingDialog(getContext(), getFragmentManager(), showToast),
+                                    showToast
+                            ).show();
                             break;
                         case DrawerEventRelay.DrawerEvent.Type.EQUALIZER_SELECTED:
                             delayHandler.postDelayed(() -> multiSheetEventRelay.sendEvent(new MultiSheetEventRelay.MultiSheetEvent(MultiSheetEventRelay.MultiSheetEvent.Action.HIDE, MultiSheetView.Sheet.FIRST)), 100);

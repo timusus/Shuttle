@@ -17,31 +17,41 @@ import com.afollestad.aesthetic.Aesthetic;
 import com.bignerdranch.expandablerecyclerview.ParentViewHolder;
 import com.bignerdranch.expandablerecyclerview.model.Parent;
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
+import com.simplecity.amp_library.utils.SleepTimer;
+import com.simplecity.amp_library.utils.StringUtils;
 import com.simplecity.amp_library.utils.TypefaceManager;
+import com.simplecityapps.recycler_adapter.recyclerview.AttachStateViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.subscriptions.CompositeSubscription;
 
 public class DrawerParent implements Parent<DrawerChild> {
 
+    private static final String TAG = "DrawerParent";
+
     static DrawerParent libraryParent = new DrawerParent(DrawerParent.Type.LIBRARY, R.string.library_title, R.drawable.ic_library_white, DrawerEventRelay.librarySelectedEvent, true);
     static DrawerParent folderParent = new DrawerParent(DrawerParent.Type.FOLDERS, R.string.folders_title, R.drawable.ic_folders_many_white, DrawerEventRelay.foldersSelectedEvent, true);
+    static DrawerParent playlistsParent = new DrawerParent(DrawerParent.Type.PLAYLISTS, R.string.playlists_title, R.drawable.ic_action_toggle_queue, null, true);
+    static DrawerParent sleepTimerParent = new DrawerParent(Type.SLEEP_TIMER, R.string.sleep_timer, R.drawable.ic_sleep_24dp, DrawerEventRelay.sleepTimerSelectedEvent, false);
     static DrawerParent equalizerParent = new DrawerParent(Type.EQUALIZER, R.string.equalizer, R.drawable.ic_equalizer_24dp, DrawerEventRelay.equalizerSelectedEvent, false);
     static DrawerParent settingsParent = new DrawerParent(DrawerParent.Type.SETTINGS, R.string.settings, R.drawable.ic_action_settings, DrawerEventRelay.settingsSelectedEvent, false);
     static DrawerParent supportParent = new DrawerParent(DrawerParent.Type.SUPPORT, R.string.pref_title_support, R.drawable.ic_settings_help, DrawerEventRelay.supportSelectedEvent, false);
-    static DrawerParent playlistsParent = new DrawerParent(DrawerParent.Type.PLAYLISTS, R.string.playlists_title, R.drawable.ic_action_toggle_queue, null, true);
 
     public @interface Type {
         int LIBRARY = 0;
         int FOLDERS = 1;
         int PLAYLISTS = 2;
-        int EQUALIZER = 3;
-        int SETTINGS = 4;
-        int SUPPORT = 5;
+        int SLEEP_TIMER = 3;
+        int EQUALIZER = 4;
+        int SETTINGS = 5;
+        int SUPPORT = 6;
     }
 
     boolean selectable = true;
@@ -145,9 +155,11 @@ public class DrawerParent implements Parent<DrawerChild> {
         }
     }
 
-    static class ParentHolder extends ParentViewHolder {
+    static class ParentHolder extends ParentViewHolder implements AttachStateViewHolder {
 
         private DrawerParent drawerParent;
+
+        private CompositeSubscription subscriptions = new CompositeSubscription();
 
         @BindView(R.id.icon)
         ImageView icon;
@@ -157,6 +169,9 @@ public class DrawerParent implements Parent<DrawerChild> {
 
         @BindView(R.id.expandable_icon)
         ImageView expandableIcon;
+
+        @BindView(R.id.timeRemaining)
+        TextView timeRemaining;
 
         private ObjectAnimator objectAnimator;
 
@@ -192,6 +207,32 @@ public class DrawerParent implements Parent<DrawerChild> {
             super.onClick(v);
 
             drawerParent.onClick();
+        }
+
+        @Override
+        public void onAttachedToWindow() {
+            if (drawerParent.type == Type.SLEEP_TIMER) {
+                subscriptions.add(SleepTimer.getInstance().getCurrentTimeObservable()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(aLong -> {
+                            if (aLong > 0) {
+                                timeRemaining.setText(StringUtils.makeTimeString(itemView.getContext(), aLong));
+                            }
+                        }, throwable -> LogUtils.logException("DrawerParent error observing sleep time", throwable)));
+
+                subscriptions.add(SleepTimer.getInstance().getTimerActiveSubject()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(active -> timeRemaining.setVisibility(active ? View.VISIBLE : View.GONE),
+                                throwable -> LogUtils.logException("DrawerParent error observing sleep state", throwable))
+                );
+            }
+        }
+
+        @Override
+        public void onDetachedFromWindow() {
+            if (subscriptions != null) {
+                subscriptions.clear();
+            }
         }
     }
 }

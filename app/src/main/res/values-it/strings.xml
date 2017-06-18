@@ -580,13 +580,13 @@ cartelle "</item>
     <string name="sort_files_track_name">Nome del brano</string>
     <!-- ## Sleep Timer ## -->
     <!-- Options Menu - Sleep Timer Title -->
-    <string name="timer">Spegnimento automatico</string>
+    <string name="sleep_timer">Spegnimento automatico</string>
     <!-- -->
     <string name="sleep_timer_play_to_end">Riproduci l\'ultimo brano fino alla fine</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_set">Imposta</string>
+    <string name="sleep_timer_set">Imposta</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_stop">Stop</string>
+    <string name="sleep_timer_stop_button">Stop</string>
     <!-- Button name in time span picker -->
     <string name="button_done">Fatto</string>
     <!-- Title of time span picker -->

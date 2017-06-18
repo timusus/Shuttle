@@ -85,6 +85,7 @@ import com.simplecity.amp_library.utils.MediaButtonIntentReceiver;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
+import com.simplecity.amp_library.utils.SleepTimer;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -100,6 +101,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 @SuppressLint("InlinedApi")
 public class MusicService extends Service {
@@ -301,10 +303,6 @@ public class MusicService extends Service {
 
     private static NotificationStateHandler mNotificationStateHandler;
 
-    SleepHandler sleepHandler;
-
-    private long sleepTime;
-
     // Used to track what type of audio focus loss caused the playback to pause
     boolean pausedByTransientLossOfFocus = false;
 
@@ -324,6 +322,10 @@ public class MusicService extends Service {
 
     private boolean queueReloading;
     private boolean playOnQueueLoad;
+
+    private CompositeSubscription subscriptions = new CompositeSubscription();
+
+    boolean pauseOnTrackFinish = false;
 
     void updatePlaybackLocation(int location) {
 
@@ -577,7 +579,6 @@ public class MusicService extends Service {
 
         // Initialize the handlers
         playerHandler = new MediaPlayerHandler(this, mHandlerThread.getLooper());
-        sleepHandler = new SleepHandler(this);
         mNotificationStateHandler = new NotificationStateHandler(this);
 
         registerHeadsetPlugReceiver();
@@ -641,6 +642,18 @@ public class MusicService extends Service {
         scheduleDelayedShutdown();
 
         reloadQueue();
+
+        Observable<Long> currentTimeObservable = SleepTimer.getInstance().getCurrentTimeObservable();
+        subscriptions.add(currentTimeObservable
+                .subscribe(remainingTime -> {
+                    if (remainingTime == 0) {
+                        if (SleepTimer.getInstance().playToEnd) {
+                            pauseOnTrackFinish = true;
+                        } else {
+                            playerHandler.sendEmptyMessage(MusicService.PlayerHandler.FADE_DOWN_STOP);
+                        }
+                    }
+                }, throwable -> LogUtils.logException("MusicService error consuming SleepTimer observable", throwable)));
     }
 
     List<Song> getCurrentPlaylist() {
@@ -846,7 +859,6 @@ public class MusicService extends Service {
 
         // Remove any callbacks from the handlers
         playerHandler.removeCallbacksAndMessages(null);
-        sleepHandler.removeCallbacksAndMessages(null);
         mNotificationStateHandler.removeCallbacksAndMessages(null);
 
         // quit the thread so that anything that gets posted won't run
@@ -876,6 +888,8 @@ public class MusicService extends Service {
         }
 
         mWakeLock.release();
+
+        subscriptions.clear();
 
         super.onDestroy();
     }
@@ -2754,46 +2768,8 @@ public class MusicService extends Service {
         }
     }
 
-    public void sleep(int sleepNumber) {
-        sleepHandler.removeCallbacksAndMessages(null);
-        sleepTime = 0;
-        sleepHandler.sendMessageDelayed(sleepHandler.obtainMessage(PlayerHandler.SLEEP), sleepNumber);
-        sleepTime = System.currentTimeMillis() + sleepNumber;
-
-        final int minutes = (sleepNumber / (1000 * 60)) % 60;
-        final int hours = (sleepNumber / (1000 * 60 * 60)) % 24;
-
-        final String hourSeq = (hours == 0) ? "" : (hours == 1) ? hours + getString(R.string.hour) : hours + getString(R.string.hours);
-
-        final String minSeq = (minutes == 0) ? "" : (minutes == 1) ? "" : minutes + getString(R.string.minutes);
-
-        doOnMainThread(() -> {
-            String toastText = getString(R.string.sleep_message) + hourSeq;
-            if (hours != 0 && minutes != 0) {
-                toastText = toastText + getString(R.string.and) + minSeq;
-            } else if (hours == 0 && minutes != 0) {
-                toastText = toastText + minSeq;
-            }
-            Toast.makeText(MusicService.this, toastText, Toast.LENGTH_LONG).show();
-        });
-
-    }
-
     public Observable<Boolean> isFavorite() {
         return PlaylistUtils.isFavorite(getSong());
-    }
-
-    public boolean isTimerActive() {
-        return sleepHandler.hasMessages(PlayerHandler.SLEEP);
-    }
-
-    public void stopTimer() {
-        sleepHandler.removeCallbacksAndMessages(null);
-        sleepTime = 0;
-    }
-
-    public long timeRemaining() {
-        return sleepTime;
     }
 
     public void toggleShuffleMode() {

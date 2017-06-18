@@ -577,13 +577,13 @@ www.shuttlemusicplayer.com</string>
     <string name="sort_files_track_name">音轨名称</string>
     <!-- ## Sleep Timer ## -->
     <!-- Options Menu - Sleep Timer Title -->
-    <string name="timer">睡眠定时器</string>
+    <string name="sleep_timer">睡眠定时器</string>
     <!-- -->
     <string name="sleep_timer_play_to_end">播放完最后一首歌曲后休眠</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_set">设置</string>
+    <string name="sleep_timer_set">设置</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_stop">停止</string>
+    <string name="sleep_timer_stop_button">停止</string>
     <!-- Button name in time span picker -->
     <string name="button_done">完成</string>
     <!-- Title of time span picker -->

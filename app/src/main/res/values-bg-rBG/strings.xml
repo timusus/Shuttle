@@ -565,13 +565,13 @@
     <string name="sort_files_track_name">Име на песента</string>
     <!-- ## Sleep Timer ## -->
     <!-- Options Menu - Sleep Timer Title -->
-    <string name="timer">Таймер за автоматично изключване</string>
+    <string name="sleep_timer">Таймер за автоматично изключване</string>
     <!-- -->
     <string name="sleep_timer_play_to_end">Пуснете последната песен, за да завършите</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_set">Задай</string>
+    <string name="sleep_timer_set">Задай</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_stop">Спри</string>
+    <string name="sleep_timer_stop_button">Спри</string>
     <!-- Button name in time span picker -->
     <string name="button_done">Готово</string>
     <!-- Title of time span picker -->

@@ -547,13 +547,13 @@
     <string name="sort_files_track_name">トラック名</string>
     <!-- ## Sleep Timer ## -->
     <!-- Options Menu - Sleep Timer Title -->
-    <string name="timer">スリープタイマー</string>
+    <string name="sleep_timer">スリープタイマー</string>
     <!-- -->
     <string name="sleep_timer_play_to_end">最後の曲を再生して停止</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_set">セット</string>
+    <string name="sleep_timer_set">セット</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_stop">停止</string>
+    <string name="sleep_timer_stop_button">停止</string>
     <!-- Button name in time span picker -->
     <string name="button_done">完了</string>
     <!-- Title of time span picker -->

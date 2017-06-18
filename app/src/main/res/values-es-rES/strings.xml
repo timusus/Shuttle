@@ -568,13 +568,13 @@ carpetas</item>
     <string name="sort_files_track_name">Nombre de canción</string>
     <!-- ## Sleep Timer ## -->
     <!-- Options Menu - Sleep Timer Title -->
-    <string name="timer">Temporizador de reposo</string>
+    <string name="sleep_timer">Temporizador de reposo</string>
     <!-- -->
     <string name="sleep_timer_play_to_end">Reproducir última canción completa</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_set">Ajustar</string>
+    <string name="sleep_timer_set">Ajustar</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_stop">Detener</string>
+    <string name="sleep_timer_stop_button">Detener</string>
     <!-- Button name in time span picker -->
     <string name="button_done">Hecho</string>
     <!-- Title of time span picker -->

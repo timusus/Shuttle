@@ -572,13 +572,13 @@ mapa</item>
     <string name="sort_files_track_name">Naziv trake</string>
     <!-- ## Sleep Timer ## -->
     <!-- Options Menu - Sleep Timer Title -->
-    <string name="timer">Timer spavanja</string>
+    <string name="sleep_timer">Timer spavanja</string>
     <!-- -->
     <string name="sleep_timer_play_to_end">Reproduciraj zadnju pjesmu do kraja</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_set">Postavi</string>
+    <string name="sleep_timer_set">Postavi</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_stop">Stopiraj</string>
+    <string name="sleep_timer_stop_button">Stopiraj</string>
     <!-- Button name in time span picker -->
     <string name="button_done">Dovršeno</string>
     <!-- Title of time span picker -->

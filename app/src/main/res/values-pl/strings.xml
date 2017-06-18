@@ -587,13 +587,13 @@ Po wyłączeniu, jako obraz zastępczy będzie używana ikona programu.</string>
     <string name="sort_files_track_name">Utwór</string>
     <!-- ## Sleep Timer ## -->
     <!-- Options Menu - Sleep Timer Title -->
-    <string name="timer">Wyłącznik czasowy</string>
+    <string name="sleep_timer">Wyłącznik czasowy</string>
     <!-- -->
     <string name="sleep_timer_play_to_end">Odtwarzanie do końca ostatniego utworu</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_set">Ustaw</string>
+    <string name="sleep_timer_set">Ustaw</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_stop">Zatrzymaj</string>
+    <string name="sleep_timer_stop_button">Zatrzymaj</string>
     <!-- Button name in time span picker -->
     <string name="button_done">Gotowe</string>
     <!-- Title of time span picker -->

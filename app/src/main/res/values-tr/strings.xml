@@ -575,13 +575,13 @@ dosyalar</item>
     <string name="sort_files_track_name">Parça Adı</string>
     <!-- ## Sleep Timer ## -->
     <!-- Options Menu - Sleep Timer Title -->
-    <string name="timer">Uyku modu</string>
+    <string name="sleep_timer">Uyku modu</string>
     <!-- -->
     <string name="sleep_timer_play_to_end">Sonlandırmak için son şarkıyı çal</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_set">Ayarla</string>
+    <string name="sleep_timer_set">Ayarla</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_stop">Durdur</string>
+    <string name="sleep_timer_stop_button">Durdur</string>
     <!-- Button name in time span picker -->
     <string name="button_done">Tamam</string>
     <!-- Title of time span picker -->

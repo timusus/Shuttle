@@ -5,8 +5,6 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-
-
     <color name="list_divider_dark">#1EFFFFFF</color>
     <color name="list_divider_light">#1E000000</color>
 
@@ -45,19 +43,6 @@
     <color name="color_filter">#60000000</color>
 
     <drawable name="notification_template_icon_bg">#3333B5E5</drawable>
-
-    <color name="default_text_color_holo_dark">#ffffffff</color>
-    <color name="default_text_color_holo_dark_disabled">#ff4c4c4c</color>
-    <color name="default_divider_color_dark">#20ffffff</color>
-    <color name="default_button_background_dark">#00000000</color>
-    <color name="default_button_background_pressed_dark">#46c5c1ff</color>
-    <color name="default_keyboard_indicator_color_dark">#ff33b5e5</color>
-    <color name="default_text_color_holo_light">#ff000000</color>
-    <color name="default_text_color_holo_light_disabled">#ffb2b2b2</color>
-    <color name="default_divider_color_light">#20000000</color>
-    <color name="default_button_background_light">#00000000</color>
-    <color name="default_button_background_pressed_light">#ff00ddff</color>
-    <color name="default_keyboard_indicator_color_light">#ff00ddff</color>
 
     <color name="primary_text_dark">#ffffff</color>
     <color name="primary_text_light">#000000</color>

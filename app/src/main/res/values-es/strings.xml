@@ -568,13 +568,13 @@
     <string name="sort_files_track_name">Nombre de la pista</string>
     <!-- ## Sleep Timer ## -->
     <!-- Options Menu - Sleep Timer Title -->
-    <string name="timer">Temporizador</string>
+    <string name="sleep_timer">Temporizador</string>
     <!-- -->
     <string name="sleep_timer_play_to_end">Reproducir la última canción para terminar</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_set">Fijar</string>
+    <string name="sleep_timer_set">Fijar</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_stop">Parar</string>
+    <string name="sleep_timer_stop_button">Parar</string>
     <!-- Button name in time span picker -->
     <string name="button_done">Hecho</string>
     <!-- Title of time span picker -->

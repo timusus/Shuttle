@@ -29,6 +29,7 @@ import com.simplecity.amp_library.ui.fragments.BaseFragment;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.ui.views.CircleImageView;
 import com.simplecity.amp_library.ui.views.PlayerViewAdapter;
+import com.simplecityapps.recycler_adapter.recyclerview.ChildAttachStateChangeListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,6 +122,7 @@ public class DrawerFragment extends BaseFragment implements
         drawerParents.add(DrawerParent.folderParent);
         drawerParents.add(playlistDrawerParent);
         drawerParents.add(new DrawerDivider());
+        drawerParents.add(DrawerParent.sleepTimerParent);
         drawerParents.add(DrawerParent.equalizerParent);
         drawerParents.add(DrawerParent.settingsParent);
         drawerParents.add(DrawerParent.supportParent);
@@ -132,6 +134,7 @@ public class DrawerFragment extends BaseFragment implements
         adapter = new DrawerAdapter(drawerParents);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
+        recyclerView.addOnChildAttachStateChangeListener(new ChildAttachStateChangeListener(recyclerView));
 
         setDrawerItemSelected(selectedDrawerParent);
 

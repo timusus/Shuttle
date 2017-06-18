@@ -577,13 +577,13 @@ map "</item>
     <string name="sort_files_track_name">Nummernaam</string>
     <!-- ## Sleep Timer ## -->
     <!-- Options Menu - Sleep Timer Title -->
-    <string name="timer">Slaaptimer</string>
+    <string name="sleep_timer">Slaaptimer</string>
     <!-- -->
     <string name="sleep_timer_play_to_end">Speel het laatste nummer helemaal</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_set">Instellen</string>
+    <string name="sleep_timer_set">Instellen</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_stop">Stoppen</string>
+    <string name="sleep_timer_stop_button">Stoppen</string>
     <!-- Button name in time span picker -->
     <string name="button_done">Klaar</string>
     <!-- Title of time span picker -->

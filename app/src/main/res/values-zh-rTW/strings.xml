@@ -567,13 +567,13 @@
     <string name="sort_files_track_name">音軌名稱</string>
     <!-- ## Sleep Timer ## -->
     <!-- Options Menu - Sleep Timer Title -->
-    <string name="timer">休眠計時</string>
+    <string name="sleep_timer">休眠計時</string>
     <!-- -->
     <string name="sleep_timer_play_to_end">播放最後一首曲目後結束</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_set">設定</string>
+    <string name="sleep_timer_set">設定</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_stop">停止</string>
+    <string name="sleep_timer_stop_button">停止</string>
     <!-- Button name in time span picker -->
     <string name="button_done">完成</string>
     <!-- Title of time span picker -->

@@ -586,13 +586,13 @@
     <string name="sort_files_track_name">Songname</string>
     <!-- ## Sleep Timer ## -->
     <!-- Options Menu - Sleep Timer Title -->
-    <string name="timer">Einschlaf-Timer</string>
+    <string name="sleep_timer">Einschlaf-Timer</string>
     <!-- -->
     <string name="sleep_timer_play_to_end">Spiele den letzten Song zu Ende</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_set">Einstellen</string>
+    <string name="sleep_timer_set">Einstellen</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_stop">Anhalten</string>
+    <string name="sleep_timer_stop_button">Anhalten</string>
     <!-- Button name in time span picker -->
     <string name="button_done">Fertig</string>
     <!-- Title of time span picker -->

@@ -4,7 +4,7 @@ ext.versions = [
         // App versions
         // /////////////////////////////////////////////////////////////////////////
 
-        name                   : "1.6.7-beta3",
+        name                          : "1.6.7-beta3",
 
         // //////////////////////////////////////////////////////////////////////////
         // Compile versions
@@ -73,6 +73,7 @@ ext.versions = [
         daggerAnnotationProcessor     : "2.11",
         expandableRecyclerView        : "3.0.0-RC1",
         aesthetic                     : "0.4.0",
+        betterPickers                 : "3.1.0",
 
         // //////////////////////////////////////////////////////////////////////////
         // MultiDex
@@ -194,6 +195,8 @@ ext.libs = [
         expandableRecyclerView        : "com.bignerdranch.android:expandablerecyclerview:$versions.expandableRecyclerView",
         // Aesthetic - Theming Engine
         aesthetic                     : project(":libraries/:aesthetic"),
+        // Better pickers - https://github.com/code-troopers/android-betterpickers
+        betterPickers                 : "com.code-troopers.betterpickers:library:$versions.betterPickers",
 
         // //////////////////////////////////////////////////////////////////////////
         // MultiDex

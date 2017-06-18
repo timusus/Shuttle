@@ -53,37 +53,6 @@
     <attr name="toolbar_theme" format="reference"/>
     <attr name="toolbar_popup_theme" format="reference"/>
 
-    <!-- Better Pickers -->
-
-    <declare-styleable name="BetterPickersDialogFragment">
-        <attr name="bpTextColor" format="reference"/>
-        <attr name="bpTitleColor" format="reference"/>
-        <attr name="bpDeleteIcon" format="reference"/>
-        <attr name="bpCheckIcon" format="reference"/>
-        <attr name="bpKeyBackground" format="reference"/>
-        <attr name="bpButtonBackground" format="reference"/>
-        <attr name="bpTitleDividerColor" format="color"/>
-        <attr name="bpDividerColor" format="color"/>
-        <attr name="bpKeyboardIndicatorColor" format="color"/>
-        <attr name="bpDialogBackground" format="reference"/>
-    </declare-styleable>
-
-    <!-- Holo Color Picker Attrs -->
-    <declare-styleable name="ColorPicker">
-        <attr name="color_wheel_radius" format="dimension"/>
-        <attr name="color_wheel_thickness" format="dimension"/>
-        <attr name="color_center_radius" format="dimension"/>
-        <attr name="color_center_halo_radius" format="dimension"/>
-        <attr name="color_pointer_radius" format="dimension"/>
-        <attr name="color_pointer_halo_radius" format="dimension"/>
-    </declare-styleable>
-    <declare-styleable name="ColorBars">
-        <attr name="bar_thickness" format="dimension"/>
-        <attr name="bar_length" format="dimension"/>
-        <attr name="bar_pointer_radius" format="dimension"/>
-        <attr name="bar_pointer_halo_radius" format="dimension"/>
-    </declare-styleable>
-
     <declare-styleable name="PagerSlidingTabStrip">
         <attr name="indicatorColor" format="color"/>
         <attr name="underlineColor" format="color"/>
