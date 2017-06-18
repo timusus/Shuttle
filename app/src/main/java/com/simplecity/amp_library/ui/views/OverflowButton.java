@@ -33,15 +33,6 @@ public class OverflowButton extends NonScrollImageButton {
         drawable = DrawableCompat.wrap(getResources().getDrawable(R.drawable.ic_overflow_20dp)).mutate();
     }
 
-    private Observable<Integer> getColorObservable() {
-        if (dark) {
-            return Aesthetic.get().textColorSecondaryInverse();
-        } else {
-            return Aesthetic.get().textColorSecondary();
-
-        }
-    }
-
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
