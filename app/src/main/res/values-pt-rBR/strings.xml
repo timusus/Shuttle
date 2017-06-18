@@ -44,16 +44,6 @@
     </plurals>
     <!-- Toast after selecting an empty playlist -->
     <string name="emptyplaylist">A lista de reprodução selecionada está vazia.</string>
-    <!-- Used in sleep message. Example 2 hours (and) 5 minutes -->
-    <string name="and">e</string>
-    <!-- Alarm confirmation toast: singular hour -->
-    <string name="hour">" hora"</string>
-    <!-- Alarm confirmation toast: plural hours -->
-    <string name="hours">" horas"</string>
-    <!-- Alarm confirmation toast: plural minutes -->
-    <string name="minutes">" minutos"</string>
-    <!-- Alarm toast: Sleep timer set for -->
-    <string name="sleep_message">"Temporizador definido para "</string>
     <!-- -->
     <string name="initial_dir_set_message">"  definido como diret\u00f3rio inicial"</string>
     <!-- Transient popup message shown after deleting a playlist -->
@@ -122,7 +112,7 @@ músicas adicionadas à fila.</item>
 \n• Edição de tags
 \n• Navegação por pastas
 \n• Suporte ao ChromeCast
-\n\n• E também ajuda a promover o desenvolvimento futuro do aplicativo.\n\nVocê não precisa atualizar se você já tem o Shuttle+</string>
+\n\nE também ajuda a promover o desenvolvimento futuro do aplicativo.\n\nVocê não precisa atualizar se você já tem o Shuttle+</string>
     <string name="get_pro_button_play_store">Play Store</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="btn_upgrade">Atualizar</string>
@@ -192,7 +182,7 @@ músicas adicionadas à fila.</item>
     <!-- Menu option 'clear queue' -->
     <string name="clear_queue">Limpar fila</string>
     <!-- -->
-    <string name="fav_add">Adicionar aos Favoritos</string>
+    <string name="fav_add">Favoritar</string>
     <!-- Context menu item -->
     <string name="play_selection">Reproduzir</string>
     <!-- Multi select menu item-->
@@ -475,6 +465,7 @@ Se estiver desmarcado, o ícone do Shuttle será usado como uma capa</string>
     <!-- -->
     <string name="rename_file">Renomear arquivo</string>
     <!-- -->
+    <string name="rename">Renomear</string>
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">Definir como pasta inicial</string>
     <!-- Label in folder view - number of folders within the current folder -->
@@ -577,14 +568,19 @@ pastas</item>
     <string name="sort_files_album_name">Nome do álbum</string>
     <string name="sort_files_track_name">Nome da faixa</string>
     <!-- ## Sleep Timer ## -->
-    <!-- Options Menu - Sleep Timer Title -->
-    <string name="sleep_timer">Temporizador</string>
-    <!-- -->
+    <!-- Sleep timer title -->
+    <!--Sleep timer "Play last song to end" -->
     <string name="sleep_timer_play_to_end">Reproduzir última música para terminar</string>
     <!-- Sleep timer "set" -->
-    <string name="sleep_timer_set">Definir</string>
-    <!-- Sleep timer "set" -->
-    <string name="sleep_timer_stop_button">Parar</string>
+    <!-- Sleep timer "Stop" -->
+    <!-- Sleep timer stop message "Stop sleep timer?" -->
+    <!-- Toast when sleep timer is set -->
+    <!-- Sleep timer "Set time..." -->
+    <!-- Sleep timer "5 minutes" -->
+    <!-- Sleep timer "15 minutes" -->
+    <!-- Sleep timer "30 minutes" -->
+    <!-- Sleep timer "1 hour" -->
+    <!-- Sleep timer label "Minutes" (limited space here) -->
     <!-- Button name in time span picker -->
     <string name="button_done">Pronto</string>
     <!-- Title of time span picker -->
@@ -657,10 +653,6 @@ pastas</item>
     <string name="song_info">Informações</string>
     <!-- Artwork Download Service Label-->
     <string name="download_service">Serviço de download</string>
-    <!-- ## Better Pickers Strings ## -->
-    <string name="picker_set">OK</string>
-    <string name="timer_delete">Excluir</string>
-    <string name="time_picker_time_seperator">:</string>
     <!-- Accessibility button description -->
     <string name="btn_play">Reproduzir</string>
     <!-- Accessibility button description -->

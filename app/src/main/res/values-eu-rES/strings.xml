@@ -44,16 +44,6 @@
     </plurals>
     <!-- Toast after selecting an empty playlist -->
     <string name="emptyplaylist">Aukeratutako zerrenda hutsik dago.</string>
-    <!-- Used in sleep message. Example 2 hours (and) 5 minutes -->
-    <string name="and">" eta "</string>
-    <!-- Alarm confirmation toast: singular hour -->
-    <string name="hour">" ordu"</string>
-    <!-- Alarm confirmation toast: plural hours -->
-    <string name="hours">" ordu"</string>
-    <!-- Alarm confirmation toast: plural minutes -->
-    <string name="minutes">" minutu"</string>
-    <!-- Alarm toast: Sleep timer set for -->
-    <string name="sleep_message">Atsedenerako tenporizadorea noizko jarrita:</string>
     <!-- -->
     <string name="initial_dir_set_message">Hasierako karpeta bezala aukeratu.</string>
     <!-- Transient popup message shown after deleting a playlist -->
@@ -574,14 +564,19 @@ karpeta</item>
     <string name="sort_files_album_name">Albumaren izena</string>
     <string name="sort_files_track_name">Abestiaren izena</string>
     <!-- ## Sleep Timer ## -->
-    <!-- Options Menu - Sleep Timer Title -->
-    <string name="sleep_timer">Atsedeneko tenporizadorea</string>
-    <!-- -->
+    <!-- Sleep timer title -->
+    <!--Sleep timer "Play last song to end" -->
     <string name="sleep_timer_play_to_end">Azken abestia bukaeraraino erreproduzitu</string>
     <!-- Sleep timer "set" -->
-    <string name="sleep_timer_set">Ezarri</string>
-    <!-- Sleep timer "set" -->
-    <string name="sleep_timer_stop_button">Gelditu</string>
+    <!-- Sleep timer "Stop" -->
+    <!-- Sleep timer stop message "Stop sleep timer?" -->
+    <!-- Toast when sleep timer is set -->
+    <!-- Sleep timer "Set time..." -->
+    <!-- Sleep timer "5 minutes" -->
+    <!-- Sleep timer "15 minutes" -->
+    <!-- Sleep timer "30 minutes" -->
+    <!-- Sleep timer "1 hour" -->
+    <!-- Sleep timer label "Minutes" (limited space here) -->
     <!-- Button name in time span picker -->
     <string name="button_done">Bukatuta</string>
     <!-- Title of time span picker -->
@@ -654,10 +649,6 @@ karpeta</item>
     <string name="song_info">Abesti info.</string>
     <!-- Artwork Download Service Label-->
     <string name="download_service">Deskarga zerbitzua</string>
-    <!-- ## Better Pickers Strings ## -->
-    <string name="picker_set">OK</string>
-    <string name="timer_delete">Ezabatu</string>
-    <string name="time_picker_time_seperator">:</string>
     <!-- Accessibility button description -->
     <string name="btn_play">Erreproduzitu</string>
     <!-- Accessibility button description -->

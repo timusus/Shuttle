@@ -31,14 +31,6 @@
     <!-- Toasts after adding song(s) to playlists -->
     <!-- Toast after selecting an empty playlist -->
     <string name="emptyplaylist">Selected playlist is empty.</string>
-    <!-- Used in sleep message. Example 2 hours (and) 5 minutes -->
-    <string name="and">" and "</string>
-    <!-- Alarm confirmation toast: singular hour -->
-    <string name="hour">" hour"</string>
-    <!-- Alarm confirmation toast: plural hours -->
-    <!-- Alarm confirmation toast: plural minutes -->
-    <string name="minutes">" minutes"</string>
-    <!-- Alarm toast: Sleep timer set for -->
     <!-- -->
     <!-- Transient popup message shown after deleting a playlist -->
     <!-- Transient popup message shown after renaming a playlist -->
@@ -280,10 +272,18 @@
     <!-- -->
     <!-- ## Sort options ## -->
     <!-- ## Sleep Timer ## -->
-    <!-- Options Menu - Sleep Timer Title -->
-    <!-- -->
+    <!-- Sleep timer title -->
+    <!--Sleep timer "Play last song to end" -->
     <!-- Sleep timer "set" -->
-    <!-- Sleep timer "set" -->
+    <!-- Sleep timer "Stop" -->
+    <!-- Sleep timer stop message "Stop sleep timer?" -->
+    <!-- Toast when sleep timer is set -->
+    <!-- Sleep timer "Set time..." -->
+    <!-- Sleep timer "5 minutes" -->
+    <!-- Sleep timer "15 minutes" -->
+    <!-- Sleep timer "30 minutes" -->
+    <!-- Sleep timer "1 hour" -->
+    <!-- Sleep timer label "Minutes" (limited space here) -->
     <!-- Button name in time span picker -->
     <!-- Title of time span picker -->
     <!-- ## Notification bar text ## -->
@@ -319,7 +319,6 @@
     <!-- Default value if album year unknown -->
     <!-- Song Info overflow option-->
     <!-- Artwork Download Service Label-->
-    <!-- ## Better Pickers Strings ## -->
     <!-- Accessibility button description -->
     <!-- Accessibility button description -->
     <!-- Accessibility button description -->

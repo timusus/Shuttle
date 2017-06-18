@@ -46,16 +46,6 @@
     </plurals>
     <!-- Toast after selecting an empty playlist -->
     <string name="emptyplaylist">Lista odtwarzania jest pusta.</string>
-    <!-- Used in sleep message. Example 2 hours (and) 5 minutes -->
-    <string name="and">" i "</string>
-    <!-- Alarm confirmation toast: singular hour -->
-    <string name="hour">" godzina"</string>
-    <!-- Alarm confirmation toast: plural hours -->
-    <string name="hours">" godzin"</string>
-    <!-- Alarm confirmation toast: plural minutes -->
-    <string name="minutes">" minut"</string>
-    <!-- Alarm toast: Sleep timer set for -->
-    <string name="sleep_message">"Ustawiono wy\u0142\u0105cznik czasowy na "</string>
     <!-- -->
     <string name="initial_dir_set_message">" ustawiony jako pocz\u0105tkowy katalog"</string>
     <!-- Transient popup message shown after deleting a playlist -->
@@ -155,7 +145,7 @@
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">Wszystkie utwory z albumu „<xliff:g id="album">%s</xliff:g>” zostaną trwale usunięte.</string>
     <!-- Delete confirmation dialog message when deleting albums -->
-    <string name="delete_album_desc_multiple">Następujące albumy: <xliff:g id="album">%s</xliff:g> zostaną trwale usunięte.</string>
+    <string name="delete_album_desc_multiple">Zostaną usunięte wszystkie utwory z następujących albumów:<xliff:g id="album">%s</xliff:g>.</string>
     <!-- Delete confirmation dialog when deleting a single song -->
     <string name="delete_song_desc">Utwór „<xliff:g id="song">%s</xliff:g>” zostanie trwale usunięty.</string>
     <!-- Delete confirmation dialog message title when deleting songs -->
@@ -199,19 +189,22 @@
     <string name="widget_show_artwork">Wyświetlanie okładki albumu</string>
     <!-- ## Menu Headings ## -->
     <!-- Context menu in navigation drawer - option to save playlist as M3U -->
-    <string name="export_playlist">Eksportuj listę odtwarzania</string>
+    <string name="export_playlist">Eksportuj</string>
     <!-- context menu item to remove the selected item from the playlist -->
     <!-- Menu option 'clear queue' -->
     <string name="clear_queue">Wyczyść kolejkę</string>
     <!-- -->
-    <string name="fav_add">Dodaj do ulubionych</string>
+    <string name="fav_add">Ulubiona</string>
     <!-- Context menu item -->
     <string name="play_selection">Odtwarzaj</string>
     <!-- Multi select menu item-->
+    <string name="menu_add_to">Dodaj do…</string>
     <!-- Multi select menu item-->
+    <string name="menu_playlist">Lista odtwarzania</string>
     <!-- Multi select menu item-->
+    <string name="menu_queue">Kolejka</string>
     <!-- Context menu item -->
-    <string name="add_to_playlist">Dodaj do listy odtwarzania</string>
+    <string name="add_to_playlist">Lista odtwarzania</string>
     <!-- Context menu item -->
     <string name="new_playlist">Nowa</string>
     <!-- menu item to save the current list as a new playlist -->
@@ -219,7 +212,7 @@
     <!-- Context menu item to remove the selected item from the playlist -->
     <string name="remove_from_playlist">Usuń z listy odtwarzania</string>
     <!-- Context menu item to remove the selected item from the queue -->
-    <string name="remove_from_queue">Usuń z kolejki</string>
+    <string name="remove_from_queue">Usuń</string>
     <!-- Context menu item -->
     <string name="play_next">Odtwarzaj następny</string>
     <!-- Menu text for the settings item -->
@@ -254,6 +247,7 @@
     <!-- 'More' button -->
     <string name="heading_more">Więcej</string>
     <!-- Share option-->
+    <string name="share">Udostępnij</string>
     <!-- ## Navigation Drawer ## -->
     <!-- Accessibility description 'open navigation drawer'-->
     <string name="navigation_drawer_open">Otwórz pasek nawigacyjny</string>
@@ -267,7 +261,9 @@
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">Nawigacja</string>
     <!--Settings category for 'notification' items -->
+    <string name="pref_category_notif_drawer">Powiadomienia</string>
     <!-- Settings title for inverting the notification drawer text & icons -->
+    <string name="pref_title_invert_notif_icons">Odwrócenie ikon/treści powiadomień</string>
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Inne</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
@@ -418,6 +414,8 @@ Po wyłączeniu, jako obraz zastępczy będzie używana ikona programu.</string>
     <string name="pref_summary_gplus">W społeczności Google+ jest bardzo aktywna grupa użytkowników odtwarzacza Shuttle. Jest to najlepsze miejsce, aby uzyskać poszukiwaną odpowiedź lub pomoc.</string>
     <string name="pref_title_rate">Podziękuj</string>
     <string name="pref_summary_rate">Umożliwia zostawienie opinii na temat programu.</string>
+    <string name="pref_title_headset_beep">Sygnał pomijania</string>
+    <string name="pref_summary_headset_beep">Odtwarza sygnał podczas pomijania utworu przyciskiem zestawu słuchawkowego</string>
     <!-- Settings title for ignore playlist duplicates -->
     <string name="pref_title_ignore_duplicates">Ignorowanie powielonych utworów</string>
     <!-- Settings summary for ignore playlist duplicates -->
@@ -479,6 +477,7 @@ Po wyłączeniu, jako obraz zastępczy będzie używana ikona programu.</string>
     <!-- -->
     <string name="rename_file">Zmień nazwę pliku</string>
     <!-- -->
+    <string name="rename">Zmień nazwę</string>
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">Ustaw jako początkowy katalog</string>
     <!-- Label in folder view - number of folders within the current folder -->
@@ -497,12 +496,13 @@ Po wyłączeniu, jako obraz zastępczy będzie używana ikona programu.</string>
     <!-- -->
     <string name="parent_folder">Katalog nadrzędny</string>
     <!-- -->
-    <string name="show_filenames">Wyświetl nazwy plików</string>
+    <string name="show_filenames">Nazwy plików</string>
     <!-- 'Scan'-->
     <string name="scan_file">Uaktualnij</string>
     <!-- Scan Complete-->
     <string name="scan_complete">Ukończono uaktualnianie</string>
     <!-- Scanning-->
+    <string name="scanning">Przeszukiwanie…</string>
     <!-- ## Main Headings ## -->
     <!-- Artist screen title -->
     <string name="artists_title">Wykonawcy</string>
@@ -586,14 +586,19 @@ Po wyłączeniu, jako obraz zastępczy będzie używana ikona programu.</string>
     <string name="sort_files_album_name">Album</string>
     <string name="sort_files_track_name">Utwór</string>
     <!-- ## Sleep Timer ## -->
-    <!-- Options Menu - Sleep Timer Title -->
-    <string name="sleep_timer">Wyłącznik czasowy</string>
-    <!-- -->
+    <!-- Sleep timer title -->
+    <!--Sleep timer "Play last song to end" -->
     <string name="sleep_timer_play_to_end">Odtwarzanie do końca ostatniego utworu</string>
     <!-- Sleep timer "set" -->
-    <string name="sleep_timer_set">Ustaw</string>
-    <!-- Sleep timer "set" -->
-    <string name="sleep_timer_stop_button">Zatrzymaj</string>
+    <!-- Sleep timer "Stop" -->
+    <!-- Sleep timer stop message "Stop sleep timer?" -->
+    <!-- Toast when sleep timer is set -->
+    <!-- Sleep timer "Set time..." -->
+    <!-- Sleep timer "5 minutes" -->
+    <!-- Sleep timer "15 minutes" -->
+    <!-- Sleep timer "30 minutes" -->
+    <!-- Sleep timer "1 hour" -->
+    <!-- Sleep timer label "Minutes" (limited space here) -->
     <!-- Button name in time span picker -->
     <string name="button_done">Gotowe</string>
     <!-- Title of time span picker -->
@@ -665,19 +670,17 @@ Po wyłączeniu, jako obraz zastępczy będzie używana ikona programu.</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
     <string name="unknown_album_artist_name">Nieznany  wykonawca</string>
     <!-- Default value if album year unknown -->
+    <string name="unknown_year">Nieznany rok</string>
     <!-- Song Info overflow option-->
     <string name="song_info">Informacje o utworze</string>
     <!-- Artwork Download Service Label-->
     <string name="download_service">Usługa pobierania</string>
-    <!-- ## Better Pickers Strings ## -->
-    <string name="picker_set">Ok</string>
-    <string name="timer_delete">Usuń</string>
-    <string name="time_picker_time_seperator">:</string>
     <!-- Accessibility button description -->
     <string name="btn_play">Odtwarzaj</string>
     <!-- Accessibility button description -->
     <string name="btn_pause">Wstrzymaj</string>
     <!-- Accessibility button description -->
+    <string name="btn_play_pause">Odtwarzaj/Wstrzymaj</string>
     <!-- Accessibility button description -->
     <string name="btn_skip">Pomiń</string>
     <!-- Accessibility button description -->
@@ -741,6 +744,7 @@ Po wyłączeniu, jako obraz zastępczy będzie używana ikona programu.</string>
     <!-- "Shuffle" Shortcut long label. Max 25 characters.-->
     <string name="shortcut_shuffle_long_label">Wymieszaj wszystkie</string>
     <!-- "Shuffle" Shortcut label disabled. Shows when shuffle not available (I don't think this ever happens)-->
+    <string name="shortcut_shuffle_disabled">Losowanie utworów niedostępne</string>
     <!-- "Play" Shortcut label. Max 10 characters.-->
     <string name="shortcut_play_short_label">Odtwórz</string>
     <!-- "Play" Shortcut long label. Max 25 characters.-->
@@ -750,20 +754,24 @@ Po wyłączeniu, jako obraz zastępczy będzie używana ikona programu.</string>
     <!-- "Folders" Shortcut label. Max 10 characters.-->
     <string name="shortcut_folders_short_label">Katalogi</string>
     <!-- "Folders" Shortcut long label. Max 25 characters.-->
+    <string name="shortcut_folders_long_label">Otwiera przeglądarkę katalogów</string>
     <!-- "Folders" Shortcut label disabled. (I don't think this ever happens)-->
     <string name="shortcut_folders_disabled">Katalogi nie dostępne</string>
     <!-- "Playlist" Shortcut label. Max 10 characters.-->
     <string name="shortcut_playlist_short_label">Lista odtwarzania</string>
     <!-- "Playlist" Shortcut long label. Max 25 characters.-->
+    <string name="shortcut_playlist_long_label">Otwiera listę odtwarzania ulubionych utworów</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">Lista odtwarzania nie dostępna</string>
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">Płyta <xliff:g id="number">%d</xliff:g></string>
     <!-- Search Filter-->
+    <string name="search_fuzzy">Rozmyty</string>
     <string name="search_title_only">Tylko tytuły</string>
     <string name="search_artists">Wykonawcy</string>
     <string name="search_albums">Albumy</string>
     <!-- Changelog -->
+    <string name="changelog_show_on_launch">Wyświetlanie podczas uruchamiania</string>
     <!-- Lyrics -->
     <!-- QuickLyric button -->
     <string name="quicklyric">QuickLyric</string>
@@ -772,4 +780,5 @@ Po wyłączeniu, jako obraz zastępczy będzie używana ikona programu.</string>
     <!-- Shown when there are no lyrics -->
     <string name="no_lyrics">Nie odnaleziono dołączonego tekstu.</string>
     <!-- QuickLyric info dialog message-->
+    <string name="quicklyric_info">QuickLyric jest otwarto-źródłowym programem pobierającym teksty utworów, dostępnym w sklepie Google Play.\n\n\nPo zainstalowaniu, QuickLyric będzie można otworzyć za pośrednictwem Shuttle, używając dedykowanego przycisku.</string>
 </resources>

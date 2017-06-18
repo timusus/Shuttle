@@ -44,16 +44,6 @@
     </plurals>
     <!-- Toast after selecting an empty playlist -->
     <string name="emptyplaylist">La playlist sélectionnée est vide.</string>
-    <!-- Used in sleep message. Example 2 hours (and) 5 minutes -->
-    <string name="and">et</string>
-    <!-- Alarm confirmation toast: singular hour -->
-    <string name="hour">" heure"</string>
-    <!-- Alarm confirmation toast: plural hours -->
-    <string name="hours">" heures"</string>
-    <!-- Alarm confirmation toast: plural minutes -->
-    <string name="minutes">" minutes"</string>
-    <!-- Alarm toast: Sleep timer set for -->
-    <string name="sleep_message">"Minuterie de sommeil fix\u00e9e pour "</string>
     <!-- -->
     <string name="initial_dir_set_message">" d\u00e9fini comme dossier par d\u00e9faut"</string>
     <!-- Transient popup message shown after deleting a playlist -->
@@ -555,14 +545,19 @@
     <string name="sort_files_album_name">Nom de l\'album</string>
     <string name="sort_files_track_name">Nom de la piste</string>
     <!-- ## Sleep Timer ## -->
-    <!-- Options Menu - Sleep Timer Title -->
-    <string name="sleep_timer">Minuteur d\'arrêt</string>
-    <!-- -->
+    <!-- Sleep timer title -->
+    <!--Sleep timer "Play last song to end" -->
     <string name="sleep_timer_play_to_end">Lire le dernier titre jusqu\'à la fin</string>
     <!-- Sleep timer "set" -->
-    <string name="sleep_timer_set">Définir</string>
-    <!-- Sleep timer "set" -->
-    <string name="sleep_timer_stop_button">Arrêter</string>
+    <!-- Sleep timer "Stop" -->
+    <!-- Sleep timer stop message "Stop sleep timer?" -->
+    <!-- Toast when sleep timer is set -->
+    <!-- Sleep timer "Set time..." -->
+    <!-- Sleep timer "5 minutes" -->
+    <!-- Sleep timer "15 minutes" -->
+    <!-- Sleep timer "30 minutes" -->
+    <!-- Sleep timer "1 hour" -->
+    <!-- Sleep timer label "Minutes" (limited space here) -->
     <!-- Button name in time span picker -->
     <string name="button_done">Terminé</string>
     <!-- Title of time span picker -->
@@ -633,10 +628,6 @@
     <!-- Song Info overflow option-->
     <string name="song_info">Info de la chanson</string>
     <!-- Artwork Download Service Label-->
-    <!-- ## Better Pickers Strings ## -->
-    <string name="picker_set">OK</string>
-    <string name="timer_delete">Supprimer</string>
-    <string name="time_picker_time_seperator">:</string>
     <!-- Accessibility button description -->
     <string name="btn_play">Lecture/pause</string>
     <!-- Accessibility button description -->

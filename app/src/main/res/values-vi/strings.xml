@@ -43,16 +43,6 @@
     </plurals>
     <!-- Toast after selecting an empty playlist -->
     <string name="emptyplaylist">Danh sách đã chọn rỗng.</string>
-    <!-- Used in sleep message. Example 2 hours (and) 5 minutes -->
-    <string name="and">" v\u00e0 "</string>
-    <!-- Alarm confirmation toast: singular hour -->
-    <string name="hour">" gi\u1edd"</string>
-    <!-- Alarm confirmation toast: plural hours -->
-    <string name="hours">" gi\u1edd"</string>
-    <!-- Alarm confirmation toast: plural minutes -->
-    <string name="minutes">" ph\u00fat"</string>
-    <!-- Alarm toast: Sleep timer set for -->
-    <string name="sleep_message">"H\u1eb9n gi\u1edd t\u1eaft sau "</string>
     <!-- -->
     <string name="initial_dir_set_message">" \u0111\u1eb7t l\u00e0m th\u01b0 m\u1ee5c kh\u1edfi t\u1ea1o"</string>
     <!-- Transient popup message shown after deleting a playlist -->
@@ -470,6 +460,7 @@
     <!-- -->
     <string name="rename_file">Đổi tên tập tin</string>
     <!-- -->
+    <string name="rename">Đổi tên</string>
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">Đặt làm thư mục khởi tạo</string>
     <!-- Label in folder view - number of folders within the current folder -->
@@ -573,14 +564,19 @@
     <string name="sort_files_album_name">Tên album</string>
     <string name="sort_files_track_name">Tên bài hát</string>
     <!-- ## Sleep Timer ## -->
-    <!-- Options Menu - Sleep Timer Title -->
-    <string name="sleep_timer">Hẹn giờ</string>
-    <!-- -->
+    <!-- Sleep timer title -->
+    <!--Sleep timer "Play last song to end" -->
     <string name="sleep_timer_play_to_end">Phát hết bài cuối</string>
     <!-- Sleep timer "set" -->
-    <string name="sleep_timer_set">Đặt</string>
-    <!-- Sleep timer "set" -->
-    <string name="sleep_timer_stop_button">Dừng</string>
+    <!-- Sleep timer "Stop" -->
+    <!-- Sleep timer stop message "Stop sleep timer?" -->
+    <!-- Toast when sleep timer is set -->
+    <!-- Sleep timer "Set time..." -->
+    <!-- Sleep timer "5 minutes" -->
+    <!-- Sleep timer "15 minutes" -->
+    <!-- Sleep timer "30 minutes" -->
+    <!-- Sleep timer "1 hour" -->
+    <!-- Sleep timer label "Minutes" (limited space here) -->
     <!-- Button name in time span picker -->
     <string name="button_done">Xong</string>
     <!-- Title of time span picker -->
@@ -651,10 +647,6 @@
     <string name="song_info">Thông tin bài hát</string>
     <!-- Artwork Download Service Label-->
     <string name="download_service">Dịch vụ tải xuống</string>
-    <!-- ## Better Pickers Strings ## -->
-    <string name="picker_set">OK</string>
-    <string name="timer_delete">Xoá</string>
-    <string name="time_picker_time_seperator">:</string>
     <!-- Accessibility button description -->
     <string name="btn_play">Phát</string>
     <!-- Accessibility button description -->

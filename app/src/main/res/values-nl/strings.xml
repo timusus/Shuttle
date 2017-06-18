@@ -44,16 +44,6 @@
     </plurals>
     <!-- Toast after selecting an empty playlist -->
     <string name="emptyplaylist">Gekozen afspeellijst is leeg.</string>
-    <!-- Used in sleep message. Example 2 hours (and) 5 minutes -->
-    <string name="and">" en "</string>
-    <!-- Alarm confirmation toast: singular hour -->
-    <string name="hour">" uur"</string>
-    <!-- Alarm confirmation toast: plural hours -->
-    <string name="hours">" uren"</string>
-    <!-- Alarm confirmation toast: plural minutes -->
-    <string name="minutes">" minuten"</string>
-    <!-- Alarm toast: Sleep timer set for -->
-    <string name="sleep_message">Slaaptimer ingesteld voor</string>
     <!-- -->
     <string name="initial_dir_set_message">" instellen als beginmap"</string>
     <!-- Transient popup message shown after deleting a playlist -->
@@ -473,6 +463,7 @@ Indien uitgeschakeld wordt het Shuttle-icoon als plaatshouder gebruikt</string>
     <!-- -->
     <string name="rename_file">Bestand hernoemen</string>
     <!-- -->
+    <string name="rename">Hernoemen</string>
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">Instellen als standaardmap</string>
     <!-- Label in folder view - number of folders within the current folder -->
@@ -576,14 +567,19 @@ map "</item>
     <string name="sort_files_album_name">Albumnaam</string>
     <string name="sort_files_track_name">Nummernaam</string>
     <!-- ## Sleep Timer ## -->
-    <!-- Options Menu - Sleep Timer Title -->
-    <string name="sleep_timer">Slaaptimer</string>
-    <!-- -->
+    <!-- Sleep timer title -->
+    <!--Sleep timer "Play last song to end" -->
     <string name="sleep_timer_play_to_end">Speel het laatste nummer helemaal</string>
     <!-- Sleep timer "set" -->
-    <string name="sleep_timer_set">Instellen</string>
-    <!-- Sleep timer "set" -->
-    <string name="sleep_timer_stop_button">Stoppen</string>
+    <!-- Sleep timer "Stop" -->
+    <!-- Sleep timer stop message "Stop sleep timer?" -->
+    <!-- Toast when sleep timer is set -->
+    <!-- Sleep timer "Set time..." -->
+    <!-- Sleep timer "5 minutes" -->
+    <!-- Sleep timer "15 minutes" -->
+    <!-- Sleep timer "30 minutes" -->
+    <!-- Sleep timer "1 hour" -->
+    <!-- Sleep timer label "Minutes" (limited space here) -->
     <!-- Button name in time span picker -->
     <string name="button_done">Klaar</string>
     <!-- Title of time span picker -->
@@ -656,10 +652,6 @@ map "</item>
     <string name="song_info">Nummer info</string>
     <!-- Artwork Download Service Label-->
     <string name="download_service">Download Service</string>
-    <!-- ## Better Pickers Strings ## -->
-    <string name="picker_set">OK</string>
-    <string name="timer_delete">Verwijderen</string>
-    <string name="time_picker_time_seperator">:</string>
     <!-- Accessibility button description -->
     <string name="btn_play">Afspelen</string>
     <!-- Accessibility button description -->

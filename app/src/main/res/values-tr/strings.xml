@@ -44,16 +44,6 @@
     </plurals>
     <!-- Toast after selecting an empty playlist -->
     <string name="emptyplaylist">Seçilen şarkı listesi boş.</string>
-    <!-- Used in sleep message. Example 2 hours (and) 5 minutes -->
-    <string name="and">ve</string>
-    <!-- Alarm confirmation toast: singular hour -->
-    <string name="hour">saat</string>
-    <!-- Alarm confirmation toast: plural hours -->
-    <string name="hours">saat</string>
-    <!-- Alarm confirmation toast: plural minutes -->
-    <string name="minutes">dakika</string>
-    <!-- Alarm toast: Sleep timer set for -->
-    <string name="sleep_message">"Uyku modu ayarland\u0131 "</string>
     <!-- -->
     <string name="initial_dir_set_message">" ba\u015flang\u0131\u00e7 \u200b\u200bdizini olarak ayarla"</string>
     <!-- Transient popup message shown after deleting a playlist -->
@@ -187,7 +177,7 @@
     <string name="widget_show_artwork">Albüm kapağını göster</string>
     <!-- ## Menu Headings ## -->
     <!-- Context menu in navigation drawer - option to save playlist as M3U -->
-    <string name="export_playlist">Şarkı listesini dışa aktar</string>
+    <string name="export_playlist">Dışa aktar</string>
     <!-- context menu item to remove the selected item from the playlist -->
     <!-- Menu option 'clear queue' -->
     <string name="clear_queue">Sırayı temizle</string>
@@ -196,10 +186,13 @@
     <!-- Context menu item -->
     <string name="play_selection">Çal</string>
     <!-- Multi select menu item-->
+    <string name="menu_add_to">Ekle...</string>
     <!-- Multi select menu item-->
+    <string name="menu_playlist">Şarkı listesi</string>
     <!-- Multi select menu item-->
+    <string name="menu_queue">Sıra</string>
     <!-- Context menu item -->
-    <string name="add_to_playlist">Şarkı listesine ekle</string>
+    <string name="add_to_playlist">Şarkı listesi</string>
     <!-- Context menu item -->
     <string name="new_playlist">Yeni</string>
     <!-- menu item to save the current list as a new playlist -->
@@ -207,7 +200,7 @@
     <!-- Context menu item to remove the selected item from the playlist -->
     <string name="remove_from_playlist">Şarkı listesinden kaldır</string>
     <!-- Context menu item to remove the selected item from the queue -->
-    <string name="remove_from_queue">Sıradan kaldır</string>
+    <string name="remove_from_queue">Kaldır</string>
     <!-- Context menu item -->
     <string name="play_next">Sıradakini çal</string>
     <!-- Menu text for the settings item -->
@@ -346,7 +339,7 @@
     <!-- Settings summary for the option to download artwork automatically-->
     <string name="pref_summary_download_artwork_auto">Eksik sanatçı ve albüm kapaklarını otomatik olarak indir</string>
     <!-- Settings title for the download via Wi-Fi checkbox -->
-    <string name="pref_title_download_wifi_only">Sadece Wi-Fi Kullanarak İndir</string>
+    <string name="pref_title_download_wifi_only">Yalnızca Wi-Fi ile indir</string>
     <!-- Settings summary for the download via Wi-Fi checkbox -->
     <string name="pref_summary_download_wifi_only">Sanatçı ve albüm kapakları sadece bir Wi-Fi bağlantısı mevcutsa indirilir</string>
     <!-- Settings title for gmail style placeholders checkbox-->
@@ -472,6 +465,7 @@ Bu seçenek işaretli değilse, Shuttle simgesi kullanılacaktır.</string>
     <!-- -->
     <string name="rename_file">Dosyayı yeniden adlandır</string>
     <!-- -->
+    <string name="rename">Ad değiştir</string>
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">Başlangıç dizini olarak ayarla</string>
     <!-- Label in folder view - number of folders within the current folder -->
@@ -574,14 +568,19 @@ dosyalar</item>
     <string name="sort_files_album_name">Albüm Adı</string>
     <string name="sort_files_track_name">Parça Adı</string>
     <!-- ## Sleep Timer ## -->
-    <!-- Options Menu - Sleep Timer Title -->
-    <string name="sleep_timer">Uyku modu</string>
-    <!-- -->
+    <!-- Sleep timer title -->
+    <!--Sleep timer "Play last song to end" -->
     <string name="sleep_timer_play_to_end">Sonlandırmak için son şarkıyı çal</string>
     <!-- Sleep timer "set" -->
-    <string name="sleep_timer_set">Ayarla</string>
-    <!-- Sleep timer "set" -->
-    <string name="sleep_timer_stop_button">Durdur</string>
+    <!-- Sleep timer "Stop" -->
+    <!-- Sleep timer stop message "Stop sleep timer?" -->
+    <!-- Toast when sleep timer is set -->
+    <!-- Sleep timer "Set time..." -->
+    <!-- Sleep timer "5 minutes" -->
+    <!-- Sleep timer "15 minutes" -->
+    <!-- Sleep timer "30 minutes" -->
+    <!-- Sleep timer "1 hour" -->
+    <!-- Sleep timer label "Minutes" (limited space here) -->
     <!-- Button name in time span picker -->
     <string name="button_done">Tamam</string>
     <!-- Title of time span picker -->
@@ -654,10 +653,6 @@ dosyalar</item>
     <string name="song_info">Şarkı Bilgisi</string>
     <!-- Artwork Download Service Label-->
     <string name="download_service">İndirme Servisi</string>
-    <!-- ## Better Pickers Strings ## -->
-    <string name="picker_set">TAMAM</string>
-    <string name="timer_delete">Sil</string>
-    <string name="time_picker_time_seperator">:</string>
     <!-- Accessibility button description -->
     <string name="btn_play">Çal</string>
     <!-- Accessibility button description -->

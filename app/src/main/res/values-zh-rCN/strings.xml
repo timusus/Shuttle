@@ -43,16 +43,6 @@
     </plurals>
     <!-- Toast after selecting an empty playlist -->
     <string name="emptyplaylist">您所选的播放列表为空</string>
-    <!-- Used in sleep message. Example 2 hours (and) 5 minutes -->
-    <string name="and">\u4e0e</string>
-    <!-- Alarm confirmation toast: singular hour -->
-    <string name="hour">\u5c0f\u65f6</string>
-    <!-- Alarm confirmation toast: plural hours -->
-    <string name="hours">\u5c0f\u65f6</string>
-    <!-- Alarm confirmation toast: plural minutes -->
-    <string name="minutes">\u5206\u949f</string>
-    <!-- Alarm toast: Sleep timer set for -->
-    <string name="sleep_message">\u7761\u7720\u65f6\u95f4\u8bbe\u7f6e</string>
     <!-- -->
     <string name="initial_dir_set_message">" \u8bbe\u5b9a\u4e3a\u521d\u59cb\u76ee\u5f55"</string>
     <!-- Transient popup message shown after deleting a playlist -->
@@ -576,14 +566,19 @@ www.shuttlemusicplayer.com</string>
     <string name="sort_files_album_name">专辑名称</string>
     <string name="sort_files_track_name">音轨名称</string>
     <!-- ## Sleep Timer ## -->
-    <!-- Options Menu - Sleep Timer Title -->
-    <string name="sleep_timer">睡眠定时器</string>
-    <!-- -->
+    <!-- Sleep timer title -->
+    <!--Sleep timer "Play last song to end" -->
     <string name="sleep_timer_play_to_end">播放完最后一首歌曲后休眠</string>
     <!-- Sleep timer "set" -->
-    <string name="sleep_timer_set">设置</string>
-    <!-- Sleep timer "set" -->
-    <string name="sleep_timer_stop_button">停止</string>
+    <!-- Sleep timer "Stop" -->
+    <!-- Sleep timer stop message "Stop sleep timer?" -->
+    <!-- Toast when sleep timer is set -->
+    <!-- Sleep timer "Set time..." -->
+    <!-- Sleep timer "5 minutes" -->
+    <!-- Sleep timer "15 minutes" -->
+    <!-- Sleep timer "30 minutes" -->
+    <!-- Sleep timer "1 hour" -->
+    <!-- Sleep timer label "Minutes" (limited space here) -->
     <!-- Button name in time span picker -->
     <string name="button_done">完成</string>
     <!-- Title of time span picker -->
@@ -654,10 +649,6 @@ www.shuttlemusicplayer.com</string>
     <string name="song_info">歌曲信息</string>
     <!-- Artwork Download Service Label-->
     <string name="download_service">下载服务</string>
-    <!-- ## Better Pickers Strings ## -->
-    <string name="picker_set">确定</string>
-    <string name="timer_delete">删除</string>
-    <string name="time_picker_time_seperator">:</string>
     <!-- Accessibility button description -->
     <string name="btn_play">播放/暂停</string>
     <!-- Accessibility button description -->

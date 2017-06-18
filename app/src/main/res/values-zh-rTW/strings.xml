@@ -43,16 +43,6 @@
     </plurals>
     <!-- Toast after selecting an empty playlist -->
     <string name="emptyplaylist">選取的播放清單是空的</string>
-    <!-- Used in sleep message. Example 2 hours (and) 5 minutes -->
-    <string name="and">" \u8207 "</string>
-    <!-- Alarm confirmation toast: singular hour -->
-    <string name="hour">" \u5c0f\u6642"</string>
-    <!-- Alarm confirmation toast: plural hours -->
-    <string name="hours">" \u5c0f\u6642"</string>
-    <!-- Alarm confirmation toast: plural minutes -->
-    <string name="minutes">" \u5206\u9418"</string>
-    <!-- Alarm toast: Sleep timer set for -->
-    <string name="sleep_message">\u4f11\u7720\u8a08\u6642\u5df2\u8a2d\u70ba</string>
     <!-- -->
     <string name="initial_dir_set_message">\u8a2d\u70ba\u8d77\u59cb\u4f4d\u7f6e</string>
     <!-- Transient popup message shown after deleting a playlist -->
@@ -566,14 +556,19 @@
     <string name="sort_files_album_name">專輯名稱</string>
     <string name="sort_files_track_name">音軌名稱</string>
     <!-- ## Sleep Timer ## -->
-    <!-- Options Menu - Sleep Timer Title -->
-    <string name="sleep_timer">休眠計時</string>
-    <!-- -->
+    <!-- Sleep timer title -->
+    <!--Sleep timer "Play last song to end" -->
     <string name="sleep_timer_play_to_end">播放最後一首曲目後結束</string>
     <!-- Sleep timer "set" -->
-    <string name="sleep_timer_set">設定</string>
-    <!-- Sleep timer "set" -->
-    <string name="sleep_timer_stop_button">停止</string>
+    <!-- Sleep timer "Stop" -->
+    <!-- Sleep timer stop message "Stop sleep timer?" -->
+    <!-- Toast when sleep timer is set -->
+    <!-- Sleep timer "Set time..." -->
+    <!-- Sleep timer "5 minutes" -->
+    <!-- Sleep timer "15 minutes" -->
+    <!-- Sleep timer "30 minutes" -->
+    <!-- Sleep timer "1 hour" -->
+    <!-- Sleep timer label "Minutes" (limited space here) -->
     <!-- Button name in time span picker -->
     <string name="button_done">完成</string>
     <!-- Title of time span picker -->
@@ -643,10 +638,6 @@
     <string name="song_info">音樂資訊</string>
     <!-- Artwork Download Service Label-->
     <string name="download_service">下載服務</string>
-    <!-- ## Better Pickers Strings ## -->
-    <string name="picker_set">確定</string>
-    <string name="timer_delete">刪除</string>
-    <string name="time_picker_time_seperator">：</string>
     <!-- Accessibility button description -->
     <string name="btn_play">播放</string>
     <!-- Accessibility button description -->

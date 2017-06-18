@@ -44,16 +44,6 @@
     </plurals>
     <!-- Toast after selecting an empty playlist -->
     <string name="emptyplaylist">Избраният плейлист е празен.</string>
-    <!-- Used in sleep message. Example 2 hours (and) 5 minutes -->
-    <string name="and">" \u0438 "</string>
-    <!-- Alarm confirmation toast: singular hour -->
-    <string name="hour">" \u0447\u0430\u0441"</string>
-    <!-- Alarm confirmation toast: plural hours -->
-    <string name="hours">" \u0447\u0430\u0441\u0430"</string>
-    <!-- Alarm confirmation toast: plural minutes -->
-    <string name="minutes">" \u043c\u0438\u043d\u0443\u0442\u0438"</string>
-    <!-- Alarm toast: Sleep timer set for -->
-    <string name="sleep_message">"\u0422\u0430\u0439\u043c\u0435\u0440 \u0437\u0430 \u0430\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u043d\u043e \u0438\u0437\u043a\u043b\u044e\u0447\u0432\u0430\u043d\u0435 \u0437\u0430\u0434\u0430\u0434\u0435\u043d \u0437\u0430 "</string>
     <!-- -->
     <string name="initial_dir_set_message">" \u0437\u0430\u0434\u0430\u0439 \u043a\u0430\u0442\u043e \u043d\u0430\u0447\u0430\u043b\u043d\u0430 \u0434\u0438\u0440\u0435\u043a\u0442\u043e\u0440\u0438\u044f"</string>
     <!-- Transient popup message shown after deleting a playlist -->
@@ -564,14 +554,19 @@
     <string name="sort_files_album_name">Име на албума</string>
     <string name="sort_files_track_name">Име на песента</string>
     <!-- ## Sleep Timer ## -->
-    <!-- Options Menu - Sleep Timer Title -->
-    <string name="sleep_timer">Таймер за автоматично изключване</string>
-    <!-- -->
+    <!-- Sleep timer title -->
+    <!--Sleep timer "Play last song to end" -->
     <string name="sleep_timer_play_to_end">Пуснете последната песен, за да завършите</string>
     <!-- Sleep timer "set" -->
-    <string name="sleep_timer_set">Задай</string>
-    <!-- Sleep timer "set" -->
-    <string name="sleep_timer_stop_button">Спри</string>
+    <!-- Sleep timer "Stop" -->
+    <!-- Sleep timer stop message "Stop sleep timer?" -->
+    <!-- Toast when sleep timer is set -->
+    <!-- Sleep timer "Set time..." -->
+    <!-- Sleep timer "5 minutes" -->
+    <!-- Sleep timer "15 minutes" -->
+    <!-- Sleep timer "30 minutes" -->
+    <!-- Sleep timer "1 hour" -->
+    <!-- Sleep timer label "Minutes" (limited space here) -->
     <!-- Button name in time span picker -->
     <string name="button_done">Готово</string>
     <!-- Title of time span picker -->
@@ -643,10 +638,6 @@
     <string name="song_info">Инфо за песента</string>
     <!-- Artwork Download Service Label-->
     <string name="download_service">Услуга за изтегляне</string>
-    <!-- ## Better Pickers Strings ## -->
-    <string name="picker_set">ОК</string>
-    <string name="timer_delete">Изтрий</string>
-    <string name="time_picker_time_seperator">:</string>
     <!-- Accessibility button description -->
     <string name="btn_play">Изпълни</string>
     <!-- Accessibility button description -->
