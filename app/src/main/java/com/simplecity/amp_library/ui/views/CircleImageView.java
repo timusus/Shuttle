@@ -274,14 +274,16 @@ public class CircleImageView extends AppCompatImageView {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        aestheticDisposable = Aesthetic.get().isDark()
-                .subscribe(isDark -> {
-                    if (isDark) {
-                        setBorderColor(getResources().getColor(R.color.grey_900));
-                    } else {
-                        setBorderColor(getResources().getColor(R.color.grey_250));
-                    }
-                });
+        if (!isInEditMode()) {
+            aestheticDisposable = Aesthetic.get().isDark()
+                    .subscribe(isDark -> {
+                        if (isDark) {
+                            setBorderColor(getResources().getColor(R.color.grey_900));
+                        } else {
+                            setBorderColor(getResources().getColor(R.color.grey_250));
+                        }
+                    });
+        }
     }
 
     @Override
