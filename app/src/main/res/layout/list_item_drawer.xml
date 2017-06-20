@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    android:foreground="?attr/list_selector"
+    android:background="?attr/list_selector"
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
@@ -16,7 +16,6 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="32dp"
         android:layout_marginStart="16dp"
-        android:alpha="0.6"
         android:scaleType="fitCenter"
         android:visibility="invisible"
         tools:ignore="ContentDescription"
