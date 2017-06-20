@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.StrictMode;
@@ -40,7 +39,6 @@ import com.simplecity.amp_library.sql.providers.PlayCountTable;
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
 import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.SettingsManager;
-import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
@@ -220,43 +218,39 @@ public class ShuttleApplication extends Application {
     }
 
     public boolean getIsUpgraded() {
-        return isUpgraded || BuildConfig.DEBUG;
+        return false;//isUpgraded || BuildConfig.DEBUG;
     }
 
     private void deleteOldResources() {
-        ShuttleUtils.execute(new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-
-                //Delete albumthumbs/artists directory
-                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                    File file = new File(Environment.getExternalStorageDirectory() + "/albumthumbs/artists/");
-                    if (file.exists() && file.isDirectory()) {
-                        File[] files = file.listFiles();
-                        if (files != null) {
-                            for (File child : files) {
-                                child.delete();
-                            }
+        Observable.fromCallable(() -> {
+            //Delete albumthumbs/artists directory
+            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                File file = new File(Environment.getExternalStorageDirectory() + "/albumthumbs/artists/");
+                if (file.exists() && file.isDirectory()) {
+                    File[] files = file.listFiles();
+                    if (files != null) {
+                        for (File child : files) {
+                            child.delete();
                         }
-                        file.delete();
                     }
+                    file.delete();
                 }
-
-                //Delete old http cache
-                File oldHttpCache = getDiskCacheDir("http");
-                if (oldHttpCache != null && oldHttpCache.exists()) {
-                    oldHttpCache.delete();
-                }
-
-                //Delete old thumbs cache
-                File oldThumbsCache = getDiskCacheDir("thumbs");
-                if (oldThumbsCache != null && oldThumbsCache.exists()) {
-                    oldThumbsCache.delete();
-                }
-
-                return null;
             }
-        });
+
+            //Delete old http cache
+            File oldHttpCache = getDiskCacheDir("http");
+            if (oldHttpCache != null && oldHttpCache.exists()) {
+                oldHttpCache.delete();
+            }
+
+            //Delete old thumbs cache
+            File oldThumbsCache = getDiskCacheDir("thumbs");
+            if (oldThumbsCache != null && oldThumbsCache.exists()) {
+                oldThumbsCache.delete();
+            }
+            return null;
+        }).subscribeOn(Schedulers.io())
+                .subscribe();
     }
 
     public static File getDiskCacheDir(String uniqueName) {
