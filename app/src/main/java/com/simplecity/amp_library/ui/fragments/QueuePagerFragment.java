@@ -94,15 +94,17 @@ public class QueuePagerFragment extends BaseFragment implements
 
                 int snapPosition = super.findTargetSnapPosition(layoutManager, velocityX, velocityY);
 
-                rx.Observable.defer(() -> {
-                    if (MusicUtils.getQueuePosition() != snapPosition) {
-                        MusicUtils.setQueuePosition(snapPosition);
-                    }
-                    return rx.Observable.empty();
-                })
-                        .delaySubscription(150, TimeUnit.MILLISECONDS)
-                        .subscribeOn(Schedulers.io())
-                        .subscribe();
+                if (snapPosition < viewModelAdapter.items.size()) {
+                    rx.Observable.defer(() -> {
+                        if (MusicUtils.getQueuePosition() != snapPosition) {
+                            MusicUtils.setQueuePosition(snapPosition);
+                        }
+                        return rx.Observable.empty();
+                    })
+                            .delaySubscription(150, TimeUnit.MILLISECONDS)
+                            .subscribeOn(Schedulers.io())
+                            .subscribe();
+                }
 
                 return snapPosition;
             }
