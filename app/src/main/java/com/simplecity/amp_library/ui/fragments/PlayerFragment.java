@@ -3,6 +3,7 @@ package com.simplecity.amp_library.ui.fragments;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -174,6 +175,8 @@ public class PlayerFragment extends BaseFragment implements PlayerView, Toolbar.
                     .commit();
         }
 
+        Aesthetic.get().colorPrimary().take(1).subscribe(this::invalidateColors);
+
         return rootView;
     }
 
@@ -331,49 +334,45 @@ public class PlayerFragment extends BaseFragment implements PlayerView, Toolbar.
                 .load(song)
                 .asBitmap()
                 .transcode(new PaletteBitmapTranscoder(getContext()), PaletteBitmap.class)
-                .override(100, 100)
+                .override(250, 250)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(new SimpleTarget<PaletteBitmap>() {
                     @Override
                     public void onResourceReady(PaletteBitmap resource, GlideAnimation<? super PaletteBitmap> glideAnimation) {
-
                         Palette.Swatch swatch = resource.palette.getDarkMutedSwatch();
-
-                        int newColor = Aesthetic.get().colorPrimary().blockingFirst();
-
                         if (swatch != null) {
-                            newColor = swatch.getRgb();
-                        }
-
-                        if (backgroundColor != newColor) {
-                            // Todo:
-                            // This null check is only necessary because backgroundView is null in landscape mode.
-                            // Can be removed when that problem is solved.
-                            if (backgroundView != null) {
-                                ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), backgroundColor, newColor);
-                                colorAnimation.setDuration(350);
-                                colorAnimation.addUpdateListener(animator -> backgroundView.setBackgroundColor((Integer) animator.getAnimatedValue()));
-                                colorAnimation.start();
-                            }
-                            backgroundColor = newColor;
-
-//                            Aesthetic.get()
-//                                    .colorPrimary(newColor)
-//                                    .colorStatusBarAuto()
-//                                    .apply();
-                        }
-
-                        boolean isColorLight = Util.isColorLight(newColor);
-                        int textColor = isColorLight ? Color.BLACK : Color.WHITE;
-                        currentTime.setTextColor(textColor);
-                        totalTime.setTextColor(textColor);
-                        track.setTextColor(textColor);
-                        album.setTextColor(textColor);
-                        if (artist != null) {
-                            artist.setTextColor(textColor);
+                            invalidateColors(swatch.getRgb());
+                        } else {
+                            Aesthetic.get().colorPrimary().take(1).subscribe(color -> invalidateColors(color));
                         }
                     }
+
+                    @Override
+                    public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                        super.onLoadFailed(e, errorDrawable);
+                        Aesthetic.get().colorPrimary().take(1).subscribe(color -> invalidateColors(color));
+                    }
                 });
+    }
+
+    void invalidateColors(int color) {
+        if (color != backgroundColor) {
+            ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), backgroundColor, color);
+            colorAnimation.setDuration(400);
+            colorAnimation.addUpdateListener(animator -> backgroundView.setBackgroundColor((Integer) animator.getAnimatedValue()));
+            colorAnimation.start();
+        }
+        backgroundColor = color;
+
+        boolean isColorLight = Util.isColorLight(color);
+        int textColor = isColorLight ? Color.BLACK : Color.WHITE;
+        currentTime.setTextColor(textColor);
+        totalTime.setTextColor(textColor);
+        track.setTextColor(textColor);
+        album.setTextColor(textColor);
+        if (artist != null) {
+            artist.setTextColor(textColor);
+        }
     }
 
     @Override

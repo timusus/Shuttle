@@ -25,8 +25,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_container"
-        tools:background="#000000"/>
+        app:layout_constraintTop_toBottomOf="@+id/main_container"/>
 
     <com.simplecity.amp_library.ui.views.SizableSeekBar
         android:id="@+id/seekbar"
