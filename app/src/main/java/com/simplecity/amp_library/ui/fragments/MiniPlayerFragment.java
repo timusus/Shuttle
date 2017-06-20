@@ -21,11 +21,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
-import com.simplecity.amp_library.glide.utils.GlideUtils;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.ui.views.PlayPauseView;
 import com.simplecity.amp_library.ui.views.PlayerViewAdapter;
+import com.simplecity.amp_library.utils.PlaceholderProvider;
 
 import javax.inject.Inject;
 
@@ -246,7 +246,7 @@ public class MiniPlayerFragment extends BaseFragment {
                     .load(song)
                     .priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .placeholder(GlideUtils.getMediumPlaceHolderResId())
+                    .placeholder(PlaceholderProvider.getInstance().getMediumPlaceHolderResId())
                     .into(miniArtwork);
 
             rootView.setContentDescription(getString(R.string.btn_now_playing, song.name, song.artistName));

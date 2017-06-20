@@ -26,6 +26,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import rx.schedulers.Schedulers;
 
 public class QueuePagerFragment extends BaseFragment implements
@@ -33,6 +34,8 @@ public class QueuePagerFragment extends BaseFragment implements
         QueuePagerView {
 
     private final String TAG = "QueuePagerFragment";
+
+    private Unbinder unbinder;
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
@@ -70,7 +73,7 @@ public class QueuePagerFragment extends BaseFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_queue_pager, container, false);
 
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
@@ -111,6 +114,12 @@ public class QueuePagerFragment extends BaseFragment implements
         super.onPause();
 
         queuePagerPresenter.unbindView(this);
+    }
+
+    @Override
+    public void onDestroyView() {
+        unbinder.unbind();
+        super.onDestroyView();
     }
 
     @Override

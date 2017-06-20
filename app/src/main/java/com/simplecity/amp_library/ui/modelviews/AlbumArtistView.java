@@ -8,6 +8,7 @@ import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.format.PrefixHighlighter;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.ui.adapters.ViewType;
+import com.simplecity.amp_library.utils.PlaceholderProvider;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +19,6 @@ import static com.bumptech.glide.load.engine.DiskCacheStrategy.ALL;
 import static com.github.florent37.glidepalette.BitmapPalette.Profile.MUTED_DARK;
 import static com.github.florent37.glidepalette.GlidePalette.with;
 import static com.simplecity.amp_library.R.string.btn_options;
-import static com.simplecity.amp_library.glide.utils.GlideUtils.getPlaceHolderDrawable;
 import static com.simplecity.amp_library.ui.adapters.ViewType.ARTIST_PALETTE;
 import static com.simplecity.amp_library.utils.SortManager.AlbumSort.ARTIST_NAME;
 import static com.simplecity.amp_library.utils.SortManager.ArtistSort.DEFAULT;
@@ -114,7 +114,7 @@ public class AlbumArtistView extends MultiItemView<AlbumArtistView.ViewHolder, A
                         .crossfade(true)
                         : null)
                 .diskCacheStrategy(ALL)
-                .placeholder(getPlaceHolderDrawable(albumArtist.name, false))
+                .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(albumArtist.name, false))
                 .into(holder.imageOne);
 
         holder.overflowButton.setContentDescription(holder.itemView.getResources().getString(btn_options, albumArtist.name));

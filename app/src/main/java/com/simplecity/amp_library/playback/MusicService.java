@@ -82,6 +82,7 @@ import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.DrawableUtils;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MediaButtonIntentReceiver;
+import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
@@ -404,7 +405,7 @@ public class MusicService extends Service {
                         .load(getSong())
                         .asBitmap()
                         .override(1024, 1024)
-                        .placeholder(GlideUtils.getLargePlaceHolderResId())
+                        .placeholder(PlaceholderProvider.getInstance().getLargePlaceHolderResId())
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
@@ -2079,7 +2080,7 @@ public class MusicService extends Service {
                 .asBitmap()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .override(600, 600)
-                .placeholder(GlideUtils.getPlaceHolderDrawable(albumName, false))
+                .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(albumName, false))
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {

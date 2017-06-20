@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.simplecity.amp_library.glide.utils.GlideUtils;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.ArtworkProvider;
@@ -14,6 +13,7 @@ import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.utils.ArtworkDialog;
 import com.simplecity.amp_library.utils.Operators;
+import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.SortManager;
 
 import java.util.List;
@@ -119,7 +119,7 @@ public class ArtistDetailFragment extends BaseDetailFragment  {
     @NonNull
     @Override
     Drawable getPlaceHolderDrawable() {
-        return GlideUtils.getPlaceHolderDrawable(albumArtist.name, true);
+        return PlaceholderProvider.getInstance().getPlaceHolderDrawable(albumArtist.name, true);
     }
 
     @Override

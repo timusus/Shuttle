@@ -9,8 +9,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.ui.adapters.ViewType;
-
-import static com.simplecity.amp_library.glide.utils.GlideUtils.getPlaceHolderDrawable;
+import com.simplecity.amp_library.utils.PlaceholderProvider;
 
 public class SuggestedSongView extends MultiItemView<SuggestedSongView.ViewHolder, Song> {
 
@@ -75,7 +74,7 @@ public class SuggestedSongView extends MultiItemView<SuggestedSongView.ViewHolde
 
         requestManager.load(song)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .placeholder(getPlaceHolderDrawable(song.albumName, false))
+                .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.albumName, false))
                 .into(holder.imageOne);
 
         holder.overflowButton.setContentDescription(holder.itemView.getResources().getString(R.string.btn_options, song.name));

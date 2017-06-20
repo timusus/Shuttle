@@ -5,11 +5,11 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-import com.simplecity.amp_library.glide.utils.GlideUtils;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.utils.Operators;
+import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.SortManager;
 
 import java.util.List;
@@ -104,7 +104,7 @@ public class PlaylistDetailFragment extends BaseDetailFragment {
     @NonNull
     @Override
     Drawable getPlaceHolderDrawable() {
-        return GlideUtils.getPlaceHolderDrawable(playlist.name, true);
+        return PlaceholderProvider.getInstance().getPlaceHolderDrawable(playlist.name, true);
     }
 
     @Override

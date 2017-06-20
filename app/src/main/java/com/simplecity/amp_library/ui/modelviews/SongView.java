@@ -14,10 +14,10 @@ import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.format.PrefixHighlighter;
-import com.simplecity.amp_library.glide.utils.GlideUtils;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.ui.views.NonScrollImageButton;
+import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.SortManager;
 import com.simplecity.amp_library.utils.StringUtils;
@@ -167,7 +167,7 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder, Song>
                 holder.artwork.setVisibility(View.VISIBLE);
                 requestManager.load(song)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .placeholder(GlideUtils.getPlaceHolderDrawable(song.albumName, false))
+                        .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.albumName, false))
                         .into(holder.artwork);
             } else {
                 holder.artwork.setVisibility(View.GONE);

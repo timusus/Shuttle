@@ -4,14 +4,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.ui.adapters.ViewType;
+import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecityapps.recycler_adapter.model.BaseViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
-
-import static com.bumptech.glide.Glide.clear;
-import static com.simplecity.amp_library.R.layout.list_item_queue_pager;
-import static com.simplecity.amp_library.ui.adapters.ViewType.QUEUE_PAGER_ITEM;
 
 public class QueuePagerItemView extends BaseViewModel<QueuePagerItemView.ViewHolder> {
 
@@ -25,12 +25,12 @@ public class QueuePagerItemView extends BaseViewModel<QueuePagerItemView.ViewHol
 
     @Override
     public int getViewType() {
-        return QUEUE_PAGER_ITEM;
+        return ViewType.QUEUE_PAGER_ITEM;
     }
 
     @Override
     public int getLayoutResId() {
-        return list_item_queue_pager;
+        return R.layout.list_item_queue_pager;
     }
 
     @Override
@@ -42,7 +42,10 @@ public class QueuePagerItemView extends BaseViewModel<QueuePagerItemView.ViewHol
     public void bindView(ViewHolder holder) {
         super.bindView(holder);
 
-        requestManager.load(song).into((ImageView) holder.itemView);
+        requestManager
+                .load(song)
+                .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.name, true))
+                .into((ImageView) holder.itemView);
     }
 
     static class ViewHolder extends BaseViewHolder<QueuePagerItemView> {
@@ -55,7 +58,7 @@ public class QueuePagerItemView extends BaseViewModel<QueuePagerItemView.ViewHol
         public void recycle() {
             super.recycle();
 
-            clear(itemView);
+            Glide.clear(itemView);
         }
     }
 

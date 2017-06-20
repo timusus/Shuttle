@@ -1,9 +1,9 @@
 package com.simplecity.amp_library.ui.drawer;
 
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.aesthetic.Aesthetic;
+import com.afollestad.aesthetic.Rx;
 import com.annimon.stream.Stream;
 import com.bignerdranch.expandablerecyclerview.model.Parent;
 import com.bumptech.glide.Glide;
@@ -22,13 +24,13 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
-import com.simplecity.amp_library.glide.utils.GlideUtils;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.ui.fragments.BaseFragment;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.ui.views.CircleImageView;
 import com.simplecity.amp_library.ui.views.PlayerViewAdapter;
+import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecityapps.recycler_adapter.recyclerview.ChildAttachStateChangeListener;
 
 import java.util.ArrayList;
@@ -38,6 +40,8 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
+import io.reactivex.disposables.Disposable;
 
 public class DrawerFragment extends BaseFragment implements
         DrawerView,
@@ -87,6 +91,9 @@ public class DrawerFragment extends BaseFragment implements
 
     private Drawable backgroundPlaceholder;
 
+    private Disposable aestheticDisposable;
+    private Unbinder unbinder;
+
     public DrawerFragment() {
     }
 
@@ -105,7 +112,7 @@ public class DrawerFragment extends BaseFragment implements
 
         requestManager = Glide.with(this);
 
-        backgroundPlaceholder = DrawableCompat.wrap(getResources().getDrawable(R.drawable.ic_drawer_header_placeholder));
+        backgroundPlaceholder = getResources().getDrawable(R.drawable.ic_drawer_header_placeholder);
     }
 
     @Override
@@ -113,7 +120,7 @@ public class DrawerFragment extends BaseFragment implements
 
         rootView = inflater.inflate(R.layout.fragment_drawer, container, false);
 
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
 
         playlistDrawerParent = DrawerParent.playlistsParent;
 
@@ -146,12 +153,19 @@ public class DrawerFragment extends BaseFragment implements
         super.onResume();
         drawerPresenter.bindView(this);
         playerPresenter.bindView(playerViewAdapter);
+
+        aestheticDisposable = Aesthetic.get()
+                .colorPrimary()
+                .compose(Rx.distinctToMainThread())
+                .subscribe(color -> backgroundPlaceholder.setColorFilter(color, PorterDuff.Mode.MULTIPLY));
     }
 
     @Override
     public void onPause() {
         drawerPresenter.unbindView(this);
         playerPresenter.unbindView(playerViewAdapter);
+
+        aestheticDisposable.dispose();
         super.onPause();
     }
 
@@ -161,8 +175,10 @@ public class DrawerFragment extends BaseFragment implements
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        unbinder.unbind();
+
+        super.onDestroyView();
     }
 
     @Override
@@ -224,7 +240,7 @@ public class DrawerFragment extends BaseFragment implements
 
             requestManager.load(song.getAlbumArtist())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .placeholder(GlideUtils.getMediumPlaceHolderResId())
+                    .placeholder(PlaceholderProvider.getInstance().getMediumPlaceHolderResId())
                     .into(artistImage);
 
             if (song.name == null || (song.albumName == null && song.albumArtistName == null)) {

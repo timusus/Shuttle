@@ -35,7 +35,6 @@ import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.glide.utils.AlwaysCrossFade;
-import com.simplecity.amp_library.glide.utils.GlideUtils;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.ArtworkProvider;
 import com.simplecity.amp_library.model.Song;
@@ -52,6 +51,7 @@ import com.simplecity.amp_library.ui.modelviews.SubheaderView;
 import com.simplecity.amp_library.utils.ActionBarUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
+import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.ResourceUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
@@ -395,7 +395,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
                                 requestManager.load(nextSlideShowAlbum)
                                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                                         .priority(Priority.HIGH)
-                                        .error(GlideUtils.getPlaceHolderDrawable(nextSlideShowAlbum.name, true))
+                                        .error(PlaceholderProvider.getInstance().getPlaceHolderDrawable(nextSlideShowAlbum.name, true))
                                         .centerCrop()
                                         .thumbnail(Glide
                                                 .with(this)
