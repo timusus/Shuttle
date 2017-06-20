@@ -390,7 +390,7 @@ Indien uitgeschakeld wordt het Shuttle-icoon als plaatshouder gebruikt</string>
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <string name="pref_summary_simple_download">Download Simple Last.fm Scobbler uit de Google Play Store</string>
     <!-- Settings title for the About heading -->
-    <string name="pref_title_about">Wijzigingen</string>
+    <string name="pref_title_changelog">Wijzigingen</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Ondersteuning</string>
     <string name="pref_title_version">Versie</string>

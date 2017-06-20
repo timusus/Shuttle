@@ -393,7 +393,7 @@
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <string name="pref_summary_simple_download">Завантажити Simple Last.FM Scrobbler з Google Play</string>
     <!-- Settings title for the About heading -->
-    <string name="pref_title_about">Звітування змін</string>
+    <string name="pref_title_changelog">Звітування змін</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Підтримка</string>
     <string name="pref_title_version">Версія</string>

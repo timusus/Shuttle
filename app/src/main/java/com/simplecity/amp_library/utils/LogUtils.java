@@ -17,4 +17,8 @@ public class LogUtils {
             throwable.printStackTrace();
         }
     }
+
+    public static void logError(String tag, String message) {
+        Crashlytics.log(Log.ERROR, tag, message);
+    }
 }

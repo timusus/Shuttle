@@ -392,7 +392,7 @@
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <string name="pref_summary_simple_download">从Google Play Store下载Simple Last.FM Scrobbler</string>
     <!-- Settings title for the About heading -->
-    <string name="pref_title_about">更新日志</string>
+    <string name="pref_title_changelog">更新日志</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">支持</string>
     <string name="pref_title_version">版本</string>

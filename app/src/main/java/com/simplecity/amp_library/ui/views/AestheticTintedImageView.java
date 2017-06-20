@@ -58,7 +58,9 @@ public class AestheticTintedImageView extends AppCompatImageView {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        aestheticDisposable = getColorObservable().subscribe(this::invalidateColors);
+        if (!isInEditMode()) {
+            aestheticDisposable = getColorObservable().subscribe(this::invalidateColors);
+        }
     }
 
     @Override

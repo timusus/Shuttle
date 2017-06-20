@@ -383,7 +383,7 @@
     <string name="pref_summary_simple_download">"Изтегляне на Simple Last.FM Scrobbler от Google Play Store
 	"</string>
     <!-- Settings title for the About heading -->
-    <string name="pref_title_about">Информация за апликацията</string>
+    <string name="pref_title_changelog">Информация за апликацията</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Поддръжка.</string>
     <string name="pref_title_version">Версия</string>

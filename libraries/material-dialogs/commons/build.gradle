@@ -1,0 +1,38 @@
+apply plugin: 'com.android.library'
+apply from: '../dependencies.gradle'
+
+ext {
+    PUBLISH_GROUP_ID = 'com.afollestad.material-dialogs'
+    PUBLISH_ARTIFACT_ID = 'commons'
+    PUBLISH_VERSION = versions.publishVersion
+}
+
+android {
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
+
+    defaultConfig {
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.compileSdk
+        versionCode versions.publishVersionCode
+        versionName versions.publishVersion
+    }
+    lintOptions {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+    sourceSets {
+        main.res.srcDirs = [
+            'src/main/res',
+            'src/main/res-public'
+        ]
+    }
+}
+
+dependencies {
+    compile 'com.android.support:support-v13:' + versions.supportLib
+    compile 'com.android.support:appcompat-v7:' + versions.supportLib
+    compile project(':libraries/material-dialogs/:core')
+}
+
+//apply from: 'https://raw.githubusercontent.com/afollestad/aidanfollestad.com/master/android-lib-release.gradle'

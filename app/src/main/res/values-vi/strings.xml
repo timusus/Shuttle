@@ -387,7 +387,7 @@
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <string name="pref_summary_simple_download">Tải Simple Last.fm scrobbler trên CH Play</string>
     <!-- Settings title for the About heading -->
-    <string name="pref_title_about">Thay đổi</string>
+    <string name="pref_title_changelog">Thay đổi</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Hỗ trợ</string>
     <string name="pref_title_version">Phiên bản</string>

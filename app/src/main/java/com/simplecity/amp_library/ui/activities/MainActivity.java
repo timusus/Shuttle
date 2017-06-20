@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.ui.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -9,10 +10,10 @@ import android.view.View;
 
 import com.afollestad.aesthetic.Aesthetic;
 import com.greysonparrelli.permiso.Permiso;
+import com.simplecity.amp_library.IabManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ui.drawer.DrawerProvider;
 import com.simplecity.amp_library.ui.fragments.MainController;
-import com.simplecity.amp_library.utils.SleepTimer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +67,15 @@ public class MainActivity extends BaseCastActivity implements
                     .beginTransaction()
                     .add(R.id.mainContainer, MainController.newInstance())
                     .commit();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (IabManager.getInstance().iabHelper == null) return;
+
+        if (!IabManager.getInstance().iabHelper.handleActivityResult(requestCode, resultCode, data)) {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 

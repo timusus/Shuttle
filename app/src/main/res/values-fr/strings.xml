@@ -377,7 +377,7 @@
     <string name="pref_summary_simple_download">"Télécharger Simple Last.FM Scrobbler depuis le Google Play Store
 	"</string>
     <!-- Settings title for the About heading -->
-    <string name="pref_title_about">À propos</string>
+    <string name="pref_title_changelog">À propos</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Soutenir</string>
     <string name="pref_title_version">Version</string>

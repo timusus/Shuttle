@@ -439,13 +439,6 @@ public class MusicUtils {
         return Observable.just(false);
     }
 
-    public static void toggleLockscreenArtwork() {
-        if (MusicServiceConnectionUtils.sServiceBinder.getService() == null) {
-            return;
-        }
-        MusicServiceConnectionUtils.sServiceBinder.getService().notifyChange(MusicService.InternalIntents.META_CHANGED);
-    }
-
     public static void toggleShuffleMode() {
         if (MusicServiceConnectionUtils.sServiceBinder.getService() == null) {
             return;

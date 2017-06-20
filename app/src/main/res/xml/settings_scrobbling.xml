@@ -4,11 +4,9 @@
 
     <android.support.v7.preference.PreferenceCategory
         android:key="pref_key_simple_lastfm_scrobble_settings"
-        android:layout="@layout/preference_category"
         android:title="@string/pref_title_simple_scrobbler">
 
-        <android.support.v7.preference.CheckBoxPreference
-            android:defaultValue="false"
+        <android.support.v7.preference.SwitchPreferenceCompat
             android:key="pref_simple_lastfm_scrobbler"
             android:summary="@string/pref_summary_simple_enable"
             android:title="@string/pref_title_simple_enable"/>

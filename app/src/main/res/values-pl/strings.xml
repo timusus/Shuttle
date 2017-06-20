@@ -404,7 +404,7 @@ Po wyłączeniu, jako obraz zastępczy będzie używana ikona programu.</string>
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <string name="pref_summary_simple_download">Pobiera Simple Last.FM Scrobbler ze sklepu Google Play</string>
     <!-- Settings title for the About heading -->
-    <string name="pref_title_about">Lista zmian</string>
+    <string name="pref_title_changelog">Lista zmian</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Pomoc</string>
     <string name="pref_title_version">Wersja</string>

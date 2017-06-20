@@ -569,10 +569,14 @@ public class Aesthetic {
   }
 
   @CheckResult
-  public Aesthetic colorNavigationBarAuto() {
-    int color = prefs.getInt(KEY_PRIMARY_COLOR, resolveColor(context, R.attr.colorPrimary));
+  public Aesthetic colorNavigationBarAuto(boolean auto) {
     String key = String.format(KEY_NAV_BAR_COLOR, key(context));
-    editor.putInt(key, isColorLight(color) ? Color.BLACK : color);
+    if (auto) {
+      int color = prefs.getInt(KEY_PRIMARY_COLOR, resolveColor(context, R.attr.colorPrimary));
+      editor.putInt(key, isColorLight(color) ? Color.BLACK : color);
+    } else {
+      editor.remove(key);
+    }
     return this;
   }
 

@@ -6,8 +6,7 @@
     <item
         android:id="@+id/action_equalizer"
         android:title="@string/equalizer"
-        app:actionLayout="@layout/eq_switch"
-        app:actionViewClass="android.support.v7.widget.SwitchCompat"
+        app:actionViewClass="com.afollestad.aesthetic.AestheticSwitchCompat"
         app:showAsAction="ifRoom"/>
 
     <item

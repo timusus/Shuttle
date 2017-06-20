@@ -389,7 +389,7 @@ Ako nije označeno, Shuttle ikona će se koristiti kao sličica</string>
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <string name="pref_summary_simple_download">Preuzmite Last.FM scrobbler sa Google Play Trgovine</string>
     <!-- Settings title for the About heading -->
-    <string name="pref_title_about">Popis promjena</string>
+    <string name="pref_title_changelog">Popis promjena</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Podrška</string>
     <string name="pref_title_version">Verzija</string>

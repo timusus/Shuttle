@@ -2,29 +2,40 @@ package com.simplecity.amp_library.ui.settings;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.XmlRes;
 import android.support.v4.app.Fragment;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.SwitchPreferenceCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.afollestad.aesthetic.Aesthetic;
+import com.afollestad.aesthetic.Rx;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
+import com.simplecity.amp_library.ui.activities.MainActivity;
 import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
+import com.simplecity.amp_library.utils.SettingsManager;
+import com.simplecity.amp_library.utils.ShuttleUtils;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.disposables.Disposable;
 import test.com.androidnavigation.base.Controller;
 import test.com.androidnavigation.base.NavigationController;
 import test.com.androidnavigation.fragment.BaseController;
@@ -94,12 +105,18 @@ public class SettingsParentFragment extends BaseNavigationController {
     public static class SettingsFragment extends PreferenceFragmentCompat implements
             Controller,
             SupportView,
-            SettingsView {
+            SettingsView,
+            ColorChooserDialog.ColorCallback {
 
         @XmlRes int preferenceResource;
 
         @Inject SupportPresenter supportPresenter;
         @Inject SettingsPresenter settingsPresenter;
+
+        private ColorChooserDialog primaryColorDialog;
+        private ColorChooserDialog accentColorDialog;
+
+        private Disposable aestheticDisposable;
 
         public static FragmentInfo getFragmentInfo(@XmlRes int preferenceResource) {
             Bundle args = new Bundle();
@@ -140,7 +157,16 @@ public class SettingsParentFragment extends BaseNavigationController {
 
             // Support Preferences
 
-            Preference faqPreference = findPreference("pref_faq");
+
+            Preference changelogPreference = findPreference(SettingsManager.KEY_PREF_CHANGELOG);
+            if (changelogPreference != null) {
+                changelogPreference.setOnPreferenceClickListener(preference -> {
+                    settingsPresenter.changelogClicked(getContext());
+                    return true;
+                });
+            }
+
+            Preference faqPreference = findPreference(SettingsManager.KEY_PREF_FAQ);
             if (faqPreference != null) {
                 faqPreference.setOnPreferenceClickListener(preference -> {
                     supportPresenter.faqClicked();
@@ -148,7 +174,7 @@ public class SettingsParentFragment extends BaseNavigationController {
                 });
             }
 
-            Preference helpPreference = findPreference("pref_help");
+            Preference helpPreference = findPreference(SettingsManager.KEY_PREF_HELP);
             if (helpPreference != null) {
                 helpPreference.setOnPreferenceClickListener(preference -> {
                     supportPresenter.helpClicked();
@@ -156,12 +182,182 @@ public class SettingsParentFragment extends BaseNavigationController {
                 });
             }
 
-            Preference ratePreference = findPreference("pref_rate");
+            Preference ratePreference = findPreference(SettingsManager.KEY_PREF_RATE);
             if (ratePreference != null) {
                 ratePreference.setOnPreferenceClickListener(preference -> {
                     supportPresenter.rateClicked();
                     return true;
                 });
+            }
+
+            Preference restorePurchasesPreference = findPreference(SettingsManager.KEY_PREF_RESTORE_PURCHASES);
+            if (restorePurchasesPreference != null) {
+                if (ShuttleUtils.isAmazonBuild() || ShuttleUtils.isUpgraded()) {
+                    restorePurchasesPreference.setVisible(false);
+                }
+                restorePurchasesPreference.setOnPreferenceClickListener(preference -> {
+                    settingsPresenter.restorePurchasesClicked();
+                    return true;
+                });
+            }
+
+            // Display
+
+            Preference chooseTabsPreference = findPreference(SettingsManager.KEY_PREF_TAB_CHOOSER);
+            if (chooseTabsPreference != null) {
+                chooseTabsPreference.setOnPreferenceClickListener(preference -> {
+                    settingsPresenter.chooseTabsClicked(getContext());
+                    return true;
+                });
+            }
+
+            Preference defaultPagePreference = findPreference(SettingsManager.KEY_PREF_DEFAULT_PAGE);
+            if (defaultPagePreference != null) {
+                defaultPagePreference.setOnPreferenceClickListener(preference -> {
+                    settingsPresenter.chooseDefaultPageClicked(getContext());
+                    return true;
+                });
+            }
+
+            SwitchPreferenceCompat invertNotificationIconsPreference = (SwitchPreferenceCompat) findPreference("pref_invert_notif_icons");
+            if (invertNotificationIconsPreference != null) {
+                if (!ShuttleUtils.hasLollipop()) {
+                    invertNotificationIconsPreference.setVisible(false);
+                }
+            }
+
+            // Themes
+
+            Preference baseThemePreference = findPreference(SettingsManager.KEY_PREF_THEME_BASE);
+            if (baseThemePreference != null) {
+                baseThemePreference.setOnPreferenceClickListener(preference -> {
+                    settingsPresenter.baseThemeClicked(getContext());
+                    return true;
+                });
+            }
+
+            Preference primaryColorPreference = findPreference(SettingsManager.KEY_PREF_PRIMARY_COLOR);
+            if (primaryColorPreference != null) {
+                primaryColorPreference.setOnPreferenceClickListener(preference -> {
+                    settingsPresenter.primaryColorClicked(getContext());
+                    return true;
+                });
+            }
+
+            Preference accentColorColorPreference = findPreference(SettingsManager.KEY_PREF_ACCENT_COLOR);
+            if (accentColorColorPreference != null) {
+                accentColorColorPreference.setOnPreferenceClickListener(preference -> {
+                    settingsPresenter.accentColorClicked(getContext());
+                    return true;
+                });
+            }
+
+            SwitchPreferenceCompat tintNavBarColorPreference = (SwitchPreferenceCompat) findPreference(SettingsManager.KEY_PREF_NAV_BAR);
+            if (tintNavBarColorPreference != null) {
+                tintNavBarColorPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                    settingsPresenter.tintNavBarClicked((Boolean) newValue);
+                    return true;
+                });
+            }
+
+            // Artwork
+
+            Preference downloadArtworkPreference = findPreference(SettingsManager.KEY_PREF_DOWNLOAD_ARTWORK);
+            if (downloadArtworkPreference != null) {
+                downloadArtworkPreference.setOnPreferenceClickListener(preference -> {
+                    settingsPresenter.downloadArtworkClicked(getContext());
+                    return true;
+                });
+            }
+
+            Preference deleteArtworkPreference = findPreference(SettingsManager.KEY_PREF_DELETE_ARTWORK);
+            if (deleteArtworkPreference != null) {
+                deleteArtworkPreference.setOnPreferenceClickListener(preference -> {
+                    settingsPresenter.deleteArtworkClicked(getContext());
+                    return true;
+                });
+            }
+
+            SwitchPreferenceCompat ignoreEmbeddedArtworkPreference = (SwitchPreferenceCompat) findPreference(SettingsManager.KEY_IGNORE_EMBEDDED_ARTWORK);
+            if (ignoreEmbeddedArtworkPreference != null) {
+                ignoreEmbeddedArtworkPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                    settingsPresenter.changeArtworkPreferenceClicked(getContext());
+                    return true;
+                });
+            }
+
+            SwitchPreferenceCompat ignoreFolderArtworkPreference = (SwitchPreferenceCompat) findPreference(SettingsManager.KEY_IGNORE_FOLDER_ARTWORK);
+            if (ignoreFolderArtworkPreference != null) {
+                ignoreFolderArtworkPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                    settingsPresenter.changeArtworkPreferenceClicked(getContext());
+                    return true;
+                });
+            }
+
+            SwitchPreferenceCompat preferEmbeddedArtworkPreference = (SwitchPreferenceCompat) findPreference(SettingsManager.KEY_PREFER_EMBEDDED_ARTWORK);
+            if (preferEmbeddedArtworkPreference != null) {
+                preferEmbeddedArtworkPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                    settingsPresenter.changeArtworkPreferenceClicked(getContext());
+                    return true;
+                });
+            }
+
+            SwitchPreferenceCompat ignoreMediaStoreArtworkPreference = (SwitchPreferenceCompat) findPreference(SettingsManager.KEY_IGNORE_MEDIASTORE_ART);
+            if (ignoreMediaStoreArtworkPreference != null) {
+                ignoreMediaStoreArtworkPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                    settingsPresenter.changeArtworkPreferenceClicked(getContext());
+                    return true;
+                });
+            }
+
+            SwitchPreferenceCompat preferLastFmArtworkPreference = (SwitchPreferenceCompat) findPreference(SettingsManager.KEY_PREFER_LAST_FM);
+            if (preferLastFmArtworkPreference != null) {
+                preferLastFmArtworkPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                    settingsPresenter.changeArtworkPreferenceClicked(getContext());
+                    return true;
+                });
+            }
+
+            // Headset/Bluetooth
+
+            // Scrobbling
+
+            Preference downloadScrobblerPreference = findPreference(SettingsManager.KEY_PREF_DOWNLOAD_SCROBBLER);
+            if (downloadScrobblerPreference != null) {
+                if (ShuttleUtils.isAmazonBuild()) {
+                    // Amazon don't allow links to the Play Store
+                    downloadScrobblerPreference.setVisible(false);
+                }
+                downloadScrobblerPreference.setOnPreferenceClickListener(preference -> {
+                    settingsPresenter.downloadScrobblerClicked();
+                    return true;
+                });
+            }
+
+            // Whitelist/Blacklist
+
+            Preference viewBlacklistPreference = findPreference(SettingsManager.KEY_PREF_BLACKLIST);
+            if (viewBlacklistPreference != null) {
+                viewBlacklistPreference.setOnPreferenceClickListener(preference -> {
+                    settingsPresenter.viewBlacklistClicked(getContext());
+                    return true;
+                });
+            }
+
+            Preference viewWhitelistPreference = findPreference(SettingsManager.KEY_PREF_WHITELIST);
+            if (viewWhitelistPreference != null) {
+                viewWhitelistPreference.setOnPreferenceClickListener(preference -> {
+                    settingsPresenter.viewWhitelistClicked(getContext());
+                    return true;
+                });
+            }
+
+            // Upgrade preference
+            Preference upgradePreference = findPreference(SettingsManager.KEY_PREF_UPGRADE);
+            if (upgradePreference != null) {
+                if (ShuttleUtils.isUpgraded()) {
+                    upgradePreference.setVisible(false);
+                }
             }
         }
 
@@ -171,45 +367,82 @@ public class SettingsParentFragment extends BaseNavigationController {
 
             supportPresenter.bindView(this);
             settingsPresenter.bindView(this);
+
+            aestheticDisposable = Aesthetic.get().colorAccent()
+                    .compose(Rx.distinctToMainThread())
+                    .subscribe(this::invalidateColors);
         }
 
         @Override
         public void onPause() {
-            super.onPause();
-
             supportPresenter.unbindView(this);
             settingsPresenter.unbindView(this);
+
+            aestheticDisposable.dispose();
+
+            super.onPause();
         }
 
         @Override
         public boolean onPreferenceTreeClick(Preference preference) {
-            switch (preference.getKey()) {
-                case "pref_display":
-                    getNavigationController().pushViewController(SettingsFragment.newInstance(R.xml.settings_display), "DisplaySettings");
-                    break;
-                case "pref_themes":
-                    getNavigationController().pushViewController(SettingsFragment.newInstance(R.xml.settings_themes), "DisplaySettings");
-                    break;
-                case "pref_artwork":
-                    getNavigationController().pushViewController(SettingsFragment.newInstance(R.xml.settings_artwork), "DisplaySettings");
-                    break;
-                case "pref_headset":
-                    getNavigationController().pushViewController(SettingsFragment.newInstance(R.xml.settings_headset), "DisplaySettings");
-                    break;
-                case "pref_scrobbling":
-                    getNavigationController().pushViewController(SettingsFragment.newInstance(R.xml.settings_scrobbling), "DisplaySettings");
-                    break;
-                case "pref_blacklist":
-                    getNavigationController().pushViewController(SettingsFragment.newInstance(R.xml.settings_blacklist), "DisplaySettings");
-                    break;
-                case "pref_about":
-                    settingsPresenter.changelogClicked(getContext());
-                    break;
-                case "pref_upgrade":
-                    settingsPresenter.upgradeClicked(getContext());
-                    break;
+            if (preference.getKey() != null) {
+                switch (preference.getKey()) {
+                    case "pref_display":
+                        getNavigationController().pushViewController(SettingsFragment.newInstance(R.xml.settings_display), "DisplaySettings");
+                        break;
+                    case "pref_themes":
+                        getNavigationController().pushViewController(SettingsFragment.newInstance(R.xml.settings_themes), "ThemeSettings");
+                        break;
+                    case "pref_artwork":
+                        getNavigationController().pushViewController(SettingsFragment.newInstance(R.xml.settings_artwork), "ArtworkSettings");
+                        break;
+                    case "pref_headset":
+                        getNavigationController().pushViewController(SettingsFragment.newInstance(R.xml.settings_headset), "HeadsetSettings");
+                        break;
+                    case "pref_scrobbling":
+                        getNavigationController().pushViewController(SettingsFragment.newInstance(R.xml.settings_scrobbling), "ScrobblingSettings");
+                        break;
+                    case "pref_blacklist":
+                        getNavigationController().pushViewController(SettingsFragment.newInstance(R.xml.settings_blacklist), "BlacklistSettings");
+                        break;
+                    case "pref_upgrade":
+                        settingsPresenter.upgradeClicked((MainActivity) getActivity());
+                        break;
+                }
             }
             return true;
+        }
+
+        void invalidateColors(int color) {
+            int preferenceCount = getPreferenceScreen().getPreferenceCount();
+            for (int i = 0; i < preferenceCount; i++) {
+                tintPreferenceIcon(getPreferenceScreen().getPreference(i), color);
+            }
+        }
+
+        void tintPreferenceIcon(Preference preference, int color) {
+            if (preference != null) {
+                Drawable icon = preference.getIcon();
+                if (icon != null) {
+                    icon = DrawableCompat.wrap(icon);
+                    DrawableCompat.setTint(icon, color);
+                    preference.setIcon(icon);
+                }
+            }
+        }
+
+        @Override
+        public void onColorSelection(@NonNull ColorChooserDialog dialog, int selectedColor) {
+            if (dialog == primaryColorDialog) {
+                settingsPresenter.changePrimaryColor(selectedColor);
+            } else if (dialog == accentColorDialog) {
+                settingsPresenter.changeAccentColor(selectedColor);
+            }
+        }
+
+        @Override
+        public void onColorChooserDismissed(@NonNull ColorChooserDialog dialog) {
+
         }
 
         // Support View
@@ -245,6 +478,8 @@ public class SettingsParentFragment extends BaseNavigationController {
 
         // Settings View
 
+        // Support
+
         @Override
         public void showChangelog(MaterialDialog dialog) {
             dialog.show();
@@ -257,6 +492,84 @@ public class SettingsParentFragment extends BaseNavigationController {
 
         @Override
         public void showUpgradeDialog(MaterialDialog dialog) {
+            dialog.show();
+        }
+
+        @Override
+        public void showUpgradeSuccessDialog(MaterialDialog dialog) {
+            dialog.show();
+        }
+
+        @Override
+        public void showUpgradeFailedToast(int messageResId) {
+            Toast.makeText(getContext(), messageResId, Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void showRestorePurchasesMessage(int messageResId) {
+            Toast.makeText(getContext(), messageResId, Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void showTabChooserDialog(MaterialDialog dialog) {
+            dialog.show();
+        }
+
+        @Override
+        public void showDefaultPageDialog(MaterialDialog dialog) {
+            dialog.show();
+        }
+
+        // Themes
+
+        @Override
+        public void showBaseThemeDialog(MaterialDialog dialog) {
+            dialog.show();
+        }
+
+        @Override
+        public void showPrimaryColorDialog(ColorChooserDialog dialog) {
+            primaryColorDialog = dialog.show(getChildFragmentManager());
+        }
+
+        @Override
+        public void showAccentColorDialog(ColorChooserDialog dialog) {
+            accentColorDialog = dialog.show(getChildFragmentManager());
+        }
+
+        // Artwork
+
+        @Override
+        public void showDownloadArtworkDialog(MaterialDialog dialog) {
+            dialog.show();
+        }
+
+        @Override
+        public void showDeleteArtworkDialog(MaterialDialog dialog) {
+            dialog.show();
+        }
+
+        @Override
+        public void showArtworkPreferenceChangeDialog(MaterialDialog dialog) {
+            dialog.show();
+        }
+
+        // Scrobbling
+
+        @Override
+        public void launchDownloadScrobblerIntent(Intent intent) {
+            startActivity(intent);
+        }
+
+        // Blacklist/Whitelist
+
+        @Override
+        public void showBlacklistDialog(MaterialDialog dialog) {
+            dialog.show();
+        }
+
+        @Override
+        public void showWhitelistDialog(MaterialDialog dialog) {
             dialog.show();
         }
     }

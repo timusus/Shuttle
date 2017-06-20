@@ -1926,35 +1926,31 @@ public class MusicService extends Service {
                 metaData.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, (long) (getQueue().size()));
             }
 
-            if (SettingsManager.getInstance().showLockscreenArtwork()) {
-                //Glide has to be called from the main thread.
-                doOnMainThread(() -> Glide.with(MusicService.this)
-                        .load(getAlbum())
-                        .asBitmap()
-                        .override(1024, 1024)
-                        .into(new SimpleTarget<Bitmap>() {
-                            @Override
-                            public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-                                if (bitmap != null) {
-                                    metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap);
-                                }
-                                try {
-                                    mSession.setMetadata(metaData.build());
-                                } catch (NullPointerException e) {
-                                    metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, null);
-                                    mSession.setMetadata(metaData.build());
-                                }
+            //Glide has to be called from the main thread.
+            doOnMainThread(() -> Glide.with(MusicService.this)
+                    .load(getAlbum())
+                    .asBitmap()
+                    .override(1024, 1024)
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+                            if (bitmap != null) {
+                                metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap);
                             }
-
-                            @Override
-                            public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                                super.onLoadFailed(e, errorDrawable);
+                            try {
+                                mSession.setMetadata(metaData.build());
+                            } catch (NullPointerException e) {
+                                metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, null);
                                 mSession.setMetadata(metaData.build());
                             }
-                        }));
-            } else {
-                mSession.setMetadata(metaData.build());
-            }
+                        }
+
+                        @Override
+                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                            super.onLoadFailed(e, errorDrawable);
+                            mSession.setMetadata(metaData.build());
+                        }
+                    }));
 
             mSession.setPlaybackState(new PlaybackStateCompat.Builder()
                     .setActions(playbackActions)

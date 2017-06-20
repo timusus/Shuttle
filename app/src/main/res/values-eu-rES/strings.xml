@@ -389,7 +389,7 @@ Desaktibatzen bada, Shuttle-en ikonoa erabiliko da bere ordez</string>
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <string name="pref_summary_simple_download">Simple Last.FM scrobbler-a deskargatu Google Play Storetik</string>
     <!-- Settings title for the About heading -->
-    <string name="pref_title_about">Aldaketak</string>
+    <string name="pref_title_changelog">Aldaketak</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Laguntza</string>
     <string name="pref_title_version">Bertsioa</string>

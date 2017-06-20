@@ -385,7 +385,7 @@ segítségével
     <string name="pref_summary_simple_download">"Egyszerű LastFM Scrobbler letöltése a Google Play Store-ból
 	"</string>
     <!-- Settings title for the About heading -->
-    <string name="pref_title_about">Változások listája</string>
+    <string name="pref_title_changelog">Változások listája</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Támogatás</string>
     <string name="pref_title_version">Verzió</string>

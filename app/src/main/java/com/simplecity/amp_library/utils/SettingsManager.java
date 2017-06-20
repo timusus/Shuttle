@@ -7,11 +7,43 @@ import android.preference.PreferenceManager;
 import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.model.CategoryItem;
 import com.simplecity.amp_library.ui.adapters.ViewType;
 
 public class SettingsManager {
 
     private static final String TAG = "SettingsManager";
+
+    // Support
+    public static String KEY_PREF_CHANGELOG = "pref_changelog";
+    public static String KEY_PREF_FAQ = "pref_faq";
+    public static String KEY_PREF_HELP = "pref_help";
+    public static String KEY_PREF_RATE = "pref_rate";
+    public static String KEY_PREF_RESTORE_PURCHASES = "pref_restore_purchases";
+
+    // Display
+    public static String KEY_PREF_TAB_CHOOSER = "pref_tab_chooser";
+    public static String KEY_PREF_DEFAULT_PAGE = "pref_default_page";
+
+    // Themes
+    public static String KEY_PREF_THEME_BASE = "pref_theme_base";
+    public static String KEY_PREF_PRIMARY_COLOR = "pref_theme_primary_color";
+    public static String KEY_PREF_ACCENT_COLOR = "pref_theme_accent_color";
+    public static String KEY_PREF_NAV_BAR = "pref_nav_bar";
+
+    // Artwork
+    public static String KEY_PREF_DOWNLOAD_ARTWORK = "pref_download_artwork";
+    public static String KEY_PREF_DELETE_ARTWORK = "pref_delete_artwork";
+
+    // Scrobbler
+    public static String KEY_PREF_DOWNLOAD_SCROBBLER = "pref_download_simple_lastfm_scrobbler";
+
+    // Blacklist/whitelist
+    public static String KEY_PREF_BLACKLIST = "pref_blacklist_view";
+    public static String KEY_PREF_WHITELIST = "pref_whitelist_view";
+
+    // Upgrade
+    public static String KEY_PREF_UPGRADE = "pref_upgrade";
 
     private static SettingsManager sInstance;
 
@@ -65,18 +97,6 @@ public class SettingsManager {
         final SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putInt(key, value);
         editor.apply();
-    }
-
-    public static final String KEY_SHOW_LOCKSCREEN_ARTWORK = "pref_show_lockscreen_artwork";
-
-    public boolean showLockscreenArtwork() {
-        return getBooleanValue(KEY_SHOW_LOCKSCREEN_ARTWORK, true);
-    }
-
-    private static final String KEY_CAN_TINT_NAV_BAR = "pref_nav_bar";
-
-    public boolean canTintNavBar() {
-        return ShuttleUtils.hasLollipop() && getBooleanValue(KEY_CAN_TINT_NAV_BAR, true);
     }
 
     private static final String KEY_KEEP_SCREEN_ON = "pref_screen_on";
@@ -424,5 +444,18 @@ public class SettingsManager {
 
     public boolean getShowChangelogOnLaunch() {
         return getBooleanValue(KEY_CHANGELOG_SHOW_ON_LAUNCH, true);
+    }
+
+    // Library Controller
+
+    private static final String KEY_DEFAULT_PAGE = "default_page";
+
+    @CategoryItem.Type
+    public int getDefaultPageType() {
+        return getIntValue(KEY_DEFAULT_PAGE, CategoryItem.Type.ARTISTS);
+    }
+
+    public void setDefaultPageType(@CategoryItem.Type int type) {
+        setIntValue(KEY_DEFAULT_PAGE, type);
     }
 }

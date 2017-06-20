@@ -388,7 +388,7 @@
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <string name="pref_summary_simple_download">Google Play 스토어에서 Simple Last.FM Scrobbler를 다운로드합니다</string>
     <!-- Settings title for the About heading -->
-    <string name="pref_title_about">변경 사항</string>
+    <string name="pref_title_changelog">변경 사항</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">지원</string>
     <string name="pref_title_version">버전</string>

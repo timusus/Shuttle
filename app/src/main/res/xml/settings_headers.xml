@@ -32,11 +32,6 @@
         android:title="@string/pref_title_blacklist"/>
 
     <android.support.v7.preference.Preference
-        android:icon="@drawable/ic_settings_about"
-        android:key="pref_about"
-        android:title="@string/pref_title_about"/>
-
-    <android.support.v7.preference.Preference
         android:icon="@drawable/ic_settings_purchase"
         android:key="pref_upgrade"
         android:title="@string/get_pro_title"/>

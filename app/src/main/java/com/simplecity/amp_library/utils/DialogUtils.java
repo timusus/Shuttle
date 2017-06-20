@@ -15,15 +15,10 @@ import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.FileProvider;
 import android.support.v4.content.IntentCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.ProgressBar;
@@ -31,7 +26,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
@@ -44,20 +38,11 @@ import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.http.HttpClient;
 import com.simplecity.amp_library.http.lastfm.LastFmAlbum;
 import com.simplecity.amp_library.http.lastfm.LastFmArtist;
-import com.simplecity.amp_library.model.BlacklistedSong;
 import com.simplecity.amp_library.model.FileObject;
 import com.simplecity.amp_library.model.Song;
-import com.simplecity.amp_library.sql.databases.BlacklistHelper;
-import com.simplecity.amp_library.sql.databases.WhitelistHelper;
 import com.simplecity.amp_library.sql.providers.PlayCountTable;
-import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
 import com.simplecity.amp_library.ui.activities.MainActivity;
-import com.simplecity.amp_library.ui.modelviews.BlacklistView;
-import com.simplecity.amp_library.ui.modelviews.EmptyView;
-import com.simplecity.amp_library.ui.modelviews.WhitelistView;
 import com.simplecity.amp_library.ui.views.CustomColorPicker;
-import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
-import com.simplecityapps.recycler_adapter.model.ViewModel;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -70,11 +55,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import rx.Observable;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import static com.afollestad.aesthetic.Rx.distinctToMainThread;
 import static com.simplecity.amp_library.R.id.album;
 import static com.simplecity.amp_library.R.id.artist;
 
@@ -87,150 +70,9 @@ public class DialogUtils {
         return new MaterialDialog.Builder(context);
     }
 
-    public static MaterialDialog getChangelogDialog(Context context) {
-        View customView = LayoutInflater.from(context).inflate(R.layout.dialog_changelog, null);
-
-        WebView webView = (WebView) customView.findViewById(R.id.webView);
-        webView.setBackgroundColor(context.getResources().getColor(android.R.color.transparent));
-
-        CheckBox checkBox = (CheckBox) customView.findViewById(R.id.checkbox);
-        checkBox.setChecked(SettingsManager.getInstance().getShowChangelogOnLaunch());
-        checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> SettingsManager.getInstance().setShowChangelogOnLaunch(isChecked));
-
-        ProgressBar progressBar = (ProgressBar) customView.findViewById(R.id.progress);
-
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-
-                ViewUtils.fadeOut(progressBar, ()
-                        -> ViewUtils.fadeIn(webView, null));
-            }
-        });
-
-        Aesthetic.get()
-                .isDark()
-                .take(1)
-                .compose(distinctToMainThread())
-                .subscribe(isDark -> webView.loadUrl(isDark ? "file:///android_asset/web/info.html" : "file:///android_asset/web/info_dark.html"));
-
-        return getBuilder(context)
-                .title(R.string.pref_title_about)
-                .customView(customView, false)
-                .negativeText(R.string.close)
-                .build();
-
-    }
-
     public interface ColorSelectionListener {
         void colorSelected(int color);
     }
-
-//    public static void showColorPickerDialog(SettingsFragment fragment, int selectedColor, ColorSelectionListener listener) {
-//        showColorPickerDialog(fragment, selectedColor, ColorPalette.getPrimaryColors(), ColorPalette.getPrimaryColorsSub(), listener);
-//    }
-//
-//    public static void showColorPickerDialog(SettingsFragment fragment, int selectedColor, int[] mainColors, int[][] subColors, ColorSelectionListener listener) {
-//
-//        View customView = LayoutInflater.from(fragment.getActivity()).inflate(R.layout.dialog_color_picker, null);
-//
-//        RecyclerView recyclerView = (RecyclerView) customView.findViewById(R.id.recyclerView);
-//        GridLayoutManager gridLayoutManager = new GridLayoutManager(fragment.getActivity(), 5);
-//        recyclerView.setLayoutManager(gridLayoutManager);
-//        ThemeUtils.themeRecyclerView(recyclerView);
-//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//                ThemeUtils.themeRecyclerView(recyclerView);
-//                super.onScrollStateChanged(recyclerView, newState);
-//            }
-//        });
-//
-//        ColorAdapter colorAdapter = new ColorAdapter();
-//
-//        List<ViewModel> colorViews = new ArrayList<>();
-//        for (int i = 0, length = mainColors.length; i < length; i++) {
-//            ColorView colorView = new ColorView(mainColors[i]);
-//            boolean selected = false;
-//
-//            //If the sub colors array contains our selected color, then we set this colorView to selected.
-//            for (int j = 0, jLength = subColors[i].length; j < jLength; j++) {
-//                if (subColors[i][j] == selectedColor) {
-//                    selected = true;
-//                }
-//            }
-//            colorView.selected = selected;
-//            colorViews.add(colorView);
-//        }
-//        colorAdapter.setItems(colorViews);
-//        recyclerView.setAdapter(colorAdapter);
-//
-//        colorAdapter.setColorListener((position, color, isSubColor) -> {
-//            if (isSubColor) {
-//                colorAdapter.setSelectedPosition(position);
-//            } else {
-//                List<ViewModel> subColorViews = new ArrayList<>();
-//                for (int i = 0, length = subColors[position].length; i < length; i++) {
-//                    ColorView colorView = new ColorView(subColors[position][i]);
-//                    colorView.selected = colorView.color == selectedColor;
-//                    subColorViews.add(colorView);
-//                    colorAdapter.isSubColor = true;
-//                }
-//                colorAdapter.setItems(subColorViews);
-//            }
-//        });
-//
-//        int neutralTextResId;
-//        TextView textView = (TextView) customView.findViewById(R.id.text1);
-//        if (ShuttleUtils.isUpgraded()) {
-//            textView.setVisibility(View.GONE);
-//            neutralTextResId = R.string.dialog_custom;
-//        } else {
-//            textView.setVisibility(View.VISIBLE);
-//            if (ShuttleUtils.isAmazonBuild()) {
-//                neutralTextResId = R.string.get_pro_button_amazon;
-//            } else {
-//                neutralTextResId = R.string.btn_upgrade;
-//            }
-//        }
-//
-//        getBuilder(fragment.getActivity())
-//                .title(fragment.getActivity().getString(R.string.color_pick))
-//                .negativeText(R.string.cancel)
-//                .onNegative((dialog, which) -> dialog.dismiss())
-//                .positiveText(R.string.button_done)
-//                .onPositive((dialog, which) -> {
-//                    int color = selectedColor;
-//                    for (ViewModel item : colorAdapter.items) {
-//                        if (((ColorView) item).selected) {
-//                            color = ((ColorView) item).color;
-//                            break;
-//                        }
-//                    }
-//                    listener.colorSelected(color);
-//                    dialog.dismiss();
-//                })
-//                .neutralText(neutralTextResId)
-//                .autoDismiss(false)
-//                .onNeutral((dialog, which) -> {
-//                    if (ShuttleUtils.isUpgraded()) {
-//                        showCustomColorPickerDialog(fragment.getActivity(), selectedColor, listener);
-//                        dialog.dismiss();
-//                    } else {
-//                        showUpgradeDialog(fragment.getActivity(), (upgradeDialog, which1) -> {
-//                            if (ShuttleUtils.isAmazonBuild()) {
-//                                ShuttleUtils.openShuttleLink(fragment.getActivity(), "com.simplecity.amp_pro");
-//                            } else {
-//                                AnalyticsManager.logUpgrade(AnalyticsManager.UpgradeType.COLORS);
-//                                ((SettingsActivity) fragment.getActivity()).purchasePremiumUpgrade();
-//                            }
-//                        });
-//                    }
-//                })
-//                .customView(customView, false)
-//                .show();
-//    }
 
     public static void showCustomColorPickerDialog(Context context, int selectedColor, ColorSelectionListener listener) {
 
@@ -588,118 +430,6 @@ public class DialogUtils {
         Dialog dialog = builder.show();
         dialog.setOnDismissListener(dialog1 -> {
         });
-    }
-
-    public static void showBlacklistDialog(final Context context) {
-
-        View view = LayoutInflater.from(context).inflate(R.layout.dialog_blacklist, null);
-
-        final MaterialDialog.Builder builder = getBuilder(context)
-                .title(R.string.blacklist_title)
-                .customView(view, false)
-                .positiveText(R.string.close)
-                .negativeText(R.string.pref_title_clear_blacklist)
-                .onNegative((materialDialog, dialogAction) -> {
-                    BlacklistHelper.deleteAllSongs();
-                    Toast.makeText(context, R.string.blacklist_deleted, Toast.LENGTH_SHORT).show();
-                });
-
-        final Dialog dialog = builder.build();
-
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-
-        final ViewModelAdapter blacklistAdapter = new ViewModelAdapter();
-
-        recyclerView.setAdapter(blacklistAdapter);
-
-        Observable<List<Song>> songsObservable = SqlBriteUtils.createContinuousQuery(ShuttleApplication.getInstance(), Song::new, Song.getQuery()).first();
-        Observable<List<BlacklistedSong>> blacklistObservable = BlacklistHelper.getBlacklistSongsObservable();
-
-        BlacklistView.ClickListener listener = song -> {
-            BlacklistHelper.deleteSong(song.id);
-            if (blacklistAdapter.items.size() == 0) {
-                dialog.dismiss();
-            }
-        };
-
-        Subscription subscription = Observable.combineLatest(songsObservable, blacklistObservable, (songs, blacklistedSongs) ->
-                Stream.of(songs)
-                        .filter(song -> Stream.of(blacklistedSongs)
-                                .anyMatch(blacklistedSong -> blacklistedSong.songId == song.id))
-                        .sorted((a, b) -> ComparisonUtils.compare(a.albumArtistName, b.albumArtistName))
-                        .sorted((a, b) -> ComparisonUtils.compareInt(b.year, a.year))
-                        .sorted((a, b) -> ComparisonUtils.compareInt(a.track, b.track))
-                        .sorted((a, b) -> ComparisonUtils.compareInt(a.discNumber, b.discNumber))
-                        .sorted((a, b) -> ComparisonUtils.compare(a.albumName, b.albumName))
-                        .map(song -> {
-                            BlacklistView blacklistView = new BlacklistView(song);
-                            blacklistView.setClickListener(listener);
-                            return (ViewModel) blacklistView;
-                        })
-                        .collect(Collectors.toList()))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(blacklistViews -> {
-                    if (blacklistViews.size() == 0) {
-                        blacklistAdapter.addItem(0, new EmptyView(R.string.blacklist_empty));
-                    } else {
-                        blacklistAdapter.setItems(blacklistViews);
-                    }
-                }, error -> LogUtils.logException("DialogUtils: Error setting blacklist vies", error));
-
-        dialog.setOnDismissListener(dialogInterface -> subscription.unsubscribe());
-        dialog.show();
-    }
-
-    public static void showWhitelistDialog(final Context context) {
-
-        View view = LayoutInflater.from(context).inflate(R.layout.dialog_blacklist, null);
-
-        final MaterialDialog.Builder builder = getBuilder(context)
-                .title(R.string.whitelist_title)
-                .customView(view, false)
-                .positiveText(R.string.close)
-                .negativeText(R.string.pref_title_clear_whitelist)
-                .onNegative((materialDialog, dialogAction) -> {
-                    WhitelistHelper.deleteAllFolders();
-                    Toast.makeText(context, R.string.whitelist_deleted, Toast.LENGTH_SHORT).show();
-                });
-
-        final Dialog dialog = builder.build();
-
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-
-        final ViewModelAdapter whitelistAdapter = new ViewModelAdapter();
-
-        recyclerView.setAdapter(whitelistAdapter);
-
-        WhitelistView.ClickListener listener = whitelistFolder -> {
-            WhitelistHelper.deleteFolder(whitelistFolder);
-            if (whitelistAdapter.items.size() == 0) {
-                dialog.dismiss();
-            }
-        };
-
-        Subscription subscription = WhitelistHelper.getWhitelistFolders()
-                .map(whitelistFolders -> Stream.of(whitelistFolders)
-                        .map(folder -> {
-                            WhitelistView whitelistView = new WhitelistView(folder);
-                            whitelistView.setClickListener(listener);
-                            return (ViewModel) whitelistView;
-                        })
-                        .collect(Collectors.toList()))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(whitelistViews -> {
-                    if (whitelistViews.size() == 0) {
-                        whitelistAdapter.addItem(0, new EmptyView(R.string.whitelist_empty));
-                    } else {
-                        whitelistAdapter.setItems(whitelistViews);
-                    }
-                }, error -> LogUtils.logException("DialogUtils: Error setting whitelist items", error));
-
-        dialog.setOnDismissListener(dialogInterface -> subscription.unsubscribe());
-        dialog.show();
     }
 
     public static void showSongInfoDialog(Context context, Song song) {

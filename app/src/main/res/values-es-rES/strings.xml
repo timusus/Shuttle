@@ -382,7 +382,7 @@ Si no está seleccionado, se usará el icono de Shuttle en su lugar</string>
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <string name="pref_summary_simple_download">Descargar Simple Last.FM Scrobbler desde la Play Store</string>
     <!-- Settings title for the About heading -->
-    <string name="pref_title_about">Lista de cambios</string>
+    <string name="pref_title_changelog">Lista de cambios</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Soporte</string>
     <string name="pref_title_version">Versión</string>

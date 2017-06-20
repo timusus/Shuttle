@@ -57,7 +57,7 @@ ext.versions = [
         fastScroll                    : "1.0.15",
         glide                         : "3.8.0-SNAPSHOT",
         glideOkhttp                   : "1.4.0@aar",
-        materialDialogs               : "0.9.4.3",
+        materialDialogs               : "0.9.4.5",
         permiso                       : "0.3.0",
         rxAndroid                     : "1.2.1",
         rxBindings                    : "0.4.0",
@@ -164,7 +164,11 @@ ext.libs = [
         // Glide - OkHttp  integration - https://git.io/vihvW (Bump)
         glideOkhttp                   : "com.github.bumptech.glide:okhttp3-integration:$versions.glideOkhttp",
         // Material Dialogs - https://git.io/vixHf (Aidan Follestad)
-        materialDialogs               : "com.afollestad.material-dialogs:core:$versions.materialDialogs",
+//        materialDialogs               : "com.afollestad.material-dialogs:core:$versions.materialDialogs",
+//        materialDialogCommons         : "com.afollestad.material-dialogs:commons:$versions.materialDialogs",
+        materialDialogs               : project(':libraries/material-dialogs/:core'),
+        materialDialogCommons         : project(':libraries/material-dialogs/:commons'),
+
         // Permiso - https://git.io/vixQ4 (Greyson Parrelli)
         permiso                       : "com.greysonparrelli.permiso:permiso:$versions.permiso",
         // RxJava - https://git.io/vihv0 (ReactiveX)

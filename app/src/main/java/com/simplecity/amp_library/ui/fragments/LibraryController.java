@@ -20,9 +20,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
+import com.simplecity.amp_library.model.CategoryItem;
 import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.search.SearchFragment;
@@ -38,7 +41,7 @@ import com.simplecity.amp_library.ui.views.ContextualToolbarHost;
 import com.simplecity.amp_library.ui.views.PagerListenerAdapter;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
 import com.simplecity.amp_library.utils.DialogUtils;
-import com.simplecity.amp_library.utils.ShuttleUtils;
+import com.simplecity.amp_library.utils.SettingsManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,22 +61,6 @@ public class LibraryController extends BaseFragment implements
         ContextualToolbarHost {
 
     private static final String TAG = "LibraryController";
-
-    private static final String GENRES_ORDER = "genres_order";
-    private static final String SUGGESTED_ORDER = "suggested_order";
-    private static final String ARTISTS_ORDER = "artists_order";
-    private static final String ALBUMS_ORDER = "albums_order";
-    private static final String SONGS_ORDER = "songs_order";
-    private static final String FOLDERS_ORDER = "folders_order";
-    private static final String PLAYLISTS_ORDER = "playlists_order";
-
-    private static final String SHOW_GENRES = "show_genres";
-    private static final String SHOW_SUGGESTED = "show_suggested";
-    private static final String SHOW_ARTISTS = "show_artists";
-    private static final String SHOW_ALBUMS = "show_albums";
-    private static final String SHOW_SONGS = "show_songs";
-    private static final String SHOW_FOLDERS = "show_folders";
-    private static final String SHOW_PLAYLISTS = "show_playlists";
 
     private PagerAdapter adapter;
 
@@ -102,76 +89,26 @@ public class LibraryController extends BaseFragment implements
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
-
-        boolean showGenres = prefs.getBoolean(SHOW_GENRES, true);
-        boolean showSuggested = prefs.getBoolean(SHOW_SUGGESTED, true);
-        boolean showArtists = prefs.getBoolean(SHOW_ARTISTS, true);
-        boolean showAlbums = prefs.getBoolean(SHOW_ALBUMS, true);
-        boolean showSongs = prefs.getBoolean(SHOW_SONGS, true);
-        boolean showFolders = prefs.getBoolean(SHOW_FOLDERS, false);
-        if (!ShuttleUtils.isUpgraded()) {
-            showFolders = false;
-        }
-        boolean showPlaylists = prefs.getBoolean(SHOW_PLAYLISTS, false);
-
-        int genresOrder = prefs.getInt(GENRES_ORDER, 0);
-        int suggestedOrder = prefs.getInt(SUGGESTED_ORDER, 1);
-        int artistsOrder = prefs.getInt(ARTISTS_ORDER, 2);
-        int albumsOrder = prefs.getInt(ALBUMS_ORDER, 3);
-        int songsOrder = prefs.getInt(SONGS_ORDER, 4);
-        int foldersOrder = prefs.getInt(FOLDERS_ORDER, 5);
-        int playlistsOrder = prefs.getInt(PLAYLISTS_ORDER, 6);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        CategoryItem.getCategoryItems(sharedPreferences);
 
         adapter = new PagerAdapter(getChildFragmentManager());
 
-        for (int i = 0; i < 8; i++) {
-            if (genresOrder == i) {
-                if (showGenres) {
-                    adapter.addFragment(GenreFragment.newInstance(getString(R.string.genres_title)));
-                }
-            } else if (suggestedOrder == i) {
-                if (showSuggested) {
-                    adapter.addFragment(SuggestedFragment.newInstance(getString(R.string.suggested_title)));
-                }
-            } else if (artistsOrder == i) {
-                if (showArtists) {
-                    adapter.addFragment(AlbumArtistFragment.newInstance(getString(R.string.artists_title)));
-                }
-            } else if (albumsOrder == i) {
-                if (showAlbums) {
-                    adapter.addFragment(AlbumFragment.newInstance(getString(R.string.albums_title)));
-                }
-            } else if (songsOrder == i) {
-                if (showSongs) {
-                    adapter.addFragment(SongFragment.newInstance(getString(R.string.tracks_title)));
-                }
-            } else if (foldersOrder == i) {
-                if (showFolders) {
-                    adapter.addFragment(FolderFragment.newInstance(getString(R.string.folders_title)));
-                }
-            } else if (playlistsOrder == i) {
-                if (showPlaylists) {
-                    adapter.addFragment(PlaylistFragment.newInstance(getString(R.string.playlists_title)));
-                }
+        List<CategoryItem> categoryItems = Stream.of(CategoryItem.getCategoryItems(sharedPreferences))
+                .filter(categoryItem -> categoryItem.isEnabled)
+                .collect(Collectors.toList());
+
+        int defaultPageType = SettingsManager.getInstance().getDefaultPageType();
+        int defaultPage = 1;
+        for (int i = 0; i < categoryItems.size(); i++) {
+            CategoryItem categoryItem = categoryItems.get(i);
+            adapter.addFragment(categoryItem.getFragment(getContext()));
+            if (categoryItem.type == defaultPageType) {
+                defaultPage = i;
             }
         }
 
-        currentPage = 2;
-
-        String defaultPage = prefs.getString("pref_default_page", null);
-        for (int i = 0; i < adapter.getCount(); i++) {
-            if (adapter.getPageTitle(i).equals(defaultPage)) {
-                this.currentPage = i;
-            }
-        }
-        if (this.currentPage > adapter.getCount()) {
-            if (adapter.getCount() > 3) {
-                this.currentPage = 2;
-            } else {
-                this.currentPage = 0;
-            }
-        }
+        currentPage = Math.min(defaultPage, adapter.getCount());
 
         setHasOptionsMenu(true);
     }

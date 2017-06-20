@@ -3,22 +3,21 @@
 <android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <android.support.v7.preference.PreferenceCategory
-        android:layout="@layout/preference_category"
         android:title="@string/pref_title_headset">
 
-        <android.support.v7.preference.CheckBoxPreference
+        <android.support.v7.preference.SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="pref_headset_disconnect"
             android:summary="@string/pref_summary_headset_disconnect"
             android:title="@string/pref_title_headset_disconnect" />
 
-        <android.support.v7.preference.CheckBoxPreference
+        <android.support.v7.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="pref_headset_connect"
             android:summary="@string/pref_summary_headset_con"
             android:title="@string/pref_title_headset_con" />
 
-        <android.support.v7.preference.CheckBoxPreference
+        <android.support.v7.preference.SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="pref_headset_beep"
             android:summary="@string/pref_summary_headset_beep"
@@ -27,16 +26,15 @@
     </android.support.v7.preference.PreferenceCategory>
 
     <android.support.v7.preference.PreferenceCategory
-        android:layout="@layout/preference_category"
         android:title="@string/pref_title_bluetooth">
 
-        <android.support.v7.preference.CheckBoxPreference
+        <android.support.v7.preference.SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="pref_bluetooth_disconnect"
             android:summary="@string/pref_summary_bluetooth_disconnect"
             android:title="@string/pref_title_headset_disconnect" />
 
-        <android.support.v7.preference.CheckBoxPreference
+        <android.support.v7.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="pref_bluetooth_connect"
             android:summary="@string/pref_summary_bluetooth_connect"

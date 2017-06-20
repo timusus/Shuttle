@@ -11,7 +11,7 @@
             android:summary="@string/pref_summary_choose_tabs"
             android:title="@string/pref_title_choose_tabs"/>
 
-        <android.support.v7.preference.ListPreference
+        <android.support.v7.preference.Preference
             android:dialogTitle="@string/select_default_page"
             android:entries="@array/pref_default_page_entries"
             android:entryValues="@array/pref_default_page_entries"
@@ -25,7 +25,7 @@
         android:key="pref_category_notifications"
         android:title="@string/pref_category_notif_drawer">
 
-        <android.support.v7.preference.CheckBoxPreference
+        <android.support.v7.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="pref_invert_notif_icons"
             android:title="@string/pref_title_invert_notif_icons"/>
@@ -36,19 +36,13 @@
         android:key="display_group"
         android:title="@string/pref_category_other">
 
-        <android.support.v7.preference.CheckBoxPreference
+        <android.support.v7.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="pref_screen_on"
             android:summary="@string/pref_summary_screen_on"
             android:title="@string/pref_title_screen_on"/>
 
-        <android.support.v7.preference.CheckBoxPreference
-            android:defaultValue="true"
-            android:key="pref_show_lockscreen_artwork"
-            android:summary="@string/pref_summary_lockscreen"
-            android:title="@string/pref_title_lockscreen"/>
-
-        <android.support.v7.preference.CheckBoxPreference
+        <android.support.v7.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="pref_ignore_duplicates"
             android:summary="@string/pref_summary_ignore_duplicates"

@@ -392,7 +392,7 @@ Bu seçenek işaretli değilse, Shuttle simgesi kullanılacaktır.</string>
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <string name="pref_summary_simple_download">Simple Last.FM Scrobbler\'ı Google Play Store\'dan indir</string>
     <!-- Settings title for the About heading -->
-    <string name="pref_title_about">Değişiklikler</string>
+    <string name="pref_title_changelog">Değişiklikler</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Destek</string>
     <string name="pref_title_version">Versiyon</string>

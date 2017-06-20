@@ -284,9 +284,9 @@
     <!--Settings summary for opening the dialog to pick which categories are shown as tab headings -->
     <string name="pref_summary_choose_tabs">Choose &amp; rearrange categories displayed as tabs at the top of the screen</string>
     <!--Settings title for picking the primary theme color -->
-    <string name="pref_title_theme_pick_color">Theme Color</string>
+    <string name="pref_title_theme_pick_color">Primary Color</string>
     <!--Settings summary for picking the primary theme color-->
-    <string name="pref_summary_theme_pick_color">Choose the color for your theme</string>
+    <string name="pref_summary_theme_pick_color">Choose the primary color for your theme</string>
     <!--Settings title for for picking the accent theme color-->
     <string name="pref_title_theme_pick_accent_color">Accent Color</string>
     <!--Settings summary for picking the accent theme color-->
@@ -417,7 +417,7 @@
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <string name="pref_summary_simple_download">Download Simple Last.FM scrobbler from the Google Play Store</string>
     <!-- Settings title for the About heading -->
-    <string name="pref_title_about">Changelog</string>
+    <string name="pref_title_changelog">Changelog</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Support</string>
 
