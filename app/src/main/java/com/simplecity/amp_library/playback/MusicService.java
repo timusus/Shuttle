@@ -405,7 +405,7 @@ public class MusicService extends Service {
                         .load(getSong())
                         .asBitmap()
                         .override(1024, 1024)
-                        .placeholder(PlaceholderProvider.getInstance().getLargePlaceHolderResId())
+                        .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(getSong().name, true))
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {

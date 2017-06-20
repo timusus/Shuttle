@@ -240,7 +240,7 @@ public class DrawerFragment extends BaseFragment implements
 
             requestManager.load(song.getAlbumArtist())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .placeholder(PlaceholderProvider.getInstance().getMediumPlaceHolderResId())
+                    .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.albumArtistName, false))
                     .into(artistImage);
 
             if (song.name == null || (song.albumName == null && song.albumArtistName == null)) {

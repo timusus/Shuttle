@@ -56,12 +56,12 @@ public class PlaceholderProvider {
     }
 
     @DrawableRes
-    public int getMediumPlaceHolderResId() {
+    private int getMediumPlaceHolderResId() {
         return isDark ? R.drawable.ic_placeholder_dark_medium : R.drawable.ic_placeholder_light_medium;
     }
 
     @DrawableRes
-    public int getLargePlaceHolderResId() {
+    private int getLargePlaceHolderResId() {
         return isDark ? R.drawable.ic_placeholder_dark_large : R.drawable.ic_placeholder_light_large;
     }
 

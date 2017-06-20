@@ -246,7 +246,7 @@ public class MiniPlayerFragment extends BaseFragment {
                     .load(song)
                     .priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .placeholder(PlaceholderProvider.getInstance().getMediumPlaceHolderResId())
+                    .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.name, false))
                     .into(miniArtwork);
 
             rootView.setContentDescription(getString(R.string.btn_now_playing, song.name, song.artistName));
