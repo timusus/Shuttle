@@ -8,17 +8,25 @@ import android.support.v7.widget.SnapHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
+import com.bumptech.glide.GenericRequestBuilder;
+import com.bumptech.glide.ListPreloader;
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
+import com.simplecity.amp_library.glide.preloader.RecyclerViewPreloader;
+import com.simplecity.amp_library.ui.modelviews.QueuePagerItemView;
 import com.simplecity.amp_library.ui.presenters.QueuePagerPresenter;
 import com.simplecity.amp_library.ui.views.QueuePagerView;
 import com.simplecity.amp_library.utils.MusicUtils;
+import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -48,6 +56,8 @@ public class QueuePagerFragment extends BaseFragment implements
 
     private ViewModelAdapter viewModelAdapter;
 
+    private int[] imageSize = new int[2];
+
     public static QueuePagerFragment newInstance() {
         Bundle args = new Bundle();
         QueuePagerFragment fragment = new QueuePagerFragment();
@@ -62,11 +72,11 @@ public class QueuePagerFragment extends BaseFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        viewModelAdapter = new ViewModelAdapter();
+
         ShuttleApplication.getInstance().getAppComponent()
                 .plus(new FragmentModule(this))
                 .inject(this);
-
-        viewModelAdapter = new ViewModelAdapter();
     }
 
     @Override
@@ -98,6 +108,31 @@ public class QueuePagerFragment extends BaseFragment implements
             }
         };
         snapHelper.attachToRecyclerView(recyclerView);
+
+        recyclerView.addOnScrollListener(new RecyclerViewPreloader<>(new ListPreloader.PreloadModelProvider<QueuePagerItemView>() {
+            @Override
+            public List<QueuePagerItemView> getPreloadItems(int position) {
+                QueuePagerItemView queuePagerItemView = (QueuePagerItemView) viewModelAdapter.items.get(position);
+                return Collections.singletonList(queuePagerItemView);
+            }
+
+            @Override
+            public GenericRequestBuilder getPreloadRequestBuilder(QueuePagerItemView item) {
+                return requestManager
+                        .load(item.song)
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .error(PlaceholderProvider.getInstance().getPlaceHolderDrawable(item.song.name, true));
+            }
+        }, (item, adapterPosition, perItemPosition) -> imageSize, 3));
+
+        recyclerView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                imageSize = new int[]{recyclerView.getWidth(), recyclerView.getHeight()};
+                recyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+                return false;
+            }
+        });
 
         return rootView;
     }

@@ -1,11 +1,14 @@
 package com.simplecity.amp_library.ui.modelviews;
 
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.ui.adapters.ViewType;
@@ -15,7 +18,7 @@ import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 
 public class QueuePagerItemView extends BaseViewModel<QueuePagerItemView.ViewHolder> {
 
-    private Song song;
+    public Song song;
     private RequestManager requestManager;
 
     public QueuePagerItemView(Song song, RequestManager requestManager) {
@@ -44,11 +47,21 @@ public class QueuePagerItemView extends BaseViewModel<QueuePagerItemView.ViewHol
 
         requestManager
                 .load(song)
-                .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.name, true))
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .error(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.name, true))
                 .into((ImageView) holder.itemView);
+
+        holder.itemView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                Log.i("QueueItem", "Width: " + holder.itemView.getWidth() + " height: " + holder.itemView.getHeight());
+                holder.itemView.getViewTreeObserver().removeOnPreDrawListener(this);
+                return false;
+            }
+        });
     }
 
-    static class ViewHolder extends BaseViewHolder<QueuePagerItemView> {
+    public static class ViewHolder extends BaseViewHolder<QueuePagerItemView> {
 
         public ViewHolder(View itemView) {
             super(itemView);
