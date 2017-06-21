@@ -56,7 +56,7 @@ public class PlaceholderProvider {
     }
 
     @DrawableRes
-    private int getMediumPlaceHolderResId() {
+    public int getMediumPlaceHolderResId() {
         return isDark ? R.drawable.ic_placeholder_dark_medium : R.drawable.ic_placeholder_light_medium;
     }
 

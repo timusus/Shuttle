@@ -83,7 +83,8 @@ public class DrawerFragment extends BaseFragment implements
 
     private Playlist currentSelectedPlaylist = null;
 
-    @Inject PlayerPresenter playerPresenter;
+    @Inject
+    PlayerPresenter playerPresenter;
 
     @Inject DrawerPresenter drawerPresenter;
 
@@ -149,36 +150,43 @@ public class DrawerFragment extends BaseFragment implements
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         drawerPresenter.bindView(this);
         playerPresenter.bindView(playerViewAdapter);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
         aestheticDisposable = Aesthetic.get()
                 .colorPrimary()
                 .compose(Rx.distinctToMainThread())
                 .subscribe(color -> backgroundPlaceholder.setColorFilter(color, PorterDuff.Mode.MULTIPLY));
+
+        playerPresenter.updateTrackInfo();
     }
 
     @Override
     public void onPause() {
-        drawerPresenter.unbindView(this);
-        playerPresenter.unbindView(playerViewAdapter);
-
         aestheticDisposable.dispose();
         super.onPause();
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        drawerPresenter.unbindView(this);
+        playerPresenter.unbindView(playerViewAdapter);
+        unbinder.unbind();
+        super.onDestroyView();
     }
 
     @Override
     public void onClick(DrawerParent drawerParent) {
         drawerPresenter.onDrawerItemClicked(drawerParent);
-    }
-
-    @Override
-    public void onDestroyView() {
-        unbinder.unbind();
-
-        super.onDestroyView();
     }
 
     @Override
@@ -240,7 +248,7 @@ public class DrawerFragment extends BaseFragment implements
 
             requestManager.load(song.getAlbumArtist())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.albumArtistName, false))
+                    .placeholder(PlaceholderProvider.getInstance().getMediumPlaceHolderResId())
                     .into(artistImage);
 
             if (song.name == null || (song.albumName == null && song.albumArtistName == null)) {
