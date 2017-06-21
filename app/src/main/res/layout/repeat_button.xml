@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="?attr/circular_ripple"
+    android:background="@drawable/ripple_circular_dark"
     android:contentDescription="@string/btn_repeat_all"
     android:padding="12dp"
     android:src="@drawable/ic_repeat_white"/>
