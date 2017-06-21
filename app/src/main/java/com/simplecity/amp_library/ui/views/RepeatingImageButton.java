@@ -1,23 +1,25 @@
 package com.simplecity.amp_library.ui.views;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageButton;
 
 /**
  * A button that will repeatedly call a 'listener' method
  * as long as the button is pressed.
  */
-public class RepeatingImageButton extends ImageButton {
+public class RepeatingImageButton extends android.support.v7.widget.AppCompatImageButton {
 
-    private long mStartTime;
-    private int mRepeatCount;
-    private RepeatListener mListener;
-    long mInterval = 500;
+    private long startTime;
+    private int repeatCount;
+    private RepeatListener listener;
+    long interval = 500;
 
     public RepeatingImageButton(Context context) {
         this(context, null);
@@ -31,6 +33,10 @@ public class RepeatingImageButton extends ImageButton {
         super(context, attrs, defStyle);
         setFocusable(true);
         setLongClickable(true);
+
+        Drawable drawable = DrawableCompat.wrap(getDrawable().mutate());
+        DrawableCompat.setTint(drawable, Color.WHITE);
+        setImageDrawable(drawable);
     }
 
     /**
@@ -40,13 +46,13 @@ public class RepeatingImageButton extends ImageButton {
      * @param l The listener that will be called
      */
     public void setRepeatListener(RepeatListener l) {
-        mListener = l;
+        listener = l;
     }
 
     @Override
     public boolean performLongClick() {
-        mStartTime = SystemClock.elapsedRealtime();
-        mRepeatCount = 0;
+        startTime = SystemClock.elapsedRealtime();
+        repeatCount = 0;
         post(mRepeater);
         return true;
     }
@@ -56,9 +62,9 @@ public class RepeatingImageButton extends ImageButton {
         if (event.getAction() == MotionEvent.ACTION_UP) {
             // remove the repeater, but call the hook one more time
             removeCallbacks(mRepeater);
-            if (mStartTime != 0) {
+            if (startTime != 0) {
                 doRepeat(true);
-                mStartTime = 0;
+                startTime = 0;
             }
         }
         return super.onTouchEvent(event);
@@ -84,9 +90,9 @@ public class RepeatingImageButton extends ImageButton {
             case KeyEvent.KEYCODE_ENTER:
                 // remove the repeater, but call the hook one more time
                 removeCallbacks(mRepeater);
-                if (mStartTime != 0) {
+                if (startTime != 0) {
                     doRepeat(true);
-                    mStartTime = 0;
+                    startTime = 0;
                 }
         }
         return super.onKeyUp(keyCode, event);
@@ -96,15 +102,15 @@ public class RepeatingImageButton extends ImageButton {
         public void run() {
             doRepeat(false);
             if (isPressed()) {
-                postDelayed(this, mInterval);
+                postDelayed(this, interval);
             }
         }
     };
 
     void doRepeat(boolean last) {
         long now = SystemClock.elapsedRealtime();
-        if (mListener != null) {
-            mListener.onRepeat(this, now - mStartTime, last ? -1 : mRepeatCount++);
+        if (listener != null) {
+            listener.onRepeat(this, now - startTime, last ? -1 : repeatCount++);
         }
     }
 
