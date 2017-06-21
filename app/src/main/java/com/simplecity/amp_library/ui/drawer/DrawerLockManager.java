@@ -1,7 +1,6 @@
 package com.simplecity.amp_library.ui.drawer;
 
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 public class DrawerLockManager {
 
@@ -41,7 +40,6 @@ public class DrawerLockManager {
             drawerLockController.lockDrawer();
         }
         isLocked = true;
-        Log.i(TAG, "Drawer lock added. Locks: " + drawerLocks);
     }
 
     public void removeDrawerLock() {
@@ -52,6 +50,5 @@ public class DrawerLockManager {
                 isLocked = false;
             }
         }
-        Log.i(TAG, "Drawer lock removed. Locks: " + drawerLocks);
     }
 }
