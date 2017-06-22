@@ -88,10 +88,11 @@ public class MainController extends BaseNavigationController implements BackPres
                     .add(multiSheetView.getSheetContainerViewResId(MultiSheetView.Sheet.SECOND), QueueFragment.newInstance())
                     .commit();
 
-            ((ViewGroup) multiSheetView.findViewById(multiSheetView.getSheetPeekViewResId(MultiSheetView.Sheet.SECOND))).addView(new UpNextView(getContext()));
         } else {
             multiSheetView.goToSheet(savedInstanceState.getInt(STATE_CURRENT_SHEET));
         }
+
+        ((ViewGroup) multiSheetView.findViewById(multiSheetView.getSheetPeekViewResId(MultiSheetView.Sheet.SECOND))).addView(new UpNextView(getContext()));
 
         return rootView;
     }

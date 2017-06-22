@@ -55,6 +55,7 @@ public class MultiSheetView extends FrameLayout {
                 if (sheetStateChangeListener != null && oldState != newState) {
                     sheetStateChangeListener.onSheetStateChanged(Sheet.FIRST, newState);
                 }
+                fadeView(findViewById(getSheetPeekViewResId(Sheet.FIRST)), newState == SlidingUpPanelLayout.PanelState.EXPANDED ? 1f : 0f);
             }
 
             @Override
@@ -69,10 +70,13 @@ public class MultiSheetView extends FrameLayout {
             public void onPanelStateChanged(View view, SlidingUpPanelLayout.PanelState oldState, SlidingUpPanelLayout.PanelState newState) {
                 if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                     panel1Layout.setTouchEnabled(true);
+                } else if (newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
+                    panel1Layout.setTouchEnabled(false);
                 }
                 if (sheetStateChangeListener != null && oldState != newState) {
                     sheetStateChangeListener.onSheetStateChanged(Sheet.SECOND, newState);
                 }
+                fadeView(findViewById(getSheetPeekViewResId(Sheet.SECOND)), newState == SlidingUpPanelLayout.PanelState.EXPANDED ? 1f : 0f);
             }
 
             @Override
