@@ -25,7 +25,7 @@ public class DrawerEventRelay {
 
     }
 
-    void sendEvent(@NonNull DrawerEvent event) {
+    public void sendEvent(@NonNull DrawerEvent event) {
         relay.call(event);
     }
 
@@ -49,6 +49,20 @@ public class DrawerEventRelay {
         @Type public int type;
 
         @Nullable public Object data;
+
+        public boolean isActionable = true;
+
+        /**
+         * @param type         the {@link Type of event}
+         * @param data         optional Object to be passed with this event
+         * @param isActionable true if navigational changes should be performed in response to this DrawerEvent
+         *                     Defaults to true.
+         */
+        public DrawerEvent(int type, @Nullable Object data, boolean isActionable) {
+            this.type = type;
+            this.data = data;
+            this.isActionable = isActionable;
+        }
 
         /**
          * @param type the {@link Type of event}

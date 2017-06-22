@@ -100,6 +100,7 @@ public class MainController extends BaseNavigationController implements BackPres
 
         subscriptions.add(drawerEventRelay.getEvents()
                 .observeOn(AndroidSchedulers.mainThread())
+                .filter(drawerEvent -> drawerEvent.isActionable)
                 .subscribe(drawerEvent -> {
                     switch (drawerEvent.type) {
                         case DrawerEventRelay.DrawerEvent.Type.LIBRARY_SELECTED:

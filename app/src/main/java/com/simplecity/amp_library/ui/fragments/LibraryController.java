@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.CategoryItem;
@@ -36,6 +37,7 @@ import com.simplecity.amp_library.ui.detail.ArtistDetailFragment;
 import com.simplecity.amp_library.ui.detail.BaseDetailFragment;
 import com.simplecity.amp_library.ui.detail.GenreDetailFragment;
 import com.simplecity.amp_library.ui.detail.PlaylistDetailFragment;
+import com.simplecity.amp_library.ui.drawer.DrawerEventRelay;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.ui.views.ContextualToolbarHost;
 import com.simplecity.amp_library.ui.views.PagerListenerAdapter;
@@ -45,6 +47,8 @@ import com.simplecity.amp_library.utils.SettingsManager;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -76,6 +80,8 @@ public class LibraryController extends BaseFragment implements
     @BindView(R.id.contextualToolbar)
     ContextualToolbar contextualToolbar;
 
+    @Inject DrawerEventRelay drawerEventRelay;
+
     private int currentPage = 0;
 
     public static FragmentInfo fragmentInfo() {
@@ -88,6 +94,8 @@ public class LibraryController extends BaseFragment implements
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ShuttleApplication.getInstance().getAppComponent().inject(this);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         CategoryItem.getCategoryItems(sharedPreferences);
@@ -168,6 +176,8 @@ public class LibraryController extends BaseFragment implements
         super.onResume();
 
         multiSheetEventRelay.sendEvent(new MultiSheetEventRelay.MultiSheetEvent(MultiSheetEventRelay.MultiSheetEvent.Action.SHOW_IF_HIDDEN, MultiSheetView.Sheet.NONE));
+
+        drawerEventRelay.sendEvent(new DrawerEventRelay.DrawerEvent(DrawerEventRelay.DrawerEvent.Type.LIBRARY_SELECTED, null, false));
     }
 
     @Override

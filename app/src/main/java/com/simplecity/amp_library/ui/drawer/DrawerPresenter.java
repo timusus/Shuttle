@@ -32,6 +32,22 @@ public class DrawerPresenter extends Presenter<DrawerView> {
         super.bindView(view);
 
         loadData();
+
+        addSubcscription(drawerEventRelay.getEvents().subscribe(drawerEvent -> {
+            DrawerView drawerView = getView();
+            switch (drawerEvent.type) {
+                case DrawerEventRelay.DrawerEvent.Type.LIBRARY_SELECTED:
+                    if (drawerView != null) {
+                        drawerView.setDrawerItemSelected(DrawerParent.Type.LIBRARY);
+                    }
+                    break;
+                case DrawerEventRelay.DrawerEvent.Type.FOLDERS_SELECTED:
+                    if (drawerView != null) {
+                        drawerView.setDrawerItemSelected(DrawerParent.Type.FOLDERS);
+                    }
+                    break;
+            }
+        }));
     }
 
     void onDrawerItemClicked(DrawerParent drawerParent) {
