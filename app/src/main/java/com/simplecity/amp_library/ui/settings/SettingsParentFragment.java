@@ -42,7 +42,7 @@ import test.com.androidnavigation.fragment.BaseController;
 import test.com.androidnavigation.fragment.BaseNavigationController;
 import test.com.androidnavigation.fragment.FragmentInfo;
 
-public class SettingsParentFragment extends BaseNavigationController {
+public class SettingsParentFragment extends BaseNavigationController implements DrawerLockManager.DrawerLock {
 
     public static String ARG_PREFERENCE_RESOURCE = "preference_resource";
     public static String ARG_TITLE = "title";
@@ -93,12 +93,12 @@ public class SettingsParentFragment extends BaseNavigationController {
     @Override
     public void onResume() {
         super.onResume();
-        DrawerLockManager.getInstance().addDrawerLock();
+        DrawerLockManager.getInstance().addDrawerLock(this);
     }
 
     @Override
     public void onPause() {
-        DrawerLockManager.getInstance().removeDrawerLock();
+        DrawerLockManager.getInstance().removeDrawerLock(this);
         super.onPause();
     }
 

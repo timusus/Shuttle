@@ -2,15 +2,18 @@ package com.simplecity.amp_library.ui.drawer;
 
 import android.support.annotation.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DrawerLockManager {
 
-    private static final String TAG = "DrawerLockManager";
-
+    public interface DrawerLock {
+        String getTag();
+    }
+    
     private static DrawerLockManager instance;
 
-    private int drawerLocks = 0;
-
-    private boolean isLocked = false;
+    private List<DrawerLock> drawerLocks = new ArrayList<>();
 
     @Nullable
     private DrawerLockController drawerLockController;
@@ -30,24 +33,22 @@ public class DrawerLockManager {
         this.drawerLockController = drawerLockController;
     }
 
-    public boolean isLocked() {
-        return isLocked;
-    }
-
-    public void addDrawerLock() {
-        drawerLocks++;
+    public void addDrawerLock(DrawerLock drawerLock) {
+        if (!drawerLocks.contains(drawerLock)) {
+            drawerLocks.add(drawerLock);
+        }
         if (drawerLockController != null) {
             drawerLockController.lockDrawer();
         }
-        isLocked = true;
     }
 
-    public void removeDrawerLock() {
-        drawerLocks = Math.max(0, drawerLocks - 1);
-        if (drawerLocks == 0) {
+    public void removeDrawerLock(DrawerLock drawerLock) {
+        if (drawerLocks.contains(drawerLock)) {
+            drawerLocks.remove(drawerLock);
+        }
+        if (drawerLocks.isEmpty()) {
             if (drawerLockController != null) {
                 drawerLockController.unlockDrawer();
-                isLocked = false;
             }
         }
     }

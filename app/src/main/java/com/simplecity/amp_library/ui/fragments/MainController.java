@@ -19,9 +19,9 @@ import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
 import com.simplecity.amp_library.ui.drawer.DrawerProvider;
 import com.simplecity.amp_library.ui.settings.SettingsParentFragment;
 import com.simplecity.amp_library.ui.views.UpNextView;
+import com.simplecity.amp_library.ui.views.multisheet.CustomMultiSheetView;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
 import com.simplecity.amp_library.utils.SleepTimer;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import javax.inject.Inject;
 
@@ -50,7 +50,7 @@ public class MainController extends BaseNavigationController implements BackPres
     private Handler delayHandler;
 
     @BindView(R.id.multiSheetView)
-    MultiSheetView multiSheetView;
+    CustomMultiSheetView multiSheetView;
 
     public static MainController newInstance() {
         Bundle args = new Bundle();
@@ -71,14 +71,6 @@ public class MainController extends BaseNavigationController implements BackPres
         ButterKnife.bind(this, rootView);
 
         ShuttleApplication.getInstance().getAppComponent().inject(this);
-
-        multiSheetView.setSheetStateChangeListener((sheet, state) -> {
-            if (state == SlidingUpPanelLayout.PanelState.COLLAPSED) {
-                DrawerLockManager.getInstance().removeDrawerLock();
-            } else if (state == SlidingUpPanelLayout.PanelState.EXPANDED) {
-                DrawerLockManager.getInstance().addDrawerLock();
-            }
-        });
 
         if (savedInstanceState == null) {
             getChildFragmentManager()

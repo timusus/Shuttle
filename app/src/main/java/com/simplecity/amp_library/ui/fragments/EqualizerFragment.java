@@ -45,7 +45,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class EqualizerFragment extends BaseFragment implements Toolbar.OnMenuItemClickListener, CompoundButton.OnCheckedChangeListener {
+public class EqualizerFragment extends BaseFragment implements
+        Toolbar.OnMenuItemClickListener,
+        CompoundButton.OnCheckedChangeListener,
+        DrawerLockManager.DrawerLock {
 
     private static final String TAG = "EqualizerFragment";
 
@@ -418,7 +421,7 @@ public class EqualizerFragment extends BaseFragment implements Toolbar.OnMenuIte
     public void onResume() {
         super.onResume();
 
-        DrawerLockManager.getInstance().addDrawerLock();
+        DrawerLockManager.getInstance().addDrawerLock(this);
 
         if (serviceConnection == null) {
             serviceConnection = new ServiceConnection() {
@@ -445,7 +448,7 @@ public class EqualizerFragment extends BaseFragment implements Toolbar.OnMenuIte
 
         getActivity().unbindService(serviceConnection);
 
-        DrawerLockManager.getInstance().removeDrawerLock();
+        DrawerLockManager.getInstance().removeDrawerLock(this);
 
         super.onPause();
     }

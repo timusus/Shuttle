@@ -85,7 +85,8 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         SongsProvider,
         AlbumsProvider,
         AlbumView.ClickListener,
-        SongView.ClickListener {
+        SongView.ClickListener,
+        DrawerLockManager.DrawerLock {
 
     private static final String ARG_TRANSITION_NAME = "transition_name";
 
@@ -201,7 +202,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
             startSlideShow();
         }
 
-        DrawerLockManager.getInstance().addDrawerLock();
+        DrawerLockManager.getInstance().addDrawerLock(this);
     }
 
     @Override
@@ -209,7 +210,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
         subscriptions.unsubscribe();
 
-        DrawerLockManager.getInstance().removeDrawerLock();
+        DrawerLockManager.getInstance().removeDrawerLock(this);
 
         super.onPause();
     }

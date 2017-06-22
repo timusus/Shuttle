@@ -60,7 +60,8 @@ public class FolderFragment extends BaseFragment implements
         BackPressListener,
         FolderView.ClickListener,
         PageSelectedListener,
-        Toolbar.OnMenuItemClickListener {
+        Toolbar.OnMenuItemClickListener,
+        DrawerLockManager.DrawerLock {
 
     private static final String TAG = "FolderFragment";
 
@@ -180,7 +181,7 @@ public class FolderFragment extends BaseFragment implements
 
         setupContextualToolbar();
 
-        DrawerLockManager.getInstance().addDrawerLock();
+        DrawerLockManager.getInstance().addDrawerLock(this);
     }
 
     @Override
@@ -189,7 +190,7 @@ public class FolderFragment extends BaseFragment implements
 
         getNavigationController().removeBackPressListener(this);
 
-        DrawerLockManager.getInstance().removeDrawerLock();
+        DrawerLockManager.getInstance().removeDrawerLock(this);
 
         super.onPause();
     }

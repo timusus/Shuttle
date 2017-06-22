@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import javax.inject.Inject;
 
@@ -21,10 +23,35 @@ public class CustomMultiSheetView extends MultiSheetView {
 
     private CompositeSubscription subscriptions;
 
+    private DrawerLockManager.DrawerLock sheet1Lock = () -> "Sheet 1";
+    private DrawerLockManager.DrawerLock sheet2Lock = () -> "Sheet 2";
+
     public CustomMultiSheetView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
         subscriptions = new CompositeSubscription();
+
+        setSheetStateChangeListener((sheet, state) -> {
+            if (state == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                switch (sheet) {
+                    case Sheet.FIRST:
+                        DrawerLockManager.getInstance().removeDrawerLock(sheet1Lock);
+                        break;
+                    case Sheet.SECOND:
+                        DrawerLockManager.getInstance().removeDrawerLock(sheet2Lock);
+                        break;
+                }
+            } else if (state == SlidingUpPanelLayout.PanelState.EXPANDED) {
+                switch (sheet) {
+                    case Sheet.FIRST:
+                        DrawerLockManager.getInstance().addDrawerLock(sheet1Lock);
+                        break;
+                    case Sheet.SECOND:
+                        DrawerLockManager.getInstance().addDrawerLock(sheet2Lock);
+                        break;
+                }
+            }
+        });
     }
 
     @Override
