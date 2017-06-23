@@ -1,7 +1,6 @@
 package com.simplecity.amp_library.ui.fragments;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -59,7 +58,6 @@ public class FolderFragment extends BaseFragment implements
         BreadcrumbListener,
         BackPressListener,
         FolderView.ClickListener,
-        PageSelectedListener,
         Toolbar.OnMenuItemClickListener,
         DrawerLockManager.DrawerLock {
 
@@ -96,8 +94,6 @@ public class FolderFragment extends BaseFragment implements
     boolean showBreadcrumbsInList;
 
     private CompositeSubscription subscriptions;
-
-    private boolean isCurrentPage = false;
 
     private ContextualToolbarHelper<BaseFileObject> contextualToolbarHelper;
 
@@ -136,7 +132,6 @@ public class FolderFragment extends BaseFragment implements
         ButterKnife.bind(this, rootView);
 
 //        if (getParentFragment() == null) {
-        isCurrentPage = true;
         showBreadcrumbsInList = false;
         breadcrumb.addBreadcrumbListener(this);
         if (!TextUtils.isEmpty(currentDir)) {
@@ -179,9 +174,11 @@ public class FolderFragment extends BaseFragment implements
 
         getNavigationController().addBackPressListener(this);
 
-        setupContextualToolbar();
-
         DrawerLockManager.getInstance().addDrawerLock(this);
+
+        if (isVisible()) {
+            setupContextualToolbar();
+        }
     }
 
     @Override
@@ -415,25 +412,18 @@ public class FolderFragment extends BaseFragment implements
     }
 
     @Override
-    public void onPageSelected() {
-        isCurrentPage = true;
-        setupContextualToolbar();
-    }
-
-    @Override
-    public void onPageDeselected() {
-        isCurrentPage = false;
-        new Handler().postDelayed(() -> {
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            setupContextualToolbar();
+        } else {
             if (contextualToolbarHelper != null) {
                 contextualToolbarHelper.finish();
             }
-        }, 250);
+        }
     }
 
     private void setupContextualToolbar() {
-
-        if (!isCurrentPage) return;
-
         if (contextualToolbar != null) {
 
             contextualToolbar.getMenu().clear();

@@ -2,11 +2,11 @@ package com.simplecity.amp_library.ui.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -51,8 +51,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class AlbumArtistFragment extends BaseFragment implements
         MusicUtils.Defs,
-        AlbumArtistView.ClickListener,
-        PageSelectedListener {
+        AlbumArtistView.ClickListener {
 
     interface AlbumArtistClickListener {
 
@@ -80,8 +79,6 @@ public class AlbumArtistFragment extends BaseFragment implements
     private Subscription subscription;
 
     private ContextualToolbarHelper<AlbumArtist> contextualToolbarHelper;
-
-    private boolean isCurrentPage = false;
 
     @Inject
     RequestManager requestManager;
@@ -160,7 +157,9 @@ public class AlbumArtistFragment extends BaseFragment implements
 
         refreshAdapterItems();
 
-        setupContextualToolbar();
+        if (isVisible()) {
+            setupContextualToolbar();
+        }
     }
 
     void refreshAdapterItems() {
@@ -388,25 +387,18 @@ public class AlbumArtistFragment extends BaseFragment implements
     }
 
     @Override
-    public void onPageSelected() {
-        isCurrentPage = true;
-        setupContextualToolbar();
-    }
-
-    @Override
-    public void onPageDeselected() {
-        isCurrentPage = false;
-        new Handler().postDelayed(() -> {
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            setupContextualToolbar();
+        } else {
             if (contextualToolbarHelper != null) {
                 contextualToolbarHelper.finish();
             }
-        }, 250);
+        }
     }
 
     private void setupContextualToolbar() {
-
-        if (!isCurrentPage) return;
-
         ContextualToolbar contextualToolbar = ContextualToolbar.findContextualToolbar(this);
         if (contextualToolbar != null) {
             contextualToolbar.getMenu().clear();
@@ -429,6 +421,8 @@ public class AlbumArtistFragment extends BaseFragment implements
                     adapter.notifyItemRangeChanged(0, adapter.items.size(), 0);
                 }
             });
+        } else {
+            Log.i(TAG, "Failed to find contextual toolbar");
         }
     }
 

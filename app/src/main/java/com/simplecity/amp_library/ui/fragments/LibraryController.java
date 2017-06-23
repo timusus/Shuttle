@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
@@ -40,7 +39,6 @@ import com.simplecity.amp_library.ui.detail.PlaylistDetailFragment;
 import com.simplecity.amp_library.ui.drawer.DrawerEventRelay;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.ui.views.ContextualToolbarHost;
-import com.simplecity.amp_library.ui.views.PagerListenerAdapter;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
 import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
@@ -132,23 +130,6 @@ public class LibraryController extends BaseFragment implements
 
         pager.setAdapter(adapter);
         pager.setOffscreenPageLimit(adapter.getCount() - 1);
-        pager.addOnPageChangeListener(new PagerListenerAdapter() {
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-                for (int i = 0; i < adapter.getCount(); i++) {
-                    Fragment fragment = adapter.getItem(i);
-                    if (fragment instanceof PageSelectedListener) {
-                        if (i == position) {
-                            ((PageSelectedListener) fragment).onPageSelected();
-                        } else if (i == currentPage) {
-                            ((PageSelectedListener) fragment).onPageDeselected();
-                        }
-                    }
-                }
-                currentPage = position;
-            }
-        });
         pager.setCurrentItem(currentPage);
 
         slidingTabLayout.setupWithViewPager(pager);

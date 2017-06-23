@@ -3,7 +3,6 @@ package com.simplecity.amp_library.ui.fragments;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -32,7 +31,6 @@ import com.simplecity.amp_library.ui.recyclerview.GridDividerDecoration;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.DataManager;
-import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
@@ -54,8 +52,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class AlbumFragment extends BaseFragment implements
         MusicUtils.Defs,
-        AlbumView.ClickListener,
-        PageSelectedListener {
+        AlbumView.ClickListener {
 
     interface AlbumClickListener {
 
@@ -81,8 +78,6 @@ public class AlbumFragment extends BaseFragment implements
     private boolean sortOrderChanged = false;
 
     private Subscription subscription;
-
-    private boolean isCurrentPage = false;
 
     @Inject
     RequestManager requestManager;
@@ -168,7 +163,9 @@ public class AlbumFragment extends BaseFragment implements
 
         refreshAdapterItems();
 
-        setupContextualToolbar();
+        if (isVisible()) {
+            setupContextualToolbar();
+        }
     }
 
     void refreshAdapterItems() {
@@ -391,28 +388,20 @@ public class AlbumFragment extends BaseFragment implements
     }
 
     @Override
-    public void onPageSelected() {
-        isCurrentPage = true;
-        setupContextualToolbar();
-    }
-
-    @Override
-    public void onPageDeselected() {
-        isCurrentPage = false;
-        new Handler().postDelayed(() -> {
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            setupContextualToolbar();
+        } else {
             if (contextualToolbarHelper != null) {
                 contextualToolbarHelper.finish();
             }
-        }, 250);
+        }
     }
 
     private void setupContextualToolbar() {
-
-        if (!isCurrentPage) return;
-
         ContextualToolbar contextualToolbar = ContextualToolbar.findContextualToolbar(this);
         if (contextualToolbar != null) {
-
             contextualToolbar.getMenu().clear();
             contextualToolbar.inflateMenu(R.menu.context_menu_songs);
             SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
