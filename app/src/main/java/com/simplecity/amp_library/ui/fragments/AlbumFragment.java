@@ -319,32 +319,28 @@ public class AlbumFragment extends BaseFragment implements
                 refreshAdapterItems();
                 break;
             case R.id.view_as_list:
-                SettingsManager.getInstance().setAlbumDisplayType(ViewType.ALBUM_LIST);
+                int viewType = ViewType.ALBUM_LIST;
+                SettingsManager.getInstance().setAlbumDisplayType(viewType);
                 layoutManager.setSpanCount(getResources().getInteger(R.integer.list_num_columns));
-                //Todo:
-//                adapter.updateItemViewType();
-                adapter.notifyItemRangeChanged(0, adapter.getItemCount());
+                updateViewType(viewType);
                 break;
             case R.id.view_as_grid:
-                SettingsManager.getInstance().setAlbumDisplayType(ViewType.ALBUM_GRID);
+                viewType = ViewType.ALBUM_GRID;
+                SettingsManager.getInstance().setAlbumDisplayType(viewType);
                 layoutManager.setSpanCount(SettingsManager.getInstance().getAlbumColumnCount(getResources()));
-                //Todo:
-//                adapter.updateItemViewType();
-                adapter.notifyItemRangeChanged(0, adapter.getItemCount());
+                updateViewType(viewType);
                 break;
             case R.id.view_as_grid_card:
-                SettingsManager.getInstance().setAlbumDisplayType(ViewType.ALBUM_CARD);
+                viewType = ViewType.ALBUM_CARD;
+                SettingsManager.getInstance().setAlbumDisplayType(viewType);
                 layoutManager.setSpanCount(SettingsManager.getInstance().getAlbumColumnCount(getResources()));
-                //Todo:
-//                adapter.updateItemViewType();
-                adapter.notifyItemRangeChanged(0, adapter.getItemCount());
+                updateViewType(viewType);
                 break;
             case R.id.view_as_grid_palette:
-                SettingsManager.getInstance().setAlbumDisplayType(ViewType.ALBUM_PALETTE);
+                viewType = ViewType.ALBUM_PALETTE;
+                SettingsManager.getInstance().setAlbumDisplayType(viewType);
                 layoutManager.setSpanCount(SettingsManager.getInstance().getAlbumColumnCount(getResources()));
-                //Todo:
-//                adapter.updateItemViewType();
-                adapter.notifyItemRangeChanged(0, adapter.getItemCount());
+                updateViewType(viewType);
                 break;
         }
 
@@ -361,6 +357,13 @@ public class AlbumFragment extends BaseFragment implements
         getActivity().supportInvalidateOptionsMenu();
 
         return super.onOptionsItemSelected(item);
+    }
+
+    void updateViewType(@ViewType int viewType) {
+        Stream.of(adapter.items)
+                .filter(viewModel -> viewModel instanceof AlbumView)
+                .forEach(viewModel -> ((AlbumView) viewModel).setViewType(viewType));
+        adapter.notifyItemRangeChanged(0, adapter.getItemCount());
     }
 
     @Override

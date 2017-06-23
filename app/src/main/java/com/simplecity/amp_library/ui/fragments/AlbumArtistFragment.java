@@ -319,32 +319,28 @@ public class AlbumArtistFragment extends BaseFragment implements
                 refreshAdapterItems();
                 break;
             case R.id.view_as_list:
-                SettingsManager.getInstance().setArtistDisplayType(ViewType.ARTIST_LIST);
+                int viewType = ViewType.ARTIST_LIST;
+                SettingsManager.getInstance().setArtistDisplayType(viewType);
                 layoutManager.setSpanCount(getResources().getInteger(R.integer.list_num_columns));
-                // Todo:
-//                adapter.updateItemViewType();
-                adapter.notifyItemRangeChanged(0, adapter.getItemCount());
+                updateViewType(viewType);
                 break;
             case R.id.view_as_grid:
-                SettingsManager.getInstance().setArtistDisplayType(ViewType.ARTIST_GRID);
+                viewType = ViewType.ARTIST_GRID;
+                SettingsManager.getInstance().setArtistDisplayType(viewType);
                 layoutManager.setSpanCount(SettingsManager.getInstance().getArtistColumnCount(getResources()));
-                // Todo:
-//                adapter.updateItemViewType();
-                adapter.notifyItemRangeChanged(0, adapter.getItemCount());
+                updateViewType(viewType);
                 break;
             case R.id.view_as_grid_card:
-                SettingsManager.getInstance().setArtistDisplayType(ViewType.ARTIST_CARD);
+                viewType = ViewType.ARTIST_CARD;
+                SettingsManager.getInstance().setArtistDisplayType(viewType);
                 layoutManager.setSpanCount(SettingsManager.getInstance().getArtistColumnCount(getResources()));
-                // Todo:
-//                adapter.updateItemViewType();
-                adapter.notifyItemRangeChanged(0, adapter.getItemCount());
+                updateViewType(viewType);
                 break;
             case R.id.view_as_grid_palette:
-                SettingsManager.getInstance().setArtistDisplayType(ViewType.ARTIST_PALETTE);
+                viewType = ViewType.ARTIST_PALETTE;
+                SettingsManager.getInstance().setArtistDisplayType(viewType);
                 layoutManager.setSpanCount(SettingsManager.getInstance().getArtistColumnCount(getResources()));
-                // Todo:
-//                adapter.updateItemViewType();
-                adapter.notifyItemRangeChanged(0, adapter.getItemCount());
+                updateViewType(viewType);
                 break;
         }
 
@@ -360,6 +356,13 @@ public class AlbumArtistFragment extends BaseFragment implements
         getActivity().supportInvalidateOptionsMenu();
 
         return super.onOptionsItemSelected(item);
+    }
+
+    void updateViewType(@ViewType int viewType) {
+        Stream.of(adapter.items)
+                .filter(viewModel -> viewModel instanceof AlbumArtistView)
+                .forEach(viewModel -> ((AlbumArtistView) viewModel).setViewType(viewType));
+        adapter.notifyItemRangeChanged(0, adapter.getItemCount());
     }
 
     @Override
