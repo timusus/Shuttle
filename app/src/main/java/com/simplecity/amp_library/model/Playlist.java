@@ -141,7 +141,6 @@ public class Playlist implements Serializable {
     }
 
     public static Playlist favoritesPlaylist() {
-
         Query query = new Query.Builder()
                 .uri(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI)
                 .projection(new String[]{BaseColumns._ID})

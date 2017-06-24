@@ -83,7 +83,7 @@ public class PlayerPresenter extends Presenter<PlayerView> {
                             case MusicService.InternalIntents.META_CHANGED:
                                 updateTrackInfo();
                                 break;
-                                case MusicService.InternalIntents.QUEUE_CHANGED:
+                            case MusicService.InternalIntents.QUEUE_CHANGED:
                                 updateTrackInfo();
                                 break;
                             case MusicService.InternalIntents.PLAY_STATE_CHANGED:
@@ -133,8 +133,10 @@ public class PlayerPresenter extends Presenter<PlayerView> {
         PlayerView view = getView();
         if (view != null) {
             addSubcscription(PlaylistUtils.isFavorite(MusicUtils.getSong())
+                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(view::favoriteChanged));
+                    .subscribe(view::favoriteChanged,
+                            error -> LogUtils.logException("Update favorite failed", error)));
         }
     }
 

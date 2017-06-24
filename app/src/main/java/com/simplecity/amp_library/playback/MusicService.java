@@ -1308,22 +1308,23 @@ public class MusicService extends Service {
     }
 
     private Observable<Bundle> getExtras(boolean fromUser) {
-        return isFavorite().flatMap(isFavorite -> {
-            Bundle extras = new Bundle();
-            extras.putLong("id", getSongId());
-            extras.putString("artist", getArtistName());
-            extras.putString("album", getAlbumName());
-            extras.putString("track", getSongName());
-            extras.putInt("shuffleMode", getShuffleMode());
-            extras.putInt("repeatMode", getRepeatMode());
-            extras.putBoolean("playing", isPlaying());
-            extras.putBoolean("isfavorite", isFavorite);
-            extras.putLong("duration", getDuration());
-            extras.putLong("position", getPosition());
-            extras.putLong("ListSize", getCurrentPlaylist().size());
-            extras.putBoolean(FROM_USER, fromUser);
-            return Observable.just(extras);
-        });
+        return isFavorite()
+                .flatMap(isFavorite -> {
+                    Bundle extras = new Bundle();
+                    extras.putLong("id", getSongId());
+                    extras.putString("artist", getArtistName());
+                    extras.putString("album", getAlbumName());
+                    extras.putString("track", getSongName());
+                    extras.putInt("shuffleMode", getShuffleMode());
+                    extras.putInt("repeatMode", getRepeatMode());
+                    extras.putBoolean("playing", isPlaying());
+                    extras.putBoolean("isfavorite", isFavorite);
+                    extras.putLong("duration", getDuration());
+                    extras.putLong("position", getPosition());
+                    extras.putLong("ListSize", getCurrentPlaylist().size());
+                    extras.putBoolean(FROM_USER, fromUser);
+                    return Observable.just(extras);
+                });
     }
 
     private void notifyChange(String what, boolean fromUser) {

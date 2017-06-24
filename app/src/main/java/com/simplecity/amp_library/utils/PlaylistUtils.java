@@ -240,7 +240,7 @@ public class PlaylistUtils {
                 .flatMap(Playlist::getSongsObservable)
                 .flatMap(songs -> Observable.just(songs.contains(song)))
                 .onErrorReturn(throwable -> {
-                    Log.e(TAG, "isFavorite() called,  playlist null. Returning false");
+                    Log.e(TAG, "isFavorite() called,  playlist null. Returning false: " + throwable);
                     return false;
                 });
     }
