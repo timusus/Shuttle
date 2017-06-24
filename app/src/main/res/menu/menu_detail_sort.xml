@@ -22,24 +22,32 @@
         android:title="@string/play_selection"/>
 
     <item
-        android:id="@+id/addToPlaylist"
-        android:icon="@drawable/ic_action_add"
-        android:title="@string/menu_playlist"
-        app:showAsAction="ifRoom">
+        android:title="@string/menu_add_to">
+        <menu>
+            <item
+                android:id="@+id/addToPlaylist"
+                android:title="@string/menu_playlist">
+                <menu/>
+            </item>
 
-        <menu/>
-
+            <item
+                android:id="@+id/addToQueue"
+                android:title="@string/menu_queue"/>
+        </menu>
     </item>
 
     <item
-        android:id="@+id/addToQueue"
-        android:title="@string/menu_queue"/>
-
-    <item
         android:id="@+id/editTags"
-        android:title="@string/edit_tags"/>
+        android:title="@string/edit_tags"
+        android:visible="false"/>
 
     <item
-        android:id="@+id/editArtwork"
-        android:title="@string/artwork_edit"/>
+        android:id="@+id/info"
+        android:title="@string/info"
+        android:visible="false"/>
+
+    <item
+        android:id="@+id/artwork"
+        android:title="@string/artwork_edit"
+        android:visible="false"/>
 </menu>

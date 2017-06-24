@@ -17,4 +17,6 @@ interface DetailView {
     void showTaggerDialog(TaggerDialog taggerDialog);
 
     void showArtworkDialog(MaterialDialog artworkDialog);
+
+    void showInfoDialog(MaterialDialog infoDialog);
 }

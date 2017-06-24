@@ -285,6 +285,11 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     }
 
     @Nullable
+    MaterialDialog getInfoDialog() {
+        return null;
+    }
+
+    @Nullable
     protected String getToolbarSubtitle() {
         return null;
     }
@@ -345,7 +350,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
                 .map(album -> {
                     HorizontalAlbumView horizontalAlbumView = new HorizontalAlbumView(album, requestManager);
                     horizontalAlbumView.setClickListener(BaseDetailFragment.this);
-                    horizontalAlbumView.setShowYear(true);
+                    horizontalAlbumView.showYear(true);
                     return horizontalAlbumView;
                 })
                 .collect(Collectors.toList()));
@@ -414,7 +419,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         detailPresenter.fabClicked();
     }
 
-    private void setupToolbarMenu(Toolbar toolbar) {
+    protected void setupToolbarMenu(Toolbar toolbar) {
         toolbar.inflateMenu(R.menu.menu_detail_sort);
 
         setupCastMenu(toolbar.getMenu());
@@ -499,7 +504,6 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.play:
                 detailPresenter.playAll();
@@ -507,17 +511,20 @@ public abstract class BaseDetailFragment extends BaseFragment implements
             case R.id.addToQueue:
                 detailPresenter.addToQueue();
                 return true;
-            case R.id.editTags:
-                detailPresenter.editTags(getTaggerDialog());
-                return true;
-            case R.id.editArtwork:
-                detailPresenter.editArtwork(getArtworkDialog());
-                return true;
             case MusicUtils.Defs.NEW_PLAYLIST:
                 detailPresenter.newPlaylist(getContext());
                 return true;
             case MusicUtils.Defs.PLAYLIST_SELECTED:
                 detailPresenter.playlistSelected(getContext(), item);
+                return true;
+            case R.id.editTags:
+                detailPresenter.editTags(getTaggerDialog());
+                return true;
+            case R.id.info:
+                detailPresenter.infoClicked(getInfoDialog());
+                return true;
+            case R.id.artwork:
+                detailPresenter.editArtwork(getArtworkDialog());
                 return true;
         }
 
@@ -669,6 +676,11 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     @Override
     public void showArtworkDialog(MaterialDialog artworkDialog) {
         artworkDialog.show();
+    }
+
+    @Override
+    public void showInfoDialog(MaterialDialog infoDialog) {
+        infoDialog.show();
     }
 
     void pushDetailController(BaseDetailFragment detailFragment, String tag, View transitionView) {

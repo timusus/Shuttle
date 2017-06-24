@@ -26,6 +26,8 @@ import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.sql.databases.BlacklistHelper;
 import com.simplecity.amp_library.tagger.TaggerDialog;
+import com.simplecity.amp_library.ui.dialog.BiographyDialog;
+import com.simplecity.amp_library.ui.dialog.DeleteDialog;
 
 import java.io.File;
 import java.util.Collections;
@@ -57,7 +59,7 @@ public class MenuUtils implements MusicUtils.Defs {
     }
 
     public static void showSongInfo(Context context, Song song) {
-        DialogUtils.showSongInfoDialog(context, song);
+        BiographyDialog.showSongInfoDialog(context, song);
     }
 
     public static void setRingtone(Context context, Song song) {
@@ -81,7 +83,7 @@ public class MenuUtils implements MusicUtils.Defs {
     }
 
     public static void delete(Context context, List<Song> songs) {
-        new DialogUtils.DeleteDialogBuilder()
+        new DeleteDialog.DeleteDialogBuilder()
                 .context(context)
                 .singleMessageId(R.string.delete_song_desc)
                 .multipleMessage(R.string.delete_song_desc_multiple)
@@ -199,7 +201,7 @@ public class MenuUtils implements MusicUtils.Defs {
     }
 
     public static void albumInfo(Context context, Album album) {
-        DialogUtils.showAlbumBiographyDialog(context, album.albumArtistName, album.name);
+        BiographyDialog.getAlbumBiographyDialog(context, album.albumArtistName, album.name);
     }
 
     public static void showArtworkChooserDialog(Context context, Album album) {
@@ -212,7 +214,7 @@ public class MenuUtils implements MusicUtils.Defs {
     }
 
     public static void deleteAlbums(Context context, List<Album> albums, Observable<List<Song>> songsObservable) {
-        new DialogUtils.DeleteDialogBuilder()
+        new DeleteDialog.DeleteDialogBuilder()
                 .context(context)
                 .singleMessageId(R.string.delete_album_desc)
                 .multipleMessage(R.string.delete_album_desc_multiple)
@@ -307,7 +309,7 @@ public class MenuUtils implements MusicUtils.Defs {
     }
 
     public static void albumArtistInfo(Context context, AlbumArtist albumArtist) {
-        DialogUtils.showArtistBiographyDialog(context, albumArtist.name);
+        BiographyDialog.getArtistBiographyDialog(context, albumArtist.name);
     }
 
     public static void showArtworkChooserDialog(Context context, AlbumArtist albumArtist) {
@@ -315,7 +317,7 @@ public class MenuUtils implements MusicUtils.Defs {
     }
 
     public static void deleteAlbumArtists(Context context, List<AlbumArtist> albumArtists, Observable<List<Song>> songsObservable) {
-        new DialogUtils.DeleteDialogBuilder()
+        new DeleteDialog.DeleteDialogBuilder()
                 .context(context)
                 .singleMessageId(R.string.delete_album_artist_desc)
                 .multipleMessage(R.string.delete_album_artist_desc_multiple)
@@ -389,7 +391,7 @@ public class MenuUtils implements MusicUtils.Defs {
                 case R.id.info:
                     albumArtistInfo(context, albumArtist);
                     return true;
-                case R.id.editArtwork:
+                case R.id.artwork:
                     showArtworkChooserDialog(context, albumArtist);
                     return true;
                 case R.id.blacklist:

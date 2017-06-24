@@ -119,7 +119,7 @@ public class QueuePresenter extends Presenter<QueueView> {
                     if (songView == null) {
                         songView = new SongView(song, requestManager);
                         songView.setClickListener(clickListener);
-                        songView.setShowAlbumArt(true);
+                        songView.showAlbumArt(true);
                         songView.setEditable(true);
                     }
 

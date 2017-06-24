@@ -36,7 +36,6 @@ import com.simplecity.amp_library.ui.fragments.WidgetFragment;
 import com.simplecity.amp_library.ui.views.SizableSeekBar;
 import com.simplecity.amp_library.ui.widgets.BaseWidgetProvider;
 import com.simplecity.amp_library.utils.ColorUtils;
-import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 
 public abstract class BaseWidgetConfigure extends BaseActivity implements
@@ -191,50 +190,52 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
         }
 
         if (view.getId() == R.id.btn_background_color) {
-            DialogUtils.showCustomColorPickerDialog(this, ColorUtils.adjustAlpha(mBackgroundColor, mAlpha), color -> {
-                mBackgroundColor = color;
-                mPrefs.edit()
-                        .putInt(BaseWidgetProvider.ARG_WIDGET_BACKGROUND_COLOR + mAppWidgetId, color)
-                        .apply();
-
-                Fragment fragment = mPagerAdapter.getRegisteredFragment(mPager.getCurrentItem());
-                if (fragment != null) {
-                    View fragmentView = fragment.getView();
-                    if (fragmentView != null) {
-                        View layout = fragmentView.findViewById(getRootViewId());
-                        layout.setBackgroundColor(ColorUtils.adjustAlpha(mBackgroundColor, mAlpha));
-                    }
-                }
-            });
+            //Todo:
+//            DialogUtils.showCustomColorPickerDialog(this, ColorUtils.adjustAlpha(mBackgroundColor, mAlpha), color -> {
+//                mBackgroundColor = color;
+//                mPrefs.edit()
+//                        .putInt(BaseWidgetProvider.ARG_WIDGET_BACKGROUND_COLOR + mAppWidgetId, color)
+//                        .apply();
+//
+//                Fragment fragment = mPagerAdapter.getRegisteredFragment(mPager.getCurrentItem());
+//                if (fragment != null) {
+//                    View fragmentView = fragment.getView();
+//                    if (fragmentView != null) {
+//                        View layout = fragmentView.findViewById(getRootViewId());
+//                        layout.setBackgroundColor(ColorUtils.adjustAlpha(mBackgroundColor, mAlpha));
+//                    }
+//                }
+//            });
         }
         if (view.getId() == R.id.btn_text_color) {
-            DialogUtils.showCustomColorPickerDialog(this, mTextColor, color -> {
-                mTextColor = color;
-                mPrefs.edit()
-                        .putInt(BaseWidgetProvider.ARG_WIDGET_TEXT_COLOR + mAppWidgetId, color)
-                        .apply();
-
-                Fragment fragment = mPagerAdapter.getRegisteredFragment(mPager.getCurrentItem());
-                if (fragment != null) {
-                    View widgetView = fragment.getView();
-                    if (widgetView != null) {
-
-                        TextView text1 = (TextView) widgetView.findViewById(R.id.text1);
-                        TextView text2 = (TextView) widgetView.findViewById(R.id.text2);
-                        TextView text3 = (TextView) widgetView.findViewById(R.id.text3);
-
-                        if (text1 != null) {
-                            text1.setTextColor(mTextColor);
-                        }
-                        if (text2 != null) {
-                            text2.setTextColor(mTextColor);
-                        }
-                        if (text3 != null) {
-                            text3.setTextColor(mTextColor);
-                        }
-                    }
-                }
-            });
+            //Todo:
+//            DialogUtils.showCustomColorPickerDialog(this, mTextColor, color -> {
+//                mTextColor = color;
+//                mPrefs.edit()
+//                        .putInt(BaseWidgetProvider.ARG_WIDGET_TEXT_COLOR + mAppWidgetId, color)
+//                        .apply();
+//
+//                Fragment fragment = mPagerAdapter.getRegisteredFragment(mPager.getCurrentItem());
+//                if (fragment != null) {
+//                    View widgetView = fragment.getView();
+//                    if (widgetView != null) {
+//
+//                        TextView text1 = (TextView) widgetView.findViewById(R.id.text1);
+//                        TextView text2 = (TextView) widgetView.findViewById(R.id.text2);
+//                        TextView text3 = (TextView) widgetView.findViewById(R.id.text3);
+//
+//                        if (text1 != null) {
+//                            text1.setTextColor(mTextColor);
+//                        }
+//                        if (text2 != null) {
+//                            text2.setTextColor(mTextColor);
+//                        }
+//                        if (text3 != null) {
+//                            text3.setTextColor(mTextColor);
+//                        }
+//                    }
+//                }
+//            });
         }
     }
 

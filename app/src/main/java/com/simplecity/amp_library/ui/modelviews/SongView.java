@@ -62,6 +62,10 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder, Song>
 
     private boolean showTrackNumber;
 
+    private boolean showArtistName = true;
+
+    private boolean showAlbumName = true;
+
     private boolean isCurrentTrack;
 
     @Nullable
@@ -80,12 +84,20 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder, Song>
         this.editable = editable;
     }
 
-    public void setShowAlbumArt(boolean showAlbumArt) {
+    public void showAlbumArt(boolean showAlbumArt) {
         this.showAlbumArt = showAlbumArt;
     }
 
-    public void setShowPlayCount(boolean showPlayCount) {
+    public void showPlayCount(boolean showPlayCount) {
         this.showPlayCount = showPlayCount;
+    }
+
+    public void showArtistName(boolean showArtistName) {
+        this.showArtistName = showArtistName;
+    }
+
+    public void showAlbumName(boolean showAlbumName) {
+        this.showAlbumName = showAlbumName;
     }
 
     public void setPrefix(PrefixHighlighter prefixHighlighter, char[] prefix) {
@@ -155,7 +167,16 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder, Song>
             }
         }
 
-        holder.lineTwo.setText(String.format("%s - %s", song.artistName, song.albumName));
+        if (showArtistName && showAlbumName) {
+            holder.lineTwo.setText(String.format("%s - %s", song.artistName, song.albumName));
+            holder.lineTwo.setVisibility(View.VISIBLE);
+        } else if (showAlbumName) {
+            holder.lineTwo.setText(song.albumName);
+            holder.lineTwo.setVisibility(View.VISIBLE);
+        } else {
+            holder.lineTwo.setVisibility(View.GONE);
+        }
+
         holder.lineThree.setText(song.getDurationLabel());
 
         if (holder.dragHandle != null) {
@@ -275,28 +296,15 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder, Song>
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
 
         SongView songView = (SongView) o;
 
-        if (editable != songView.editable) return false;
-        if (showAlbumArt != songView.showAlbumArt) return false;
-        if (showTrackNumber != songView.showTrackNumber) return false;
-        if (isCurrentTrack != songView.isCurrentTrack) return false;
-        if (song != null ? !song.equals(songView.song) : songView.song != null) return false;
-        return Arrays.equals(prefix, songView.prefix);
+        return song != null ? song.equals(songView.song) : songView.song == null;
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (song != null ? song.hashCode() : 0);
-        result = 31 * result + Arrays.hashCode(prefix);
-        result = 31 * result + (editable ? 1 : 0);
-        result = 31 * result + (showAlbumArt ? 1 : 0);
-        result = 31 * result + (showTrackNumber ? 1 : 0);
-        result = 31 * result + (isCurrentTrack ? 1 : 0);
-        return result;
+        return song != null ? song.hashCode() : 0;
     }
 
     public static class ViewHolder extends BaseViewHolder<SongView> {

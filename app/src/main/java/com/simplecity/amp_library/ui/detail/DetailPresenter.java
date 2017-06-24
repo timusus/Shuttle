@@ -108,4 +108,11 @@ class DetailPresenter extends Presenter<DetailView> {
                     PlaylistUtils.addToPlaylist(context, playlist, songs);
                 });
     }
+
+    void infoClicked(MaterialDialog dialog) {
+        DetailView detailView = getView();
+        if (detailView != null) {
+            detailView.showInfoDialog(dialog);
+        }
+    }
 }

@@ -1,4 +1,4 @@
-package com.simplecity.amp_library.ui.settings;
+package com.simplecity.amp_library.ui.dialog;
 
 import android.content.Context;
 import android.content.SharedPreferences;

@@ -4,15 +4,22 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.annimon.stream.Stream;
+import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.ArtworkProvider;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.tagger.TaggerDialog;
+import com.simplecity.amp_library.ui.dialog.BiographyDialog;
+import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.utils.ArtworkDialog;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.SortManager;
+import com.simplecityapps.recycler_adapter.model.ViewModel;
 
 import java.util.List;
 
@@ -98,10 +105,39 @@ public class AlbumDetailFragment extends BaseDetailFragment {
         return TaggerDialog.newInstance(album);
     }
 
+    @Nullable
+    @Override
+    MaterialDialog getInfoDialog() {
+        return BiographyDialog.getAlbumBiographyDialog(getContext(), album.albumArtistName, album.name);
+    }
+
     @NonNull
     @Override
     Drawable getPlaceHolderDrawable() {
         return PlaceholderProvider.getInstance().getPlaceHolderDrawable(album.name, true);
+    }
+
+    @NonNull
+    @Override
+    public List<ViewModel> getSongViewModels(List<Song> songs) {
+        List<ViewModel> songViewModels = super.getSongViewModels(songs);
+        Stream.of(songViewModels)
+                .filter(viewModel -> viewModel instanceof SongView)
+                .forEach(viewModel -> {
+                    ((SongView) viewModel).showArtistName(false);
+                    ((SongView) viewModel).showAlbumName(false);
+                    ((SongView) viewModel).setShowTrackNumber(getSongSortOrder() == SortManager.SongSort.TRACK_NUMBER || getSongSortOrder() == SortManager.SongSort.DETAIL_DEFAULT);
+                });
+        return songViewModels;
+    }
+
+    @Override
+    protected void setupToolbarMenu(Toolbar toolbar) {
+        super.setupToolbarMenu(toolbar);
+
+        toolbar.getMenu().findItem(R.id.editTags).setVisible(true);
+        toolbar.getMenu().findItem(R.id.info).setVisible(true);
+        toolbar.getMenu().findItem(R.id.artwork).setVisible(true);
     }
 
     @Override

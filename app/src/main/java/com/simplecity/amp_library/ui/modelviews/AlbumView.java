@@ -93,7 +93,7 @@ public class AlbumView extends MultiItemView<AlbumView.ViewHolder, Album> implem
         return false;
     }
 
-    public void setShowYear(boolean showYear) {
+    public void showYear(boolean showYear) {
         this.showYear = showYear;
     }
 

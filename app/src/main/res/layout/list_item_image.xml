@@ -49,11 +49,9 @@
 
     <com.simplecity.amp_library.ui.views.OverflowButton
         android:id="@+id/btn_overflow"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@null"
-        android:paddingLeft="2dp"
-        android:paddingStart="2dp"/>
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@null"/>
 
 </android.support.design.internal.ForegroundLinearLayout>
 
