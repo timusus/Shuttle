@@ -35,6 +35,7 @@ import com.simplecity.amp_library.glide.palette.PaletteBitmap;
 import com.simplecity.amp_library.glide.palette.PaletteBitmapTranscoder;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.ui.views.FavoriteActionBarView;
 import com.simplecity.amp_library.ui.views.PlayPauseView;
@@ -372,6 +373,16 @@ public class PlayerFragment extends BaseFragment implements
     }
 
     @Override
+    public void showTaggerDialog(TaggerDialog taggerDialog) {
+        taggerDialog.show(getFragmentManager());
+    }
+
+    @Override
+    public void showSongInfoDialog(MaterialDialog dialog) {
+        dialog.show();
+    }
+
+    @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.favorite:
@@ -385,10 +396,10 @@ public class PlayerFragment extends BaseFragment implements
 
                 return true;
             case R.id.editTags:
-
+                presenter.editTagsClicked();
                 return true;
             case R.id.songInfo:
-
+                presenter.songInfoClicked(getContext());
                 return true;
         }
         return false;

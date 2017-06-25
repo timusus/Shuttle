@@ -8,8 +8,11 @@ import android.widget.Toast;
 import com.f2prateek.rx.receivers.RxBroadcastReceiver;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.lyrics.LyricsDialog;
+import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.playback.PlaybackMonitor;
+import com.simplecity.amp_library.tagger.TaggerDialog;
+import com.simplecity.amp_library.ui.dialog.BiographyDialog;
 import com.simplecity.amp_library.ui.views.PlayerView;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
@@ -271,6 +274,23 @@ public class PlayerPresenter extends Presenter<PlayerView> {
         PlayerView playerView = getView();
         if (playerView != null) {
             playerView.showLyricsDialog(new LyricsDialog().getDialog(context));
+        }
+    }
+
+    public void editTagsClicked() {
+        PlayerView playerView = getView();
+        if (playerView != null) {
+            playerView.showTaggerDialog(TaggerDialog.newInstance(MusicUtils.getSong()));
+        }
+    }
+
+    public void songInfoClicked(Context context) {
+        PlayerView playerView = getView();
+        if (playerView != null) {
+            Song song = MusicUtils.getSong();
+            if (song != null) {
+                playerView.showSongInfoDialog(BiographyDialog.getSongInfoDialog(context, song));
+            }
         }
     }
 }

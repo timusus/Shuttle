@@ -1,6 +1,7 @@
 package com.simplecity.amp_library.ui.dialog;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -128,11 +129,7 @@ public class BiographyDialog {
         return builder.build();
     }
 
-    public static void showSongInfoDialog(Context context, Song song) {
-
-        if (song == null) {
-            return;
-        }
+    public static MaterialDialog getSongInfoDialog(@NonNull Context context, @NonNull Song song) {
 
         View view = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.dialog_song_info, null);
 
@@ -228,11 +225,11 @@ public class BiographyDialog {
                 .subscribe(playCount -> playCountValue.setText(String.valueOf(playCount)),
                         error -> LogUtils.logException("DialogUtils:  Error getting play count", error));
 
-        DialogUtils.getBuilder(context)
+        return DialogUtils.getBuilder(context)
                 .title(context.getString(R.string.dialog_song_info_title))
                 .customView(view, false)
                 .negativeText(R.string.close)
-                .show();
+                .build();
     }
 
     public static void showFileInfoDialog(Context context, FileObject fileObject) {

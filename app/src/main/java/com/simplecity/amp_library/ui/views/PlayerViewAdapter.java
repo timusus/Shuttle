@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.tagger.TaggerDialog;
 
 public abstract class PlayerViewAdapter implements PlayerView {
 
@@ -60,6 +61,16 @@ public abstract class PlayerViewAdapter implements PlayerView {
 
     @Override
     public void showLyricsDialog(MaterialDialog dialog) {
+
+    }
+
+    @Override
+    public void showTaggerDialog(TaggerDialog taggerDialog) {
+
+    }
+
+    @Override
+    public void showSongInfoDialog(MaterialDialog dialog) {
 
     }
 

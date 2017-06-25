@@ -59,7 +59,7 @@ public class MenuUtils implements MusicUtils.Defs {
     }
 
     public static void showSongInfo(Context context, Song song) {
-        BiographyDialog.showSongInfoDialog(context, song);
+        BiographyDialog.getSongInfoDialog(context, song).show();
     }
 
     public static void setRingtone(Context context, Song song) {
