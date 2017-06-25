@@ -113,7 +113,7 @@ public class MainController extends BaseNavigationController implements BackPres
                             Action0 showToast = () -> Toast.makeText(getContext(), R.string.sleep_timer_started, Toast.LENGTH_SHORT).show();
                             SleepTimer.getInstance().getDialog(
                                     getContext(),
-                                    () -> SleepTimer.getInstance().showTimeThingDialog(getContext(), getFragmentManager(), showToast),
+                                    () -> SleepTimer.getInstance().showHmsPicker(getContext(), getFragmentManager(), showToast),
                                     showToast
                             ).show();
                             break;

@@ -124,7 +124,7 @@ public final class SleepTimer {
         }
     }
 
-    public void showTimeThingDialog(Context context, FragmentManager fragmentManager, Action0 timerStarted) {
+    public void showHmsPicker(Context context, FragmentManager fragmentManager, Action0 timerStarted) {
         NumberPickerBuilder numberPickerBuilder = new NumberPickerBuilder();
         numberPickerBuilder
                 .setFragmentManager(fragmentManager)
