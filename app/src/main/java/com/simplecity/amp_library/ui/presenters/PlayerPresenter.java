@@ -1,11 +1,13 @@
 package com.simplecity.amp_library.ui.presenters;
 
+import android.content.Context;
 import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 
 import com.f2prateek.rx.receivers.RxBroadcastReceiver;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.lyrics.LyricsDialog;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.playback.PlaybackMonitor;
 import com.simplecity.amp_library.ui.views.PlayerView;
@@ -262,6 +264,13 @@ public class PlayerPresenter extends Presenter<PlayerView> {
                 MusicUtils.seekTo(newpos);
                 lastSeekEventTime = delta;
             }
+        }
+    }
+
+    public void showLyrics(Context context) {
+        PlayerView playerView = getView();
+        if (playerView != null) {
+            playerView.showLyricsDialog(new LyricsDialog().getDialog(context));
         }
     }
 }

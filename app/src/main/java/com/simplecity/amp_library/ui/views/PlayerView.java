@@ -3,6 +3,7 @@ package com.simplecity.amp_library.ui.views;
 
 import android.support.annotation.Nullable;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
 
@@ -27,4 +28,6 @@ public interface PlayerView {
     void trackInfoChanged(@Nullable Song song);
 
     void showToast(String message, int duration);
+
+    void showLyricsDialog(MaterialDialog dialog);
 }

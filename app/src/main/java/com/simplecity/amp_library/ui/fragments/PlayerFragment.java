@@ -6,8 +6,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -20,6 +18,7 @@ import android.widget.Toast;
 
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.Util;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -34,7 +33,6 @@ import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.glide.palette.PaletteBitmap;
 import com.simplecity.amp_library.glide.palette.PaletteBitmapTranscoder;
-import com.simplecity.amp_library.lyrics.LyricsFragment;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
@@ -58,7 +56,9 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class PlayerFragment extends BaseFragment implements PlayerView, Toolbar.OnMenuItemClickListener {
+public class PlayerFragment extends BaseFragment implements
+        PlayerView,
+        Toolbar.OnMenuItemClickListener {
 
     private final String TAG = ((Object) this).getClass().getSimpleName();
 
@@ -239,20 +239,6 @@ public class PlayerFragment extends BaseFragment implements PlayerView, Toolbar.
         super.onDestroy();
     }
 
-    private void toggleLyrics() {
-        Fragment fragment = getChildFragmentManager().findFragmentById(R.id.main_container);
-        if (fragment instanceof LyricsFragment) {
-            return;
-        }
-        FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-        ft.setCustomAnimations(R.anim.abc_fade_in, R.anim.abc_fade_out);
-        if (fragment instanceof QueueFragment) {
-            ft.replace(R.id.main_container, new QueuePagerFragment(), QUEUE_PAGER_FRAGMENT);
-        }
-        ft.add(R.id.main_container, new LyricsFragment(), LYRICS_FRAGMENT);
-        ft.commit();
-    }
-
     @Override
     protected String screenName() {
         return TAG;
@@ -381,6 +367,11 @@ public class PlayerFragment extends BaseFragment implements PlayerView, Toolbar.
     }
 
     @Override
+    public void showLyricsDialog(MaterialDialog dialog) {
+        dialog.show();
+    }
+
+    @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.favorite:
@@ -388,7 +379,7 @@ public class PlayerFragment extends BaseFragment implements PlayerView, Toolbar.
                 presenter.toggleFavorite();
                 return true;
             case R.id.lyrics:
-
+                presenter.showLyrics(getContext());
                 return true;
             case R.id.goTo:
 
