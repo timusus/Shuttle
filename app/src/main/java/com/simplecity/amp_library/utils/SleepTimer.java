@@ -96,28 +96,28 @@ public final class SleepTimer {
                     .itemsCallback((materialDialog, view, i, charSequence) -> {
                         switch (i) {
                             case 0:
-                                // Set time manually
-                                showTimePicker.call();
-                                break;
-                            case 1:
                                 // 5 mins
                                 start(5 * 60, playToEnd);
                                 timerStarted.call();
                                 break;
-                            case 2:
+                            case 1:
                                 // 15 mins
                                 start(15 * 60, playToEnd);
                                 timerStarted.call();
                                 break;
-                            case 3:
+                            case 2:
                                 // 30 mins
                                 start(30 * 60, playToEnd);
                                 timerStarted.call();
                                 break;
-                            case 4:
+                            case 3:
                                 // 1 hour
                                 start(60 * 60, playToEnd);
                                 timerStarted.call();
+                                break;
+                            case 4:
+                                // Set time manually
+                                showTimePicker.call();
                                 break;
                         }
                     }).build();
