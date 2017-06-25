@@ -9,32 +9,32 @@ import javax.inject.Inject;
 
 import rx.Observable;
 
-public class DrawerEventRelay {
+public class NavigationEventRelay {
 
-    static DrawerEvent librarySelectedEvent = new DrawerEvent(DrawerEvent.Type.LIBRARY_SELECTED);
-    static DrawerEvent foldersSelectedEvent = new DrawerEvent(DrawerEvent.Type.FOLDERS_SELECTED);
-    static DrawerEvent sleepTimerSelectedEvent = new DrawerEvent(DrawerEvent.Type.SLEEP_TIMER_SELECTED);
-    static DrawerEvent equalizerSelectedEvent = new DrawerEvent(DrawerEvent.Type.EQUALIZER_SELECTED);
-    static DrawerEvent settingsSelectedEvent = new DrawerEvent(DrawerEvent.Type.SETTINGS_SELECTED);
-    static DrawerEvent supportSelectedEvent = new DrawerEvent(DrawerEvent.Type.SUPPORT_SELECTED);
+    static NavigationEvent librarySelectedEvent = new NavigationEvent(NavigationEvent.Type.LIBRARY_SELECTED);
+    static NavigationEvent foldersSelectedEvent = new NavigationEvent(NavigationEvent.Type.FOLDERS_SELECTED);
+    static NavigationEvent sleepTimerSelectedEvent = new NavigationEvent(NavigationEvent.Type.SLEEP_TIMER_SELECTED);
+    static NavigationEvent equalizerSelectedEvent = new NavigationEvent(NavigationEvent.Type.EQUALIZER_SELECTED);
+    static NavigationEvent settingsSelectedEvent = new NavigationEvent(NavigationEvent.Type.SETTINGS_SELECTED);
+    static NavigationEvent supportSelectedEvent = new NavigationEvent(NavigationEvent.Type.SUPPORT_SELECTED);
 
-    private PublishRelay<DrawerEvent> relay = PublishRelay.create();
+    private PublishRelay<NavigationEvent> relay = PublishRelay.create();
 
     @Inject
-    public DrawerEventRelay() {
+    public NavigationEventRelay() {
 
     }
 
-    public void sendEvent(@NonNull DrawerEvent event) {
+    public void sendEvent(@NonNull NavigationEvent event) {
         relay.call(event);
     }
 
-    public Observable<DrawerEvent> getEvents() {
+    public Observable<NavigationEvent> getEvents() {
         // Delay the event a tiny bit, to allow the drawer to close.
         return relay;//.delay(250, TimeUnit.MILLISECONDS);
     }
 
-    public static class DrawerEvent {
+    public static class NavigationEvent {
 
         public @interface Type {
             int LIBRARY_SELECTED = 0;
@@ -44,6 +44,8 @@ public class DrawerEventRelay {
             int SETTINGS_SELECTED = 4;
             int SUPPORT_SELECTED = 5;
             int PLAYLIST_SELECTED = 6;
+            int GO_TO_ARTIST = 7;
+            int GO_TO_ALBUM = 8;
         }
 
         @Type public int type;
@@ -55,10 +57,10 @@ public class DrawerEventRelay {
         /**
          * @param type         the {@link Type of event}
          * @param data         optional Object to be passed with this event
-         * @param isActionable true if navigational changes should be performed in response to this DrawerEvent
+         * @param isActionable true if navigational changes should be performed in response to this NavigationEvent
          *                     Defaults to true.
          */
-        public DrawerEvent(int type, @Nullable Object data, boolean isActionable) {
+        public NavigationEvent(int type, @Nullable Object data, boolean isActionable) {
             this.type = type;
             this.data = data;
             this.isActionable = isActionable;
@@ -68,7 +70,7 @@ public class DrawerEventRelay {
          * @param type the {@link Type of event}
          * @param data optional Object to be passed with this event
          */
-        DrawerEvent(int type, @Nullable Object data) {
+        NavigationEvent(int type, @Nullable Object data) {
             this.type = type;
             this.data = data;
         }
@@ -76,7 +78,7 @@ public class DrawerEventRelay {
         /**
          * @param type the {@link Type of event}
          */
-        DrawerEvent(int type) {
+        NavigationEvent(int type) {
             this.type = type;
         }
     }

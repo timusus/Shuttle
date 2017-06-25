@@ -36,7 +36,7 @@ import com.simplecity.amp_library.ui.detail.ArtistDetailFragment;
 import com.simplecity.amp_library.ui.detail.BaseDetailFragment;
 import com.simplecity.amp_library.ui.detail.GenreDetailFragment;
 import com.simplecity.amp_library.ui.detail.PlaylistDetailFragment;
-import com.simplecity.amp_library.ui.drawer.DrawerEventRelay;
+import com.simplecity.amp_library.ui.drawer.NavigationEventRelay;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.ui.views.ContextualToolbarHost;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
@@ -78,7 +78,7 @@ public class LibraryController extends BaseFragment implements
     @BindView(R.id.contextualToolbar)
     ContextualToolbar contextualToolbar;
 
-    @Inject DrawerEventRelay drawerEventRelay;
+    @Inject NavigationEventRelay navigationEventRelay;
 
     private int currentPage = 0;
 
@@ -158,7 +158,7 @@ public class LibraryController extends BaseFragment implements
 
         multiSheetEventRelay.sendEvent(new MultiSheetEventRelay.MultiSheetEvent(MultiSheetEventRelay.MultiSheetEvent.Action.SHOW_IF_HIDDEN, MultiSheetView.Sheet.NONE));
 
-        drawerEventRelay.sendEvent(new DrawerEventRelay.DrawerEvent(DrawerEventRelay.DrawerEvent.Type.LIBRARY_SELECTED, null, false));
+        navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.LIBRARY_SELECTED, null, false));
     }
 
     @Override

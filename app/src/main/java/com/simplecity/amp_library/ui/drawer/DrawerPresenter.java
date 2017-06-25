@@ -19,7 +19,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class DrawerPresenter extends Presenter<DrawerView> {
 
-    @Inject DrawerEventRelay drawerEventRelay;
+    @Inject NavigationEventRelay navigationEventRelay;
 
     @Inject PlaylistsModel playlistsModel;
 
@@ -33,15 +33,15 @@ public class DrawerPresenter extends Presenter<DrawerView> {
 
         loadData();
 
-        addSubcscription(drawerEventRelay.getEvents().subscribe(drawerEvent -> {
+        addSubcscription(navigationEventRelay.getEvents().subscribe(drawerEvent -> {
             DrawerView drawerView = getView();
             switch (drawerEvent.type) {
-                case DrawerEventRelay.DrawerEvent.Type.LIBRARY_SELECTED:
+                case NavigationEventRelay.NavigationEvent.Type.LIBRARY_SELECTED:
                     if (drawerView != null) {
                         drawerView.setDrawerItemSelected(DrawerParent.Type.LIBRARY);
                     }
                     break;
-                case DrawerEventRelay.DrawerEvent.Type.FOLDERS_SELECTED:
+                case NavigationEventRelay.NavigationEvent.Type.FOLDERS_SELECTED:
                     if (drawerView != null) {
                         drawerView.setDrawerItemSelected(DrawerParent.Type.FOLDERS);
                     }
@@ -58,14 +58,14 @@ public class DrawerPresenter extends Presenter<DrawerView> {
 
         closeDrawer();
 
-        if (drawerParent.drawerEvent != null) {
-            drawerEventRelay.sendEvent(drawerParent.drawerEvent);
+        if (drawerParent.navigationEvent != null) {
+            navigationEventRelay.sendEvent(drawerParent.navigationEvent);
         }
     }
 
     void onPlaylistClicked(Playlist playlist) {
         closeDrawer();
-        drawerEventRelay.sendEvent(new DrawerEventRelay.DrawerEvent(DrawerEventRelay.DrawerEvent.Type.PLAYLIST_SELECTED, playlist));
+        navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.PLAYLIST_SELECTED, playlist));
     }
 
     private void closeDrawer() {

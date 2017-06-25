@@ -11,12 +11,16 @@ import android.widget.Toast;
 
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.model.Album;
+import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Playlist;
+import com.simplecity.amp_library.ui.detail.AlbumDetailFragment;
+import com.simplecity.amp_library.ui.detail.ArtistDetailFragment;
 import com.simplecity.amp_library.ui.detail.PlaylistDetailFragment;
-import com.simplecity.amp_library.ui.drawer.DrawerEventRelay;
 import com.simplecity.amp_library.ui.drawer.DrawerLockController;
 import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
 import com.simplecity.amp_library.ui.drawer.DrawerProvider;
+import com.simplecity.amp_library.ui.drawer.NavigationEventRelay;
 import com.simplecity.amp_library.ui.settings.SettingsParentFragment;
 import com.simplecity.amp_library.ui.views.UpNextView;
 import com.simplecity.amp_library.ui.views.multisheet.CustomMultiSheetView;
@@ -41,7 +45,7 @@ public class MainController extends BaseNavigationController implements BackPres
 
     public static final String STATE_CURRENT_SHEET = "current_sheet";
 
-    @Inject DrawerEventRelay drawerEventRelay;
+    @Inject NavigationEventRelay navigationEventRelay;
 
     @Inject MultiSheetEventRelay multiSheetEventRelay;
 
@@ -98,18 +102,18 @@ public class MainController extends BaseNavigationController implements BackPres
         }
         delayHandler = new Handler();
 
-        subscriptions.add(drawerEventRelay.getEvents()
+        subscriptions.add(navigationEventRelay.getEvents()
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter(drawerEvent -> drawerEvent.isActionable)
-                .subscribe(drawerEvent -> {
-                    switch (drawerEvent.type) {
-                        case DrawerEventRelay.DrawerEvent.Type.LIBRARY_SELECTED:
+                .subscribe(navigationEvent -> {
+                    switch (navigationEvent.type) {
+                        case NavigationEventRelay.NavigationEvent.Type.LIBRARY_SELECTED:
                             popToRootViewController();
                             break;
-                        case DrawerEventRelay.DrawerEvent.Type.FOLDERS_SELECTED:
+                        case NavigationEventRelay.NavigationEvent.Type.FOLDERS_SELECTED:
                             delayHandler.postDelayed(() -> pushViewController(FolderFragment.newInstance("PageTitle"), "FolderFragment"), 250);
                             break;
-                        case DrawerEventRelay.DrawerEvent.Type.SLEEP_TIMER_SELECTED:
+                        case NavigationEventRelay.NavigationEvent.Type.SLEEP_TIMER_SELECTED:
                             Action0 showToast = () -> Toast.makeText(getContext(), R.string.sleep_timer_started, Toast.LENGTH_SHORT).show();
                             SleepTimer.getInstance().getDialog(
                                     getContext(),
@@ -117,21 +121,38 @@ public class MainController extends BaseNavigationController implements BackPres
                                     showToast
                             ).show();
                             break;
-                        case DrawerEventRelay.DrawerEvent.Type.EQUALIZER_SELECTED:
+                        case NavigationEventRelay.NavigationEvent.Type.EQUALIZER_SELECTED:
                             delayHandler.postDelayed(() -> multiSheetEventRelay.sendEvent(new MultiSheetEventRelay.MultiSheetEvent(MultiSheetEventRelay.MultiSheetEvent.Action.HIDE, MultiSheetView.Sheet.FIRST)), 100);
                             delayHandler.postDelayed(() -> pushViewController(EqualizerFragment.newInstance(), "EqualizerFragment"), 250);
                             break;
-                        case DrawerEventRelay.DrawerEvent.Type.SETTINGS_SELECTED:
+                        case NavigationEventRelay.NavigationEvent.Type.SETTINGS_SELECTED:
                             delayHandler.postDelayed(() -> multiSheetEventRelay.sendEvent(new MultiSheetEventRelay.MultiSheetEvent(MultiSheetEventRelay.MultiSheetEvent.Action.HIDE, MultiSheetView.Sheet.FIRST)), 100);
                             delayHandler.postDelayed(() -> pushViewController(SettingsParentFragment.newInstance(R.xml.settings_headers, R.string.settings), "Settings Fragment"), 250);
                             break;
-                        case DrawerEventRelay.DrawerEvent.Type.SUPPORT_SELECTED:
+                        case NavigationEventRelay.NavigationEvent.Type.SUPPORT_SELECTED:
                             delayHandler.postDelayed(() -> multiSheetEventRelay.sendEvent(new MultiSheetEventRelay.MultiSheetEvent(MultiSheetEventRelay.MultiSheetEvent.Action.HIDE, MultiSheetView.Sheet.FIRST)), 100);
                             delayHandler.postDelayed(() -> pushViewController(SettingsParentFragment.newInstance(R.xml.settings_support, R.string.pref_title_support), "Support Fragment"), 250);
                             break;
-                        case DrawerEventRelay.DrawerEvent.Type.PLAYLIST_SELECTED:
-                            delayHandler.postDelayed(() -> pushViewController(PlaylistDetailFragment.newInstance((Playlist) drawerEvent.data), "PlaylistDetailFragment"), 250);
+                        case NavigationEventRelay.NavigationEvent.Type.PLAYLIST_SELECTED:
+                            delayHandler.postDelayed(() -> pushViewController(PlaylistDetailFragment.newInstance((Playlist) navigationEvent.data), "PlaylistDetailFragment"), 250);
                             break;
+                        case NavigationEventRelay.NavigationEvent.Type.GO_TO_ARTIST:
+                            multiSheetView.goToSheet(MultiSheetView.Sheet.NONE);
+                            AlbumArtist albumArtist = (AlbumArtist) navigationEvent.data;
+                            delayHandler.postDelayed(() -> {
+                                popToRootViewController();
+                                pushViewController(ArtistDetailFragment.newInstance(albumArtist, null), "ArtistDetailFragment");
+                            }, 250);
+                            break;
+                        case NavigationEventRelay.NavigationEvent.Type.GO_TO_ALBUM:
+                            multiSheetView.goToSheet(MultiSheetView.Sheet.NONE);
+                            Album album = (Album) navigationEvent.data;
+                            delayHandler.postDelayed(() -> {
+                                popToRootViewController();
+                                pushViewController(AlbumDetailFragment.newInstance(album, null), "AlbumDetailFragment");
+                            }, 250);
+                            break;
+
                     }
                 }));
 

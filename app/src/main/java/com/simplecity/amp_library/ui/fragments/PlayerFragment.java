@@ -36,6 +36,7 @@ import com.simplecity.amp_library.glide.palette.PaletteBitmapTranscoder;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.tagger.TaggerDialog;
+import com.simplecity.amp_library.ui.drawer.NavigationEventRelay;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.ui.views.FavoriteActionBarView;
 import com.simplecity.amp_library.ui.views.PlayPauseView;
@@ -45,6 +46,7 @@ import com.simplecity.amp_library.ui.views.RepeatingImageButton;
 import com.simplecity.amp_library.ui.views.ShuffleButton;
 import com.simplecity.amp_library.ui.views.SizableSeekBar;
 import com.simplecity.amp_library.utils.LogUtils;
+import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.StringUtils;
 
 import java.util.concurrent.TimeUnit;
@@ -115,6 +117,8 @@ public class PlayerFragment extends BaseFragment implements
     private int backgroundColor;
 
     @Inject PlayerPresenter presenter;
+
+    @Inject NavigationEventRelay navigationEventRelay;
 
     public PlayerFragment() {
     }
@@ -392,8 +396,11 @@ public class PlayerFragment extends BaseFragment implements
             case R.id.lyrics:
                 presenter.showLyrics(getContext());
                 return true;
-            case R.id.goTo:
-
+            case R.id.goToArtist:
+                navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_ARTIST, MusicUtils.getAlbumArtist(), true));
+                return true;
+            case R.id.goToAlbum:
+                navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_ALBUM, MusicUtils.getAlbum(), true));
                 return true;
             case R.id.editTags:
                 presenter.editTagsClicked();
