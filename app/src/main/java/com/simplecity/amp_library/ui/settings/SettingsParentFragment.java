@@ -35,6 +35,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.reactivex.disposables.Disposable;
 import test.com.androidnavigation.base.Controller;
 import test.com.androidnavigation.base.NavigationController;
@@ -51,6 +52,8 @@ public class SettingsParentFragment extends BaseNavigationController implements 
 
     @XmlRes int preferenceResource;
     @StringRes int titleResId;
+    
+    private Unbinder unbinder;
 
     public static SettingsParentFragment newInstance(@XmlRes int preferenceResource, @StringRes int titleResId) {
         Bundle args = new Bundle();
@@ -82,7 +85,7 @@ public class SettingsParentFragment extends BaseNavigationController implements 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
 
         toolbar.setTitle(titleResId);
         toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
@@ -100,6 +103,12 @@ public class SettingsParentFragment extends BaseNavigationController implements 
     public void onPause() {
         DrawerLockManager.getInstance().removeDrawerLock(this);
         super.onPause();
+    }
+
+    @Override
+    public void onDestroyView() {
+        unbinder.unbind();
+        super.onDestroyView();
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat implements

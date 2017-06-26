@@ -48,6 +48,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.reactivex.disposables.CompositeDisposable;
 import rx.Subscription;
 import test.com.multisheetview.ui.view.MultiSheetView;
@@ -90,6 +91,7 @@ public class QueueFragment extends BaseFragment implements
     private ContextualToolbarHelper<Song> contextualToolbarHelper;
 
     private Subscription loadDataSubscription;
+    private Unbinder unbinder;
 
     public static QueueFragment newInstance() {
         Bundle args = new Bundle();
@@ -125,7 +127,7 @@ public class QueueFragment extends BaseFragment implements
 
         View rootView = inflater.inflate(R.layout.fragment_queue, container, false);
 
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
 
         toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
         toolbar.inflateMenu(R.menu.menu_queue);
@@ -204,12 +206,14 @@ public class QueueFragment extends BaseFragment implements
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
-
         MultiSheetView.setScrollableView(recyclerView, null);
         MultiSheetView.setScrollableViewHelper(recyclerView, null);
 
         disposables.clear();
+
+        unbinder.unbind();
+
+        super.onDestroyView();
     }
 
     @Override

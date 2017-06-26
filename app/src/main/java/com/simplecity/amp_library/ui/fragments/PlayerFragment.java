@@ -55,6 +55,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -119,6 +120,7 @@ public class PlayerFragment extends BaseFragment implements
     @Inject PlayerPresenter presenter;
 
     @Inject NavigationEventRelay navigationEventRelay;
+    private Unbinder unbinder;
 
     public PlayerFragment() {
     }
@@ -144,7 +146,7 @@ public class PlayerFragment extends BaseFragment implements
 
         View rootView = inflater.inflate(R.layout.fragment_player, container, false);
 
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
 
         toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
         toolbar.inflateMenu(R.menu.menu_now_playing);
@@ -194,9 +196,11 @@ public class PlayerFragment extends BaseFragment implements
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
-
         presenter.unbindView(this);
+
+        unbinder.unbind();
+
+        super.onDestroyView();
     }
 
     public void update() {

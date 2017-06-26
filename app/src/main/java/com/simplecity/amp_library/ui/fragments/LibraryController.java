@@ -53,6 +53,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.reactivex.disposables.CompositeDisposable;
 import test.com.androidnavigation.fragment.FragmentInfo;
 import test.com.multisheetview.ui.view.MultiSheetView;
@@ -93,6 +94,8 @@ public class LibraryController extends BaseFragment implements
     private int currentPage = 0;
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
+
+    private Unbinder unbinder;
 
     public static FragmentInfo fragmentInfo() {
         return new FragmentInfo(LibraryController.class, null, "LibraryController");
@@ -136,7 +139,7 @@ public class LibraryController extends BaseFragment implements
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_library, container, false);
 
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
@@ -188,6 +191,7 @@ public class LibraryController extends BaseFragment implements
     @Override
     public void onDestroyView() {
         compositeDisposable.clear();
+        unbinder.unbind();
         super.onDestroyView();
     }
 

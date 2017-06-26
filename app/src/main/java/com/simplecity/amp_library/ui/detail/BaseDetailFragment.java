@@ -232,8 +232,9 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
         aestheticDisposable.dispose();
 
-        unbinder.unbind();
         detailPresenter.unbindView(this);
+
+        unbinder.unbind();
 
         super.onDestroyView();
     }

@@ -32,6 +32,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.reactivex.disposables.CompositeDisposable;
 import test.com.multisheetview.ui.view.MultiSheetView;
 
@@ -64,6 +65,8 @@ public class MiniPlayerFragment extends BaseFragment {
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
+    private Unbinder unbinder;
+
     public MiniPlayerFragment() {
 
     }
@@ -88,7 +91,7 @@ public class MiniPlayerFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_mini_player, container, false);
 
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
 
         rootView.setOnClickListener(v -> {
             MultiSheetView multiSheetView = MultiSheetView.getParentMultiSheetView(rootView);
@@ -143,6 +146,7 @@ public class MiniPlayerFragment extends BaseFragment {
     public void onDestroyView() {
         presenter.unbindView(playerViewAdapter);
         disposable.clear();
+        unbinder.unbind();
         super.onDestroyView();
     }
 
