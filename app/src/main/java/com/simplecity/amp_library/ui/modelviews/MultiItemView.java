@@ -69,25 +69,6 @@ public abstract class MultiItemView<VH extends MultiItemView.ViewHolder, T> exte
             super(itemView);
 
             ButterKnife.bind(this, itemView);
-
-            int viewType = getItemViewType();
-
-            if (viewType == ViewType.ARTIST_CARD
-                    || viewType == ViewType.ALBUM_CARD
-                    || viewType == ViewType.ARTIST_CARD_LARGE
-                    || viewType == ViewType.ALBUM_CARD_LARGE
-                    || viewType == ViewType.ARTIST_LIST
-                    || viewType == ViewType.ALBUM_LIST
-                    || viewType == ViewType.ARTIST_LIST_SMALL
-                    || viewType == ViewType.ALBUM_LIST_SMALL
-                    || viewType == ViewType.SUGGESTED_SONG) {
-            } else {
-            }
-            if (viewType == ViewType.ARTIST_GRID || viewType == ViewType.ALBUM_GRID) {
-                if (bottomContainer != null) {
-                    bottomContainer.setBackgroundColor(0x90000000);
-                }
-            }
         }
 
         @Override
@@ -109,6 +90,13 @@ public abstract class MultiItemView<VH extends MultiItemView.ViewHolder, T> exte
 
         if (holder.tickImageView != null) {
             holder.tickImageView.setVisibility(isSelected() ? View.VISIBLE : View.GONE);
+        }
+
+        int viewType = getViewType();
+        if (viewType == ViewType.ARTIST_GRID || viewType == ViewType.ALBUM_GRID) {
+            if (holder.bottomContainer != null) {
+                holder.bottomContainer.setBackgroundColor(0x90000000);
+            }
         }
     }
 
