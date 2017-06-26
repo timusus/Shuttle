@@ -1,55 +1,48 @@
 package com.simplecity.amp_library.ui.modelviews;
 
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.model.StreamEncoder;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.ImageViewTarget;
 import com.bumptech.glide.request.target.Target;
+import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.glide.loader.TypeLoader;
 import com.simplecity.amp_library.glide.utils.BitmapAndSize;
 import com.simplecity.amp_library.glide.utils.BitmapAndSizeDecoder;
+import com.simplecity.amp_library.model.ArtworkModel;
 import com.simplecity.amp_library.model.ArtworkProvider;
+import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecityapps.recycler_adapter.model.BaseViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.List;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-import static com.bumptech.glide.Glide.with;
-import static com.bumptech.glide.load.engine.DiskCacheStrategy.NONE;
-import static com.simplecity.amp_library.R.drawable.text_protection_scrim_reversed;
-import static com.simplecity.amp_library.R.id;
-import static com.simplecity.amp_library.R.id.line_one;
-import static com.simplecity.amp_library.R.id.line_two;
-import static com.simplecity.amp_library.R.layout.list_item_artwork;
-import static com.simplecity.amp_library.R.string.artwork_type_custom;
-import static com.simplecity.amp_library.model.ArtworkModel.getTypeString;
-import static com.simplecity.amp_library.model.ArtworkProvider.Type;
-import static com.simplecity.amp_library.model.ArtworkProvider.Type.FOLDER;
-import static com.simplecity.amp_library.ui.adapters.ViewType.ARTWORK;
-import static com.simplecity.amp_library.ui.modelviews.ArtworkView.ViewHolder;
-import static java.lang.String.format;
-import static java.lang.System.currentTimeMillis;
-
-public class ArtworkView extends BaseViewModel<ViewHolder> {
+public class ArtworkView extends BaseViewModel<ArtworkView.ViewHolder> {
 
     public interface GlideListener {
         void onArtworkLoadFailed(ArtworkView artworkView);
     }
 
-    @Type
+    public interface ClickListener {
+        void onClick(ArtworkView artworkView);
+    }
+
+    @ArtworkProvider.Type
     private int type;
 
     private ArtworkProvider artworkProvider;
 
-    private GlideListener listener;
+    private GlideListener glideListener;
 
     public File file;
 
@@ -57,16 +50,27 @@ public class ArtworkView extends BaseViewModel<ViewHolder> {
 
     private boolean isCustom;
 
-    public ArtworkView(int type, ArtworkProvider artworkProvider, GlideListener listener) {
-        this(type, artworkProvider, listener, null, false);
+    @Nullable
+    private ClickListener listener;
+
+    public ArtworkView(int type, ArtworkProvider artworkProvider, GlideListener glideListener) {
+        this(type, artworkProvider, glideListener, null, false);
     }
 
-    public ArtworkView(int type, ArtworkProvider artworkProvider, GlideListener listener, File file, boolean isCustom) {
+    public ArtworkView(int type, ArtworkProvider artworkProvider, GlideListener glideListener, File file, boolean isCustom) {
         this.type = type;
         this.artworkProvider = artworkProvider;
-        this.listener = listener;
+        this.glideListener = glideListener;
         this.file = file;
         this.isCustom = isCustom;
+    }
+
+    public ArtworkModel getItem() {
+        return new ArtworkModel(type, file);
+    }
+
+    public void setListener(@Nullable ClickListener listener) {
+        this.listener = listener;
     }
 
     public void setSelected(boolean selected) {
@@ -79,39 +83,45 @@ public class ArtworkView extends BaseViewModel<ViewHolder> {
 
     @Override
     public int getViewType() {
-        return ARTWORK;
+        return ViewType.ARTWORK;
     }
 
     @Override
     public int getLayoutResId() {
-        return list_item_artwork;
+        return R.layout.list_item_artwork;
+    }
+
+    void onClick() {
+        if (listener != null) {
+            listener.onClick(this);
+        }
     }
 
     @Override
     public void bindView(ViewHolder holder) {
         super.bindView(holder);
 
-        long time = currentTimeMillis();
+        long time = System.currentTimeMillis();
 
         holder.textContainer.setBackground(null);
-        holder.progressBar.setVisibility(VISIBLE);
+        holder.progressBar.setVisibility(View.VISIBLE);
         holder.lineTwo.setText(null);
 
-        with(holder.itemView.getContext())
+        Glide.with(holder.itemView.getContext())
                 .using(new TypeLoader(type, file), InputStream.class)
                 .from(ArtworkProvider.class)
                 .as(BitmapAndSize.class)
                 .sourceEncoder(new StreamEncoder())
                 .decoder(new BitmapAndSizeDecoder(holder.itemView.getContext()))
-                .diskCacheStrategy(NONE)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .load(artworkProvider)
                 .listener(new RequestListener<ArtworkProvider, BitmapAndSize>() {
                     @Override
                     public boolean onException(Exception e, ArtworkProvider model, Target<BitmapAndSize> target, boolean isFirstResource) {
-                        if (listener != null) {
+                        if (glideListener != null) {
                             if (holder.itemView.getHandler() != null) {
                                 holder.itemView.getHandler().postDelayed(() ->
-                                        listener.onArtworkLoadFailed(ArtworkView.this), currentTimeMillis() + 1000 - time);
+                                        glideListener.onArtworkLoadFailed(ArtworkView.this), System.currentTimeMillis() + 1000 - time);
                             }
                         }
                         return false;
@@ -125,25 +135,32 @@ public class ArtworkView extends BaseViewModel<ViewHolder> {
                 .into(new ImageViewTarget<BitmapAndSize>(((ViewHolder) holder).imageView) {
                     @Override
                     protected void setResource(BitmapAndSize resource) {
-                        holder.textContainer.setBackgroundResource(text_protection_scrim_reversed);
-                        holder.progressBar.setVisibility(GONE);
+                        holder.textContainer.setBackgroundResource(R.drawable.text_protection_scrim_reversed);
+                        holder.progressBar.setVisibility(View.GONE);
 
                         holder.imageView.setImageBitmap(resource.bitmap);
-                        holder.lineTwo.setText(format("%sx%spx", resource.size.width, resource.size.height));
+                        holder.lineTwo.setText(String.format("%sx%spx", resource.size.width, resource.size.height));
                     }
                 });
 
-        holder.lineOne.setText(getTypeString(type));
+        holder.lineOne.setText(ArtworkModel.getTypeString(type));
 
-        if (type == FOLDER && file != null) {
+        if (type == ArtworkProvider.Type.FOLDER && file != null) {
             holder.lineOne.setText(file.getName());
         }
 
         if (isCustom && file != null && file.getPath().contains("custom_artwork")) {
-            holder.lineOne.setText(holder.itemView.getContext().getString(artwork_type_custom));
+            holder.lineOne.setText(holder.itemView.getContext().getString(R.string.artwork_type_custom));
         }
 
-        holder.checkView.setVisibility(isSelected() ? VISIBLE : GONE);
+        holder.checkView.setVisibility(isSelected() ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void bindView(ViewHolder holder, int position, List payloads) {
+        super.bindView(holder, position, payloads);
+
+        holder.checkView.setVisibility(isSelected() ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -151,7 +168,7 @@ public class ArtworkView extends BaseViewModel<ViewHolder> {
         return new ViewHolder(createView(parent));
     }
 
-    public static class ViewHolder extends BaseViewHolder {
+    public static class ViewHolder extends BaseViewHolder<ArtworkView> {
 
         public ImageView imageView;
         public TextView lineOne;
@@ -163,12 +180,14 @@ public class ArtworkView extends BaseViewModel<ViewHolder> {
         public ViewHolder(View itemView) {
             super(itemView);
 
-            imageView = (ImageView) itemView.findViewById(id.imageView);
-            lineOne = (TextView) itemView.findViewById(line_one);
-            lineTwo = (TextView) itemView.findViewById(line_two);
-            checkView = itemView.findViewById(id.checkView);
-            textContainer = itemView.findViewById(id.textContainer);
-            progressBar = (ProgressBar) itemView.findViewById(id.progressBar);
+            imageView = itemView.findViewById(R.id.imageView);
+            lineOne = itemView.findViewById(R.id.line_one);
+            lineTwo = itemView.findViewById(R.id.line_two);
+            checkView = itemView.findViewById(R.id.checkView);
+            textContainer = itemView.findViewById(R.id.textContainer);
+            progressBar = itemView.findViewById(R.id.progressBar);
+
+            itemView.setOnClickListener(v -> viewModel.onClick());
         }
 
         @Override

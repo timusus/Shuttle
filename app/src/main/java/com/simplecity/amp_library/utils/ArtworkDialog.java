@@ -2,6 +2,7 @@ package com.simplecity.amp_library.utils;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import com.simplecity.amp_library.ui.modelviews.ArtworkView;
 import com.simplecity.amp_library.ui.recyclerview.SpacesItemDecoration;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
+import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,28 +47,24 @@ public class ArtworkDialog {
 
         View customView = LayoutInflater.from(context).inflate(R.layout.dialog_artwork, null);
 
-        ArtworkAdapter artworkAdapter = new ArtworkAdapter();
+        ViewModelAdapter adapter = new ViewModelAdapter();
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-        RecyclerView recyclerView = (RecyclerView) customView.findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = customView.findViewById(R.id.recyclerView);
         recyclerView.addItemDecoration(new SpacesItemDecoration(16));
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemViewCacheSize(0);
-        recyclerView.setRecyclerListener(holder -> {
-            if (holder.getAdapterPosition() != -1) {
-//                artworkAdapter.items.get(holder.getAdapterPosition()).recycle(holder);
-            }
-        });
+        recyclerView.setRecyclerListener(new RecyclerListener());
 
-        artworkAdapter.items.add(0, new ArtworkLoadingView());
-        artworkAdapter.notifyDataSetChanged();
-        recyclerView.setAdapter(artworkAdapter);
+        adapter.items.add(0, new ArtworkLoadingView());
+        adapter.notifyDataSetChanged();
+        recyclerView.setAdapter(adapter);
 
         ArtworkView.GlideListener glideListener = artworkView -> {
-            int index = artworkAdapter.items.indexOf(artworkView);
+            int index = adapter.items.indexOf(artworkView);
             if (index != -1) {
-                artworkAdapter.removeItem(index);
+                adapter.removeItem(index);
             }
         };
 
@@ -100,34 +98,47 @@ public class ArtworkDialog {
         ArtworkView folderView = new ArtworkView(ArtworkProvider.Type.FOLDER, null, null);
         viewModels.add(folderView);
 
-        artworkAdapter.setItems(viewModels);
+        ArtworkView.ClickListener listener = artworkView -> {
+            Stream.of(viewModels)
+                    .filter(viewModel -> viewModel instanceof ArtworkView)
+                    .forEachIndexed((i, viewModel) -> ((ArtworkView) viewModel).setSelected(viewModel == artworkView));
+            adapter.notifyItemRangeChanged(0, adapter.getItemCount(), 0);
+        };
+
+        Stream.of(viewModels)
+                .filter(viewModel -> viewModel instanceof ArtworkView)
+                .forEach(viewModel -> ((ArtworkView) viewModel).setListener(listener));
+
+        adapter.setItems(viewModels);
 
         Observable.fromCallable(artworkProvider::getFolderArtworkFiles)
                 .subscribeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(files -> {
-                    artworkAdapter.removeItem(artworkAdapter.items.indexOf(folderView));
+                    adapter.removeItem(adapter.items.indexOf(folderView));
                     if (files != null) {
                         Stream.of(files).filter(file -> userSelectedArtwork == null || !file.getPath().equals(userSelectedArtwork.path)).forEach(file -> {
-                            artworkAdapter.addItem(new ArtworkView(ArtworkProvider.Type.FOLDER, artworkProvider, glideListener, file, false));
+                            adapter.addItem(new ArtworkView(ArtworkProvider.Type.FOLDER, artworkProvider, glideListener, file, false));
                         });
                     }
                 }, error -> LogUtils.logException("ArtworkDialog: Error getting artwork files", error));
 
-        return DialogUtils.getBuilder(context)
-                .title(context.getString(R.string.artwork_edit))
+        return new MaterialDialog.Builder(context)
+                .title(R.string.artwork_edit)
                 .customView(customView, false)
                 .autoDismiss(false)
                 .positiveText(context.getString(R.string.save))
                 .onPositive((dialog, which) -> {
-                    if (artworkAdapter.checkedItem != null) {
+                    ArtworkView checkedView = ArtworkDialog.getCheckedView(adapter.items);
+                    if (checkedView != null) {
+                        ArtworkModel artworkModel = checkedView.getItem();
                         ContentValues values = new ContentValues();
                         values.put(CustomArtworkTable.COLUMN_KEY, artworkProvider.getArtworkKey());
-                        values.put(CustomArtworkTable.COLUMN_TYPE, artworkAdapter.checkedItem.type);
-                        values.put(CustomArtworkTable.COLUMN_PATH, artworkAdapter.checkedItem.file == null ? null : artworkAdapter.checkedItem.file.getPath());
+                        values.put(CustomArtworkTable.COLUMN_TYPE, artworkModel.type);
+                        values.put(CustomArtworkTable.COLUMN_PATH, artworkModel.file == null ? null : artworkModel.file.getPath());
                         context.getContentResolver().insert(CustomArtworkTable.URI, values);
 
-                        ShuttleApplication.getInstance().userSelectedArtwork.put(artworkProvider.getArtworkKey(), new UserSelectedArtwork(artworkAdapter.checkedItem.type, artworkAdapter.checkedItem.file == null ? null : artworkAdapter.checkedItem.file.getPath()));
+                        ShuttleApplication.getInstance().userSelectedArtwork.put(artworkProvider.getArtworkKey(), new UserSelectedArtwork(artworkModel.type, artworkModel.file == null ? null : artworkModel.file.getPath()));
                     } else {
                         context.getContentResolver().delete(CustomArtworkTable.URI, CustomArtworkTable.COLUMN_KEY + "='" + artworkProvider.getArtworkKey().replaceAll("'", "\''") + "'", null);
                         ShuttleApplication.getInstance().userSelectedArtwork.remove(artworkProvider.getArtworkKey());
@@ -141,16 +152,16 @@ public class ArtworkDialog {
                         .requestImage(Sources.GALLERY)
                         .flatMap(uri -> {
 
-                            //The directory will be shuttle/custom_artwork/key_hashcode/currenSystemTime.artwork
-                            //We want the directory to be based on the key, so we can delete old artwork, and the
-                            //filename to be unique, because it's used for Glide caching.
+                            // The directory will be shuttle/custom_artwork/key_hashcode/currentSystemTime.artwork
+                            // We want the directory to be based on the key, so we can delete old artwork, and the
+                            // filename to be unique, because it's used for Glide caching.
                             File dir = new File(ShuttleApplication.getInstance().getFilesDir() + "/shuttle/custom_artwork/" + artworkProvider.getArtworkKey().hashCode() + "/");
 
-                            //Create dir if necessary
+                            // Create dir if necessary
                             if (!dir.exists()) {
                                 dir.mkdirs();
                             } else {
-                                //Delete any existing artwork for this key.
+                                // Delete any existing artwork for this key.
                                 if (dir.isDirectory()) {
                                     String[] children = dir.list();
                                     for (String child : children) {
@@ -174,79 +185,28 @@ public class ArtworkDialog {
                         })
                         .filter(file -> file != null && file.exists())
                         .subscribe(file -> {
-
-                            //If we've already got user-selected artwork in the adapter, remove it.
-                            if (artworkAdapter.getItemCount() != 0) {
-                                File aFile = ((ArtworkView) artworkAdapter.items.get(0)).file;
+                            // If we've already got user-selected artwork in the adapter, remove it.
+                            if (adapter.getItemCount() != 0) {
+                                File aFile = ((ArtworkView) adapter.items.get(0)).file;
                                 if (aFile != null && aFile.getPath().contains(artworkProvider.getArtworkKey())) {
-                                    artworkAdapter.removeItem(0);
+                                    adapter.removeItem(0);
                                 }
                             }
 
                             ArtworkView artworkView = new ArtworkView(ArtworkProvider.Type.FOLDER, artworkProvider, glideListener, file, true);
-                            artworkAdapter.addItem(0, artworkView);
-                            artworkAdapter.selectItem(0);
+                            artworkView.setSelected(true);
+                            adapter.addItem(0, artworkView);
                             recyclerView.scrollToPosition(0);
                         }, error -> LogUtils.logException("ArtworkDialog error picking from gallery", error)))
                 .cancelable(false)
                 .build();
     }
 
-    private static class ArtworkAdapter extends ViewModelAdapter {
-
-        ArtworkModel checkedItem;
-
-        ArtworkAdapter() {
-        }
-
-//        @Override
-//        protected void attachListeners(RecyclerView.ViewHolder viewHolder) {
-//            super.attachListeners(viewHolder);
-//
-//            if (viewHolder instanceof ArtworkView.ViewHolder) {
-//                viewHolder.itemView.setOnClickListener(v -> {
-//                    if (viewHolder.getAdapterPosition() != -1) {
-//                        selectItem(viewHolder.getAdapterPosition());
-//                    }
-//                });
-//            }
-//        }
-
-        void selectItem(int position) {
-
-            ViewModel viewModel = items.get(position);
-            if (!(viewModel instanceof ArtworkView)) {
-                return;
-            }
-
-            ArtworkView artworkView = (ArtworkView) viewModel;
-
-            int previouslySelectedItem = -1;
-
-            for (int i = 0, itemsSize = items.size(); i < itemsSize; i++) {
-                ViewModel item = items.get(i);
-                if (item instanceof ArtworkView && ((ArtworkView) item).isSelected()) {
-                    previouslySelectedItem = i;
-                    break;
-                }
-            }
-
-            if (previouslySelectedItem == -1 || previouslySelectedItem == position) {
-                artworkView.setSelected(!artworkView.isSelected());
-                notifyItemChanged(position);
-            } else {
-                artworkView.setSelected(true);
-                ((ArtworkView) items.get(previouslySelectedItem)).setSelected(false);
-                notifyItemChanged(previouslySelectedItem);
-                notifyItemChanged(position);
-            }
-
-            //Todo:
-//            Stream.of(items)
-//                    .filter(item -> item instanceof ArtworkView && ((ArtworkView) item).isSelected())
-//                    .forEach(item -> checkedItem = (ArtworkModel) item.getItem());
-
-            notifyDataSetChanged();
-        }
+    @Nullable
+    public static ArtworkView getCheckedView(List<ViewModel> viewModels) {
+        return (ArtworkView) Stream.of(viewModels)
+                .filter(viewModel -> viewModel instanceof ArtworkView && ((ArtworkView) viewModel).isSelected())
+                .findFirst()
+                .orElse(null);
     }
 }
