@@ -90,12 +90,6 @@
         android:textSize="14sp"
         tools:text="3:20"/>
 
-    <com.simplecity.amp_library.ui.views.OverflowButton
-        android:id="@+id/btn_overflow"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:alpha="0.8"
-        android:background="?attr/circular_ripple"
-        android:paddingLeft="2dp"
-        android:paddingStart="2dp"/>
+    <include layout="@layout/overflow_button"/>
+
 </android.support.design.internal.ForegroundLinearLayout>

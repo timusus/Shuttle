@@ -47,11 +47,7 @@
             tools:text="Franz Ferdinand - Tonight"/>
     </LinearLayout>
 
-    <com.simplecity.amp_library.ui.views.OverflowButton
-        android:id="@+id/btn_overflow"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="@null"/>
+    <include layout="@layout/overflow_button"/>
 
 </android.support.design.internal.ForegroundLinearLayout>
 

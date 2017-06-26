@@ -7,8 +7,7 @@
     android:descendantFocusability="blocksDescendants"
     android:foreground="?attr/list_selector"
     android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:paddingRight="8dp">
+    android:orientation="horizontal">
 
     <com.simplecity.amp_library.ui.views.DragHandle
         android:id="@+id/drag_handle"
@@ -73,12 +72,6 @@
         android:textSize="14sp"
         tools:text="3:20"/>
 
-    <com.simplecity.amp_library.ui.views.OverflowButton
-        android:id="@+id/btn_overflow"
-        android:layout_width="40dp"
-        android:layout_height="48dp"
-        android:layout_marginLeft="-4dp"
-        android:layout_marginRight="-6dp"
-        android:background="@null"/>
+    <include layout="@layout/overflow_button"/>
 
 </android.support.design.internal.ForegroundLinearLayout>
