@@ -616,7 +616,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
      */
     protected void updateMenuItems(Toolbar toolbar) {
         // Songs
-        switch (SortManager.getInstance().getArtistDetailSongsSortOrder()) {
+        switch (getSongSortOrder()) {
             case SortManager.SongSort.DETAIL_DEFAULT:
                 toolbar.getMenu().findItem(R.id.sort_song_default).setChecked(true);
                 break;
@@ -643,11 +643,11 @@ public abstract class BaseDetailFragment extends BaseFragment implements
                 break;
         }
 
-        toolbar.getMenu().findItem(R.id.sort_songs_ascending).setChecked(SortManager.getInstance().getArtistDetailSongsAscending());
+        toolbar.getMenu().findItem(R.id.sort_songs_ascending).setChecked(getSongsAscending());
 
         if (showAlbumMenu()) {
             //Albums
-            switch (SortManager.getInstance().getArtistDetailAlbumsSortOrder()) {
+            switch (getAlbumSort()) {
                 case SortManager.AlbumSort.DEFAULT:
                     toolbar.getMenu().findItem(R.id.sort_album_default).setChecked(true);
                     break;
@@ -662,7 +662,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
                     break;
             }
 
-            toolbar.getMenu().findItem(R.id.sort_albums_ascending).setChecked(SortManager.getInstance().getArtistDetailAlbumsAscending());
+            toolbar.getMenu().findItem(R.id.sort_albums_ascending).setChecked(getAlbumsAscending());
         }
     }
 
