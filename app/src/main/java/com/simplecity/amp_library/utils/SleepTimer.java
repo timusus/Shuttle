@@ -55,9 +55,9 @@ public final class SleepTimer {
                             if (aLong == -1) {
                                 stop();
                             }
-                        })
-                        .onBackpressureLatest()
-                        .share());
+                        }))
+                .onBackpressureLatest()
+                .share();
     }
 
     public Observable<Long> getCurrentTimeObservable() {
