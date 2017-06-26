@@ -79,6 +79,8 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
+import static com.afollestad.aesthetic.Rx.distinctToMainThread;
+
 public abstract class BaseDetailFragment extends BaseFragment implements
         DetailView,
         Toolbar.OnMenuItemClickListener,
@@ -113,7 +115,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
 
-    protected CompositeSubscription subscriptions;
+    protected CompositeSubscription subscriptions = new CompositeSubscription();
 
     protected RequestManager requestManager;
 
@@ -183,9 +185,21 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
         loadBackgroundImage();
 
+        Aesthetic.get()
+                .colorPrimary()
+                .take(1)
+                .subscribe(primaryColor -> {
+                    toolbarLayout.setContentScrimColor(primaryColor);
+                    toolbarLayout.setBackgroundColor(primaryColor);
+                });
+
         aestheticDisposable = Aesthetic.get()
                 .colorPrimary()
-                .subscribe(primaryColor -> toolbarLayout.setContentScrimColor(primaryColor));
+                .compose(distinctToMainThread())
+                .subscribe(primaryColor -> {
+                    toolbarLayout.setContentScrimColor(primaryColor);
+                    toolbarLayout.setBackgroundColor(primaryColor);
+                });
 
         return rootView;
     }
@@ -193,8 +207,6 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     @Override
     public void onResume() {
         super.onResume();
-
-        subscriptions = new CompositeSubscription();
 
         detailPresenter.loadData();
 
@@ -208,7 +220,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     @Override
     public void onPause() {
 
-        subscriptions.unsubscribe();
+        subscriptions.clear();
 
         DrawerLockManager.getInstance().removeDrawerLock(this);
 

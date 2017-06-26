@@ -42,13 +42,25 @@ public class StatusBarView extends View {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
+        // Need to invalidate the colors as early as possible. When subscribing to the continuous observable
+        // below (subscription = ...), we're using distinctToMainThread(), which introduces a slight delay. During
+        // this delay, we see the original colors, which are then swapped once the emission is consumed.
+        // So, we'll just do a take(1), and since we're calling from the main thread, we don't need to worry
+        // about distinctToMainThread() for this call. This prevents the 'flickering' of colors.
+
+        Aesthetic.get()
+                .colorStatusBar()
+                .take(1)
+                .subscribe(
+                        ViewBackgroundAction.create(this), onErrorLogAndRethrow()
+                );
+
         bgSubscription = Aesthetic.get().colorStatusBar()
-                .compose(Rx.<Integer>distinctToMainThread())
+                .compose(Rx.distinctToMainThread())
                 .subscribe(
                         ViewBackgroundAction.create(this), onErrorLogAndRethrow()
                 );
     }
-
 
     @Override
     protected void onDetachedFromWindow() {

@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewCompat;
@@ -19,6 +20,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.afollestad.aesthetic.Aesthetic;
+import com.afollestad.aesthetic.ViewBackgroundAction;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
@@ -50,8 +53,12 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.disposables.CompositeDisposable;
 import test.com.androidnavigation.fragment.FragmentInfo;
 import test.com.multisheetview.ui.view.MultiSheetView;
+
+import static com.afollestad.aesthetic.Rx.distinctToMainThread;
+import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
 
 
 public class LibraryController extends BaseFragment implements
@@ -78,9 +85,14 @@ public class LibraryController extends BaseFragment implements
     @BindView(R.id.contextualToolbar)
     ContextualToolbar contextualToolbar;
 
+    @BindView(R.id.app_bar)
+    AppBarLayout appBarLayout;
+
     @Inject NavigationEventRelay navigationEventRelay;
 
     private int currentPage = 0;
+
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public static FragmentInfo fragmentInfo() {
         return new FragmentInfo(LibraryController.class, null, "LibraryController");
@@ -140,6 +152,18 @@ public class LibraryController extends BaseFragment implements
             }
         }, 1000);
 
+        Aesthetic.get()
+                .colorPrimary()
+                .take(1)
+                .subscribe(color -> ViewBackgroundAction.create(appBarLayout)
+                        .accept(color), onErrorLogAndRethrow());
+
+        compositeDisposable.add(Aesthetic.get()
+                .colorPrimary()
+                .compose(distinctToMainThread())
+                .subscribe(color -> ViewBackgroundAction.create(appBarLayout)
+                        .accept(color), onErrorLogAndRethrow()));
+
         return rootView;
     }
 
@@ -148,7 +172,7 @@ public class LibraryController extends BaseFragment implements
         super.onViewCreated(view, savedInstanceState);
 
         if (getActivity() instanceof ToolbarListener) {
-            ((ToolbarListener) getActivity()).toolbarAttached((Toolbar) view.findViewById(R.id.toolbar));
+            ((ToolbarListener) getActivity()).toolbarAttached(view.findViewById(R.id.toolbar));
         }
     }
 
@@ -159,6 +183,12 @@ public class LibraryController extends BaseFragment implements
         multiSheetEventRelay.sendEvent(new MultiSheetEventRelay.MultiSheetEvent(MultiSheetEventRelay.MultiSheetEvent.Action.SHOW_IF_HIDDEN, MultiSheetView.Sheet.NONE));
 
         navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.LIBRARY_SELECTED, null, false));
+    }
+
+    @Override
+    public void onDestroyView() {
+        compositeDisposable.clear();
+        super.onDestroyView();
     }
 
     @Override
@@ -214,6 +244,7 @@ public class LibraryController extends BaseFragment implements
         if (transitionView != null) {
             String transitionName = ViewCompat.getTransitionName(transitionView);
             transitions.add(new Pair<>(transitionView, transitionName));
+//            transitions.add(new Pair<>(toolbar, "toolbar"));
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                 Transition moveTransition = TransitionInflater.from(getContext()).inflateTransition(R.transition.image_transition);

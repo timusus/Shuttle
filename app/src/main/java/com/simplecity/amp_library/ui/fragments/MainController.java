@@ -49,12 +49,12 @@ public class MainController extends BaseNavigationController implements BackPres
 
     @Inject MultiSheetEventRelay multiSheetEventRelay;
 
-    private CompositeSubscription subscriptions = new CompositeSubscription();
-
     private Handler delayHandler;
 
     @BindView(R.id.multiSheetView)
     CustomMultiSheetView multiSheetView;
+
+    private CompositeSubscription subscriptions = new CompositeSubscription();
 
     public static MainController newInstance() {
         Bundle args = new Bundle();

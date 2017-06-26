@@ -17,13 +17,9 @@ import android.support.v4.util.Pair;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.f2prateek.rx.preferences2.RxSharedPreferences;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -72,9 +68,9 @@ public class Aesthetic {
   @SuppressLint("StaticFieldLeak")
   private static Aesthetic instance;
 
-  private final ArrayMap<String, List<ViewObservablePair>> backgroundSubscriberViews;
+//  private final ArrayMap<String, List<ViewObservablePair>> backgroundSubscriberViews;
   private final ArrayMap<String, Integer> lastActivityThemes;
-  private CompositeDisposable backgroundSubscriptions;
+//  private CompositeDisposable backgroundSubscriptions;
 
   private CompositeDisposable subs;
   private AppCompatActivity context;
@@ -89,7 +85,7 @@ public class Aesthetic {
     prefs = context.getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
     editor = prefs.edit();
     rxPrefs = RxSharedPreferences.create(prefs);
-    backgroundSubscriberViews = new ArrayMap<>(0);
+//    backgroundSubscriberViews = new ArrayMap<>(0);
     lastActivityThemes = new ArrayMap<>(2);
   }
 
@@ -157,11 +153,7 @@ public class Aesthetic {
     if (instance.subs != null) {
       instance.subs.clear();
     }
-    if (instance.backgroundSubscriptions != null) {
-      instance.backgroundSubscriptions.clear();
-    }
     if (activity.isFinishing()) {
-      instance.backgroundSubscriberViews.remove(activity.getClass().getName());
       if (instance.context != null
           && instance.context.getClass().getName().equals(activity.getClass().getName())) {
         instance.context = null;
@@ -181,8 +173,6 @@ public class Aesthetic {
       instance.subs.clear();
     }
     instance.subs = new CompositeDisposable();
-    subscribeBackgroundListeners();
-
     instance.subs.add(
         instance
             .colorPrimary()
@@ -266,41 +256,6 @@ public class Aesthetic {
     boolean firstTime = instance.prefs.getBoolean(KEY_FIRST_TIME, true);
     instance.editor.putBoolean(KEY_FIRST_TIME, false).commit();
     return firstTime;
-  }
-
-  private static void subscribeBackgroundListeners() {
-    if (instance.backgroundSubscriptions != null) {
-      instance.backgroundSubscriptions.clear();
-    }
-    instance.backgroundSubscriptions = new CompositeDisposable();
-    if (instance.backgroundSubscriberViews.size() > 0) {
-      List<ViewObservablePair> pairs =
-          instance.backgroundSubscriberViews.get(instance.context.getClass().getName());
-      if (pairs != null) {
-        for (ViewObservablePair pair : pairs) {
-          instance.backgroundSubscriptions.add(
-              pair.observable()
-                  .compose(Rx.<Integer>distinctToMainThread())
-                  .subscribeWith(ViewBackgroundSubscriber.create(pair.view())));
-        }
-      }
-    }
-  }
-
-  void addBackgroundSubscriber(@NonNull View view, @NonNull Observable<Integer> colorObservable) {
-    List<ViewObservablePair> subscribers =
-        backgroundSubscriberViews.get(instance.context.getClass().getName());
-    if (subscribers == null) {
-      subscribers = new ArrayList<>(1);
-      backgroundSubscriberViews.put(instance.context.getClass().getName(), subscribers);
-    }
-    subscribers.add(ViewObservablePair.create(view, colorObservable));
-    if (isResumed) {
-      instance.backgroundSubscriptions.add(
-          colorObservable
-              .compose(Rx.<Integer>distinctToMainThread())
-              .subscribeWith(ViewBackgroundSubscriber.create(view)));
-    }
   }
 
   private void invalidateStatusBar() {

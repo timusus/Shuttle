@@ -12,6 +12,8 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.afollestad.aesthetic.Aesthetic;
+import com.afollestad.aesthetic.ViewBackgroundAction;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.interfaces.Breadcrumb;
 import com.simplecity.amp_library.interfaces.BreadcrumbListener;
@@ -21,6 +23,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import io.reactivex.disposables.Disposable;
+
+import static com.afollestad.aesthetic.Rx.distinctToMainThread;
+import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
 
 /**
  * A view that holds the navigation breadcrumb pattern
@@ -32,6 +39,8 @@ public class BreadcrumbView extends RelativeLayout implements Breadcrumb, OnClic
     private int mTextColor = -1;
 
     private List<BreadcrumbListener> mBreadcrumbListeners;
+
+    private Disposable aestheticDisposable;
 
     /**
      * Constructor of <code>BreadcrumbView</code>
@@ -84,6 +93,29 @@ public class BreadcrumbView extends RelativeLayout implements Breadcrumb, OnClic
         this.mScrollView = (HorizontalScrollView) findViewById(R.id.breadcrumb_scrollview);
         this.mBreadcrumbBar = (ViewGroup) findViewById(R.id.breadcrumb);
 
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
+        Aesthetic.get()
+                .colorPrimary()
+                .take(1)
+                .subscribe(color -> ViewBackgroundAction.create(this)
+                        .accept(color), onErrorLogAndRethrow());
+
+        aestheticDisposable = (Aesthetic.get()
+                .colorPrimary()
+                .compose(distinctToMainThread())
+                .subscribe(color -> ViewBackgroundAction.create(this)
+                        .accept(color), onErrorLogAndRethrow()));
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        aestheticDisposable.dispose();
+        super.onDetachedFromWindow();
     }
 
     @Override

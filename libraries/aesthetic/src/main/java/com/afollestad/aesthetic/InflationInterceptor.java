@@ -290,24 +290,6 @@ final class InflationInterceptor implements LayoutInflaterFactory {
         }
       }
     }
-
-    if (view != null) {
-      if (viewBackgroundRes != 0) {
-        Observable<Integer> obs;
-        obs = ViewUtil.getObservableForResId(view.getContext(), viewBackgroundRes, null);
-        if (obs != null) {
-          Aesthetic.get().addBackgroundSubscriber(view, obs);
-        }
-      }
-
-      String idName = "";
-      try {
-        idName = context.getResources().getResourceName(view.getId()) + " ";
-      } catch (Throwable ignored) {
-      }
-      log("Inflated -> %s%s", idName, view.getClass().getName());
-    }
-
     return view;
   }
 }

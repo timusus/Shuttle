@@ -1,6 +1,7 @@
 package com.simplecity.amp_library.ui.fragments;
 
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.afollestad.aesthetic.Aesthetic;
+import com.afollestad.aesthetic.ViewBackgroundAction;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.IntStream;
 import com.annimon.stream.Stream;
@@ -48,11 +51,15 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.disposables.CompositeDisposable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import test.com.androidnavigation.fragment.BackPressListener;
+
+import static com.afollestad.aesthetic.Rx.distinctToMainThread;
+import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
 
 public class FolderFragment extends BaseFragment implements
         BreadcrumbListener,
@@ -80,6 +87,11 @@ public class FolderFragment extends BaseFragment implements
 
     @BindView(R.id.contextualToolbar)
     ContextualToolbar contextualToolbar;
+
+    @BindView(R.id.app_bar)
+    AppBarLayout appBarLayout;
+
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     boolean isInActionMode = false;
 
@@ -152,6 +164,18 @@ public class FolderFragment extends BaseFragment implements
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
 
+        Aesthetic.get()
+                .colorPrimary()
+                .take(1)
+                .subscribe(color -> ViewBackgroundAction.create(appBarLayout)
+                        .accept(color), onErrorLogAndRethrow());
+
+        compositeDisposable.add(Aesthetic.get()
+                .colorPrimary()
+                .compose(distinctToMainThread())
+                .subscribe(color -> ViewBackgroundAction.create(appBarLayout)
+                        .accept(color), onErrorLogAndRethrow()));
+
         return rootView;
     }
 
@@ -194,14 +218,8 @@ public class FolderFragment extends BaseFragment implements
 
     @Override
     public void onDestroyView() {
-
+        compositeDisposable.clear();
         super.onDestroyView();
-    }
-
-    @Override
-    public void onDestroy() {
-
-        super.onDestroy();
     }
 
     @Override

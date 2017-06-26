@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.Util;
+import com.afollestad.aesthetic.ViewBackgroundAction;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -35,6 +36,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import test.com.multisheetview.ui.view.MultiSheetView;
 
 import static com.afollestad.aesthetic.Rx.distinctToMainThread;
+import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
 
 public class MiniPlayerFragment extends BaseFragment {
 
@@ -105,12 +107,13 @@ public class MiniPlayerFragment extends BaseFragment {
 
         disposable.add(Aesthetic.get()
                 .colorPrimary()
-                .map(color -> !Util.isColorLight(color))
                 .compose(distinctToMainThread())
-                .subscribe(isDark -> {
+                .subscribe(color -> {
+                    boolean isDark = !Util.isColorLight(color);
                     trackName.setTextColor(isDark ? Color.WHITE : Color.BLACK);
                     artistName.setTextColor(isDark ? Color.WHITE : Color.BLACK);
-                }));
+                    ViewBackgroundAction.create(rootView).accept(color);
+                }, onErrorLogAndRethrow()));
 
         return rootView;
     }
