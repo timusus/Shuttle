@@ -282,7 +282,8 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder, Song>
     @Override
     public boolean areContentsEqual(Object other) {
         if (other instanceof SongView) {
-            return this.song.equals(((SongView) other).song) && Arrays.equals(prefix, ((SongView) other).prefix);
+            return this.song.equals(((SongView) other).song)
+                    && Arrays.equals(prefix, ((SongView) other).prefix);
         }
         return false;
     }
@@ -299,12 +300,27 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder, Song>
 
         SongView songView = (SongView) o;
 
+        if (editable != songView.editable) return false;
+        if (showAlbumArt != songView.showAlbumArt) return false;
+        if (showPlayCount != songView.showPlayCount) return false;
+        if (showTrackNumber != songView.showTrackNumber) return false;
+        if (showArtistName != songView.showArtistName) return false;
+        if (showAlbumName != songView.showAlbumName) return false;
+        if (isCurrentTrack != songView.isCurrentTrack) return false;
         return song != null ? song.equals(songView.song) : songView.song == null;
     }
 
     @Override
     public int hashCode() {
-        return song != null ? song.hashCode() : 0;
+        int result = song != null ? song.hashCode() : 0;
+        result = 31 * result + (editable ? 1 : 0);
+        result = 31 * result + (showAlbumArt ? 1 : 0);
+        result = 31 * result + (showPlayCount ? 1 : 0);
+        result = 31 * result + (showTrackNumber ? 1 : 0);
+        result = 31 * result + (showArtistName ? 1 : 0);
+        result = 31 * result + (showAlbumName ? 1 : 0);
+        result = 31 * result + (isCurrentTrack ? 1 : 0);
+        return result;
     }
 
     public static class ViewHolder extends BaseViewHolder<SongView> {
