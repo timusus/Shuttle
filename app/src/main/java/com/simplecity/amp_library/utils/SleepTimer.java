@@ -24,7 +24,7 @@ public final class SleepTimer {
 
     private boolean isActive;
 
-    public boolean playToEnd = true;
+    public boolean playToEnd = false;
 
     private int timeRemaining = 0;
 
@@ -92,7 +92,7 @@ public final class SleepTimer {
             return new MaterialDialog.Builder(context)
                     .title(R.string.sleep_timer)
                     .items(R.array.timerValues)
-                    .checkBoxPromptRes(R.string.sleep_timer_play_to_end, true, (compoundButton, b) -> playToEnd = b)
+                    .checkBoxPromptRes(R.string.sleep_timer_play_to_end, false, (compoundButton, b) -> playToEnd = b)
                     .itemsCallback((materialDialog, view, i, charSequence) -> {
                         switch (i) {
                             case 0:
