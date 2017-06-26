@@ -30,8 +30,9 @@ import com.simplecity.amp_library.ui.fragments.BaseFragment;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.ui.views.CircleImageView;
 import com.simplecity.amp_library.ui.views.PlayerViewAdapter;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
-import com.simplecityapps.recycler_adapter.recyclerview.ChildAttachStateChangeListener;
+import com.simplecity.amp_library.utils.SleepTimer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.disposables.Disposable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.subscriptions.CompositeSubscription;
 
 public class DrawerFragment extends BaseFragment implements
         DrawerView,
@@ -93,7 +96,12 @@ public class DrawerFragment extends BaseFragment implements
     private Drawable backgroundPlaceholder;
 
     private Disposable aestheticDisposable;
+
+    private CompositeSubscription subscriptions = new CompositeSubscription();
+
     private Unbinder unbinder;
+
+    private List<Parent<DrawerChild>> drawerParents;
 
     public DrawerFragment() {
     }
@@ -125,7 +133,7 @@ public class DrawerFragment extends BaseFragment implements
 
         playlistDrawerParent = DrawerParent.playlistsParent;
 
-        List<Parent<DrawerChild>> drawerParents = new ArrayList<>();
+        drawerParents = new ArrayList<>();
         drawerParents.add(DrawerParent.libraryParent);
         drawerParents.add(DrawerParent.folderParent);
         drawerParents.add(playlistDrawerParent);
@@ -142,7 +150,6 @@ public class DrawerFragment extends BaseFragment implements
         adapter = new DrawerAdapter(drawerParents);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
-        recyclerView.addOnChildAttachStateChangeListener(new ChildAttachStateChangeListener(recyclerView));
 
         setDrawerItemSelected(selectedDrawerParent);
 
@@ -167,14 +174,38 @@ public class DrawerFragment extends BaseFragment implements
                 .subscribe(color -> backgroundPlaceholder.setColorFilter(color, PorterDuff.Mode.MULTIPLY));
 
         playerPresenter.updateTrackInfo();
+
+        subscriptions.add(SleepTimer.getInstance().getCurrentTimeObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aLong -> Stream.of(drawerParents)
+                        .forEachIndexed((i, drawerParent) -> {
+                            if (aLong > 0 && (drawerParent instanceof DrawerParent) && ((DrawerParent) drawerParent).type == DrawerParent.Type.SLEEP_TIMER) {
+                                ((DrawerParent) drawerParent).setTimeRemaining(aLong);
+                                adapter.notifyParentChanged(i);
+                            }
+                        }), throwable -> LogUtils.logException("DrawerParent error observing sleep time", throwable)));
+
+        subscriptions.add(SleepTimer.getInstance().getTimerActiveSubject()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(active -> Stream.of(drawerParents)
+                                .forEachIndexed((i, drawerParent) -> {
+                                    if ((drawerParent instanceof DrawerParent) && ((DrawerParent) drawerParent).type == DrawerParent.Type.SLEEP_TIMER) {
+                                        ((DrawerParent) drawerParent).setTimerActive(active);
+                                        adapter.notifyParentChanged(i);
+                                    }
+                                }),
+                        throwable -> LogUtils.logException("DrawerParent error observing sleep state", throwable))
+        );
     }
 
     @Override
     public void onPause() {
         aestheticDisposable.dispose();
+
+        subscriptions.clear();
+
         super.onPause();
     }
-
 
     @Override
     public void onDestroyView() {

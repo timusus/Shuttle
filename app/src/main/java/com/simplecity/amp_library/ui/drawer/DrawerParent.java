@@ -17,20 +17,15 @@ import com.afollestad.aesthetic.Aesthetic;
 import com.bignerdranch.expandablerecyclerview.ParentViewHolder;
 import com.bignerdranch.expandablerecyclerview.model.Parent;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
-import com.simplecity.amp_library.utils.SleepTimer;
 import com.simplecity.amp_library.utils.StringUtils;
 import com.simplecity.amp_library.utils.TypefaceManager;
-import com.simplecityapps.recycler_adapter.recyclerview.AttachStateViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.CompositeSubscription;
 
 public class DrawerParent implements Parent<DrawerChild> {
 
@@ -80,6 +75,9 @@ public class DrawerParent implements Parent<DrawerChild> {
 
     private boolean isSelected;
 
+    private boolean timerActive = false;
+    private long timeRemaining = 0L;
+
     DrawerParent(@DrawerParent.Type int type, int titleResId, int iconResId, @Nullable NavigationEventRelay.NavigationEvent navigationEvent, boolean selectable) {
         this.type = type;
         this.titleResId = titleResId;
@@ -100,6 +98,14 @@ public class DrawerParent implements Parent<DrawerChild> {
 
     public void setSelected(boolean selected) {
         isSelected = selected;
+    }
+
+    public void setTimerActive(boolean timerActive) {
+        this.timerActive = timerActive;
+    }
+
+    public void setTimeRemaining(long timeRemaining) {
+        this.timeRemaining = timeRemaining;
     }
 
     void onClick() {
@@ -153,13 +159,18 @@ public class DrawerParent implements Parent<DrawerChild> {
             holder.itemView.setAlpha(getChildList().isEmpty() ? 0.4f : 1.0f);
             holder.itemView.setEnabled(!getChildList().isEmpty());
         }
+
+        if (type == Type.SLEEP_TIMER) {
+            holder.timeRemaining.setVisibility(timerActive ? View.VISIBLE : View.GONE);
+            holder.timeRemaining.setText(StringUtils.makeTimeString(holder.itemView.getContext(), timeRemaining));
+        } else {
+            holder.timeRemaining.setVisibility(View.GONE);
+        }
     }
 
-    static class ParentHolder extends ParentViewHolder implements AttachStateViewHolder {
+    static class ParentHolder extends ParentViewHolder {
 
         private DrawerParent drawerParent;
-
-        private CompositeSubscription subscriptions = new CompositeSubscription();
 
         @BindView(R.id.icon)
         ImageView icon;
@@ -207,32 +218,6 @@ public class DrawerParent implements Parent<DrawerChild> {
             super.onClick(v);
 
             drawerParent.onClick();
-        }
-
-        @Override
-        public void onAttachedToWindow() {
-            if (drawerParent.type == Type.SLEEP_TIMER) {
-                subscriptions.add(SleepTimer.getInstance().getCurrentTimeObservable()
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(aLong -> {
-                            if (aLong > 0) {
-                                timeRemaining.setText(StringUtils.makeTimeString(itemView.getContext(), aLong));
-                            }
-                        }, throwable -> LogUtils.logException("DrawerParent error observing sleep time", throwable)));
-
-                subscriptions.add(SleepTimer.getInstance().getTimerActiveSubject()
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(active -> timeRemaining.setVisibility(active ? View.VISIBLE : View.GONE),
-                                throwable -> LogUtils.logException("DrawerParent error observing sleep state", throwable))
-                );
-            }
-        }
-
-        @Override
-        public void onDetachedFromWindow() {
-            if (subscriptions != null) {
-                subscriptions.clear();
-            }
         }
     }
 }
