@@ -53,6 +53,12 @@ public abstract class MultiItemView<VH extends MultiItemView.ViewHolder, T> exte
         @BindView(R.id.line_two)
         public TextView lineTwo;
 
+        @Nullable @BindView(R.id.albumCount)
+        public TextView albumCount;
+
+        @Nullable @BindView(R.id.trackCount)
+        public TextView trackCount;
+
         @BindView(R.id.image)
         public ImageView imageOne;
 

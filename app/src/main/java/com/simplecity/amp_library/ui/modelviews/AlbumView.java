@@ -9,6 +9,7 @@ import com.simplecity.amp_library.format.PrefixHighlighter;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
+import com.simplecity.amp_library.utils.StringUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,9 +27,6 @@ import static com.simplecity.amp_library.utils.SortManager.AlbumSort.NAME;
 import static com.simplecity.amp_library.utils.SortManager.AlbumSort.YEAR;
 import static com.simplecity.amp_library.utils.SortManager.getInstance;
 import static com.simplecity.amp_library.utils.StringUtils.keyFor;
-import static com.simplecity.amp_library.utils.StringUtils.makeAlbumAndSongsLabel;
-import static com.simplecity.amp_library.utils.StringUtils.makeYearLabel;
-import static java.lang.String.format;
 import static java.lang.String.valueOf;
 
 public class AlbumView extends MultiItemView<AlbumView.ViewHolder, Album> implements SectionedView {
@@ -118,16 +116,25 @@ public class AlbumView extends MultiItemView<AlbumView.ViewHolder, Album> implem
 
         holder.lineOne.setText(album.name);
 
-        String albumAndSongsLabel = makeAlbumAndSongsLabel(holder.itemView.getContext(), -1, album.numSongs);
+        holder.lineTwo.setVisibility(View.VISIBLE);
+
+        if (holder.albumCount != null) {
+            holder.albumCount.setVisibility(View.GONE);
+        }
+        if (holder.trackCount != null) {
+            holder.trackCount.setVisibility(View.GONE);
+        }
 
         if (showYear) {
-            holder.lineTwo.setText(makeYearLabel(holder.itemView.getContext(), album.year));
+            holder.lineTwo.setText(StringUtils.makeYearLabel(holder.itemView.getContext(), album.year));
         } else {
-            holder.lineTwo.setText(format("%s | %s", album.albumArtistName, albumAndSongsLabel));
+            holder.lineTwo.setText(album.albumArtistName);
         }
 
         if (getViewType() == ALBUM_PALETTE) {
-            holder.bottomContainer.setBackgroundColor(0x20000000);
+            if (holder.bottomContainer != null) {
+                holder.bottomContainer.setBackgroundColor(0x20000000);
+            }
         }
 
         requestManager.load(album)

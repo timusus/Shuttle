@@ -71,6 +71,13 @@ public class SuggestedSongView extends MultiItemView<SuggestedSongView.ViewHolde
 
         holder.lineOne.setText(song.name);
         holder.lineTwo.setText(song.artistName);
+        holder.lineTwo.setVisibility(View.VISIBLE);
+        if (holder.albumCount != null) {
+            holder.albumCount.setVisibility(View.GONE);
+        }
+        if (holder.trackCount != null) {
+            holder.trackCount.setVisibility(View.GONE);
+        }
 
         requestManager.load(song)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

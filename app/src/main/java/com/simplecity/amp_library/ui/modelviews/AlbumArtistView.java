@@ -97,10 +97,21 @@ public class AlbumArtistView extends MultiItemView<AlbumArtistView.ViewHolder, A
         super.bindView(holder);
 
         holder.lineOne.setText(albumArtist.name);
-        holder.lineTwo.setText(albumArtist.getNumAlbumsSongsLabel());
+
+        if (holder.trackCount != null) {
+            holder.lineTwo.setVisibility(View.GONE);
+            holder.trackCount.setVisibility(View.VISIBLE);
+            holder.trackCount.setText(String.valueOf(albumArtist.getNumSongs()));
+        }
+        if (holder.albumCount != null) {
+            holder.albumCount.setVisibility(View.VISIBLE);
+            holder.albumCount.setText(String.valueOf(albumArtist.getNumAlbums()));
+        }
 
         if (getViewType() == ViewType.ARTIST_PALETTE) {
-            holder.bottomContainer.setBackgroundColor(0x20000000);
+            if (holder.bottomContainer != null) {
+                holder.bottomContainer.setBackgroundColor(0x20000000);
+            }
         }
 
         requestManager.load(albumArtist)
