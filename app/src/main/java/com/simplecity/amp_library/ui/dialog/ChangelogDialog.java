@@ -15,8 +15,6 @@ import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ViewUtils;
 
-import static com.afollestad.aesthetic.Rx.distinctToMainThread;
-
 public class ChangelogDialog {
 
     private ChangelogDialog() {
@@ -48,14 +46,12 @@ public class ChangelogDialog {
         Aesthetic.get()
                 .isDark()
                 .take(1)
-                .compose(distinctToMainThread())
-                .subscribe(isDark -> webView.loadUrl(isDark ? "file:///android_asset/web/info.html" : "file:///android_asset/web/info_dark.html"));
+                .subscribe(isDark -> webView.loadUrl(isDark ? "file:///android_asset/web/info_dark.html" : "file:///android_asset/web/info.html"));
 
         return DialogUtils.getBuilder(context)
                 .title(R.string.pref_title_changelog)
                 .customView(customView, false)
                 .negativeText(R.string.close)
                 .build();
-
     }
 }
