@@ -258,10 +258,26 @@ public class TaggerDialog extends DialogFragment {
             } catch (UnsupportedOperationException ignored) {
 
             }
-            disc = tag.getFirst(FieldKey.DISC_NO);
-            discTotal = tag.getFirst(FieldKey.DISC_TOTAL);
-            lyrics = tag.getFirst(FieldKey.LYRICS);
-            comment = tag.getFirst(FieldKey.COMMENT);
+            try {
+                disc = tag.getFirst(FieldKey.DISC_NO);
+            } catch (UnsupportedOperationException ignored) {
+
+            }
+            try {
+                discTotal = tag.getFirst(FieldKey.DISC_TOTAL);
+            } catch (UnsupportedOperationException ignored) {
+
+            }
+            try {
+                lyrics = tag.getFirst(FieldKey.LYRICS);
+            } catch (UnsupportedOperationException ignored) {
+
+            }
+            try {
+                comment = tag.getFirst(FieldKey.COMMENT);
+            } catch (UnsupportedOperationException ignored) {
+
+            }
 
         } catch (IOException | InvalidAudioFrameException | TagException | ReadOnlyFileException | CannotReadException e) {
             Log.e(TAG, "Failed to read tags. " + e.toString());
@@ -327,7 +343,9 @@ public class TaggerDialog extends DialogFragment {
         CheckDocumentPermissionsTask task = new CheckDocumentPermissionsTask(
                 originalSongPaths, documentFiles, hasPermission -> {
 
-            progressDialog.dismiss();
+            if (isResumed() && progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
 
             if (hasPermission) {
 
