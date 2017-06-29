@@ -1,6 +1,5 @@
 package com.afollestad.aesthetic;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -24,13 +23,11 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import java.util.ArrayList;
 
 /** @author Aidan Follestad (afollestad) */
 @SuppressWarnings("WeakerAccess")
@@ -180,18 +177,11 @@ public final class Util {
     return Color.argb(alpha, red, green, blue);
   }
 
-  static void setOverflowButtonColor(@NonNull final Toolbar toolbar, final @ColorInt int color) {
-    @SuppressLint("PrivateResource")
-    final String overflowDescription =
-        toolbar.getResources().getString(R.string.abc_action_menu_overflow_description);
-    final ArrayList<View> outViews = new ArrayList<>();
-    toolbar.findViewsWithText(
-        outViews, overflowDescription, View.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
-    if (outViews.isEmpty()) {
-      return;
+  public static void setOverflowButtonColor(@NonNull final Toolbar toolbar, final @ColorInt int color) {
+    Drawable overflowDrawable = toolbar.getOverflowIcon();
+    if (overflowDrawable != null) {
+      toolbar.setOverflowIcon(TintHelper.createTintedDrawable(overflowDrawable, color));
     }
-    final AppCompatImageView overflow = (AppCompatImageView) outViews.get(0);
-    overflow.setImageDrawable(TintHelper.createTintedDrawable(overflow.getDrawable(), color));
   }
 
   @ColorInt
