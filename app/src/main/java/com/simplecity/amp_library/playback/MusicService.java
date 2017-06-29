@@ -1966,7 +1966,11 @@ public class MusicService extends Service {
                 startForegroundImpl(NOTIFICATION_ID, buildNotification());
                 break;
             case NOTIFY_MODE_BACKGROUND:
-                mNotificationManager.notify(NOTIFICATION_ID, buildNotification());
+                try {
+                    mNotificationManager.notify(NOTIFICATION_ID, buildNotification());
+                } catch (ConcurrentModificationException e) {
+                    LogUtils.logException("MusicService: Exception while attempting to show notification", e);
+                }
                 stopForegroundImpl(false, false);
                 break;
             case NOTIFY_MODE_NONE:
