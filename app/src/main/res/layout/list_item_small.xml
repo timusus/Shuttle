@@ -6,8 +6,6 @@
     android:descendantFocusability="blocksDescendants"
     android:foreground="?attr/list_selector"
     android:paddingBottom="4dp"
-    android:paddingLeft="2dp"
-    android:paddingRight="2dp"
     android:paddingTop="4dp">
 
     <ImageView
@@ -15,6 +13,8 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_centerVertical="true"
+        android:layout_marginLeft="2dp"
+        android:layout_marginStart="2dp"
         android:scaleType="centerCrop"/>
 
     <LinearLayout
@@ -49,17 +49,7 @@
             android:textSize="14sp"/>
     </LinearLayout>
 
-    <com.simplecity.amp_library.ui.views.OverflowButton
-        android:id="@+id/btn_overflow"
-        android:layout_width="48dp"
-        android:layout_height="56dp"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="0dp"
-        android:alpha="0.8"
-        android:background="@null"
-        android:paddingBottom="16dp"
-        android:paddingLeft="16dp"
-        android:paddingTop="16dp"/>
+    <include layout="@layout/overflow_button"/>
 
 </android.support.design.internal.ForegroundLinearLayout>
 
