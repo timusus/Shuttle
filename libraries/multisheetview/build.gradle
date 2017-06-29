@@ -1,12 +1,22 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath gradlePlugins.retroLambda
+    }
+}
+
 apply plugin: 'com.android.library'
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 25
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
         versionCode 1
         versionName "1.0"
 
@@ -27,9 +37,8 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile 'com.android.support:appcompat-v7:25.3.1'
-
-    compile 'com.android.support:design:25.3.1'
+    compile libs.appcompat
+    compile libs.design
 
     compile 'com.sothree.slidinguppanel:library:3.3.1'
 }

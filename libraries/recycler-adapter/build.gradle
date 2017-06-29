@@ -1,4 +1,14 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath gradlePlugins.retroLambda
+    }
+}
+
 apply plugin: 'com.android.library'
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion versions.compileSdk

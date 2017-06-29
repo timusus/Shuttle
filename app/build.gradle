@@ -5,11 +5,13 @@ buildscript {
         maven { url "https://jitpack.io" }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
         maven { url "https://maven.google.com" }
+        mavenCentral()
     }
     dependencies {
         classpath gradlePlugins.android
         classpath gradlePlugins.dexcount
         classpath gradlePlugins.fabric
+        classpath gradlePlugins.retroLambda
     }
 }
 
@@ -17,6 +19,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'io.fabric'
 apply plugin: 'com.github.triplet.play'
+apply plugin: 'me.tatarka.retrolambda'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }

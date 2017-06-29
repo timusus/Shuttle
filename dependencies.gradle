@@ -19,12 +19,13 @@ ext.versions = [
         // Plugin versions
         // /////////////////////////////////////////////////////////////////////////
 
-        androidGradlePlugin           : "3.0.0-alpha4",
-        dexcountGradlePlugin          : "0.7.0-SNAPSHOT",
+        androidGradlePlugin           : "2.3.3",
+        dexcountGradlePlugin          : "0.7.1",
         fabricGradlePlugin            : "1.+",
         googleServicesPlugin          : "3.0.0",
         playPublisher                 : "1.2.0",
         gradleVersions                : "0.15.0",
+        retroLambda                   : "3.6.1",
 
         // //////////////////////////////////////////////////////////////////////////
         // Google lib versions
@@ -104,7 +105,8 @@ ext.gradlePlugins = [
         fabric        : "io.fabric.tools:gradle:$versions.fabricGradlePlugin",
         googleServices: "com.google.gms:google-services:$versions.googleServicesPlugin",
         playPublisher : "com.github.triplet.gradle:play-publisher:$versions.playPublisher",
-        gradleVersions: "com.github.ben-manes:gradle-versions-plugin:$versions.gradleVersions"
+        gradleVersions: "com.github.ben-manes:gradle-versions-plugin:$versions.gradleVersions",
+        retroLambda   : "me.tatarka:gradle-retrolambda:$versions.retroLambda"
 ]
 
 ext.libs = [

@@ -100,3 +100,7 @@
 # Hide an annoying compilation warning
 # http://stackoverflow.com/questions/3308010/what-is-the-ignoring-innerclasses-attribute-warning-output-during-compilation
 -keepattributes EnclosingMethod
+
+#Retrolambda
+-dontwarn java.lang.invoke.*
+-dontwarn **$$Lambda$*
