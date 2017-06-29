@@ -2079,8 +2079,8 @@ public class MusicService extends Service {
                                 bigContentView.setImageViewBitmap(R.id.icon, resource);
                             }
                             mNotificationManager.notify(NOTIFICATION_ID, mNotification);
-                        } catch (NullPointerException e) {
-                            Log.e(TAG, "Exception while attempting to update notification with glide image: " + e);
+                        } catch (NullPointerException | ConcurrentModificationException e) {
+                            LogUtils.logException("MusicService: Exception while attempting to update notification with glide image.", e);
                         }
                     }
 
