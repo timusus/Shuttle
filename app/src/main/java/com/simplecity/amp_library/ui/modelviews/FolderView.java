@@ -16,7 +16,10 @@ import com.simplecity.amp_library.interfaces.FileType;
 import com.simplecity.amp_library.model.BaseFileObject;
 import com.simplecity.amp_library.model.FileObject;
 import com.simplecity.amp_library.model.FolderObject;
+import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.ui.views.CircleImageView;
+import com.simplecity.amp_library.utils.SettingsManager;
+import com.simplecity.amp_library.utils.StringUtils;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 
 import java.lang.ref.WeakReference;
@@ -24,27 +27,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-import static com.simplecity.amp_library.R.drawable.ic_folder_closed_white;
-import static com.simplecity.amp_library.R.drawable.ic_folder_open_white;
-import static com.simplecity.amp_library.R.drawable.ic_headphones_white;
-import static com.simplecity.amp_library.R.id;
-import static com.simplecity.amp_library.R.id.btn_overflow;
-import static com.simplecity.amp_library.R.id.checkbox;
-import static com.simplecity.amp_library.R.id.image;
-import static com.simplecity.amp_library.R.id.line_four;
-import static com.simplecity.amp_library.R.id.line_one;
-import static com.simplecity.amp_library.R.id.line_three;
-import static com.simplecity.amp_library.R.id.line_two;
-import static com.simplecity.amp_library.R.string.parent_folder;
-import static com.simplecity.amp_library.interfaces.FileType.FILE;
-import static com.simplecity.amp_library.interfaces.FileType.PARENT;
-import static com.simplecity.amp_library.ui.adapters.ViewType.FOLDER;
-import static com.simplecity.amp_library.utils.SettingsManager.getInstance;
-import static com.simplecity.amp_library.utils.StringUtils.makeSubfoldersLabel;
-import static java.lang.String.format;
 
 public class FolderView extends BaseSelectableViewModel<FolderView.ViewHolder, BaseFileObject> {
 
@@ -103,7 +85,7 @@ public class FolderView extends BaseSelectableViewModel<FolderView.ViewHolder, B
 
     @Override
     public int getViewType() {
-        return FOLDER;
+        return ViewType.FOLDER;
     }
 
     @Override
@@ -115,49 +97,49 @@ public class FolderView extends BaseSelectableViewModel<FolderView.ViewHolder, B
     public void bindView(ViewHolder holder) {
         super.bindView(holder);
 
-        if (baseFileObject instanceof FileObject && getInstance().getFolderBrowserShowFileNames()) {
-            holder.lineFour.setText(format("%s.%s", ((FileObject) baseFileObject).name, ((FileObject) baseFileObject).extension));
-            holder.lineFour.setVisibility(VISIBLE);
-            holder.textContainer.setVisibility(GONE);
+        if (baseFileObject instanceof FileObject && SettingsManager.getInstance().getFolderBrowserShowFileNames()) {
+            holder.lineFour.setText(String.format("%s.%s", ((FileObject) baseFileObject).name, ((FileObject) baseFileObject).extension));
+            holder.lineFour.setVisibility(View.VISIBLE);
+            holder.textContainer.setVisibility(View.GONE);
         } else {
-            holder.lineFour.setVisibility(GONE);
-            holder.textContainer.setVisibility(VISIBLE);
+            holder.lineFour.setVisibility(View.GONE);
+            holder.textContainer.setVisibility(View.VISIBLE);
         }
 
         holder.lineThree.setText(null);
 
         switch (baseFileObject.fileType) {
-            case PARENT:
+            case FileType.PARENT:
                 holder.imageView.setImageDrawable(holder.parentFolderDrawable);
-                holder.lineTwo.setText(holder.itemView.getContext().getString(parent_folder));
-                holder.overflow.setVisibility(GONE);
-                holder.lineThree.setVisibility(GONE);
+                holder.lineTwo.setText(holder.itemView.getContext().getString(R.string.parent_folder));
+                holder.overflow.setVisibility(View.GONE);
+                holder.lineThree.setVisibility(View.GONE);
                 holder.lineOne.setText(baseFileObject.name);
                 break;
             case FileType.FOLDER:
-                holder.overflow.setVisibility(VISIBLE);
+                holder.overflow.setVisibility(View.VISIBLE);
                 holder.imageView.setImageDrawable(holder.folderDrawable);
-                holder.lineTwo.setText(makeSubfoldersLabel(holder.itemView.getContext(), ((FolderObject) baseFileObject).folderCount, ((FolderObject) baseFileObject).fileCount));
-                holder.lineThree.setVisibility(GONE);
+                holder.lineTwo.setText(StringUtils.makeSubfoldersLabel(holder.itemView.getContext(), ((FolderObject) baseFileObject).folderCount, ((FolderObject) baseFileObject).fileCount));
+                holder.lineThree.setVisibility(View.GONE);
                 holder.lineOne.setText(baseFileObject.name);
                 break;
-            case FILE:
-                holder.overflow.setVisibility(VISIBLE);
+            case FileType.FILE:
+                holder.overflow.setVisibility(View.VISIBLE);
                 holder.imageView.setImageDrawable(holder.fileDrawable);
-                holder.lineThree.setVisibility(VISIBLE);
+                holder.lineThree.setVisibility(View.VISIBLE);
                 holder.lineOne.setText(((FileObject) baseFileObject).tagInfo.trackName);
-                holder.lineTwo.setText(format("%s - %s", ((FileObject) baseFileObject).tagInfo.artistName, ((FileObject) baseFileObject).tagInfo.albumName));
+                holder.lineTwo.setText(String.format("%s - %s", ((FileObject) baseFileObject).tagInfo.artistName, ((FileObject) baseFileObject).tagInfo.albumName));
                 DurationTask durationTask = new DurationTask(holder.lineThree, (FileObject) baseFileObject);
                 durationTask.execute();
                 break;
         }
 
         if (showCheckboxes && baseFileObject.fileType == FileType.FOLDER) {
-            holder.checkBox.setVisibility(VISIBLE);
-            holder.imageView.setVisibility(GONE);
+            holder.checkBox.setVisibility(View.VISIBLE);
+            holder.imageView.setVisibility(View.GONE);
         } else {
-            holder.checkBox.setVisibility(GONE);
-            holder.imageView.setVisibility(VISIBLE);
+            holder.checkBox.setVisibility(View.GONE);
+            holder.imageView.setVisibility(View.VISIBLE);
         }
 
         holder.checkBox.setChecked(isSelected());
@@ -168,21 +150,21 @@ public class FolderView extends BaseSelectableViewModel<FolderView.ViewHolder, B
     public void bindView(ViewHolder holder, int position, List payloads) {
         super.bindView(holder, position, payloads);
 
-        if (baseFileObject instanceof FileObject && getInstance().getFolderBrowserShowFileNames()) {
-            holder.lineFour.setText(format("%s.%s", ((FileObject) baseFileObject).name, ((FileObject) baseFileObject).extension));
-            holder.lineFour.setVisibility(VISIBLE);
-            holder.textContainer.setVisibility(GONE);
+        if (baseFileObject instanceof FileObject && SettingsManager.getInstance().getFolderBrowserShowFileNames()) {
+            holder.lineFour.setText(String.format("%s.%s", ((FileObject) baseFileObject).name, ((FileObject) baseFileObject).extension));
+            holder.lineFour.setVisibility(View.VISIBLE);
+            holder.textContainer.setVisibility(View.GONE);
         } else {
-            holder.lineFour.setVisibility(GONE);
-            holder.textContainer.setVisibility(VISIBLE);
+            holder.lineFour.setVisibility(View.GONE);
+            holder.textContainer.setVisibility(View.VISIBLE);
         }
 
         if (showCheckboxes && baseFileObject.fileType == FileType.FOLDER) {
-            holder.checkBox.setVisibility(VISIBLE);
-            holder.imageView.setVisibility(GONE);
+            holder.checkBox.setVisibility(View.VISIBLE);
+            holder.imageView.setVisibility(View.GONE);
         } else {
-            holder.checkBox.setVisibility(GONE);
-            holder.imageView.setVisibility(VISIBLE);
+            holder.checkBox.setVisibility(View.GONE);
+            holder.imageView.setVisibility(View.VISIBLE);
         }
 
         holder.checkBox.setChecked(isSelected());
@@ -196,28 +178,28 @@ public class FolderView extends BaseSelectableViewModel<FolderView.ViewHolder, B
 
     public static class ViewHolder extends BaseViewHolder<FolderView> {
 
-        @BindView(line_one)
+        @BindView(R.id.line_one)
         public TextView lineOne;
 
-        @BindView(line_two)
+        @BindView(R.id.line_two)
         public TextView lineTwo;
 
-        @BindView(line_three)
+        @BindView(R.id.line_three)
         public TextView lineThree;
 
-        @BindView(line_four)
+        @BindView(R.id.line_four)
         public TextView lineFour;
 
-        @BindView(id.textContainer)
+        @BindView(R.id.textContainer)
         public View textContainer;
 
-        @BindView(image)
+        @BindView(R.id.image)
         public CircleImageView imageView;
 
-        @BindView(btn_overflow)
+        @BindView(R.id.btn_overflow)
         public ImageButton overflow;
 
-        @BindView(checkbox)
+        @BindView(R.id.checkbox)
         public CheckBox checkBox;
 
         Drawable folderDrawable;
@@ -235,9 +217,9 @@ public class FolderView extends BaseSelectableViewModel<FolderView.ViewHolder, B
 
             int colorPrimary = Aesthetic.get().colorPrimary().blockingFirst();
 
-            folderDrawable = itemView.getContext().getResources().getDrawable(ic_folder_closed_white);
-            parentFolderDrawable = itemView.getContext().getResources().getDrawable(ic_folder_open_white);
-            fileDrawable = itemView.getContext().getResources().getDrawable(ic_headphones_white);
+            folderDrawable = itemView.getContext().getResources().getDrawable(R.drawable.ic_folder_closed_white);
+            parentFolderDrawable = itemView.getContext().getResources().getDrawable(R.drawable.ic_folder_open_white);
+            fileDrawable = itemView.getContext().getResources().getDrawable(R.drawable.ic_headphones_white);
 
             imageView.setColorFilter(colorPrimary);
         }
