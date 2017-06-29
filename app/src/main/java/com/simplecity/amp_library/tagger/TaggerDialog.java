@@ -344,7 +344,9 @@ public class TaggerDialog extends DialogFragment {
         CheckDocumentPermissionsTask task = new CheckDocumentPermissionsTask(
                 originalSongPaths, documentFiles, hasPermission -> {
 
-            progressDialog.dismiss();
+            if (isResumed() && progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
 
             if (hasPermission) {
 
