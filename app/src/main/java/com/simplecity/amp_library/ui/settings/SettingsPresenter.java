@@ -198,6 +198,8 @@ public class SettingsPresenter extends Presenter<SettingsView> {
             settingsView.showPrimaryColorDialog(
                     new ColorChooserDialog.Builder(context, R.string.pref_title_theme_pick_color)
                             .allowUserColorInput(true)
+                            .dynamicButtonColor(true)
+                            .preselect(Aesthetic.get().colorPrimary().blockingFirst())
                             .build());
         }
     }
@@ -216,6 +218,8 @@ public class SettingsPresenter extends Presenter<SettingsView> {
                     new ColorChooserDialog.Builder(context, R.string.pref_title_theme_pick_color)
                             .accentMode(true)
                             .allowUserColorInput(true)
+                            .dynamicButtonColor(true)
+                            .preselect(Aesthetic.get().colorAccent().blockingFirst())
                             .build());
         }
     }

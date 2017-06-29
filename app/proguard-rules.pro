@@ -101,6 +101,9 @@
 # http://stackoverflow.com/questions/3308010/what-is-the-ignoring-innerclasses-attribute-warning-output-during-compilation
 -keepattributes EnclosingMethod
 
-#Retrolambda
+# Retrolambda
 -dontwarn java.lang.invoke.*
 -dontwarn **$$Lambda$*
+
+# Keep MaterialDialogs ThemeSingleton, so we can access it via reflection, from Aesthetic
+-keep class com.afollestad.materialdialogs.internal.** { *; }
