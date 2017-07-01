@@ -305,7 +305,10 @@
         <item name="android:windowBackground">@color/transparent</item>
     </style>
 
-    <style name="WallpaperTheme" parent="Theme.AppCompat">
+    <style name="WallpaperTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimaryDark">@color/grey_600</item>
+        <item name="colorPrimary">@color/grey_500</item>
+        <item name="colorAccent">@color/grey_250</item>
         <item name="android:windowShowWallpaper">true</item>
         <item name="android:windowBackground">@color/transparent</item>
     </style>

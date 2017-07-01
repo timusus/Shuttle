@@ -40,9 +40,9 @@ import static com.afollestad.aesthetic.Util.setNavBarColorCompat;
 public class Aesthetic {
 
   private static final String PREFS_NAME = "[aesthetic-prefs]";
-  private static final String KEY_FIRST_TIME = "first_time";
+  private static final String KEY_FIRST_TIME = "first_time_%s";
   private static final String KEY_ACTIVITY_THEME = "activity_theme_%s";
-  private static final String KEY_IS_DARK = "is_dark";
+  private static final String KEY_IS_DARK = "is_dark_%s";
   private static final String KEY_PRIMARY_COLOR = "primary_color";
   private static final String KEY_PRIMARY_DARK_COLOR = "primary_dark_color";
   private static final String KEY_ACCENT_COLOR = "accent_color";
@@ -50,7 +50,7 @@ public class Aesthetic {
   private static final String KEY_SECONDARY_TEXT_COLOR = "secondary_text";
   private static final String KEY_PRIMARY_TEXT_INVERSE_COLOR = "primary_text_inverse";
   private static final String KEY_SECONDARY_TEXT_INVERSE_COLOR = "secondary_text_inverse";
-  private static final String KEY_WINDOW_BG_COLOR = "window_bg_color";
+  private static final String KEY_WINDOW_BG_COLOR = "window_bg_color_%s";
   private static final String KEY_STATUS_BAR_COLOR = "status_bar_color_%s";
   private static final String KEY_NAV_BAR_COLOR = "nav_bar_color_%S";
   private static final String KEY_LIGHT_STATUS_MODE = "light_status_mode";
@@ -252,9 +252,10 @@ public class Aesthetic {
   }
 
   /** Returns true if this method has never been called before. */
-  public static boolean isFirstTime() {
-    boolean firstTime = instance.prefs.getBoolean(KEY_FIRST_TIME, true);
-    instance.editor.putBoolean(KEY_FIRST_TIME, false).commit();
+  public static boolean isFirstTime(AppCompatActivity appCompatActivity) {
+    String key = String.format(KEY_FIRST_TIME, key(appCompatActivity));
+    boolean firstTime = instance.prefs.getBoolean(key, true);
+    instance.editor.putBoolean(key, false).commit();
     return firstTime;
   }
 
@@ -315,13 +316,15 @@ public class Aesthetic {
 
   @CheckResult
   public Aesthetic isDark(boolean isDark) {
-    editor.putBoolean(KEY_IS_DARK, isDark).commit();
+    String key = String.format(KEY_IS_DARK, key(context));
+    editor.putBoolean(key, isDark).commit();
     return this;
   }
 
   @CheckResult
   public Observable<Boolean> isDark() {
-    return rxPrefs.getBoolean(KEY_IS_DARK, false).asObservable();
+    String key = String.format(KEY_IS_DARK, key(context));
+    return rxPrefs.getBoolean(key, false).asObservable();
   }
 
   @CheckResult
@@ -459,7 +462,8 @@ public class Aesthetic {
 
   @CheckResult
   public Aesthetic colorWindowBackground(@ColorInt int color) {
-    editor.putInt(KEY_WINDOW_BG_COLOR, color).commit();
+    String key = String.format(KEY_WINDOW_BG_COLOR, key(context));
+    editor.putInt(key, color).commit();
     return this;
   }
 
@@ -470,8 +474,9 @@ public class Aesthetic {
 
   @CheckResult
   public Observable<Integer> colorWindowBackground() {
+    String key = String.format(KEY_WINDOW_BG_COLOR, key(context));
     return rxPrefs
-        .getInteger(KEY_WINDOW_BG_COLOR, resolveColor(context, android.R.attr.windowBackground))
+        .getInteger(key, resolveColor(context, android.R.attr.windowBackground))
         .asObservable();
   }
 

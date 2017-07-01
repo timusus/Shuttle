@@ -9,6 +9,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -27,6 +30,8 @@ import android.widget.RemoteViews;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.afollestad.aesthetic.Aesthetic;
+import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.simplecity.amp_library.R;
@@ -42,7 +47,11 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
         View.OnClickListener,
         CheckBox.OnCheckedChangeListener,
         SeekBar.OnSeekBarChangeListener,
-        ViewPager.OnPageChangeListener {
+        ViewPager.OnPageChangeListener,
+        ColorChooserDialog.ColorCallback {
+
+    private ColorChooserDialog textColorDialog;
+    private ColorChooserDialog backgroundColorDialog;
 
     abstract int[] getWidgetLayouts();
 
@@ -52,78 +61,85 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
 
     abstract int getRootViewId();
 
-    int[] mLayouts;
-    private int mLayoutId;
-    private int mAppWidgetId;
+    int[] layouts;
+    private int layoutId;
+    private int appWidgetId;
 
-    private float mAlpha = 0.15f;
+    private float alpha = 0.15f;
 
     /**
      * The pager widget, which handles animation and allows swiping horizontally to access previous
      * and next wizard steps.
      */
-    private ViewPager mPager;
+    private ViewPager pager;
 
     /**
      * The pager adapter, which provides the pages to the view pager widget.
      */
-    private WidgetPagerAdapter mPagerAdapter;
+    private WidgetPagerAdapter adapter;
 
-    private SharedPreferences mPrefs;
+    private SharedPreferences prefs;
 
-    private Button mBackgroundColorButton;
-    private Button mTextColorButton;
-    private SizableSeekBar mSeekBar;
+    private Button backgroundColorButton;
+    private Button textColorButton;
+    private SizableSeekBar seekBar;
 
-    private int mBackgroundColor;
-    private int mTextColor;
-    private boolean mShowAlbumArt;
-    private boolean mInvertIcons;
+    private int backgroundColor;
+    private int textColor;
+    private boolean showAlbumArt;
+    private boolean invertIcons;
 
     SparseArray<Fragment> registeredFragments = new SparseArray<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+//        if (Aesthetic.isFirstTime(this)) {
+        Aesthetic.get()
+                .activityTheme(R.style.WallpaperTheme)
+                .isDark(false)
+                .colorStatusBarAuto()
+                .apply();
+//        }
+
+        setContentView(R.layout.activity_widget_config);
 
         Bundle extras = this.getIntent().getExtras();
         if (extras != null) {
-            mAppWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+            appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         }
-        if (mAppWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
+        if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
             finish();
         }
 
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        mLayoutId = mPrefs.getInt(getLayoutIdString() + mAppWidgetId, getWidgetLayouts()[0]);
-        mBackgroundColor = mPrefs.getInt(BaseWidgetProvider.ARG_WIDGET_BACKGROUND_COLOR + mAppWidgetId, getResources().getColor(R.color.white));
-        mTextColor = mPrefs.getInt(BaseWidgetProvider.ARG_WIDGET_TEXT_COLOR + mAppWidgetId, Color.WHITE);
-        mShowAlbumArt = mPrefs.getBoolean(BaseWidgetProvider.ARG_WIDGET_SHOW_ARTWORK + mAppWidgetId, true);
-
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_widget_config);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        layoutId = prefs.getInt(getLayoutIdString() + appWidgetId, getWidgetLayouts()[0]);
+        backgroundColor = prefs.getInt(BaseWidgetProvider.ARG_WIDGET_BACKGROUND_COLOR + appWidgetId, getResources().getColor(R.color.white));
+        textColor = prefs.getInt(BaseWidgetProvider.ARG_WIDGET_TEXT_COLOR + appWidgetId, Color.WHITE);
+        showAlbumArt = prefs.getBoolean(BaseWidgetProvider.ARG_WIDGET_SHOW_ARTWORK + appWidgetId, true);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mLayouts = getWidgetLayouts();
+        layouts = getWidgetLayouts();
 
         // Instantiate a ViewPager and a PagerAdapter.
-        mPager = (ViewPager) findViewById(R.id.pager);
-        mPagerAdapter = new WidgetPagerAdapter(getSupportFragmentManager());
-        mPager.setAdapter(mPagerAdapter);
+        pager = (ViewPager) findViewById(R.id.pager);
+        adapter = new WidgetPagerAdapter(getSupportFragmentManager());
+        pager.setAdapter(adapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mPager);
+        tabLayout.setupWithViewPager(pager);
 
         Button doneButton = (Button) findViewById(R.id.btn_done);
         doneButton.setOnClickListener(this);
 
-        mBackgroundColorButton = (Button) findViewById(R.id.btn_background_color);
-        mBackgroundColorButton.setOnClickListener(this);
+        backgroundColorButton = (Button) findViewById(R.id.btn_background_color);
+        backgroundColorButton.setOnClickListener(this);
 
-        mTextColorButton = (Button) findViewById(R.id.btn_text_color);
-        mTextColorButton.setOnClickListener(this);
+        textColorButton = (Button) findViewById(R.id.btn_text_color);
+        textColorButton.setOnClickListener(this);
 
         CheckBox showAlbumArtCheckbox = (CheckBox) findViewById(R.id.checkBox1);
         showAlbumArtCheckbox.setOnCheckedChangeListener(this);
@@ -131,21 +147,21 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
         CheckBox invertedIconsCheckbox = (CheckBox) findViewById(R.id.checkBox2);
         invertedIconsCheckbox.setOnCheckedChangeListener(this);
 
-        mSeekBar = (SizableSeekBar) findViewById(R.id.seekBar1);
-        mSeekBar.setOnSeekBarChangeListener(this);
+        seekBar = (SizableSeekBar) findViewById(R.id.seekBar1);
+        seekBar.setOnSeekBarChangeListener(this);
 
         updateWidgetUI();
     }
 
     @Override
     public void onBackPressed() {
-        if (mPager.getCurrentItem() == 0) {
+        if (pager.getCurrentItem() == 0) {
             // If the user is currently looking at the first step, allow the system to handle the
             // Back button. This calls finish() on this activity and pops the back stack.
             super.onBackPressed();
         } else {
             // Otherwise, select the previous step.
-            mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+            pager.setCurrentItem(pager.getCurrentItem() - 1);
         }
     }
 
@@ -153,13 +169,13 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
     public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
 
         if (compoundButton.getId() == R.id.checkBox1) {
-            mShowAlbumArt = checked;
-            mPrefs.edit().putBoolean(BaseWidgetProvider.ARG_WIDGET_SHOW_ARTWORK + mAppWidgetId, mShowAlbumArt).apply();
+            showAlbumArt = checked;
+            prefs.edit().putBoolean(BaseWidgetProvider.ARG_WIDGET_SHOW_ARTWORK + appWidgetId, showAlbumArt).apply();
 
         }
         if (compoundButton.getId() == R.id.checkBox2) {
-            mInvertIcons = checked;
-            mPrefs.edit().putBoolean(BaseWidgetProvider.ARG_WIDGET_INVERT_ICONS + mAppWidgetId, mInvertIcons).apply();
+            invertIcons = checked;
+            prefs.edit().putBoolean(BaseWidgetProvider.ARG_WIDGET_INVERT_ICONS + appWidgetId, invertIcons).apply();
         }
         updateWidgetUI();
     }
@@ -170,19 +186,19 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
 
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
 
-            RemoteViews remoteViews = new RemoteViews(this.getPackageName(), mLayoutId);
-            BaseWidgetProvider.setupButtons(this, remoteViews, mAppWidgetId, getRootViewId());
-            appWidgetManager.updateAppWidget(mAppWidgetId, remoteViews);
+            RemoteViews remoteViews = new RemoteViews(this.getPackageName(), layoutId);
+            BaseWidgetProvider.setupButtons(this, remoteViews, appWidgetId, getRootViewId());
+            appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
 
             Intent resultValue = new Intent();
-            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
             setResult(RESULT_OK, resultValue);
 
             // Send broadcast intent to any running MediaPlaybackService so it can
             // wrap around with an immediate update.
             Intent updateIntent = new Intent(MusicService.ServiceCommand.SERVICE_COMMAND);
             updateIntent.putExtra(MusicService.MediaButtonCommand.CMD_NAME, getUpdateCommandString());
-            updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{mAppWidgetId});
+            updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{appWidgetId});
             updateIntent.addFlags(Intent.FLAG_RECEIVER_REGISTERED_ONLY);
             sendBroadcast(updateIntent);
 
@@ -190,67 +206,29 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
         }
 
         if (view.getId() == R.id.btn_background_color) {
-            //Todo:
-//            DialogUtils.showCustomColorPickerDialog(this, ColorUtils.adjustAlpha(mBackgroundColor, mAlpha), color -> {
-//                mBackgroundColor = color;
-//                mPrefs.edit()
-//                        .putInt(BaseWidgetProvider.ARG_WIDGET_BACKGROUND_COLOR + mAppWidgetId, color)
-//                        .apply();
-//
-//                Fragment fragment = mPagerAdapter.getRegisteredFragment(mPager.getCurrentItem());
-//                if (fragment != null) {
-//                    View fragmentView = fragment.getView();
-//                    if (fragmentView != null) {
-//                        View layout = fragmentView.findViewById(getRootViewId());
-//                        layout.setBackgroundColor(ColorUtils.adjustAlpha(mBackgroundColor, mAlpha));
-//                    }
-//                }
-//            });
+            backgroundColorDialog = new ColorChooserDialog.Builder(this, R.string.color_pick)
+                    .allowUserColorInputAlpha(true)
+                    .show(getSupportFragmentManager());
         }
         if (view.getId() == R.id.btn_text_color) {
-            //Todo:
-//            DialogUtils.showCustomColorPickerDialog(this, mTextColor, color -> {
-//                mTextColor = color;
-//                mPrefs.edit()
-//                        .putInt(BaseWidgetProvider.ARG_WIDGET_TEXT_COLOR + mAppWidgetId, color)
-//                        .apply();
-//
-//                Fragment fragment = mPagerAdapter.getRegisteredFragment(mPager.getCurrentItem());
-//                if (fragment != null) {
-//                    View widgetView = fragment.getView();
-//                    if (widgetView != null) {
-//
-//                        TextView text1 = (TextView) widgetView.findViewById(R.id.text1);
-//                        TextView text2 = (TextView) widgetView.findViewById(R.id.text2);
-//                        TextView text3 = (TextView) widgetView.findViewById(R.id.text3);
-//
-//                        if (text1 != null) {
-//                            text1.setTextColor(mTextColor);
-//                        }
-//                        if (text2 != null) {
-//                            text2.setTextColor(mTextColor);
-//                        }
-//                        if (text3 != null) {
-//                            text3.setTextColor(mTextColor);
-//                        }
-//                    }
-//                }
-//            });
+            textColorDialog = new ColorChooserDialog.Builder(this, R.string.color_pick)
+                    .allowUserColorInputAlpha(true)
+                    .show(getSupportFragmentManager());
         }
     }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean byUser) {
-        Fragment fragment = mPagerAdapter.getRegisteredFragment(mPager.getCurrentItem());
+        Fragment fragment = adapter.getRegisteredFragment(pager.getCurrentItem());
         if (fragment != null) {
             View view = fragment.getView();
             if (view != null) {
                 View layout = view.findViewById(getRootViewId());
-                mAlpha = 1 - (progress / 255f);
-                int adjustedColor = ColorUtils.adjustAlpha(mBackgroundColor, mAlpha);
+                alpha = 1 - (progress / 255f);
+                int adjustedColor = ColorUtils.adjustAlpha(backgroundColor, alpha);
                 layout.setBackgroundColor(adjustedColor);
-                mPrefs.edit()
-                        .putInt(BaseWidgetProvider.ARG_WIDGET_BACKGROUND_COLOR + mAppWidgetId, adjustedColor)
+                prefs.edit()
+                        .putInt(BaseWidgetProvider.ARG_WIDGET_BACKGROUND_COLOR + appWidgetId, adjustedColor)
                         .apply();
             }
         }
@@ -273,8 +251,8 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
 
     @Override
     public void onPageSelected(int position) {
-        mLayoutId = mLayouts[position];
-        mPrefs.edit().putInt(getLayoutIdString() + mAppWidgetId, mLayoutId).apply();
+        layoutId = layouts[position];
+        prefs.edit().putInt(getLayoutIdString() + appWidgetId, layoutId).apply();
         updateWidgetUI();
     }
 
@@ -300,12 +278,12 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
 
         @Override
         public Fragment getItem(int position) {
-            return new WidgetFragment().newInstance(mLayouts[position]);
+            return new WidgetFragment().newInstance(layouts[position]);
         }
 
         @Override
         public int getCount() {
-            return mLayouts.length;
+            return layouts.length;
         }
 
         @Override
@@ -333,63 +311,63 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
 
     public void updateWidgetUI() {
 
-        mBackgroundColor = mPrefs.getInt(BaseWidgetProvider.ARG_WIDGET_BACKGROUND_COLOR + mAppWidgetId, getResources().getColor(R.color.white));
-        mTextColor = mPrefs.getInt(BaseWidgetProvider.ARG_WIDGET_TEXT_COLOR + mAppWidgetId, getResources().getColor(R.color.white));
+        backgroundColor = prefs.getInt(BaseWidgetProvider.ARG_WIDGET_BACKGROUND_COLOR + appWidgetId, getResources().getColor(R.color.white));
+        textColor = prefs.getInt(BaseWidgetProvider.ARG_WIDGET_TEXT_COLOR + appWidgetId, getResources().getColor(R.color.white));
 
         Drawable backgroundButtonDrawable = getResources().getDrawable(R.drawable.bg_rounded);
         backgroundButtonDrawable.setBounds(0, 0, 60, 60);
-        mBackgroundColorButton.setCompoundDrawables(backgroundButtonDrawable, null, null, null);
+        backgroundColorButton.setCompoundDrawables(backgroundButtonDrawable, null, null, null);
 
         Drawable textButtonDrawable = getResources().getDrawable(R.drawable.bg_rounded);
         textButtonDrawable.setBounds(0, 0, 60, 60);
-        mTextColorButton.setCompoundDrawables(textButtonDrawable, null, null, null);
+        textColorButton.setCompoundDrawables(textButtonDrawable, null, null, null);
 
-        Fragment fragment = mPagerAdapter.getRegisteredFragment(mPager.getCurrentItem());
+        Fragment fragment = adapter.getRegisteredFragment(pager.getCurrentItem());
         if (fragment != null) {
             View view = fragment.getView();
             if (view != null) {
                 View widgetLayout = view.findViewById(getRootViewId());
-                widgetLayout.setBackgroundColor(ColorUtils.adjustAlpha(mBackgroundColor, mAlpha));
-                TextView text1 = (TextView) widgetLayout.findViewById(R.id.text1);
-                TextView text2 = (TextView) widgetLayout.findViewById(R.id.text2);
-                TextView text3 = (TextView) widgetLayout.findViewById(R.id.text3);
+                widgetLayout.setBackgroundColor(ColorUtils.adjustAlpha(backgroundColor, alpha));
+                TextView text1 = widgetLayout.findViewById(R.id.text1);
+                TextView text2 = widgetLayout.findViewById(R.id.text2);
+                TextView text3 = widgetLayout.findViewById(R.id.text3);
                 String trackName = MusicUtils.getSongName();
                 String artistName = MusicUtils.getAlbumArtistName();
                 final String albumName = MusicUtils.getAlbumName();
                 if (trackName != null && text1 != null) {
                     text1.setText(trackName);
-                    text1.setTextColor(mTextColor);
+                    text1.setTextColor(textColor);
                 }
                 if (artistName != null && albumName != null && text2 != null && text3 == null) {
                     text2.setText(artistName + " | " + albumName);
-                    text2.setTextColor(mTextColor);
+                    text2.setTextColor(textColor);
                 } else if (artistName != null && albumName != null && text2 != null) {
                     text2.setText(albumName);
-                    text2.setTextColor(mTextColor);
+                    text2.setTextColor(textColor);
                     text3.setText(artistName);
-                    text3.setTextColor(mTextColor);
+                    text3.setTextColor(textColor);
                 }
 
-                ImageButton shuffleButton = (ImageButton) widgetLayout.findViewById(R.id.shuffle_button);
-                ImageButton prevButton = (ImageButton) widgetLayout.findViewById(R.id.prev_button);
-                ImageButton playButton = (ImageButton) widgetLayout.findViewById(R.id.play_button);
-                ImageButton skipButton = (ImageButton) widgetLayout.findViewById(R.id.next_button);
-                ImageButton repeatButton = (ImageButton) widgetLayout.findViewById(R.id.repeat_button);
+                ImageButton shuffleButton = widgetLayout.findViewById(R.id.shuffle_button);
+                ImageButton prevButton = widgetLayout.findViewById(R.id.prev_button);
+                ImageButton playButton = widgetLayout.findViewById(R.id.play_button);
+                ImageButton skipButton = widgetLayout.findViewById(R.id.next_button);
+                ImageButton repeatButton = widgetLayout.findViewById(R.id.repeat_button);
 
-                final ImageView albumArt = (ImageView) widgetLayout.findViewById(R.id.album_art);
+                final ImageView albumArt = widgetLayout.findViewById(R.id.album_art);
                 if (albumArt != null) {
 
-                    if (!mShowAlbumArt) {
+                    if (!showAlbumArt) {
                         albumArt.setVisibility(View.GONE);
                         return;
                     } else {
                         albumArt.setVisibility(View.VISIBLE);
-                        if (mPager.getCurrentItem() == 1) {
+                        if (pager.getCurrentItem() == 1) {
                             int colorFilterColor = getResources().getColor(R.color.color_filter);
                             albumArt.setColorFilter(colorFilterColor);
-                            mPrefs.edit().putInt(BaseWidgetProvider.ARG_WIDGET_COLOR_FILTER + mAppWidgetId, colorFilterColor).apply();
+                            prefs.edit().putInt(BaseWidgetProvider.ARG_WIDGET_COLOR_FILTER + appWidgetId, colorFilterColor).apply();
                         } else {
-                            mPrefs.edit().putInt(BaseWidgetProvider.ARG_WIDGET_COLOR_FILTER + mAppWidgetId, -1).apply();
+                            prefs.edit().putInt(BaseWidgetProvider.ARG_WIDGET_COLOR_FILTER + appWidgetId, -1).apply();
                         }
                     }
 
@@ -402,4 +380,55 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
             }
         }
     }
+
+    @Override
+    public void onColorSelection(@NonNull ColorChooserDialog dialog, @ColorInt int selectedColor) {
+        if (dialog == textColorDialog) {
+            textColor = selectedColor;
+            prefs.edit().putInt(BaseWidgetProvider.ARG_WIDGET_TEXT_COLOR + appWidgetId, selectedColor).apply();
+
+            Fragment fragment = adapter.getRegisteredFragment(pager.getCurrentItem());
+            if (fragment != null) {
+                View widgetView = fragment.getView();
+                if (widgetView != null) {
+                    TextView text1 = widgetView.findViewById(R.id.text1);
+                    if (text1 != null) {
+                        text1.setTextColor(textColor);
+                    }
+                    TextView text2 = widgetView.findViewById(R.id.text2);
+                    if (text2 != null) {
+                        text2.setTextColor(textColor);
+                    }
+                    TextView text3 = widgetView.findViewById(R.id.text3);
+                    if (text3 != null) {
+                        text3.setTextColor(textColor);
+                    }
+                }
+            }
+        } else if (dialog == backgroundColorDialog) {
+            backgroundColor = selectedColor;
+            prefs.edit().putInt(BaseWidgetProvider.ARG_WIDGET_BACKGROUND_COLOR + appWidgetId, selectedColor).apply();
+
+            Fragment fragment = adapter.getRegisteredFragment(pager.getCurrentItem());
+            if (fragment != null) {
+                View fragmentView = fragment.getView();
+                if (fragmentView != null) {
+                    View layout = fragmentView.findViewById(getRootViewId());
+                    layout.setBackgroundColor(ColorUtils.adjustAlpha(backgroundColor, alpha));
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onColorChooserDismissed(@NonNull ColorChooserDialog dialog) {
+
+    }
+
+    @Nullable
+    @Override
+    public String key() {
+        return "widget_activity";
+    }
+
 }

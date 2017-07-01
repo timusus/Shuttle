@@ -2,6 +2,7 @@ package com.simplecity.amp_library.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -39,7 +40,7 @@ public class MainActivity extends BaseCastActivity implements
         super.onCreate(savedInstanceState);
 
         // If we haven't set any defaults, do that now
-        if (Aesthetic.isFirstTime()) {
+        if (Aesthetic.isFirstTime(this)) {
             Aesthetic.get()
                     .activityTheme(R.style.AppTheme_Light)
                     .isDark(false)
@@ -131,5 +132,11 @@ public class MainActivity extends BaseCastActivity implements
     @Override
     public DrawerLayout getDrawerLayout() {
         return drawerLayout;
+    }
+
+    @Nullable
+    @Override
+    public String key() {
+        return "main_activity";
     }
 }
