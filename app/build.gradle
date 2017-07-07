@@ -108,6 +108,7 @@ android {
             manifestPlaceholders = [CRASHLYTICS_API_KEY: "${getProperty(getProperties('../private.properties'), 'CRASHLYTICS_API_KEY')}"]
         }
 
+        /* Todo: Figure out how to reinstate with new Gradle version
         applicationVariants.all { variant ->
 
             if (variant.buildType.name.contains('release')) {
@@ -139,6 +140,7 @@ android {
                 }
             }
         }
+        */
     }
 
     //Ignore useless variants, such as devRelease.
