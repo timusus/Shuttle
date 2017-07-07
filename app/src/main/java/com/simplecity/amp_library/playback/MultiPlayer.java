@@ -216,7 +216,7 @@ class MultiPlayer implements
             mNextMediaPlayer = null;
             mHandler.sendEmptyMessage(MusicService.PlayerHandler.TRACK_WENT_TO_NEXT);
         } else {
-            mService.get().mWakeLock.acquire(30000);
+            mService.get().wakeLock.acquire(30000);
             mHandler.sendEmptyMessage(MusicService.PlayerHandler.TRACK_ENDED);
             mHandler.sendEmptyMessage(MusicService.PlayerHandler.RELEASE_WAKELOCK);
         }

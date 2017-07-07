@@ -18,10 +18,11 @@ import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class WhitelistDialog {
+
+    private static final String TAG = "WhitelistDialog";
 
     private WhitelistDialog() {
     }
@@ -48,14 +49,14 @@ public class WhitelistDialog {
 
         recyclerView.setAdapter(whitelistAdapter);
 
-        WhitelistView.ClickListener listener = whitelistFolder -> {
-            WhitelistHelper.deleteFolder(whitelistFolder);
+        WhitelistView.ClickListener listener = whiteListView -> {
+            WhitelistHelper.deleteFolder(whiteListView.whitelistFolder);
             if (whitelistAdapter.items.size() == 0) {
                 dialog.dismiss();
             }
         };
 
-        Subscription subscription = WhitelistHelper.getWhitelistFolders()
+        WhitelistHelper.getWhitelistFolders()
                 .map(whitelistFolders -> Stream.of(whitelistFolders)
                         .map(folder -> {
                             WhitelistView whitelistView = new WhitelistView(folder);
@@ -70,9 +71,8 @@ public class WhitelistDialog {
                     } else {
                         whitelistAdapter.setItems(whitelistViews);
                     }
-                }, error -> LogUtils.logException("DialogUtils: Error setting whitelist items", error));
+                }, error -> LogUtils.logException(TAG, "Error setting whitelist items", error));
 
-        dialog.setOnDismissListener(dialogInterface -> subscription.unsubscribe());
         return dialog;
     }
 }

@@ -45,9 +45,9 @@ import java.util.Collections;
 
 import javax.inject.Inject;
 
-import rx.Observable;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 public class AlbumArtistFragment extends BaseFragment implements
         MusicUtils.Defs,
@@ -76,7 +76,7 @@ public class AlbumArtistFragment extends BaseFragment implements
 
     private boolean sortOrderChanged = false;
 
-    private Subscription subscription;
+    private Disposable disposable;
 
     private ContextualToolbarHelper<AlbumArtist> contextualToolbarHelper;
 
@@ -144,8 +144,8 @@ public class AlbumArtistFragment extends BaseFragment implements
     @Override
     public void onPause() {
 
-        if (subscription != null) {
-            subscription.unsubscribe();
+        if (disposable != null) {
+            disposable.dispose();
         }
 
         super.onPause();
@@ -157,7 +157,7 @@ public class AlbumArtistFragment extends BaseFragment implements
 
         refreshAdapterItems();
 
-        if (isVisible()) {
+        if (getUserVisibleHint()) {
             setupContextualToolbar();
         }
     }
@@ -171,15 +171,15 @@ public class AlbumArtistFragment extends BaseFragment implements
 
                 boolean ascending = SortManager.getInstance().getArtistsAscending();
 
-                subscription = DataManager.getInstance().getAlbumArtistsRelay()
-                        .flatMap(albumArtists -> {
+                disposable = DataManager.getInstance().getAlbumArtistsRelay()
+                        .flatMapSingle(albumArtists -> {
                             //Sort
                             SortManager.getInstance().sortAlbumArtists(albumArtists);
                             //Reverse if required
                             if (!ascending) {
                                 Collections.reverse(albumArtists);
                             }
-                            return Observable.from(albumArtists)
+                            return Observable.fromIterable(albumArtists)
                                     .map(albumArtist -> {
 
                                         // Look for an existing AlbumArtistView wrapping the song, we'll reuse it if it exists.
@@ -427,6 +427,7 @@ public class AlbumArtistFragment extends BaseFragment implements
         } else {
             Log.i(TAG, "Failed to find contextual toolbar");
         }
+        Log.i(TAG, "setupContextualToolbar.. Visible to user: " +  getUserVisibleHint());
     }
 
     @Override

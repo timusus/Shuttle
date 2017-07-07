@@ -4,16 +4,19 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
+import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.model.Query;
-import com.squareup.sqlbrite.BriteContentResolver;
-import com.squareup.sqlbrite.SqlBrite;
+import com.squareup.sqlbrite2.BriteContentResolver;
+import com.squareup.sqlbrite2.SqlBrite;
 
+import java.util.Collections;
 import java.util.List;
 
-import rx.Observable;
-import rx.Single;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 public final class SqlBriteUtils {
 
@@ -23,14 +26,14 @@ public final class SqlBriteUtils {
 
     private static final String TAG = "SqlBriteUtils";
 
-    private static BriteContentResolver wrapContentProvider(Context context) {
-        final SqlBrite sqlBrite = SqlBrite.create();
+    private static BriteContentResolver wrapContentProvider(@NonNull Context context) {
+        final SqlBrite sqlBrite = new SqlBrite.Builder().build();
         BriteContentResolver briteContentResolver = sqlBrite.wrapContentProvider(context.getContentResolver(), Schedulers.io());
-        // briteContentResolver.setLoggingEnabled(BuildConfig.DEBUG);
+        briteContentResolver.setLoggingEnabled(BuildConfig.DEBUG);
         return briteContentResolver;
     }
 
-    public static Observable<SqlBrite.Query> createContinuousQuery(Context context, Query query) {
+    private static Observable<SqlBrite.Query> createObservable(@NonNull Context context, @NonNull Query query) {
         return wrapContentProvider(context)
                 .createQuery(query.uri, query.projection, query.selection, query.args, query.sort, false)
                 .subscribeOn(Schedulers.io())
@@ -38,56 +41,34 @@ public final class SqlBriteUtils {
     }
 
     /**
-     * Creates an {@link Observable} that <b>continuously</b> emits new Lists when subscribed and when the content provider notifies of a change.
+     * Creates an {@link Observable} that emits new items when subscribed and when the content provider notifies of a change.
      */
-    public static <T> Observable<List<T>> createContinuousQuery(Context context, Func1<Cursor, T> mapper, Query query) {
-        return createContinuousQuery(context, query)
+    public static <T> Observable<T> createObservable(@NonNull Context context, @NonNull Function<Cursor, T> mapper, @NonNull Query query, T defaultValue) {
+        return createObservable(context, query)
+                .lift(new QueryToOneOperator<>(mapper, defaultValue));
+    }
+
+    /**
+     * Creates a {@link Single} that emits an item.
+     */
+    public static <T> Single<T> createSingle(@NonNull Context context, @NonNull Function<Cursor, T> mapper, @NonNull Query query, T defaultValue) {
+        return createObservable(context, mapper, query, defaultValue)
+                .firstOrError();
+    }
+
+    /**
+     * Creates an {@link Observable} that emits new lists when subscribed and when the content provider notifies of a change.
+     */
+    public static <T> Observable<List<T>> createObservableList(@NonNull Context context, @NonNull Function<Cursor, T> mapper, @NonNull Query query) {
+        return createObservable(context, query)
                 .lift(new QueryToListOperator<>(mapper));
     }
 
     /**
-     * Creates a {@link Observable} that emits a List.
+     * Creates a {@link Single} that emits a list.
      */
-    public static <T> Observable<List<T>> createQuery(Context context, Func1<Cursor, T> mapper, Query query) {
-        return createContinuousQuery(context, mapper, query).first();
-    }
-
-    /**
-     * Creates an {@link Observable} that <b>continuously</b> emits a single item when subscribed and when the content provider notifies of a change.
-     * <p>
-     * Note: No default item is emitted. If the cursor is empty, downstream subscribers will not
-     * receive a result.
-     */
-    public static <T> Observable<T> createSingleContinuousQuery(Context context, Func1<Cursor, T> mapper, Query query) {
-        return createSingleContinuousQuery(context, mapper, null, query);
-    }
-
-    /**
-     * Creates a {@link Observable} that emits a single item.
-     */
-    public static <T> Observable<T> createSingleQuery(Context context, Func1<Cursor, T> mapper, Query query) {
-        return createSingleContinuousQuery(context, mapper, null, query).first();
-    }
-
-    /**
-     * Creates an {@link Observable} that <b>continuously</b> emits a single item when subscribed and when the content provider notifies of a change.
-     * <p>
-     * Note: If no default item is supplied, nothing is emitted. Downstream subscribers will not receive a result.
-     *
-     * @param defaultValue the default value to emit (or null if no default value should be emitted)
-     */
-    public static <T> Observable<T> createSingleContinuousQuery(Context context, Func1<Cursor, T> mapper, T defaultValue, Query query) {
-        return wrapContentProvider(context)
-                .createQuery(query.uri, query.projection, query.selection, query.args, query.sort, false)
-                .lift(new QueryToOneOperator<>(mapper, defaultValue != null, defaultValue));
-    }
-
-    /**
-     * Creates a {@link Single} that emits a single item.
-     * <p>
-     * Note: If no default item is supplied, nothing is emitted. Downstream subscribers will not receive a result.
-     */
-    public static <T> Observable<T> createSingleQuery(Context context, Func1<Cursor, T> mapper, T defaultValue, Query query) {
-        return createSingleContinuousQuery(context, mapper, defaultValue, query).first();
+    public static <T> Single<List<T>> createSingleList(@NonNull Context context, @NonNull Function<Cursor, T> mapper, @NonNull Query query) {
+        return createObservableList(context, mapper, query)
+                .first(Collections.emptyList());
     }
 }

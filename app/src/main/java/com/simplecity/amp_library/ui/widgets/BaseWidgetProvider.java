@@ -19,10 +19,9 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.glide.utils.CustomAppWidgetTarget;
 import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.ui.activities.MainActivity;
 import com.simplecity.amp_library.utils.DrawableUtils;
-
-import rx.functions.Action0;
 
 public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
@@ -34,8 +33,8 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
     public abstract int getRootViewId();
 
-    protected void doOnMainThread(Action0 action) {
-        new Handler(Looper.getMainLooper()).post(action::call);
+    protected void doOnMainThread(UnsafeAction action) {
+        new Handler(Looper.getMainLooper()).post(action::run);
     }
 
     public static final String ARG_WIDGET_BACKGROUND_COLOR = "widget_background_color_";

@@ -24,15 +24,17 @@ import com.simplecity.amp_library.utils.ShuttleUtils;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * A service which will download all artist & album artworkProvider, via an AsyncTask, and display the progress in a notification.
@@ -52,7 +54,7 @@ public class ArtworkDownloadService extends Service {
     private int progress = 0;
     private int max = 100;
 
-    private CompositeSubscription subscription;
+    private CompositeDisposable disposables = new CompositeDisposable();
 
     @Override
     public void onCreate() {
@@ -83,29 +85,25 @@ public class ArtworkDownloadService extends Service {
             notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
         }
 
-        subscription = new CompositeSubscription();
-
-        Observable<List<ArtworkProvider>> sharedItemsObservable = DataManager.getInstance()
+        Single<List<ArtworkProvider>> sharedItemsSingle = DataManager.getInstance()
                 .getAlbumArtistsRelay()
-                .first()
-                .<ArtworkProvider>flatMap(Observable::from)
+                .first(Collections.emptyList())
+                .<ArtworkProvider>flatMapObservable(Observable::fromIterable)
                 .mergeWith(DataManager.getInstance().getAlbumsRelay()
-                        .first()
-                        .flatMap(Observable::from))
-                .toList()
-                .share();
+                        .first(Collections.emptyList())
+                        .flatMapObservable(Observable::fromIterable))
+                .toList();
 
-        subscription.add(sharedItemsObservable
+        disposables.add(sharedItemsSingle
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(list -> {
                     max = list.size();
                     updateProgress();
-                }, error -> LogUtils.logException("ArtworkDownloadService: Error determining max", error)));
+                }, error -> LogUtils.logException(TAG, "Error determining max", error)));
 
 
-        subscription.add(sharedItemsObservable.flatMap(Observable::from)
+        disposables.add(sharedItemsSingle.flatMapObservable(Observable::fromIterable)
                 .flatMap(artworkProvider -> Observable.just(artworkProvider)
-                        .subscribeOn(Schedulers.computation())
                         .map(artwork -> {
                             FutureTarget<File> futureTarget = Glide.with(ArtworkDownloadService.this)
                                     .using(new ArtworkModelLoader(true), InputStream.class)
@@ -118,12 +116,11 @@ public class ArtworkDownloadService extends Service {
                                 Log.e(TAG, "Error downloading artworkProvider: " + e);
                             }
                             Glide.clear(futureTarget);
-                            return null;
+                            return artwork;
                         }))
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(item -> {
-                    updateProgress();
-                }, error -> LogUtils.logException("ArtworkDownloadService: Error downloading artwork", error)));
+                .subscribe(item -> updateProgress(), error -> LogUtils.logException(TAG, "Error downloading artwork", error)));
     }
 
     @Override
@@ -139,8 +136,8 @@ public class ArtworkDownloadService extends Service {
 
     @Override
     public void onDestroy() {
-        if (subscription != null) {
-            subscription.unsubscribe();
+        if (disposables != null) {
+            disposables.clear();
         }
         notificationManager.cancel(NOTIFICATION_ID);
         super.onDestroy();
@@ -170,7 +167,7 @@ public class ArtworkDownloadService extends Service {
             final String action = intent.getAction();
             if (action != null && action.equals(ACTION_CANCEL)) {
                 //Handle a notification cancel action click:
-                subscription.unsubscribe();
+                disposables.clear();
                 notificationBuilder = null;
                 notificationManager.cancel(NOTIFICATION_ID);
                 stopSelf();

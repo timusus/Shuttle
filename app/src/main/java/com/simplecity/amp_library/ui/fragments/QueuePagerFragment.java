@@ -35,7 +35,8 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 
 public class QueuePagerFragment extends BaseFragment implements
         RequestManagerProvider,
@@ -95,11 +96,11 @@ public class QueuePagerFragment extends BaseFragment implements
                 int snapPosition = super.findTargetSnapPosition(layoutManager, velocityX, velocityY);
 
                 if (snapPosition < viewModelAdapter.items.size()) {
-                    rx.Observable.defer(() -> {
+                    Observable.defer(() -> {
                         if (MusicUtils.getQueuePosition() != snapPosition) {
                             MusicUtils.setQueuePosition(snapPosition);
                         }
-                        return rx.Observable.empty();
+                        return Observable.empty();
                     })
                             .delaySubscription(150, TimeUnit.MILLISECONDS)
                             .subscribeOn(Schedulers.io())

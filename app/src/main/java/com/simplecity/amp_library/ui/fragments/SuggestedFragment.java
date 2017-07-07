@@ -43,14 +43,12 @@ import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
 public class SuggestedFragment extends BaseFragment implements
         SuggestedHeaderView.ClickListener,
@@ -96,9 +94,9 @@ public class SuggestedFragment extends BaseFragment implements
 
     private RecyclerView recyclerView;
 
-    private ViewModelAdapter ViewModelAdapter;
+    private ViewModelAdapter viewModelAdapter;
 
-    private CompositeSubscription subscription;
+    private CompositeDisposable disposables = new CompositeDisposable();
 
     @Inject
     RequestManager requestManager;
@@ -144,10 +142,8 @@ public class SuggestedFragment extends BaseFragment implements
                 .plus(new FragmentModule(this))
                 .inject(this);
 
-        ViewModelAdapter = new ViewModelAdapter();
-
+        viewModelAdapter = new ViewModelAdapter();
         mostPlayedRecyclerView = new HorizontalRecyclerView();
-
         favoriteRecyclerView = new HorizontalRecyclerView();
     }
 
@@ -158,15 +154,15 @@ public class SuggestedFragment extends BaseFragment implements
 
             recyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_suggested, container, false);
             recyclerView.addItemDecoration(new SuggestedDividerDecoration(getResources()));
-            recyclerView.setAdapter(ViewModelAdapter);
+            recyclerView.setAdapter(viewModelAdapter);
             recyclerView.setRecyclerListener(new RecyclerListener());
 
             GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 6);
             gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
-                    if (!ViewModelAdapter.items.isEmpty() && position >= 0) {
-                        ViewModel item = ViewModelAdapter.items.get(position);
+                    if (!viewModelAdapter.items.isEmpty() && position >= 0) {
+                        ViewModel item = viewModelAdapter.items.get(position);
                         if (item instanceof HorizontalRecyclerView
                                 || item instanceof SuggestedHeaderView
                                 || (item instanceof AlbumView && item.getViewType() == ViewType.ALBUM_LIST)
@@ -196,147 +192,150 @@ public class SuggestedFragment extends BaseFragment implements
         refreshAdapterItems();
     }
 
-    void refreshAdapterItems() {
+    Observable<List<ViewModel>> getMostPlayedViewModels() {
+        return Playlist.mostPlayedPlaylist
+                .getSongsObservable()
+                .map(songs -> {
+                    if (!songs.isEmpty()) {
+                        List<ViewModel> viewModels = new ArrayList<>();
 
+                        SuggestedHeader mostPlayedHeader = new SuggestedHeader(getString(R.string.mostplayed), getString(R.string.suggested_most_played_songs_subtitle), Playlist.mostPlayedPlaylist);
+                        SuggestedHeaderView mostPlayedHeaderView = new SuggestedHeaderView(mostPlayedHeader);
+                        mostPlayedHeaderView.setClickListener(this);
+                        viewModels.add(mostPlayedHeaderView);
+
+                        viewModels.add(mostPlayedRecyclerView);
+
+                        Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(b.playCount, a.playCount));
+                        SongClickListener songClickListener = new SongClickListener(songs);
+
+                        mostPlayedRecyclerView.viewModelAdapter.setItems(Stream.of(songs)
+                                .map(song -> {
+                                    SuggestedSongView suggestedSongView = new SuggestedSongView(song, requestManager);
+                                    suggestedSongView.setClickListener(songClickListener);
+                                    return (ViewModel) suggestedSongView;
+                                })
+                                .limit(20)
+                                .collect(Collectors.toList()));
+
+                        return viewModels;
+                    } else {
+                        return Collections.emptyList();
+                    }
+                });
+    }
+
+    Observable<List<ViewModel>> getRecentlyPlayedViewModels() {
+        return Playlist.recentlyPlayedPlaylist
+                .getSongsObservable()
+                .flatMap(songs -> Observable.just(Operators.songsToAlbums(songs)))
+                .flatMap(albums -> Observable.fromIterable(albums)
+                        .sorted((a, b) -> ComparisonUtils.compareLong(b.lastPlayed, a.lastPlayed))
+                        .flatMapSingle(album ->
+                                // We need to populate the song count
+                                album.getSongsSingle()
+                                        .map(songs -> {
+                                            album.numSongs = songs.size();
+                                            return album;
+                                        })
+                                        .toObservable()
+                                        .sorted((a, b) -> ComparisonUtils.compareLong(b.lastPlayed, a.lastPlayed))
+                                        .filter(a -> a.numSongs > 0)
+                                        .take(6)
+                                        .toList())
+                )
+                .map(albums -> {
+                    if (!albums.isEmpty()) {
+                        List<ViewModel> viewModels = new ArrayList<>();
+
+                        SuggestedHeader recentlyPlayedHeader = new SuggestedHeader(getString(R.string.suggested_recent_title), getString(R.string.suggested_recent_subtitle), Playlist.recentlyPlayedPlaylist);
+                        SuggestedHeaderView recentlyPlayedHeaderView = new SuggestedHeaderView(recentlyPlayedHeader);
+                        recentlyPlayedHeaderView.setClickListener(this);
+                        viewModels.add(recentlyPlayedHeaderView);
+
+                        viewModels.addAll(Stream.of(albums)
+                                .map(album -> {
+                                    AlbumView albumView = new AlbumView(album, ViewType.ALBUM_LIST_SMALL, requestManager);
+                                    albumView.setClickListener(this);
+                                    return albumView;
+                                }).toList());
+
+                        return viewModels;
+                    } else {
+                        return Collections.emptyList();
+                    }
+                });
+    }
+
+    Observable<List<ViewModel>> getFavoriteSongViewModels() {
+        Observable<Playlist> favoritesPlaylist = Playlist.favoritesPlaylist().toObservable().cache();
+        Observable<List<Song>> favoritesSongs = favoritesPlaylist
+                .flatMap(Playlist::getSongsObservable)
+                .flatMapSingle(songs -> Observable.fromIterable(songs)
+                        .take(20)
+                        .toList());
+
+        return Observable.zip(favoritesPlaylist, favoritesSongs, (playlist, songs) -> {
+            if (!songs.isEmpty()) {
+                List<ViewModel> viewModels = new ArrayList<>();
+
+                SuggestedHeader favoriteHeader = new SuggestedHeader(getString(R.string.fav_title), getString(R.string.suggested_favorite_subtitle), playlist);
+                SuggestedHeaderView favoriteHeaderView = new SuggestedHeaderView(favoriteHeader);
+                favoriteHeaderView.setClickListener(this);
+                viewModels.add(favoriteHeaderView);
+
+                viewModels.add(favoriteRecyclerView);
+
+                SongClickListener songClickListener = new SongClickListener(songs);
+                favoriteRecyclerView.viewModelAdapter.setItems(Stream.of(songs).map(song -> {
+                    SuggestedSongView suggestedSongView = new SuggestedSongView(song, requestManager);
+                    suggestedSongView.setClickListener(songClickListener);
+                    return (ViewModel) suggestedSongView;
+                }).toList());
+
+                return viewModels;
+            } else {
+                return Collections.emptyList();
+            }
+        });
+    }
+
+    Observable<List<ViewModel>> getRecentlyAddedViewModels() {
+        return Playlist.recentlyAddedPlaylist
+                .getSongsObservable()
+                .flatMapSingle(source -> Observable.fromIterable(source)
+                        .sorted((a, b) -> ComparisonUtils.compareLong(b.playCount, a.playCount))
+                        .take(20)
+                        .toList())
+                .map(songs -> {
+                    if (!songs.isEmpty()) {
+                        List<ViewModel> viewModels = new ArrayList<>();
+
+                        SuggestedHeader recentlyAddedHeader = new SuggestedHeader(getString(R.string.recentlyadded), getString(R.string.suggested_recently_added_subtitle), Playlist.recentlyAddedPlaylist);
+                        SuggestedHeaderView recentlyAddedHeaderView = new SuggestedHeaderView(recentlyAddedHeader);
+                        recentlyAddedHeaderView.setClickListener(this);
+                        viewModels.add(recentlyAddedHeaderView);
+
+                        SongClickListener songClickListener = new SongClickListener(songs);
+
+                        viewModels.addAll(Stream.of(songs).map(song -> {
+                            SuggestedSongView suggestedSongView = new SuggestedSongView(song, requestManager);
+                            suggestedSongView.setClickListener(songClickListener);
+                            return (ViewModel) suggestedSongView;
+                        }).toList());
+
+                        return viewModels;
+                    } else {
+                        return Collections.emptyList();
+                    }
+                });
+    }
+
+    void refreshAdapterItems() {
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {
-
-                subscription = new CompositeSubscription();
-
-                Observable<Playlist> mostPlayedPlaylistObservable = Observable.fromCallable(Playlist::mostPlayedPlaylist)
-                        .subscribeOn(Schedulers.io())
-                        .cache();
-
-                Observable<List<Song>> mostPlayedSongsObservable = mostPlayedPlaylistObservable
-                        .filter(playlist -> playlist != null)
-                        .flatMap(Playlist::getSongsObservable)
-                        .cache();
-
-                Observable<List<ViewModel>> mostPlayedItemsObservable = mostPlayedPlaylistObservable
-                        .flatMap(playlist -> {
-
-                            SuggestedHeader mostPlayedHeader = new SuggestedHeader(getString(R.string.mostplayed), getString(R.string.suggested_most_played_songs_subtitle), playlist);
-                            SuggestedHeaderView mostPlayedHeaderView = new SuggestedHeaderView(mostPlayedHeader);
-                            mostPlayedHeaderView.setClickListener(this);
-
-                            return mostPlayedSongsObservable
-                                    .map(songs -> {
-                                        List<ViewModel> items = new ArrayList<>();
-                                        if (!songs.isEmpty()) {
-                                            items.add(mostPlayedHeaderView);
-                                            items.add(mostPlayedRecyclerView);
-                                        }
-                                        return items;
-                                    });
-                        })
-                        .switchIfEmpty(Observable.just(Collections.emptyList()));
-
-                Observable<List<ViewModel>> recentlyPlayedAlbums = Observable.fromCallable(Playlist::recentlyPlayedPlaylist)
-                        .subscribeOn(Schedulers.io())
-                        .filter(playlist -> playlist != null)
-                        .flatMap(playlist -> {
-
-                            SuggestedHeader recentlyPlayedHeader = new SuggestedHeader(getString(R.string.suggested_recent_title), getString(R.string.suggested_recent_subtitle), playlist);
-                            SuggestedHeaderView recentlyPlayedHeaderView = new SuggestedHeaderView(recentlyPlayedHeader);
-                            recentlyPlayedHeaderView.setClickListener(this);
-
-                            return playlist.getSongsObservable()
-                                    .flatMap(songs -> Observable.just(Operators.songsToAlbums(songs)))
-                                    .flatMap(Observable::from)
-                                    .sorted((a, b) -> ComparisonUtils.compareLong(b.lastPlayed, a.lastPlayed))
-                                    .limit(6)
-                                    .flatMap(album ->
-                                            //We need to populate the song count
-                                            album.getSongsObservable()
-                                                    .map(songs -> {
-                                                        album.numSongs = songs.size();
-                                                        return album;
-                                                    }))
-                                    .sorted((a, b) -> ComparisonUtils.compareLong(b.lastPlayed, a.lastPlayed))
-                                    .filter(album -> album.numSongs > 0)
-                                    .map(album -> {
-                                        AlbumView albumView = new AlbumView(album, ViewType.ALBUM_LIST_SMALL, requestManager);
-                                        albumView.setClickListener(this);
-                                        return (ViewModel) albumView;
-                                    })
-                                    .toList()
-                                    .map(adaptableItems -> {
-                                        if (!adaptableItems.isEmpty()) {
-                                            adaptableItems.add(0, recentlyPlayedHeaderView);
-                                        }
-                                        return adaptableItems;
-                                    });
-                        })
-                        .switchIfEmpty(Observable.just(Collections.emptyList()));
-
-                Observable<Playlist> favouritesPlaylistObservable = Observable.fromCallable(Playlist::favoritesPlaylist)
-                        .subscribeOn(Schedulers.io())
-                        .cache();
-
-                Observable<List<Song>> favouritesSongsObservable = favouritesPlaylistObservable
-                        .filter(playlist -> playlist != null)
-                        .flatMap(Playlist::getSongsObservable)
-                        .cache();
-
-                Observable<List<ViewModel>> favoriteSongsItemsObservable = favouritesPlaylistObservable
-                        .flatMap(playlist -> {
-
-                            SuggestedHeader favoriteHeader = new SuggestedHeader(getString(R.string.fav_title), getString(R.string.suggested_favorite_subtitle), playlist);
-                            SuggestedHeaderView favoriteHeaderView = new SuggestedHeaderView(favoriteHeader);
-                            favoriteHeaderView.setClickListener(this);
-
-                            return favouritesSongsObservable
-                                    .map(songs -> {
-                                        List<ViewModel> items = new ArrayList<>();
-                                        if (!songs.isEmpty()) {
-                                            items.add(favoriteHeaderView);
-                                            items.add(favoriteRecyclerView);
-                                        }
-                                        return items;
-                                    });
-                        })
-                        .switchIfEmpty(Observable.just(Collections.emptyList()));
-
-                Observable<List<ViewModel>> recentlyAddedAlbums = Observable.fromCallable(Playlist::recentlyAddedPlaylist)
-                        .subscribeOn(Schedulers.io())
-                        .filter(playlist -> playlist != null)
-                        .flatMap(playlist -> {
-
-                            SuggestedHeader recentlyAddedHeader = new SuggestedHeader(getString(R.string.recentlyadded), getString(R.string.suggested_recently_added_subtitle), playlist);
-                            SuggestedHeaderView recentlyAddedHeaderView = new SuggestedHeaderView(recentlyAddedHeader);
-                            recentlyAddedHeaderView.setClickListener(this);
-
-                            return playlist.getSongsObservable()
-                                    .flatMap(songs -> Observable.just(Operators.songsToAlbums(songs)))
-                                    .flatMap(Observable::from)
-                                    .sorted((a, b) -> ComparisonUtils.compareLong(b.dateAdded, a.dateAdded))
-                                    .limit(4)
-                                    .flatMap(album ->
-                                            //We need to populate the song count
-                                            album.getSongsObservable()
-                                                    .map(songs -> {
-                                                        album.numSongs = songs.size();
-                                                        return album;
-                                                    }))
-                                    .sorted((a, b) -> ComparisonUtils.compareLong(b.dateAdded, a.dateAdded))
-                                    .filter(album -> album.numSongs > 0)
-                                    .map(album -> {
-                                        AlbumView albumView = new AlbumView(album, ViewType.ALBUM_LIST_SMALL, requestManager);
-                                        albumView.setClickListener(this);
-                                        return (ViewModel) albumView;
-                                    })
-                                    .toList()
-                                    .map(adaptableItems -> {
-                                        if (!adaptableItems.isEmpty()) {
-                                            adaptableItems.add(0, recentlyAddedHeaderView);
-                                        }
-                                        return adaptableItems;
-                                    });
-                        })
-                        .switchIfEmpty(Observable.just(Collections.emptyList()));
-
-                subscription.add(
-                        Observable.combineLatest(mostPlayedItemsObservable, recentlyPlayedAlbums, favoriteSongsItemsObservable, recentlyAddedAlbums,
+                disposables.add(
+                        Observable.combineLatest(getMostPlayedViewModels(), getRecentlyPlayedViewModels(), getFavoriteSongViewModels(), getRecentlyAddedViewModels(),
                                 (mostPlayedSongs1, recentlyPlayedAlbums1, favoriteSongs1, recentlyAddedAlbums1) -> {
                                     List<ViewModel> items = new ArrayList<>();
                                     items.addAll(mostPlayedSongs1);
@@ -345,49 +344,15 @@ public class SuggestedFragment extends BaseFragment implements
                                     items.addAll(recentlyAddedAlbums1);
                                     return items;
                                 })
-                                .debounce(250, TimeUnit.MILLISECONDS)
-                                .switchIfEmpty(Observable.just(new ArrayList<>()))
+                                .switchIfEmpty(Observable.just(Collections.emptyList()))
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(adaptableItems -> {
                                     if (adaptableItems.isEmpty()) {
-                                        ViewModelAdapter.setItems(Collections.singletonList((new EmptyView(R.string.empty_suggested))));
+                                        viewModelAdapter.setItems(Collections.singletonList((new EmptyView(R.string.empty_suggested))));
                                     } else {
-                                        ViewModelAdapter.setItems(adaptableItems);
+                                        viewModelAdapter.setItems(adaptableItems);
                                     }
-                                }, error -> LogUtils.logException("SuggestedFragment: Error setting items", error)));
-
-                subscription.add(mostPlayedSongsObservable
-                        .map(songs -> {
-                            Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(b.playCount, a.playCount));
-                            SongClickListener songClickListener = new SongClickListener(songs);
-                            return Stream.of(songs)
-                                    .map(song -> {
-                                        SuggestedSongView suggestedSongView = new SuggestedSongView(song, requestManager);
-                                        suggestedSongView.setClickListener(songClickListener);
-                                        return (ViewModel) suggestedSongView;
-                                    })
-                                    .limit(20)
-                                    .collect(Collectors.toList());
-                        })
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(adaptableItems -> mostPlayedRecyclerView.ViewModelAdapter.setItems(adaptableItems),
-                                error -> LogUtils.logException("SuggestedFragment: Error setting most played songs", error)));
-
-                subscription.add(favouritesSongsObservable
-                        .map(songs -> {
-                            SongClickListener songClickListener = new SongClickListener(songs);
-                            return Stream.of(songs)
-                                    .map(song -> {
-                                        SuggestedSongView suggestedSongView = new SuggestedSongView(song, requestManager);
-                                        suggestedSongView.setClickListener(songClickListener);
-                                        return (ViewModel) suggestedSongView;
-                                    })
-                                    .limit(20)
-                                    .collect(Collectors.toList());
-                        })
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(adaptableItems -> favoriteRecyclerView.ViewModelAdapter.setItems(adaptableItems),
-                                error -> LogUtils.logException("SuggestedFragment: Error setting favourite songs", error)));
+                                }, error -> LogUtils.logException(TAG, "Error setting items", error)));
             }
         });
     }
@@ -395,8 +360,8 @@ public class SuggestedFragment extends BaseFragment implements
     @Override
     public void onPause() {
 
-        if (subscription != null) {
-            subscription.unsubscribe();
+        if (disposables != null) {
+            disposables.clear();
         }
 
         super.onPause();
@@ -424,7 +389,7 @@ public class SuggestedFragment extends BaseFragment implements
 
     @Override
     public void onSuggestedHeaderClick(SuggestedHeader suggestedHeader) {
-        getNavigationController().pushViewController(PlaylistDetailFragment.newInstance(suggestedHeader.playlist), "PlaylistFrasgment");
+        getNavigationController().pushViewController(PlaylistDetailFragment.newInstance(suggestedHeader.playlist), "PlaylistFragment");
     }
 
     @Override

@@ -12,10 +12,10 @@ import com.simplecity.amp_library.utils.Operators;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.SortManager;
 
+import java.util.Collections;
 import java.util.List;
 
-import rx.Observable;
-
+import io.reactivex.Single;
 
 public class PlaylistDetailFragment extends BaseDetailFragment {
 
@@ -85,13 +85,13 @@ public class PlaylistDetailFragment extends BaseDetailFragment {
 
     @NonNull
     @Override
-    public Observable<List<Song>> getSongs() {
-        return playlist.getSongsObservable();
+    public Single<List<Song>> getSongs() {
+        return playlist.getSongsObservable().first(Collections.emptyList());
     }
 
     @NonNull
     @Override
-    public Observable<List<Album>> getAlbums() {
+    public Single<List<Album>> getAlbums() {
         return getSongs().map(Operators::songsToAlbums);
     }
 

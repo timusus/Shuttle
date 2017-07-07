@@ -31,9 +31,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class ArtworkDialog {
 
@@ -121,7 +121,7 @@ public class ArtworkDialog {
                             adapter.addItem(new ArtworkView(ArtworkProvider.Type.FOLDER, artworkProvider, glideListener, file, false));
                         });
                     }
-                }, error -> LogUtils.logException("ArtworkDialog: Error getting artwork files", error));
+                }, error -> LogUtils.logException(TAG, "Error getting artwork files", error));
 
         return new MaterialDialog.Builder(context)
                 .title(R.string.artwork_edit)
@@ -197,7 +197,7 @@ public class ArtworkDialog {
                             artworkView.setSelected(true);
                             adapter.addItem(0, artworkView);
                             recyclerView.scrollToPosition(0);
-                        }, error -> LogUtils.logException("ArtworkDialog error picking from gallery", error)))
+                        }, error -> LogUtils.logException(TAG, "Error picking from gallery", error)))
                 .cancelable(false)
                 .build();
     }

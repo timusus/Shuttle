@@ -9,7 +9,7 @@ import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
 import java.io.Serializable;
 import java.util.List;
 
-import rx.Observable;
+import io.reactivex.Single;
 
 public class Genre implements Serializable {
 
@@ -44,26 +44,10 @@ public class Genre implements Serializable {
         this.name = name;
     }
 
-    public Observable<List<Song>> getSongsObservable() {
+    public Single<List<Song>> getSongsObservable() {
         Query query = Song.getQuery();
         query.uri = MediaStore.Audio.Genres.Members.getContentUri("external", id);
-        return SqlBriteUtils.createQuery(ShuttleApplication.getInstance(), Song::new, query);
-    }
-
-    public Observable<Integer> getSongCountObservable() {
-        Query query = Song.getQuery();
-        query.uri = MediaStore.Audio.Genres.Members.getContentUri("external", id);
-        return SqlBriteUtils.createContinuousQuery(ShuttleApplication.getInstance(), query).map(query1 -> {
-            Cursor cursor = query1.run();
-            if (cursor != null) {
-                try {
-                    return cursor.getCount();
-                } finally {
-                    cursor.close();
-                }
-            }
-            return 0;
-        }).first();
+        return SqlBriteUtils.createSingleList(ShuttleApplication.getInstance(), Song::new, query);
     }
 
     @Override

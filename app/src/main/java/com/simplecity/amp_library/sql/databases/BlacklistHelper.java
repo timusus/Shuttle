@@ -6,11 +6,12 @@ import com.annimon.stream.Stream;
 import com.simplecity.amp_library.model.BlacklistedSong;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.utils.DataManager;
-import com.squareup.sqlbrite.BriteDatabase;
+import com.squareup.sqlbrite2.BriteDatabase;
 
+import java.util.Collections;
 import java.util.List;
 
-import rx.Observable;
+import io.reactivex.Single;
 
 public class BlacklistHelper {
 
@@ -40,10 +41,11 @@ public class BlacklistHelper {
         }
     }
 
-    public static Observable<List<BlacklistedSong>> getBlacklistSongsObservable() {
+    public static Single<List<BlacklistedSong>> getBlacklistSongsObservable() {
         return DataManager.getInstance().getBlacklistDatabase()
                 .createQuery(BlacklistDbOpenHelper.TABLE_SONGS, "SELECT * FROM " + BlacklistDbOpenHelper.TABLE_SONGS)
-                .mapToList(BlacklistedSong::new);
+                .mapToList(BlacklistedSong::new)
+                .first(Collections.emptyList());
     }
 
     public static void deleteSong(long songId) {

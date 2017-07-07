@@ -16,7 +16,6 @@ import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Header;
 import com.simplecity.amp_library.model.Song;
-import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.ui.modelviews.AlbumArtistView;
 import com.simplecity.amp_library.ui.modelviews.AlbumView;
@@ -24,7 +23,6 @@ import com.simplecity.amp_library.ui.modelviews.SearchHeaderView;
 import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.presenters.Presenter;
 import com.simplecity.amp_library.utils.DataManager;
-import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
@@ -39,15 +37,17 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import io.reactivex.SingleOperator;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 public class SearchPresenter extends Presenter<SearchView> implements
         AlbumView.ClickListener,
         AlbumArtistView.ClickListener {
+
+    private static final String TAG = "SearchPresenter";
 
     private static final double SCORE_THRESHOLD = 0.80;
 
@@ -55,8 +55,8 @@ public class SearchPresenter extends Presenter<SearchView> implements
 
     private RequestManager requestManager;
 
-    private Subscription performSearchSubscription;
-    private Subscription setItemsSubscription;
+    private Disposable performSearchSubscription;
+    private Disposable setItemsSubscription;
 
     private String query;
 
@@ -105,26 +105,26 @@ public class SearchPresenter extends Presenter<SearchView> implements
 
             //We've received a new refresh call. Unsubscribe the in-flight subscription if it exists.
             if (performSearchSubscription != null) {
-                performSearchSubscription.unsubscribe();
+                performSearchSubscription.dispose();
             }
 
             boolean searchArtists = SettingsManager.getInstance().getSearchArtists();
 
-            Observable<List<ViewModel>> albumArtistsObservable = searchArtists ? DataManager.getInstance().getAlbumArtistsRelay()
-                    .first()
-                    .lift(new AlbumArtistFilterOperator(query, requestManager, prefixHighlighter)) : Observable.just(Collections.emptyList());
+            Single<List<ViewModel>> albumArtistsObservable = searchArtists ? DataManager.getInstance().getAlbumArtistsRelay()
+                    .first(Collections.emptyList())
+                    .lift(new AlbumArtistFilterOperator(query, requestManager, prefixHighlighter)) : Single.just(Collections.emptyList());
 
             boolean searchAlbums = SettingsManager.getInstance().getSearchAlbums();
 
-            Observable<List<ViewModel>> albumsObservable = searchAlbums ? DataManager.getInstance().getAlbumsRelay()
-                    .first()
-                    .lift(new AlbumFilterOperator(query, requestManager, prefixHighlighter)) : Observable.just(Collections.emptyList());
+            Single<List<ViewModel>> albumsObservable = searchAlbums ? DataManager.getInstance().getAlbumsRelay()
+                    .first(Collections.emptyList())
+                    .lift(new AlbumFilterOperator(query, requestManager, prefixHighlighter)) : Single.just(Collections.emptyList());
 
-            Observable<List<ViewModel>> songsObservable = DataManager.getInstance().getSongsRelay()
-                    .first()
+            Single<List<ViewModel>> songsObservable = DataManager.getInstance().getSongsRelay()
+                    .first(Collections.emptyList())
                     .lift(new SongFilterOperator(query, requestManager, prefixHighlighter));
 
-            performSearchSubscription = Observable.combineLatest(
+            performSearchSubscription = Single.zip(
                     albumArtistsObservable, albumsObservable, songsObservable,
                     (adaptableItems, adaptableItems2, adaptableItems3) -> {
                         List<ViewModel> list = new ArrayList<>();
@@ -138,7 +138,7 @@ public class SearchPresenter extends Presenter<SearchView> implements
 
                         //We've got a new set of items to adapt.. Cancel the in-flight subscription.
                         if (setItemsSubscription != null) {
-                            setItemsSubscription.unsubscribe();
+                            setItemsSubscription.dispose();
                         }
 
                         if (adaptableItems.isEmpty()) {
@@ -146,9 +146,9 @@ public class SearchPresenter extends Presenter<SearchView> implements
                         } else {
                             setItemsSubscription = searchView.setItems(adaptableItems);
                         }
-                    }, error -> LogUtils.logException("SearchPresenter: Error refreshing adapter", error));
+                    }, error -> LogUtils.logException(TAG, "Error refreshing adapter", error));
 
-            addSubcscription(performSearchSubscription);
+            addDisposable(performSearchSubscription);
         }
     }
 
@@ -184,13 +184,10 @@ public class SearchPresenter extends Presenter<SearchView> implements
     public void onAlbumArtistOverflowClicked(View v, AlbumArtist albumArtist) {
         PopupMenu menu = new PopupMenu(v.getContext(), v);
         menu.inflate(R.menu.menu_artist);
-        menu.setOnMenuItemClickListener(MenuUtils.getAlbumArtistClickListener(v.getContext(), albumArtist, new Action1<TaggerDialog>() {
-            @Override
-            public void call(TaggerDialog taggerDialog) {
-                SearchView searchView = getView();
-                if (searchView != null) {
-                    searchView.showTaggerDialog(taggerDialog);
-                }
+        menu.setOnMenuItemClickListener(MenuUtils.getAlbumArtistClickListener(v.getContext(), albumArtist, taggerDialog -> {
+            SearchView searchView = getView();
+            if (searchView != null) {
+                searchView.showTaggerDialog(taggerDialog);
             }
         }));
         menu.show();
@@ -213,19 +210,16 @@ public class SearchPresenter extends Presenter<SearchView> implements
     public void onAlbumOverflowClicked(View v, Album album) {
         PopupMenu menu = new PopupMenu(v.getContext(), v);
         menu.inflate(R.menu.menu_album);
-        menu.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(v.getContext(), album, new Action1<TaggerDialog>() {
-            @Override
-            public void call(TaggerDialog taggerDialog) {
-                SearchView searchView = getView();
-                if (searchView != null) {
-                    searchView.showTaggerDialog(taggerDialog);
-                }
+        menu.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(v.getContext(), album, taggerDialog -> {
+            SearchView searchView = getView();
+            if (searchView != null) {
+                searchView.showTaggerDialog(taggerDialog);
             }
         }));
         menu.show();
     }
 
-    private class SongFilterOperator implements Observable.Operator<List<ViewModel>, List<Song>> {
+    private class SongFilterOperator implements SingleOperator<List<ViewModel>, List<Song>> {
 
         private String filterString;
 
@@ -242,11 +236,15 @@ public class SearchPresenter extends Presenter<SearchView> implements
         }
 
         @Override
-        public Subscriber<List<Song>> call(Subscriber<? super List<ViewModel>> subscriber) {
-            return new Subscriber<List<Song>>() {
+        public SingleObserver<? super List<Song>> apply(SingleObserver<? super List<ViewModel>> observer) throws Exception {
+            return new SingleObserver<List<Song>>() {
                 @Override
-                public void onNext(List<Song> songs) {
+                public void onSubscribe(Disposable d) {
+                    observer.onSubscribe(d);
+                }
 
+                @Override
+                public void onSuccess(List<Song> songs) {
                     char[] prefix = filterString.toUpperCase().toCharArray();
 
                     List<Album> albums = Operators.songsToAlbums(songs);
@@ -254,8 +252,6 @@ public class SearchPresenter extends Presenter<SearchView> implements
 
                     List<AlbumArtist> albumArtists = Operators.albumsToAlbumArtists(albums);
                     Collections.sort(albumArtists, AlbumArtist::compareTo);
-
-                    if (isUnsubscribed()) return;
 
                     boolean fuzzy = SettingsManager.getInstance().getSearchFuzzy();
 
@@ -277,21 +273,13 @@ public class SearchPresenter extends Presenter<SearchView> implements
                         viewModels.add(0, songsHeader);
                     }
 
-                    if (!subscriber.isUnsubscribed()) {
-                        subscriber.onNext(viewModels);
-                    }
-                }
-
-                @Override
-                public void onCompleted() {
-                    subscriber.onCompleted();
+                    observer.onSuccess(viewModels);
                 }
 
                 @Override
                 public void onError(Throwable e) {
-                    subscriber.onError(e);
+                    observer.onError(e);
                 }
-
             };
         }
 
@@ -308,7 +296,7 @@ public class SearchPresenter extends Presenter<SearchView> implements
         }
     }
 
-    private class AlbumFilterOperator implements Observable.Operator<List<ViewModel>, List<Album>> {
+    private class AlbumFilterOperator implements SingleOperator<List<ViewModel>, List<Album>> {
 
         private String filterString;
 
@@ -325,16 +313,18 @@ public class SearchPresenter extends Presenter<SearchView> implements
         }
 
         @Override
-        public Subscriber<? super List<Album>> call(Subscriber<? super List<ViewModel>> subscriber) {
-            return new Subscriber<List<Album>>() {
+        public SingleObserver<? super List<Album>> apply(SingleObserver<? super List<ViewModel>> observer) throws Exception {
+            return new SingleObserver<List<Album>>() {
                 @Override
-                public void onNext(List<Album> albums) {
+                public void onSubscribe(Disposable d) {
+                    observer.onSubscribe(d);
+                }
 
+                @Override
+                public void onSuccess(List<Album> albums) {
                     char[] prefix = filterString.toUpperCase().toCharArray();
 
                     Collections.sort(albums, Album::compareTo);
-
-                    if (isUnsubscribed()) return;
 
                     boolean fuzzy = SettingsManager.getInstance().getSearchFuzzy();
 
@@ -354,21 +344,13 @@ public class SearchPresenter extends Presenter<SearchView> implements
                         viewModels.add(0, albumsHeader);
                     }
 
-                    if (!subscriber.isUnsubscribed()) {
-                        subscriber.onNext(viewModels);
-                    }
-                }
-
-                @Override
-                public void onCompleted() {
-                    subscriber.onCompleted();
+                    observer.onSuccess(viewModels);
                 }
 
                 @Override
                 public void onError(Throwable e) {
-                    subscriber.onError(e);
+                    observer.onError(e);
                 }
-
             };
         }
 
@@ -385,7 +367,7 @@ public class SearchPresenter extends Presenter<SearchView> implements
         }
     }
 
-    private class AlbumArtistFilterOperator implements Observable.Operator<List<ViewModel>, List<AlbumArtist>> {
+    private class AlbumArtistFilterOperator implements SingleOperator<List<ViewModel>, List<AlbumArtist>> {
 
         private String filterString;
 
@@ -402,16 +384,18 @@ public class SearchPresenter extends Presenter<SearchView> implements
         }
 
         @Override
-        public Subscriber<? super List<AlbumArtist>> call(Subscriber<? super List<ViewModel>> subscriber) {
-            return new Subscriber<List<AlbumArtist>>() {
+        public SingleObserver<? super List<AlbumArtist>> apply(SingleObserver<? super List<ViewModel>> observer) throws Exception {
+            return new SingleObserver<List<AlbumArtist>>() {
                 @Override
-                public void onNext(List<AlbumArtist> albumArtists) {
+                public void onSubscribe(Disposable d) {
+                    observer.onSubscribe(d);
+                }
 
+                @Override
+                public void onSuccess(List<AlbumArtist> albumArtists) {
                     char[] prefix = filterString.toUpperCase().toCharArray();
 
                     Collections.sort(albumArtists, AlbumArtist::compareTo);
-
-                    if (isUnsubscribed()) return;
 
                     boolean fuzzy = SettingsManager.getInstance().getSearchFuzzy();
 
@@ -433,21 +417,13 @@ public class SearchPresenter extends Presenter<SearchView> implements
                         viewModels.add(0, artistsHeader);
                     }
 
-                    if (!subscriber.isUnsubscribed()) {
-                        subscriber.onNext(viewModels);
-                    }
-                }
-
-                @Override
-                public void onCompleted() {
-                    subscriber.onCompleted();
+                    observer.onSuccess(viewModels);
                 }
 
                 @Override
                 public void onError(Throwable e) {
-                    subscriber.onError(e);
+                    observer.onError(e);
                 }
-
             };
         }
 
@@ -494,13 +470,10 @@ public class SearchPresenter extends Presenter<SearchView> implements
         public void onSongOverflowClick(int position, View v, Song song) {
             PopupMenu menu = new PopupMenu(v.getContext(), v);
             menu.inflate(R.menu.menu_search);
-            menu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(v.getContext(), song, new Action1<TaggerDialog>() {
-                @Override
-                public void call(TaggerDialog taggerDialog) {
-                    SearchView searchView = getView();
-                    if (searchView != null) {
-                        searchView.showTaggerDialog(taggerDialog);
-                    }
+            menu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(v.getContext(), song, taggerDialog -> {
+                SearchView searchView = getView();
+                if (searchView != null) {
+                    searchView.showTaggerDialog(taggerDialog);
                 }
             }));
             menu.show();

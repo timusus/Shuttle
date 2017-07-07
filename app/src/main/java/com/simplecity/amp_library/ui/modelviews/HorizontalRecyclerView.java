@@ -18,18 +18,18 @@ import static com.simplecity.amp_library.ui.adapters.ViewType.HORIZONTAL_RECYCLE
 
 public class HorizontalRecyclerView extends BaseViewModel<HorizontalRecyclerView.ViewHolder> {
 
-    public ViewModelAdapter ViewModelAdapter;
+    public ViewModelAdapter viewModelAdapter;
 
     public HorizontalRecyclerView() {
-        this.ViewModelAdapter = new ViewModelAdapter();
+        this.viewModelAdapter = new ViewModelAdapter();
     }
 
     public void setItems(List<ViewModel> items) {
-        ViewModelAdapter.setItems(items);
+        viewModelAdapter.setItems(items);
     }
 
     public int getCount() {
-        return ViewModelAdapter.getItemCount();
+        return viewModelAdapter.getItemCount();
     }
 
     @Override
@@ -46,7 +46,7 @@ public class HorizontalRecyclerView extends BaseViewModel<HorizontalRecyclerView
     public void bindView(ViewHolder holder) {
         super.bindView(holder);
 
-        ((RecyclerView) holder.itemView).setAdapter(ViewModelAdapter);
+        ((RecyclerView) holder.itemView).setAdapter(viewModelAdapter);
     }
 
     @Override
@@ -79,11 +79,11 @@ public class HorizontalRecyclerView extends BaseViewModel<HorizontalRecyclerView
 
         HorizontalRecyclerView that = (HorizontalRecyclerView) o;
 
-        return ViewModelAdapter != null ? ViewModelAdapter.equals(that.ViewModelAdapter) : that.ViewModelAdapter == null;
+        return viewModelAdapter != null ? viewModelAdapter.equals(that.viewModelAdapter) : that.viewModelAdapter == null;
     }
 
     @Override
     public int hashCode() {
-        return ViewModelAdapter != null ? ViewModelAdapter.hashCode() : 0;
+        return viewModelAdapter != null ? viewModelAdapter.hashCode() : 0;
     }
 }

@@ -50,7 +50,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.disposables.CompositeDisposable;
-import rx.Subscription;
+import io.reactivex.disposables.Disposable;
 import test.com.multisheetview.ui.view.MultiSheetView;
 
 public class QueueFragment extends BaseFragment implements
@@ -90,7 +90,7 @@ public class QueueFragment extends BaseFragment implements
 
     private ContextualToolbarHelper<Song> contextualToolbarHelper;
 
-    private Subscription loadDataSubscription;
+    private Disposable loadDataDisposable;
     private Unbinder unbinder;
 
     public static QueueFragment newInstance() {
@@ -199,8 +199,8 @@ public class QueueFragment extends BaseFragment implements
         playerPresenter.unbindView(playerViewAdapter);
         queuePresenter.unbindView(this);
 
-        if (loadDataSubscription != null) {
-            loadDataSubscription.unsubscribe();
+        if (loadDataDisposable != null) {
+            loadDataDisposable.dispose();
         }
     }
 
@@ -250,11 +250,11 @@ public class QueueFragment extends BaseFragment implements
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {
 
-                if (loadDataSubscription != null) {
-                    loadDataSubscription.unsubscribe();
+                if (loadDataDisposable != null) {
+                    loadDataDisposable.dispose();
                 }
 
-                loadDataSubscription = adapter.setItems(items, new CompletionListUpdateCallbackAdapter() {
+                loadDataDisposable = adapter.setItems(items, new CompletionListUpdateCallbackAdapter() {
                     @Override
                     public void onComplete() {
                         setCurrentQueueItem(position);

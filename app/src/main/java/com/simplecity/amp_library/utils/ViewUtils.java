@@ -6,11 +6,11 @@ import android.animation.ObjectAnimator;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import rx.functions.Action0;
+import com.simplecity.amp_library.rx.UnsafeAction;
 
 public class ViewUtils {
 
-    public static void fadeOut(View view, @Nullable Action0 completion) {
+    public static void fadeOut(View view, @Nullable UnsafeAction action) {
 
         ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(view, View.ALPHA, 1f, 0f).setDuration(250);
         objectAnimator.addListener(new AnimatorListenerAdapter() {
@@ -19,8 +19,8 @@ public class ViewUtils {
                 view.setVisibility(View.GONE);
                 objectAnimator.removeAllListeners();
 
-                if (completion != null) {
-                    completion.call();
+                if (action != null) {
+                    action.run();
                 }
             }
         });
@@ -28,7 +28,7 @@ public class ViewUtils {
         objectAnimator.start();
     }
 
-    public static void fadeIn(View view, @Nullable Action0 completion) {
+    public static void fadeIn(View view, @Nullable UnsafeAction action) {
 
         view.setVisibility(View.VISIBLE);
 
@@ -37,8 +37,8 @@ public class ViewUtils {
             @Override
             public void onAnimationEnd(Animator animation) {
                 animation.removeAllListeners();
-                if (completion != null) {
-                    completion.call();
+                if (action != null) {
+                    action.run();
                 }
             }
         });

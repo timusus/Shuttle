@@ -21,7 +21,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
+import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
@@ -48,8 +48,9 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.Subscription;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 public class SearchFragment extends BaseFragment implements
         com.simplecity.amp_library.search.SearchView {
@@ -72,7 +73,7 @@ public class SearchFragment extends BaseFragment implements
 
     private EmptyView emptyView;
 
-    private CompositeSubscription subscriptions = new CompositeSubscription();
+    private CompositeDisposable disposables = new CompositeDisposable();
 
     @Inject
     SearchPresenter searchPresenter;
@@ -166,10 +167,10 @@ public class SearchFragment extends BaseFragment implements
 
         searchPresenter.bindView(this);
 
-        subscriptions.add(RxSearchView.queryTextChangeEvents(searchView)
+        disposables.add(RxSearchView.queryTextChangeEvents(searchView)
                 .skip(1)
                 .debounce(200, TimeUnit.MILLISECONDS)
-                .onBackpressureLatest()
+                .toFlowable(BackpressureStrategy.LATEST)
                 .subscribe(searchViewQueryTextEvent -> {
                     query = searchViewQueryTextEvent.queryText().toString();
                     searchPresenter.queryChanged(query);
@@ -180,7 +181,7 @@ public class SearchFragment extends BaseFragment implements
 
     @Override
     public void onPause() {
-        subscriptions.clear();
+        disposables.clear();
         searchPresenter.unbindView(this);
 
         super.onPause();
@@ -202,10 +203,10 @@ public class SearchFragment extends BaseFragment implements
     }
 
     @Override
-    public Subscription setItems(@NonNull List<ViewModel> items) {
-        Subscription subscription = adapter.setItems(items);
+    public Disposable setItems(@NonNull List<ViewModel> items) {
+        Disposable disposable = adapter.setItems(items);
         recyclerView.scrollToPosition(0);
-        return subscription;
+        return disposable;
     }
 
     @Override

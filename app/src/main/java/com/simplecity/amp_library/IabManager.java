@@ -11,11 +11,10 @@ import com.android.vending.billing.utils.IabResult;
 import com.android.vending.billing.utils.Inventory;
 import com.android.vending.billing.utils.Purchase;
 import com.simplecity.amp_library.constants.Config;
+import com.simplecity.amp_library.rx.UnsafeConsumer;
 import com.simplecity.amp_library.ui.activities.MainActivity;
 import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.LogUtils;
-
-import rx.functions.Action1;
 
 public class IabManager {
 
@@ -43,7 +42,7 @@ public class IabManager {
         setup(null);
     }
 
-    public void setup(@Nullable Action1<Integer> messageCallback) {
+    public void setup(@Nullable UnsafeConsumer<Integer> messageCallback) {
         iabHelper.startSetup(result -> {
 
             if (!result.isSuccess()) {
@@ -59,7 +58,7 @@ public class IabManager {
         });
     }
 
-    public void purchaseUpgrade(Activity activity, Action1<Boolean> successHandler) {
+    public void purchaseUpgrade(Activity activity, UnsafeConsumer<Boolean> successHandler) {
         if (!(activity instanceof MainActivity)) {
             throw new IllegalStateException("purchaseUpgrade must be called from MainActivity, it's the only Activity handling the activity result.");
         }
@@ -73,7 +72,7 @@ public class IabManager {
 
                 if (result.isFailure()) {
                     LogUtils.logError("IabManager", "Purchase result failure: " + result.getMessage());
-                    successHandler.call(false);
+                    successHandler.accept(false);
                     return;
                 }
 
@@ -81,16 +80,16 @@ public class IabManager {
 
                 if (sku.equals(Config.SKU_PREMIUM)) {
                     setIsUpgraded(true);
-                    successHandler.call(true);
+                    successHandler.accept(true);
                 }
             }, "");
         } catch (IllegalStateException error) {
-            LogUtils.logException("IabManager error purchasing", error);
-            successHandler.call(false);
+            LogUtils.logException(TAG, "Error purchasing", error);
+            successHandler.accept(false);
         }
     }
 
-    public void restorePurchases(@Nullable Action1<Integer> messageCallback) {
+    public void restorePurchases(@Nullable UnsafeConsumer<Integer> messageCallback) {
         if (iabHelper.setupDone) {
             iabHelper.queryInventoryAsync(new QueryFinishedListener(iabHelper, messageCallback));
         } else {
@@ -113,9 +112,9 @@ public class IabManager {
         private IabHelper iabHelper;
 
         @Nullable
-        private Action1<Integer> messageCallback;
+        private UnsafeConsumer<Integer> messageCallback;
 
-        public QueryFinishedListener(IabHelper iabHelper, @Nullable Action1<Integer> messageCallback) {
+        public QueryFinishedListener(IabHelper iabHelper, @Nullable UnsafeConsumer<Integer> messageCallback) {
             this.iabHelper = iabHelper;
             this.messageCallback = messageCallback;
         }
@@ -139,13 +138,13 @@ public class IabManager {
             if (messageCallback != null) {
                 if (!wasPremium && premiumPurchase != null) {
                     //We didn't have a purchase, but we do now
-                    messageCallback.call(R.string.iab_purchase_restored);
+                    messageCallback.accept(R.string.iab_purchase_restored);
                 } else if (premiumPurchase == null) {
                     //No purchases found
-                    messageCallback.call(R.string.iab_purchase_not_found);
+                    messageCallback.accept(R.string.iab_purchase_not_found);
                 } else {
                     //We did have a purchase, and we still do
-                    messageCallback.call(R.string.iab_already_upgraded);
+                    messageCallback.accept(R.string.iab_already_upgraded);
                 }
             }
         }

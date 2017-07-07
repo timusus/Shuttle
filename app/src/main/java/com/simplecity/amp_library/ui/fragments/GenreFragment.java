@@ -1,9 +1,7 @@
 package com.simplecity.amp_library.ui.fragments;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -22,7 +20,6 @@ import com.simplecity.amp_library.ui.recyclerview.GridDividerDecoration;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
@@ -31,8 +28,8 @@ import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.Collections;
 
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 public class GenreFragment extends BaseFragment implements
         GenreView.ClickListener {
@@ -46,18 +43,12 @@ public class GenreFragment extends BaseFragment implements
 
     private static final String ARG_PAGE_TITLE = "page_title";
 
-    private SharedPreferences mPrefs;
-
     @Nullable
     private GenreClickListener genreClickListener;
 
-    private FastScrollRecyclerView mRecyclerView;
-
     private SectionedAdapter adapter;
 
-    private SharedPreferences.OnSharedPreferenceChangeListener mSharedPreferenceChangeListener;
-
-    private Subscription subscription;
+    private Disposable disposable;
 
     public GenreFragment() {
 
@@ -85,32 +76,24 @@ public class GenreFragment extends BaseFragment implements
         super.onCreate(savedInstanceState);
 
         adapter = new SectionedAdapter();
-
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
-
-        mPrefs.registerOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        FastScrollRecyclerView recyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.addItemDecoration(new GridDividerDecoration(getResources(), 4, true));
+        recyclerView.setRecyclerListener(new RecyclerListener());
+        recyclerView.setAdapter(adapter);
 
-        if (mRecyclerView == null) {
-
-            mRecyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            mRecyclerView.addItemDecoration(new GridDividerDecoration(getResources(), 4, true));
-            mRecyclerView.setRecyclerListener(new RecyclerListener());
-            mRecyclerView.setAdapter(adapter);
-        }
-
-        return mRecyclerView;
+        return recyclerView;
     }
 
     @Override
     public void onPause() {
 
-        if (subscription != null) {
-            subscription.unsubscribe();
+        if (disposable != null) {
+            disposable.dispose();
         }
 
         super.onPause();
@@ -125,14 +108,13 @@ public class GenreFragment extends BaseFragment implements
 
     @Override
     public void onDestroy() {
-        mPrefs.unregisterOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
         super.onDestroy();
     }
 
     private void refreshAdapterItems() {
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {
-                subscription = DataManager.getInstance().getGenresRelay()
+                disposable = DataManager.getInstance().getGenresRelay()
                         .map(genres -> Stream.of(genres)
                                 .sorted((a, b) -> ComparisonUtils.compare(a.name, b.name))
                                 .map(genre -> {
@@ -148,7 +130,7 @@ public class GenreFragment extends BaseFragment implements
                             } else {
                                 adapter.setItems(items);
                             }
-                        }, error -> LogUtils.logException("GenreFragment: Error refreshing adapter items", error));
+                        }, error -> LogUtils.logException(TAG, "Error refreshing adapter items", error));
             }
         });
     }

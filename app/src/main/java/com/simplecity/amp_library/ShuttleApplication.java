@@ -54,15 +54,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import io.fabric.sdk.android.Fabric;
-import rx.Observable;
-import rx.schedulers.Schedulers;
+import io.reactivex.Completable;
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 
 public class ShuttleApplication extends Application {
 
-    private static ShuttleApplication sInstance;
+    private static ShuttleApplication instance;
 
     public static synchronized ShuttleApplication getInstance() {
-        return sInstance;
+        return instance;
     }
 
     private static final String TAG = "ShuttleApplication";
@@ -93,15 +94,25 @@ public class ShuttleApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        appComponent = initDagger(this);
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
 
-        refWatcher = LeakCanary.install(this);
-        sInstance = this;
+        instance = this;
 
         if (BuildConfig.DEBUG) {
             Log.w(TAG, "**Debug mode is ON**");
-//            enableStrictMode();
+
+            // Traceur.enableLogging();
+
+            // enableStrictMode();
         }
+
+        appComponent = initDagger(this);
+
+        refWatcher = LeakCanary.install(this);
 
         //Crashlytics
         CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build();
@@ -152,7 +163,7 @@ public class ShuttleApplication extends Application {
 
         startService(new Intent(this, EqualizerService.class));
 
-        Observable.fromCallable(() -> {
+        Completable.fromAction(() -> {
             Query query = new Query.Builder()
                     .uri(CustomArtworkTable.URI)
                     .projection(new String[]{CustomArtworkTable.COLUMN_ID, CustomArtworkTable.COLUMN_KEY, CustomArtworkTable.COLUMN_TYPE, CustomArtworkTable.COLUMN_PATH})
@@ -166,7 +177,6 @@ public class ShuttleApplication extends Application {
                                             cursor.getString(cursor.getColumnIndexOrThrow(CustomArtworkTable.COLUMN_PATH)))
                             ),
                     query);
-            return null;
         })
                 .subscribeOn(Schedulers.io())
                 .subscribe();
@@ -205,7 +215,7 @@ public class ShuttleApplication extends Application {
 
     public static String getVersion() {
         try {
-            return sInstance.getPackageManager().getPackageInfo(sInstance.getPackageName(), 0).versionName;
+            return instance.getPackageManager().getPackageInfo(instance.getPackageName(), 0).versionName;
         } catch (PackageManager.NameNotFoundException | NullPointerException ignored) {
 
         }
@@ -222,7 +232,8 @@ public class ShuttleApplication extends Application {
     }
 
     private void deleteOldResources() {
-        Observable.fromCallable(() -> {
+
+        Completable.fromAction(() -> {
             //Delete albumthumbs/artists directory
             if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
                 File file = new File(Environment.getExternalStorageDirectory() + "/albumthumbs/artists/");
@@ -248,7 +259,6 @@ public class ShuttleApplication extends Application {
             if (oldThumbsCache != null && oldThumbsCache.exists()) {
                 oldThumbsCache.delete();
             }
-            return null;
         }).subscribeOn(Schedulers.io())
                 .subscribe();
     }
@@ -284,7 +294,7 @@ public class ShuttleApplication extends Application {
             return;
         }
 
-        Observable.fromCallable(() -> {
+        Completable.fromAction(() -> {
             List<Integer> playCountIds = new ArrayList<>();
 
             Query query = new Query.Builder()
@@ -317,8 +327,6 @@ public class ShuttleApplication extends Application {
                 getContentResolver().delete(PlayCountTable.URI, selection.toString(), null);
             } catch (IllegalArgumentException ignored) {
             }
-
-            return null;
         })
                 .subscribeOn(Schedulers.io())
                 .subscribe();
@@ -336,13 +344,12 @@ public class ShuttleApplication extends Application {
         // If the maximum number of cursors is created (based on memory/processor speed or god knows what else), then the device
         // will start throwing CursorWindow exceptions, and the queries will slow down massively. This ends up making all queries slow.
         // This task isn't time critical, so we can afford to let it just casually do its job.
-        SqlBriteUtils.createQuery(ShuttleApplication.getInstance(), Genre::new, Genre.getQuery())
-                .first()
-                .flatMap(Observable::from)
+        SqlBriteUtils.createSingleList(ShuttleApplication.getInstance(), Genre::new, Genre.getQuery())
+                .flatMapObservable(Observable::fromIterable)
                 .concatMap(genre -> Observable.just(genre).delay(250, TimeUnit.MILLISECONDS))
-                .flatMap(genre -> genre.getSongCountObservable()
-                        .doOnNext(numSongs -> {
-                            if (numSongs == 0) {
+                .flatMapSingle(genre -> genre.getSongsObservable()
+                        .doOnSuccess(songs -> {
+                            if (songs.isEmpty()) {
                                 try {
                                     getContentResolver().delete(MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI, MediaStore.Audio.Genres._ID + " == " + genre.id, null);
                                 } catch (IllegalArgumentException | UnsupportedOperationException ignored) {

@@ -30,10 +30,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import rx.Observable;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class PlaylistFragment extends BaseFragment implements
         MusicUtils.Defs,
@@ -48,14 +48,12 @@ public class PlaylistFragment extends BaseFragment implements
 
     private static final String ARG_PAGE_TITLE = "page_title";
 
-    private FastScrollRecyclerView mRecyclerView;
-
-    private PlaylistAdapter mPlaylistAdapter;
+    private PlaylistAdapter adapter;
 
     @Nullable
     private PlaylistClickListener playlistClickListener;
 
-    private Subscription subscription;
+    private Disposable disposable;
 
     public PlaylistFragment() {
 
@@ -89,27 +87,26 @@ public class PlaylistFragment extends BaseFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mPlaylistAdapter = new PlaylistAdapter();
-        mPlaylistAdapter.setListener(this);
+        adapter = new PlaylistAdapter();
+        adapter.setListener(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        FastScrollRecyclerView recyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setRecyclerListener(new RecyclerListener());
+        recyclerView.setAdapter(adapter);
 
-        mRecyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.setRecyclerListener(new RecyclerListener());
-        mRecyclerView.setAdapter(mPlaylistAdapter);
-
-        return mRecyclerView;
+        return recyclerView;
     }
 
     @Override
     public void onPause() {
         super.onPause();
 
-        if (subscription != null) {
-            subscription.unsubscribe();
+        if (disposable != null) {
+            disposable.dispose();
         }
     }
 
@@ -135,15 +132,15 @@ public class PlaylistFragment extends BaseFragment implements
                                         playlists.add(podcastPlaylist);
                                     }
 
-                                    playlists.add(Playlist.recentlyAddedPlaylist());
-                                    playlists.add(Playlist.mostPlayedPlaylist());
+                                    playlists.add(Playlist.recentlyAddedPlaylist);
+                                    playlists.add(Playlist.mostPlayedPlaylist);
                                     return Observable.just(playlists);
                                 }
                         );
 
                 Observable<List<Playlist>> playlistsObservable = DataManager.getInstance().getPlaylistsRelay();
 
-                subscription = Observable.combineLatest(
+                disposable = Observable.combineLatest(
                         defaultPlaylistsObservable, playlistsObservable, (defaultPlaylists, playlists) -> {
                             List<Playlist> list = new ArrayList<>();
                             list.addAll(defaultPlaylists);
@@ -159,11 +156,11 @@ public class PlaylistFragment extends BaseFragment implements
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(items -> {
                             if (items.isEmpty()) {
-                                mPlaylistAdapter.setItems(Collections.singletonList(new EmptyView(R.string.empty_playlist)));
+                                adapter.setItems(Collections.singletonList(new EmptyView(R.string.empty_playlist)));
                             } else {
-                                mPlaylistAdapter.setItems(items);
+                                adapter.setItems(items);
                             }
-                        }, error -> LogUtils.logException("PlaylistFragment: Error refreshing adapter", error));
+                        }, error -> LogUtils.logException(TAG, "Error refreshing adapter", error));
             }
         });
     }

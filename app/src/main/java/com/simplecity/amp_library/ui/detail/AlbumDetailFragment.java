@@ -23,7 +23,7 @@ import com.simplecityapps.recycler_adapter.model.ViewModel;
 
 import java.util.List;
 
-import rx.Observable;
+import io.reactivex.Single;
 
 public class AlbumDetailFragment extends BaseDetailFragment {
 
@@ -75,8 +75,8 @@ public class AlbumDetailFragment extends BaseDetailFragment {
 
     @NonNull
     @Override
-    public Observable<List<Song>> getSongs() {
-        return album.getSongsObservable();
+    public Single<List<Song>> getSongs() {
+        return album.getSongsSingle();
     }
 
     @NonNull

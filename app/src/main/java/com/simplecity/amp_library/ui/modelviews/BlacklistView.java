@@ -25,7 +25,7 @@ import static java.lang.String.format;
 public class BlacklistView extends BaseViewModel<BlacklistView.ViewHolder> {
 
     public interface ClickListener {
-        void onRemove(Song song);
+        void onRemove(BlacklistView blacklistView);
     }
 
     public Song song;
@@ -43,7 +43,7 @@ public class BlacklistView extends BaseViewModel<BlacklistView.ViewHolder> {
 
     private void onDeleteClicked() {
         if (listener != null) {
-            listener.onRemove(song);
+            listener.onRemove(this);
         }
     }
 

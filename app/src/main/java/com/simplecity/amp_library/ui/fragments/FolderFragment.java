@@ -52,11 +52,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.schedulers.Schedulers;
 import test.com.androidnavigation.fragment.BackPressListener;
 
 import static com.afollestad.aesthetic.Rx.distinctToMainThread;
@@ -106,12 +105,12 @@ public class FolderFragment extends BaseFragment implements
 
     boolean showBreadcrumbsInList;
 
-    private CompositeSubscription subscriptions;
+    private CompositeDisposable disposables;
 
     private ContextualToolbarHelper<BaseFileObject> contextualToolbarHelper;
 
     private Unbinder unbinder;
-    
+
     public FolderFragment() {
     }
 
@@ -127,7 +126,7 @@ public class FolderFragment extends BaseFragment implements
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        subscriptions = new CompositeSubscription();
+        disposables = new CompositeDisposable();
 
         adapter = new ViewModelAdapter();
 
@@ -186,7 +185,7 @@ public class FolderFragment extends BaseFragment implements
         super.onResume();
 
         if (currentDir == null) {
-            subscriptions.add(Observable.fromCallable(() -> {
+            disposables.add(Observable.fromCallable(() -> {
                 if (!TextUtils.isEmpty(currentDir)) {
                     return new File(currentDir);
                 } else {
@@ -195,7 +194,7 @@ public class FolderFragment extends BaseFragment implements
             }).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this::changeDir,
-                            error -> LogUtils.logException("FolderFragment: Error in onResume", error)));
+                            error -> LogUtils.logException(TAG, "Error in onResume", error)));
         }
 
         getNavigationController().addBackPressListener(this);
@@ -209,7 +208,7 @@ public class FolderFragment extends BaseFragment implements
 
     @Override
     public void onPause() {
-        subscriptions.clear();
+        disposables.clear();
 
         getNavigationController().removeBackPressListener(this);
 
@@ -281,7 +280,7 @@ public class FolderFragment extends BaseFragment implements
 
     public void changeDir(File newDir) {
 
-        subscriptions.add(Observable.fromCallable(() -> {
+        disposables.add(Observable.fromCallable(() -> {
 
             final String path = FileHelper.getPath(newDir);
 
@@ -330,7 +329,7 @@ public class FolderFragment extends BaseFragment implements
                     if (adapter != null) {
                         changeBreadcrumbPath();
                     }
-                }, error -> LogUtils.logException("FolderFragment: Error changing dir", error)));
+                }, error -> LogUtils.logException(TAG, "Error changing dir", error)));
     }
 
     public void reload() {
@@ -369,7 +368,7 @@ public class FolderFragment extends BaseFragment implements
                                     Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                                 }
                             });
-                        }, error -> LogUtils.logException("FolderFragment: Error playing all", error));
+                        }, error -> LogUtils.logException(TAG, "Error playing all", error));
             } else {
                 changeDir(new File(folderView.baseFileObject.path));
             }
@@ -429,7 +428,7 @@ public class FolderFragment extends BaseFragment implements
                     if (showCheckboxes) {
                         adapter.notifyItemRangeChanged(0, adapter.getItemCount());
                     }
-                }, error -> LogUtils.logException("FolderFragment: Error updating whitelist", error));
+                }, error -> LogUtils.logException(TAG, "Error updating whitelist", error));
     }
 
     @Override

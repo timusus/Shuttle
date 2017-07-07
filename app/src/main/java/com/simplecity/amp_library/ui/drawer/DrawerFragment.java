@@ -42,9 +42,8 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import io.reactivex.disposables.Disposable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
 public class DrawerFragment extends BaseFragment implements
         DrawerView,
@@ -95,9 +94,7 @@ public class DrawerFragment extends BaseFragment implements
 
     private Drawable backgroundPlaceholder;
 
-    private Disposable aestheticDisposable;
-
-    private CompositeSubscription subscriptions = new CompositeSubscription();
+    private CompositeDisposable disposables = new CompositeDisposable();
 
     private Unbinder unbinder;
 
@@ -168,14 +165,14 @@ public class DrawerFragment extends BaseFragment implements
     public void onResume() {
         super.onResume();
 
-        aestheticDisposable = Aesthetic.get()
+        disposables.add(Aesthetic.get()
                 .colorPrimary()
                 .compose(Rx.distinctToMainThread())
-                .subscribe(color -> backgroundPlaceholder.setColorFilter(color, PorterDuff.Mode.MULTIPLY));
+                .subscribe(color -> backgroundPlaceholder.setColorFilter(color, PorterDuff.Mode.MULTIPLY)));
 
         playerPresenter.updateTrackInfo();
 
-        subscriptions.add(SleepTimer.getInstance().getCurrentTimeObservable()
+        disposables.add(SleepTimer.getInstance().getCurrentTimeObservable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> Stream.of(drawerParents)
                         .forEachIndexed((i, drawerParent) -> {
@@ -183,9 +180,9 @@ public class DrawerFragment extends BaseFragment implements
                                 ((DrawerParent) drawerParent).setTimeRemaining(aLong);
                                 adapter.notifyParentChanged(i);
                             }
-                        }), throwable -> LogUtils.logException("DrawerParent error observing sleep time", throwable)));
+                        }), throwable -> LogUtils.logException(TAG, "Error observing sleep time", throwable)));
 
-        subscriptions.add(SleepTimer.getInstance().getTimerActiveSubject()
+        disposables.add(SleepTimer.getInstance().getTimerActiveSubject()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(active -> Stream.of(drawerParents)
                                 .forEachIndexed((i, drawerParent) -> {
@@ -194,15 +191,13 @@ public class DrawerFragment extends BaseFragment implements
                                         adapter.notifyParentChanged(i);
                                     }
                                 }),
-                        throwable -> LogUtils.logException("DrawerParent error observing sleep state", throwable))
+                        throwable -> LogUtils.logException(TAG, "Error observing sleep state", throwable))
         );
     }
 
     @Override
     public void onPause() {
-        aestheticDisposable.dispose();
-
-        subscriptions.clear();
+        disposables.clear();
 
         super.onPause();
     }

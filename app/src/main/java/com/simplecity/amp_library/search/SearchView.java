@@ -11,7 +11,7 @@ import com.simplecityapps.recycler_adapter.model.ViewModel;
 
 import java.util.List;
 
-import rx.Subscription;
+import io.reactivex.disposables.Disposable;
 
 public interface SearchView {
 
@@ -19,7 +19,7 @@ public interface SearchView {
 
     void setEmpty(boolean empty);
 
-    Subscription setItems(@NonNull List<ViewModel> items);
+    Disposable setItems(@NonNull List<ViewModel> items);
 
     void setFilterFuzzyChecked(boolean checked);
 

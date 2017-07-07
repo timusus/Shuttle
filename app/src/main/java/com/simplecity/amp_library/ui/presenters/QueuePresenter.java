@@ -12,7 +12,7 @@ import android.view.View;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.bumptech.glide.RequestManager;
-import com.f2prateek.rx.receivers.RxBroadcastReceiver;
+import com.cantrowitz.rxbroadcast.RxBroadcast;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
@@ -29,7 +29,8 @@ import com.simplecityapps.recycler_adapter.model.ViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.android.schedulers.AndroidSchedulers;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class QueuePresenter extends Presenter<QueueView> {
 
@@ -57,9 +58,9 @@ public class QueuePresenter extends Presenter<QueueView> {
         filter.addAction(MusicService.InternalIntents.QUEUE_CHANGED);
         filter.addAction(MusicService.InternalIntents.SERVICE_CONNECTED);
 
-        addSubcscription(RxBroadcastReceiver.create(ShuttleApplication.getInstance(), filter)
+        addDisposable(RxBroadcast.fromBroadcast(ShuttleApplication.getInstance(), filter)
                 .startWith(new Intent(MusicService.InternalIntents.QUEUE_CHANGED))
-                .onBackpressureLatest()
+                .toFlowable(BackpressureStrategy.LATEST)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(intent -> {
                     final String action = intent.getAction();

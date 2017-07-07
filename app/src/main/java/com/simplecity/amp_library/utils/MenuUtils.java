@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.annimon.stream.Collectors;
+import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.interfaces.FileType;
@@ -24,23 +25,29 @@ import com.simplecity.amp_library.model.FolderObject;
 import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.rx.UnsafeAction;
+import com.simplecity.amp_library.rx.UnsafeCallable;
+import com.simplecity.amp_library.rx.UnsafeConsumer;
 import com.simplecity.amp_library.sql.databases.BlacklistHelper;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.dialog.BiographyDialog;
 import com.simplecity.amp_library.ui.dialog.DeleteDialog;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
-import rx.functions.Action1;
-import rx.functions.Func0;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class MenuUtils implements MusicUtils.Defs {
+
+    private static final String TAG = "MenuUtils";
 
     // Songs
 
@@ -90,7 +97,7 @@ public class MenuUtils implements MusicUtils.Defs {
                 .itemNames(Stream.of(songs)
                         .map(song -> song.name)
                         .collect(Collectors.toList()))
-                .songsToDelete(Observable.just(songs))
+                .songsToDelete(Single.just(songs))
                 .build()
                 .show();
     }
@@ -107,9 +114,9 @@ public class MenuUtils implements MusicUtils.Defs {
         PlaylistUtils.makePlaylistMenu(context, sub);
     }
 
-    public static Toolbar.OnMenuItemClickListener getSongMenuClickListener(Context context, Func0<List<Song>> func) {
+    public static Toolbar.OnMenuItemClickListener getSongMenuClickListener(Context context, UnsafeCallable<List<Song>> callable) {
         return item -> {
-            List<Song> songs = func.call();
+            List<Song> songs = callable.call();
             switch (item.getItemId()) {
                 case NEW_PLAYLIST:
                     newPlaylist(context, songs);
@@ -131,7 +138,7 @@ public class MenuUtils implements MusicUtils.Defs {
         };
     }
 
-    public static PopupMenu.OnMenuItemClickListener getSongMenuClickListener(Context context, Song song, Action1<TaggerDialog> tagEditorCallback) {
+    public static PopupMenu.OnMenuItemClickListener getSongMenuClickListener(Context context, Song song, UnsafeConsumer<TaggerDialog> tagEditorCallback) {
         return item -> {
             switch (item.getItemId()) {
                 case R.id.playNext:
@@ -147,7 +154,7 @@ public class MenuUtils implements MusicUtils.Defs {
                     addToQueue(context, Collections.singletonList(song));
                     return true;
                 case R.id.editTags:
-                    tagEditorCallback.call(editTags(song));
+                    tagEditorCallback.accept(editTags(song));
                     return true;
                 case R.id.share:
                     song.share(context);
@@ -171,28 +178,48 @@ public class MenuUtils implements MusicUtils.Defs {
 
     // Albums
 
-    public static void play(Context context, Observable<List<Song>> observable) {
+    private static Single<List<Song>> getSongsForAlbum(Album album) {
+        return album.getSongsSingle()
+                .map(songs -> {
+                    Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(b.year, a.year));
+                    Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(a.track, b.track));
+                    Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(a.discNumber, b.discNumber));
+                    return songs;
+                });
+    }
+
+    private static Single<List<Song>> getSongsForAlbums(List<Album> albums) {
+        return Observable.fromIterable(albums)
+                .flatMapSingle(MenuUtils::getSongsForAlbum)
+                .reduce(Collections.emptyList(), (BiFunction<List<Song>, List<Song>, List<Song>>) (songs, songs2) -> {
+                    List<Song> allSongs = new ArrayList<>();
+                    allSongs.addAll(songs);
+                    allSongs.addAll(songs2);
+                    return allSongs;
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public static void play(Context context, Single<List<Song>> observable) {
         MusicUtils.playAll(observable, message -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show());
     }
 
-    public static void newPlaylist(Context context, Observable<List<Song>> observable) {
-        observable
-                .observeOn(AndroidSchedulers.mainThread())
+    public static void newPlaylist(Context context, Single<List<Song>> single) {
+        single.observeOn(AndroidSchedulers.mainThread())
                 .subscribe(songs -> PlaylistUtils.createPlaylistDialog(context, songs));
     }
 
-    public static void addToPlaylist(Context context, MenuItem item, Observable<List<Song>> observable) {
-        observable
-                .observeOn(AndroidSchedulers.mainThread())
+    public static void addToPlaylist(Context context, MenuItem item, Single<List<Song>> single) {
+        single.observeOn(AndroidSchedulers.mainThread())
                 .subscribe(songs -> {
                     Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
                     PlaylistUtils.addToPlaylist(context, playlist, songs);
                 });
     }
 
-    public static void addToQueue(Context context, Observable<List<Song>> observable) {
-        observable
-                .observeOn(AndroidSchedulers.mainThread())
+    public static void addToQueue(Context context, Single<List<Song>> single) {
+        single.observeOn(AndroidSchedulers.mainThread())
                 .subscribe(songs -> MusicUtils.addToQueue(songs, message -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show()));
     }
 
@@ -200,20 +227,20 @@ public class MenuUtils implements MusicUtils.Defs {
         return TaggerDialog.newInstance(album);
     }
 
-    public static void albumInfo(Context context, Album album) {
-        BiographyDialog.getAlbumBiographyDialog(context, album.albumArtistName, album.name);
+    public static void showAlbumInfo(Context context, Album album) {
+        BiographyDialog.getAlbumBiographyDialog(context, album.albumArtistName, album.name).show();
     }
 
     public static void showArtworkChooserDialog(Context context, Album album) {
         ArtworkDialog.build(context, album).show();
     }
 
-    public static void blacklist(Observable<List<Song>> observable) {
-        observable.observeOn(AndroidSchedulers.mainThread())
-                .subscribe(MenuUtils::blacklist);
+    public static void blacklist(Single<List<Song>> single) {
+        single.observeOn(AndroidSchedulers.mainThread())
+                .subscribe((songs, throwable) -> blacklist(songs));
     }
 
-    public static void deleteAlbums(Context context, List<Album> albums, Observable<List<Song>> songsObservable) {
+    public static void deleteAlbums(Context context, List<Album> albums, Single<List<Song>> songsSingle) {
         new DeleteDialog.DeleteDialogBuilder()
                 .context(context)
                 .singleMessageId(R.string.delete_album_desc)
@@ -221,102 +248,106 @@ public class MenuUtils implements MusicUtils.Defs {
                 .itemNames(Stream.of(albums)
                         .map(album -> album.name)
                         .collect(Collectors.toList()))
-                .songsToDelete(songsObservable)
+                .songsToDelete(songsSingle)
                 .build()
                 .show();
     }
 
-    public static Toolbar.OnMenuItemClickListener getAlbumMenuClickListener(Context context, Func0<List<Album>> func) {
+    public static Toolbar.OnMenuItemClickListener getAlbumMenuClickListener(Context context, UnsafeCallable<List<Album>> callable) {
         return item -> {
-
-            List<Album> albums = func.call();
-
-            Observable<List<Song>> songsObservable = Observable.defer(() ->
-                    Observable.from(albums)
-                            .flatMap(Album::getSongsObservable)
-                            .reduce((songs, songs2) -> Stream.concat(Stream.of(songs), Stream.of(songs2))
-                                    .collect(Collectors.toList()))
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread()));
-
             switch (item.getItemId()) {
                 case NEW_PLAYLIST:
-                    newPlaylist(context, songsObservable);
+                    newPlaylist(context, getSongsForAlbums(callable.call()));
                     return true;
                 case PLAYLIST_SELECTED:
-                    addToPlaylist(context, item, songsObservable);
+                    addToPlaylist(context, item, getSongsForAlbums(callable.call()));
                     return true;
                 case R.id.addToQueue:
-                    addToQueue(context, songsObservable);
+                    addToQueue(context, getSongsForAlbums(callable.call()));
                     return true;
                 case R.id.delete:
-                    deleteAlbums(context, albums, songsObservable);
+                    List<Album> albums = callable.call();
+                    deleteAlbums(context, albums, getSongsForAlbums(albums));
                     return true;
             }
             return false;
         };
     }
 
-    public static PopupMenu.OnMenuItemClickListener getAlbumMenuClickListener(Context context, Album album, Action1<TaggerDialog> tagEditorCallback) {
-        return new PopupMenu.OnMenuItemClickListener() {
-            Observable<List<Song>> songsObservable = album.getSongsObservable()
-                    .doOnNext(songs -> {
-                        Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(b.year, a.year));
-                        Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(a.track, b.track));
-                        Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(a.discNumber, b.discNumber));
-                    });
-
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.play:
-                        play(context, songsObservable);
-                        return true;
-                    case NEW_PLAYLIST:
-                        newPlaylist(context, songsObservable);
-                        return true;
-                    case PLAYLIST_SELECTED:
-                        addToPlaylist(context, item, songsObservable);
-                        return true;
-                    case R.id.addToQueue:
-                        addToQueue(context, songsObservable);
-                        return true;
-                    case R.id.editTags:
-                        tagEditorCallback.call(editTags(album));
-                        return true;
-                    case R.id.info:
-                        albumInfo(context, album);
-                        return true;
-                    case R.id.artwork:
-                        showArtworkChooserDialog(context, album);
-                        return true;
-                    case R.id.blacklist:
-                        blacklist(songsObservable);
-                        return true;
-                    case R.id.delete:
-                        deleteAlbums(context, Collections.singletonList(album), album.getSongsObservable());
-                        return true;
-                }
-                return false;
+    public static PopupMenu.OnMenuItemClickListener getAlbumMenuClickListener(Context context, Album album, UnsafeConsumer<TaggerDialog> tagEditorCallback) {
+        return item -> {
+            switch (item.getItemId()) {
+                case R.id.play:
+                    play(context, getSongsForAlbum(album));
+                    return true;
+                case NEW_PLAYLIST:
+                    newPlaylist(context, getSongsForAlbum(album));
+                    return true;
+                case PLAYLIST_SELECTED:
+                    addToPlaylist(context, item, getSongsForAlbum(album));
+                    return true;
+                case R.id.addToQueue:
+                    addToQueue(context, getSongsForAlbum(album));
+                    return true;
+                case R.id.editTags:
+                    tagEditorCallback.accept(editTags(album));
+                    return true;
+                case R.id.info:
+                    showAlbumInfo(context, album);
+                    return true;
+                case R.id.artwork:
+                    showArtworkChooserDialog(context, album);
+                    return true;
+                case R.id.blacklist:
+                    blacklist(getSongsForAlbum(album));
+                    return true;
+                case R.id.delete:
+                    deleteAlbums(context, Collections.singletonList(album), album.getSongsSingle());
+                    return true;
             }
+            return false;
         };
     }
 
     // AlbumArtists
 
+    private static Single<List<Song>> getSongsForAlbumArtist(AlbumArtist albumArtist) {
+        return albumArtist.getSongsSingle()
+                .map(songs -> {
+                    Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(b.year, a.year));
+                    Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(a.track, b.track));
+                    Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(a.discNumber, b.discNumber));
+                    Collections.sort(songs, (a, b) -> ComparisonUtils.compare(a.albumName, b.albumName));
+                    return songs;
+                });
+    }
+
+    private static Single<List<Song>> getSongsForAlbumArtists(List<AlbumArtist> albumArtists) {
+        return Observable.fromIterable(albumArtists)
+                .flatMapSingle(MenuUtils::getSongsForAlbumArtist)
+                .reduce(Collections.emptyList(), (BiFunction<List<Song>, List<Song>, List<Song>>) (songs, songs2) -> {
+                    List<Song> allSongs = new ArrayList<>();
+                    allSongs.addAll(songs);
+                    allSongs.addAll(songs2);
+                    return allSongs;
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
     public static TaggerDialog editTags(AlbumArtist albumArtist) {
         return TaggerDialog.newInstance(albumArtist);
     }
 
-    public static void albumArtistInfo(Context context, AlbumArtist albumArtist) {
-        BiographyDialog.getArtistBiographyDialog(context, albumArtist.name);
+    public static void showArtistInfo(Context context, AlbumArtist albumArtist) {
+        BiographyDialog.getArtistBiographyDialog(context, albumArtist.name).show();
     }
 
     public static void showArtworkChooserDialog(Context context, AlbumArtist albumArtist) {
         ArtworkDialog.build(context, albumArtist).show();
     }
 
-    public static void deleteAlbumArtists(Context context, List<AlbumArtist> albumArtists, Observable<List<Song>> songsObservable) {
+    public static void deleteAlbumArtists(Context context, List<AlbumArtist> albumArtists, Single<List<Song>> songsObservable) {
         new DeleteDialog.DeleteDialogBuilder()
                 .context(context)
                 .singleMessageId(R.string.delete_album_artist_desc)
@@ -329,76 +360,56 @@ public class MenuUtils implements MusicUtils.Defs {
                 .show();
     }
 
-    public static Toolbar.OnMenuItemClickListener getAlbumArtistMenuClickListener(Context context, Func0<List<AlbumArtist>> func) {
+    public static Toolbar.OnMenuItemClickListener getAlbumArtistMenuClickListener(Context context, UnsafeCallable<List<AlbumArtist>> callable) {
         return item -> {
-
-            List<AlbumArtist> albumArtists = func.call();
-
-            Observable<List<Song>> songsObservable = Observable.defer(() ->
-                    Observable.from(albumArtists)
-                            .flatMap(AlbumArtist::getSongsObservable)
-                            .reduce((songs, songs2) -> Stream.concat(Stream.of(songs), Stream.of(songs2))
-                                    .collect(Collectors.toList()))
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread()));
-
             switch (item.getItemId()) {
                 case NEW_PLAYLIST:
-                    newPlaylist(context, songsObservable);
+                    newPlaylist(context, getSongsForAlbumArtists(callable.call()));
                     return true;
                 case PLAYLIST_SELECTED:
-                    addToPlaylist(context, item, songsObservable);
+                    addToPlaylist(context, item, getSongsForAlbumArtists(callable.call()));
                     return true;
                 case R.id.addToQueue:
-                    addToQueue(context, songsObservable);
+                    addToQueue(context, getSongsForAlbumArtists(callable.call()));
                     return true;
                 case R.id.delete:
-                    deleteAlbumArtists(context, albumArtists, songsObservable);
+                    List<AlbumArtist> albumArtists = callable.call();
+                    deleteAlbumArtists(context, albumArtists, getSongsForAlbumArtists(albumArtists));
                     return true;
             }
             return false;
         };
     }
 
-    public static PopupMenu.OnMenuItemClickListener getAlbumArtistClickListener(Context context, AlbumArtist albumArtist, Action1<TaggerDialog> tagEditorCallback) {
-
-        Observable<List<Song>> songsObservable = albumArtist.getSongsObservable()
-                .map(songs -> {
-                    Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(b.year, a.year));
-                    Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(a.track, b.track));
-                    Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(a.discNumber, b.discNumber));
-                    Collections.sort(songs, (a, b) -> ComparisonUtils.compare(a.albumName, b.albumName));
-                    return songs;
-                });
-
+    public static PopupMenu.OnMenuItemClickListener getAlbumArtistClickListener(Context context, AlbumArtist albumArtist, UnsafeConsumer<TaggerDialog> tagEditorCallback) {
         return item -> {
             switch (item.getItemId()) {
                 case R.id.play:
-                    play(context, songsObservable);
+                    play(context, getSongsForAlbumArtist(albumArtist));
                     return true;
                 case NEW_PLAYLIST:
-                    newPlaylist(context, songsObservable);
+                    newPlaylist(context, getSongsForAlbumArtist(albumArtist));
                     return true;
                 case PLAYLIST_SELECTED:
-                    addToPlaylist(context, item, songsObservable);
+                    addToPlaylist(context, item, getSongsForAlbumArtist(albumArtist));
                     return true;
                 case R.id.addToQueue:
-                    addToQueue(context, songsObservable);
+                    addToQueue(context, getSongsForAlbumArtist(albumArtist));
                     return true;
                 case R.id.editTags:
-                    tagEditorCallback.call(editTags(albumArtist));
+                    tagEditorCallback.accept(editTags(albumArtist));
                     return true;
                 case R.id.info:
-                    albumArtistInfo(context, albumArtist);
+                    showArtistInfo(context, albumArtist);
                     return true;
                 case R.id.artwork:
                     showArtworkChooserDialog(context, albumArtist);
                     return true;
                 case R.id.blacklist:
-                    blacklist(songsObservable);
+                    blacklist(getSongsForAlbumArtist(albumArtist));
                     return true;
                 case R.id.delete:
-                    deleteAlbumArtists(context, Collections.singletonList(albumArtist), songsObservable);
+                    deleteAlbumArtists(context, Collections.singletonList(albumArtist), getSongsForAlbumArtist(albumArtist));
                     return true;
             }
             return false;
@@ -458,7 +469,7 @@ public class MenuUtils implements MusicUtils.Defs {
         return item -> {
             switch (item.getItemId()) {
                 case R.id.playPlaylist:
-                    play(context, playlist.getSongsObservable());
+                    play(context, playlist.getSongsObservable().first(Collections.emptyList()));
                     return true;
                 case R.id.deletePlaylist:
                     delete(context, playlist);
@@ -482,31 +493,32 @@ public class MenuUtils implements MusicUtils.Defs {
 
     // Genres
 
+    private static Single<List<Song>> getSongsForGenre(Genre genre) {
+        return genre.getSongsObservable()
+                .map(songs -> {
+                    Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(b.year, a.year));
+                    Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(a.track, b.track));
+                    Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(a.discNumber, b.discNumber));
+                    Collections.sort(songs, (a, b) -> ComparisonUtils.compare(a.albumName, b.albumName));
+                    Collections.sort(songs, (a, b) -> ComparisonUtils.compare(a.albumArtistName, b.albumArtistName));
+                    return songs;
+                });
+    }
+
     public static PopupMenu.OnMenuItemClickListener getGenreClickListener(final Context context, final Genre genre) {
         return item -> {
-
-            Observable<List<Song>> songsObservable = genre.getSongsObservable()
-                    .map(songs -> {
-                        Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(b.year, a.year));
-                        Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(a.track, b.track));
-                        Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(a.discNumber, b.discNumber));
-                        Collections.sort(songs, (a, b) -> ComparisonUtils.compare(a.albumName, b.albumName));
-                        Collections.sort(songs, (a, b) -> ComparisonUtils.compare(a.albumArtistName, b.albumArtistName));
-                        return songs;
-                    });
-
             switch (item.getItemId()) {
                 case R.id.play:
-                    play(context, genre.getSongsObservable());
+                    play(context, getSongsForGenre(genre));
                     return true;
                 case NEW_PLAYLIST:
-                    newPlaylist(context, songsObservable);
+                    newPlaylist(context, getSongsForGenre(genre));
                     return true;
                 case PLAYLIST_SELECTED:
-                    addToPlaylist(context, item, songsObservable);
+                    addToPlaylist(context, item, getSongsForGenre(genre));
                     return true;
                 case R.id.addToQueue:
-                    addToQueue(context, songsObservable);
+                    addToQueue(context, getSongsForGenre(genre));
                     return true;
             }
             return false;
@@ -514,6 +526,16 @@ public class MenuUtils implements MusicUtils.Defs {
     }
 
     // Folders
+
+    static Single<Song> getSongForFile(FileObject fileObject) {
+        return FileHelper.getSong(new File(fileObject.path))
+                .map(Optional::get)
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    static Single<List<Song>> getSongsForFolderObject(FolderObject folderObject) {
+        return FileHelper.getSongList(new File(folderObject.path), true, false);
+    }
 
     public static void setupFolderMenu(Context context, PopupMenu menu, BaseFileObject fileObject) {
 
@@ -553,9 +575,9 @@ public class MenuUtils implements MusicUtils.Defs {
         CustomMediaScanner.scanFile(context, folderObject);
     }
 
-    public static void renameFile(Context context, BaseFileObject fileObject, Action0 filenameChanged) {
+    public static void renameFile(Context context, BaseFileObject fileObject, UnsafeAction filenameChanged) {
         View customView = LayoutInflater.from(context).inflate(R.layout.dialog_rename, null);
-        final EditText editText = (EditText) customView.findViewById(R.id.editText);
+        final EditText editText = customView.findViewById(R.id.editText);
         editText.setText(fileObject.name);
 
         MaterialDialog.Builder builder = DialogUtils.getBuilder(context);
@@ -570,7 +592,7 @@ public class MenuUtils implements MusicUtils.Defs {
                 .onPositive((materialDialog, dialogAction) -> {
                     if (editText.getText() != null) {
                         if (FileHelper.renameFile(context, fileObject, editText.getText().toString())) {
-                            filenameChanged.call();
+                            filenameChanged.run();
                         } else {
                             Toast.makeText(context,
                                     fileObject.fileType == FileType.FOLDER ? R.string.rename_folder_failed : R.string.rename_file_failed,
@@ -582,7 +604,7 @@ public class MenuUtils implements MusicUtils.Defs {
                 .show();
     }
 
-    public static void deleteFile(Context context, BaseFileObject fileObject, Action0 fileDeleted) {
+    public static void deleteFile(Context context, BaseFileObject fileObject, UnsafeAction fileDeleted) {
         MaterialDialog.Builder builder = DialogUtils.getBuilder(context)
                 .title(R.string.delete_item)
                 .iconRes(R.drawable.ic_dialog_alert);
@@ -596,7 +618,7 @@ public class MenuUtils implements MusicUtils.Defs {
         builder.positiveText(R.string.button_ok)
                 .onPositive((materialDialog, dialogAction) -> {
                     if (FileHelper.deleteFile(new File(fileObject.path))) {
-                        fileDeleted.call();
+                        fileDeleted.run();
                         CustomMediaScanner.scanFiles(Collections.singletonList(fileObject.path), null);
                     } else {
                         Toast.makeText(context,
@@ -614,7 +636,7 @@ public class MenuUtils implements MusicUtils.Defs {
     }
 
     @Nullable
-    public static PopupMenu.OnMenuItemClickListener getFolderMenuClickListener(Context context, BaseFileObject fileObject, Action1<TaggerDialog> tagEditorCallback, Action0 filenameChanged, Action0 fileDeleted) {
+    public static PopupMenu.OnMenuItemClickListener getFolderMenuClickListener(Context context, BaseFileObject fileObject, UnsafeConsumer<TaggerDialog> tagEditorCallback, UnsafeAction filenameChanged, UnsafeAction fileDeleted) {
         switch (fileObject.fileType) {
             case FileType.FILE:
                 return getFileMenuClickListener(context, (FileObject) fileObject, tagEditorCallback, filenameChanged, fileDeleted);
@@ -624,41 +646,41 @@ public class MenuUtils implements MusicUtils.Defs {
         return null;
     }
 
-    private static PopupMenu.OnMenuItemClickListener getFileMenuClickListener(Context context, FileObject fileObject, Action1<TaggerDialog> tagEditorCallback, Action0 filenameChanged, Action0 fileDeleted) {
+    private static PopupMenu.OnMenuItemClickListener getFileMenuClickListener(Context context, FileObject fileObject, UnsafeConsumer<TaggerDialog> tagEditorCallback, UnsafeAction filenameChanged, UnsafeAction fileDeleted) {
         return menuItem -> {
-            Observable<Song> songObservable = FileHelper.getSong(new File(fileObject.path))
-                    .observeOn(AndroidSchedulers.mainThread());
+
+            Consumer<Throwable> errorHandler = e -> LogUtils.logException(TAG, "getFileMenuClickListener threw error", e);
 
             switch (menuItem.getItemId()) {
                 case R.id.playNext:
-                    songObservable.subscribe(song -> playNext(context, song));
+                    getSongForFile(fileObject).subscribe(song -> playNext(context, song), errorHandler);
                     return true;
                 case NEW_PLAYLIST:
-                    songObservable.subscribe(song -> newPlaylist(context, Collections.singletonList(song)));
+                    getSongForFile(fileObject).subscribe(song -> newPlaylist(context, Collections.singletonList(song)), errorHandler);
                     return true;
                 case PLAYLIST_SELECTED:
-                    songObservable.subscribe(song -> addToPlaylist(context, menuItem, Collections.singletonList(song)));
+                    getSongForFile(fileObject).subscribe(song -> addToPlaylist(context, menuItem, Collections.singletonList(song)), errorHandler);
                     return true;
                 case R.id.addToQueue:
-                    songObservable.subscribe(song -> addToQueue(context, Collections.singletonList(song)));
+                    getSongForFile(fileObject).subscribe(song -> addToQueue(context, Collections.singletonList(song)), errorHandler);
                     return true;
                 case R.id.scan:
                     scanFile(context, fileObject);
                     return true;
                 case R.id.editTags:
-                    songObservable.subscribe(song -> tagEditorCallback.call(editTags(song)));
+                    getSongForFile(fileObject).subscribe(song -> tagEditorCallback.accept(editTags(song)), errorHandler);
                     return true;
                 case R.id.share:
-                    songObservable.subscribe(song -> song.share(context));
+                    getSongForFile(fileObject).subscribe(song -> song.share(context), errorHandler);
                     return true;
                 case R.id.ringtone:
-                    songObservable.subscribe(song -> setRingtone(context, song));
+                    getSongForFile(fileObject).subscribe(song -> setRingtone(context, song), errorHandler);
                     return true;
                 case R.id.songInfo:
-                    songObservable.subscribe(song -> showSongInfo(context, song));
+                    getSongForFile(fileObject).subscribe(song -> showSongInfo(context, song), errorHandler);
                     return true;
                 case R.id.blacklist:
-                    songObservable.subscribe(MenuUtils::blacklist);
+                    getSongForFile(fileObject).subscribe(song -> blacklist(song));
                     return true;
                 case R.id.rename:
                     renameFile(context, fileObject, filenameChanged);
@@ -671,23 +693,20 @@ public class MenuUtils implements MusicUtils.Defs {
         };
     }
 
-    private static PopupMenu.OnMenuItemClickListener getFolderMenuClickListener(Context context, FolderObject folderObject, Action0 filenameChanged, Action0 fileDeleted) {
+    private static PopupMenu.OnMenuItemClickListener getFolderMenuClickListener(Context context, FolderObject folderObject, UnsafeAction filenameChanged, UnsafeAction fileDeleted) {
         return menuItem -> {
-
-            Observable<List<Song>> songsObservable = FileHelper.getSongList(new File(folderObject.path), true, false);
-
             switch (menuItem.getItemId()) {
                 case R.id.play:
-                    play(context, songsObservable);
+                    play(context, getSongsForFolderObject(folderObject));
                     return true;
                 case NEW_PLAYLIST:
-                    newPlaylist(context, songsObservable);
+                    newPlaylist(context, getSongsForFolderObject(folderObject));
                     return true;
                 case PLAYLIST_SELECTED:
-                    addToPlaylist(context, menuItem, songsObservable);
+                    addToPlaylist(context, menuItem, getSongsForFolderObject(folderObject));
                     return true;
                 case R.id.addToQueue:
-                    addToQueue(context, songsObservable);
+                    addToQueue(context, getSongsForFolderObject(folderObject));
                     return true;
                 case R.id.setInitialDir:
                     setInitialDir(context, folderObject);
@@ -696,7 +715,7 @@ public class MenuUtils implements MusicUtils.Defs {
                     scanFolder(context, folderObject);
                     return true;
                 case R.id.blacklist:
-                    blacklist(songsObservable);
+                    blacklist(getSongsForFolderObject(folderObject));
                     return true;
                 case R.id.rename:
                     renameFile(context, folderObject, filenameChanged);

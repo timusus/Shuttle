@@ -25,7 +25,6 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
     maven { url "https://jitpack.io" }
     maven {
-        name 'glide-snapshot'
         url 'http://oss.sonatype.org/content/repositories/snapshots'
     }
 }
@@ -276,13 +275,16 @@ dependencies {
     compile libs.glideOkhttp
     compile libs.glidePalette
     compile libs.permiso
+
     compile libs.rxAndroid
-    compile libs.rxBindings
-    compile libs.rxBindingsAppCompat
-    compile libs.rxImageSel
+    compile libs.rxBinding
+    compile libs.rxBindingAppCompat
+    compile libs.rxImagePicker
     compile libs.rxJava
     compile libs.rxRelay
-    compile libs.rxReceivers
+    compile libs.rxBroadcast
+    compile 'com.tspoon.traceur:traceur:1.0.1'
+
     compile libs.streams
     compile(libs.crashlytics) {
         transitive = true
@@ -333,30 +335,33 @@ def gitCommitCount() {
     return commitCount
 }
 
-////Fix an issue where launcher shortcuts don't use the correct package name based on the build flavours.
-//def replaceInShortcuts(variant, fromString, toString) {
-//    def flavor = variant.productFlavors.get(0)
-//    def buildtype = variant.buildType
-//    def shortcutsFile = "$buildDir/intermediates/res/merged/${flavor.name}/${buildtype.name}/xml/shortcuts.xml"
-//    def file = new File(shortcutsFile)
-//    def updatedContent = file.getText('UTF-8').replaceAll(fromString, toString)
-//    file.write(updatedContent, 'UTF-8')
-//}
-//
-//afterEvaluate {
-//    android.applicationVariants.all { variant ->
-//        variant.outputs.each { output ->
-//            output.processResources.doFirst {
-//                replaceInShortcuts(variant, '\\{applicationId\\}', variant.applicationId)
-//
-//            }
-//        }
-//    }
-//}
+/* Todo: Possibly no longer required..
+
+    //Fix an issue where launcher shortcuts don't use the correct package name based on the build flavours.
+    def replaceInShortcuts(variant, fromString, toString) {
+        def flavor = variant.productFlavors.get(0)
+        def buildtype = variant.buildType
+        def shortcutsFile = "$buildDir/intermediates/res/merged/${flavor.name}/${buildtype.name}/xml/shortcuts.xml"
+        def file = new File(shortcutsFile)
+        def updatedContent = file.getText('UTF-8').replaceAll(fromString, toString)
+        file.write(updatedContent, 'UTF-8')
+    }
+
+    afterEvaluate {
+        android.applicationVariants.all { variant ->
+            variant.outputs.each { output ->
+                output.processResources.doFirst {
+                    replaceInShortcuts(variant, '\\{applicationId\\}', variant.applicationId)
+
+                }
+            }
+        }
+    }
+*/
 
 play {
     track = 'beta'
-//    untrackOld = true
+    // untrackOld = true
     serviceAccountEmail = 'app-deployment@api-5801704373554614142-812229.iam.gserviceaccount.com'
     jsonFile = file('../deployment_keys.json')
 }

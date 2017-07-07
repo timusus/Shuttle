@@ -19,8 +19,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Single;
 import retrofit2.Call;
-import rx.Observable;
 
 public class Album implements
         Serializable,
@@ -67,8 +67,8 @@ public class Album implements
         setArtworkKey();
     }
 
-    public Observable<List<Song>> getSongsObservable() {
-        return DataManager.getInstance().getSongsObservable(song -> song.albumId == id);
+    public Single<List<Song>> getSongsSingle() {
+        return DataManager.getInstance().getSongsObservable(song -> song.albumId == id).firstOrError();
     }
 
     public static class Builder {

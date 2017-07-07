@@ -8,13 +8,15 @@ import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.codetroopers.betterpickers.numberpicker.NumberPickerBuilder;
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.rx.UnsafeAction;
 
 import java.math.BigDecimal;
 import java.util.concurrent.TimeUnit;
 
-import rx.Observable;
-import rx.functions.Action0;
-import rx.subjects.BehaviorSubject;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.Observable;
+import io.reactivex.subjects.BehaviorSubject;
 
 public final class SleepTimer {
 
@@ -28,7 +30,7 @@ public final class SleepTimer {
 
     private int timeRemaining = 0;
 
-    private Observable<Long> currentTimeObservable;
+    private Flowable<Long> currentTimeObservable;
 
     private BehaviorSubject<Boolean> timerActiveObservable;
 
@@ -56,11 +58,11 @@ public final class SleepTimer {
                                 stop();
                             }
                         }))
-                .onBackpressureLatest()
+                .toFlowable(BackpressureStrategy.LATEST)
                 .share();
     }
 
-    public Observable<Long> getCurrentTimeObservable() {
+    public Flowable<Long> getCurrentTimeObservable() {
         return currentTimeObservable;
     }
 
@@ -79,7 +81,7 @@ public final class SleepTimer {
         timerActiveObservable.onNext(false);
     }
 
-    public MaterialDialog getDialog(Context context, Action0 showTimePicker, Action0 timerStarted) {
+    public MaterialDialog getDialog(Context context, UnsafeAction showTimePicker, UnsafeAction timerStarted) {
 
         if (isActive) {
             return new MaterialDialog.Builder(context)
@@ -98,33 +100,33 @@ public final class SleepTimer {
                             case 0:
                                 // 5 mins
                                 start(5 * 60, playToEnd);
-                                timerStarted.call();
+                                timerStarted.run();
                                 break;
                             case 1:
                                 // 15 mins
                                 start(15 * 60, playToEnd);
-                                timerStarted.call();
+                                timerStarted.run();
                                 break;
                             case 2:
                                 // 30 mins
                                 start(30 * 60, playToEnd);
-                                timerStarted.call();
+                                timerStarted.run();
                                 break;
                             case 3:
                                 // 1 hour
                                 start(60 * 60, playToEnd);
-                                timerStarted.call();
+                                timerStarted.run();
                                 break;
                             case 4:
                                 // Set time manually
-                                showTimePicker.call();
+                                showTimePicker.run();
                                 break;
                         }
                     }).build();
         }
     }
 
-    public void showHmsPicker(Context context, FragmentManager fragmentManager, Action0 timerStarted) {
+    public void showHmsPicker(Context context, FragmentManager fragmentManager, UnsafeAction timerStarted) {
         NumberPickerBuilder numberPickerBuilder = new NumberPickerBuilder();
         numberPickerBuilder
                 .setFragmentManager(fragmentManager)
@@ -135,7 +137,7 @@ public final class SleepTimer {
                 .setLabelText(context.getString(R.string.sleep_timer_label_minutes))
                 .addNumberPickerDialogHandler((reference, number, decimal, isNegative, fullNumber) -> {
                     start(number.intValue() * 60, playToEnd);
-                    timerStarted.call();
+                    timerStarted.run();
                 })
                 .show();
     }

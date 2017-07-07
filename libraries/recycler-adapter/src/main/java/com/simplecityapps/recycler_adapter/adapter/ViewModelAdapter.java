@@ -14,10 +14,10 @@ import com.simplecityapps.recycler_adapter.model.ViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * A custom RecyclerView.Adapter used for adapting {@link ViewModel}'s.
@@ -74,7 +74,7 @@ public class ViewModelAdapter extends RecyclerView.Adapter {
      *
      * @param items the new dataset ({@link List<ViewModel>})
      */
-    public synchronized Subscription setItems(List<ViewModel> items) {
+    public synchronized Disposable setItems(List<ViewModel> items) {
         return setItems(items, null);
     }
 
@@ -86,13 +86,13 @@ public class ViewModelAdapter extends RecyclerView.Adapter {
      * @param callback an optional {@link ListUpdateCallback}
      */
     @Nullable
-    public synchronized Subscription setItems(List<ViewModel> items, @Nullable CompletionListUpdateCallback callback) {
+    public synchronized Disposable setItems(List<ViewModel> items, @Nullable CompletionListUpdateCallback callback) {
 
         if (this.items == items) {
             return null;
         }
 
-        return Observable.fromCallable(() -> DiffUtil.calculateDiff(new DiffCallback(this.items, items)))
+        return Single.fromCallable(() -> DiffUtil.calculateDiff(new DiffCallback(this.items, items)))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(diffResult -> {

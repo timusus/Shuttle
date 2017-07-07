@@ -14,6 +14,7 @@ import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Playlist;
+import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.ui.detail.AlbumDetailFragment;
 import com.simplecity.amp_library.ui.detail.ArtistDetailFragment;
 import com.simplecity.amp_library.ui.detail.PlaylistDetailFragment;
@@ -31,9 +32,8 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import test.com.androidnavigation.fragment.BackPressHandler;
 import test.com.androidnavigation.fragment.BaseNavigationController;
 import test.com.androidnavigation.fragment.FragmentInfo;
@@ -54,7 +54,7 @@ public class MainController extends BaseNavigationController implements BackPres
     @BindView(R.id.multiSheetView)
     CustomMultiSheetView multiSheetView;
 
-    private CompositeSubscription subscriptions = new CompositeSubscription();
+    private CompositeDisposable disposables = new CompositeDisposable();
 
     public static MainController newInstance() {
         Bundle args = new Bundle();
@@ -102,7 +102,7 @@ public class MainController extends BaseNavigationController implements BackPres
         }
         delayHandler = new Handler();
 
-        subscriptions.add(navigationEventRelay.getEvents()
+        disposables.add(navigationEventRelay.getEvents()
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter(drawerEvent -> drawerEvent.isActionable)
                 .subscribe(navigationEvent -> {
@@ -114,7 +114,7 @@ public class MainController extends BaseNavigationController implements BackPres
                             delayHandler.postDelayed(() -> pushViewController(FolderFragment.newInstance("PageTitle"), "FolderFragment"), 250);
                             break;
                         case NavigationEventRelay.NavigationEvent.Type.SLEEP_TIMER_SELECTED:
-                            Action0 showToast = () -> Toast.makeText(getContext(), R.string.sleep_timer_started, Toast.LENGTH_SHORT).show();
+                            UnsafeAction showToast = () -> Toast.makeText(getContext(), R.string.sleep_timer_started, Toast.LENGTH_SHORT).show();
                             SleepTimer.getInstance().getDialog(
                                     getContext(),
                                     () -> SleepTimer.getInstance().showHmsPicker(getContext(), getFragmentManager(), showToast),
@@ -164,7 +164,7 @@ public class MainController extends BaseNavigationController implements BackPres
         delayHandler.removeCallbacksAndMessages(null);
         delayHandler = null;
 
-        subscriptions.clear();
+        disposables.clear();
 
         DrawerLockManager.getInstance().setDrawerLockController(null);
 

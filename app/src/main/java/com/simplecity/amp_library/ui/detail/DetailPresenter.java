@@ -17,8 +17,8 @@ import com.simplecityapps.recycler_adapter.model.ViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 class DetailPresenter extends Presenter<DetailView> {
 
@@ -35,7 +35,7 @@ class DetailPresenter extends Presenter<DetailView> {
 
     void loadData() {
         PermissionUtils.RequestStoragePermissions(() ->
-                addSubcscription(songsProvider.getSongs().zipWith(albumsProvider.getAlbums(), (songs, albums) -> {
+                addDisposable(songsProvider.getSongs().zipWith(albumsProvider.getAlbums(), (songs, albums) -> {
                     List<ViewModel> viewModels = new ArrayList<>();
                     viewModels.addAll(albumsProvider.getAlbumViewModels(albums));
                     viewModels.addAll(songsProvider.getSongViewModels(songs));

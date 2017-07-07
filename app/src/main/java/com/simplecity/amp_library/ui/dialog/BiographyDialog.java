@@ -21,17 +21,19 @@ import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.FileHelper;
 import com.simplecity.amp_library.utils.LogUtils;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 import static com.simplecity.amp_library.R.id.album;
 import static com.simplecity.amp_library.R.id.artist;
 
 public class BiographyDialog {
+
+    private static final String TAG = "BiographyDialog";
 
     private BiographyDialog() {
     }
@@ -165,7 +167,7 @@ public class BiographyDialog {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(genre -> genreValue.setText(genre == null ? null : genre.name),
-                        error -> LogUtils.logException("DialogUtils: Error getting genre", error));
+                        error -> LogUtils.logException(TAG, "Error getting genre", error));
 
         View albumArtistView = view.findViewById(R.id.album_artist);
         TextView albumArtistKey = albumArtistView.findViewById(R.id.key);
@@ -223,7 +225,7 @@ public class BiographyDialog {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(playCount -> playCountValue.setText(String.valueOf(playCount)),
-                        error -> LogUtils.logException("DialogUtils:  Error getting play count", error));
+                        error -> LogUtils.logException(TAG, "Error getting play count", error));
 
         return DialogUtils.getBuilder(context)
                 .title(context.getString(R.string.dialog_song_info_title))

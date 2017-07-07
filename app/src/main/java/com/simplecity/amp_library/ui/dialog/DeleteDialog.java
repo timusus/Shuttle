@@ -21,11 +21,13 @@ import com.simplecity.amp_library.utils.MusicUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class DeleteDialog {
+
+    private static final String TAG = "DeleteDialog";
 
     private DeleteDialog() {
     }
@@ -41,7 +43,7 @@ public class DeleteDialog {
         private int deleteMultipleMessageId;
 
         private List<String> itemNames;
-        private Observable<List<Song>> songsObservable;
+        private Single<List<Song>> songsSingle;
 
         public DeleteDialogBuilder context(Context context) {
             this.context = context;
@@ -63,19 +65,18 @@ public class DeleteDialog {
             return this;
         }
 
-        public DeleteDialogBuilder songsToDelete(Observable<List<Song>> songsObservable) {
-            this.songsObservable = songsObservable;
+        public DeleteDialogBuilder songsToDelete(Single<List<Song>> songsObservable) {
+            this.songsSingle = songsObservable;
             return this;
         }
 
         void deleteSongs() {
-            songsObservable
+            songsSingle
                     .map(lists -> Stream.of(lists)
                             .flatMap(Stream::of)
                             .filter(Song::delete)
                             .collect(Collectors.toList()))
-                    .doOnNext(songs -> {
-
+                    .doOnSuccess(songs -> {
                         //Current play queue
                         MusicUtils.removeFromQueue(songs, true);
 
@@ -103,7 +104,7 @@ public class DeleteDialog {
                         } else {
                             Toast.makeText(context, R.string.delete_songs_failure_toast, Toast.LENGTH_SHORT).show();
                         }
-                    }, error -> LogUtils.logException("DialogUtils: Error scanning files", error));
+                    }, error -> LogUtils.logException(TAG, "Error scanning files", error));
         }
 
         public MaterialDialog build() {

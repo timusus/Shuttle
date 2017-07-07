@@ -7,7 +7,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.f2prateek.rx.receivers.RxBroadcastReceiver;
+import com.cantrowitz.rxbroadcast.RxBroadcast;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Query;
 import com.simplecity.amp_library.model.Song;
@@ -29,9 +29,12 @@ import org.jaudiotagger.tag.TagException;
 import java.io.File;
 import java.io.IOException;
 
-import rx.Observable;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Observable;
 
 class LyricsPresenter extends Presenter<LyricsView> {
+
+    private static final String TAG = "LyricsPresenter";
 
     @Override
     public void bindView(@NonNull LyricsView view) {
@@ -39,8 +42,9 @@ class LyricsPresenter extends Presenter<LyricsView> {
 
         updateLyrics();
 
-        addSubcscription(RxBroadcastReceiver.create(ShuttleApplication.getInstance(), new IntentFilter(MusicService.InternalIntents.META_CHANGED))
-                .subscribe(intent -> updateLyrics(), error -> LogUtils.logException("LyricsPresenter: Error receiving meta changed", error)));
+        addDisposable(RxBroadcast.fromBroadcast(ShuttleApplication.getInstance(), new IntentFilter(MusicService.InternalIntents.META_CHANGED))
+                .toFlowable(BackpressureStrategy.LATEST)
+                .subscribe(intent -> updateLyrics(), error -> LogUtils.logException(TAG, "Error receiving meta changed", error)));
     }
 
     void downloadOrLaunchQuickLyric() {
@@ -66,13 +70,13 @@ class LyricsPresenter extends Presenter<LyricsView> {
 
     private void updateLyrics() {
 
-        addSubcscription(Observable.fromCallable(() -> {
+        addDisposable(Observable.fromCallable(() -> {
 
-            String lyrics = null;
+            String lyrics = "";
             String path = MusicUtils.getFilePath();
 
             if (TextUtils.isEmpty(path)) {
-                return null;
+                return lyrics;
             }
 
             if (path.startsWith("content://")) {
@@ -116,9 +120,9 @@ class LyricsPresenter extends Presenter<LyricsView> {
             LyricsView lyricsView = getView();
             if (lyricsView != null) {
                 lyricsView.updateLyrics(lyrics);
-                lyricsView.showNoLyricsView(lyrics == null);
+                lyricsView.showNoLyricsView(TextUtils.isEmpty(lyrics));
                 lyricsView.showQuickLyricInfoButton(!QuickLyricUtils.isQLInstalled());
             }
-        }, error -> LogUtils.logException("LyricsPresenter: Error getting lyrics", error)));
+        }, error -> LogUtils.logException(TAG, "Error getting lyrics", error)));
     }
 }

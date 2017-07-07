@@ -80,7 +80,7 @@ final class MediaPlayerHandler extends Handler {
                 }
                 break;
             case MusicService.PlayerHandler.RELEASE_WAKELOCK:
-                service.mWakeLock.release();
+                service.wakeLock.release();
                 break;
 
             case MusicService.PlayerHandler.FOCUS_CHANGE:

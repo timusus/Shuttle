@@ -16,10 +16,11 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import io.reactivex.Single;
 import retrofit2.Call;
-import rx.Observable;
 
 public class AlbumArtist implements
         Serializable,
@@ -37,11 +38,12 @@ public class AlbumArtist implements
         this.name = name;
         this.albums = albums;
     }
-    
-    public Observable<List<Song>> getSongsObservable() {
+
+    public Single<List<Song>> getSongsSingle() {
         return DataManager.getInstance().getSongsObservable(song -> Stream.of(albums)
                 .map(album -> album.id)
-                .anyMatch(albumId -> albumId == song.albumId));
+                .anyMatch(albumId -> albumId == song.albumId))
+                .first(Collections.emptyList());
     }
 
     @Override

@@ -11,7 +11,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import javax.inject.Inject;
 
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.disposables.CompositeDisposable;
 import test.com.multisheetview.ui.view.MultiSheetView;
 
 /**
@@ -21,7 +21,7 @@ public class CustomMultiSheetView extends MultiSheetView {
 
     @Inject MultiSheetEventRelay multiSheetEventRelay;
 
-    private CompositeSubscription subscriptions;
+    private CompositeDisposable disposables;
 
     private DrawerLockManager.DrawerLock sheet1Lock = () -> "Sheet 1";
     private DrawerLockManager.DrawerLock sheet2Lock = () -> "Sheet 2";
@@ -29,7 +29,7 @@ public class CustomMultiSheetView extends MultiSheetView {
     public CustomMultiSheetView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
-        subscriptions = new CompositeSubscription();
+        disposables = new CompositeDisposable();
 
         setSheetStateChangeListener((sheet, state) -> {
             if (state == SlidingUpPanelLayout.PanelState.COLLAPSED) {
@@ -60,7 +60,7 @@ public class CustomMultiSheetView extends MultiSheetView {
 
         ShuttleApplication.getInstance().getAppComponent().inject(this);
 
-        subscriptions.add(multiSheetEventRelay.getEvents().subscribe(event -> {
+        disposables.add(multiSheetEventRelay.getEvents().subscribe(event -> {
             switch (event.action) {
                 case MultiSheetEventRelay.MultiSheetEvent.Action.GOTO:
                     goToSheet(event.sheet);
@@ -81,7 +81,7 @@ public class CustomMultiSheetView extends MultiSheetView {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
-        subscriptions.clear();
+        disposables.clear();
     }
 
 }

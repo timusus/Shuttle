@@ -14,7 +14,7 @@ import com.simplecity.amp_library.utils.SortManager;
 
 import java.util.List;
 
-import rx.Observable;
+import io.reactivex.Single;
 
 public class GenreDetailFragment extends BaseDetailFragment {
 
@@ -84,13 +84,13 @@ public class GenreDetailFragment extends BaseDetailFragment {
 
     @NonNull
     @Override
-    public Observable<List<Song>> getSongs() {
+    public Single<List<Song>> getSongs() {
         return genre.getSongsObservable();
     }
 
     @NonNull
     @Override
-    public Observable<List<Album>> getAlbums() {
+    public Single<List<Album>> getAlbums() {
         return getSongs().map(Operators::songsToAlbums);
     }
 

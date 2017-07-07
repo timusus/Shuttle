@@ -38,11 +38,13 @@ import com.simplecity.amp_library.sql.SqlUtils;
 import com.simplecity.amp_library.sql.providers.PlayCountTable;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * General helpers
@@ -186,7 +188,7 @@ public final class ShuttleUtils {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(message -> Toast.makeText(context, message,
-                        Toast.LENGTH_SHORT).show(), error -> LogUtils.logException("ShuttleUtils: Error setting ringtone", error));
+                        Toast.LENGTH_SHORT).show(), error -> LogUtils.logException(TAG, "Error setting ringtone", error));
 
     }
 
@@ -313,15 +315,19 @@ public final class ShuttleUtils {
         return ShuttleApplication.getInstance().getResources().getBoolean(R.bool.isTablet);
     }
 
-    static Observable<List<Song>> getSongsForFileObjects(List<BaseFileObject> fileObjects) {
-        List<Observable<List<Song>>> observables = Stream.of(fileObjects)
+    static Single<List<Song>> getSongsForFileObjects(List<BaseFileObject> fileObjects) {
+
+        List<Single<List<Song>>> observables = Stream.of(fileObjects)
                 .map(fileObject -> FileHelper.getSongList(new File(fileObject.path), true, false))
                 .collect(Collectors.toList());
 
-        return Observable.concat(observables).reduce((songs, songs2) -> {
-            songs.addAll(songs2);
-            return songs;
-        });
+        return Single.concat(observables)
+                .reduce((songs, songs2) -> {
+                    List<Song> allSongs = new ArrayList<>();
+                    allSongs.addAll(songs);
+                    allSongs.addAll(songs2);
+                    return allSongs;
+                }).toSingle();
     }
 
     public static void incrementPlayCount(Context context, Song song) {

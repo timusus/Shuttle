@@ -3,11 +3,11 @@ package com.simplecity.amp_library.ui.drawer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.jakewharton.rxrelay.PublishRelay;
+import com.jakewharton.rxrelay2.PublishRelay;
 
 import javax.inject.Inject;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 public class NavigationEventRelay {
 
@@ -26,7 +26,7 @@ public class NavigationEventRelay {
     }
 
     public void sendEvent(@NonNull NavigationEvent event) {
-        relay.call(event);
+        relay.accept(event);
     }
 
     public Observable<NavigationEvent> getEvents() {

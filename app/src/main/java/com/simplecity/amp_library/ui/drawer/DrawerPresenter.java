@@ -2,22 +2,25 @@ package com.simplecity.amp_library.ui.drawer;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.PopupMenu;
+import android.util.Log;
 import android.view.View;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.PlaylistsModel;
 import com.simplecity.amp_library.ui.presenters.Presenter;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
 
 import javax.inject.Inject;
 
-import rx.android.schedulers.AndroidSchedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class DrawerPresenter extends Presenter<DrawerView> {
+
+    private static final String TAG = "DrawerPresenter";
 
     @Inject NavigationEventRelay navigationEventRelay;
 
@@ -33,7 +36,7 @@ public class DrawerPresenter extends Presenter<DrawerView> {
 
         loadData();
 
-        addSubcscription(navigationEventRelay.getEvents().subscribe(drawerEvent -> {
+        addDisposable(navigationEventRelay.getEvents().subscribe(drawerEvent -> {
             DrawerView drawerView = getView();
             switch (drawerEvent.type) {
                 case NavigationEventRelay.NavigationEvent.Type.LIBRARY_SELECTED:
@@ -77,7 +80,8 @@ public class DrawerPresenter extends Presenter<DrawerView> {
 
     private void loadData() {
         PermissionUtils.RequestStoragePermissions(() ->
-                playlistsModel.getPlaylists()
+                addDisposable(playlistsModel.getPlaylistsObservable()
+                        .doOnNext(playlists -> Log.i(TAG, "Playlists: " + playlists))
                         .map(playlists -> Stream.of(playlists)
                                 .map(playlist1 -> {
                                     DrawerChild drawerChild = new DrawerChild(playlist1);
@@ -106,8 +110,8 @@ public class DrawerPresenter extends Presenter<DrawerView> {
                                         drawerView.setItems(drawerChildren);
                                     }
                                 },
-                                error -> CrashlyticsCore.getInstance().log("Error refreshing DrawerFragment adapter items: " + error.toString())
-                        ));
+                                error -> LogUtils.logException(TAG, "Error refreshing DrawerFragment adapter items", error)
+                        )));
     }
 
 }

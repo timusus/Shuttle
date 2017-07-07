@@ -3,6 +3,7 @@ package com.simplecity.amp_library.ui.fragments;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,10 +38,9 @@ import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 import java.util.Collections;
 import java.util.List;
 
-import rx.Observable;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func0;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 public class SongFragment extends BaseFragment implements
         MusicUtils.Defs,
@@ -57,7 +57,7 @@ public class SongFragment extends BaseFragment implements
 
     private boolean sortOrderChanged = false;
 
-    private Subscription subscription;
+    private Disposable disposable;
 
     private ShuffleView shuffleView;
 
@@ -102,7 +102,7 @@ public class SongFragment extends BaseFragment implements
 
         refreshAdapterItems();
 
-        if (isVisible()) {
+        if (getUserVisibleHint()) {
             setupContextualToolbar();
         }
     }
@@ -118,15 +118,15 @@ public class SongFragment extends BaseFragment implements
 
                         boolean ascending = SortManager.getInstance().getSongsAscending();
 
-                        subscription = DataManager.getInstance().getSongsRelay()
-                                .flatMap(songs -> {
+                        disposable = DataManager.getInstance().getSongsRelay()
+                                .flatMapSingle(songs -> {
                                     //Sort
                                     SortManager.getInstance().sortSongs(songs);
                                     //Reverse if required
                                     if (!ascending) {
                                         Collections.reverse(songs);
                                     }
-                                    return Observable.from(songs)
+                                    return Observable.fromIterable(songs)
                                             .map(song -> {
 
                                                 // Look for an existing SongView wrapping the song, we'll reuse it if it exists.
@@ -160,7 +160,7 @@ public class SongFragment extends BaseFragment implements
                                     }
 
                                     sortOrderChanged = false;
-                                }, error -> LogUtils.logException("SongFragment: Error refreshing adapter items", error));
+                                }, error -> LogUtils.logException(TAG, "Error refreshing adapter items", error));
                     }
                 }
         );
@@ -169,8 +169,8 @@ public class SongFragment extends BaseFragment implements
     @Override
     public void onPause() {
 
-        if (subscription != null) {
-            subscription.unsubscribe();
+        if (disposable != null) {
+            disposable.dispose();
         }
 
         super.onPause();
@@ -330,14 +330,9 @@ public class SongFragment extends BaseFragment implements
             SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
             PlaylistUtils.makePlaylistMenu(getActivity(), sub);
 
-            contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), new Func0<List<Song>>() {
-                @Override
-                public List<Song> call() {
-                    return Stream.of(contextualToolbarHelper.getItems())
-                            .map(SelectableViewModel::getItem)
-                            .collect(Collectors.toList());
-                }
-            }));
+            contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), () -> Stream.of(contextualToolbarHelper.getItems())
+                    .map(SelectableViewModel::getItem)
+                    .collect(Collectors.toList())));
             contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
                 @Override
                 public void notifyItemChanged(int position) {
@@ -350,6 +345,7 @@ public class SongFragment extends BaseFragment implements
                 }
             });
         }
+        Log.i(TAG, "setupContextualToolbar.. Visible to user: " + getUserVisibleHint());
     }
 
     @Override

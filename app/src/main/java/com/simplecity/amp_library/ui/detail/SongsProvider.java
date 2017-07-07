@@ -7,12 +7,12 @@ import com.simplecityapps.recycler_adapter.model.ViewModel;
 
 import java.util.List;
 
-import rx.Observable;
+import io.reactivex.Single;
 
 public interface SongsProvider {
 
     @NonNull
-    Observable<List<Song>> getSongs();
+    Single<List<Song>> getSongs();
 
     @NonNull
     List<ViewModel> getSongViewModels(List<Song> songs);

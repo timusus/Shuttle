@@ -14,15 +14,15 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.FolderObject;
+import com.simplecity.amp_library.rx.UnsafeConsumer;
 
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 
 public class CustomMediaScanner implements MediaScannerConnection.MediaScannerConnectionClient {
 
@@ -111,7 +111,7 @@ public class CustomMediaScanner implements MediaScannerConnection.MediaScannerCo
         }
     }
 
-    public static Subscription scanFile(Context context, FolderObject folderObject) {
+    public static Disposable scanFile(Context context, FolderObject folderObject) {
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_progress, null);
         TextView pathsTextView = view.findViewById(R.id.paths);
         pathsTextView.setText(folderObject.path);
@@ -149,7 +149,7 @@ public class CustomMediaScanner implements MediaScannerConnection.MediaScannerCo
                 });
     }
 
-    public static void scanFile(String path, Action1<String> message) {
+    public static void scanFile(String path, UnsafeConsumer<String> message) {
         CustomMediaScanner.scanFiles(Collections.singletonList(path), new CustomMediaScanner.ScanCompletionListener() {
             @Override
             public void onPathScanned(String path) {
@@ -158,7 +158,7 @@ public class CustomMediaScanner implements MediaScannerConnection.MediaScannerCo
 
             @Override
             public void onScanCompleted() {
-                message.call(ShuttleApplication.getInstance().getString(R.string.scan_complete));
+                message.accept(ShuttleApplication.getInstance().getString(R.string.scan_complete));
             }
         });
     }

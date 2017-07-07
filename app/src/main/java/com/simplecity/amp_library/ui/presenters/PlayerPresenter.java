@@ -5,7 +5,7 @@ import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 
-import com.f2prateek.rx.receivers.RxBroadcastReceiver;
+import com.cantrowitz.rxbroadcast.RxBroadcast;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.lyrics.LyricsDialog;
 import com.simplecity.amp_library.model.Song;
@@ -22,11 +22,14 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class PlayerPresenter extends Presenter<PlayerView> {
+
+    private static final String TAG = "PlayerPresenter";
 
     private long startSeekPos = 0;
     private long lastSeekEventTime;
@@ -52,23 +55,23 @@ public class PlayerPresenter extends Presenter<PlayerView> {
         updatePlaystate();
         updateRepeatMode();
 
-        addSubcscription(PlaybackMonitor.getInstance().getProgressObservable()
+        addDisposable(PlaybackMonitor.getInstance().getProgressObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(progress -> view.setSeekProgress((int) (progress * 1000)),
-                        error -> LogUtils.logException("PlayerPresenter: Error updating seek progress", error)));
+                        error -> LogUtils.logException(TAG, "PlayerPresenter: Error updating seek progress", error)));
 
-        addSubcscription(PlaybackMonitor.getInstance().getCurrentTimeObservable()
+        addDisposable(PlaybackMonitor.getInstance().getCurrentTimeObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(pos -> refreshCurrentTimeText(pos / 1000),
-                        error -> LogUtils.logException("PlayerPresenter: Error refreshing time text", error)));
+                        error -> LogUtils.logException(TAG, "PlayerPresenter: Error refreshing time text", error)));
 
-        addSubcscription(Observable.interval(500, TimeUnit.MILLISECONDS)
+        addDisposable(Flowable.interval(500, TimeUnit.MILLISECONDS)
                 .onBackpressureDrop()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> setCurrentTimeVisibility(MusicUtils.isPlaying() || !currentPlaybackTimeVisible),
-                        error -> LogUtils.logException("PlayerPresenter: Error emitting current time", error)));
+                        error -> LogUtils.logException(TAG, "PlayerPresenter: Error emitting current time", error)));
 
         final IntentFilter filter = new IntentFilter();
         filter.addAction(MusicService.InternalIntents.META_CHANGED);
@@ -78,8 +81,8 @@ public class PlayerPresenter extends Presenter<PlayerView> {
         filter.addAction(MusicService.InternalIntents.REPEAT_CHANGED);
         filter.addAction(MusicService.InternalIntents.SERVICE_CONNECTED);
 
-        addSubcscription(RxBroadcastReceiver.create(ShuttleApplication.getInstance(), filter)
-                .onBackpressureLatest()
+        addDisposable(RxBroadcast.fromBroadcast(ShuttleApplication.getInstance(), filter)
+                .toFlowable(BackpressureStrategy.LATEST)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(intent -> {
                     final String action = intent.getAction();
@@ -110,7 +113,7 @@ public class PlayerPresenter extends Presenter<PlayerView> {
                                 break;
                         }
                     }
-                }, error -> LogUtils.logException("PlayerPresenter: Error sending broadcast", error)));
+                }, error -> LogUtils.logException(TAG, "PlayerPresenter: Error sending broadcast", error)));
     }
 
 
@@ -137,11 +140,11 @@ public class PlayerPresenter extends Presenter<PlayerView> {
     private void updateFavorite() {
         PlayerView view = getView();
         if (view != null) {
-            addSubcscription(PlaylistUtils.isFavorite(MusicUtils.getSong())
+            addDisposable(PlaylistUtils.isFavorite(MusicUtils.getSong())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(view::favoriteChanged,
-                            error -> LogUtils.logException("Update favorite failed", error)));
+                            error -> LogUtils.logException(TAG, "Update favorite failed", error)));
         }
     }
 
@@ -186,7 +189,6 @@ public class PlayerPresenter extends Presenter<PlayerView> {
     public void toggleFavorite() {
         PlaylistUtils.toggleFavorite(message -> {
             updateFavorite();
-
             PlayerView playerView = getView();
             if (playerView != null) {
                 playerView.showToast(message, Toast.LENGTH_SHORT);

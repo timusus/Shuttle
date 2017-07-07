@@ -34,8 +34,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Observable;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 
 public class SettingsPresenter extends Presenter<SettingsView> {
 

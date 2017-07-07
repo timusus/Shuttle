@@ -11,10 +11,12 @@ public class LogUtils {
         //no instance
     }
 
-    public static void logException(String message, Throwable throwable) {
-        Crashlytics.log(Log.ERROR, "Shuttle Error", message + " Throwable: " + throwable.getMessage());
+    public static void logException(String tag, String message, Throwable throwable) {
         if (BuildConfig.DEBUG) {
+            Log.e(tag, message + "\nThrowable: " + throwable.getMessage());
             throwable.printStackTrace();
+        } else {
+            Crashlytics.log(Log.ERROR, tag, message + "\nThrowable: " + throwable.getMessage());
         }
     }
 

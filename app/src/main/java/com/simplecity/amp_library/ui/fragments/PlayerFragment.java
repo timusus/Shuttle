@@ -23,11 +23,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.jakewharton.rxbinding.widget.RxSeekBar;
-import com.jakewharton.rxbinding.widget.SeekBarChangeEvent;
-import com.jakewharton.rxbinding.widget.SeekBarProgressChangeEvent;
-import com.jakewharton.rxbinding.widget.SeekBarStartChangeEvent;
-import com.jakewharton.rxbinding.widget.SeekBarStopChangeEvent;
+import com.jakewharton.rxbinding2.widget.RxSeekBar;
+import com.jakewharton.rxbinding2.widget.SeekBarChangeEvent;
+import com.jakewharton.rxbinding2.widget.SeekBarProgressChangeEvent;
+import com.jakewharton.rxbinding2.widget.SeekBarStartChangeEvent;
+import com.jakewharton.rxbinding2.widget.SeekBarStopChangeEvent;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
@@ -56,9 +56,10 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
 public class PlayerFragment extends BaseFragment implements
         PlayerView,
@@ -109,11 +110,7 @@ public class PlayerFragment extends BaseFragment implements
     @BindView(R.id.backgroundView)
     View backgroundView;
 
-    private static final String QUEUE_FRAGMENT = "queue_fragment";
-    private static final String QUEUE_PAGER_FRAGMENT = "queue_pager_fragment";
-    private static final String LYRICS_FRAGMENT = "lyrics_fragment";
-
-    private CompositeSubscription subscriptions;
+    private CompositeDisposable disposables = new CompositeDisposable();
 
     private int backgroundColor;
 
@@ -178,7 +175,7 @@ public class PlayerFragment extends BaseFragment implements
 
         if (savedInstanceState == null) {
             getChildFragmentManager().beginTransaction()
-                    .add(R.id.main_container, QueuePagerFragment.newInstance(), QUEUE_PAGER_FRAGMENT)
+                    .add(R.id.main_container, QueuePagerFragment.newInstance(), "QueuePagerFragment")
                     .commit();
         }
 
@@ -213,33 +210,31 @@ public class PlayerFragment extends BaseFragment implements
     public void onResume() {
         super.onResume();
 
-        subscriptions = new CompositeSubscription();
-
-        Observable<SeekBarChangeEvent> sharedSeekBarEvents = RxSeekBar.changeEvents(seekBar)
-                .onBackpressureLatest()
+        Flowable<SeekBarChangeEvent> sharedSeekBarEvents = RxSeekBar.changeEvents(seekBar)
+                .toFlowable(BackpressureStrategy.LATEST)
                 .ofType(SeekBarChangeEvent.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .share();
 
-        subscriptions.add(sharedSeekBarEvents.subscribe(seekBarChangeEvent -> {
+        disposables.add(sharedSeekBarEvents.subscribe(seekBarChangeEvent -> {
             if (seekBarChangeEvent instanceof SeekBarStartChangeEvent) {
                 isSeeking = true;
             } else if (seekBarChangeEvent instanceof SeekBarStopChangeEvent) {
                 isSeeking = false;
             }
-        }, error -> LogUtils.logException("PlayerFragment: Error in seek change event", error)));
+        }, error -> LogUtils.logException(TAG, "Error in seek change event", error)));
 
-        subscriptions.add(sharedSeekBarEvents
+        disposables.add(sharedSeekBarEvents
                 .ofType(SeekBarProgressChangeEvent.class)
                 .filter(SeekBarProgressChangeEvent::fromUser)
                 .debounce(15, TimeUnit.MILLISECONDS)
                 .subscribe(seekBarChangeEvent -> presenter.seekTo(seekBarChangeEvent.progress()),
-                        error -> LogUtils.logException("PlayerFragment: Error receiving seekbar progress", error)));
+                        error -> LogUtils.logException(TAG, "Error receiving seekbar progress", error)));
     }
 
     @Override
     public void onPause() {
-        subscriptions.unsubscribe();
+        disposables.clear();
         super.onPause();
     }
 

@@ -23,13 +23,15 @@ import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 
+import java.util.Collections;
 import java.util.List;
 
-import rx.Observable;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class BlacklistDialog {
+
+    private static final String TAG = "BlacklistDialog";
 
     private BlacklistDialog() {
         //no instance
@@ -57,17 +59,18 @@ public class BlacklistDialog {
 
         recyclerView.setAdapter(blacklistAdapter);
 
-        Observable<List<Song>> songsObservable = SqlBriteUtils.createContinuousQuery(ShuttleApplication.getInstance(), Song::new, Song.getQuery()).first();
-        Observable<List<BlacklistedSong>> blacklistObservable = BlacklistHelper.getBlacklistSongsObservable();
+        Single<List<Song>> songsObservable = SqlBriteUtils.createObservableList(ShuttleApplication.getInstance(), Song::new, Song.getQuery()).first(Collections.emptyList());
+        Single<List<BlacklistedSong>> blacklistObservable = BlacklistHelper.getBlacklistSongsObservable();
 
-        BlacklistView.ClickListener listener = song -> {
-            BlacklistHelper.deleteSong(song.id);
+        BlacklistView.ClickListener listener = blacklistView -> {
+            BlacklistHelper.deleteSong(blacklistView.song.id);
+            blacklistAdapter.removeItem(blacklistView);
             if (blacklistAdapter.items.size() == 0) {
                 dialog.dismiss();
             }
         };
 
-        Subscription subscription = Observable.combineLatest(songsObservable, blacklistObservable, (songs, blacklistedSongs) ->
+        Single.zip(songsObservable, blacklistObservable, (songs, blacklistedSongs) ->
                 Stream.of(songs)
                         .filter(song -> Stream.of(blacklistedSongs)
                                 .anyMatch(blacklistedSong -> blacklistedSong.songId == song.id))
@@ -89,9 +92,7 @@ public class BlacklistDialog {
                     } else {
                         blacklistAdapter.setItems(blacklistViews);
                     }
-                }, error -> LogUtils.logException("DialogUtils: Error setting blacklist vies", error));
-
-        dialog.setOnDismissListener(dialogInterface -> subscription.unsubscribe());
+                }, error -> LogUtils.logException(TAG, "Error setting blacklist vies", error));
         return dialog;
     }
 }

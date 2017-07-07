@@ -21,10 +21,10 @@ import static com.simplecity.amp_library.ui.adapters.ViewType.BLACKLIST;
 public class WhitelistView extends BaseViewModel<WhitelistView.ViewHolder> {
 
     public interface ClickListener {
-        void onRemove(WhitelistFolder whitelistFolder);
+        void onRemove(WhitelistView WhitelistView);
     }
 
-    private WhitelistFolder whitelistFolder;
+    public WhitelistFolder whitelistFolder;
 
     public WhitelistView(WhitelistFolder whitelistFolder) {
         this.whitelistFolder = whitelistFolder;
@@ -38,7 +38,7 @@ public class WhitelistView extends BaseViewModel<WhitelistView.ViewHolder> {
 
     private void onRemove() {
         if (listener != null) {
-            listener.onRemove(whitelistFolder);
+            listener.onRemove(this);
         }
     }
 
@@ -78,6 +78,7 @@ public class WhitelistView extends BaseViewModel<WhitelistView.ViewHolder> {
             ButterKnife.bind(this, itemView);
 
             lineOne.setSingleLine(false);
+            overflow.setOnClickListener(v -> viewModel.onRemove());
         }
 
         @Override

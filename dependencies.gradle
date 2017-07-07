@@ -46,7 +46,7 @@ ext.versions = [
         okhttp                        : "3.7.0",
         retrofit                      : "2.2.0",
         retrofitGson                  : "2.2.0",
-        sqlBrite                      : "1.1.1",
+        sqlBrite                      : "2.0.0-SNAPSHOT",
 
         // //////////////////////////////////////////////////////////////////////////
         // Third party lib versions
@@ -60,13 +60,6 @@ ext.versions = [
         glideOkhttp                   : "1.4.0@aar",
         materialDialogs               : "0.9.4.5",
         permiso                       : "0.3.0",
-        rxAndroid                     : "1.2.1",
-        rxBindings                    : "0.4.0",
-        rxBindingsAppCompat           : "0.4.0",
-        rxImageSel                    : "1.3.1",
-        rxJava                        : "1.3.0",
-        rxRelay                       : "1.2.0",
-        rxReceivers                   : "0.1.0",
         streams                       : "1.1.7",
         butterknife                   : "8.6.0",
         butterknifeAnnotationProcessor: "8.6.0",
@@ -75,6 +68,15 @@ ext.versions = [
         expandableRecyclerView        : "3.0.0-RC1",
         aesthetic                     : "0.4.0",
         betterPickers                 : "3.1.0",
+
+        // RX
+        rxAndroid                     : "2.0.1",
+        rxBinding                     : "2.0.0",
+        rxBindingAppCompat            : "2.0.0",
+        rxImagePicker                 : "2.0.0",
+        rxJava                        : "2.1.0",
+        rxRelay                       : "2.0.0",
+        rxBroadcast                   : "2.0.0",
 
         // //////////////////////////////////////////////////////////////////////////
         // MultiDex
@@ -140,7 +142,7 @@ ext.libs = [
         okhttp                        : "com.squareup.okhttp3:okhttp:$versions.okhttp",
         retrofit                      : "com.squareup.retrofit2:retrofit:$versions.retrofit",
         retrofitGson                  : "com.squareup.retrofit2:converter-gson:$versions.retrofitGson",
-        sqlBrite                      : "com.squareup.sqlbrite:sqlbrite:$versions.sqlBrite",
+        sqlBrite                      : "com.squareup.sqlbrite2:sqlbrite:$versions.sqlBrite",
 
         // //////////////////////////////////////////////////////////////////////////
         // Third party libs
@@ -173,20 +175,6 @@ ext.libs = [
 
         // Permiso - https://git.io/vixQ4 (Greyson Parrelli)
         permiso                       : "com.greysonparrelli.permiso:permiso:$versions.permiso",
-        // RxJava - https://git.io/vihv0 (ReactiveX)
-        rxAndroid                     : "io.reactivex:rxandroid:$versions.rxAndroid",
-        // RxBindings - https://git.io/vix5y (Jake Wharton)
-        rxBindings                    : "com.jakewharton.rxbinding:rxbinding:$versions.rxBindings",
-        // RxBindings AppCompat - https://git.io/vix5y (Jake Wharton)
-        rxBindingsAppCompat           : "com.jakewharton.rxbinding:rxbinding-appcompat-v7:$versions.rxBindingsAppCompat",
-        // RxJava - https://git.io/rxjava (ReactiveX)
-        rxJava                        : "io.reactivex:rxjava:$versions.rxJava",
-        // RX Image Picker - https://git.io/vix5H (MLSDev )
-        rxImageSel                    : "com.mlsdev.rximagepicker:library:$versions.rxImageSel",
-        // RX Relay - https://github.com/JakeWharton/RxRelay
-        rxRelay                       : "com.jakewharton.rxrelay:rxrelay:$versions.rxRelay",
-        // Rx Receivers - https://github.com/f2prateek/rx-receivers
-        rxReceivers                   : "com.f2prateek.rx.receivers:rx-receivers:$versions.rxReceivers",
         // Streams Backport - https://git.io/vCazA (Victor Melnik)
         streams                       : "com.annimon:stream:$versions.streams",
         // Glide Palette - https://git.io/vix57 (Florent Champigny)
@@ -203,6 +191,23 @@ ext.libs = [
         aesthetic                     : project(":libraries/:aesthetic"),
         // Better pickers - https://github.com/code-troopers/android-betterpickers
         betterPickers                 : "com.code-troopers.betterpickers:library:$versions.betterPickers",
+
+        // RX
+
+        // RxJava - https://git.io/vihv0 (ReactiveX)
+        rxAndroid                     : "io.reactivex.rxjava2:rxandroid:$versions.rxAndroid",
+        // rxBinding - https://git.io/vix5y (Jake Wharton)
+        rxBinding                     : "com.jakewharton.rxbinding2:rxbinding:$versions.rxBinding",
+        // rxBinding AppCompat - https://git.io/vix5y (Jake Wharton)
+        rxBindingAppCompat            : "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:$versions.rxBindingAppCompat",
+        // RxJava - https://git.io/rxjava (ReactiveX)
+        rxJava                        : "io.reactivex.rxjava2:rxjava:$versions.rxJava",
+        // RX Image Picker - https://git.io/vix5H (MLSDev )
+        rxImagePicker                 : "com.mlsdev.rximagepicker:library:$versions.rxImagePicker",
+        // RX Relay - https://github.com/JakeWharton/RxRelay
+        rxRelay                       : "com.jakewharton.rxrelay2:rxrelay:$versions.rxRelay",
+        // Rx Receivers - https://github.com/f2prateek/rx-receivers
+        rxBroadcast                   : "com.cantrowitz:rxbroadcast:$versions.rxBroadcast",
 
         // //////////////////////////////////////////////////////////////////////////
         // MultiDex

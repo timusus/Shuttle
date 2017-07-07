@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,9 +47,9 @@ import java.util.Collections;
 
 import javax.inject.Inject;
 
-import rx.Observable;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 public class AlbumFragment extends BaseFragment implements
         MusicUtils.Defs,
@@ -77,7 +78,7 @@ public class AlbumFragment extends BaseFragment implements
 
     private boolean sortOrderChanged = false;
 
-    private Subscription subscription;
+    private Disposable subscription;
 
     @Inject
     RequestManager requestManager;
@@ -151,7 +152,7 @@ public class AlbumFragment extends BaseFragment implements
     public void onPause() {
 
         if (subscription != null) {
-            subscription.unsubscribe();
+            subscription.dispose();
         }
 
         super.onPause();
@@ -163,7 +164,7 @@ public class AlbumFragment extends BaseFragment implements
 
         refreshAdapterItems();
 
-        if (isVisible()) {
+        if (getUserVisibleHint()) {
             setupContextualToolbar();
         }
     }
@@ -178,14 +179,14 @@ public class AlbumFragment extends BaseFragment implements
                 boolean ascending = SortManager.getInstance().getAlbumsAscending();
 
                 subscription = DataManager.getInstance().getAlbumsRelay()
-                        .flatMap(albums -> {
+                        .flatMapSingle(albums -> {
                             //Sort
                             SortManager.getInstance().sortAlbums(albums);
                             //Reverse if required
                             if (!ascending) {
                                 Collections.reverse(albums);
                             }
-                            return Observable.from(albums)
+                            return Observable.fromIterable(albums)
                                     .map(album -> {
 
                                         // Look for an existing AlbumView wrapping the album, we'll reuse it if it exists.
@@ -218,7 +219,7 @@ public class AlbumFragment extends BaseFragment implements
                             }
 
                             sortOrderChanged = false;
-                        }, error -> LogUtils.logException("AlbumFragment: Error refreshing adapter items", error));
+                        }, error -> LogUtils.logException(TAG, "Error refreshing adapter items", error));
             }
         });
     }
@@ -430,6 +431,7 @@ public class AlbumFragment extends BaseFragment implements
                 }
             });
         }
+        Log.i(TAG, "setupContextualToolbar.. Visible to user: " + getUserVisibleHint());
     }
 
     @Override

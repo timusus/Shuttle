@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
-import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
@@ -41,6 +40,7 @@ import com.simplecity.amp_library.model.BaseFileObject;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Query;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.rx.UnsafeConsumer;
 import com.simplecity.amp_library.sql.SqlUtils;
 import com.simplecity.amp_library.sql.providers.PlayCountTable;
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
@@ -48,12 +48,14 @@ import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+import io.reactivex.Completable;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class PlaylistUtils {
 
@@ -107,7 +109,7 @@ public class PlaylistUtils {
         return null;
     }
 
-    public static Observable<Integer> idForPlaylistObservable(Context context, String name) {
+    public static Single<Integer> idForPlaylistObservable(Context context, String name) {
         Query query = new Query.Builder()
                 .uri(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI)
                 .projection(new String[]{MediaStore.Audio.Playlists._ID})
@@ -115,7 +117,11 @@ public class PlaylistUtils {
                 .sort(MediaStore.Audio.Playlists.NAME)
                 .build();
 
-        return SqlBriteUtils.createSingleQuery(context, cursor -> cursor.getInt(0), -1, query);
+        return SqlBriteUtils.createSingle(context, cursor -> {
+            return cursor.getInt(0);
+        }, query, -1)
+                .doOnSuccess(id -> Log.i(TAG, "Playlist id: " + id))
+                .doOnError(throwable -> Log.i(TAG, "Playlist error: " + throwable.toString()));
     }
 
     public static void createM3uPlaylist(final Context context, final Playlist playlist) {
@@ -126,7 +132,8 @@ public class PlaylistUtils {
         progressDialog.show();
 
         playlist.getSongsObservable()
-                .flatMap(songs -> {
+                .first(Collections.emptyList())
+                .map(songs -> {
                     if (!songs.isEmpty()) {
 
                         File playlistFile = null;
@@ -181,25 +188,24 @@ public class PlaylistUtils {
                                 Log.e(TAG, "Failed to write file: " + e);
                             }
                         }
-                        return Observable.just(playlistFile);
-                    } else {
-                        return Observable.empty();
+                        return playlistFile;
                     }
+                    return null;
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(progressDialog::dismiss)
                 .subscribe(file -> {
+                    progressDialog.dismiss();
                     if (file != null) {
                         Toast.makeText(context, String.format(context.getString(R.string.playlist_saved), file.getPath()), Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(context, R.string.playlist_save_failed, Toast.LENGTH_SHORT).show();
                     }
-                }, error -> LogUtils.logException("PlaylistUtils: Error saving m3u playlist", error));
+                }, error -> LogUtils.logException(TAG, "Error saving m3u playlist", error));
     }
 
     /**
-     * Clears the 'most played' databse
+     * Clears the 'most played' database
      */
     public static void clearMostPlayed() {
         ShuttleApplication.getInstance().getContentResolver().delete(PlayCountTable.URI, null, null);
@@ -210,16 +216,7 @@ public class PlaylistUtils {
     }
 
     public static void makePlaylistMenu(Context context, SubMenu sub) {
-
-        Query query = new Query.Builder()
-                .uri(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI)
-                .projection(new String[]{
-                        BaseColumns._ID,
-                        MediaStore.Audio.PlaylistsColumns.NAME
-                })
-                .build();
-
-        SqlBriteUtils.createQuery(context, Playlist::new, query)
+        SqlBriteUtils.createSingleList(context, Playlist::new, Playlist.getQuery())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(playlists -> {
                     sub.clear();
@@ -229,16 +226,16 @@ public class PlaylistUtils {
                         intent.putExtra(ShuttleUtils.ARG_PLAYLIST, playlist);
                         sub.add(0, MusicUtils.Defs.PLAYLIST_SELECTED, 0, playlist.name).setIntent(intent);
                     }
-                }, error -> LogUtils.logException("PlaylistUtils: Error making playlist menu", error));
+                }, error -> LogUtils.logException(TAG, "Error making playlist menu", error));
     }
 
     /**
      * @return true if this item is a favorite
      */
-    public static Observable<Boolean> isFavorite(Song song) {
-        return Observable.fromCallable(Playlist::favoritesPlaylist)
-                .flatMap(Playlist::getSongsObservable)
-                .flatMap(songs -> Observable.just(songs.contains(song)))
+    public static Single<Boolean> isFavorite(Song song) {
+        return Playlist.favoritesPlaylist()
+                .flatMap(playlist -> playlist.getSongsObservable().first(Collections.emptyList()))
+                .flatMap(songs -> Single.just(songs.contains(song)))
                 .onErrorReturn(throwable -> {
                     Log.e(TAG, "isFavorite() called,  playlist null. Returning false: " + throwable);
                     return false;
@@ -264,7 +261,7 @@ public class PlaylistUtils {
                         progressDialog.dismiss();
                     }
                     addToPlaylist(context, playlist, songs);
-                }, error -> LogUtils.logException("PlaylistUtils: Error getting songs for file object", error));
+                }, error -> LogUtils.logException(TAG, "Error getting songs for file object", error));
     }
 
     /**
@@ -280,7 +277,7 @@ public class PlaylistUtils {
             return;
         }
 
-        playlist.getSongsObservable()
+        playlist.getSongsObservable().first(Collections.emptyList())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(existingSongs -> {
 
@@ -351,7 +348,7 @@ public class PlaylistUtils {
                     } else {
                         insertPlaylistItems(context, playlist, songs, existingSongs.size());
                     }
-                }, error -> LogUtils.logException("PlaylistUtils: Error determining existing songs", error));
+                }, error -> LogUtils.logException(TAG, "PlaylistUtils: Error determining existing songs", error));
     }
 
     private static void insertPlaylistItems(@NonNull Context context, @NonNull Playlist playlist, @NonNull List<Song> songs, int songCount) {
@@ -447,14 +444,16 @@ public class PlaylistUtils {
      * Removes all entries from the 'favorites' playlist
      */
     public static void clearFavorites() {
-        Playlist favoritesPlaylist = Playlist.favoritesPlaylist();
-        if (favoritesPlaylist.id >= 0) {
-            final Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", favoritesPlaylist.id);
-            ShuttleApplication.getInstance().getContentResolver().delete(uri, null, null);
-        }
+        Playlist.favoritesPlaylist()
+                .flatMapCompletable(playlist -> Completable.fromAction(() -> {
+                    final Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlist.id);
+                    ShuttleApplication.getInstance().getContentResolver().delete(uri, null, null);
+                }))
+                .subscribeOn(Schedulers.io())
+                .subscribe();
     }
 
-    public static void toggleFavorite(Action1<String> action) {
+    public static void toggleFavorite(UnsafeConsumer<String> action) {
         MusicUtils.isFavorite()
                 .subscribeOn(Schedulers.io())
                 .subscribe(isFavorite -> {
@@ -463,13 +462,13 @@ public class PlaylistUtils {
                     } else {
                         removeFromFavorites(action);
                     }
-                }, error -> LogUtils.logException("PlaylistUtils: Error toggling favourites", error));
+                }, error -> LogUtils.logException(TAG, "PlaylistUtils: Error toggling favourites", error));
     }
 
     /**
      * Add a song to the favourites playlist
      */
-    public static void addToFavorites(Action1<String> action) {
+    public static void addToFavorites(UnsafeConsumer<String> action) {
 
         Song song = MusicUtils.getSong();
 
@@ -477,22 +476,23 @@ public class PlaylistUtils {
             return;
         }
 
-        Observable.fromCallable(Playlist::favoritesPlaylist)
-                .flatMap(playlist -> playlist.getSongsObservable()
+        Playlist.favoritesPlaylist()
+                .flatMap(playlist -> playlist.getSongsObservable().first(Collections.emptyList())
                         .flatMap(songs -> {
                             Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlist.id);
                             ContentValues values = new ContentValues();
                             values.put(MediaStore.Audio.Playlists.Members.AUDIO_ID, song.id);
                             values.put(MediaStore.Audio.Playlists.Members.PLAY_ORDER, songs.size() + 1);
                             ShuttleApplication.getInstance().getContentResolver().insert(uri, values);
-                            return Observable.just(playlist);
+                            ShuttleApplication.getInstance().getContentResolver().notifyChange(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, null);
+                            return Single.just(playlist);
                         }))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(playlist -> action.call(ShuttleApplication.getInstance().getResources().getString(R.string.song_to_favourites, song.name)));
+                .subscribe(playlist -> action.accept(ShuttleApplication.getInstance().getResources().getString(R.string.song_to_favourites, song.name)));
     }
 
-    public static void removeFromFavorites(Action1<String> action) {
+    public static void removeFromFavorites(UnsafeConsumer<String> action) {
 
         Song song = MusicUtils.getSong();
 
@@ -500,22 +500,22 @@ public class PlaylistUtils {
             return;
         }
 
-        Observable.fromCallable(
-                () -> {
-                    Playlist favoritesPlaylist = Playlist.favoritesPlaylist();
-                    if (favoritesPlaylist.id >= 0) {
-                        final Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", favoritesPlaylist.id);
-                        return ShuttleApplication.getInstance().getContentResolver().delete(uri, MediaStore.Audio.Playlists.Members.AUDIO_ID + "=" + song.id, null);
+        Playlist.favoritesPlaylist()
+                .map(playlist -> {
+                    int numTracksRemoved = 0;
+                    if (playlist.id >= 0) {
+                        final Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlist.id);
+                        numTracksRemoved = ShuttleApplication.getInstance().getContentResolver().delete(uri, MediaStore.Audio.Playlists.Members.AUDIO_ID + "=" + song.id, null);
                     }
-                    return 0;
+                    return numTracksRemoved;
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(numTracksRemoved -> {
                     if (numTracksRemoved > 0) {
-                        action.call(ShuttleApplication.getInstance().getResources().getString(R.string.song_removed_from_favourites, song.name));
+                        action.accept(ShuttleApplication.getInstance().getResources().getString(R.string.song_removed_from_favourites, song.name));
                     }
-                }, error -> LogUtils.logException("PlaylistUtils: Error Removing from favourites", error));
+                }, error -> LogUtils.logException(TAG, "PlaylistUtils: Error Removing from favourites", error));
     }
 
     public static void showPlaylistToast(Context context, int numTracksAdded) {
@@ -546,7 +546,7 @@ public class PlaylistUtils {
                     if (!TextUtils.isEmpty(name)) {
                         editText.setSelection(name.length());
                     }
-                }, error -> LogUtils.logException("PlaylistUtils: Error Setting playlist name", error));
+                }, error -> LogUtils.logException(TAG, "PlaylistUtils: Error Setting playlist name", error));
 
         MaterialDialog.Builder builder = DialogUtils.getBuilder(context)
                 .customView(customView, false)
@@ -576,7 +576,7 @@ public class PlaylistUtils {
                                     if (uri != null) {
                                         listener.onSave(new Playlist(Playlist.Type.USER_CREATED, Long.valueOf(uri.getLastPathSegment()), name, true, false, true, true, true));
                                     }
-                                }, error -> LogUtils.logException("PlaylistUtils: Error Saving playlist", error));
+                                }, error -> LogUtils.logException(TAG, "PlaylistUtils: Error Saving playlist", error));
                     }
                 })
                 .negativeText(R.string.cancel);
@@ -607,7 +607,7 @@ public class PlaylistUtils {
                                 } else {
                                     ((MaterialDialog) dialog).getActionButton(DialogAction.POSITIVE).setText(R.string.create_playlist_create_text);
                                 }
-                            }, error -> LogUtils.logException("PlaylistUtils: Error handling text change", error));
+                            }, error -> LogUtils.logException(TAG, "PlaylistUtils: Error handling text change", error));
                 }
             }
 

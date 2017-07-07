@@ -7,13 +7,14 @@ import android.util.Log;
 
 import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.model.Query;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.ThreadUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.functions.Action1;
-import rx.functions.Func1;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 public class SqlUtils {
 
@@ -46,7 +47,7 @@ public class SqlUtils {
         return cursor;
     }
 
-    public static <T> List<T> createQuery(Context context, Func1<Cursor, T> mapper, Query query) {
+    public static <T> List<T> createQuery(Context context, Function<Cursor, T> mapper, Query query) {
 
         List<T> items = new ArrayList<>();
 
@@ -56,13 +57,15 @@ public class SqlUtils {
             try {
                 if (cursor.moveToFirst()) {
                     do {
-                        T item = mapper.call(cursor);
+                        T item = mapper.apply(cursor);
                         if (item == null) {
                             throw new NullPointerException("Mapper returned null for row " + cursor.getPosition());
                         }
                         items.add(item);
                     } while (cursor.moveToNext());
                 }
+            } catch (Exception e) {
+                LogUtils.logException(TAG, "createSingle threw an error", e);
             } finally {
                 cursor.close();
             }
@@ -70,7 +73,7 @@ public class SqlUtils {
         return items;
     }
 
-    public static void createActionableQuery(Context context, Action1<Cursor> action, Query query) {
+    public static void createActionableQuery(Context context, Consumer<Cursor> action, Query query) {
 
         Cursor cursor = createQuery(context, query);
 
@@ -78,20 +81,22 @@ public class SqlUtils {
             try {
                 if (cursor.moveToFirst()) {
                     do {
-                        action.call(cursor);
+                        action.accept(cursor);
                     } while (cursor.moveToNext());
                 }
+            } catch (Exception e) {
+                LogUtils.logException(TAG, "createActionableQuery threw an error", e);
             } finally {
                 cursor.close();
             }
         }
     }
 
-    public static <T> T createSingleQuery(Context context, Func1<Cursor, T> mapper, Query query) {
+    public static <T> T createSingleQuery(Context context, Function<Cursor, T> mapper, Query query) {
         return createSingleQuery(context, mapper, null, query);
     }
 
-    public static <T> T createSingleQuery(Context context, Func1<Cursor, T> mapper, T defaultValue, Query query) {
+    public static <T> T createSingleQuery(Context context, Function<Cursor, T> mapper, T defaultValue, Query query) {
 
         T item = defaultValue;
 
@@ -100,11 +105,14 @@ public class SqlUtils {
         if (cursor != null) {
             try {
                 if (cursor.moveToFirst()) {
-                    item = mapper.call(cursor);
+                    item = mapper.apply(cursor);
                     if (cursor.moveToNext()) {
                         Log.e(TAG, "Cursor returned more than 1 row. Query: " + query);
                     }
                 }
+            } catch (Exception e) {
+                LogUtils.logException(TAG, "createSingleQuery threw an error", e);
+                e.printStackTrace();
             } finally {
                 cursor.close();
             }

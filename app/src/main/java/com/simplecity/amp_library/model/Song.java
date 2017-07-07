@@ -28,8 +28,8 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.List;
 
+import io.reactivex.Single;
 import retrofit2.Call;
-import rx.Observable;
 
 public class Song implements
         Serializable,
@@ -310,10 +310,10 @@ public class Song implements
                 .build();
     }
 
-    public Observable<Genre> getGenreObservable(Context context) {
+    public Single<Genre> getGenreObservable(Context context) {
         Query query = Genre.getQuery();
         query.uri = MediaStore.Audio.Genres.getContentUriForAudioId("external", (int) id);
-        return SqlBriteUtils.createSingleQuery(context, Genre::new, query);
+        return SqlBriteUtils.createSingle(context, Genre::new, query, null);
     }
 
     public Genre getGenre(Context context) {

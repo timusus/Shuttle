@@ -10,11 +10,12 @@ import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class ShortcutTrampolineActivity extends AppCompatActivity {
+
+    private static final String TAG = "ShortcutTrampolineActiv";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,14 +39,14 @@ public class ShortcutTrampolineActivity extends AppCompatActivity {
             case MusicService.ShortcutCommands.PLAYLIST:
                 intent = new Intent(this, MainActivity.class);
                 intent.setAction(action);
-                Observable.fromCallable(Playlist::favoritesPlaylist)
+                Playlist.favoritesPlaylist()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(playlist -> {
-                            intent.putExtra(ShuttleUtils.ARG_PLAYLIST, Playlist.favoritesPlaylist());
+                            intent.putExtra(ShuttleUtils.ARG_PLAYLIST, playlist);
                             startActivity(intent);
                             finish();
-                        }, error -> LogUtils.logException("ShortcutTrampolineActivity: Error starting activity", error));
+                        }, error -> LogUtils.logException(TAG, "Error starting activity", error));
                 break;
         }
     }

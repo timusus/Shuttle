@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.annimon.stream.Collectors;
+import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
@@ -49,6 +50,7 @@ import com.simplecity.amp_library.ui.modelviews.HorizontalRecyclerView;
 import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.modelviews.SubheaderView;
 import com.simplecity.amp_library.utils.ActionBarUtils;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
@@ -72,12 +74,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import io.reactivex.disposables.Disposable;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 import static com.afollestad.aesthetic.Rx.distinctToMainThread;
 
@@ -89,6 +90,8 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         AlbumView.ClickListener,
         SongView.ClickListener,
         DrawerLockManager.DrawerLock {
+
+    private static final String TAG = "BaseDetailFragment";
 
     private static final String ARG_TRANSITION_NAME = "transition_name";
 
@@ -115,7 +118,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
 
-    protected CompositeSubscription subscriptions = new CompositeSubscription();
+    protected CompositeDisposable disposables = new CompositeDisposable();
 
     protected RequestManager requestManager;
 
@@ -126,8 +129,6 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     private HorizontalRecyclerView horizontalRecyclerView;
 
     @Nullable Album currentSlideShowAlbum;
-
-    private Disposable aestheticDisposable;
 
     public BaseDetailFragment() {
     }
@@ -193,13 +194,13 @@ public abstract class BaseDetailFragment extends BaseFragment implements
                     toolbarLayout.setBackgroundColor(primaryColor);
                 });
 
-        aestheticDisposable = Aesthetic.get()
+        disposables.add(Aesthetic.get()
                 .colorPrimary()
                 .compose(distinctToMainThread())
                 .subscribe(primaryColor -> {
                     toolbarLayout.setContentScrimColor(primaryColor);
                     toolbarLayout.setBackgroundColor(primaryColor);
-                });
+                }));
 
         return rootView;
     }
@@ -220,8 +221,6 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     @Override
     public void onPause() {
 
-        subscriptions.clear();
-
         DrawerLockManager.getInstance().removeDrawerLock(this);
 
         super.onPause();
@@ -230,7 +229,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     @Override
     public void onDestroyView() {
 
-        aestheticDisposable.dispose();
+        disposables.clear();
 
         detailPresenter.unbindView(this);
 
@@ -245,7 +244,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
     @NonNull
     @Override
-    public abstract Observable<List<Song>> getSongs();
+    public abstract Single<List<Song>> getSongs();
 
     abstract void setSongSortOrder(@SortManager.SongSort int sortOrder);
 
@@ -337,8 +336,8 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
     @NonNull
     @Override
-    public Observable<List<Album>> getAlbums() {
-        return Observable.just(Collections.emptyList());
+    public Single<List<Album>> getAlbums() {
+        return Single.just(Collections.emptyList());
     }
 
     @NonNull
@@ -397,34 +396,43 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     }
 
     void startSlideShow() {
-        subscriptions.add(
+        disposables.add(
                 Observable.combineLatest(
-                        getAlbums(),
+                        getAlbums().toObservable(),
                         Observable.interval(8, TimeUnit.SECONDS)
                                 // Load an image straight away
                                 .startWith(0L)
                                 // If we have a 'current slideshowAlbum' then we're coming back from onResume. Don't load a new one immediately.
                                 .delay(currentSlideShowAlbum == null ? 0 : 8, TimeUnit.SECONDS),
-                        (albums, aLong) -> albums.isEmpty() ? currentSlideShowAlbum : albums.get(new Random().nextInt(albums.size()))
+                        (albums, aLong) -> {
+                            if (albums.isEmpty()) {
+                                return Optional.ofNullable(currentSlideShowAlbum);
+                            } else {
+                                return Optional.of(albums.get(new Random().nextInt(albums.size())));
+                            }
+                        }
                 ).subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(nextSlideShowAlbum -> {
-                            if (nextSlideShowAlbum != null && nextSlideShowAlbum != currentSlideShowAlbum) {
-                                //This crazy business is what's required to have a smooth Glide crossfade with no 'white flicker'
-                                requestManager.load(nextSlideShowAlbum)
-                                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                                        .priority(Priority.HIGH)
-                                        .error(PlaceholderProvider.getInstance().getPlaceHolderDrawable(nextSlideShowAlbum.name, true))
-                                        .centerCrop()
-                                        .thumbnail(Glide
-                                                .with(this)
-                                                .load(currentSlideShowAlbum)
-                                                .centerCrop())
-                                        .crossFade(600)
-                                        .into(headerImageView);
-                                currentSlideShowAlbum = nextSlideShowAlbum;
+                        .subscribe(nextSlideShowAlbumOptional -> {
+                            if (nextSlideShowAlbumOptional.isPresent()) {
+                                Album nextSlideshowAlbum = nextSlideShowAlbumOptional.get();
+                                if (nextSlideshowAlbum != currentSlideShowAlbum) {
+                                    //This crazy business is what's required to have a smooth Glide crossfade with no 'white flicker'
+                                    requestManager.load(nextSlideshowAlbum)
+                                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                            .priority(Priority.HIGH)
+                                            .error(PlaceholderProvider.getInstance().getPlaceHolderDrawable(nextSlideshowAlbum.name, true))
+                                            .centerCrop()
+                                            .thumbnail(Glide
+                                                    .with(this)
+                                                    .load(currentSlideShowAlbum)
+                                                    .centerCrop())
+                                            .crossFade(600)
+                                            .into(headerImageView);
+                                    currentSlideShowAlbum = nextSlideshowAlbum;
+                                }
                             }
-                        }));
+                        }, error -> LogUtils.logException(TAG, "startSlideShow threw error", error)));
     }
 
     @OnClick(R.id.fab)
@@ -712,7 +720,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
     @Override
     public void onSongClick(int position, SongView songView) {
-        subscriptions.add(getSongs()
+        disposables.add(getSongs()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(songs -> MusicUtils.playAll(songs, songs.indexOf(songView.song), message -> Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show())));
@@ -727,12 +735,8 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     public void onSongOverflowClick(int position, View v, Song song) {
         PopupMenu popupMenu = new PopupMenu(getContext(), v);
         MenuUtils.setupSongMenu(getContext(), popupMenu, false);
-        popupMenu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), song, new Action1<TaggerDialog>() {
-            @Override
-            public void call(TaggerDialog taggerDialog) {
-                taggerDialog.show(getFragmentManager());
-            }
-        }));
+        popupMenu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), song, taggerDialog
+                -> taggerDialog.show(getFragmentManager())));
         popupMenu.show();
     }
 
@@ -750,12 +754,8 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     public void onAlbumOverflowClicked(View v, Album album) {
         PopupMenu popupMenu = new PopupMenu(getContext(), v);
         popupMenu.inflate(R.menu.menu_album);
-        popupMenu.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(getContext(), album, new Action1<TaggerDialog>() {
-            @Override
-            public void call(TaggerDialog taggerDialog) {
-                taggerDialog.show(getFragmentManager());
-            }
-        }));
+        popupMenu.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(getContext(), album, taggerDialog
+                -> taggerDialog.show(getFragmentManager())));
         popupMenu.show();
     }
 

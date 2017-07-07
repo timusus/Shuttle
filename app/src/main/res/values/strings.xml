@@ -717,8 +717,8 @@
     <string name="unknown_album_artist_name">Unknown album artist</string>
     <!-- Default value if album year unknown -->
     <string name="unknown_year">Year unknown</string>
-    <!-- Song Info overflow option-->
-    <string name="song_info">Song Info</string>
+    <!-- Song info overflow option-->
+    <string name="song_info">Song info</string>
 
     <!-- Artwork Download Service Label-->
     <string name="download_service">Download Service</string>

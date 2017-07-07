@@ -1,10 +1,11 @@
 package com.simplecity.amp_library.ui.views.multisheet;
 
-import com.jakewharton.rxrelay.PublishRelay;
+
+import com.jakewharton.rxrelay2.PublishRelay;
 
 import javax.inject.Inject;
 
-import rx.Observable;
+import io.reactivex.Observable;
 import test.com.multisheetview.ui.view.MultiSheetView;
 
 public class MultiSheetEventRelay {
@@ -16,7 +17,7 @@ public class MultiSheetEventRelay {
     }
 
     public void sendEvent(MultiSheetEvent event) {
-        eventRelay.call(event);
+        eventRelay.accept(event);
     }
 
     public Observable<MultiSheetEvent> getEvents() {

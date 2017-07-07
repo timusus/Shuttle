@@ -19,8 +19,8 @@ import com.simplecity.amp_library.utils.MusicUtils;
 import java.util.Collections;
 import java.util.Locale;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 import static com.simplecity.amp_library.utils.StringUtils.containsIgnoreCase;
 
@@ -56,16 +56,31 @@ public class VoiceSearchActivity extends BaseActivity {
     }
 
     private void searchAndPlaySongs() {
+
+        DataManager.getInstance().getAlbumArtistsRelay()
+                .first(Collections.emptyList())
+                .flatMapObservable(Observable::fromIterable)
+                .filter(albumArtist -> albumArtist.name.toLowerCase(Locale.getDefault()).contains(filterString.toLowerCase()))
+                .flatMapSingle(AlbumArtist::getSongsSingle)
+                .map(songs -> {
+                    Collections.sort(songs, (a, b) -> a.getAlbumArtist().compareTo(b.getAlbumArtist()));
+                    Collections.sort(songs, (a, b) -> a.getAlbum().compareTo(b.getAlbum()));
+                    Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(a.track, b.track));
+                    Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(a.discNumber, b.discNumber));
+                    return songs;
+                });
+
+
         //Search for album-artists, albums & songs matching our filter. Then, create an Observable emitting List<Song> for each type of result.
         //Then we concat the results, and return the first one which is non-empty. Order is important here, we want album-artist first, if it's
         //available, then albums, then songs.
         Observable.concat(
                 //If we have an album artist matching our query, then play the songs by that album artist
                 DataManager.getInstance().getAlbumArtistsRelay()
-                        .first()
-                        .flatMap(Observable::from)
+                        .first(Collections.emptyList())
+                        .flatMapObservable(Observable::fromIterable)
                         .filter(albumArtist -> albumArtist.name.toLowerCase(Locale.getDefault()).contains(filterString.toLowerCase()))
-                        .flatMap(AlbumArtist::getSongsObservable)
+                        .flatMapSingle(AlbumArtist::getSongsSingle)
                         .map(songs -> {
                             Collections.sort(songs, (a, b) -> a.getAlbumArtist().compareTo(b.getAlbumArtist()));
                             Collections.sort(songs, (a, b) -> a.getAlbum().compareTo(b.getAlbum()));
@@ -75,13 +90,13 @@ public class VoiceSearchActivity extends BaseActivity {
                         }),
                 //If we have an album matching our query, then play the songs from that album
                 DataManager.getInstance().getAlbumsRelay()
-                        .first()
-                        .flatMap(Observable::from)
+                        .first(Collections.emptyList())
+                        .flatMapObservable(Observable::fromIterable)
                         .filter(album -> containsIgnoreCase(album.name, filterString)
                                 || containsIgnoreCase(album.name, filterString)
                                 || (Stream.of(album.artists).anyMatch(artist -> containsIgnoreCase(artist.name, filterString)))
                                 || containsIgnoreCase(album.albumArtistName, filterString))
-                        .flatMap(Album::getSongsObservable)
+                        .flatMapSingle(Album::getSongsSingle)
                         .map(songs -> {
                             Collections.sort(songs, (a, b) -> a.getAlbum().compareTo(b.getAlbum()));
                             Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(a.track, b.track));
@@ -90,13 +105,13 @@ public class VoiceSearchActivity extends BaseActivity {
                         }),
                 //If have a song, play that song, as well as others from the same album.
                 DataManager.getInstance().getSongsRelay()
-                        .first()
-                        .flatMap(Observable::from)
+                        .first(Collections.emptyList())
+                        .flatMapObservable(Observable::fromIterable)
                         .filter(song -> containsIgnoreCase(song.name, filterString)
                                 || containsIgnoreCase(song.albumName, filterString)
                                 || containsIgnoreCase(song.artistName, filterString)
                                 || containsIgnoreCase(song.albumArtistName, filterString))
-                        .flatMap(song -> song.getAlbum().getSongsObservable()
+                        .flatMapSingle(song -> song.getAlbum().getSongsSingle()
                                 .map(songs -> {
                                     Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(a.track, b.track));
                                     Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(a.discNumber, b.discNumber));
@@ -104,7 +119,8 @@ public class VoiceSearchActivity extends BaseActivity {
                                     return songs;
                                 }))
         )
-                .first(songs -> !songs.isEmpty())
+                .filter(songs -> !songs.isEmpty())
+                .firstOrError()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(songs -> {
                     if (songs != null) {
@@ -112,7 +128,7 @@ public class VoiceSearchActivity extends BaseActivity {
                                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show());
                     }
                     finish();
-                }, error -> LogUtils.logException("VoiceSearchActivity, error attempting to playAll()", error));
+                }, error -> LogUtils.logException(TAG, "Error attempting to playAll()", error));
     }
 
     @Override
