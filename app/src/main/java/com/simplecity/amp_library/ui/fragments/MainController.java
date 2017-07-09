@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.ui.fragments;
 
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -9,11 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.cantrowitz.rxbroadcast.RxBroadcast;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Playlist;
+import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.ui.detail.AlbumDetailFragment;
 import com.simplecity.amp_library.ui.detail.ArtistDetailFragment;
@@ -26,6 +29,7 @@ import com.simplecity.amp_library.ui.settings.SettingsParentFragment;
 import com.simplecity.amp_library.ui.views.UpNextView;
 import com.simplecity.amp_library.ui.views.multisheet.CustomMultiSheetView;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
+import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.SleepTimer;
 
 import javax.inject.Inject;
@@ -34,6 +38,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import test.com.androidnavigation.fragment.BackPressHandler;
 import test.com.androidnavigation.fragment.BaseNavigationController;
 import test.com.androidnavigation.fragment.FragmentInfo;
@@ -89,6 +94,8 @@ public class MainController extends BaseNavigationController implements BackPres
         }
 
         ((ViewGroup) multiSheetView.findViewById(multiSheetView.getSheetPeekViewResId(MultiSheetView.Sheet.SECOND))).addView(new UpNextView(getContext()));
+
+        toggleBottomSheetVisibility();
 
         return rootView;
     }
@@ -156,6 +163,16 @@ public class MainController extends BaseNavigationController implements BackPres
                     }
                 }));
 
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(MusicService.InternalIntents.SERVICE_CONNECTED);
+        intentFilter.addAction(MusicService.InternalIntents.QUEUE_CHANGED);
+        disposables.add(
+                RxBroadcast.fromBroadcast(getContext(), intentFilter)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(intent -> toggleBottomSheetVisibility())
+        );
+
         DrawerLockManager.getInstance().setDrawerLockController(this);
     }
 
@@ -169,6 +186,19 @@ public class MainController extends BaseNavigationController implements BackPres
         DrawerLockManager.getInstance().setDrawerLockController(null);
 
         super.onPause();
+    }
+
+    /**
+     * Hide/show the bottom sheet, depending on whether the queue is empty.
+     */
+    private void toggleBottomSheetVisibility() {
+        if (MusicUtils.getQueue().isEmpty()) {
+            multiSheetView.hideSheet(MultiSheetView.Sheet.FIRST);
+        } else {
+            if (multiSheetView.isHidden(MultiSheetView.Sheet.FIRST)) {
+                multiSheetView.goToSheet(MultiSheetView.Sheet.NONE);
+            }
+        }
     }
 
     @Override

@@ -48,7 +48,7 @@ public class MultiSheetView extends FrameLayout {
 
         View.inflate(context, R.layout.multi_sheet, this);
 
-        panel1Layout = (SlidingUpPanelLayout) findViewById(R.id.sheet1);
+        panel1Layout = findViewById(R.id.sheet1);
         panel1Layout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelStateChanged(View view, SlidingUpPanelLayout.PanelState oldState, SlidingUpPanelLayout.PanelState newState) {
@@ -64,7 +64,7 @@ public class MultiSheetView extends FrameLayout {
             }
         });
 
-        panel2Layout = (SlidingUpPanelLayout) findViewById(R.id.sheet2);
+        panel2Layout = findViewById(R.id.sheet2);
         panel2Layout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelStateChanged(View view, SlidingUpPanelLayout.PanelState oldState, SlidingUpPanelLayout.PanelState newState) {
