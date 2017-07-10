@@ -113,8 +113,6 @@ public class PlayerFragment extends BaseFragment implements
 
     private CompositeDisposable disposables = new CompositeDisposable();
 
-    private int backgroundColor;
-
     @Inject PlayerPresenter presenter;
 
     @Inject NavigationEventRelay navigationEventRelay;
@@ -180,8 +178,6 @@ public class PlayerFragment extends BaseFragment implements
                     .commit();
         }
 
-        Aesthetic.get().colorPrimary().take(1).subscribe(this::invalidateColors);
-
         return rootView;
     }
 
@@ -210,6 +206,10 @@ public class PlayerFragment extends BaseFragment implements
     @Override
     public void onResume() {
         super.onResume();
+
+        disposables.add(Aesthetic.get()
+                .colorPrimary()
+                .subscribe(this::invalidateColors));
 
         Flowable<SeekBarChangeEvent> sharedSeekBarEvents = RxSeekBar.changeEvents(seekBar)
                 .toFlowable(BackpressureStrategy.LATEST)
@@ -320,60 +320,59 @@ public class PlayerFragment extends BaseFragment implements
         track.setSelected(true);
         album.setText(String.format("%s | %s", song.artistName, song.albumName));
 
-        //noinspection unchecked
-        Glide.with(this)
-                .load(song)
-                .asBitmap()
-                .transcode(new PaletteBitmapTranscoder(getContext()), PaletteBitmap.class)
-                .override(250, 250)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(new SimpleTarget<PaletteBitmap>() {
-                    @Override
-                    public void onResourceReady(PaletteBitmap resource, GlideAnimation<? super PaletteBitmap> glideAnimation) {
-                        Palette.Swatch swatch = resource.palette.getDarkMutedSwatch();
-                        if (swatch != null) {
-                            invalidateColors(swatch.getRgb());
-
-                            if (SettingsManager.getInstance().getUsePalette() && !SettingsManager.getInstance().getUsePaletteNowPlayingOnly()) {
-                                // Set Aesthetic colors globally, based on the current Palette swatch
-                                Aesthetic.get().colorPrimary(swatch.getRgb())
-                                        .colorStatusBarAuto()
-                                        .apply();
-                            }
-                        } else {
-                            if (SettingsManager.getInstance().getUsePalette()) {
+        if (SettingsManager.getInstance().getUsePalette()) {
+            //noinspection unchecked
+            Glide.with(this)
+                    .load(song)
+                    .asBitmap()
+                    .transcode(new PaletteBitmapTranscoder(getContext()), PaletteBitmap.class)
+                    .override(250, 250)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(new SimpleTarget<PaletteBitmap>() {
+                        @Override
+                        public void onResourceReady(PaletteBitmap resource, GlideAnimation<? super PaletteBitmap> glideAnimation) {
+                            Palette.Swatch swatch = resource.palette.getDarkMutedSwatch();
+                            if (swatch != null) {
+                                if (!SettingsManager.getInstance().getUsePaletteNowPlayingOnly()) {
+                                    // Set Aesthetic colors globally, based on the current Palette swatch
+                                    Aesthetic.get()
+                                            .colorPrimary()
+                                            .take(1)
+                                            .subscribe(integer -> {
+                                                ValueAnimator valueAnimator = ValueAnimator.ofInt(integer, swatch.getRgb());
+                                                valueAnimator.setEvaluator(new ArgbEvaluator());
+                                                valueAnimator.setDuration(450);
+                                                valueAnimator.addUpdateListener(animator -> Aesthetic.get()
+                                                        .colorPrimary((Integer) animator.getAnimatedValue())
+                                                        .colorStatusBarAuto()
+                                                        .apply());
+                                                valueAnimator.start();
+                                            });
+                                }
+                            } else {
                                 Aesthetic.get()
                                         .colorPrimary()
                                         .take(1)
                                         .subscribe(color -> invalidateColors(color));
                             }
                         }
-                    }
 
-                    @Override
-                    public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                        super.onLoadFailed(e, errorDrawable);
-                        if (SettingsManager.getInstance().getUsePalette()) {
+                        @Override
+                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                            super.onLoadFailed(e, errorDrawable);
                             Aesthetic.get()
                                     .colorPrimary()
                                     .take(1)
                                     .subscribe(color -> invalidateColors(color));
                         }
-                    }
-                });
+                    });
+        }
     }
 
     void invalidateColors(int color) {
-        if (color != backgroundColor) {
-            ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), backgroundColor, color);
-            colorAnimation.setDuration(400);
-            colorAnimation.addUpdateListener(animator -> backgroundView.setBackgroundColor((Integer) animator.getAnimatedValue()));
-            colorAnimation.start();
-        }
-        backgroundColor = color;
-
         boolean isColorLight = Util.isColorLight(color);
         int textColor = isColorLight ? Color.BLACK : Color.WHITE;
+        backgroundView.setBackgroundColor(color);
         currentTime.setTextColor(textColor);
         totalTime.setTextColor(textColor);
         track.setTextColor(textColor);
