@@ -39,6 +39,4 @@ dependencies {
 
     compile libs.appcompat
     compile libs.design
-
-    compile 'com.sothree.slidinguppanel:library:3.3.1'
 }

@@ -3,16 +3,16 @@ package com.simplecity.amp_library.ui.views.multisheet;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.util.AttributeSet;
 
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.simplecity.multisheetview.ui.view.MultiSheetView;
 
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
-import test.com.multisheetview.ui.view.MultiSheetView;
 
 /**
  * A custom MultiSheetView with an RXRelay for responding to expand/collapse events.
@@ -32,7 +32,7 @@ public class CustomMultiSheetView extends MultiSheetView {
         disposables = new CompositeDisposable();
 
         setSheetStateChangeListener((sheet, state) -> {
-            if (state == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+            if (state == BottomSheetBehavior.STATE_COLLAPSED) {
                 switch (sheet) {
                     case Sheet.FIRST:
                         DrawerLockManager.getInstance().removeDrawerLock(sheet1Lock);
@@ -41,7 +41,7 @@ public class CustomMultiSheetView extends MultiSheetView {
                         DrawerLockManager.getInstance().removeDrawerLock(sheet2Lock);
                         break;
                 }
-            } else if (state == SlidingUpPanelLayout.PanelState.EXPANDED) {
+            } else if (state == BottomSheetBehavior.STATE_EXPANDED) {
                 switch (sheet) {
                     case Sheet.FIRST:
                         DrawerLockManager.getInstance().addDrawerLock(sheet1Lock);
@@ -55,7 +55,7 @@ public class CustomMultiSheetView extends MultiSheetView {
     }
 
     @Override
-    protected void onAttachedToWindow() {
+    public void onAttachedToWindow() {
         super.onAttachedToWindow();
 
         ShuttleApplication.getInstance().getAppComponent().inject(this);
@@ -66,22 +66,19 @@ public class CustomMultiSheetView extends MultiSheetView {
                     goToSheet(event.sheet);
                     break;
                 case MultiSheetEventRelay.MultiSheetEvent.Action.HIDE:
-                    hideSheet(event.sheet);
+                    hide();
                     break;
                 case MultiSheetEventRelay.MultiSheetEvent.Action.SHOW_IF_HIDDEN:
-                    if (isHidden(getCurrentSheet())) {
-                        goToSheet(event.sheet);
-                    }
+                    unhide();
                     break;
             }
         }));
     }
 
     @Override
-    protected void onDetachedFromWindow() {
+    public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
         disposables.clear();
     }
-
 }

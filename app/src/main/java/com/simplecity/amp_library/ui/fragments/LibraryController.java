@@ -46,6 +46,7 @@ import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
 import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
+import com.simplecity.multisheetview.ui.view.MultiSheetView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +58,6 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.disposables.CompositeDisposable;
 import test.com.androidnavigation.fragment.FragmentInfo;
-import test.com.multisheetview.ui.view.MultiSheetView;
 
 import static com.afollestad.aesthetic.Rx.distinctToMainThread;
 import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;

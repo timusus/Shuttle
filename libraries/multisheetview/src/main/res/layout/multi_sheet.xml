@@ -1,30 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.sothree.slidinguppanel.SlidingUpPanelLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/sheet1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="bottom"
-    app:umanoDragView="@+id/sheet1Parent"
-    app:umanoPanelHeight="64dp">
+    tools:parentTag="android.support.design.widget.CoordinatorLayout">
 
     <FrameLayout
         android:id="@+id/mainContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/bottom_sheet_height"/>
 
-    <com.sothree.slidinguppanel.SlidingUpPanelLayout
-        android:id="@+id/sheet2"
+    <FrameLayout
+        android:id="@+id/sheet1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="bottom"
-        app:umanoPanelHeight="64dp"
+        app:behavior_peekHeight="@dimen/bottom_sheet_height"
+        app:layout_behavior="com.simplecity.multisheetview.ui.behavior.CustomBottomSheetBehavior"
         tools:ignore="MissingPrefix">
 
         <FrameLayout
-            android:id="@+id/sheet1Parent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -32,28 +29,40 @@
             <FrameLayout
                 android:id="@+id/sheet1Container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/bottom_sheet_height"/>
 
             <FrameLayout
                 android:id="@+id/sheet1PeekView"
                 android:layout_width="match_parent"
-                android:layout_height="64dp"/>
+                android:layout_height="@dimen/bottom_sheet_height"/>
+
         </FrameLayout>
 
-        <FrameLayout
+        <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/sheet1Coordinator"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <FrameLayout
-                android:id="@+id/sheet2Container"
+                android:id="@+id/sheet2"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:behavior_peekHeight="@dimen/bottom_sheet_height"
+                app:layout_behavior="com.simplecity.multisheetview.ui.behavior.CustomBottomSheetBehavior">
 
-            <FrameLayout
-                android:id="@+id/sheet2PeekView"
-                android:layout_width="match_parent"
-                android:layout_height="64dp"/>
-        </FrameLayout>
-    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+                <FrameLayout
+                    android:id="@+id/sheet2Container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
 
-</com.sothree.slidinguppanel.SlidingUpPanelLayout>
+                <FrameLayout
+                    android:id="@+id/sheet2PeekView"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/bottom_sheet_height"/>
+
+            </FrameLayout>
+        </android.support.design.widget.CoordinatorLayout>
+    </FrameLayout>
+</android.support.design.widget.CoordinatorLayout>

@@ -40,7 +40,6 @@ import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
-import com.sothree.slidinguppanel.ScrollableViewHelper;
 
 import java.util.List;
 
@@ -51,7 +50,6 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import test.com.multisheetview.ui.view.MultiSheetView;
 
 public class QueueFragment extends BaseFragment implements
         QueueView {
@@ -83,8 +81,6 @@ public class QueueFragment extends BaseFragment implements
     QueuePresenter queuePresenter;
 
     @Inject PlayerPresenter playerPresenter;
-
-    private boolean canScroll = true;
 
     private CompositeDisposable disposables = new CompositeDisposable();
 
@@ -145,8 +141,7 @@ public class QueueFragment extends BaseFragment implements
                 (fromPosition, toPosition) ->
                         adapter.moveItem(fromPosition, toPosition), MusicUtils::moveQueueItem,
                 () -> {
-                    //We've finished our drag event. Allow the sliding up panel to intercept touch events
-                    canScroll = true;
+                    // Nothing to do
                 }));
 
         itemTouchHelper.attachToRecyclerView(recyclerView);
@@ -169,17 +164,6 @@ public class QueueFragment extends BaseFragment implements
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        MultiSheetView.setScrollableView(recyclerView, recyclerView);
-        MultiSheetView.setScrollableViewHelper(recyclerView, new ScrollableViewHelper() {
-            @Override
-            public int getScrollableViewScrollPosition(View scrollableView, boolean isSlidingUp) {
-                if (!canScroll) {
-                    return 1;
-                }
-                return super.getScrollableViewScrollPosition(scrollableView, isSlidingUp);
-            }
-        });
     }
 
     @Override
@@ -206,9 +190,6 @@ public class QueueFragment extends BaseFragment implements
 
     @Override
     public void onDestroyView() {
-        MultiSheetView.setScrollableView(recyclerView, null);
-        MultiSheetView.setScrollableViewHelper(recyclerView, null);
-
         disposables.clear();
 
         unbinder.unbind();
@@ -277,7 +258,6 @@ public class QueueFragment extends BaseFragment implements
 
     @Override
     public void startDrag(SongView.ViewHolder holder) {
-        canScroll = false;
         itemTouchHelper.startDrag(holder);
     }
 

@@ -31,6 +31,7 @@ import com.simplecity.amp_library.ui.views.multisheet.CustomMultiSheetView;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.SleepTimer;
+import com.simplecity.multisheetview.ui.view.MultiSheetView;
 
 import javax.inject.Inject;
 
@@ -42,7 +43,6 @@ import io.reactivex.schedulers.Schedulers;
 import test.com.androidnavigation.fragment.BackPressHandler;
 import test.com.androidnavigation.fragment.BaseNavigationController;
 import test.com.androidnavigation.fragment.FragmentInfo;
-import test.com.multisheetview.ui.view.MultiSheetView;
 
 public class MainController extends BaseNavigationController implements BackPressHandler, DrawerLockController {
 
@@ -75,6 +75,7 @@ public class MainController extends BaseNavigationController implements BackPres
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         ButterKnife.bind(this, rootView);
@@ -193,11 +194,9 @@ public class MainController extends BaseNavigationController implements BackPres
      */
     private void toggleBottomSheetVisibility() {
         if (MusicUtils.getQueue().isEmpty()) {
-            multiSheetView.hideSheet(MultiSheetView.Sheet.FIRST);
+            multiSheetView.hide();
         } else {
-            if (multiSheetView.isHidden(MultiSheetView.Sheet.FIRST)) {
-                multiSheetView.goToSheet(MultiSheetView.Sheet.NONE);
-            }
+            multiSheetView.unhide();
         }
     }
 

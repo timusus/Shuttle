@@ -1,0 +1,262 @@
+package com.simplecity.multisheetview.ui.view;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CoordinatorLayout;
+import android.util.AttributeSet;
+import android.view.View;
+
+import com.simplecity.multisheetview.R;
+import com.simplecity.multisheetview.ui.behavior.CustomBottomSheetBehavior;
+
+public class MultiSheetView extends CoordinatorLayout {
+
+    private static final String TAG = "MultiSheetView";
+
+    public interface SheetStateChangeListener {
+        void onSheetStateChanged(@Sheet int sheet, @BottomSheetBehavior.State int state);
+    }
+
+    public @interface Sheet {
+        int NONE = 0;
+        int FIRST = 1;
+        int SECOND = 2;
+    }
+
+    private CustomBottomSheetBehavior bottomSheetBehavior1;
+    private CustomBottomSheetBehavior bottomSheetBehavior2;
+
+    @Nullable
+    private SheetStateChangeListener sheetStateChangeListener;
+
+    public MultiSheetView(Context context) {
+        this(context, null);
+    }
+
+    public MultiSheetView(@NonNull Context context, @Nullable AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public MultiSheetView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+
+        inflate(getContext(), R.layout.multi_sheet, this);
+
+        View sheet1 = findViewById(R.id.sheet1);
+        bottomSheetBehavior1 = (CustomBottomSheetBehavior) BottomSheetBehavior.from(sheet1);
+        bottomSheetBehavior1.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    fadeView(findViewById(getSheetPeekViewResId(Sheet.FIRST)), 1f);
+                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    fadeView(findViewById(getSheetPeekViewResId(Sheet.FIRST)), 0f);
+                }
+                if (sheetStateChangeListener != null) {
+                    sheetStateChangeListener.onSheetStateChanged(Sheet.FIRST, newState);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                fadeView(findViewById(getSheetPeekViewResId(Sheet.FIRST)), slideOffset);
+            }
+        });
+
+        View sheet2 = findViewById(R.id.sheet2);
+        bottomSheetBehavior2 = (CustomBottomSheetBehavior) BottomSheetBehavior.from(sheet2);
+        bottomSheetBehavior2.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_EXPANDED || newState == BottomSheetBehavior.STATE_DRAGGING) {
+                    bottomSheetBehavior1.setAllowDragging(false);
+                } else {
+                    bottomSheetBehavior1.setAllowDragging(true);
+                }
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    fadeView(findViewById(getSheetPeekViewResId(Sheet.SECOND)), 1f);
+                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    fadeView(findViewById(getSheetPeekViewResId(Sheet.SECOND)), 0f);
+                }
+                if (sheetStateChangeListener != null) {
+                    sheetStateChangeListener.onSheetStateChanged(Sheet.SECOND, newState);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                bottomSheetBehavior1.setAllowDragging(false);
+                fadeView(findViewById(getSheetPeekViewResId(Sheet.SECOND)), slideOffset);
+            }
+        });
+
+        //First sheet view click listener
+        findViewById(getSheetPeekViewResId(Sheet.FIRST)).setOnClickListener(v ->
+                expandSheet(Sheet.FIRST));
+
+        //Second sheet view click listener
+        findViewById(getSheetPeekViewResId(Sheet.SECOND)).setOnClickListener(v ->
+                expandSheet(Sheet.SECOND));
+
+        findViewById(getSheetPeekViewResId(Sheet.SECOND)).setOnTouchListener((v, event) -> {
+            bottomSheetBehavior1.setAllowDragging(false);
+            bottomSheetBehavior2.setAllowDragging(true);
+            return false;
+        });
+    }
+
+    public void setSheetStateChangeListener(@Nullable SheetStateChangeListener sheetStateChangeListener) {
+        this.sheetStateChangeListener = sheetStateChangeListener;
+    }
+
+    public void expandSheet(@Sheet int sheet) {
+        switch (sheet) {
+            case Sheet.FIRST:
+                bottomSheetBehavior1.setState(BottomSheetBehavior.STATE_EXPANDED);
+                break;
+            case Sheet.SECOND:
+                bottomSheetBehavior2.setState(BottomSheetBehavior.STATE_EXPANDED);
+                break;
+        }
+    }
+
+    public void collapseSheet(@Sheet int sheet) {
+        switch (sheet) {
+            case Sheet.FIRST:
+                bottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                break;
+            case Sheet.SECOND:
+                bottomSheetBehavior2.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                break;
+        }
+    }
+
+    public boolean isHidden() {
+        return bottomSheetBehavior1.getPeekHeight() == 0;
+    }
+
+    public void hide() {
+        if (!isHidden()) {
+            bottomSheetBehavior1.setPeekHeight(0);
+            ((LayoutParams) findViewById(getMainContainerResId()).getLayoutParams()).bottomMargin = 0;
+            goToSheet(Sheet.NONE);
+        }
+    }
+
+    public void unhide() {
+        if (isHidden()) {
+            int peekHeight = getContext().getResources().getDimensionPixelSize(R.dimen.bottom_sheet_height);
+            bottomSheetBehavior1.setPeekHeight(peekHeight);
+            ((LayoutParams) findViewById(getMainContainerResId()).getLayoutParams()).bottomMargin = peekHeight;
+        }
+    }
+
+    /**
+     * Expand the passed in sheet, collapsing/expanding the other sheet(s) as required.
+     */
+    public void goToSheet(@Sheet int sheet) {
+        switch (sheet) {
+            case Sheet.NONE:
+                collapseSheet(Sheet.FIRST);
+                collapseSheet(Sheet.SECOND);
+                break;
+            case Sheet.FIRST:
+                collapseSheet(Sheet.SECOND);
+                expandSheet(Sheet.FIRST);
+                break;
+            case Sheet.SECOND:
+                expandSheet(Sheet.FIRST);
+                expandSheet(Sheet.SECOND);
+                break;
+        }
+    }
+
+    /**
+     * @return the currently expanded Sheet
+     */
+    @Sheet
+    public int getCurrentSheet() {
+        if (bottomSheetBehavior2.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            return Sheet.SECOND;
+        } else if (bottomSheetBehavior1.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            return Sheet.FIRST;
+        } else {
+            return Sheet.NONE;
+        }
+    }
+
+    public boolean consumeBackPress() {
+        switch (getCurrentSheet()) {
+            case Sheet.SECOND:
+                collapseSheet(Sheet.SECOND);
+                return true;
+            case Sheet.FIRST:
+                collapseSheet(Sheet.FIRST);
+                return true;
+        }
+        return false;
+    }
+
+    @IdRes
+    public int getMainContainerResId() {
+        return R.id.mainContainer;
+    }
+
+    @SuppressLint("DefaultLocale")
+    @IdRes
+    public int getSheetContainerViewResId(@Sheet int sheet) {
+        switch (sheet) {
+            case Sheet.FIRST:
+                return R.id.sheet1Container;
+            case Sheet.SECOND:
+                return R.id.sheet2Container;
+        }
+
+        throw new IllegalStateException(String.format("No container view resId found for sheet: %d", sheet));
+    }
+
+    @SuppressLint("DefaultLocale")
+    @IdRes
+    public int getSheetPeekViewResId(@Sheet int sheet) {
+        switch (sheet) {
+            case Sheet.FIRST:
+                return R.id.sheet1PeekView;
+            case Sheet.SECOND:
+                return R.id.sheet2PeekView;
+        }
+
+        throw new IllegalStateException(String.format("No peek view resId found for sheet: %d", sheet));
+    }
+
+    void fadeView(View v, float offset) {
+        float alpha = 1 - offset;
+        v.setAlpha(alpha);
+        v.setVisibility(alpha == 0 ? View.GONE : View.VISIBLE);
+    }
+
+    /**
+     * A helper method to return the first MultiSheetView parent of the passed in View,
+     * or null if none can be found.
+     *
+     * @param v the view whose hierarchy will be traversed.
+     * @return the first MultiSheetView of the passed in view, or null if none can be found.
+     */
+    @Nullable
+    public static MultiSheetView getParentMultiSheetView(@Nullable View v) {
+        if (v == null) return null;
+
+        if (v instanceof MultiSheetView) {
+            return (MultiSheetView) v;
+        }
+
+        if (v.getParent() instanceof View) {
+            return getParentMultiSheetView((View) v.getParent());
+        }
+
+        return null;
+    }
+}

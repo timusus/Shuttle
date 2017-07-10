@@ -87,6 +87,7 @@ public class QueuePagerFragment extends BaseFragment implements
         unbinder = ButterKnife.bind(this, rootView);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(viewModelAdapter);
         SnapHelper snapHelper = new PagerSnapHelper() {

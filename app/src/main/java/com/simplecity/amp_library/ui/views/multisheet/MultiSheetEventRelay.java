@@ -6,7 +6,7 @@ import com.jakewharton.rxrelay2.PublishRelay;
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
-import test.com.multisheetview.ui.view.MultiSheetView;
+import com.simplecity.multisheetview.ui.view.MultiSheetView;
 
 public class MultiSheetEventRelay {
 
