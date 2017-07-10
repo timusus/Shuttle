@@ -52,7 +52,7 @@ public class SettingsParentFragment extends BaseNavigationController implements 
 
     @XmlRes int preferenceResource;
     @StringRes int titleResId;
-    
+
     private Unbinder unbinder;
 
     public static SettingsParentFragment newInstance(@XmlRes int preferenceResource, @StringRes int titleResId) {
@@ -265,6 +265,22 @@ public class SettingsParentFragment extends BaseNavigationController implements 
             if (tintNavBarColorPreference != null) {
                 tintNavBarColorPreference.setOnPreferenceChangeListener((preference, newValue) -> {
                     settingsPresenter.tintNavBarClicked((Boolean) newValue);
+                    return true;
+                });
+            }
+
+            SwitchPreferenceCompat usePalettePreference = (SwitchPreferenceCompat) findPreference(SettingsManager.KEY_PREF_PALETTE);
+            if (usePalettePreference != null) {
+                usePalettePreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                    settingsPresenter.usePaletteClicked((Boolean) newValue);
+                    return true;
+                });
+            }
+
+            SwitchPreferenceCompat usePaletteNowPlayingOnlyPreference = (SwitchPreferenceCompat) findPreference(SettingsManager.KEY_PREF_PALETTE_NOW_PLAYING_ONLY);
+            if (usePaletteNowPlayingOnlyPreference != null) {
+                usePaletteNowPlayingOnlyPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                    settingsPresenter.usePaletteNowPlayingOnlyClicked((Boolean) newValue);
                     return true;
                 });
             }

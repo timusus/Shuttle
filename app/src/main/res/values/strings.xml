@@ -303,6 +303,12 @@
     <string name="pref_title_theme_dark">Dark</string>
     <string name="pref_title_theme_light">Light</string>
     <string name="pref_title_theme_black">Black</string>
+
+    <string name="pref_group_palette">Palette</string>
+    <string name="pref_title_palette">Use Colors from Artwork</string>
+    <string name="pref_summary_palette">If enabled, Shuttle will detect the most prominent color in your artwork, and use that as the \'primary color\' throughout the app</string>
+    <string name="pref_title_palette_now_playing">Only on \'Now Playing\' Screen</string>
+
     <!--Settings summary for the downloading more themes -->
     <string name="pref_summary_get_pro_themes">More themes are available in Shuttle+</string>
     <!--Settings title for whitelist/blacklist-->

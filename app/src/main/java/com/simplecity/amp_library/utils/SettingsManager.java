@@ -30,6 +30,8 @@ public class SettingsManager {
     public static String KEY_PREF_PRIMARY_COLOR = "pref_theme_primary_color";
     public static String KEY_PREF_ACCENT_COLOR = "pref_theme_accent_color";
     public static String KEY_PREF_NAV_BAR = "pref_nav_bar";
+    public static String KEY_PREF_PALETTE = "pref_theme_use_palette";
+    public static String KEY_PREF_PALETTE_NOW_PLAYING_ONLY = "pref_theme_use_palette_now_playing";
 
     // Artwork
     public static String KEY_PREF_DOWNLOAD_ARTWORK = "pref_download_artwork";
@@ -302,32 +304,17 @@ public class SettingsManager {
         return getBooleanValue(KEY_BLUETOOTH_RESUME_CONNECT, false);
     }
 
-    private static final String KEY_PRIMARY_COLOR = "pref_theme_highlight_color";
-    private static final String KEY_ACCENT_COLOR = "pref_theme_accent_color";
-    private static final String KEY_ACCENT_IS_WHITE = "pref_theme_white_accent";
+    // Themes
 
-    public int getPrimaryColor(int defaultColor) {
-        return getIntValue(KEY_PRIMARY_COLOR, defaultColor);
+    public boolean getUsePalette() {
+        return getBooleanValue(KEY_PREF_PALETTE, true);
     }
 
-    public void setPrimaryColor(int primaryColor) {
-        setIntValue(KEY_PRIMARY_COLOR, primaryColor);
+    public boolean getUsePaletteNowPlayingOnly() {
+        return getBooleanValue(KEY_PREF_PALETTE_NOW_PLAYING_ONLY, false);
     }
 
-    public int getAccentColor(int defaultColor) {
-        return getIntValue(KEY_ACCENT_COLOR, defaultColor);
-    }
-
-    public void setAccentColor(int accentColor) {
-        setIntValue(KEY_ACCENT_COLOR, accentColor);
-    }
-
-    public boolean isAccentColorWhite() {
-        return getBooleanValue(KEY_ACCENT_IS_WHITE, false);
-    }
-
-
-    //ARTWORK
+    // Artwork
 
     public static final String KEY_PREFER_LAST_FM = "pref_prefer_lastfm";
     private static final String KEY_DOWNLOAD_AUTOMATICALLY = "pref_download_artwork_auto";

@@ -47,6 +47,7 @@ import com.simplecity.amp_library.ui.views.ShuffleButton;
 import com.simplecity.amp_library.ui.views.SizableSeekBar;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
+import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.StringUtils;
 
 import java.util.concurrent.TimeUnit;
@@ -332,15 +333,32 @@ public class PlayerFragment extends BaseFragment implements
                         Palette.Swatch swatch = resource.palette.getDarkMutedSwatch();
                         if (swatch != null) {
                             invalidateColors(swatch.getRgb());
+
+                            if (SettingsManager.getInstance().getUsePalette() && !SettingsManager.getInstance().getUsePaletteNowPlayingOnly()) {
+                                // Set Aesthetic colors globally, based on the current Palette swatch
+                                Aesthetic.get().colorPrimary(swatch.getRgb())
+                                        .colorStatusBarAuto()
+                                        .apply();
+                            }
                         } else {
-                            Aesthetic.get().colorPrimary().take(1).subscribe(color -> invalidateColors(color));
+                            if (SettingsManager.getInstance().getUsePalette()) {
+                                Aesthetic.get()
+                                        .colorPrimary()
+                                        .take(1)
+                                        .subscribe(color -> invalidateColors(color));
+                            }
                         }
                     }
 
                     @Override
                     public void onLoadFailed(Exception e, Drawable errorDrawable) {
                         super.onLoadFailed(e, errorDrawable);
-                        Aesthetic.get().colorPrimary().take(1).subscribe(color -> invalidateColors(color));
+                        if (SettingsManager.getInstance().getUsePalette()) {
+                            Aesthetic.get()
+                                    .colorPrimary()
+                                    .take(1)
+                                    .subscribe(color -> invalidateColors(color));
+                        }
                     }
                 });
     }

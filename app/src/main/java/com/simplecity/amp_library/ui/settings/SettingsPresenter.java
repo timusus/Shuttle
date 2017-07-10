@@ -236,6 +236,26 @@ public class SettingsPresenter extends Presenter<SettingsView> {
                 .apply();
     }
 
+    public void usePaletteClicked(boolean usePalette) {
+        // If we're not using palette any more, set the primary color back to default
+        if (!usePalette) {
+            Aesthetic.get()
+                    .colorPrimaryRes(R.color.blue_500)
+                    .colorStatusBarAuto()
+                    .apply();
+        }
+    }
+
+    public void usePaletteNowPlayingOnlyClicked(boolean usePaletteNowPlayingOnly) {
+        // If we're only using palette for 'now playing', set the primary color back to default
+        if (usePaletteNowPlayingOnly) {
+            Aesthetic.get()
+                    .colorPrimaryRes(R.color.blue_500)
+                    .colorStatusBarAuto()
+                    .apply();
+        }
+    }
+
     // Artwork
 
     public void downloadArtworkClicked(Context context) {
