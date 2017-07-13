@@ -43,16 +43,16 @@ public class Aesthetic {
   private static final String KEY_FIRST_TIME = "first_time_%s";
   private static final String KEY_ACTIVITY_THEME = "activity_theme_%s";
   private static final String KEY_IS_DARK = "is_dark_%s";
-  private static final String KEY_PRIMARY_COLOR = "primary_color";
+  private static final String KEY_PRIMARY_COLOR = "primary_color_%s";
   private static final String KEY_PRIMARY_DARK_COLOR = "primary_dark_color";
-  private static final String KEY_ACCENT_COLOR = "accent_color";
+  private static final String KEY_ACCENT_COLOR = "accent_color_%s";
   private static final String KEY_PRIMARY_TEXT_COLOR = "primary_text";
   private static final String KEY_SECONDARY_TEXT_COLOR = "secondary_text";
   private static final String KEY_PRIMARY_TEXT_INVERSE_COLOR = "primary_text_inverse";
   private static final String KEY_SECONDARY_TEXT_INVERSE_COLOR = "secondary_text_inverse";
   private static final String KEY_WINDOW_BG_COLOR = "window_bg_color_%s";
   private static final String KEY_STATUS_BAR_COLOR = "status_bar_color_%s";
-  private static final String KEY_NAV_BAR_COLOR = "nav_bar_color_%S";
+  private static final String KEY_NAV_BAR_COLOR = "nav_bar_color_%s";
   private static final String KEY_LIGHT_STATUS_MODE = "light_status_mode";
   private static final String KEY_TAB_LAYOUT_BG_MODE = "tab_layout_bg_mode";
   private static final String KEY_TAB_LAYOUT_INDICATOR_MODE = "tab_layout_indicator_mode";
@@ -330,7 +330,8 @@ public class Aesthetic {
   @CheckResult
   public Aesthetic colorPrimary(@ColorInt int color) {
     // needs to be committed immediately so that for statusBarColorAuto() and other auto methods
-    editor.putInt(KEY_PRIMARY_COLOR, color).commit();
+    String key = String.format(KEY_PRIMARY_COLOR, key(context));
+    editor.putInt(key, color).commit();
     return this;
   }
 
@@ -341,8 +342,9 @@ public class Aesthetic {
 
   @CheckResult
   public Observable<Integer> colorPrimary() {
+    String key = String.format(KEY_PRIMARY_COLOR, key(context));
     return rxPrefs
-        .getInteger(KEY_PRIMARY_COLOR, resolveColor(context, R.attr.colorPrimary))
+        .getInteger(key, resolveColor(context, R.attr.colorPrimary))
         .asObservable();
   }
 
@@ -367,7 +369,8 @@ public class Aesthetic {
 
   @CheckResult
   public Aesthetic colorAccent(@ColorInt int color) {
-    editor.putInt(KEY_ACCENT_COLOR, color).commit();
+    String key = String.format(KEY_ACCENT_COLOR, key(context));
+    editor.putInt(key, color).commit();
     return this;
   }
 
@@ -378,8 +381,9 @@ public class Aesthetic {
 
   @CheckResult
   public Observable<Integer> colorAccent() {
+    String key = String.format(KEY_ACCENT_COLOR, key(context));
     return rxPrefs
-        .getInteger(KEY_ACCENT_COLOR, resolveColor(context, R.attr.colorAccent))
+        .getInteger(key, resolveColor(context, R.attr.colorAccent))
         .asObservable();
   }
 
@@ -494,11 +498,12 @@ public class Aesthetic {
 
   @CheckResult
   public Aesthetic colorStatusBarAuto() {
-    String key = String.format(KEY_STATUS_BAR_COLOR, key(context));
+    String statusBarKey = String.format(KEY_STATUS_BAR_COLOR, key(context));
+    String primaryColorKey = String.format(KEY_PRIMARY_COLOR, key(context));
     editor.putInt(
-        key,
+        statusBarKey,
         Util.darkenColor(
-            prefs.getInt(KEY_PRIMARY_COLOR, resolveColor(context, R.attr.colorPrimary))));
+            prefs.getInt(primaryColorKey, resolveColor(context, R.attr.colorPrimary))));
     return this;
   }
 
@@ -530,12 +535,13 @@ public class Aesthetic {
 
   @CheckResult
   public Aesthetic colorNavigationBarAuto(boolean auto) {
-    String key = String.format(KEY_NAV_BAR_COLOR, key(context));
-    if (auto) {
-      int color = prefs.getInt(KEY_PRIMARY_COLOR, resolveColor(context, R.attr.colorPrimary));
-      editor.putInt(key, isColorLight(color) ? Color.BLACK : color);
+    String navBarKey = String.format(KEY_NAV_BAR_COLOR, key(context));
+    String primaryColorKey = String.format(KEY_PRIMARY_COLOR, key(context));
+      if (auto) {
+      int color = prefs.getInt(primaryColorKey, resolveColor(context, R.attr.colorPrimary));
+      editor.putInt(navBarKey, isColorLight(color) ? Color.BLACK : color);
     } else {
-      editor.remove(key);
+      editor.remove(navBarKey);
     }
     return this;
   }

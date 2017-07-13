@@ -16,6 +16,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.SparseArray;
@@ -99,6 +100,8 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
         Aesthetic.get()
                 .activityTheme(R.style.WallpaperTheme)
                 .isDark(false)
+                .colorPrimaryRes(R.color.blue_500)
+                .colorAccentRes(R.color.amber_300)
                 .colorStatusBarAuto()
                 .apply();
 //        }
@@ -314,7 +317,7 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
         backgroundColor = prefs.getInt(BaseWidgetProvider.ARG_WIDGET_BACKGROUND_COLOR + appWidgetId, getResources().getColor(R.color.white));
         textColor = prefs.getInt(BaseWidgetProvider.ARG_WIDGET_TEXT_COLOR + appWidgetId, getResources().getColor(R.color.white));
 
-        Drawable backgroundButtonDrawable = getResources().getDrawable(R.drawable.bg_rounded);
+        Drawable backgroundButtonDrawable = DrawableCompat.wrap(getResources().getDrawable(R.drawable.bg_rounded));
         backgroundButtonDrawable.setBounds(0, 0, 60, 60);
         backgroundColorButton.setCompoundDrawables(backgroundButtonDrawable, null, null, null);
 

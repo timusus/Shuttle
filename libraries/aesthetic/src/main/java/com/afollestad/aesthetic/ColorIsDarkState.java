@@ -23,7 +23,7 @@ public final class ColorIsDarkState {
     return new ColorIsDarkState(color, isDark);
   }
 
-  static BiFunction<Integer, Boolean, ColorIsDarkState> creator() {
+  public static BiFunction<Integer, Boolean, ColorIsDarkState> creator() {
     return new BiFunction<Integer, Boolean, ColorIsDarkState>() {
       @Override
       public ColorIsDarkState apply(Integer integer, Boolean aBoolean) {

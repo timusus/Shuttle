@@ -52,24 +52,22 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <CheckBox
+            <com.simplecity.amp_library.ui.views.CustomCheckbox
                 android:id="@+id/checkBox1"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
                 android:checked="true"
                 android:gravity="center_vertical"
-                android:text="@string/widget_show_artwork"
-                android:textColor="?android:textColorPrimaryInverse"/>
+                android:text="@string/widget_show_artwork"/>
 
-            <CheckBox
+            <com.simplecity.amp_library.ui.views.CustomCheckbox
                 android:id="@+id/checkBox2"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="@string/widget_invert_icons"
-                android:textColor="?android:textColorPrimaryInverse"/>
+                android:text="@string/widget_invert_icons"/>
 
         </LinearLayout>
 

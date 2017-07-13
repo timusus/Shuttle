@@ -1,21 +1,22 @@
 package com.afollestad.aesthetic;
 
-import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
-import static com.afollestad.aesthetic.Util.resolveResId;
-
 import android.content.Context;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.util.AttributeSet;
+
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 
+import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
+import static com.afollestad.aesthetic.Util.resolveResId;
+
 /** @author Aidan Follestad (afollestad) */
 public class AestheticCheckBox extends AppCompatCheckBox {
 
   private CompositeDisposable subscriptions;
-  private int backgroundResId;
+  protected int backgroundResId;
 
   public AestheticCheckBox(Context context) {
     super(context);
@@ -37,7 +38,7 @@ public class AestheticCheckBox extends AppCompatCheckBox {
     }
   }
 
-  private void invalidateColors(ColorIsDarkState state) {
+  protected void invalidateColors(ColorIsDarkState state) {
     TintHelper.setTint(this, state.color(), state.isDark());
   }
 
