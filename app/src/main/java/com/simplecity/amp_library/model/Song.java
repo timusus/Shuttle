@@ -109,7 +109,13 @@ public class Song implements
 
         id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
 
-        name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
+        path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
+
+        if (getTagInfo().trackName != null && getTagInfo().trackName.length() > 0) {
+            name = getTagInfo().trackName;
+        } else {
+            name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
+        }
 
         artistId = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST_ID));
 
@@ -131,8 +137,6 @@ public class Song implements
         }
 
         dateAdded = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_ADDED));
-
-        path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
 
         albumArtistName = artistName;
         if (cursor.getColumnIndex("album_artist") != -1) {
