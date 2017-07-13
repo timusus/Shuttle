@@ -4,7 +4,6 @@
     <!-- Shown when a user attempts to edit tags, but they don't have a 'DocumentProvider' available to pick the directory of their music (and thus give permission to Shuttle)-->
     <string name="R.string.toast_no_document_provider">Ez dago dokumentu hornitzailerik eskuragarri baimen eskaera burutzeko</string>
     <!-- Displayed when an M3U playlist is being saved, but it already exists -->
-    <string name="playlist_save_exists">Erreprodukzio zerrenda jada existizen da</string>
     <!-- Displayed when an M3U playlist save fails -->
     <string name="playlist_save_failed">Ezin izan da erreproukzio zerrenda gorde</string>
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
@@ -51,10 +50,6 @@
     <!-- Transient popup message shown after renaming a playlist -->
     <string name="playlist_renamed_message">Zerrenda berrizendatua.</string>
     <!-- Toast confirming that song(s) was/were deleted. -->
-    <plurals name="NNNtracksdeleted">
-        <item quantity="one">Abesti bat ezabatua izan da.</item>
-        <item quantity="other"><xliff:g id="songs_to_delete">%d</xliff:g> abesti ezabatuak izan dira.</item>
-    </plurals>
     <!-- -->
     <plurals name="NNNtrackstoqueue">
         <item quantity="one">Abesti bat ilarara gehitua.</item>
@@ -62,23 +57,16 @@
 abesti ilarara gehituak.</item>
     </plurals>
     <!-- Toasts after adding song(s) to playlists -->
-    <plurals name="NNNtrackstofavourites">
-        <item quantity="one">Abesti bat gogokoetara gehitua.</item>
-        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> abesti gogokoetara gehituak.</item>
-    </plurals>
     <string name="song_to_favourites"><xliff:g id="song_name">%s</xliff:g> gogokoetara gehitua.</string>
     <string name="song_removed_from_favourites"><xliff:g id="song_name">%s</xliff:g> gogokoetik kendua.</string>
     <!-- ## Dialogs ## -->
     <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_tite">Berrabiarazpena beharrezkoa</string>
     <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_message">Aldaketa hauek ez dira ikusiko Shuttle berrabiarazi arte</string>
     <!-- Restart now button -->
     <string name="restart_button">Orain berrabiarazi</string>
     <!-- Displays when picking a theme color -->
     <string name="color_pick">Kolore bat aukeratu</string>
     <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
-    <string name="dialog_custom">Pertsonalizatua</string>
     <!-- Displays when sharing a file fails -->
     <string name="share_failed">Barkatu, fitxategi hau ezin izan da banatu</string>
     <!-- Displays when you click 'share' -->
@@ -113,8 +101,6 @@ abesti ilarara gehituak.</item>
 \n• Karpeten ikuspena 
 \n• ChromeCastentzako euskarria
 \n\nGarapena aurrera eramaten laguntzen du.\n\nEz duzu hobetu behar jada Shuttle+ erosita baduzu.</string>
-    <string name="get_pro_button_play_store">Play Store</string>
-    <string name="get_pro_button_amazon">Amazon</string>
     <string name="btn_upgrade">Hobetu</string>
     <!-- -->
     <string name="get_pro_button_no">Ez, eskerrik asko</string>
@@ -189,13 +175,11 @@ abesti ilarara gehituak.</item>
     <!-- Multi select menu item-->
     <!-- Multi select menu item-->
     <!-- Context menu item -->
-    <string name="add_to_playlist">Zerrendara gehitu</string>
     <!-- Context menu item -->
     <string name="new_playlist">Berria</string>
     <!-- menu item to save the current list as a new playlist -->
     <string name="save_as_playlist">Zerrenda bezala gorde</string>
     <!-- Context menu item to remove the selected item from the playlist -->
-    <string name="remove_from_playlist">Zerrendatik kendu</string>
     <!-- Context menu item to remove the selected item from the queue -->
     <string name="remove_from_queue">Ilaratik kendu</string>
     <!-- Context menu item -->
@@ -207,12 +191,10 @@ abesti ilarara gehituak.</item>
     <!-- -->
     <string name="library_title">Liburutegia</string>
     <!-- -->
-    <string name="share_title">Banatu</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Bilatu</string>
     <string name="search_filter">Filtratu</string>
     <!-- Playlist context menu item to delete the selected playlist. -->
-    <string name="delete_playlist_menu">Ezabatu</string>
     <!-- Playlist context menu item to clear the selected playlist. -->
     <string name="clear_playlist_menu">Garbitu</string>
     <!-- Playlist context menu item to edit the selected playlist -->
@@ -240,9 +222,7 @@ abesti ilarara gehituak.</item>
     <string name="navigation_drawer_close">Nabigazio kaxa itxi</string>
     <!-- ## Preference Menu ## -->
     <!--Settings title for white accent color) -->
-    <string name="pref_title_theme_white_accent">Azentu zuria erabili</string>
     <!--Settings summary for white accent color-->
-    <string name="pref_summary_theme_white_accent">Zuria erabiltzen du kolore azentu guztientzako, egoera azaldu behar dutenak ezik (nahastu eta errepikatu zuriaren beste kolore bat behar dute piztuta daudela adierazteko).</string>
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">Nabigazioa</string>
     <!--Settings category for 'notification' items -->
@@ -276,7 +256,6 @@ abesti ilarara gehituak.</item>
     <string name="pref_title_theme_light">Argia</string>
     <string name="pref_title_theme_black">Beltza</string>
     <!--Settings summary for the downloading more themes -->
-    <string name="pref_summary_get_pro_themes">Gai gehiago daude eskuragarri Shuttle+entzako</string>
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">Zerrenda zuria/beltza</string>
     <!--Settings title for viewing blacklist-->
@@ -288,7 +267,6 @@ abesti ilarara gehituak.</item>
     <!--Settings title for clearing whitelist-->
     <string name="pref_title_clear_whitelist">Ezabatu</string>
     <!--Settings title for clearing whitelist-->
-    <string name="pref_title_update_whitelist">Eguneratu</string>
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">Karatula ebaki</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -345,9 +323,7 @@ abesti ilarara gehituak.</item>
     <string name="pref_summary_placeholders">\'Gmail\' estiloko karatulak erakusten ditu berez.
 Desaktibatzen bada, Shuttle-en ikonoa erabiliko da bere ordez</string>
     <!-- Settings title for the enable lockscreen controls checkbox -->
-    <string name="pref_title_lockscreen">Blokeo-pantailaren karatula aktibatu</string>
     <!-- Settings summary for the enable lockscreen controls checkbox -->
-    <string name="pref_summary_lockscreen">Blokeo-pantailako karatulak aktibatu/desaktibatzen ditu</string>
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">Pantaila</string>
     <!-- Settings title for the keep screen on checkbox -->
@@ -636,13 +612,9 @@ karpeta</item>
     <string name="action_mode_selection_count"><xliff:g id="number">%d</xliff:g> aukeratuta</string>
     <!-- ## Unknown artist/album metadata ##-->
     <!-- Default name of artist that doesn't have a name in the metadata -->
-    <string name="unknown_artist_name">Artista ezezaguna</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_name">Album ezezaguna</string>
     <!-- Default name of genre that doesn't have a name in the metadata -->
-    <string name="unknown_genre_name">Genero ezezaguna</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_artist_name">Album-artista ezezaguna</string>
     <!-- Default value if album year unknown -->
     <string name="unknown_year">Urte ezezaguna</string>
     <!-- Song Info overflow option-->
@@ -660,7 +632,6 @@ karpeta</item>
     <!-- Accessibility button description -->
     <string name="btn_prev">Aurrekoa</string>
     <!-- Accessibility button description -->
-    <string name="btn_queue">Erreprodukzio ilara ikusi</string>
     <!-- Accessibility button description -->
     <string name="btn_close">Itxi</string>
     <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
@@ -676,13 +647,11 @@ karpeta</item>
     <!-- Accessibility button description -->
     <string name="btn_shuffle_off">Nahasketa desaktibatuta</string>
     <!-- Accessibility button description -->
-    <string name="btn_show_queue">Ilara ikusi</string>
     <!-- Accessibility button description -->
     <string name="btn_fab_shuffle">Zerrenda hau nahastu eta erreproduzitu</string>
     <!-- Accessibility now playing 'mini player' description. Example: Now playing <Wannabe> by <Spice Girls> -->
     <string name="btn_now_playing">Orain %1$s - %2$s erreproduzitzen</string>
     <!-- Accessibility 'show lyrics' -->
-    <string name="btn_show_lyrics">Hitzak ikusi</string>
     <string name="pref_summary_restore_purchases">Shuttle+ erosi baduzu, baina oraindik doaineko bertsioa agertzen bazaizu, botoi honi eman iezaiozu.</string>
     <string name="pref_title_restore_purchases">Erosketak berreskuratu</string>
     <string name="blacklist_empty">Ez duzu abestirik zerrenda beltzean sartu!</string>
@@ -702,7 +671,6 @@ karpeta</item>
     <string name="iab_purchase_failed">Zerbait txarto joan da. Mesedez saiatu berriz geroago...</string>
     <string name="snackbar_rate_text">Shuttle erabiltzea gustuko?</string>
     <string name="snackbar_rate_action">Puntua ezazu!</string>
-    <string name="toast_purchase_failed">Zerbait txarto joan da. Mesedez saiatu berriz geroago...</string>
     <string name="dialog_create_playlist_error">Errorea erreprodukzio-zerrenda sortzean</string>
     <!-- Artwork picker -->
     <string name="artwork_edit">Karatula aukeratu</string>
@@ -732,16 +700,12 @@ karpeta</item>
     <!-- "Folders" Shortcut label disabled. (I don't think this ever happens)-->
     <string name="shortcut_folders_disabled">Karpetak ez daude eskuragarri</string>
     <!-- "Playlist" Shortcut label. Max 10 characters.-->
-    <string name="shortcut_playlist_short_label">Zerrenda</string>
     <!-- "Playlist" Shortcut long label. Max 25 characters.-->
-    <string name="shortcut_playlist_long_label">Gogokoenen erreprodukzio-zerrenda zabaldu</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
-    <string name="shortcut_playlist_disabled">Zerrenda ez dago eskuragarri</string>
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label"><xliff:g id="number">%d</xliff:g>. Diskoa</string>
     <!-- Search Filter-->
     <string name="search_fuzzy">Zehaztugabea</string>
-    <string name="search_title_only">Izennburua bakarrik</string>
     <string name="search_artists">Artistak</string>
     <string name="search_albums">Albumak</string>
     <!-- Changelog -->

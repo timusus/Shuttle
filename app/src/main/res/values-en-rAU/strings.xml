@@ -3,7 +3,6 @@
     <!-- ## Toast Messages ## -->
     <!-- Shown when a user attempts to edit tags, but they don't have a 'DocumentProvider' available to pick the directory of their music (and thus give permission to Shuttle)-->
     <!-- Displayed when an M3U playlist is being saved, but it already exists -->
-    <string name="playlist_save_exists">Playlist already exists</string>
     <!-- Displayed when an M3U playlist save fails -->
     <string name="playlist_save_failed">Couldn\'t save playlist</string>
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
@@ -125,7 +124,6 @@
     <!-- ## Preference Menu ## -->
     <!--Settings title for white accent color) -->
     <!--Settings summary for white accent color-->
-    <string name="pref_summary_theme_white_accent">Uses white for all colour accents, except those which need to show state (shuffle and repeat need a colour other than white to show they are turned on).</string>
     <!--Settings category for 'navigation' items -->
     <!--Settings category for 'notification' items -->
     <!-- Settings title for inverting the notification drawer text & icons -->

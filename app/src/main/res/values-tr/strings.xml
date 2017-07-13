@@ -4,7 +4,6 @@
     <!-- Shown when a user attempts to edit tags, but they don't have a 'DocumentProvider' available to pick the directory of their music (and thus give permission to Shuttle)-->
     <string name="R.string.toast_no_document_provider">İzin isteğini el ile giriş yapabilmek için kullanılabilir bir Döküman Sağlayıcı mevcut değil</string>
     <!-- Displayed when an M3U playlist is being saved, but it already exists -->
-    <string name="playlist_save_exists">Şarkı listesi zaten var</string>
     <!-- Displayed when an M3U playlist save fails -->
     <string name="playlist_save_failed">Şarkı listesi kaydedilemedi</string>
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
@@ -51,34 +50,22 @@
     <!-- Transient popup message shown after renaming a playlist -->
     <string name="playlist_renamed_message">Liste yeniden adlandırıldı.</string>
     <!-- Toast confirming that song(s) was/were deleted. -->
-    <plurals name="NNNtracksdeleted">
-        <item quantity="one">1 şarkı silindi.</item>
-        <item quantity="other"><xliff:g id="songs_to_delete">%d</xliff:g> şarkı silindi.</item>
-    </plurals>
     <!-- -->
     <plurals name="NNNtrackstoqueue">
         <item quantity="one">1 şarkı sıraya eklendi.</item>
         <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> şarkı sıraya eklendi.</item>
     </plurals>
     <!-- Toasts after adding song(s) to playlists -->
-    <plurals name="NNNtrackstofavourites">
-        <item quantity="one">1 şarkı favorilere eklendi.</item>
-        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> 
-şarkı favorilere eklendi.</item>
-    </plurals>
     <string name="song_to_favourites"><xliff:g id="song_name">%s</xliff:g> favorilere eklendi.</string>
     <string name="song_removed_from_favourites"><xliff:g id="song_name">%s</xliff:g> favorilerden kaldırıldı.</string>
     <!-- ## Dialogs ## -->
     <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_tite">Yeniden başlatma gerekli</string>
     <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_message">Shuttle\'ı yeniden başlatana kadar bu değişiklikler etkili olmayacaktır</string>
     <!-- Restart now button -->
     <string name="restart_button">Şimdi yeniden başlat</string>
     <!-- Displays when picking a theme color -->
     <string name="color_pick">Bir Renk Seçin</string>
     <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
-    <string name="dialog_custom">Özel</string>
     <!-- Displays when sharing a file fails -->
     <string name="share_failed">Maalesef, bu dosya paylaşılamaz</string>
     <!-- Displays when you click 'share' -->
@@ -113,8 +100,6 @@
 \n•Klasör tarama
 \n•ChromeCast Desteği
 \n\n\Üstelik uygulamanın geliştirilmesine de yardımcı olur.\n\nShuttle+ mevcutsa yükseltme gerekmez</string>
-    <string name="get_pro_button_play_store">Play Store</string>
-    <string name="get_pro_button_amazon">Amazon</string>
     <string name="btn_upgrade">Yükselt</string>
     <!-- -->
     <string name="get_pro_button_no">Hayır teşekkürler</string>
@@ -192,13 +177,11 @@
     <!-- Multi select menu item-->
     <string name="menu_queue">Sıra</string>
     <!-- Context menu item -->
-    <string name="add_to_playlist">Şarkı listesi</string>
     <!-- Context menu item -->
     <string name="new_playlist">Yeni</string>
     <!-- menu item to save the current list as a new playlist -->
     <string name="save_as_playlist">Şarkı listesi olarak kaydet</string>
     <!-- Context menu item to remove the selected item from the playlist -->
-    <string name="remove_from_playlist">Şarkı listesinden kaldır</string>
     <!-- Context menu item to remove the selected item from the queue -->
     <string name="remove_from_queue">Kaldır</string>
     <!-- Context menu item -->
@@ -210,12 +193,10 @@
     <!-- -->
     <string name="library_title">Kütüphane</string>
     <!-- -->
-    <string name="share_title">Paylaş</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Ara</string>
     <string name="search_filter">Filtre</string>
     <!-- Playlist context menu item to delete the selected playlist. -->
-    <string name="delete_playlist_menu">Sil</string>
     <!-- Playlist context menu item to clear the selected playlist. -->
     <string name="clear_playlist_menu">Temizle</string>
     <!-- Playlist context menu item to edit the selected playlist -->
@@ -243,9 +224,7 @@
     <string name="navigation_drawer_close">Gezinti çekmecesi kapalı</string>
     <!-- ## Preference Menu ## -->
     <!--Settings title for white accent color) -->
-    <string name="pref_title_theme_white_accent">Beyaz Vurgu Rengi Kullan</string>
     <!--Settings summary for white accent color-->
-    <string name="pref_summary_theme_white_accent">Durumunu göstermesi gerekenler dışında beyaz kullanır (karıştır ve tekrar et, açık olduklarını göstermek için beyazdan farklı bir renk gerektirebilir).</string>
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">Gezinme</string>
     <!--Settings category for 'notification' items -->
@@ -279,7 +258,6 @@
     <string name="pref_title_theme_light">Açık</string>
     <string name="pref_title_theme_black">Siyah</string>
     <!--Settings summary for the downloading more themes -->
-    <string name="pref_summary_get_pro_themes">Diğer temalar Shuttle+\'da mevcuttur.</string>
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">Beyaz/Kara Liste</string>
     <!--Settings title for viewing blacklist-->
@@ -291,7 +269,6 @@
     <!--Settings title for clearing whitelist-->
     <string name="pref_title_clear_whitelist">Temizle</string>
     <!--Settings title for clearing whitelist-->
-    <string name="pref_title_update_whitelist">Güncelle</string>
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">Albüm Kapağını Kırpın</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -348,9 +325,7 @@
     <string name="pref_summary_placeholders">Varsayılan olarak \'Gmail\' harf görselleri kullanılacaktır.
 Bu seçenek işaretli değilse, Shuttle simgesi kullanılacaktır.</string>
     <!-- Settings title for the enable lockscreen controls checkbox -->
-    <string name="pref_title_lockscreen">Kilit Ekranında Albüm Kapağını Etkinleştir</string>
     <!-- Settings summary for the enable lockscreen controls checkbox -->
-    <string name="pref_summary_lockscreen">Kilit ekranında albüm kapağını etkinleştir veya devre dışı bırak</string>
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">Ekran</string>
     <!-- Settings title for the keep screen on checkbox -->
@@ -640,13 +615,9 @@ dosyalar</item>
     <string name="action_mode_selection_count"><xliff:g id="number">%d</xliff:g> seçildi</string>
     <!-- ## Unknown artist/album metadata ##-->
     <!-- Default name of artist that doesn't have a name in the metadata -->
-    <string name="unknown_artist_name">Bilinmeyen sanatçı</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_name">Bilinmeyen albüm</string>
     <!-- Default name of genre that doesn't have a name in the metadata -->
-    <string name="unknown_genre_name">Bilinmeyen tür</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_artist_name">Bilinmeyen albüm sanatçısı</string>
     <!-- Default value if album year unknown -->
     <string name="unknown_year">Yıl bilinmiyor</string>
     <!-- Song Info overflow option-->
@@ -664,7 +635,6 @@ dosyalar</item>
     <!-- Accessibility button description -->
     <string name="btn_prev">Önceki</string>
     <!-- Accessibility button description -->
-    <string name="btn_queue">Çalma sırası görünümü</string>
     <!-- Accessibility button description -->
     <string name="btn_close">Kapat</string>
     <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
@@ -680,13 +650,11 @@ dosyalar</item>
     <!-- Accessibility button description -->
     <string name="btn_shuffle_off">Karıştırma kapalı</string>
     <!-- Accessibility button description -->
-    <string name="btn_show_queue">Sırayı göster</string>
     <!-- Accessibility button description -->
     <string name="btn_fab_shuffle">Karıştır ve geçerli listeyi çal</string>
     <!-- Accessibility now playing 'mini player' description. Example: Now playing <Wannabe> by <Spice Girls> -->
     <string name="btn_now_playing">Şimdi %2$s sanatçısından %1$s çalınıyor</string>
     <!-- Accessibility 'show lyrics' -->
-    <string name="btn_show_lyrics">Sözleri göster</string>
     <string name="pref_summary_restore_purchases">Shuttle\'ı zaten yükselttiyseniz ancak hala ücretsiz sürüm olarak görünüyorsa, bu tuşa basın.</string>
     <string name="pref_title_restore_purchases">Satın Almayı Geri Yükle</string>
     <string name="blacklist_empty">Herhangi bir şarkı kara listede değil!</string>
@@ -706,7 +674,6 @@ dosyalar</item>
     <string name="iab_purchase_failed">Bir şeyler yanlış gitti. Lütfen daha sonra tekrar deneyin..</string>
     <string name="snackbar_rate_text">Shuttle kullanmaktan keyif aldınız mı?</string>
     <string name="snackbar_rate_action">Oy Verin!</string>
-    <string name="toast_purchase_failed">Bir şeyler yanlış gitti. Lütfen daha sonra tekrar deneyiniz..</string>
     <string name="dialog_create_playlist_error">Şarkı listesi oluşturma hatası</string>
     <!-- Artwork picker -->
     <string name="artwork_edit">Albüm kapağı seçin</string>
@@ -736,16 +703,12 @@ dosyalar</item>
     <!-- "Folders" Shortcut label disabled. (I don't think this ever happens)-->
     <string name="shortcut_folders_disabled">Klasörler kullanılabilir değil</string>
     <!-- "Playlist" Shortcut label. Max 10 characters.-->
-    <string name="shortcut_playlist_short_label">Şarkı listesi</string>
     <!-- "Playlist" Shortcut long label. Max 25 characters.-->
-    <string name="shortcut_playlist_long_label">Favori Şarkı Listelerini Aç</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
-    <string name="shortcut_playlist_disabled">Şarkı listesi kullanılabilir değil</string>
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">Disk <xliff:g id="number">%d</xliff:g></string>
     <!-- Search Filter-->
     <string name="search_fuzzy">Bulanık</string>
-    <string name="search_title_only">Sadece Başlık</string>
     <string name="search_artists">Sanatçılar</string>
     <string name="search_albums">Albümler</string>
     <!-- Changelog -->

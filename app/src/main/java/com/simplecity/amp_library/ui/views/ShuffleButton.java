@@ -65,6 +65,11 @@ public class ShuffleButton extends android.support.v7.widget.AppCompatImageButto
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+
+        if (isInEditMode()) {
+            return;
+        }
+
         aestheticDisposable = Aesthetic.get().colorAccent()
                 .subscribe(colorAccent -> {
                     selectedColor = colorAccent;

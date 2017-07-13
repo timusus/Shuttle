@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>    <!-- The width of the big icons in notifications. -->
+<resources>
+    <!-- The width of the big icons in notifications. -->
     <dimen name="notification_large_icon_width">113dp</dimen>
     <!-- The width of the big icons in notifications. -->
     <dimen name="notification_large_icon_height">113dp</dimen>

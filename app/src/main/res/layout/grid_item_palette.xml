@@ -34,7 +34,7 @@
         android:layout_margin="8dp"
         android:background="@drawable/circle"
         android:padding="4dp"
-        android:src="@drawable/ic_tick_white"
+        android:src="@drawable/ic_check_24dp"
         android:visibility="gone"
         tools:visibility="visible"/>
 </FrameLayout>

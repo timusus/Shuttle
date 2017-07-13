@@ -11,12 +11,6 @@
         <item name="listDividerColor">@color/list_divider_dark</item>
         <item name="circular_ripple">@drawable/ripple_circular_dark</item>
 
-        <!--<item name="android:textViewStyle">@style/PrimaryTextLight</item>-->
-        <!--<item name="android:checkboxStyle">@style/CheckboxStyle</item>-->
-        <!--<item name="android:buttonStyle">@style/ButtonStyle</item>-->
-        <!--<item name="android:editTextStyle">@style/EditTextStyle</item>-->
-        <!--<item name="secondaryTextViewStyle">@style/SecondaryTextLight</item>-->
-
         <item name="preferenceTheme">
             @style/PreferenceThemeOverlay.v14.Material
         </item>
@@ -37,7 +31,33 @@
         <item name="android:windowBackground">@color/black</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="TranslucentTheme" parent="Theme.AppCompat">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@color/semitransparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="WallpaperTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimaryDark">@color/grey_600</item>
+        <item name="colorPrimary">@color/grey_500</item>
+        <item name="colorAccent">@color/grey_250</item>
+        <item name="android:windowShowWallpaper">true</item>
+        <item name="android:windowBackground">@color/transparent</item>
+    </style>
+
+    <style name="Theme.Transparent" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="Theme.AppCompat.NoActionBar.FullScreen" parent="@style/Theme.AppCompat"/>
 
     <style name="CollapsingToolbarExpandedTextAppearance" parent="TextAppearance.AppCompat.Title">
         <item name="android:textSize">30sp</item>

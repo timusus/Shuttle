@@ -52,7 +52,7 @@
             android:layout_marginLeft="48dp"
             android:layout_marginTop="20dp"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_prev_white"/>
+            android:src="@drawable/ic_skip_previous_24dp"/>
 
         <ImageButton
             android:id="@+id/btn_pause"
@@ -63,7 +63,7 @@
             android:layout_marginRight="30dp"
             android:layout_marginTop="16dp"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_pause_white"/>
+            android:src="@drawable/ic_pause_24dp"/>
 
         <ImageButton
             android:id="@+id/btn_skip"
@@ -75,7 +75,7 @@
             android:layout_marginRight="48dp"
             android:layout_marginTop="20dp"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_skip_white"/>
+            android:src="@drawable/ic_skip_next_24dp"/>
 
         <ImageButton
             android:id="@+id/back_btn"

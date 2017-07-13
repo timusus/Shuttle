@@ -153,18 +153,18 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     void setupRepeatView(MusicService service, RemoteViews views, boolean invertIcons) {
         switch (service.getRepeatMode()) {
             case MusicService.RepeatMode.ALL:
-                views.setImageViewBitmap(R.id.repeat_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_repeat_white));
+                views.setImageViewBitmap(R.id.repeat_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_repeat_24dp));
                 views.setContentDescription(R.id.shuffle_button, service.getString(R.string.btn_repeat_current));
                 break;
             case MusicService.RepeatMode.ONE:
-                views.setImageViewBitmap(R.id.repeat_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_repeat_one_white));
+                views.setImageViewBitmap(R.id.repeat_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_repeat_one_24dp));
                 views.setContentDescription(R.id.shuffle_button, service.getString(R.string.btn_repeat_off));
                 break;
             default:
                 if (invertIcons) {
-                    views.setImageViewBitmap(R.id.repeat_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_repeat_white));
+                    views.setImageViewBitmap(R.id.repeat_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_repeat_24dp));
                 } else {
-                    views.setImageViewResource(R.id.repeat_button, R.drawable.ic_repeat_white);
+                    views.setImageViewResource(R.id.repeat_button, R.drawable.ic_repeat_24dp);
                 }
                 views.setContentDescription(R.id.shuffle_button, service.getString(R.string.btn_repeat_all));
                 break;
@@ -175,14 +175,14 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         switch (service.getShuffleMode()) {
             case MusicService.ShuffleMode.OFF:
                 if (invertIcons) {
-                    views.setImageViewBitmap(R.id.shuffle_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_shuffle_white));
+                    views.setImageViewBitmap(R.id.shuffle_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_shuffle_24dp));
                 } else {
-                    views.setImageViewResource(R.id.shuffle_button, R.drawable.ic_shuffle_white);
+                    views.setImageViewResource(R.id.shuffle_button, R.drawable.ic_shuffle_24dp);
                 }
                 views.setContentDescription(R.id.shuffle_button, service.getString(R.string.btn_shuffle_on));
                 break;
             default:
-                views.setImageViewBitmap(R.id.shuffle_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_shuffle_white));
+                views.setImageViewBitmap(R.id.shuffle_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_shuffle_24dp));
                 views.setContentDescription(R.id.shuffle_button, service.getString(R.string.btn_shuffle_off));
                 break;
         }

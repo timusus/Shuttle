@@ -42,6 +42,10 @@ public class StatusBarView extends View {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
+        if (isInEditMode()) {
+            return;
+        }
+
         // Need to invalidate the colors as early as possible. When subscribing to the continuous observable
         // below (subscription = ...), we're using distinctToMainThread(), which introduces a slight delay. During
         // this delay, we see the original colors, which are then swapped once the emission is consumed.

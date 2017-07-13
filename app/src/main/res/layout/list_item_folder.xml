@@ -16,7 +16,7 @@
         android:layout_height="48dp"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
-        android:src="@drawable/ic_folder_closed_white"
+        android:src="@drawable/ic_folder_24dp"
         app:border_width="8dp"/>
 
     <CheckBox

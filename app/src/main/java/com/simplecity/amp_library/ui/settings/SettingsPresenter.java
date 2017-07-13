@@ -283,7 +283,7 @@ public class SettingsPresenter extends Presenter<SettingsView> {
             settingsView.showDeleteArtworkDialog(
                     new MaterialDialog.Builder(context)
                             .title(R.string.pref_title_delete_artwork)
-                            .iconRes(R.drawable.ic_dialog_alert)
+                            .iconRes(R.drawable.ic_warning_24dp)
                             .content(R.string.delete_artwork_confirmation_dialog)
                             .positiveText(R.string.button_ok)
                             .onPositive((materialDialog, dialogAction) -> deleteArtwork())

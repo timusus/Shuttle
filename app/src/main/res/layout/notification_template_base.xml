@@ -51,11 +51,10 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/btn_play_pause"
                 style="@style/notification_button"
                 android:layout_gravity="center_vertical"
                 android:contentDescription="@string/btn_play"
-                android:src="@drawable/ic_pause_white">
+                android:src="@drawable/ic_pause_24dp">
             </ImageButton>
 
             <ImageButton
@@ -63,7 +62,7 @@
                 style="@style/notification_button"
                 android:layout_gravity="center_vertical"
                 android:contentDescription="@string/btn_skip"
-                android:src="@drawable/ic_skip_white">
+                android:src="@drawable/ic_skip_next_24dp">
             </ImageButton>
 
             <ImageButton

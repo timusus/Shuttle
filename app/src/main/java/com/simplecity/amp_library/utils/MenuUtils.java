@@ -607,7 +607,7 @@ public class MenuUtils implements MusicUtils.Defs {
     public static void deleteFile(Context context, BaseFileObject fileObject, UnsafeAction fileDeleted) {
         MaterialDialog.Builder builder = DialogUtils.getBuilder(context)
                 .title(R.string.delete_item)
-                .iconRes(R.drawable.ic_dialog_alert);
+                .iconRes(R.drawable.ic_warning_24dp);
         if (fileObject.fileType == FileType.FILE) {
             builder.content(String.format(context.getResources().getString(
                     R.string.delete_file_confirmation_dialog), fileObject.name));

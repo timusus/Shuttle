@@ -62,19 +62,19 @@
                 android:id="@+id/prev"
                 style="@style/notification_button"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_prev_white" />
+                android:src="@drawable/ic_skip_previous_24dp" />
 
             <ImageButton
                 android:id="@+id/pause"
                 style="@style/notification_button"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_pause_white" />
+                android:src="@drawable/ic_pause_24dp" />
 
             <ImageButton
                 android:id="@+id/next"
                 style="@style/notification_button"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_skip_white" />
+                android:src="@drawable/ic_skip_next_24dp" />
 
         </LinearLayout>
     </RelativeLayout>

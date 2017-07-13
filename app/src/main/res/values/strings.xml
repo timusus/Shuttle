@@ -6,7 +6,6 @@
     <!-- Shown when a user attempts to edit tags, but they don't have a 'DocumentProvider' available to pick the directory of their music (and thus give permission to Shuttle)-->
     <string name="R.string.toast_no_document_provider">No DocumentProvider available to handle permission request</string>
     <!-- Displayed when an M3U playlist is being saved, but it already exists -->
-    <string name="playlist_save_exists">Playlist already exists</string>
     <!-- Displayed when an M3U playlist save fails -->
     <string name="playlist_save_failed">Couldn\'t save playlist</string>
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
@@ -56,12 +55,6 @@
     <!-- Transient popup message shown after renaming a playlist -->
     <string name="playlist_renamed_message">Playlist renamed.</string>
     <!-- Toast confirming that song(s) was/were deleted. -->
-    <plurals name="NNNtracksdeleted">
-        <!-- delete confirmation message for 1 song -->
-        <item quantity="one">1 song was deleted.</item>
-        <!-- delete confirmation message for 0 or more than 1 songs -->
-        <item quantity="other"><xliff:g id="songs_to_delete">%d</xliff:g> songs were deleted.</item>
-    </plurals>
     <!-- -->
     <plurals name="NNNtrackstoqueue">
         <!-- message shown when one song was added -->
@@ -73,26 +66,15 @@
         </item>
     </plurals>
     <!-- Toasts after adding song(s) to playlists -->
-    <plurals name="NNNtrackstofavourites">
-        <!-- message shown when one song was added -->
-        <item quantity="one">1 song added to favorites.</item>
-        <!-- message shown when zero or more than one song was added -->
-        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> songs added to favorites.</item>
-    </plurals>
     <string name="song_to_favourites"><xliff:g id="song_name">%s</xliff:g> added to favorites.</string>
     <string name="song_removed_from_favourites"><xliff:g id="song_name">%s</xliff:g> removed from favorites.</string>
 
     <!-- ## Dialogs ## -->
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_tite">Restart required</string>
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_message">These changes won\'t take effect until you restart Shuttle</string>
     <!-- Restart now button -->
     <string name="restart_button">Restart now</string>
     <!-- Displays when picking a theme color -->
     <string name="color_pick">Pick a Color</string>
     <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
-    <string name="dialog_custom">Custom</string>
     <!-- Displays when sharing a file fails -->
     <string name="share_failed">Sorry, this file couldn\'t be shared</string>
     <!-- Displays when you click 'share' -->
@@ -129,9 +111,6 @@
         \n• ChromeCast Support
         \n\nIt also helps to promote further development.\n\nYou do not need to upgrade if you already have Shuttle+</string>
 
-    <string name="get_pro_button_play_store">Play Store</string>
-    <string name="get_pro_button_amazon">Amazon</string>
-
     <string name="btn_upgrade">Upgrade</string>
     <!-- -->
     <string name="get_pro_button_no">No thanks</string>
@@ -150,6 +129,9 @@
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">All songs from the album <xliff:g id="album">%s</xliff:g> will be permanently deleted.</string>
     <!-- Delete confirmation dialog message when deleting albums -->
+    <string name="get_pro_button_play_store">Play Store</string>
+    <string name="get_pro_button_amazon">Amazon</string>
+
     <string name="delete_album_desc_multiple">All songs from the following albums:<xliff:g id="album">%s</xliff:g>will be permanently deleted.</string>
     <!-- Delete confirmation dialog when deleting a single song -->
     <string name="delete_song_desc"><xliff:g id="song">%s</xliff:g> will be permanently deleted.</string>
@@ -212,13 +194,11 @@
     <!-- Multi select menu item-->
     <string name="menu_queue">Queue</string>
     <!-- Context menu item -->
-    <string name="add_to_playlist">Playlist</string>
     <!-- Context menu item -->
     <string name="new_playlist">New</string>
     <!-- menu item to save the current list as a new playlist -->
     <string name="save_as_playlist">Save as playlist</string>
     <!-- Context menu item to remove the selected item from the playlist -->
-    <string name="remove_from_playlist">Remove from playlist</string>
     <!-- Context menu item to remove the selected item from the queue -->
     <string name="remove_from_queue">Remove</string>
     <!-- Context menu item -->
@@ -230,15 +210,12 @@
     <!-- -->
     <string name="library_title">Library</string>
     <!-- -->
-    <string name="share_title">Share</string>
 
     <!-- Library screen, menu item -->
     <string name="search_title">Search</string>
 
     <string name="search_filter">Filter</string>
 
-    <!-- Playlist context menu item to delete the selected playlist. -->
-    <string name="delete_playlist_menu">Delete</string>
     <!-- Playlist context menu item to clear the selected playlist. -->
     <string name="clear_playlist_menu">Clear</string>
     <!-- Playlist context menu item to edit the selected playlist -->
@@ -267,10 +244,6 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <!-- ## Preference Menu ## -->
-    <!--Settings title for white accent color) -->
-    <string name="pref_title_theme_white_accent">Use White Accent</string>
-    <!--Settings summary for white accent color-->
-    <string name="pref_summary_theme_white_accent">Uses white for all color accents, except those which need to show state (shuffle and repeat need a color other than white to show they are turned on).</string>
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">Navigation</string>
     <!--Settings category for 'notification' items -->
@@ -309,8 +282,6 @@
     <string name="pref_summary_palette">If enabled, Shuttle will detect the most prominent color in your artwork, and use that as the \'primary color\' throughout the app</string>
     <string name="pref_title_palette_now_playing">Only on \'Now Playing\' Screen</string>
 
-    <!--Settings summary for the downloading more themes -->
-    <string name="pref_summary_get_pro_themes">More themes are available in Shuttle+</string>
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">White/Blacklist</string>
     <!--Settings title for viewing blacklist-->
@@ -321,8 +292,6 @@
     <string name="pref_title_view_whitelist">View/Edit Whitelist</string>
     <!--Settings title for clearing whitelist-->
     <string name="pref_title_clear_whitelist">Clear</string>
-    <!--Settings title for clearing whitelist-->
-    <string name="pref_title_update_whitelist">Update</string>
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">Crop Album Art</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -378,10 +347,6 @@
     <!-- Settings summary for gmail style placeholders checkbox-->
     <string name="pref_summary_placeholders">Displays \'Gmail\' style placeholders by default.
         If unchecked, the Shuttle icon will be used as a placeholder instead</string>
-    <!-- Settings title for the enable lockscreen controls checkbox -->
-    <string name="pref_title_lockscreen">Enable Lockscreen Artwork</string>
-    <!-- Settings summary for the enable lockscreen controls checkbox -->
-    <string name="pref_summary_lockscreen">Enables/disables the artwork on the lockscreen</string>
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">Display</string>
     <!-- Settings title for the keep screen on checkbox -->
@@ -625,8 +590,6 @@
     <string name="sleep_timer">Sleep timer</string>
     <!--Sleep timer "Play last song to end" -->
     <string name="sleep_timer_play_to_end">Play last song to end</string>
-    <!-- Sleep timer "set" -->
-    <string name="sleep_timer_set">Set</string>
     <!-- Sleep timer "Stop" -->
     <string name="sleep_timer_stop_button">Stop</string>
     <!-- Sleep timer stop message "Stop sleep timer?" -->
@@ -713,14 +676,6 @@
     <string name="action_mode_selection_count"><xliff:g id="number">%d</xliff:g> selected</string>
 
     <!-- ## Unknown artist/album metadata ##-->
-    <!-- Default name of artist that doesn't have a name in the metadata -->
-    <string name="unknown_artist_name">Unknown artist</string>
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_name">Unknown album</string>
-    <!-- Default name of genre that doesn't have a name in the metadata -->
-    <string name="unknown_genre_name">Unknown genre</string>
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_artist_name">Unknown album artist</string>
     <!-- Default value if album year unknown -->
     <string name="unknown_year">Year unknown</string>
     <!-- Song info overflow option-->
@@ -740,7 +695,6 @@
     <!-- Accessibility button description -->
     <string name="btn_prev">Previous</string>
     <!-- Accessibility button description -->
-    <string name="btn_queue">View play queue</string>
     <!-- Accessibility button description -->
     <string name="btn_close">Close</string>
 
@@ -757,13 +711,11 @@
     <!-- Accessibility button description -->
     <string name="btn_shuffle_off">Shuffle off</string>
     <!-- Accessibility button description -->
-    <string name="btn_show_queue">Show queue</string>
     <!-- Accessibility button description -->
     <string name="btn_fab_shuffle">Shuffle &amp; play current list</string>
     <!-- Accessibility now playing 'mini player' description. Example: Now playing <Wannabe> by <Spice Girls> -->
     <string name="btn_now_playing">Now playing %1$s by %2$s</string>
     <!-- Accessibility 'show lyrics' -->
-    <string name="btn_show_lyrics">Show lyrics</string>
 
     <string name="pref_summary_restore_purchases">If you\'ve already upgraded Shuttle, but it\'s still showing up as the free version, press this.</string>
     <string name="pref_title_restore_purchases">Restore Purchases</string>
@@ -784,7 +736,6 @@
     <string name="iab_purchase_failed">Something went wrong. Please try again later..</string>
     <string name="snackbar_rate_text">Enjoy using Shuttle?</string>
     <string name="snackbar_rate_action">Rate It!</string>
-    <string name="toast_purchase_failed">Something went wrong. Please try again later..</string>
     <string name="dialog_create_playlist_error">Error creating playlist</string>
 
     <!-- Artwork picker -->
@@ -818,19 +769,11 @@
     <!-- "Folders" Shortcut label disabled. (I don't think this ever happens)-->
     <string name="shortcut_folders_disabled">Folders not available</string>
 
-    <!-- "Playlist" Shortcut label. Max 10 characters.-->
-    <string name="shortcut_playlist_short_label">Playlist</string>
-    <!-- "Playlist" Shortcut long label. Max 25 characters.-->
-    <string name="shortcut_playlist_long_label">Open Favorites Playlist</string>
-    <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
-    <string name="shortcut_playlist_disabled">Playlist not available</string>
-
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">Disc <xliff:g id="number">%d</xliff:g></string>
 
     <!-- Search Filter-->
     <string name="search_fuzzy">Fuzzy</string>
-    <string name="search_title_only">Title Only</string>
     <string name="search_artists">Artists</string>
     <string name="search_albums">Albums</string>
 
@@ -847,5 +790,13 @@
     <string name="no_lyrics">No embedded lyrics found.</string>
     <!-- QuickLyric info dialog message-->
     <string name="quicklyric_info">QuickLyric is an open-source lyric fetcher on the Google Play Store.\n\nOnce installed, QuickLyric will be opened from Shuttle whenever you hit the \'QuickLyric\' menu button.</string>
+
+
+    <!-- "Playlist" Shortcut label. Max 10 characters.-->
+    <string name="shortcut_playlist_short_label">Playlist</string>
+    <!-- "Playlist" Shortcut long label. Max 25 characters.-->
+    <string name="shortcut_playlist_long_label">Open Favorites Playlist</string>
+    <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
+    <string name="shortcut_playlist_disabled">Playlist not available</string>
 
 </resources>

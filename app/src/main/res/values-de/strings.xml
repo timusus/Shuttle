@@ -4,7 +4,6 @@
     <!-- Shown when a user attempts to edit tags, but they don't have a 'DocumentProvider' available to pick the directory of their music (and thus give permission to Shuttle)-->
     <string name="R.string.toast_no_document_provider">Kein Dokumenten-Provider verfügbar um diese Erlaubnisanfrage zu bearbeiten.</string>
     <!-- Displayed when an M3U playlist is being saved, but it already exists -->
-    <string name="playlist_save_exists">"Playlist ist bereits vorhanden. "</string>
     <!-- Displayed when an M3U playlist save fails -->
     <string name="playlist_save_failed">Playlist konnte nicht gespeichert werden</string>
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
@@ -51,10 +50,6 @@
     <!-- Transient popup message shown after renaming a playlist -->
     <string name="playlist_renamed_message">Playlist umbenannt.</string>
     <!-- Toast confirming that song(s) was/were deleted. -->
-    <plurals name="NNNtracksdeleted">
-        <item quantity="one">1 Titel wurde gelöscht.</item>
-        <item quantity="other"><xliff:g id="SONGS_TO_DELETE">%d</xliff:g> Titel wurden gelöscht.</item>
-    </plurals>
     <!-- -->
     <plurals name="NNNtrackstoqueue">
         <item quantity="one">1 Titel in die Warteschlange aufgenommen.</item>
@@ -62,23 +57,16 @@
 		"</item>
     </plurals>
     <!-- Toasts after adding song(s) to playlists -->
-    <plurals name="NNNtrackstofavourites">
-        <item quantity="one">1 Titel wurde zu den Favoriten hinzugefügt.</item>
-        <item quantity="other"><xliff:g id="number" example="27">%d</xliff:g> Titel wurden zu den Favoriten hinzugefügt.</item>
-    </plurals>
     <string name="song_to_favourites"><xliff:g id="song_name">%s</xliff:g> zu Favoriten hinzugefügt.</string>
     <string name="song_removed_from_favourites"><xliff:g id="song_name">%s</xliff:g> aus Favoriten entfernt.</string>
     <!-- ## Dialogs ## -->
     <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_tite">Neustart erforderlich</string>
     <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_message">Diese Veränderungen treten erst in Kraft, wenn Shuttle neu gestartet wird</string>
     <!-- Restart now button -->
     <string name="restart_button">Neu starten</string>
     <!-- Displays when picking a theme color -->
     <string name="color_pick">Wähle eine Farbe</string>
     <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
-    <string name="dialog_custom">Benutzerd.</string>
     <!-- Displays when sharing a file fails -->
     <string name="share_failed">Entschuldige, diese Datei konnte nicht geteilt werden.</string>
     <!-- Displays when you click 'share' -->
@@ -113,8 +101,6 @@
         \n• Ordneransicht
         \n• ChromeCast-Unterstützung
         \n\nAußerdem unterstützt du die weitere Entwicklung.\n\nWenn du Shuttle+ bereits besitzt ist ein Upgrade nicht nötig.</string>
-    <string name="get_pro_button_play_store">Play Store</string>
-    <string name="get_pro_button_amazon">Amazon</string>
     <string name="btn_upgrade">Upgrade</string>
     <!-- -->
     <string name="get_pro_button_no">Nein Danke</string>
@@ -189,13 +175,11 @@
     <!-- Multi select menu item-->
     <!-- Multi select menu item-->
     <!-- Context menu item -->
-    <string name="add_to_playlist">Zur Playlist hinzufügen</string>
     <!-- Context menu item -->
     <string name="new_playlist">Neu</string>
     <!-- menu item to save the current list as a new playlist -->
     <string name="save_as_playlist">Als Playlist speichern</string>
     <!-- Context menu item to remove the selected item from the playlist -->
-    <string name="remove_from_playlist">Von Playlist entfernen</string>
     <!-- Context menu item to remove the selected item from the queue -->
     <string name="remove_from_queue">Aus Warteschlange entfernen</string>
     <!-- Context menu item -->
@@ -207,12 +191,10 @@
     <!-- -->
     <string name="library_title">Bibliothek</string>
     <!-- -->
-    <string name="share_title">Teilen</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Suche</string>
     <string name="search_filter">Filter</string>
     <!-- Playlist context menu item to delete the selected playlist. -->
-    <string name="delete_playlist_menu">Löschen</string>
     <!-- Playlist context menu item to clear the selected playlist. -->
     <string name="clear_playlist_menu">Leeren</string>
     <!-- Playlist context menu item to edit the selected playlist -->
@@ -240,9 +222,7 @@
     <string name="navigation_drawer_close">Navigationsmenü schliessen</string>
     <!-- ## Preference Menu ## -->
     <!--Settings title for white accent color) -->
-    <string name="pref_title_theme_white_accent">Weiße Akzentfarbe verwenden</string>
     <!--Settings summary for white accent color-->
-    <string name="pref_summary_theme_white_accent">Verwendet Weiß für alle Farbakzente, außer den Statusanzeigen (Shuffle und Wiederholen benötigen eine andere Farbe als Weiß um darzustellen, dass sie eingeschaltet sind).</string>
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">Navigation</string>
     <!--Settings category for 'notification' items -->
@@ -276,7 +256,6 @@
     <string name="pref_title_theme_light">Helles Theme</string>
     <string name="pref_title_theme_black">Schwarz</string>
     <!--Settings summary for the downloading more themes -->
-    <string name="pref_summary_get_pro_themes">"Weitere Themen sind in Shuttle+ verfügbar "</string>
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">White/Blacklist</string>
     <!--Settings title for viewing blacklist-->
@@ -288,7 +267,6 @@
     <!--Settings title for clearing whitelist-->
     <string name="pref_title_clear_whitelist">Leeren</string>
     <!--Settings title for clearing whitelist-->
-    <string name="pref_title_update_whitelist">Update</string>
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">Albencover zuschneiden</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -348,9 +326,7 @@
     <string name="pref_summary_placeholders">"Platzhalter im Gmail-Stil werden verwendet. Wenn abgewählt, wird das Shuttle-Symbol als Platzhalter verwendet.
     "</string>
     <!-- Settings title for the enable lockscreen controls checkbox -->
-    <string name="pref_title_lockscreen">Albumcover im Sperrbildschirm anzeigen</string>
     <!-- Settings summary for the enable lockscreen controls checkbox -->
-    <string name="pref_summary_lockscreen">Aktiviert / deaktiviert die Cover-Anzeige im Sperrbildschirm</string>
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">Anzeigeeinstellungen</string>
     <!-- Settings title for the keep screen on checkbox -->
@@ -647,13 +623,9 @@
     <string name="action_mode_selection_count"><xliff:g id="number">%d</xliff:g> ausgewählt</string>
     <!-- ## Unknown artist/album metadata ##-->
     <!-- Default name of artist that doesn't have a name in the metadata -->
-    <string name="unknown_artist_name">Unbekannter Interpret</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_name">Unbekanntes Album</string>
     <!-- Default name of genre that doesn't have a name in the metadata -->
-    <string name="unknown_genre_name">Unbekanntes Genre</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_artist_name">Unbekannter Album-Interpret</string>
     <!-- Default value if album year unknown -->
     <string name="unknown_year">Unbekanntes Jahr</string>
     <!-- Song Info overflow option-->
@@ -671,7 +643,6 @@
     <!-- Accessibility button description -->
     <string name="btn_prev">Zurück</string>
     <!-- Accessibility button description -->
-    <string name="btn_queue">Zeige Warteschlange</string>
     <!-- Accessibility button description -->
     <string name="btn_close">Schließen</string>
     <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
@@ -687,13 +658,11 @@
     <!-- Accessibility button description -->
     <string name="btn_shuffle_off">Shuffle aus</string>
     <!-- Accessibility button description -->
-    <string name="btn_show_queue">Warteschlange zeigen</string>
     <!-- Accessibility button description -->
     <string name="btn_fab_shuffle">Zufallswiedergabe für aktuelle Liste starten.</string>
     <!-- Accessibility now playing 'mini player' description. Example: Now playing <Wannabe> by <Spice Girls> -->
     <string name="btn_now_playing">Spielt %1$s von %2$s</string>
     <!-- Accessibility 'show lyrics' -->
-    <string name="btn_show_lyrics">Text anzeigen</string>
     <string name="pref_summary_restore_purchases">Klicke hier wenn Shuttle trotz Upgrade noch als Gratis-Version angezeigt wird.</string>
     <string name="pref_title_restore_purchases">Käufe wiederherstellen</string>
     <string name="blacklist_empty">Du hast keine Titel in deiner Blacklist!</string>
@@ -713,7 +682,6 @@
     <string name="iab_purchase_failed">Etwas ist schiefgelaufen. Bitte versuch es später erneut...</string>
     <string name="snackbar_rate_text">Gefällt dir Shuttle ?</string>
     <string name="snackbar_rate_action">Bewerte die App</string>
-    <string name="toast_purchase_failed">Etwas ist schief gelaufen. Bitte versuch es später nochmal..</string>
     <string name="dialog_create_playlist_error">Fehler beim erstellen einer Playlist</string>
     <!-- Artwork picker -->
     <string name="artwork_edit">Cover bearbeiten</string>
@@ -743,11 +711,8 @@
     <!-- "Folders" Shortcut label disabled. (I don't think this ever happens)-->
     <string name="shortcut_folders_disabled">Ordner nicht verfügbar</string>
     <!-- "Playlist" Shortcut label. Max 10 characters.-->
-    <string name="shortcut_playlist_short_label">Playlist</string>
     <!-- "Playlist" Shortcut long label. Max 25 characters.-->
-    <string name="shortcut_playlist_long_label">Favoriten-Playlist öffnen</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
-    <string name="shortcut_playlist_disabled">Playlist nicht verfügbar</string>
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">Album <xliff:g id="number">%d</xliff:g></string>
     <!-- Search Filter-->

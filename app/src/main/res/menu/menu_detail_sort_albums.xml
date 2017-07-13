@@ -6,7 +6,6 @@
         android:title="@string/albums_title"/>
 
     <group
-        android:id="@+id/group1"
         android:checkableBehavior="single">
         <item
             android:id="@+id/sort_album_default"

@@ -6,5 +6,5 @@
     android:layout_height="wrap_content"
     android:background="@drawable/ripple_circular_dark"
     android:contentDescription="@string/btn_repeat_all"
-    android:padding="12dp"
-    android:src="@drawable/ic_repeat_white"/>
+    android:padding="14dp"
+    android:src="@drawable/ic_repeat_24dp"/>

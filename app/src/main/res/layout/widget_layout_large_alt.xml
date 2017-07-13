@@ -80,7 +80,7 @@
                 android:gravity="center"
                 android:padding="4dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/ic_prev_white"/>
+                android:src="@drawable/ic_skip_previous_24dp"/>
 
             <ImageButton
                 android:id="@+id/play_button"
@@ -91,7 +91,7 @@
                 android:gravity="center"
                 android:padding="4dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/ic_play_white"/>
+                android:src="@drawable/ic_play_24dp"/>
 
             <ImageButton
                 android:id="@+id/next_button"
@@ -103,7 +103,7 @@
                 android:contentDescription="@string/btn_skip"
                 android:padding="4dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/ic_skip_white"/>
+                android:src="@drawable/ic_skip_next_24dp"/>
 
         </LinearLayout>
 

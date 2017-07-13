@@ -33,8 +33,8 @@ public class FavoriteActionBarView extends FrameLayout {
 
         ButterKnife.bind(this);
 
-        normalDrawable = getContext().getResources().getDrawable(R.drawable.ic_fav);
-        selectedDrawable = getContext().getResources().getDrawable(R.drawable.ic_fav_pressed);
+        normalDrawable = getContext().getResources().getDrawable(R.drawable.ic_favorite_border_24dp);
+        selectedDrawable = getContext().getResources().getDrawable(R.drawable.ic_favorite_24dp);
 
         setIsFavorite(isFavorite);
     }

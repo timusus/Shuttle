@@ -54,7 +54,6 @@
             android:exported="true"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
 
             <intent-filter>

@@ -74,7 +74,7 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/btn_shuffle_on"
-                android:src="@drawable/ic_shuffle_white"/>
+                android:src="@drawable/ic_shuffle_24dp"/>
 
             <ImageButton
                 android:id="@+id/prev_button"
@@ -84,7 +84,7 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/btn_prev"
-                android:src="@drawable/ic_prev_white"/>
+                android:src="@drawable/ic_skip_previous_24dp"/>
 
             <ImageButton
                 android:id="@+id/play_button"
@@ -94,7 +94,7 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/btn_play_pause"
-                android:src="@drawable/ic_play_white"/>
+                android:src="@drawable/ic_play_24dp"/>
 
             <ImageButton
                 android:id="@+id/next_button"
@@ -104,7 +104,7 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/btn_skip"
-                android:src="@drawable/ic_skip_white"/>
+                android:src="@drawable/ic_skip_next_24dp"/>
 
             <ImageButton
                 android:id="@+id/repeat_button"
@@ -114,7 +114,7 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/btn_repeat_all"
-                android:src="@drawable/ic_repeat_white"/>
+                android:src="@drawable/ic_repeat_24dp"/>
         </LinearLayout>
     </RelativeLayout>
 </FrameLayout>

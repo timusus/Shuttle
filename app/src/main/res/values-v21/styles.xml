@@ -1,50 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <!--<style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">-->
-
-        <!--<item name="colorPrimary">@color/colorPrimary</item>-->
-        <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
-        <!--<item name="colorAccent">@color/colorAccent</item>-->
-
-        <!--&lt;!&ndash;<item name="android:windowDrawsSystemBarBackgrounds">true</item>&ndash;&gt;-->
-        <!--<item name="android:statusBarColor">@android:color/transparent</item>-->
-        <!--&lt;!&ndash;<item name="android:windowTranslucentStatus">false</item>&ndash;&gt;-->
-
-        <!--<item name="list_selector">@drawable/list_selector_dark</item>-->
-        <!--<item name="breadcrumb_divider">@drawable/ic_breadcrumb_divider_white</item>-->
-        <!--<item name="circle_border">@color/grey_250</item>-->
-        <!--<item name="listDividerColor">@color/list_divider_dark</item>-->
-        <!--<item name="bg_card">@color/bg_card_light</item>-->
-        <!--<item name="circular_ripple">@drawable/ripple_circular_light</item>-->
-        <!--<item name="bg_drawer">@color/bg_drawer_light</item>-->
-
-        <!--<item name="android:textViewStyle">@style/PrimaryTextLight</item>-->
-        <!--<item name="android:checkboxStyle">@style/CheckboxStyle</item>-->
-        <!--<item name="android:buttonStyle">@style/ButtonStyle</item>-->
-        <!--<item name="android:editTextStyle">@style/EditTextStyle</item>-->
-        <!--<item name="secondaryTextViewStyle">@style/SecondaryTextLight</item>-->
-
-        <!--<item name="btn_search">@drawable/ic_action_search</item>-->
-        <!--<item name="btn_settings">@drawable/ic_action_settings</item>-->
-        <!--<item name="btn_share">@drawable/ic_action_share</item>-->
-        <!--<item name="btn_lyrics">@drawable/ic_action_lyrics_24dp</item>-->
-        <!--<item name="btn_sort">@drawable/ic_action_sort</item>-->
-        <!--<item name="btn_fav">@drawable/ic_fav</item>-->
-        <!--<item name="btn_fav_pressed">@drawable/ic_fav_pressed</item>-->
-        <!--<item name="btn_add">@drawable/ic_action_add</item>-->
-        <!--<item name="btn_tags">@drawable/ic_action_tags</item>-->
-        <!--<item name="btn_queue">@drawable/ic_action_add_queue</item>-->
-        <!--<item name="btn_toggle_queue">@drawable/ic_action_toggle_queue</item>-->
-        <!--<item name="btn_delete">@drawable/ic_action_delete</item>-->
-        <!--<item name="btn_remove">@drawable/ic_action_remove</item>-->
-        <!--<item name="btn_dialog_alert">@drawable/ic_dialog_alert</item>-->
-
-        <!--<item name="preferenceTheme">-->
-            <!--@style/PreferenceThemeOverlay.v14.Material-->
-        <!--</item>-->
-    <!--</style>-->
-
     <style name="TextAppearance.Material.Notification.Title.Inverse" parent="@android:style/TextAppearance.Material.Notification.Title">
         <item name="android:textColor">#ffffff</item>
         <item name="android:textSize">@dimen/notification_title_text_size</item>

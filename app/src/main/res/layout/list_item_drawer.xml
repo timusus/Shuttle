@@ -19,7 +19,7 @@
         android:scaleType="fitCenter"
         android:visibility="invisible"
         tools:ignore="ContentDescription"
-        tools:src="@drawable/ic_folders_many_white"
+        tools:src="@drawable/ic_folder_multiple_24dp"
         tools:visibility="visible"/>
 
     <TextView
@@ -49,10 +49,12 @@
 
         <ImageView
             android:id="@+id/expandable_icon"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            tools:ignore="ContentDescription"/>
+            tools:ignore="ContentDescription"
+            tools:src="@drawable/ic_arrow_up_24dp"
+            tools:tint="#FFFFFF"/>
 
         <TextView
             android:id="@+id/timeRemaining"

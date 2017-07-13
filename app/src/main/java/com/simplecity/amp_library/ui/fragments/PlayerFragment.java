@@ -105,9 +105,6 @@ public class PlayerFragment extends BaseFragment implements
     @Nullable @BindView(R.id.text3)
     TextView artist;
 
-    @Nullable @BindView(R.id.queue_position)
-    TextView queuePosition;
-
     @BindView(R.id.backgroundView)
     View backgroundView;
 
@@ -369,7 +366,7 @@ public class PlayerFragment extends BaseFragment implements
         }
     }
 
-    void invalidateColors(int color) {
+    private void invalidateColors(int color) {
         boolean isColorLight = Util.isColorLight(color);
         int textColor = isColorLight ? Color.BLACK : Color.WHITE;
         backgroundView.setBackgroundColor(color);

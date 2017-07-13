@@ -37,7 +37,7 @@
         android:ellipsize="end"
         android:gravity="start|center_vertical"
         android:maxLines="1"
-        android:src="@drawable/ic_prev_white"
+        android:src="@drawable/ic_skip_previous_24dp"
         android:textColor="#ccc"
         android:textSize="14sp"/>
 
@@ -52,7 +52,7 @@
         android:ellipsize="end"
         android:gravity="start|center_vertical"
         android:maxLines="1"
-        android:src="@drawable/ic_pause_white"
+        android:src="@drawable/ic_pause_24dp"
         android:textColor="#ccc"
         android:textSize="14dp"/>
 
@@ -67,7 +67,7 @@
         android:ellipsize="end"
         android:gravity="start|center_vertical"
         android:maxLines="1"
-        android:src="@drawable/ic_skip_white"
+        android:src="@drawable/ic_skip_next_24dp"
         android:textColor="#ccc"
         android:textSize="14sp"/>
 

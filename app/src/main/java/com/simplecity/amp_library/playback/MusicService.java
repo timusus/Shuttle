@@ -2043,13 +2043,13 @@ public class MusicService extends Service {
             bigContentView.setTextViewText(R.id.title, trackName);
         }
 
-        contentView.setImageViewBitmap(R.id.pause, DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_pause_white));
-        contentView.setImageViewBitmap(R.id.next, DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_skip_white));
-        contentView.setImageViewBitmap(R.id.prev, DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_prev_white));
+        contentView.setImageViewBitmap(R.id.pause, DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_pause_24dp));
+        contentView.setImageViewBitmap(R.id.next, DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_skip_next_24dp));
+        contentView.setImageViewBitmap(R.id.prev, DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_skip_previous_24dp));
 
-        bigContentView.setImageViewBitmap(R.id.pause, DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_pause_white));
-        bigContentView.setImageViewBitmap(R.id.next, DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_skip_white));
-        bigContentView.setImageViewBitmap(R.id.prev, DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_prev_white));
+        bigContentView.setImageViewBitmap(R.id.pause, DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_pause_24dp));
+        bigContentView.setImageViewBitmap(R.id.next, DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_skip_next_24dp));
+        bigContentView.setImageViewBitmap(R.id.prev, DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_skip_previous_24dp));
 
         PendingIntent pendingIntent = retrievePlaybackAction(ServiceCommand.PREV_ACTION);
         bigContentView.setOnClickPendingIntent(R.id.prev, pendingIntent);
@@ -2108,18 +2108,18 @@ public class MusicService extends Service {
         }
 
         if (ShuttleUtils.hasAndroidLPreview()) {
-            notification.contentView.setImageViewBitmap(R.id.pause, !isPlaying ? DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_play_white) : DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_pause_white));
+            notification.contentView.setImageViewBitmap(R.id.pause, !isPlaying ? DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_play_24dp) : DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_pause_24dp));
         } else {
-            notification.contentView.setImageViewResource(R.id.pause, !isPlaying ? R.drawable.ic_play_white : R.drawable.ic_pause_white);
+            notification.contentView.setImageViewResource(R.id.pause, !isPlaying ? R.drawable.ic_play_24dp : R.drawable.ic_pause_24dp);
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             try {
                 if (notification.bigContentView != null) {
                     if (ShuttleUtils.hasAndroidLPreview()) {
-                        notification.bigContentView.setImageViewBitmap(R.id.pause, !isPlaying ? DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_play_white) : DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_pause_white));
+                        notification.bigContentView.setImageViewBitmap(R.id.pause, !isPlaying ? DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_play_24dp) : DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_pause_24dp));
                     } else {
-                        notification.bigContentView.setImageViewResource(R.id.pause, !isPlaying ? R.drawable.ic_play_white : R.drawable.ic_pause_white
+                        notification.bigContentView.setImageViewResource(R.id.pause, !isPlaying ? R.drawable.ic_play_24dp : R.drawable.ic_pause_24dp
                         );
                     }
                 }

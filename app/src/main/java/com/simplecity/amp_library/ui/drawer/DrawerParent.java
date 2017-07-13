@@ -31,13 +31,13 @@ public class DrawerParent implements Parent<DrawerChild> {
 
     private static final String TAG = "DrawerParent";
 
-    static DrawerParent libraryParent = new DrawerParent(DrawerParent.Type.LIBRARY, R.string.library_title, R.drawable.ic_library_white, NavigationEventRelay.librarySelectedEvent, true);
-    static DrawerParent folderParent = new DrawerParent(DrawerParent.Type.FOLDERS, R.string.folders_title, R.drawable.ic_folders_many_white, NavigationEventRelay.foldersSelectedEvent, true);
-    static DrawerParent playlistsParent = new DrawerParent(DrawerParent.Type.PLAYLISTS, R.string.playlists_title, R.drawable.ic_action_toggle_queue, null, true);
+    static DrawerParent libraryParent = new DrawerParent(DrawerParent.Type.LIBRARY, R.string.library_title, R.drawable.ic_library_music_24dp, NavigationEventRelay.librarySelectedEvent, true);
+    static DrawerParent folderParent = new DrawerParent(DrawerParent.Type.FOLDERS, R.string.folders_title, R.drawable.ic_folder_multiple_24dp, NavigationEventRelay.foldersSelectedEvent, true);
+    static DrawerParent playlistsParent = new DrawerParent(DrawerParent.Type.PLAYLISTS, R.string.playlists_title, R.drawable.ic_queue_music_24dp, null, true);
     static DrawerParent sleepTimerParent = new DrawerParent(Type.SLEEP_TIMER, R.string.sleep_timer, R.drawable.ic_sleep_24dp, NavigationEventRelay.sleepTimerSelectedEvent, false);
     static DrawerParent equalizerParent = new DrawerParent(Type.EQUALIZER, R.string.equalizer, R.drawable.ic_equalizer_24dp, NavigationEventRelay.equalizerSelectedEvent, false);
-    static DrawerParent settingsParent = new DrawerParent(DrawerParent.Type.SETTINGS, R.string.settings, R.drawable.ic_action_settings, NavigationEventRelay.settingsSelectedEvent, false);
-    static DrawerParent supportParent = new DrawerParent(DrawerParent.Type.SUPPORT, R.string.pref_title_support, R.drawable.ic_settings_help, NavigationEventRelay.supportSelectedEvent, false);
+    static DrawerParent settingsParent = new DrawerParent(DrawerParent.Type.SETTINGS, R.string.settings, R.drawable.ic_settings_24dp, NavigationEventRelay.settingsSelectedEvent, false);
+    static DrawerParent supportParent = new DrawerParent(DrawerParent.Type.SUPPORT, R.string.pref_title_support, R.drawable.ic_help_24dp, NavigationEventRelay.supportSelectedEvent, false);
 
     public @interface Type {
         int LIBRARY = 0;
@@ -124,8 +124,10 @@ public class DrawerParent implements Parent<DrawerChild> {
 
         holder.bind(this);
 
-        int imageResourceId = holder.isExpanded() ? R.drawable.ic_arrow_up : R.drawable.ic_arrow_down;
-        holder.expandableIcon.setImageDrawable(holder.itemView.getResources().getDrawable(imageResourceId));
+        Drawable arrowDrawable = DrawableCompat.wrap(holder.itemView.getResources().getDrawable(holder.isExpanded() ? R.drawable.ic_arrow_up_24dp : R.drawable.ic_arrow_down_24dp));
+        DrawableCompat.setTint(arrowDrawable, Aesthetic.get().textColorSecondary().blockingFirst());
+        holder.expandableIcon.setImageDrawable(arrowDrawable);
+
         holder.expandableIcon.setVisibility(getChildList().isEmpty() ? View.GONE : View.VISIBLE);
 
         holder.icon.setImageDrawable(getDrawable(holder.itemView.getContext()));

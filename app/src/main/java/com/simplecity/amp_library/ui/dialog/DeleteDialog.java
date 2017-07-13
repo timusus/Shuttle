@@ -125,7 +125,7 @@ public class DeleteDialog {
             String message = String.format(stringToFormat, names);
 
             return DialogUtils.getBuilder(context)
-                    .iconRes(R.drawable.ic_dialog_alert)
+                    .iconRes(R.drawable.ic_warning_24dp)
                     .title(R.string.delete_item)
                     .content(message)
                     .positiveText(R.string.button_ok)

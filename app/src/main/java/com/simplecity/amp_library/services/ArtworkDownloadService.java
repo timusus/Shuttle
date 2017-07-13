@@ -72,7 +72,7 @@ public class ArtworkDownloadService extends Service {
                 .setSmallIcon(android.R.drawable.stat_sys_download)
                 .setOngoing(true)
                 .setProgress(100, 0, true)
-                .addAction(new NotificationCompat.Action(R.drawable.ic_action_navigation_close, getString(R.string.cancel), pendingIntent));
+                .addAction(new NotificationCompat.Action(R.drawable.ic_close_24dp, getString(R.string.cancel), pendingIntent));
 
         if (!ShuttleUtils.isOnline(false)) {
             Toast toast = Toast.makeText(this, getResources().getString(R.string.connection_unavailable), Toast.LENGTH_SHORT);

@@ -77,12 +77,11 @@
             tools:visibility="visible">
 
             <ImageView
-                android:id="@+id/imageView2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_margin="8dp"
-                android:src="@drawable/ic_tick_white"/>
+                android:src="@drawable/ic_check_24dp"/>
 
         </FrameLayout>
     </LinearLayout>

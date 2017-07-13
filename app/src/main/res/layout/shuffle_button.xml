@@ -6,5 +6,5 @@
     android:layout_height="wrap_content"
     android:background="@drawable/ripple_circular_dark"
     android:contentDescription="@string/btn_shuffle_off"
-    android:padding="12dp"
+    android:padding="14dp"
     android:src="@drawable/ic_shuffle_24dp"/>

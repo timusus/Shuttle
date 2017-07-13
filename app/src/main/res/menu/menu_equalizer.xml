@@ -11,7 +11,7 @@
 
     <item
         android:id="@+id/menu_dsp"
-        android:icon="@drawable/ic_action_settings"
+        android:icon="@drawable/ic_settings_24dp"
         android:title="@string/open_dsp"
         app:showAsAction="ifRoom"/>
 

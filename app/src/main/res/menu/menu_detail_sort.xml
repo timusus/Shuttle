@@ -10,7 +10,7 @@
 
     <item
         android:id="@+id/sorting"
-        android:icon="@drawable/ic_action_sort"
+        android:icon="@drawable/ic_sort_24dp"
         android:title="@string/sorting"
         app:showAsAction="ifRoom">
 
