@@ -159,6 +159,7 @@
         <item name="ic_placeholder_medium">@drawable/ic_placeholder_light_medium</item>
 
         <item name="toolbar_theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="android:itemBackground">@color/bg_light</item>
         <item name="toolbar_popup_theme">@style/ThemeOverlay.AppCompat.Light</item>
 
         <item name="android:windowContentOverlay">@null</item>
