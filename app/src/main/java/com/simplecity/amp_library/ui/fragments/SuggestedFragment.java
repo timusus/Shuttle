@@ -229,7 +229,7 @@ public class SuggestedFragment extends BaseFragment implements
         return Playlist.recentlyPlayedPlaylist
                 .getSongsObservable()
                 .flatMap(songs -> Observable.just(Operators.songsToAlbums(songs)))
-                .flatMap(albums -> Observable.fromIterable(albums)
+                .flatMapSingle(albums -> Observable.fromIterable(albums)
                         .sorted((a, b) -> ComparisonUtils.compareLong(b.lastPlayed, a.lastPlayed))
                         .flatMapSingle(album ->
                                 // We need to populate the song count
@@ -238,11 +238,11 @@ public class SuggestedFragment extends BaseFragment implements
                                             album.numSongs = songs.size();
                                             return album;
                                         })
-                                        .toObservable()
-                                        .sorted((a, b) -> ComparisonUtils.compareLong(b.lastPlayed, a.lastPlayed))
                                         .filter(a -> a.numSongs > 0)
-                                        .take(6)
-                                        .toList())
+                                        .toSingle()
+                        )
+                        .take(6)
+                        .toList()
                 )
                 .map(albums -> {
                     if (!albums.isEmpty()) {
