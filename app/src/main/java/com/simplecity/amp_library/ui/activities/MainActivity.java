@@ -2,6 +2,7 @@ package com.simplecity.amp_library.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -111,14 +112,14 @@ public class MainActivity extends BaseCastActivity implements
     }
 
     @Override
-    public void addBackPressListener(BackPressListener listener) {
+    public void addBackPressListener(@NonNull BackPressListener listener) {
         if (!backPressListeners.contains(listener)) {
             backPressListeners.add(listener);
         }
     }
 
     @Override
-    public void removeBackPressListener(BackPressListener listener) {
+    public void removeBackPressListener(@NonNull BackPressListener listener) {
         if (backPressListeners.contains(listener)) {
             backPressListeners.remove(listener);
         }
