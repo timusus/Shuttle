@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.annimon.stream.Collectors;
 import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
@@ -96,7 +95,7 @@ public class MenuUtils implements MusicUtils.Defs {
                 .multipleMessage(R.string.delete_song_desc_multiple)
                 .itemNames(Stream.of(songs)
                         .map(song -> song.name)
-                        .collect(Collectors.toList()))
+                        .toList())
                 .songsToDelete(Single.just(songs))
                 .build()
                 .show();
@@ -247,7 +246,7 @@ public class MenuUtils implements MusicUtils.Defs {
                 .multipleMessage(R.string.delete_album_desc_multiple)
                 .itemNames(Stream.of(albums)
                         .map(album -> album.name)
-                        .collect(Collectors.toList()))
+                        .toList())
                 .songsToDelete(songsSingle)
                 .build()
                 .show();
@@ -354,7 +353,7 @@ public class MenuUtils implements MusicUtils.Defs {
                 .multipleMessage(R.string.delete_album_artist_desc_multiple)
                 .itemNames(Stream.of(albumArtists)
                         .map(albumArtist -> albumArtist.name)
-                        .collect(Collectors.toList()))
+                        .toList())
                 .songsToDelete(songsObservable)
                 .build()
                 .show();

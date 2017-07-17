@@ -404,7 +404,7 @@ public class FolderFragment extends BaseFragment implements
 
         List<ViewModel> breadcrumbViews = Stream.of(adapter.items)
                 .filter(adaptableItem -> adaptableItem instanceof BreadcrumbsView)
-                .collect(Collectors.toList());
+                .toList();
 
         for (ViewModel viewModel : breadcrumbViews) {
             ((BreadcrumbsView) viewModel).setBreadcrumbsPath(currentDir);
@@ -423,7 +423,7 @@ public class FolderFragment extends BaseFragment implements
                     paths.clear();
                     paths.addAll(Stream.of(whitelistFolders)
                             .map(whitelistFolder -> whitelistFolder.folder)
-                            .collect(Collectors.toList()));
+                            .toList());
 
                     if (showCheckboxes) {
                         adapter.notifyItemRangeChanged(0, adapter.getItemCount());

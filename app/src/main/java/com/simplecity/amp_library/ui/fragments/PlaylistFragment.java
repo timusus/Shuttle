@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Playlist;
@@ -152,7 +151,7 @@ public class PlaylistFragment extends BaseFragment implements
                                 .sorted((a, b) -> ComparisonUtils.compare(a.name, b.name))
                                 .sorted((a, b) -> ComparisonUtils.compareInt(a.type, b.type))
                                 .map(playlist -> (ViewModel) new PlaylistView(playlist))
-                                .collect(Collectors.toList()))
+                                .toList())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(items -> {
                             if (items.isEmpty()) {

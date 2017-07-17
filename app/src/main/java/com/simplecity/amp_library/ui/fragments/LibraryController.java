@@ -22,7 +22,6 @@ import android.view.ViewGroup;
 
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.ViewBackgroundAction;
-import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
@@ -118,7 +117,7 @@ public class LibraryController extends BaseFragment implements
 
         List<CategoryItem> categoryItems = Stream.of(CategoryItem.getCategoryItems(sharedPreferences))
                 .filter(categoryItem -> categoryItem.isEnabled)
-                .collect(Collectors.toList());
+                .toList();
 
         int defaultPageType = SettingsManager.getInstance().getDefaultPageType();
         int defaultPage = 1;

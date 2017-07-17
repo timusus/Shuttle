@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Genre;
@@ -122,7 +121,7 @@ public class GenreFragment extends BaseFragment implements
                                     genreView.setClickListener(this);
                                     return (ViewModel) genreView;
                                 })
-                                .collect(Collectors.toList()))
+                                .toList())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(items -> {
                             if (items.isEmpty()) {

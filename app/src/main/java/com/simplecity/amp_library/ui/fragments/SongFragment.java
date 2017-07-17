@@ -280,7 +280,7 @@ public class SongFragment extends BaseFragment implements
             List<Song> songs = Stream.of(adapter.items)
                     .filter(adaptableItem -> adaptableItem instanceof SongView)
                     .map(adaptableItem -> ((SongView) adaptableItem).song)
-                    .collect(Collectors.toList());
+                    .toList();
 
             MusicUtils.playAll(songs, songs.indexOf(songView.song), (String message) ->
                     Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show());

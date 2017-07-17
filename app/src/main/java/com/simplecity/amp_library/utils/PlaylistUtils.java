@@ -30,7 +30,6 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.crashlytics.android.Crashlytics;
 import com.simplecity.amp_library.R;
@@ -286,7 +285,7 @@ public class PlaylistUtils {
                         List<Song> duplicates = Stream.of(existingSongs)
                                 .filter(songs::contains)
                                 .distinct()
-                                .collect(Collectors.toList());
+                                .toList();
 
                         if (!duplicates.isEmpty()) {
 

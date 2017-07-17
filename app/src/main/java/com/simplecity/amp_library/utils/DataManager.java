@@ -1,6 +1,5 @@
 package com.simplecity.amp_library.utils;
 
-import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.annimon.stream.function.Predicate;
 import com.jakewharton.rxrelay2.BehaviorRelay;
@@ -98,7 +97,7 @@ public class DataManager {
                     result = Stream.of(songs)
                             .filter(song -> !Stream.of(blacklistedSongs)
                                     .anyMatch(blacklistedSong -> blacklistedSong.songId == song.id))
-                            .collect(Collectors.toList());
+                            .toList();
                 }
 
                 //Filter out non-whitelisted folders
@@ -106,7 +105,7 @@ public class DataManager {
                     result = Stream.of(result)
                             .filter(song -> Stream.of(whitelistFolders)
                                     .anyMatch(whitelistFolder -> StringUtils.containsIgnoreCase(song.path, whitelistFolder.folder)))
-                            .collect(Collectors.toList());
+                            .toList();
                 }
 
                 return result;
@@ -238,7 +237,7 @@ public class DataManager {
         return getSongsRelay()
                 .map(songs -> Stream.of(songs)
                         .filter(predicate)
-                        .collect(Collectors.toList()));
+                        .toList());
     }
 
     /**

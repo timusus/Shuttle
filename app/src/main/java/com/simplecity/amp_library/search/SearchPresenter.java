@@ -258,7 +258,8 @@ public class SearchPresenter extends Presenter<SearchView> implements
                     Stream<Song> songStream = Stream.of(songs)
                             .filter(song -> song.name != null);
 
-                    songs = (fuzzy ? applyJaroWinklerFilter(songStream) : applySongFilter(songStream)).collect(Collectors.toList());
+                    songs = (fuzzy ? applyJaroWinklerFilter(songStream) : applySongFilter(songStream))
+                            .toList();
 
                     SongViewClickListener songViewClickListener = new SongViewClickListener(songs);
 
@@ -411,7 +412,7 @@ public class SearchPresenter extends Presenter<SearchView> implements
                                 albumArtistView.setPrefix(prefixHighlighter, prefix);
                                 return (ViewModel) albumArtistView;
                             })
-                            .collect(Collectors.toList());
+                            .toList();
 
                     if (!viewModels.isEmpty()) {
                         viewModels.add(0, artistsHeader);

@@ -16,7 +16,6 @@ import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
@@ -415,7 +414,7 @@ public class AlbumFragment extends BaseFragment implements
                     getContext(),
                     () -> Stream.of(contextualToolbarHelper.getItems())
                             .map(SelectableViewModel::getItem)
-                            .collect(Collectors.toList())
+                            .toList()
                     )
             );
 

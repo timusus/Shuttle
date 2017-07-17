@@ -16,7 +16,6 @@ import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
@@ -319,7 +318,7 @@ public class ShuttleApplication extends Application {
 
             selection.append(TextUtils.join(",", Stream.of(playCountIds)
                     .filter(playCountId -> !songIds.contains(playCountId))
-                    .collect(Collectors.toList())));
+                    .toList()));
 
             selection.append(")");
 

@@ -75,7 +75,7 @@ public class DeleteDialog {
                     .map(lists -> Stream.of(lists)
                             .flatMap(Stream::of)
                             .filter(Song::delete)
-                            .collect(Collectors.toList()))
+                            .toList())
                     .doOnSuccess(songs -> {
                         //Current play queue
                         MusicUtils.removeFromQueue(songs, true);
@@ -99,7 +99,7 @@ public class DeleteDialog {
                         if (deletedSongs.size() > 0) {
                             CustomMediaScanner.scanFiles(Stream.of(deletedSongs)
                                     .map(song -> song.path)
-                                    .collect(Collectors.toList()), null);
+                                    .toList(), null);
                             Toast.makeText(context, String.format(context.getString(R.string.delete_songs_success_toast), deletedSongs.size()), Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(context, R.string.delete_songs_failure_toast, Toast.LENGTH_SHORT).show();

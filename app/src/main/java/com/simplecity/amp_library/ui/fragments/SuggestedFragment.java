@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
@@ -216,7 +215,7 @@ public class SuggestedFragment extends BaseFragment implements
                                     return (ViewModel) suggestedSongView;
                                 })
                                 .limit(20)
-                                .collect(Collectors.toList()));
+                                .toList());
 
                         return viewModels;
                     } else {

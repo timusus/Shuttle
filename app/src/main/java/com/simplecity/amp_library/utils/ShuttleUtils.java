@@ -25,7 +25,6 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.R;
@@ -319,7 +318,7 @@ public final class ShuttleUtils {
 
         List<Single<List<Song>>> observables = Stream.of(fileObjects)
                 .map(fileObject -> FileHelper.getSongList(new File(fileObject.path), true, false))
-                .collect(Collectors.toList());
+                .toList();
 
         return Single.concat(observables)
                 .reduce((songs, songs2) -> {

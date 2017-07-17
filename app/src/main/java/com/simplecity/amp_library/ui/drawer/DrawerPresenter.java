@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.PopupMenu;
 import android.view.View;
 
-import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.PlaylistsModel;
@@ -99,7 +98,7 @@ public class DrawerPresenter extends Presenter<DrawerView> {
                                     });
                                     return drawerChild;
                                 })
-                                .collect(Collectors.toList()))
+                                .toList())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 drawerChildren -> {

@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
@@ -130,7 +129,7 @@ public class TaggerDialog extends DialogFragment {
 
             originalSongPaths = Stream.of(albumArtist.albums)
                     .flatMap(value -> Stream.of(value.paths))
-                    .collect(Collectors.toList());
+                    .toList();
             showAlbum = false;
             showTrack = false;
         } else if (model instanceof Album) {

@@ -11,7 +11,6 @@ import android.support.v4.content.IntentCompat;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
-import com.annimon.stream.Collectors;
 import com.annimon.stream.IntPair;
 import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
@@ -128,7 +127,8 @@ public class SettingsPresenter extends Presenter<SettingsView> {
         if (settingsView != null) {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
             List<CategoryItem> categoryItems = Stream.of(CategoryItem.getCategoryItems(sharedPreferences))
-                    .filter(categoryItem -> categoryItem.isEnabled).collect(Collectors.toList());
+                    .filter(categoryItem -> categoryItem.isEnabled)
+                    .toList();
 
             int defaultPageType = SettingsManager.getInstance().getDefaultPageType();
             int defaultPage = Math.min(Stream.of(categoryItems)
@@ -143,7 +143,7 @@ public class SettingsPresenter extends Presenter<SettingsView> {
                             .title(R.string.pref_title_default_page)
                             .items(Stream.of(categoryItems)
                                     .map(categoryItem -> context.getString(categoryItem.getTitleResId()))
-                                    .collect(Collectors.toList()))
+                                    .toList())
                             .itemsCallbackSingleChoice(defaultPage, (dialog, itemView, which, text) -> {
                                 SettingsManager.getInstance().setDefaultPageType(categoryItems.get(which).type);
                                 return false;

@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
@@ -84,7 +83,7 @@ public class BlacklistDialog {
                             blacklistView.setClickListener(listener);
                             return (ViewModel) blacklistView;
                         })
-                        .collect(Collectors.toList()))
+                        .toList())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(blacklistViews -> {
                     if (blacklistViews.size() == 0) {

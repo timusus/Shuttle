@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.sql.databases.WhitelistHelper;
@@ -63,7 +62,7 @@ public class WhitelistDialog {
                             whitelistView.setClickListener(listener);
                             return (ViewModel) whitelistView;
                         })
-                        .collect(Collectors.toList()))
+                        .toList())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(whitelistViews -> {
                     if (whitelistViews.size() == 0) {

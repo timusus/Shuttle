@@ -329,7 +329,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
                     SongView songView = new SongView(song, requestManager);
                     songView.setClickListener(BaseDetailFragment.this);
                     return songView;
-                }).collect(Collectors.toList()));
+                }).toList());
 
         return items;
     }
