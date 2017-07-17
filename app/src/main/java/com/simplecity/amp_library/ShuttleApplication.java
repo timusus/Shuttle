@@ -45,7 +45,6 @@ import com.squareup.leakcanary.RefWatcher;
 import org.jaudiotagger.tag.TagOptionSingleton;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -120,17 +119,7 @@ public class ShuttleApplication extends Application {
 
         //Firebase Analytics
         FirebaseAnalytics.getInstance(this);
-
-        //Possible fix for ClipboardUIManager leak.
-        //See https://gist.github.com/pepyakin/8d2221501fd572d4a61c and
-        //https://github.com/square/leakcanary/blob/master/leakcanary-android/src/main/java/com/squareup/leakcanary/AndroidExcludedRefs.java
-        try {
-            Class<?> cls = Class.forName("android.sec.clipboard.ClipboardUIManager");
-            Method m = cls.getDeclaredMethod("getInstance", Context.class);
-            Object o = m.invoke(null, this);
-        } catch (Exception ignored) {
-        }
-
+        
         VideoCastManager.initialize(this,
                 new CastConfiguration.Builder(Config.CHROMECAST_APP_ID)
                         .enableLockScreen()
