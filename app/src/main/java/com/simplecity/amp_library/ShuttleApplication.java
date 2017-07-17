@@ -7,9 +7,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Environment;
-import android.os.Handler;
 import android.os.StrictMode;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.multidex.MultiDex;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
@@ -30,6 +30,7 @@ import com.simplecity.amp_library.dagger.component.DaggerAppComponent;
 import com.simplecity.amp_library.dagger.module.AppModule;
 import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Query;
+import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.model.UserSelectedArtwork;
 import com.simplecity.amp_library.services.EqualizerService;
 import com.simplecity.amp_library.sql.SqlUtils;
@@ -180,15 +181,22 @@ public class ShuttleApplication extends Application {
                 .subscribeOn(Schedulers.io())
                 .subscribe();
 
-        //Clean up the genres database - remove any genres which contain no songs. Also, populates song counts.
-        cleanGenres();
+        // Clean up the genres database - remove any genres which contain no songs. Also, populates song counts.
+        // Since this is called on app launch, let's delay to allow more important tasks to complete.
+        cleanGenres()
+                .delaySubscription(5000, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .subscribe();
 
-        //Clean up the 'most played' playlist. We delay this call to allow the app to finish launching,
-        //since it's not time critical.
-        new Handler().postDelayed(this::cleanMostPlayedPlaylist, 5000);
+        cleanMostPlayedPlaylist()
+                .delay(7500, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .subscribe();
 
-        //Clean up any old, unused resources.
-        new Handler().postDelayed(this::deleteOldResources, 10000);
+        deleteOldResources()
+                .delay(10000, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .subscribe();
     }
 
     public RefWatcher getRefWatcher() {
@@ -230,9 +238,10 @@ public class ShuttleApplication extends Application {
         return isUpgraded || BuildConfig.DEBUG;
     }
 
-    private void deleteOldResources() {
+    @NonNull
+    private Completable deleteOldResources() {
 
-        Completable.fromAction(() -> {
+        return Completable.fromAction(() -> {
             //Delete albumthumbs/artists directory
             if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
                 File file = new File(Environment.getExternalStorageDirectory() + "/albumthumbs/artists/");
@@ -258,8 +267,7 @@ public class ShuttleApplication extends Application {
             if (oldThumbsCache != null && oldThumbsCache.exists()) {
                 oldThumbsCache.delete();
             }
-        }).subscribeOn(Schedulers.io())
-                .subscribe();
+        });
     }
 
     public static File getDiskCacheDir(String uniqueName) {
@@ -287,13 +295,14 @@ public class ShuttleApplication extends Application {
      * <p>
      * If they don't, remove them from the playlist.
      */
-    private void cleanMostPlayedPlaylist() {
+    @NonNull
+    private Completable cleanMostPlayedPlaylist() {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            return;
+            return Completable.complete();
         }
 
-        Completable.fromAction(() -> {
+        return Completable.fromAction(() -> {
             List<Integer> playCountIds = new ArrayList<>();
 
             Query query = new Query.Builder()
@@ -326,15 +335,14 @@ public class ShuttleApplication extends Application {
                 getContentResolver().delete(PlayCountTable.URI, selection.toString(), null);
             } catch (IllegalArgumentException ignored) {
             }
-        })
-                .subscribeOn(Schedulers.io())
-                .subscribe();
+        });
     }
 
-    private void cleanGenres() {
+    @NonNull
+    private Observable<List<Song>> cleanGenres() {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            return;
+            return Observable.empty();
         }
 
         // This observable emits a genre every 250ms. We then make a query against the genre database to populate the song count.
@@ -343,7 +351,8 @@ public class ShuttleApplication extends Application {
         // If the maximum number of cursors is created (based on memory/processor speed or god knows what else), then the device
         // will start throwing CursorWindow exceptions, and the queries will slow down massively. This ends up making all queries slow.
         // This task isn't time critical, so we can afford to let it just casually do its job.
-        SqlBriteUtils.createSingleList(ShuttleApplication.getInstance(), Genre::new, Genre.getQuery())
+        return SqlBriteUtils.createSingleList(ShuttleApplication.getInstance(), Genre::new, Genre.getQuery())
+                .doOnSuccess(genres -> Log.i(TAG, "Generated genres: " + genres.size()))
                 .flatMapObservable(Observable::fromIterable)
                 .concatMap(genre -> Observable.just(genre).delay(250, TimeUnit.MILLISECONDS))
                 .flatMapSingle(genre -> genre.getSongsObservable()
@@ -356,10 +365,7 @@ public class ShuttleApplication extends Application {
                                 }
                             }
                         })
-                )
-                // Since this is called on app launch, let's delay to allow more important tasks to complete.
-                .delaySubscription(2500, TimeUnit.MILLISECONDS)
-                .subscribe();
+                );
     }
 
     private void enableStrictMode() {
