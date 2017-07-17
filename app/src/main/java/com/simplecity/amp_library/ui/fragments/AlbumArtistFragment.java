@@ -116,25 +116,23 @@ public class AlbumArtistFragment extends BaseFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        if (recyclerView == null) {
-            int spanCount = SettingsManager.getInstance().getArtistColumnCount(getResources());
-            layoutManager = new GridLayoutManager(getContext(), spanCount);
-            layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                @Override
-                public int getSpanSize(int position) {
-                    if (adapter.items.get(position) instanceof EmptyView) {
-                        return spanCount;
-                    }
-                    return 1;
+        int spanCount = SettingsManager.getInstance().getArtistColumnCount(getResources());
+        layoutManager = new GridLayoutManager(getContext(), spanCount);
+        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (adapter.items.get(position) instanceof EmptyView) {
+                    return spanCount;
                 }
-            });
+                return 1;
+            }
+        });
 
-            recyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.addItemDecoration(new GridDividerDecoration(getResources(), 4, true));
-            recyclerView.setRecyclerListener(new RecyclerListener());
-            recyclerView.setAdapter(adapter);
-        }
+        recyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new GridDividerDecoration(getResources(), 4, true));
+        recyclerView.setRecyclerListener(new RecyclerListener());
+        recyclerView.setAdapter(adapter);
 
         return recyclerView;
     }
