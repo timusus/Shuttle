@@ -1,5 +1,6 @@
 package com.simplecity.multisheetview.ui.view;
 
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.IdRes;
@@ -51,11 +52,8 @@ public class MultiSheetView extends CoordinatorLayout {
         bottomSheetBehavior1.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                    fadeView(findViewById(getSheetPeekViewResId(Sheet.FIRST)), 1f);
-                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                    fadeView(findViewById(getSheetPeekViewResId(Sheet.FIRST)), 0f);
-                }
+                fadeView(Sheet.FIRST, newState);
+
                 if (sheetStateChangeListener != null) {
                     sheetStateChangeListener.onSheetStateChanged(Sheet.FIRST, newState);
                 }
@@ -77,11 +75,9 @@ public class MultiSheetView extends CoordinatorLayout {
                 } else {
                     bottomSheetBehavior1.setAllowDragging(true);
                 }
-                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                    fadeView(findViewById(getSheetPeekViewResId(Sheet.SECOND)), 1f);
-                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                    fadeView(findViewById(getSheetPeekViewResId(Sheet.SECOND)), 0f);
-                }
+
+                fadeView(Sheet.SECOND, newState);
+
                 if (sheetStateChangeListener != null) {
                     sheetStateChangeListener.onSheetStateChanged(Sheet.SECOND, newState);
                 }
@@ -139,14 +135,28 @@ public class MultiSheetView extends CoordinatorLayout {
         return bottomSheetBehavior1.getPeekHeight() == 0;
     }
 
-    public void hide() {
+    /**
+     * Sets the peek height of sheet one to 0.
+     *
+     * @param collapse true if all expanded sheets should be collapsed.
+     */
+    public void hide(boolean collapse) {
         if (!isHidden()) {
-            bottomSheetBehavior1.setPeekHeight(0);
+            int peekHeight = getContext().getResources().getDimensionPixelSize(R.dimen.bottom_sheet_height);
+            ValueAnimator valueAnimator = ValueAnimator.ofInt(peekHeight, 0);
+            valueAnimator.setDuration(200);
+            valueAnimator.addUpdateListener(valueAnimator1 -> bottomSheetBehavior1.setPeekHeight((Integer) valueAnimator1.getAnimatedValue()));
+            valueAnimator.start();
             ((LayoutParams) findViewById(getMainContainerResId()).getLayoutParams()).bottomMargin = 0;
-            goToSheet(Sheet.NONE);
+            if (collapse) {
+                goToSheet(Sheet.NONE);
+            }
         }
     }
 
+    /**
+     * Restores the peek height to its default value.
+     */
     public void unhide() {
         if (isHidden()) {
             int peekHeight = getContext().getResources().getDimensionPixelSize(R.dimen.bottom_sheet_height);
@@ -187,6 +197,12 @@ public class MultiSheetView extends CoordinatorLayout {
         } else {
             return Sheet.NONE;
         }
+    }
+
+    public void restoreSheet(@Sheet int sheet) {
+        goToSheet(sheet);
+        fadeView(Sheet.FIRST, bottomSheetBehavior1.getState());
+        fadeView(Sheet.SECOND, bottomSheetBehavior2.getState());
     }
 
     public boolean consumeBackPress() {
@@ -230,6 +246,14 @@ public class MultiSheetView extends CoordinatorLayout {
         }
 
         throw new IllegalStateException(String.format("No peek view resId found for sheet: %d", sheet));
+    }
+
+    private void fadeView(@Sheet int sheet, @BottomSheetBehavior.State int state) {
+        if (state == BottomSheetBehavior.STATE_EXPANDED) {
+            fadeView(findViewById(getSheetPeekViewResId(sheet)), 1f);
+        } else if (state == BottomSheetBehavior.STATE_COLLAPSED) {
+            fadeView(findViewById(getSheetPeekViewResId(sheet)), 0f);
+        }
     }
 
     void fadeView(View v, float offset) {

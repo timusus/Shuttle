@@ -66,7 +66,7 @@ public class CustomMultiSheetView extends MultiSheetView {
                     goToSheet(event.sheet);
                     break;
                 case MultiSheetEventRelay.MultiSheetEvent.Action.HIDE:
-                    hide();
+                    hide(false);
                     break;
                 case MultiSheetEventRelay.MultiSheetEvent.Action.SHOW_IF_HIDDEN:
                     unhide();
