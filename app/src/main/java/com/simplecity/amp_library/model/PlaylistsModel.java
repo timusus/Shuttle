@@ -1,7 +1,5 @@
 package com.simplecity.amp_library.model;
 
-import android.util.Log;
-
 import com.annimon.stream.Optional;
 import com.simplecity.amp_library.utils.DataManager;
 
@@ -23,9 +21,6 @@ public class PlaylistsModel {
     }
 
     public Observable<List<Playlist>> getPlaylistsObservable() {
-
-        Log.i(TAG, "getPlaylistsObservable called..");
-
         Observable<List<Playlist>> defaultPlaylistsObservable =
                 Observable.fromCallable(() -> {
                     List<Playlist> playlists = new ArrayList<>();
@@ -67,7 +62,6 @@ public class PlaylistsModel {
                                 .map(playlistOptional -> (Playlist) playlistOptional.get())
                         )
                         .toList()
-                        .toObservable())
-                .doOnNext(playlists -> Log.i(TAG, "Playlists: " + playlists));
+                        .toObservable());
     }
 }

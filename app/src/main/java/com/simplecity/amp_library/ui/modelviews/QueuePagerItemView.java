@@ -1,6 +1,5 @@
 package com.simplecity.amp_library.ui.modelviews;
 
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -54,7 +53,6 @@ public class QueuePagerItemView extends BaseViewModel<QueuePagerItemView.ViewHol
         holder.itemView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
-                Log.i("QueueItem", "Width: " + holder.itemView.getWidth() + " height: " + holder.itemView.getHeight());
                 holder.itemView.getViewTreeObserver().removeOnPreDrawListener(this);
                 return false;
             }

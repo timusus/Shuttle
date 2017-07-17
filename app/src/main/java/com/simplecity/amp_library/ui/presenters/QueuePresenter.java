@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.PopupMenu;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -78,14 +77,12 @@ public class QueuePresenter extends Presenter<QueueView> {
 
                             case MusicService.InternalIntents.QUEUE_CHANGED:
                                 if (!intent.getBooleanExtra(MusicService.FROM_USER, false)) {
-                                    Log.i(TAG, "Queue changed, loading data");
                                     loadData();
                                 }
                                 break;
                             case MusicService.InternalIntents.SERVICE_CONNECTED:
                             case MusicService.InternalIntents.REPEAT_CHANGED:
                             case MusicService.InternalIntents.SHUFFLE_CHANGED:
-                                Log.i(TAG, "Shuffle changed, loading data");
                                 loadData();
                                 break;
                         }

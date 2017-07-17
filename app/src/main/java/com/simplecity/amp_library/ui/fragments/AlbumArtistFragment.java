@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -424,10 +423,7 @@ public class AlbumArtistFragment extends BaseFragment implements
                     adapter.notifyItemRangeChanged(0, adapter.items.size(), 0);
                 }
             });
-        } else {
-            Log.i(TAG, "Failed to find contextual toolbar");
         }
-        Log.i(TAG, "setupContextualToolbar.. Visible to user: " +  getUserVisibleHint());
     }
 
     @Override

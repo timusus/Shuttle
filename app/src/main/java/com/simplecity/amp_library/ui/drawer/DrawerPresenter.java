@@ -2,7 +2,6 @@ package com.simplecity.amp_library.ui.drawer;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.PopupMenu;
-import android.util.Log;
 import android.view.View;
 
 import com.annimon.stream.Collectors;
@@ -81,7 +80,6 @@ public class DrawerPresenter extends Presenter<DrawerView> {
     private void loadData() {
         PermissionUtils.RequestStoragePermissions(() ->
                 addDisposable(playlistsModel.getPlaylistsObservable()
-                        .doOnNext(playlists -> Log.i(TAG, "Playlists: " + playlists))
                         .map(playlists -> Stream.of(playlists)
                                 .map(playlist1 -> {
                                     DrawerChild drawerChild = new DrawerChild(playlist1);
