@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<merge
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -22,22 +22,15 @@
         tools:ignore="MissingPrefix">
 
         <FrameLayout
+            android:id="@+id/sheet1Container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_marginBottom="@dimen/bottom_sheet_height"/>
 
-            <FrameLayout
-                android:id="@+id/sheet1Container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/bottom_sheet_height"/>
-
-            <FrameLayout
-                android:id="@+id/sheet1PeekView"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/bottom_sheet_height"/>
-
-        </FrameLayout>
+        <FrameLayout
+            android:id="@+id/sheet1PeekView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bottom_sheet_height"/>
 
         <android.support.design.widget.CoordinatorLayout
             android:id="@+id/sheet1Coordinator"
@@ -65,4 +58,4 @@
             </FrameLayout>
         </android.support.design.widget.CoordinatorLayout>
     </FrameLayout>
-</android.support.design.widget.CoordinatorLayout>
+</merge>
