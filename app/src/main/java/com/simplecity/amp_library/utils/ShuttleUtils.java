@@ -9,13 +9,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
@@ -45,70 +45,44 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-/**
- * General helpers
- */
 public final class ShuttleUtils {
 
     //Arguments supplied to various bundles
 
-    public static final String ARG_ALBUM_ARTIST = "album_artist";
-    public static final String ARG_ARTIST = "artist";
-    public static final String ARG_ALBUM = "album";
-    public static final String ARG_SONG = "song";
-    public static final String ARG_PLAYLIST = "playlist";
-    public static final String ARG_GENRE = "genre";
-
     private final static String TAG = "ShuttleUtils";
-    public static final int NEW_ALBUM_PHOTO = 100;
-    public static final int NEW_ARTIST_PHOTO = 200;
 
-    public static Intent getShuttleStoreIntent(String packageName) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(ShuttleUtils.getShuttleMarketUri(packageName)));
-        if (ShuttleApplication.getInstance().getPackageManager().resolveActivity(intent, 0) != null) {
-            return intent;
-        }
-        return new Intent(Intent.ACTION_VIEW, Uri.parse(ShuttleUtils.getShuttleWebUri(packageName)));
-    }
-
-    public static void openShuttleLink(@NonNull Activity activity, String packageName) {
-        activity.startActivity(getShuttleStoreIntent(packageName));
-    }
-
-    public static boolean isAmazonBuild() {
-        return BuildConfig.FLAVOR.equals("amazonFree") || BuildConfig.FLAVOR.equals("amazonPaid");
-    }
-
-    public static String getShuttleMarketUri(String packageName) {
+    @NonNull
+    public static Intent getShuttleStoreIntent(@NonNull String packageName) {
         String uri;
         if (isAmazonBuild()) {
             uri = "amzn://apps/android?p=" + packageName;
         } else {
             uri = "market://details?id=" + packageName;
         }
-        return uri;
+        return new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
     }
 
-    public static String getShuttleWebUri(String packageName) {
+    @NonNull
+    public static Intent getShuttleWebIntent(@NonNull String packageName) {
         String uri;
         if (isAmazonBuild()) {
             uri = "http://www.amazon.com/gp/mas/dl/android?p=" + packageName;
         } else {
             uri = "https://play.google.com/store/apps/details?id=" + packageName;
         }
-        return uri;
+        return new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
     }
 
-    /**
-     * Execute an {@link AsyncTask} on a thread pool
-     *
-     * @param task Task to execute
-     * @param args Optional arguments to pass to{@link  AsyncTask#execute(Object[])}
-     * @param <T>  Task argument type
-     */
-    @SuppressLint("NewApi")
-    public static <T> void execute(AsyncTask<T, ?, ?> task, T... args) {
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, args);
+    public static void openShuttleLink(@NonNull Activity activity, @NonNull String packageName, PackageManager packageManager) {
+        Intent intent = getShuttleStoreIntent(packageName);
+        if (packageManager.resolveActivity(intent, 0) == null) {
+            intent = getShuttleWebIntent(packageName);
+        }
+        activity.startActivity(intent);
+    }
+
+    public static boolean isAmazonBuild() {
+        return BuildConfig.FLAVOR.equals("amazonFree") || BuildConfig.FLAVOR.equals("amazonPaid");
     }
 
     /**
@@ -197,22 +171,19 @@ public final class ShuttleUtils {
      * @param careAboutWifiOnly whether we care if the preference 'download via wifi only' is checked
      * @return true if we have a connection, false otherwise
      */
-
     public static boolean isOnline(boolean careAboutWifiOnly) {
 
-        Context context = ShuttleApplication.getInstance();
-
-        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ShuttleApplication.getInstance());
 
         //Check if we are restricted to download over wifi only
-        boolean wifiOnly = mPrefs.getBoolean("pref_download_wifi_only", true);
+        boolean wifiOnly = prefs.getBoolean("pref_download_wifi_only", true);
 
         //If we don't care whether wifi is allowed or not, set wifiOnly to false
         if (!careAboutWifiOnly) {
             wifiOnly = false;
         }
 
-        final ConnectivityManager cm = (ConnectivityManager) context
+        final ConnectivityManager cm = (ConnectivityManager) ShuttleApplication.getInstance()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
 
         //Check the state of the wifi network
@@ -299,7 +270,7 @@ public final class ShuttleUtils {
     }
 
     /**
-     * @return true if device is running API >= 24
+     * @return true if device is running API >= 25
      */
     public static boolean hasNougatMR1() {
         return Build.VERSION.SDK_INT >= 25;

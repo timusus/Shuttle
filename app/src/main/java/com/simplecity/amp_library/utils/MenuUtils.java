@@ -60,7 +60,7 @@ public class MenuUtils implements MusicUtils.Defs {
     }
 
     public static void addToPlaylist(Context context, MenuItem item, List<Song> songs) {
-        Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
+        Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(PlaylistUtils.ARG_PLAYLIST);
         PlaylistUtils.addToPlaylist(context, playlist, songs);
     }
 
@@ -212,7 +212,7 @@ public class MenuUtils implements MusicUtils.Defs {
     public static void addToPlaylist(Context context, MenuItem item, Single<List<Song>> single) {
         single.observeOn(AndroidSchedulers.mainThread())
                 .subscribe(songs -> {
-                    Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
+                    Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(PlaylistUtils.ARG_PLAYLIST);
                     PlaylistUtils.addToPlaylist(context, playlist, songs);
                 });
     }

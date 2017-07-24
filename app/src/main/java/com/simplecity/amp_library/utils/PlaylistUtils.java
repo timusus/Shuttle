@@ -60,6 +60,8 @@ public class PlaylistUtils {
 
     private static final String TAG = "PlaylistUtils";
 
+    public static final String ARG_PLAYLIST = "playlist";
+
     private PlaylistUtils() {
 
     }
@@ -222,7 +224,7 @@ public class PlaylistUtils {
                     sub.add(0, MusicUtils.Defs.NEW_PLAYLIST, 0, R.string.new_playlist);
                     for (Playlist playlist : playlists) {
                         final Intent intent = new Intent();
-                        intent.putExtra(ShuttleUtils.ARG_PLAYLIST, playlist);
+                        intent.putExtra(ARG_PLAYLIST, playlist);
                         sub.add(0, MusicUtils.Defs.PLAYLIST_SELECTED, 0, playlist.name).setIntent(intent);
                     }
                 }, error -> LogUtils.logException(TAG, "Error making playlist menu", error));

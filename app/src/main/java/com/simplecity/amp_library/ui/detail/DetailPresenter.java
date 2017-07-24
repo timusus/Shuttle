@@ -11,7 +11,6 @@ import com.simplecity.amp_library.ui.presenters.Presenter;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
-import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 
 import java.util.ArrayList;
@@ -104,7 +103,7 @@ class DetailPresenter extends Presenter<DetailView> {
     void playlistSelected(Context context, MenuItem item) {
         songsProvider.getSongs().observeOn(AndroidSchedulers.mainThread())
                 .subscribe(songs -> {
-                    Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
+                    Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(PlaylistUtils.ARG_PLAYLIST);
                     PlaylistUtils.addToPlaylist(context, playlist, songs);
                 });
     }

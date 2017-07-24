@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.ShuttleUtils;
+import com.simplecity.amp_library.utils.PlaylistUtils;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -43,7 +43,7 @@ public class ShortcutTrampolineActivity extends AppCompatActivity {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(playlist -> {
-                            intent.putExtra(ShuttleUtils.ARG_PLAYLIST, playlist);
+                            intent.putExtra(PlaylistUtils.ARG_PLAYLIST, playlist);
                             startActivity(intent);
                             finish();
                         }, error -> LogUtils.logException(TAG, "Error starting activity", error));

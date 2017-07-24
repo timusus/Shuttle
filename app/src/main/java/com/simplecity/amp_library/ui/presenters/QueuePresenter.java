@@ -22,7 +22,6 @@ import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
-import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 
 import java.util.ArrayList;
@@ -95,7 +94,7 @@ public class QueuePresenter extends Presenter<QueueView> {
     }
 
     public void saveQueue(Context context, MenuItem item) {
-        Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
+        Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(PlaylistUtils.ARG_PLAYLIST);
         PlaylistUtils.addToPlaylist(context, playlist, MusicUtils.getQueue());
     }
 
