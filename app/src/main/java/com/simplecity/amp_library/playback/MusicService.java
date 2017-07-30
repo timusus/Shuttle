@@ -97,7 +97,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
 
-import io.reactivex.Observable;
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -345,8 +345,7 @@ public class MusicService extends Service {
     }
 
     void loadRemoteMedia(MediaInfo selectedMedia, int position, boolean autoPlay, final Bitmap bitmap, final Drawable errorDrawable) {
-
-        Observable.fromCallable(() -> {
+        Completable.fromAction(() -> {
 
             HttpServer.getInstance().serveAudio(currentSong.path);
 
@@ -359,18 +358,16 @@ public class MusicService extends Service {
             }
 
             HttpServer.getInstance().serveImage(stream.toByteArray());
-
-            return null;
         })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(o -> {
+                .subscribe(() -> {
                     try {
                         castManager.loadMedia(selectedMedia, autoPlay, position);
                     } catch (Exception e) {
                         Log.e(TAG, "Failed to load media. " + e.toString());
                     }
-                }, error -> LogUtils.logException(TAG, "Error loading remote media", error));
+                }, throwable -> LogUtils.logException(TAG, "Error loading remote media", throwable));
     }
 
     void prepareChromeCastLoad(int position, boolean autoPlay) {
@@ -1326,11 +1323,10 @@ public class MusicService extends Service {
             Song finishedSong = currentSong;
             if (finishedSong != null) {
                 if (finishedSong.hasPlayed()) {
-                    Observable.fromCallable(() -> {
+                    Completable.fromAction(() -> {
                         ShuttleUtils.incrementPlayCount(this, finishedSong);
-                        return null;
                     }).subscribeOn(Schedulers.io())
-                            .subscribe(o -> {
+                            .subscribe(() -> {
                                 // Nothing to do
                             }, error -> LogUtils.logException(TAG, "Error incrementing play count", error));
                 }

@@ -166,7 +166,7 @@ public class BiographyDialog {
         Observable.fromCallable(song::getGenre)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(genre -> genreValue.setText(genre == null ? null : genre.name),
+                .subscribe(genre -> genreValue.setText(genre.name),
                         error -> LogUtils.logException(TAG, "Error getting genre", error));
 
         View albumArtistView = view.findViewById(R.id.album_artist);

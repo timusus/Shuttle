@@ -33,7 +33,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import io.reactivex.Observable;
+import io.reactivex.Completable;
 import io.reactivex.schedulers.Schedulers;
 
 public class SettingsPresenter extends Presenter<SettingsView> {
@@ -293,11 +293,10 @@ public class SettingsPresenter extends Presenter<SettingsView> {
     }
 
     private void deleteArtwork() {
-        Observable.fromCallable(() -> {
+        Completable.fromAction(() -> {
             //Clear Glide' mem & disk cache
             Glide.get(ShuttleApplication.getInstance()).clearMemory();
             Glide.get(ShuttleApplication.getInstance()).clearDiskCache();
-            return null;
         })
                 .subscribeOn(Schedulers.io())
                 .subscribe();
