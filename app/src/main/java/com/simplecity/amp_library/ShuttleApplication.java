@@ -341,7 +341,6 @@ public class ShuttleApplication extends Application {
         // will start throwing CursorWindow exceptions, and the queries will slow down massively. This ends up making all queries slow.
         // This task isn't time critical, so we can afford to let it just casually do its job.
         return SqlBriteUtils.createSingleList(ShuttleApplication.getInstance(), Genre::new, Genre.getQuery())
-                .doOnSuccess(genres -> Log.i(TAG, "Generated genres: " + genres.size()))
                 .flatMapObservable(Observable::fromIterable)
                 .concatMap(genre -> Observable.just(genre).delay(250, TimeUnit.MILLISECONDS))
                 .flatMapSingle(genre -> genre.getSongsObservable()
