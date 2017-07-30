@@ -95,7 +95,7 @@ public class MainController extends BaseNavigationController implements BackPres
 
         ((ViewGroup) multiSheetView.findViewById(multiSheetView.getSheetPeekViewResId(MultiSheetView.Sheet.SECOND))).addView(new UpNextView(getContext()));
 
-        toggleBottomSheetVisibility(false);
+        toggleBottomSheetVisibility(false, false);
 
         return rootView;
     }
@@ -170,7 +170,7 @@ public class MainController extends BaseNavigationController implements BackPres
                 RxBroadcast.fromBroadcast(getContext(), intentFilter)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(intent -> toggleBottomSheetVisibility(true))
+                        .subscribe(intent -> toggleBottomSheetVisibility(true, true))
         );
 
         DrawerLockManager.getInstance().setDrawerLockController(this);
@@ -191,11 +191,11 @@ public class MainController extends BaseNavigationController implements BackPres
     /**
      * Hide/show the bottom sheet, depending on whether the queue is empty.
      */
-    private void toggleBottomSheetVisibility(boolean collapse) {
+    private void toggleBottomSheetVisibility(boolean collapse, boolean animate) {
         if (MusicUtils.getQueue().isEmpty()) {
-            multiSheetView.hide(collapse);
+            multiSheetView.hide(collapse, false);
         } else {
-            multiSheetView.unhide();
+            multiSheetView.unhide(animate);
         }
     }
 

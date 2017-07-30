@@ -132,21 +132,27 @@ public class MultiSheetView extends CoordinatorLayout {
     }
 
     public boolean isHidden() {
-        return bottomSheetBehavior1.getPeekHeight() == 0;
+        int peekHeight = getContext().getResources().getDimensionPixelSize(R.dimen.bottom_sheet_height);
+        return bottomSheetBehavior1.getPeekHeight() < peekHeight;
     }
 
     /**
      * Sets the peek height of sheet one to 0.
      *
      * @param collapse true if all expanded sheets should be collapsed.
+     * @param animate  true if the change in peek height should be animated
      */
-    public void hide(boolean collapse) {
+    public void hide(boolean collapse, boolean animate) {
         if (!isHidden()) {
             int peekHeight = getContext().getResources().getDimensionPixelSize(R.dimen.bottom_sheet_height);
-            ValueAnimator valueAnimator = ValueAnimator.ofInt(peekHeight, 0);
-            valueAnimator.setDuration(200);
-            valueAnimator.addUpdateListener(valueAnimator1 -> bottomSheetBehavior1.setPeekHeight((Integer) valueAnimator1.getAnimatedValue()));
-            valueAnimator.start();
+            if (animate) {
+                ValueAnimator valueAnimator = ValueAnimator.ofInt(peekHeight, 0);
+                valueAnimator.setDuration(200);
+                valueAnimator.addUpdateListener(valueAnimator1 -> bottomSheetBehavior1.setPeekHeight((Integer) valueAnimator1.getAnimatedValue()));
+                valueAnimator.start();
+            } else {
+                bottomSheetBehavior1.setPeekHeight(0);
+            }
             ((LayoutParams) findViewById(getMainContainerResId()).getLayoutParams()).bottomMargin = 0;
             if (collapse) {
                 goToSheet(Sheet.NONE);
@@ -156,11 +162,22 @@ public class MultiSheetView extends CoordinatorLayout {
 
     /**
      * Restores the peek height to its default value.
+     *
+     * @param animate true if the change in peek height should be animated
      */
-    public void unhide() {
+    public void unhide(boolean animate) {
         if (isHidden()) {
             int peekHeight = getContext().getResources().getDimensionPixelSize(R.dimen.bottom_sheet_height);
-            bottomSheetBehavior1.setPeekHeight(peekHeight);
+            int currentHeight = bottomSheetBehavior1.getPeekHeight();
+            float ratio = 1 - (currentHeight / peekHeight);
+            if (animate) {
+                ValueAnimator valueAnimator = ValueAnimator.ofInt(bottomSheetBehavior1.getPeekHeight(), peekHeight);
+                valueAnimator.setDuration((long) (200 * ratio));
+                valueAnimator.addUpdateListener(valueAnimator1 -> bottomSheetBehavior1.setPeekHeight((Integer) valueAnimator1.getAnimatedValue()));
+                valueAnimator.start();
+            } else {
+                bottomSheetBehavior1.setPeekHeight(peekHeight);
+            }
             ((LayoutParams) findViewById(getMainContainerResId()).getLayoutParams()).bottomMargin = peekHeight;
         }
     }
