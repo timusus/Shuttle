@@ -207,6 +207,11 @@ public class DrawerFragment extends BaseFragment implements
         drawerPresenter.unbindView(this);
         playerPresenter.unbindView(playerViewAdapter);
         unbinder.unbind();
+
+        Stream.of(drawerParents)
+                .filter(parent -> parent instanceof DrawerParent)
+                .forEach(parent -> ((DrawerParent) parent).setListener(null));
+
         super.onDestroyView();
     }
 
