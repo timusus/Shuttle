@@ -294,7 +294,7 @@ public class EqualizerFragment extends BaseFragment implements
             (eqContainer.findViewById(eqViewElementIds[band][1])).setVisibility(View.VISIBLE);
             (eqContainer.findViewById(eqViewTextElementIds[band][1])).setVisibility(View.VISIBLE);
             ((TextView) eqContainer.findViewById(eqViewElementIds[band][0])).setText(format("%.0f ", centerFreqHz) + unitPrefix + "Hz");
-            mEqualizerSeekBar[band] = (SizableSeekBar) eqContainer.findViewById(eqViewElementIds[band][1]);
+            mEqualizerSeekBar[band] = eqContainer.findViewById(eqViewElementIds[band][1]);
             mEqualizerSeekBar[band].setMax((bandLevelRange[1] / 100) - (bandLevelRange[0] / 100));
             mEqualizerSeekBar[band].setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override

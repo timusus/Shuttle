@@ -48,7 +48,7 @@ public class DiscNumberView extends BaseViewModel<DiscNumberView.ViewHolder> {
         public ViewHolder(View itemView) {
             super(itemView);
 
-            textView = (TextView) itemView.findViewById(id.textView);
+            textView = itemView.findViewById(id.textView);
         }
     }
 

@@ -148,10 +148,10 @@ public class TracksChooserDialog extends DialogFragment {
     }
 
     private void setUpView(View view) {
-        ListView listView1 = (ListView) view.findViewById(R.id.listview1);
-        ListView listView2 = (ListView) view.findViewById(R.id.listview2);
-        TextView textEmptyMessageView = (TextView) view.findViewById(R.id.text_empty_message);
-        TextView audioEmptyMessageView = (TextView) view.findViewById(R.id.audio_empty_message);
+        ListView listView1 = view.findViewById(R.id.listview1);
+        ListView listView2 = view.findViewById(R.id.listview2);
+        TextView textEmptyMessageView = view.findViewById(R.id.text_empty_message);
+        TextView audioEmptyMessageView = view.findViewById(R.id.audio_empty_message);
         partitionTracks();
 
         mTextAdapter = new TracksListAdapter(getActivity(), R.layout.tracks_row_layout,
@@ -162,7 +162,7 @@ public class TracksChooserDialog extends DialogFragment {
         listView1.setAdapter(mTextAdapter);
         listView2.setAdapter(mAudioVideoAdapter);
 
-        TabHost tabs = (TabHost) view.findViewById(R.id.tabhost);
+        TabHost tabs = view.findViewById(R.id.tabhost);
         tabs.setup();
 
         // create tab 1

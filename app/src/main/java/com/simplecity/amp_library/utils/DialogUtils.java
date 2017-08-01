@@ -76,7 +76,7 @@ public class DialogUtils {
         View view = LayoutInflater.from(context).inflate(R.layout.weekpicker, null);
 
         final NumberPicker numberPicker;
-        numberPicker = (NumberPicker) view.findViewById(R.id.weeks);
+        numberPicker = view.findViewById(R.id.weeks);
         numberPicker.setMaxValue(12);
         numberPicker.setMinValue(1);
         numberPicker.setValue(MusicUtils.getIntPref(context, "numweeks", 2));

@@ -177,34 +177,34 @@ public class TaggerDialog extends DialogFragment {
 
     private void setupViews(View rootView) {
 
-        titleEditText = (EditText) rootView.findViewById(R.id.new_track_name);
+        titleEditText = rootView.findViewById(R.id.new_track_name);
         titleInputLayout = getParent(titleEditText);
 
-        albumEditText = (EditText) rootView.findViewById(R.id.new_album_name);
+        albumEditText = rootView.findViewById(R.id.new_album_name);
         albumInputLayout = getParent(albumEditText);
 
-        artistEditText = (EditText) rootView.findViewById(R.id.new_artist_name);
+        artistEditText = rootView.findViewById(R.id.new_artist_name);
 
-        albumArtistEditText = (EditText) rootView.findViewById(R.id.new_album_artist_name);
+        albumArtistEditText = rootView.findViewById(R.id.new_album_artist_name);
 
-        genreEditText = (EditText) rootView.findViewById(R.id.new_genre_name);
+        genreEditText = rootView.findViewById(R.id.new_genre_name);
 
-        yearEditText = (EditText) rootView.findViewById(R.id.new_year_number);
+        yearEditText = rootView.findViewById(R.id.new_year_number);
 
-        trackEditText = (EditText) rootView.findViewById(R.id.new_track_number);
+        trackEditText = rootView.findViewById(R.id.new_track_number);
         trackInputLayout = getParent(trackEditText);
 
-        trackTotalEditText = (EditText) rootView.findViewById(R.id.new_track_total);
+        trackTotalEditText = rootView.findViewById(R.id.new_track_total);
 
-        discEditText = (EditText) rootView.findViewById(R.id.new_disc_number);
+        discEditText = rootView.findViewById(R.id.new_disc_number);
         discInputLayout = getParent(discEditText);
 
-        discTotalEditText = (EditText) rootView.findViewById(R.id.new_disc_total);
+        discTotalEditText = rootView.findViewById(R.id.new_disc_total);
 
-        lyricsEditText = (EditText) rootView.findViewById(R.id.new_lyrics);
+        lyricsEditText = rootView.findViewById(R.id.new_lyrics);
         lyricsInputLayout = getParent(lyricsEditText);
 
-        commentEditText = (EditText) rootView.findViewById(R.id.new_comment);
+        commentEditText = rootView.findViewById(R.id.new_comment);
         commentInputLayout = getParent(commentEditText);
 
         if (albumArtist != null || album != null) {

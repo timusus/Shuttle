@@ -105,9 +105,9 @@ public class IntroductoryOverlay extends RelativeLayout {
         mIsSingleTime = builder.mSingleTime;
         LayoutInflater inflater = LayoutInflater.from(getContext());
         inflater.inflate(R.layout.ccl_intro_overlay, this);
-        mButton = (Button) findViewById(R.id.button);
-        mTitleText = (TextView) findViewById(R.id.textTitle);
-        mSubtitleText = (TextView) findViewById(R.id.textSubtitle);
+        mButton = findViewById(R.id.button);
+        mTitleText = findViewById(R.id.textTitle);
+        mSubtitleText = findViewById(R.id.textSubtitle);
         TypedArray typedArray = getContext().getTheme()
                 .obtainStyledAttributes(attrs, R.styleable.CCLIntroOverlay,
                         R.attr.CCLIntroOverlayStyle, R.style.CCLIntroOverlay);

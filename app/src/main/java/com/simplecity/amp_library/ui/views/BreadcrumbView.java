@@ -90,8 +90,8 @@ public class BreadcrumbView extends RelativeLayout implements Breadcrumb, OnClic
         addView(inflate(getContext(), R.layout.breadcrumb_view, null));
 
         //Recover all views
-        this.mScrollView = (HorizontalScrollView) findViewById(R.id.breadcrumb_scrollview);
-        this.mBreadcrumbBar = (ViewGroup) findViewById(R.id.breadcrumb);
+        this.mScrollView = findViewById(R.id.breadcrumb_scrollview);
+        this.mBreadcrumbBar = findViewById(R.id.breadcrumb);
 
     }
 

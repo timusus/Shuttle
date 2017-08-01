@@ -49,7 +49,7 @@ public class SearchHeaderView extends BaseViewModel<SearchHeaderView.ViewHolder>
         public ViewHolder(View itemView) {
             super(itemView);
 
-            lineOne = (TextView) itemView.findViewById(line_one);
+            lineOne = itemView.findViewById(line_one);
         }
 
         @Override

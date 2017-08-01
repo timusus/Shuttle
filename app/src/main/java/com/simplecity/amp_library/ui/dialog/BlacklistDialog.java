@@ -51,7 +51,7 @@ public class BlacklistDialog {
 
         final MaterialDialog dialog = builder.build();
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
         final ViewModelAdapter blacklistAdapter = new ViewModelAdapter();

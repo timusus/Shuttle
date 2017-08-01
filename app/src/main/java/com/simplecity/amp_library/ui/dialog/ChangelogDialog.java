@@ -24,14 +24,14 @@ public class ChangelogDialog {
     public static MaterialDialog getChangelogDialog(Context context) {
         View customView = LayoutInflater.from(context).inflate(R.layout.dialog_changelog, null);
 
-        WebView webView = (WebView) customView.findViewById(R.id.webView);
+        WebView webView = customView.findViewById(R.id.webView);
         webView.setBackgroundColor(context.getResources().getColor(android.R.color.transparent));
 
-        CheckBox checkBox = (CheckBox) customView.findViewById(R.id.checkbox);
+        CheckBox checkBox = customView.findViewById(R.id.checkbox);
         checkBox.setChecked(SettingsManager.getInstance().getShowChangelogOnLaunch());
         checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> SettingsManager.getInstance().setShowChangelogOnLaunch(isChecked));
 
-        ProgressBar progressBar = (ProgressBar) customView.findViewById(R.id.progress);
+        ProgressBar progressBar = customView.findViewById(R.id.progress);
 
         webView.setWebViewClient(new WebViewClient() {
             @Override

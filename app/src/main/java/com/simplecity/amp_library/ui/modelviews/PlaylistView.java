@@ -56,8 +56,8 @@ public class PlaylistView extends BaseViewModel<PlaylistView.ViewHolder> {
         public ViewHolder(View itemView) {
             super(itemView);
 
-            lineOne = (TextView) itemView.findViewById(line_one);
-            overflowButton = (NonScrollImageButton) itemView.findViewById(btn_overflow);
+            lineOne = itemView.findViewById(line_one);
+            overflowButton = itemView.findViewById(btn_overflow);
         }
 
         @Override

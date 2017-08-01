@@ -76,7 +76,7 @@ public class WidgetFragment extends BaseFragment {
             layoutParams = new FrameLayout.LayoutParams((int) width, (int) height);
         }
 
-        FrameLayout frameLayout1 = (FrameLayout) rootView.findViewById(R.id.frame);
+        FrameLayout frameLayout1 = rootView.findViewById(R.id.frame);
 
         if (layoutParams != null) {
             frameLayout1.addView(frameLayout, layoutParams);

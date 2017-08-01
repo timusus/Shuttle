@@ -101,8 +101,8 @@ public class MaterialSimpleListAdapter
 
     SimpleListVH(View itemView, MaterialSimpleListAdapter adapter) {
       super(itemView);
-      icon = (ImageView) itemView.findViewById(android.R.id.icon);
-      title = (TextView) itemView.findViewById(android.R.id.title);
+      icon = itemView.findViewById(android.R.id.icon);
+      title = itemView.findViewById(android.R.id.title);
       this.adapter = adapter;
       itemView.setOnClickListener(this);
     }

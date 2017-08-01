@@ -183,8 +183,8 @@ class DefaultRvAdapter extends RecyclerView.Adapter<DefaultRvAdapter.DefaultVH> 
 
     DefaultVH(View itemView, DefaultRvAdapter adapter) {
       super(itemView);
-      control = (CompoundButton) itemView.findViewById(R.id.md_control);
-      title = (TextView) itemView.findViewById(R.id.md_title);
+      control = itemView.findViewById(R.id.md_control);
+      title = itemView.findViewById(R.id.md_title);
       this.adapter = adapter;
       itemView.setOnClickListener(this);
       if (adapter.dialog.builder.listLongCallback != null) {

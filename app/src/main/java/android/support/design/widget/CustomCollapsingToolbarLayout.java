@@ -328,7 +328,7 @@ public class CustomCollapsingToolbarLayout extends FrameLayout {
 
         if (mToolbarId != -1) {
             // If we have an ID set, try and find it and it's direct parent to us
-            mToolbar = (Toolbar) findViewById(mToolbarId);
+            mToolbar = findViewById(mToolbarId);
             if (mToolbar != null) {
                 mToolbarDirectChild = findDirectChild(mToolbar);
             }

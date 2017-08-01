@@ -55,7 +55,7 @@ public class ColorView extends BaseViewModel<ColorView.ViewHolder> {
 
         public ViewHolder(final View itemView) {
             super(itemView);
-            circleView = (CircleView) itemView.findViewById(image);
+            circleView = itemView.findViewById(image);
         }
 
         @Override

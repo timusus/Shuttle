@@ -157,7 +157,7 @@ public class PlayerFragment extends BaseFragment implements
 
         repeatButton.setOnClickListener(v -> presenter.toggleRepeat());
 
-        shuffleButton = (ShuffleButton) rootView.findViewById(R.id.shuffle);
+        shuffleButton = rootView.findViewById(R.id.shuffle);
         shuffleButton.setOnClickListener(v -> presenter.toggleShuffle());
 
         nextButton.setOnClickListener(v -> presenter.skip());
@@ -166,7 +166,7 @@ public class PlayerFragment extends BaseFragment implements
         prevButton.setOnClickListener(v -> presenter.prev(true));
         prevButton.setRepeatListener((v, duration, repeatcount) -> presenter.scanBackward(repeatcount, duration));
 
-        seekBar = (SizableSeekBar) rootView.findViewById(R.id.seekbar);
+        seekBar = rootView.findViewById(R.id.seekbar);
         seekBar.setMax(1000);
 
         if (savedInstanceState == null) {

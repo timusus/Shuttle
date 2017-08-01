@@ -332,13 +332,13 @@ public class VideoMediaRouteControllerDialog extends MediaRouteControllerDialog 
     }
 
     private void loadViews(View controls) {
-        mIcon = (ImageView) controls.findViewById(R.id.iconView);
+        mIcon = controls.findViewById(R.id.iconView);
         mIconContainer = controls.findViewById(R.id.iconContainer);
         mTextContainer = controls.findViewById(R.id.textContainer);
-        mPausePlay = (ImageView) controls.findViewById(R.id.playPauseView);
-        mTitle = (TextView) controls.findViewById(R.id.titleView);
-        mSubTitle = (TextView) controls.findViewById(R.id.subTitleView);
-        mLoading = (ProgressBar) controls.findViewById(R.id.loadingView);
-        mEmptyText = (TextView) controls.findViewById(R.id.emptyView);
+        mPausePlay = controls.findViewById(R.id.playPauseView);
+        mTitle = controls.findViewById(R.id.titleView);
+        mSubTitle = controls.findViewById(R.id.subTitleView);
+        mLoading = controls.findViewById(R.id.loadingView);
+        mEmptyText = controls.findViewById(R.id.emptyView);
     }
 }

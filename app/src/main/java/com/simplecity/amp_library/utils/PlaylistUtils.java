@@ -292,9 +292,9 @@ public class PlaylistUtils {
                         if (!duplicates.isEmpty()) {
 
                             View customView = LayoutInflater.from(context).inflate(R.layout.dialog_playlist_duplicates, null);
-                            TextView messageText = (TextView) customView.findViewById(R.id.textView);
-                            CheckBox applyToAll = (CheckBox) customView.findViewById(R.id.applyToAll);
-                            CheckBox alwaysAdd = (CheckBox) customView.findViewById(R.id.alwaysAdd);
+                            TextView messageText = customView.findViewById(R.id.textView);
+                            CheckBox applyToAll = customView.findViewById(R.id.applyToAll);
+                            CheckBox alwaysAdd = customView.findViewById(R.id.alwaysAdd);
 
                             if (duplicates.size() <= 1) {
                                 applyToAll.setVisibility(View.GONE);
@@ -537,7 +537,7 @@ public class PlaylistUtils {
     private static void createPlaylistDialog(final Context context, final OnSavePlaylistListener listener) {
 
         View customView = LayoutInflater.from(context).inflate(R.layout.dialog_playlist, null);
-        final EditText editText = (EditText) customView.findViewById(R.id.editText);
+        final EditText editText = customView.findViewById(R.id.editText);
 
         Observable.fromCallable(() -> makePlaylistName(context))
                 .subscribeOn(Schedulers.io())
@@ -623,7 +623,7 @@ public class PlaylistUtils {
     public static void renamePlaylistDialog(final Context context, final Playlist playlist) {
 
         View customView = LayoutInflater.from(context).inflate(R.layout.dialog_playlist, null);
-        final EditText editText = (EditText) customView.findViewById(R.id.editText);
+        final EditText editText = customView.findViewById(R.id.editText);
         editText.setText(playlist.name);
 
         MaterialDialog.Builder builder = DialogUtils.getBuilder(context)
