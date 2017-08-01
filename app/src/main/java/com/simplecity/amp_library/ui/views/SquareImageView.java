@@ -1,10 +1,10 @@
 package com.simplecity.amp_library.ui.views;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
-public class SquareImageView extends ImageView {
+public class SquareImageView extends AppCompatImageView {
 
     public SquareImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
