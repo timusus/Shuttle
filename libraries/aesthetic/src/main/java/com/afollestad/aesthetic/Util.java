@@ -82,13 +82,15 @@ public final class Util {
 
   @ColorInt
   static int resolveColor(Context context, @AttrRes int attr, int fallback) {
-    TypedArray a = context.getTheme().obtainStyledAttributes(new int[] {attr});
-    try {
-      return a.getColor(0, fallback);
-    } catch (Throwable ignored) {
-      return fallback;
-    } finally {
-      a.recycle();
+    if (context!=null) {
+      TypedArray a = context.getTheme().obtainStyledAttributes(new int[]{attr});
+      try {
+        return a.getColor(0, fallback);
+      } catch (Throwable ignored) {
+        return fallback;
+      } finally {
+        a.recycle();
+      }
     }
   }
 
