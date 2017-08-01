@@ -146,7 +146,7 @@ public class QueueFragment extends BaseFragment implements
 
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
-        disposables.add(Aesthetic.get()
+        disposables.add(Aesthetic.get(getContext())
                 .colorPrimary()
                 .subscribe(color -> {
                     boolean isLight = Util.isColorLight(color);

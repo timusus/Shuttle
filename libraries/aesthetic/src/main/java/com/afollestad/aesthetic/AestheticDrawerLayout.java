@@ -44,7 +44,7 @@ public class AestheticDrawerLayout extends DrawerLayout {
   protected void onAttachedToWindow() {
     super.onAttachedToWindow();
     subscription =
-        Aesthetic.get()
+        Aesthetic.get(getContext())
             .colorIconTitle(null)
             .compose(Rx.<ActiveInactiveColors>distinctToMainThread())
             .subscribe(

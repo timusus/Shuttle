@@ -34,7 +34,7 @@ public class AestheticScrollView extends ScrollView {
   protected void onAttachedToWindow() {
     super.onAttachedToWindow();
     subscription =
-        Aesthetic.get()
+        Aesthetic.get(getContext())
             .colorAccent()
             .compose(Rx.<Integer>distinctToMainThread())
             .subscribe(

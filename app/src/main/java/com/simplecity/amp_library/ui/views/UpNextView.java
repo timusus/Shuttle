@@ -67,7 +67,7 @@ public class UpNextView extends LinearLayout {
 
         playerPresenter.bindView(playerViewAdapter);
 
-        aestheticDisposable = Aesthetic.get().textColorPrimary()
+        aestheticDisposable = Aesthetic.get(getContext()).textColorPrimary()
                 .subscribe(color -> {
                     DrawableCompat.setTint(arrowDrawable, color);
                     arrow.setImageDrawable(arrowDrawable);

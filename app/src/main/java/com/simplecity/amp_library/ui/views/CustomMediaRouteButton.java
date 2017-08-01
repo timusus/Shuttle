@@ -23,7 +23,7 @@ public class CustomMediaRouteButton extends MediaRouteButton {
     }
 
     private static Context getThemedContext(Context context) {
-        return Aesthetic.get().isDark().blockingFirst() ?
+        return Aesthetic.get(context).isDark().blockingFirst() ?
                 new ContextThemeWrapper(new ContextThemeWrapper(context, R.style.Theme_AppCompat), R.style.Theme_MediaRouter) :
                 new ContextThemeWrapper(new ContextThemeWrapper(context, R.style.Theme_AppCompat_Light), R.style.Theme_MediaRouter);
     }

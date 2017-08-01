@@ -129,7 +129,7 @@ public class AestheticCoordinatorLayout extends CoordinatorLayout
       toolbarColorSubscription =
           Observable.combineLatest(
                   toolbar.colorUpdated(),
-                  Aesthetic.get().colorIconTitle(toolbar.colorUpdated()),
+                  Aesthetic.get(getContext()).colorIconTitle(toolbar.colorUpdated()),
                   new BiFunction<
                       Integer, ActiveInactiveColors, Pair<Integer, ActiveInactiveColors>>() {
                     @Override
@@ -153,7 +153,7 @@ public class AestheticCoordinatorLayout extends CoordinatorLayout
 
     if (collapsingToolbarLayout != null) {
       statusBarColorSubscription =
-          Aesthetic.get()
+          Aesthetic.get(getContext())
               .colorStatusBar()
               .compose(Rx.<Integer>distinctToMainThread())
               .subscribe(

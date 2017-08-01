@@ -1,17 +1,18 @@
 package com.afollestad.aesthetic;
 
-import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
-import static com.afollestad.aesthetic.TintHelper.createTintedDrawable;
-
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.support.v7.view.menu.ActionMenuItemView;
 import android.util.AttributeSet;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+
+import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
+import static com.afollestad.aesthetic.TintHelper.createTintedDrawable;
 
 /** @author Aidan Follestad (afollestad) */
 @SuppressWarnings("RestrictedApi")
@@ -39,7 +40,7 @@ final class AestheticActionMenuItemView extends ActionMenuItemView {
     // We need to retrieve the color again here.
     // For some reason, without this, a transparent color is used and the icon disappears
     // when the overflow menu opens.
-    Aesthetic.get()
+    Aesthetic.get(getContext())
         .colorIconTitle(null)
         .observeOn(AndroidSchedulers.mainThread())
         .take(1)
@@ -62,7 +63,7 @@ final class AestheticActionMenuItemView extends ActionMenuItemView {
   protected void onAttachedToWindow() {
     super.onAttachedToWindow();
     subscription =
-        Aesthetic.get()
+        Aesthetic.get(getContext())
             .colorIconTitle(null)
             .compose(Rx.<ActiveInactiveColors>distinctToMainThread())
             .subscribe(

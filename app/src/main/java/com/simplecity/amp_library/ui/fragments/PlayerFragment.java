@@ -204,7 +204,7 @@ public class PlayerFragment extends BaseFragment implements
     public void onResume() {
         super.onResume();
 
-        disposables.add(Aesthetic.get()
+        disposables.add(Aesthetic.get(getContext())
                 .colorPrimary()
                 .subscribe(this::invalidateColors));
 
@@ -332,14 +332,14 @@ public class PlayerFragment extends BaseFragment implements
                             if (swatch != null) {
                                 if (!SettingsManager.getInstance().getUsePaletteNowPlayingOnly()) {
                                     // Set Aesthetic colors globally, based on the current Palette swatch
-                                    Aesthetic.get()
+                                    Aesthetic.get(getContext())
                                             .colorPrimary()
                                             .take(1)
                                             .subscribe(integer -> {
                                                 ValueAnimator valueAnimator = ValueAnimator.ofInt(integer, swatch.getRgb());
                                                 valueAnimator.setEvaluator(new ArgbEvaluator());
                                                 valueAnimator.setDuration(450);
-                                                valueAnimator.addUpdateListener(animator -> Aesthetic.get()
+                                                valueAnimator.addUpdateListener(animator -> Aesthetic.get(getContext())
                                                         .colorPrimary((Integer) animator.getAnimatedValue())
                                                         .colorStatusBarAuto()
                                                         .apply());
@@ -347,7 +347,7 @@ public class PlayerFragment extends BaseFragment implements
                                             });
                                 }
                             } else {
-                                Aesthetic.get()
+                                Aesthetic.get(getContext())
                                         .colorPrimary()
                                         .take(1)
                                         .subscribe(color -> invalidateColors(color));
@@ -357,7 +357,7 @@ public class PlayerFragment extends BaseFragment implements
                         @Override
                         public void onLoadFailed(Exception e, Drawable errorDrawable) {
                             super.onLoadFailed(e, errorDrawable);
-                            Aesthetic.get()
+                            Aesthetic.get(getContext())
                                     .colorPrimary()
                                     .take(1)
                                     .subscribe(color -> invalidateColors(color));

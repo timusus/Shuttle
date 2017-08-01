@@ -44,7 +44,7 @@ public class AestheticTintedImageView extends AppCompatImageView {
     }
 
     protected Observable<Integer> getColorObservable() {
-        return Aesthetic.get().colorAccent();
+        return Aesthetic.get(getContext()).colorAccent();
     }
 
     void invalidateColors(int color) {

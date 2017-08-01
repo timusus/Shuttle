@@ -96,15 +96,15 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        if (Aesthetic.isFirstTime(this)) {
-        Aesthetic.get()
-                .activityTheme(R.style.WallpaperTheme)
-                .isDark(false)
-                .colorPrimaryRes(R.color.blue_500)
-                .colorAccentRes(R.color.amber_300)
-                .colorStatusBarAuto()
-                .apply();
-//        }
+        if (Aesthetic.isFirstTime(this)) {
+            Aesthetic.get(this)
+                    .activityTheme(R.style.WallpaperTheme)
+                    .isDark(false)
+                    .colorPrimaryRes(R.color.blue_500)
+                    .colorAccentRes(R.color.amber_300)
+                    .colorStatusBarAuto()
+                    .apply();
+        }
 
         setContentView(R.layout.activity_widget_config);
 

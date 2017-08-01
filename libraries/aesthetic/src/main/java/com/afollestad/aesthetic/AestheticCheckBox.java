@@ -50,8 +50,8 @@ public class AestheticCheckBox extends AppCompatCheckBox {
     subscriptions.add(
         Observable.combineLatest(
                 ViewUtil.getObservableForResId(
-                    getContext(), backgroundResId, Aesthetic.get().colorAccent()),
-                Aesthetic.get().isDark(),
+                    getContext(), backgroundResId, Aesthetic.get(getContext()).colorAccent()),
+                Aesthetic.get(getContext()).isDark(),
                 ColorIsDarkState.creator())
             .compose(Rx.<ColorIsDarkState>distinctToMainThread())
             .subscribe(
@@ -63,7 +63,7 @@ public class AestheticCheckBox extends AppCompatCheckBox {
                 },
                 onErrorLogAndRethrow()));
     subscriptions.add(
-        Aesthetic.get()
+        Aesthetic.get(getContext())
             .textColorPrimary()
             .compose(Rx.<Integer>distinctToMainThread())
             .subscribe(ViewTextColorAction.create(this)));

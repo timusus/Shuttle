@@ -108,7 +108,7 @@ public class MiniPlayerFragment extends BaseFragment {
 
         progressBar.setMax(1000);
 
-        disposable.add(Aesthetic.get()
+        disposable.add(Aesthetic.get(getContext())
                 .colorPrimary()
                 .compose(distinctToMainThread())
                 .subscribe(color -> {

@@ -21,7 +21,7 @@ public class DrawableUtils {
      */
     public static Bitmap getColoredBitmap(Context context, int baseDrawableResId) {
         Drawable baseDrawable = context.getResources().getDrawable(baseDrawableResId).getConstantState().newDrawable();
-        ColorFilter highlightColorFilter = new LightingColorFilter(Aesthetic.get().colorPrimary().blockingFirst(), 0);
+        ColorFilter highlightColorFilter = new LightingColorFilter(Aesthetic.get(context).colorPrimary().blockingFirst(), 0);
         baseDrawable.mutate().setColorFilter(highlightColorFilter);
 
         Bitmap bitmap = Bitmap.createBitmap(baseDrawable.getIntrinsicWidth(), baseDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);

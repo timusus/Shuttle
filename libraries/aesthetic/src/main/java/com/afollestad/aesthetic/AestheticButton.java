@@ -60,8 +60,8 @@ public class AestheticButton extends AppCompatButton {
     subscription =
         Observable.combineLatest(
                 ViewUtil.getObservableForResId(
-                    getContext(), backgroundResId, Aesthetic.get().colorAccent()),
-                Aesthetic.get().isDark(),
+                    getContext(), backgroundResId, Aesthetic.get(getContext()).colorAccent()),
+                Aesthetic.get(getContext()).isDark(),
                 ColorIsDarkState.creator())
             .compose(Rx.<ColorIsDarkState>distinctToMainThread())
             .subscribe(

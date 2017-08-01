@@ -42,7 +42,7 @@ public class MainActivity extends BaseCastActivity implements
 
         // If we haven't set any defaults, do that now
         if (Aesthetic.isFirstTime(this)) {
-            Aesthetic.get()
+            Aesthetic.get(this)
                     .activityTheme(R.style.AppTheme_Light)
                     .isDark(false)
                     .colorPrimaryRes(R.color.blue_500)
@@ -135,9 +135,4 @@ public class MainActivity extends BaseCastActivity implements
         return drawerLayout;
     }
 
-    @Nullable
-    @Override
-    public String key() {
-        return "main_activity";
-    }
 }

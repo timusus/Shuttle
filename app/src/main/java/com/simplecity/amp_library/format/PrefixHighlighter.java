@@ -6,6 +6,7 @@ import android.text.style.ForegroundColorSpan;
 import android.widget.TextView;
 
 import com.afollestad.aesthetic.Aesthetic;
+import com.simplecity.amp_library.ShuttleApplication;
 
 import javax.inject.Inject;
 
@@ -20,7 +21,7 @@ public class PrefixHighlighter {
 
     @Inject
     public PrefixHighlighter() {
-        mPrefixHighlightColor = Aesthetic.get().colorAccent().blockingFirst();
+        mPrefixHighlightColor = Aesthetic.get(ShuttleApplication.getInstance()).colorAccent().blockingFirst();
     }
 
     /**

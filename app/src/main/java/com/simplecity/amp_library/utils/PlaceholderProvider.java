@@ -40,7 +40,7 @@ public class PlaceholderProvider {
         paint.setAntiAlias(true);
         colors = res.obtainTypedArray(R.array.pastel_colors);
 
-        Aesthetic.get().isDark()
+        Aesthetic.get(ShuttleApplication.getInstance()).isDark()
                 .compose(Rx.distinctToMainThread())
                 .subscribe(isDark -> this.isDark = isDark);
     }

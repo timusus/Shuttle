@@ -49,7 +49,7 @@ public class SuggestedHeaderButton extends android.support.v7.widget.AppCompatTe
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        aestheticDisposable = Aesthetic.get().colorAccent()
+        aestheticDisposable = Aesthetic.get(getContext()).colorAccent()
                 .map(colorAccent -> new ColorIsDarkState(colorAccent, !Util.isColorLight(colorAccent)))
                 .compose(Rx.distinctToMainThread())
                 .subscribe(colorIsDarkState -> {

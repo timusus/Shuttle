@@ -49,12 +49,12 @@ public class AestheticTextInputEditText extends TextInputEditText {
     super.onAttachedToWindow();
     subs = new CompositeDisposable();
     subs.add(
-        Aesthetic.get()
+        Aesthetic.get(getContext())
             .textColorPrimary()
             .compose(Rx.<Integer>distinctToMainThread())
             .subscribe(ViewTextColorAction.create(this), onErrorLogAndRethrow()));
     subs.add(
-        Aesthetic.get()
+        Aesthetic.get(getContext())
             .textColorSecondary()
             .compose(Rx.<Integer>distinctToMainThread())
             .subscribe(ViewHintTextColorAction.create(this), onErrorLogAndRethrow()));
@@ -62,8 +62,8 @@ public class AestheticTextInputEditText extends TextInputEditText {
     subs.add(
         Observable.combineLatest(
                 ViewUtil.getObservableForResId(
-                    getContext(), backgroundResId, Aesthetic.get().colorAccent()),
-                Aesthetic.get().isDark(),
+                    getContext(), backgroundResId, Aesthetic.get(getContext()).colorAccent()),
+                Aesthetic.get(getContext()).isDark(),
                 ColorIsDarkState.creator())
             .compose(Rx.<ColorIsDarkState>distinctToMainThread())
             .subscribe(

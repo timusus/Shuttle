@@ -165,7 +165,7 @@ public class DrawerFragment extends BaseFragment implements
     public void onResume() {
         super.onResume();
 
-        disposables.add(Aesthetic.get()
+        disposables.add(Aesthetic.get(getContext())
                 .colorPrimary()
                 .compose(Rx.distinctToMainThread())
                 .subscribe(color -> backgroundPlaceholder.setColorFilter(color, PorterDuff.Mode.MULTIPLY)));

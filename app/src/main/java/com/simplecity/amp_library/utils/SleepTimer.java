@@ -130,7 +130,7 @@ public final class SleepTimer {
         NumberPickerBuilder numberPickerBuilder = new NumberPickerBuilder();
         numberPickerBuilder
                 .setFragmentManager(fragmentManager)
-                .setStyleResId(Aesthetic.get().isDark().blockingFirst() ? R.style.BetterPickers : R.style.BetterPickersLight)
+                .setStyleResId(Aesthetic.get(context).isDark().blockingFirst() ? R.style.BetterPickers : R.style.BetterPickersLight)
                 .setDecimalVisibility(View.GONE)
                 .setMaxNumber(new BigDecimal(999))
                 .setPlusMinusVisibility(View.GONE)

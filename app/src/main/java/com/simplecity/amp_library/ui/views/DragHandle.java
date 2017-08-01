@@ -20,9 +20,9 @@ public class DragHandle extends AestheticTintedImageView {
     protected Observable<Integer> getColorObservable() {
         Observable<Integer> obs;
         if (isActivated()) {
-            obs = Aesthetic.get().colorAccent();
+            obs = Aesthetic.get(getContext()).colorAccent();
         } else {
-            obs = Aesthetic.get().textColorSecondary();
+            obs = Aesthetic.get(getContext()).textColorSecondary();
         }
         return obs;
     }

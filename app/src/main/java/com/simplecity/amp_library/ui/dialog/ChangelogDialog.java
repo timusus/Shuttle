@@ -43,7 +43,7 @@ public class ChangelogDialog {
             }
         });
 
-        Aesthetic.get()
+        Aesthetic.get(context)
                 .isDark()
                 .take(1)
                 .subscribe(isDark -> webView.loadUrl(isDark ? "file:///android_asset/web/info_dark.html" : "file:///android_asset/web/info.html"));

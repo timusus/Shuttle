@@ -52,14 +52,14 @@ public class StatusBarView extends View {
         // So, we'll just do a take(1), and since we're calling from the main thread, we don't need to worry
         // about distinctToMainThread() for this call. This prevents the 'flickering' of colors.
 
-        Aesthetic.get()
+        Aesthetic.get(getContext())
                 .colorStatusBar()
                 .take(1)
                 .subscribe(
                         ViewBackgroundAction.create(this), onErrorLogAndRethrow()
                 );
 
-        bgSubscription = Aesthetic.get().colorStatusBar()
+        bgSubscription = Aesthetic.get(getContext()).colorStatusBar()
                 .compose(Rx.distinctToMainThread())
                 .subscribe(
                         ViewBackgroundAction.create(this), onErrorLogAndRethrow()

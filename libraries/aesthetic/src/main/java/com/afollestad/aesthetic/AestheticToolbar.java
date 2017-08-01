@@ -97,8 +97,8 @@ public class AestheticToolbar extends Toolbar {
     // about distinctToMainThread() for this call. This prevents the 'flickering' of colors.
 
     Observable.combineLatest(
-            Aesthetic.get().colorPrimary(),
-            Aesthetic.get().colorIconTitle(null),
+            Aesthetic.get(getContext()).colorPrimary(),
+            Aesthetic.get(getContext()).colorIconTitle(null),
             BgIconColorState.creator())
             .take(1)
             .subscribe(new Consumer<BgIconColorState>() {
@@ -110,8 +110,8 @@ public class AestheticToolbar extends Toolbar {
 
     subscription =
             Observable.combineLatest(
-                    Aesthetic.get().colorPrimary(),
-                    Aesthetic.get().colorIconTitle(null),
+                    Aesthetic.get(getContext()).colorPrimary(),
+                    Aesthetic.get(getContext()).colorIconTitle(null),
                     BgIconColorState.creator())
                     .compose(Rx.<BgIconColorState>distinctToMainThread())
                     .subscribe(

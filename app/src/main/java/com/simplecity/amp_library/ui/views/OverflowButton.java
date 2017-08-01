@@ -41,7 +41,7 @@ public class OverflowButton extends NonScrollImageButton {
             setImageDrawable(drawable);
         } else {
             aestheticDisposable = Observable.combineLatest(
-                    Aesthetic.get().textColorSecondary(),
+                    Aesthetic.get(getContext()).textColorSecondary(),
                     Observable.just(Color.WHITE),
                     Observable.just(dark),
                     LightDarkColorState.creator()

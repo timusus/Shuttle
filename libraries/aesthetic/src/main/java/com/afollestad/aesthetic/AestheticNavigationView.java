@@ -72,7 +72,7 @@ public class AestheticNavigationView extends NavigationView {
   protected void onAttachedToWindow() {
     super.onAttachedToWindow();
     modeSubscription =
-        Aesthetic.get()
+        Aesthetic.get(getContext())
             .navigationViewMode()
             .compose(Rx.<Integer>distinctToMainThread())
             .subscribe(
@@ -83,8 +83,8 @@ public class AestheticNavigationView extends NavigationView {
                       case NavigationViewMode.SELECTED_PRIMARY:
                         colorSubscription =
                             Observable.combineLatest(
-                                    Aesthetic.get().colorPrimary(),
-                                    Aesthetic.get().isDark(),
+                                    Aesthetic.get(getContext()).colorPrimary(),
+                                    Aesthetic.get(getContext()).isDark(),
                                     ColorIsDarkState.creator())
                                 .compose(Rx.<ColorIsDarkState>distinctToMainThread())
                                 .subscribe(
@@ -100,8 +100,8 @@ public class AestheticNavigationView extends NavigationView {
                       case NavigationViewMode.SELECTED_ACCENT:
                         colorSubscription =
                             Observable.combineLatest(
-                                    Aesthetic.get().colorAccent(),
-                                    Aesthetic.get().isDark(),
+                                    Aesthetic.get(getContext()).colorAccent(),
+                                    Aesthetic.get(getContext()).isDark(),
                                     ColorIsDarkState.creator())
                                 .compose(Rx.<ColorIsDarkState>distinctToMainThread())
                                 .subscribe(

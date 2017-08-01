@@ -47,7 +47,7 @@ public class AestheticTextInputLayout extends TextInputLayout {
     super.onAttachedToWindow();
     subs = new CompositeDisposable();
     subs.add(
-        Aesthetic.get()
+        Aesthetic.get(getContext())
             .textColorSecondary()
             .compose(Rx.<Integer>distinctToMainThread())
             .subscribe(
@@ -60,7 +60,7 @@ public class AestheticTextInputLayout extends TextInputLayout {
                 },
                 onErrorLogAndRethrow()));
     subs.add(
-        ViewUtil.getObservableForResId(getContext(), backgroundResId, Aesthetic.get().colorAccent())
+        ViewUtil.getObservableForResId(getContext(), backgroundResId, Aesthetic.get(getContext()).colorAccent())
             .compose(Rx.<Integer>distinctToMainThread())
             .subscribe(
                 new Consumer<Integer>() {

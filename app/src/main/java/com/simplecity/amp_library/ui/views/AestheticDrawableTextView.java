@@ -70,7 +70,7 @@ public class AestheticDrawableTextView extends AppCompatTextView {
 
         Observable<Integer> obs =
                 ViewUtil.getObservableForResId(
-                        getContext(), textColorResId, Aesthetic.get().textColorSecondary());
+                        getContext(), textColorResId, Aesthetic.get(getContext()).textColorSecondary());
         //noinspection ConstantConditions
         subscription =
                 obs.compose(Rx.distinctToMainThread())

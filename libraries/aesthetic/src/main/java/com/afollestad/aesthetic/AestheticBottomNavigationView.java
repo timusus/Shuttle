@@ -1,7 +1,5 @@
 package com.afollestad.aesthetic;
 
-import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
-
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -9,12 +7,15 @@ import android.support.annotation.ColorInt;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function3;
+
+import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
 
 /** @author Aidan Follestad (afollestad) */
 public class AestheticBottomNavigationView extends BottomNavigationView {
@@ -75,7 +76,7 @@ public class AestheticBottomNavigationView extends BottomNavigationView {
     switch (state.iconTextMode) {
       case BottomNavIconTextMode.SELECTED_PRIMARY:
         colorSubscriptions.add(
-            Aesthetic.get()
+            Aesthetic.get(getContext())
                 .colorPrimary()
                 .compose(Rx.<Integer>distinctToMainThread())
                 .subscribe(
@@ -89,7 +90,7 @@ public class AestheticBottomNavigationView extends BottomNavigationView {
         break;
       case BottomNavIconTextMode.SELECTED_ACCENT:
         colorSubscriptions.add(
-            Aesthetic.get()
+            Aesthetic.get(getContext())
                 .colorAccent()
                 .compose(Rx.<Integer>distinctToMainThread())
                 .subscribe(
@@ -112,21 +113,21 @@ public class AestheticBottomNavigationView extends BottomNavigationView {
     switch (state.bgMode) {
       case BottomNavBgMode.PRIMARY:
         colorSubscriptions.add(
-            Aesthetic.get()
+            Aesthetic.get(getContext())
                 .colorPrimary()
                 .compose(Rx.<Integer>distinctToMainThread())
                 .subscribe(ViewBackgroundAction.create(this), onErrorLogAndRethrow()));
         break;
       case BottomNavBgMode.PRIMARY_DARK:
         colorSubscriptions.add(
-            Aesthetic.get()
+            Aesthetic.get(getContext())
                 .colorStatusBar()
                 .compose(Rx.<Integer>distinctToMainThread())
                 .subscribe(ViewBackgroundAction.create(this), onErrorLogAndRethrow()));
         break;
       case BottomNavBgMode.ACCENT:
         colorSubscriptions.add(
-            Aesthetic.get()
+            Aesthetic.get(getContext())
                 .colorAccent()
                 .compose(Rx.<Integer>distinctToMainThread())
                 .subscribe(ViewBackgroundAction.create(this), onErrorLogAndRethrow()));
@@ -149,9 +150,9 @@ public class AestheticBottomNavigationView extends BottomNavigationView {
     super.onAttachedToWindow();
     modesSubscription =
         Observable.combineLatest(
-                Aesthetic.get().bottomNavigationBackgroundMode(),
-                Aesthetic.get().bottomNavigationIconTextMode(),
-                Aesthetic.get().isDark(),
+                Aesthetic.get(getContext()).bottomNavigationBackgroundMode(),
+                Aesthetic.get(getContext()).bottomNavigationIconTextMode(),
+                Aesthetic.get(getContext()).isDark(),
                 State.creator())
             .compose(Rx.<State>distinctToMainThread())
             .subscribe(

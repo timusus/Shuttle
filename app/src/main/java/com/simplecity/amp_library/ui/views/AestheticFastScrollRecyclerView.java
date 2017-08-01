@@ -29,7 +29,7 @@ public class AestheticFastScrollRecyclerView extends FastScrollRecyclerView {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        aestheticDisposable = Aesthetic.get().colorAccent().subscribe(color -> {
+        aestheticDisposable = Aesthetic.get(getContext()).colorAccent().subscribe(color -> {
             setThumbColor(color);
             setPopupBgColor(color);
             setPopupTextColor(Util.isColorLight(color) ? Color.BLACK : Color.WHITE);

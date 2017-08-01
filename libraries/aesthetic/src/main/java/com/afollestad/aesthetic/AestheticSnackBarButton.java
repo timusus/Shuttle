@@ -26,7 +26,7 @@ final class AestheticSnackBarButton extends AppCompatButton {
   protected void onAttachedToWindow() {
     super.onAttachedToWindow();
     subscription =
-        Aesthetic.get()
+        Aesthetic.get(getContext())
             .snackbarActionTextColor()
             .compose(Rx.<Integer>distinctToMainThread())
             .subscribe(ViewTextColorAction.create(this));

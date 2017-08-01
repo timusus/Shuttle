@@ -68,31 +68,27 @@ public class Aesthetic {
   @SuppressLint("StaticFieldLeak")
   private static Aesthetic instance;
 
-//  private final ArrayMap<String, List<ViewObservablePair>> backgroundSubscriberViews;
   private final ArrayMap<String, Integer> lastActivityThemes;
-//  private CompositeDisposable backgroundSubscriptions;
 
   private CompositeDisposable subs;
-  private AppCompatActivity context;
+  private Context context;
   private SharedPreferences prefs;
   private SharedPreferences.Editor editor;
   private RxSharedPreferences rxPrefs;
-  private boolean isResumed;
 
   @SuppressLint("CommitPrefEdits")
-  private Aesthetic(AppCompatActivity context) {
+  private Aesthetic(Context context) {
     this.context = context;
     prefs = context.getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
     editor = prefs.edit();
     rxPrefs = RxSharedPreferences.create(prefs);
-//    backgroundSubscriberViews = new ArrayMap<>(0);
     lastActivityThemes = new ArrayMap<>(2);
   }
 
-  private static String key(@Nullable AppCompatActivity activity) {
+  private static String key(@Nullable Context context) {
     String key;
-    if (activity instanceof AestheticKeyProvider) {
-      key = ((AestheticKeyProvider) activity).key();
+    if (context instanceof AestheticKeyProvider) {
+      key = ((AestheticKeyProvider) context).key();
     } else {
       key = "default";
     }
@@ -104,24 +100,17 @@ public class Aesthetic {
 
   /** Should be called before super.onCreate() in each Activity. */
   @NonNull
-  public static Aesthetic attach(@NonNull AppCompatActivity activity) {
-    if (instance == null) {
-      instance = new Aesthetic(activity);
-    }
-    instance.isResumed = false;
-    instance.context = activity;
+  public void attach(@NonNull AppCompatActivity activity) {
 
     LayoutInflater li = activity.getLayoutInflater();
     Util.setInflaterFactory(li, activity);
 
     String activityThemeKey = String.format(KEY_ACTIVITY_THEME, key(activity));
     int latestActivityTheme = instance.prefs.getInt(activityThemeKey, 0);
-    instance.lastActivityThemes.put(instance.context.getClass().getName(), latestActivityTheme);
+    instance.lastActivityThemes.put(activity.getClass().getName(), latestActivityTheme);
     if (latestActivityTheme != 0) {
       activity.setTheme(latestActivityTheme);
     }
-
-    return instance;
   }
 
   private static int getLastActivityTheme(@Nullable Context forContext) {
@@ -137,38 +126,29 @@ public class Aesthetic {
 
   @NonNull
   @CheckResult
-  public static Aesthetic get() {
+  public static Aesthetic get(Context context) {
     if (instance == null) {
-      throw new IllegalStateException("Not attached!");
+      instance = new Aesthetic(context);
     }
+    instance.context = context;
+
     return instance;
   }
 
   /** Should be called in onPause() of each Activity. */
-  public static void pause(@NonNull AppCompatActivity activity) {
-    if (instance == null) {
-      return;
-    }
-    instance.isResumed = false;
+  public void pause(@NonNull AppCompatActivity activity) {
     if (instance.subs != null) {
       instance.subs.clear();
     }
     if (activity.isFinishing()) {
-      if (instance.context != null
-          && instance.context.getClass().getName().equals(activity.getClass().getName())) {
-        instance.context = null;
+      if (context == activity) {
+        context = null;
       }
     }
   }
 
   /** Should be called in onResume() of each Activity. */
-  public static void resume(@NonNull AppCompatActivity activity) {
-    if (instance == null) {
-      return;
-    }
-    instance.context = activity;
-    instance.isResumed = true;
-
+  public void resume(@NonNull final AppCompatActivity activity) {
     if (instance.subs != null) {
       instance.subs.clear();
     }
@@ -181,7 +161,7 @@ public class Aesthetic {
                 new Consumer<Integer>() {
                   @Override
                   public void accept(@io.reactivex.annotations.NonNull Integer color) {
-                    Util.setTaskDescriptionColor(instance.context, color);
+                    Util.setTaskDescriptionColor(activity, color);
                   }
                 },
                 onErrorLogAndRethrow()));
@@ -193,11 +173,11 @@ public class Aesthetic {
                 new Consumer<Integer>() {
                   @Override
                   public void accept(@io.reactivex.annotations.NonNull Integer themeId) {
-                    if (getLastActivityTheme(instance.context) == themeId) {
+                    if (getLastActivityTheme(activity) == themeId) {
                       return;
                     }
-                    instance.lastActivityThemes.put(instance.context.getClass().getName(), themeId);
-                    instance.context.recreate();
+                    instance.lastActivityThemes.put(activity.getClass().getName(), themeId);
+                    activity.recreate();
                   }
                 },
                 onErrorLogAndRethrow()));
@@ -217,7 +197,7 @@ public class Aesthetic {
                   @Override
                   public void accept(
                       @io.reactivex.annotations.NonNull Pair<Integer, Integer> result) {
-                    instance.invalidateStatusBar();
+                    instance.invalidateStatusBar(activity);
                   }
                 },
                 onErrorLogAndRethrow()));
@@ -229,7 +209,7 @@ public class Aesthetic {
                 new Consumer<Integer>() {
                   @Override
                   public void accept(@io.reactivex.annotations.NonNull Integer color) {
-                    setNavBarColorCompat(instance.context, color);
+                    setNavBarColorCompat(activity, color);
                   }
                 },
                 onErrorLogAndRethrow()));
@@ -241,7 +221,7 @@ public class Aesthetic {
                 new Consumer<Integer>() {
                   @Override
                   public void accept(@io.reactivex.annotations.NonNull Integer color) {
-                    instance.context.getWindow().setBackgroundDrawable(new ColorDrawable(color));
+                    activity.getWindow().setBackgroundDrawable(new ColorDrawable(color));
                   }
                 },
                 onErrorLogAndRethrow()));
@@ -259,31 +239,31 @@ public class Aesthetic {
     return firstTime;
   }
 
-  private void invalidateStatusBar() {
-    String key = String.format(KEY_STATUS_BAR_COLOR, key(context));
-    final int color = prefs.getInt(key, resolveColor(context, R.attr.colorPrimaryDark));
+  private void invalidateStatusBar(AppCompatActivity activity) {
+    String key = String.format(KEY_STATUS_BAR_COLOR, key(activity));
+    final int color = prefs.getInt(key, resolveColor(activity, R.attr.colorPrimaryDark));
 
-    ViewGroup rootView = Util.getRootView(context);
+    ViewGroup rootView = Util.getRootView(activity);
     if (rootView instanceof DrawerLayout) {
       // Color is set to DrawerLayout, Activity gets transparent status bar
-      setLightStatusBarCompat(context, false);
+      setLightStatusBarCompat(activity, false);
       Util.setStatusBarColorCompat(
-          context, ContextCompat.getColor(context, android.R.color.transparent));
+          activity, ContextCompat.getColor(activity, android.R.color.transparent));
       ((DrawerLayout) rootView).setStatusBarBackgroundColor(color);
     } else {
-      Util.setStatusBarColorCompat(context, color);
+      Util.setStatusBarColorCompat(activity, color);
     }
 
     final int mode = prefs.getInt(KEY_LIGHT_STATUS_MODE, AutoSwitchMode.AUTO);
     switch (mode) {
       case AutoSwitchMode.OFF:
-        setLightStatusBarCompat(context, false);
+        setLightStatusBarCompat(activity, false);
         break;
       case AutoSwitchMode.ON:
-        setLightStatusBarCompat(context, true);
+        setLightStatusBarCompat(activity, true);
         break;
       default:
-        setLightStatusBarCompat(context, isColorLight(color));
+        setLightStatusBarCompat(activity, isColorLight(color));
         break;
     }
   }
@@ -660,7 +640,7 @@ public class Aesthetic {
   public Observable<ActiveInactiveColors> colorIconTitle(
       @Nullable Observable<Integer> backgroundObservable) {
     if (backgroundObservable == null) {
-      backgroundObservable = Aesthetic.get().colorPrimary();
+      backgroundObservable = Aesthetic.get(context).colorPrimary();
     }
     return backgroundObservable.flatMap(
         new Function<Integer, ObservableSource<ActiveInactiveColors>>() {

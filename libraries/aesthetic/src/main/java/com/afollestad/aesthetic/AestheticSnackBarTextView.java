@@ -28,7 +28,7 @@ final class AestheticSnackBarTextView extends AppCompatTextView {
   protected void onAttachedToWindow() {
     super.onAttachedToWindow();
     subscription =
-        Aesthetic.get()
+        Aesthetic.get(getContext())
             .snackbarTextColor()
             .compose(Rx.<Integer>distinctToMainThread())
             .subscribe(ViewTextColorAction.create(this), onErrorLogAndRethrow());

@@ -275,7 +275,7 @@ public class CircleImageView extends AppCompatImageView {
         super.onAttachedToWindow();
 
         if (!isInEditMode()) {
-            aestheticDisposable = Aesthetic.get().isDark()
+            aestheticDisposable = Aesthetic.get(getContext()).isDark()
                     .subscribe(isDark -> {
                         if (isDark) {
                             setBorderColor(getResources().getColor(R.color.grey_900));

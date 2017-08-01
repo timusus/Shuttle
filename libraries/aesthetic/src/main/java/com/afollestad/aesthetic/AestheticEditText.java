@@ -60,8 +60,8 @@ public class AestheticEditText extends AppCompatEditText {
     subscriptions.add(
         Observable.combineLatest(
                 ViewUtil.getObservableForResId(
-                    getContext(), backgroundResId, Aesthetic.get().colorAccent()),
-                Aesthetic.get().isDark(),
+                    getContext(), backgroundResId, Aesthetic.get(getContext()).colorAccent()),
+                Aesthetic.get(getContext()).isDark(),
                 ColorIsDarkState.creator())
             .compose(Rx.<ColorIsDarkState>distinctToMainThread())
             .subscribe(
@@ -74,12 +74,12 @@ public class AestheticEditText extends AppCompatEditText {
                 onErrorLogAndRethrow()));
     subscriptions.add(
         ViewUtil.getObservableForResId(
-                getContext(), textColorResId, Aesthetic.get().textColorPrimary())
+                getContext(), textColorResId, Aesthetic.get(getContext()).textColorPrimary())
             .compose(Rx.<Integer>distinctToMainThread())
             .subscribe(ViewTextColorAction.create(this), onErrorLogAndRethrow()));
     subscriptions.add(
         ViewUtil.getObservableForResId(
-                getContext(), textColorHintResId, Aesthetic.get().textColorSecondary())
+                getContext(), textColorHintResId, Aesthetic.get(getContext()).textColorSecondary())
             .compose(Rx.<Integer>distinctToMainThread())
             .subscribe(ViewHintTextColorAction.create(this), onErrorLogAndRethrow()));
   }

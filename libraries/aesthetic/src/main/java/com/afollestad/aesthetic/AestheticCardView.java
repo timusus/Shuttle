@@ -43,7 +43,7 @@ public class AestheticCardView extends CardView {
     super.onAttachedToWindow();
     Observable<Integer> obs =
         ViewUtil.getObservableForResId(
-            getContext(), backgroundResId, Aesthetic.get().colorCardViewBackground());
+            getContext(), backgroundResId, Aesthetic.get(getContext()).colorCardViewBackground());
     //noinspection ConstantConditions
     bgSubscription =
         obs.compose(Rx.<Integer>distinctToMainThread())

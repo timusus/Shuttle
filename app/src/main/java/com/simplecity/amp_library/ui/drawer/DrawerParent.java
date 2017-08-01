@@ -116,7 +116,7 @@ public class DrawerParent implements Parent<DrawerChild> {
 
     Drawable getDrawable(Context context) {
         Drawable drawable = DrawableCompat.wrap(context.getResources().getDrawable(iconResId));
-        DrawableCompat.setTint(drawable, isSelected ? Aesthetic.get().colorPrimary().blockingFirst() : Aesthetic.get().textColorPrimary().blockingFirst());
+        DrawableCompat.setTint(drawable, isSelected ? Aesthetic.get(context).colorPrimary().blockingFirst() : Aesthetic.get(context).textColorPrimary().blockingFirst());
         return drawable;
     }
 
@@ -125,7 +125,7 @@ public class DrawerParent implements Parent<DrawerChild> {
         holder.bind(this);
 
         Drawable arrowDrawable = DrawableCompat.wrap(holder.itemView.getResources().getDrawable(holder.isExpanded() ? R.drawable.ic_arrow_up_24dp : R.drawable.ic_arrow_down_24dp));
-        DrawableCompat.setTint(arrowDrawable, Aesthetic.get().textColorSecondary().blockingFirst());
+        DrawableCompat.setTint(arrowDrawable, Aesthetic.get(holder.itemView.getContext()).textColorSecondary().blockingFirst());
         holder.expandableIcon.setImageDrawable(arrowDrawable);
 
         holder.expandableIcon.setVisibility(getChildList().isEmpty() ? View.GONE : View.VISIBLE);

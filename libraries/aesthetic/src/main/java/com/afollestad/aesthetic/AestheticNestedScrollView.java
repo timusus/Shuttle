@@ -34,7 +34,7 @@ public class AestheticNestedScrollView extends NestedScrollView {
   public void onAttachedToWindow() {
     super.onAttachedToWindow();
     subscription =
-        Aesthetic.get()
+        Aesthetic.get(getContext())
             .colorAccent()
             .compose(Rx.<Integer>distinctToMainThread())
             .subscribe(

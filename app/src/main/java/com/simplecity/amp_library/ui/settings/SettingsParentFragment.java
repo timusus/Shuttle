@@ -264,7 +264,7 @@ public class SettingsParentFragment extends BaseNavigationController implements 
             SwitchPreferenceCompat tintNavBarColorPreference = (SwitchPreferenceCompat) findPreference(SettingsManager.KEY_PREF_NAV_BAR);
             if (tintNavBarColorPreference != null) {
                 tintNavBarColorPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-                    settingsPresenter.tintNavBarClicked((Boolean) newValue);
+                    settingsPresenter.tintNavBarClicked(getContext(), (Boolean) newValue);
                     return true;
                 });
             }
@@ -272,7 +272,7 @@ public class SettingsParentFragment extends BaseNavigationController implements 
             SwitchPreferenceCompat usePalettePreference = (SwitchPreferenceCompat) findPreference(SettingsManager.KEY_PREF_PALETTE);
             if (usePalettePreference != null) {
                 usePalettePreference.setOnPreferenceChangeListener((preference, newValue) -> {
-                    settingsPresenter.usePaletteClicked((Boolean) newValue);
+                    settingsPresenter.usePaletteClicked(getContext(), (Boolean) newValue);
                     return true;
                 });
             }
@@ -280,7 +280,7 @@ public class SettingsParentFragment extends BaseNavigationController implements 
             SwitchPreferenceCompat usePaletteNowPlayingOnlyPreference = (SwitchPreferenceCompat) findPreference(SettingsManager.KEY_PREF_PALETTE_NOW_PLAYING_ONLY);
             if (usePaletteNowPlayingOnlyPreference != null) {
                 usePaletteNowPlayingOnlyPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-                    settingsPresenter.usePaletteNowPlayingOnlyClicked((Boolean) newValue);
+                    settingsPresenter.usePaletteNowPlayingOnlyClicked(getContext(), (Boolean) newValue);
                     return true;
                 });
             }
@@ -393,7 +393,7 @@ public class SettingsParentFragment extends BaseNavigationController implements 
             supportPresenter.bindView(this);
             settingsPresenter.bindView(this);
 
-            aestheticDisposable = Aesthetic.get().colorAccent()
+            aestheticDisposable = Aesthetic.get(getContext()).colorAccent()
                     .compose(Rx.distinctToMainThread())
                     .subscribe(this::invalidateColors);
         }
@@ -459,9 +459,9 @@ public class SettingsParentFragment extends BaseNavigationController implements 
         @Override
         public void onColorSelection(@NonNull ColorChooserDialog dialog, int selectedColor) {
             if (dialog == primaryColorDialog) {
-                settingsPresenter.changePrimaryColor(selectedColor);
+                settingsPresenter.changePrimaryColor(getContext(), selectedColor);
             } else if (dialog == accentColorDialog) {
-                settingsPresenter.changeAccentColor(selectedColor);
+                settingsPresenter.changeAccentColor(getContext(), selectedColor);
             }
         }
 

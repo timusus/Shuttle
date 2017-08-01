@@ -70,7 +70,7 @@ public class ShuffleButton extends android.support.v7.widget.AppCompatImageButto
             return;
         }
 
-        aestheticDisposable = Aesthetic.get().colorAccent()
+        aestheticDisposable = Aesthetic.get(getContext()).colorAccent()
                 .subscribe(colorAccent -> {
                     selectedColor = colorAccent;
                     invalidateColors(selectedColor);

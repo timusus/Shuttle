@@ -160,12 +160,12 @@ public class SettingsPresenter extends Presenter<SettingsView> {
             settingsView.showBaseThemeDialog(new MaterialDialog.Builder(context)
                     .title(R.string.pref_title_base_theme)
                     .items(R.array.baseThemeArray)
-                    .itemsCallback((materialDialog, view, i, charSequence) -> changeBaseTheme(i))
+                    .itemsCallback((materialDialog, view, i, charSequence) -> changeBaseTheme(context, i))
                     .build());
         }
     }
 
-    private void changeBaseTheme(int i) {
+    private void changeBaseTheme(Context context, int i) {
         int theme = R.style.AppTheme_Light;
         boolean isDark = false;
         switch (i) {
@@ -186,7 +186,7 @@ public class SettingsPresenter extends Presenter<SettingsView> {
                 break;
         }
 
-        Aesthetic.get()
+        Aesthetic.get(context)
                 .activityTheme(theme)
                 .isDark(isDark)
                 .apply();
@@ -199,13 +199,13 @@ public class SettingsPresenter extends Presenter<SettingsView> {
                     new ColorChooserDialog.Builder(context, R.string.pref_title_theme_pick_color)
                             .allowUserColorInput(true)
                             .dynamicButtonColor(true)
-                            .preselect(Aesthetic.get().colorPrimary().blockingFirst())
+                            .preselect(Aesthetic.get(context).colorPrimary().blockingFirst())
                             .build());
         }
     }
 
-    public void changePrimaryColor(int color) {
-        Aesthetic.get()
+    public void changePrimaryColor(Context context, int color) {
+        Aesthetic.get(context)
                 .colorPrimary(color)
                 .colorStatusBarAuto()
                 .apply();
@@ -219,37 +219,37 @@ public class SettingsPresenter extends Presenter<SettingsView> {
                             .accentMode(true)
                             .allowUserColorInput(true)
                             .dynamicButtonColor(true)
-                            .preselect(Aesthetic.get().colorAccent().blockingFirst())
+                            .preselect(Aesthetic.get(context).colorAccent().blockingFirst())
                             .build());
         }
     }
 
-    public void changeAccentColor(int color) {
-        Aesthetic.get()
+    public void changeAccentColor(Context context, int color) {
+        Aesthetic.get(context)
                 .colorAccent(color)
                 .apply();
     }
 
-    public void tintNavBarClicked(boolean tintNavBar) {
-        Aesthetic.get()
+    public void tintNavBarClicked(Context context, boolean tintNavBar) {
+        Aesthetic.get(context)
                 .colorNavigationBarAuto(tintNavBar)
                 .apply();
     }
 
-    public void usePaletteClicked(boolean usePalette) {
+    public void usePaletteClicked(Context context, boolean usePalette) {
         // If we're not using palette any more, set the primary color back to default
         if (!usePalette) {
-            Aesthetic.get()
+            Aesthetic.get(context)
                     .colorPrimaryRes(R.color.blue_500)
                     .colorStatusBarAuto()
                     .apply();
         }
     }
 
-    public void usePaletteNowPlayingOnlyClicked(boolean usePaletteNowPlayingOnly) {
+    public void usePaletteNowPlayingOnlyClicked(Context context, boolean usePaletteNowPlayingOnly) {
         // If we're only using palette for 'now playing', set the primary color back to default
         if (usePaletteNowPlayingOnly) {
-            Aesthetic.get()
+            Aesthetic.get(context)
                     .colorPrimaryRes(R.color.blue_500)
                     .colorStatusBarAuto()
                     .apply();

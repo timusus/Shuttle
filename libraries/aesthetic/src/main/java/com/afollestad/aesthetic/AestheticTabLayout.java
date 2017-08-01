@@ -54,7 +54,7 @@ public class AestheticTabLayout extends TabLayout {
   @Override
   public void setBackgroundColor(@ColorInt int color) {
     super.setBackgroundColor(color);
-    Aesthetic.get()
+    Aesthetic.get(getContext())
         .colorIconTitle(Observable.just(color))
         .take(1)
         .subscribe(
@@ -94,7 +94,7 @@ public class AestheticTabLayout extends TabLayout {
 
       Note: To reproduce this issue, it seems the TabLayout needs to belong to a nested fragment.
      */
-      final Integer primaryColor = Aesthetic.get()
+      final Integer primaryColor = Aesthetic.get(getContext())
               .colorPrimary()
               .blockingFirst();
       ViewBackgroundAction.create(AestheticTabLayout.this).accept(primaryColor);
@@ -103,7 +103,7 @@ public class AestheticTabLayout extends TabLayout {
           @Override
           public void run() {
 
-              ActiveInactiveColors activeInactiveColors = Aesthetic.get()
+              ActiveInactiveColors activeInactiveColors = Aesthetic.get(getContext())
                       .colorIconTitle(Observable.just(primaryColor))
                       .blockingFirst();
 
@@ -115,7 +115,7 @@ public class AestheticTabLayout extends TabLayout {
       // End workaround
 
     bgModeSubscription =
-        Aesthetic.get()
+        Aesthetic.get(getContext())
             .tabLayoutBackgroundMode()
             .compose(Rx.<Integer>distinctToMainThread())
             .subscribe(
@@ -128,7 +128,7 @@ public class AestheticTabLayout extends TabLayout {
                     switch (mode) {
                       case TabLayoutIndicatorMode.PRIMARY:
                         bgColorSubscription =
-                            Aesthetic.get()
+                            Aesthetic.get(getContext())
                                 .colorPrimary()
                                 .compose(Rx.<Integer>distinctToMainThread())
                                 .subscribe(
@@ -137,7 +137,7 @@ public class AestheticTabLayout extends TabLayout {
                         break;
                       case TabLayoutIndicatorMode.ACCENT:
                         bgColorSubscription =
-                            Aesthetic.get()
+                            Aesthetic.get(getContext())
                                 .colorAccent()
                                 .compose(Rx.<Integer>distinctToMainThread())
                                 .subscribe(
@@ -152,7 +152,7 @@ public class AestheticTabLayout extends TabLayout {
                 onErrorLogAndRethrow());
 
     indicatorModeSubscription =
-        Aesthetic.get()
+        Aesthetic.get(getContext())
             .tabLayoutIndicatorMode()
             .compose(Rx.<Integer>distinctToMainThread())
             .subscribe(
@@ -165,7 +165,7 @@ public class AestheticTabLayout extends TabLayout {
                     switch (mode) {
                       case TabLayoutIndicatorMode.PRIMARY:
                         indicatorColorSubscription =
-                            Aesthetic.get()
+                            Aesthetic.get(getContext())
                                 .colorPrimary()
                                 .compose(Rx.<Integer>distinctToMainThread())
                                 .subscribe(
@@ -179,7 +179,7 @@ public class AestheticTabLayout extends TabLayout {
                         break;
                       case TabLayoutIndicatorMode.ACCENT:
                         indicatorColorSubscription =
-                            Aesthetic.get()
+                            Aesthetic.get(getContext())
                                 .colorAccent()
                                 .compose(Rx.<Integer>distinctToMainThread())
                                 .subscribe(

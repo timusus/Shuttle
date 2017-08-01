@@ -114,7 +114,7 @@ public class DragGripView extends View {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        aestheticDisposable = Aesthetic.get()
+        aestheticDisposable = Aesthetic.get(getContext())
                 .textColorSecondary()
                 .subscribe(color -> {
                     mColor = color;

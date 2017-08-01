@@ -1,15 +1,17 @@
 package com.afollestad.aesthetic;
 
-import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
-
 import android.content.res.ColorStateList;
 import android.support.annotation.RestrictTo;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function4;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+
+import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 
 /**
  * Handles auto theming of dialogs from my Material Dialogs library, using the ThemeSingleton class.
@@ -85,7 +87,7 @@ final class MaterialDialogsUtil {
       fieldLinkColor.set(instance, ColorStateList.valueOf(params.accentColor));
 
     } catch (Throwable t) {
-      t.printStackTrace();
+//      t.printStackTrace();
     }
   }
 

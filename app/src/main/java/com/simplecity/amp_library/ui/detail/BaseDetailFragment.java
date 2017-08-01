@@ -186,7 +186,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
         loadBackgroundImage();
 
-        Aesthetic.get()
+        Aesthetic.get(getContext())
                 .colorPrimary()
                 .take(1)
                 .subscribe(primaryColor -> {
@@ -194,7 +194,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
                     toolbarLayout.setBackgroundColor(primaryColor);
                 });
 
-        disposables.add(Aesthetic.get()
+        disposables.add(Aesthetic.get(getContext())
                 .colorPrimary()
                 .compose(distinctToMainThread())
                 .subscribe(primaryColor -> {

@@ -30,7 +30,7 @@ public class AestheticViewPager extends ViewPager {
   protected void onAttachedToWindow() {
     super.onAttachedToWindow();
     subscription =
-        Aesthetic.get()
+        Aesthetic.get(getContext())
             .colorAccent()
             .compose(Rx.<Integer>distinctToMainThread())
             .subscribe(

@@ -215,7 +215,7 @@ public class FolderView extends BaseSelectableViewModel<FolderView.ViewHolder, B
             overflow.setOnClickListener(v -> viewModel.onOverflowClick(v));
             checkBox.setOnClickListener(v -> viewModel.onCheckboxClick((CheckBox) v));
 
-            int colorPrimary = Aesthetic.get().colorPrimary().blockingFirst();
+            int colorPrimary = Aesthetic.get(itemView.getContext()).colorPrimary().blockingFirst();
 
             folderDrawable = itemView.getContext().getResources().getDrawable(R.drawable.ic_folder_24dp);
             parentFolderDrawable = itemView.getContext().getResources().getDrawable(R.drawable.ic_folder_open_24dp);

@@ -165,13 +165,13 @@ public class FolderFragment extends BaseFragment implements
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
 
-        Aesthetic.get()
+        Aesthetic.get(getContext())
                 .colorPrimary()
                 .take(1)
                 .subscribe(color -> ViewBackgroundAction.create(appBarLayout)
                         .accept(color), onErrorLogAndRethrow());
 
-        compositeDisposable.add(Aesthetic.get()
+        compositeDisposable.add(Aesthetic.get(getContext())
                 .colorPrimary()
                 .compose(distinctToMainThread())
                 .subscribe(color -> ViewBackgroundAction.create(appBarLayout)
