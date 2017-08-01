@@ -1,9 +1,9 @@
 package com.simplecity.amp_library.ui.activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -59,10 +59,12 @@ public class MainActivity extends BaseCastActivity implements
 
         //Ensure the drawer draws a content scrim over the status bar.
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerLayout.setOnApplyWindowInsetsListener((view, windowInsets) -> {
-            navigationView.dispatchApplyWindowInsets(windowInsets);
-            return windowInsets.replaceSystemWindowInsets(0, 0, 0, 0);
-        });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+            drawerLayout.setOnApplyWindowInsetsListener((view, windowInsets) -> {
+                navigationView.dispatchApplyWindowInsets(windowInsets);
+                return windowInsets.replaceSystemWindowInsets(0, 0, 0, 0);
+            });
+        }
 
         if (savedInstanceState == null) {
             getSupportFragmentManager()

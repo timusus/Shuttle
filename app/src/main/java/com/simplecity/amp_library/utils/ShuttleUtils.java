@@ -330,4 +330,8 @@ public final class ShuttleUtils {
         arrayOfObject[3] = 0xFF & i >> 24;
         return String.format("%d.%d.%d.%d", arrayOfObject);
     }
+
+    public static boolean canDrawBehindStatusBar() {
+        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH);
+    }
 }

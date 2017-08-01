@@ -9,6 +9,7 @@ import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.Rx;
 import com.afollestad.aesthetic.ViewBackgroundAction;
 import com.simplecity.amp_library.utils.ActionBarUtils;
+import com.simplecity.amp_library.utils.ShuttleUtils;
 
 import io.reactivex.disposables.Disposable;
 
@@ -35,7 +36,11 @@ public class StatusBarView extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        setMeasuredDimension(widthMeasureSpec, (int) ActionBarUtils.getStatusBarHeight(getContext()));
+        if (ShuttleUtils.canDrawBehindStatusBar()) {
+            setMeasuredDimension(widthMeasureSpec, (int) ActionBarUtils.getStatusBarHeight(getContext()));
+        } else {
+            setMeasuredDimension(0, 0);
+        }
     }
 
     @Override

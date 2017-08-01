@@ -160,8 +160,12 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         unbinder = ButterKnife.bind(this, rootView);
 
         toolbar.setNavigationOnClickListener(v -> getNavigationController().popViewController());
-        toolbar.getLayoutParams().height = (int) (ActionBarUtils.getActionBarHeight(getContext()) + ActionBarUtils.getStatusBarHeight(getContext()));
-        toolbar.setPadding(toolbar.getPaddingLeft(), (int) (toolbar.getPaddingTop() + ActionBarUtils.getStatusBarHeight(getContext())), toolbar.getPaddingRight(), toolbar.getPaddingBottom());
+
+        if (ShuttleUtils.canDrawBehindStatusBar()) {
+            toolbar.getLayoutParams().height = (int) (ActionBarUtils.getActionBarHeight(getContext()) + ActionBarUtils.getStatusBarHeight(getContext()));
+            toolbar.setPadding(toolbar.getPaddingLeft(), (int) (toolbar.getPaddingTop() + ActionBarUtils.getStatusBarHeight(getContext())), toolbar.getPaddingRight(), toolbar.getPaddingBottom());
+        }
+
         setupToolbarMenu(toolbar);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
