@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.ui.modelviews;
 
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -18,10 +19,24 @@ import static com.simplecity.amp_library.ui.fragments.PlaylistFragment.PlaylistC
 
 public class PlaylistView extends BaseViewModel<PlaylistView.ViewHolder> {
 
+    public interface OnClickListener {
+
+        void onPlaylistClick(int position, PlaylistView playlistView);
+
+        void onPlaylistOverflowClick(int position, View v, Playlist playlist);
+    }
+
     public Playlist playlist;
+
+    @Nullable
+    private OnClickListener listener;
 
     public PlaylistView(Playlist playlist) {
         this.playlist = playlist;
+    }
+
+    public void setListener(@Nullable OnClickListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -42,12 +57,24 @@ public class PlaylistView extends BaseViewModel<PlaylistView.ViewHolder> {
         holder.overflowButton.setContentDescription(holder.itemView.getResources().getString(btn_options, playlist.name));
     }
 
+    void onPlaylistClicked(int position) {
+        if (listener != null) {
+            listener.onPlaylistClick(position, this);
+        }
+    }
+
+    void onOverflowClicked(int position, View v) {
+        if (listener != null) {
+            listener.onPlaylistOverflowClick(position, v, playlist);
+        }
+    }
+
     @Override
     public ViewHolder createViewHolder(ViewGroup parent) {
         return new ViewHolder(createView(parent));
     }
 
-    public static class ViewHolder extends BaseViewHolder {
+    public static class ViewHolder extends BaseViewHolder<PlaylistView> {
 
         public TextView lineOne;
         public NonScrollImageButton overflowButton;
@@ -58,6 +85,9 @@ public class PlaylistView extends BaseViewModel<PlaylistView.ViewHolder> {
 
             lineOne = itemView.findViewById(line_one);
             overflowButton = itemView.findViewById(btn_overflow);
+
+            itemView.setOnClickListener(v -> viewModel.onPlaylistClicked(getAdapterPosition()));
+            overflowButton.setOnClickListener(v -> viewModel.onOverflowClicked(getAdapterPosition(), v));
         }
 
         @Override

@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.tagger;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -152,6 +153,7 @@ public class TaggerDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
+        @SuppressLint("InflateParams")
         View customView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_tagger, null, false);
 
         setupViews(customView);

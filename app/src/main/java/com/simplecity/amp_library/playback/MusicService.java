@@ -1323,9 +1323,7 @@ public class MusicService extends Service {
             Song finishedSong = currentSong;
             if (finishedSong != null) {
                 if (finishedSong.hasPlayed()) {
-                    Completable.fromAction(() -> {
-                        ShuttleUtils.incrementPlayCount(this, finishedSong);
-                    }).subscribeOn(Schedulers.io())
+                    Completable.fromAction(() -> ShuttleUtils.incrementPlayCount(this, finishedSong)).subscribeOn(Schedulers.io())
                             .subscribe(() -> {
                                 // Nothing to do
                             }, error -> LogUtils.logException(TAG, "Error incrementing play count", error));

@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -21,7 +22,6 @@ import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
 public class CustomMediaScanner implements MediaScannerConnection.MediaScannerConnectionClient {
@@ -111,7 +111,9 @@ public class CustomMediaScanner implements MediaScannerConnection.MediaScannerCo
         }
     }
 
-    public static Disposable scanFile(Context context, FolderObject folderObject) {
+    public static void scanFile(Context context, FolderObject folderObject) {
+
+        @SuppressLint("InflateParams")
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_progress, null);
         TextView pathsTextView = view.findViewById(R.id.paths);
         pathsTextView.setText(folderObject.path);
@@ -125,14 +127,14 @@ public class CustomMediaScanner implements MediaScannerConnection.MediaScannerCo
                 .negativeText(R.string.close)
                 .show();
 
-        return FileHelper.getPathList(new File(folderObject.path), true, false)
+        FileHelper.getPathList(new File(folderObject.path), true, false)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(paths -> {
                     ViewUtils.fadeOut(indeterminateProgress, null);
                     ViewUtils.fadeIn(horizontalProgress, null);
                     horizontalProgress.setMax(paths.size());
 
-                    CustomMediaScanner.scanFiles(paths, new CustomMediaScanner.ScanCompletionListener() {
+                    CustomMediaScanner.scanFiles(paths, new ScanCompletionListener() {
                         @Override
                         public void onPathScanned(String path) {
                             horizontalProgress.setProgress(horizontalProgress.getProgress() + 1);

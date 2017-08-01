@@ -107,11 +107,6 @@ public class SongFragment extends BaseFragment implements
         }
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
     void refreshAdapterItems() {
         PermissionUtils.RequestStoragePermissions(() -> {
                     if (getActivity() != null && isAdded()) {
@@ -174,11 +169,6 @@ public class SongFragment extends BaseFragment implements
         }
 
         super.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 
     @Override

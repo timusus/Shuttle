@@ -12,9 +12,7 @@ import com.afollestad.aesthetic.ViewTextColorAction;
 import com.afollestad.aesthetic.ViewUtil;
 
 import io.reactivex.Observable;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
 
 import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
 
@@ -59,12 +57,7 @@ public class CustomCheckbox extends AestheticCheckBox {
                         ColorIsDarkState.creator())
                         .compose(Rx.<ColorIsDarkState>distinctToMainThread())
                         .subscribe(
-                                new Consumer<ColorIsDarkState>() {
-                                    @Override
-                                    public void accept(@NonNull ColorIsDarkState colorIsDarkState) {
-                                        invalidateColors(colorIsDarkState);
-                                    }
-                                },
+                                colorIsDarkState -> invalidateColors(colorIsDarkState),
                                 onErrorLogAndRethrow()));
 
         ViewTextColorAction.create(this).accept(Color.BLACK);

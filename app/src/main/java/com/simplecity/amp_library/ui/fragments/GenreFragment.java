@@ -105,11 +105,6 @@ public class GenreFragment extends BaseFragment implements
         refreshAdapterItems();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
     private void refreshAdapterItems() {
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {

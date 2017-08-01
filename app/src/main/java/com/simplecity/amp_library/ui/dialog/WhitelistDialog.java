@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.ui.dialog;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +28,8 @@ public class WhitelistDialog {
     }
 
     public static MaterialDialog getDialog(Context context) {
+
+        @SuppressLint("InflateParams")
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_blacklist, null);
 
         final MaterialDialog.Builder builder = new MaterialDialog.Builder(context)

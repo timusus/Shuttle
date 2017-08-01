@@ -249,13 +249,6 @@ public final class ShuttleUtils {
     }
 
     /**
-     * @return true if device is running API >= 22
-     */
-    public static boolean hasLollipopMR1() {
-        return Build.VERSION.SDK_INT >= 22;
-    }
-
-    /**
      * @return true if device is running API >= 23
      */
     public static boolean hasMarshmallow() {
@@ -267,13 +260,6 @@ public final class ShuttleUtils {
      */
     public static boolean hasNougat() {
         return Build.VERSION.SDK_INT >= 24;
-    }
-
-    /**
-     * @return true if device is running API >= 25
-     */
-    public static boolean hasNougatMR1() {
-        return Build.VERSION.SDK_INT >= 25;
     }
 
     public static boolean isLandscape() {

@@ -84,7 +84,7 @@ public class ShuttleApplication extends Application {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
 
-        if (BuildConfig.MULTIDEX_ENABLED) {
+        if (BuildConfig.FLAVOR.equals("dev")) {
             MultiDex.install(base);
         }
     }
@@ -119,7 +119,7 @@ public class ShuttleApplication extends Application {
 
         //Firebase Analytics
         FirebaseAnalytics.getInstance(this);
-        
+
         VideoCastManager.initialize(this,
                 new CastConfiguration.Builder(Config.CHROMECAST_APP_ID)
                         .enableLockScreen()

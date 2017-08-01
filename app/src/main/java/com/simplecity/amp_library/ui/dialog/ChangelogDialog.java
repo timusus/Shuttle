@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.ui.dialog;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,8 @@ public class ChangelogDialog {
     }
 
     public static MaterialDialog getChangelogDialog(Context context) {
+
+        @SuppressLint("InflateParams")
         View customView = LayoutInflater.from(context).inflate(R.layout.dialog_changelog, null);
 
         WebView webView = customView.findViewById(R.id.webView);

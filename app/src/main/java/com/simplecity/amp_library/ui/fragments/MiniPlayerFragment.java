@@ -27,6 +27,7 @@ import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.ui.views.PlayPauseView;
 import com.simplecity.amp_library.ui.views.PlayerViewAdapter;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
+import com.simplecity.multisheetview.ui.view.MultiSheetView;
 
 import javax.inject.Inject;
 
@@ -34,7 +35,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.disposables.CompositeDisposable;
-import com.simplecity.multisheetview.ui.view.MultiSheetView;
 
 import static com.afollestad.aesthetic.Rx.distinctToMainThread;
 import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
@@ -135,11 +135,6 @@ public class MiniPlayerFragment extends BaseFragment {
         if (presenter != null) {
             presenter.updateTrackInfo();
         }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
     }
 
     @Override

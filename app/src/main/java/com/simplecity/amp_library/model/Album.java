@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 
-import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.http.HttpClient;
 import com.simplecity.amp_library.http.itunes.ItunesResult;
 import com.simplecity.amp_library.http.lastfm.LastFmResult;
@@ -151,10 +150,6 @@ public class Album implements
         public Album build() {
             return new Album(id, name, artists, albumArtistName, numSongs, numDiscs, year, lastPlayed, dateAdded, paths, songPlayCount);
         }
-    }
-
-    public String getNumSongsLabel() {
-        return StringUtils.makeAlbumsLabel(ShuttleApplication.getInstance(), 0, numSongs, true);
     }
 
     public AlbumArtist getAlbumArtist() {

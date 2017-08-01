@@ -165,13 +165,12 @@ class MultiPlayer implements
         }
     }
 
-    long seekTo(long whereto) {
+    void seekTo(long whereto) {
         try {
             mCurrentMediaPlayer.seekTo((int) whereto);
         } catch (IllegalStateException e) {
             Log.e(TAG, "Error seeking MultiPlayer: " + e.getLocalizedMessage());
         }
-        return whereto;
     }
 
     void setVolume(float vol) {

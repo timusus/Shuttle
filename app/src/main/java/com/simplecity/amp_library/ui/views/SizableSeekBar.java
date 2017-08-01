@@ -64,11 +64,6 @@ public class SizableSeekBar extends AestheticSeekBar {
     }
 
     @Override
-    protected void onSizeChanged(int i, int j, int k, int l) {
-        super.onSizeChanged(i, j, k, l);
-    }
-
-    @Override
     public void setOnSeekBarChangeListener(OnSeekBarChangeListener listener) {
         seekListener = listener;
     }

@@ -237,11 +237,6 @@ public class PlayerFragment extends BaseFragment implements
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
     protected String screenName() {
         return TAG;
     }

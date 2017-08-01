@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.PopupMenu;
@@ -575,7 +576,10 @@ public class MenuUtils implements MusicUtils.Defs {
     }
 
     public static void renameFile(Context context, BaseFileObject fileObject, UnsafeAction filenameChanged) {
+
+        @SuppressLint("InflateParams")
         View customView = LayoutInflater.from(context).inflate(R.layout.dialog_rename, null);
+
         final EditText editText = customView.findViewById(R.id.editText);
         editText.setText(fileObject.name);
 

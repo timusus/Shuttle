@@ -22,7 +22,7 @@ public class StringUtils {
 
     private static Formatter sFormatter = new Formatter(sFormatBuilder, Locale.getDefault());
 
-    private static Pattern pattern = Pattern.compile("^(?i)\\s*(?:the |an |a )|(?:, the|, an|, a)\\s*$|[\\[\\]\\(\\)!\\?\\.,']");
+    private static Pattern pattern = Pattern.compile("^(?i)\\s*(?:the |an |a )|(?:, the|, an|, a)\\s*$|[\\[\\]()!?.,']");
 
     private StringUtils() {
 

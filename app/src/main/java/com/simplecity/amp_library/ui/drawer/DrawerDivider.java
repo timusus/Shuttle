@@ -21,7 +21,7 @@ public class DrawerDivider implements Parent<DrawerChild> {
         return false;
     }
 
-    public void bindView(DividerHolder holder) {
+    public void bindView() {
 
     }
 

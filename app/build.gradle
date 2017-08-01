@@ -34,7 +34,7 @@ apply plugin: 'com.google.gms.google-services'
 
 @Nullable
 def getProperties(String fileName) {
-    final def Properties properties = new Properties()
+    final Properties properties = new Properties()
     def file = file(fileName)
     if (file.exists()) {
         file.withInputStream { stream -> properties.load(stream) }
@@ -42,7 +42,7 @@ def getProperties(String fileName) {
     return properties
 }
 
-def getProperty(@Nullable Properties properties, String name) {
+static def getProperty(@Nullable Properties properties, String name) {
     return properties.getProperty(name) ?: "$name missing"
 }
 
@@ -143,7 +143,7 @@ android {
         */
     }
 
-    //Ignore useless variants, such as devRelease.
+    // Ignore useless variants, such as devRelease.
     variantFilter { variant ->
 
         def names = variant.flavors*.name

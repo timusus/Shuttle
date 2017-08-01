@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.ui.dialog;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.Html;
@@ -53,12 +54,11 @@ public class BiographyDialog {
 
     private static MaterialDialog getBiographyDialog(final Context context, @BioType int type, String artistName, String albumName) {
 
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View customView = inflater.inflate(R.layout.dialog_biography, null, false);
+        @SuppressLint("InflateParams")
+        View customView = LayoutInflater.from(context).inflate(R.layout.dialog_biography, null, false);
 
         final ProgressBar progressBar = customView.findViewById(R.id.progress);
         final TextView message = customView.findViewById(R.id.message);
-        final ScrollView scrollView = customView.findViewById(R.id.scrollView);
 
         Callback<LastFmArtist> artistCallback = new Callback<LastFmArtist>() {
             @Override
@@ -133,6 +133,7 @@ public class BiographyDialog {
 
     public static MaterialDialog getSongInfoDialog(@NonNull Context context, @NonNull Song song) {
 
+        @SuppressLint("InflateParams")
         View view = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.dialog_song_info, null);
 
         View titleView = view.findViewById(R.id.title);
@@ -240,6 +241,7 @@ public class BiographyDialog {
             return;
         }
 
+        @SuppressLint("InflateParams")
         View view = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.dialog_song_info, null);
 
         View titleView = view.findViewById(R.id.title);

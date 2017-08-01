@@ -1,6 +1,5 @@
 package com.simplecity.amp_library.ui.fragments;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -101,11 +100,6 @@ public class QueueFragment extends BaseFragment implements
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -162,11 +156,6 @@ public class QueueFragment extends BaseFragment implements
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
 
@@ -195,11 +184,6 @@ public class QueueFragment extends BaseFragment implements
         unbinder.unbind();
 
         super.onDestroyView();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 
     private void setupContextualToolbar() {

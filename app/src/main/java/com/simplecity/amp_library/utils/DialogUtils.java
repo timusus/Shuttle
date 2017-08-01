@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -73,6 +74,7 @@ public class DialogUtils {
 
     public static void showWeekSelectorDialog(final Context context) {
 
+        @SuppressLint("InflateParams")
         View view = LayoutInflater.from(context).inflate(R.layout.weekpicker, null);
 
         final NumberPicker numberPicker;

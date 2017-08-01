@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.utils;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.support.annotation.Nullable;
@@ -45,6 +46,7 @@ public class ArtworkDialog {
 
     public static MaterialDialog build(Context context, ArtworkProvider artworkProvider) {
 
+        @SuppressLint("InflateParams")
         View customView = LayoutInflater.from(context).inflate(R.layout.dialog_artwork, null);
 
         ViewModelAdapter adapter = new ViewModelAdapter();
@@ -117,9 +119,8 @@ public class ArtworkDialog {
                 .subscribe(files -> {
                     adapter.removeItem(adapter.items.indexOf(folderView));
                     if (files != null) {
-                        Stream.of(files).filter(file -> userSelectedArtwork == null || !file.getPath().equals(userSelectedArtwork.path)).forEach(file -> {
-                            adapter.addItem(new ArtworkView(ArtworkProvider.Type.FOLDER, artworkProvider, glideListener, file, false));
-                        });
+                        Stream.of(files).filter(file -> userSelectedArtwork == null || !file.getPath().equals(userSelectedArtwork.path)).forEach(file ->
+                                adapter.addItem(new ArtworkView(ArtworkProvider.Type.FOLDER, artworkProvider, glideListener, file, false)));
                     }
                 }, error -> LogUtils.logException(TAG, "Error getting artwork files", error));
 

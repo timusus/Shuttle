@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.annimon.stream.Stream;
-import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.http.HttpClient;
 import com.simplecity.amp_library.http.itunes.ItunesResult;
 import com.simplecity.amp_library.http.lastfm.LastFmResult;
@@ -98,10 +97,6 @@ public class AlbumArtist implements
             numSongs += album.numSongs;
         }
         return numSongs;
-    }
-
-    public String getNumAlbumsSongsLabel() {
-        return StringUtils.makeAlbumAndSongsLabel(ShuttleApplication.getInstance(), getNumAlbums(), getNumSongs());
     }
 
     @Override

@@ -56,7 +56,7 @@ public class DrawerAdapter extends ExpandableRecyclerAdapter<Parent<DrawerChild>
     public void onBindParentViewHolder(@NonNull ParentViewHolder<Parent<DrawerChild>, DrawerChild> parentViewHolder, int parentPosition, @NonNull Parent<DrawerChild> parent) {
         switch (getParentViewType(parentPosition)) {
             case TYPE_DIVIDER:
-                ((DrawerDivider) getParentList().get(parentPosition)).bindView((DrawerDivider.DividerHolder) parentViewHolder);
+                ((DrawerDivider) getParentList().get(parentPosition)).bindView();
                 break;
             case TYPE_PARENT:
                 ((DrawerParent) getParentList().get(parentPosition)).bindView((DrawerParent.ParentHolder) parentViewHolder);
