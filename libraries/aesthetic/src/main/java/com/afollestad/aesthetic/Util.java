@@ -92,6 +92,7 @@ public final class Util {
         a.recycle();
       }
     }
+    return fallback;
   }
 
   @IdRes
