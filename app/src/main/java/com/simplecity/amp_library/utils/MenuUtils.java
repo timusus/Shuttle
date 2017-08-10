@@ -102,6 +102,10 @@ public class MenuUtils implements MusicUtils.Defs {
                 .show();
     }
 
+    public static void remove(Song song) {
+        MusicUtils.removeFromQueue(song, true);
+    }
+
     public static void setupSongMenu(Context context, PopupMenu menu, boolean showRemoveButton) {
         menu.inflate(R.menu.menu_song);
 
@@ -138,7 +142,7 @@ public class MenuUtils implements MusicUtils.Defs {
         };
     }
 
-    public static PopupMenu.OnMenuItemClickListener getSongMenuClickListener(Context context, Song song, UnsafeConsumer<TaggerDialog> tagEditorCallback) {
+    public static PopupMenu.OnMenuItemClickListener getSongMenuClickListener(Context context, Song song, UnsafeConsumer<TaggerDialog> tagEditorCallback, @Nullable UnsafeAction songRemoved) {
         return item -> {
             switch (item.getItemId()) {
                 case R.id.playNext:
@@ -170,6 +174,12 @@ public class MenuUtils implements MusicUtils.Defs {
                     return true;
                 case R.id.delete:
                     delete(context, Collections.singletonList(song));
+                    return true;
+                case R.id.remove:
+                    if (songRemoved != null) {
+                        songRemoved.run();
+                    }
+                    remove(song);
                     return true;
             }
             return false;

@@ -102,6 +102,14 @@ public class QueuePresenter extends Presenter<QueueView> {
         MusicUtils.clearQueue();
     }
 
+    public void removeFromQueue(int position, Song song) {
+        MusicUtils.removeFromQueue(song, true);
+        QueueView queueView = getView();
+        if (queueView != null) {
+            queueView.removeFromQueue(position);
+        }
+    }
+
     private void loadData() {
         QueueView queueView = getView();
         data = Stream.of(MusicUtils.getQueue())
@@ -149,12 +157,14 @@ public class QueuePresenter extends Presenter<QueueView> {
         public void onSongOverflowClick(int position, View v, Song song) {
             PopupMenu menu = new PopupMenu(v.getContext(), v);
             MenuUtils.setupSongMenu(v.getContext(), menu, true);
-            menu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(v.getContext(), song, taggerDialog -> {
-                QueueView queueView = getView();
-                if (queueView != null) {
-                    queueView.showTaggerDialog(taggerDialog);
-                }
-            }));
+            menu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(v.getContext(), song,
+                    taggerDialog -> {
+                        QueueView queueView = getView();
+                        if (queueView != null) {
+                            queueView.showTaggerDialog(taggerDialog);
+                        }
+                    },
+                    () -> removeFromQueue(position, song)));
             menu.show();
         }
 

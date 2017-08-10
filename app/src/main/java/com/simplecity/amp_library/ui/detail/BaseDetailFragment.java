@@ -739,8 +739,9 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     public void onSongOverflowClick(int position, View v, Song song) {
         PopupMenu popupMenu = new PopupMenu(getContext(), v);
         MenuUtils.setupSongMenu(getContext(), popupMenu, false);
-        popupMenu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), song, taggerDialog
-                -> taggerDialog.show(getFragmentManager())));
+        popupMenu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), song,
+                taggerDialog -> taggerDialog.show(getFragmentManager()),
+                null));
         popupMenu.show();
     }
 
