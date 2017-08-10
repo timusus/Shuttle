@@ -741,4 +741,7 @@
     <string name="search_title_only">Solo título</string>
     <string name="search_artists">Artistas</string>
     <!-- Changelog -->
+
+    <!-- Paranoid Android Error Message-->
+    <string name="non_aospa">No estás corriendo Paranoid Android</string>
 </resources>

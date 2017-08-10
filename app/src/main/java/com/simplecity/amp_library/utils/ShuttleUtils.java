@@ -76,6 +76,13 @@ public final class ShuttleUtils {
         return BuildConfig.FLAVOR.equals("amazonFree") || BuildConfig.FLAVOR.equals("amazonPaid");
     }
 
+    /**
+     * @return true if this is a Paranoid Android build
+     */
+    public static boolean isParanoidBuild() {
+        return BuildConfig.FLAVOR.equals("paranoid");
+    }
+
     public static String getShuttleMarketUri(String packageName) {
         String uri;
         if (isAmazonBuild()) {
@@ -226,6 +233,10 @@ public final class ShuttleUtils {
     public static boolean isUpgraded() {
 
         if (ShuttleApplication.getInstance().getIsUpgraded()) {
+            return true;
+        }
+
+        if (ShuttleUtils.isParanoidBuild()) {
             return true;
         }
 

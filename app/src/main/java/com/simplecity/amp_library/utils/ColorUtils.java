@@ -20,7 +20,7 @@ public class ColorUtils {
      * @return the highlight color for the current theme
      */
     public static int getPrimaryColor() {
-        return SettingsManager.getInstance().getPrimaryColor(ShuttleApplication.getInstance().getResources().getColor(R.color.indigo_500));
+        return SettingsManager.getInstance().getPrimaryColor(ShuttleApplication.getInstance().getResources().getColor(R.color.pa_primaryColor));
     }
 
     public static int getAccentColor() {
@@ -166,6 +166,10 @@ public class ColorUtils {
 
     public static int getDefaultAccentColor(int color) {
         Resources res = ShuttleApplication.getInstance().getResources();
+
+        if (color == res.getColor(R.color.pa_primaryColor)) {
+            return res.getColor(R.color.pa_accentColor);
+        }
 
         if (color == res.getColor(R.color.red_400) ||
                 color == res.getColor(R.color.red_500) ||

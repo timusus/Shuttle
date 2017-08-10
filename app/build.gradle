@@ -54,7 +54,8 @@ android {
         targetSdkVersion versions.targetSdk
 
         versionName versions.name
-        versionCode gitCommitCount() + 3200 // Add 3200 to account for moving to github and resetting commit count.
+        versionCode gitCommitCount() + 3200
+        // Add 3200 to account for moving to github and resetting commit count.
 
         resConfigs "en", "zh-rCN", "ja", "fr", "de", "ko", "it", "ru", "nl", "tr", "pl", "ro", "hu", "uk", "bg-rBG", "en-rGB", "vi", "pt-rBR", "es", "en-rNZ", "zh-rTW", "es-rES", "hr", "en-rAU", "eu-rES"
 
@@ -138,7 +139,7 @@ android {
         def names = variant.flavors*.name
         def buildTypes = variant.buildType*.name
 
-        def debugFilters = ["paid", "free", 'amazonPaid', "amazonFree"];
+        def debugFilters = ["paid", "free", 'amazonPaid', "amazonFree", "paranoid"];
         def relFilters = ["dev", "devPre21"];
 
         def filter = { name -> names.contains(name) }
@@ -180,6 +181,12 @@ android {
         amazonPaid.applicationId "com.simplecity.amp_pro"
 
         amazonFree.applicationId "another.music.player"
+
+        paranoid {
+            applicationId "com.simplecity.shuttle"
+
+            minSdkVersion 21
+        }
     }
 
     sourceSets {
@@ -203,6 +210,9 @@ android {
 
         amazonFree.res.srcDirs = ['src/free/res']
         amazonFree.java.srcDirs = ['src/free/java']
+
+        paranoid.res.srcDirs = ['src/paid/res']
+        paranoid.java.srcDirs = ['src/paid/java']
     }
 
     lintOptions {

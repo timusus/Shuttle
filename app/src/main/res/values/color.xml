@@ -56,4 +56,8 @@
     <color name="primary_text_dark">#ffffff</color>
     <color name="primary_text_light">#000000</color>
 
+    <color name="pa_primaryColor">#2D2D2D</color>
+    <color name="pa_primaryColorDark">#191919</color>
+    <color name="pa_accentColor">#76C124</color>
+
 </resources>
