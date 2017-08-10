@@ -69,6 +69,12 @@ public class UpNextView extends LinearLayout {
     @Nullable @BindView(R.id.seekbar)
     SizableSeekBar seekBar;
 
+    @Nullable @BindView(R.id.buttonContainer)
+    View buttonContainer;
+
+    @Nullable @BindView(R.id.textContainer)
+    View textcontainer;
+
     private boolean isSeeking;
 
     private Drawable arrowDrawable;
@@ -145,8 +151,12 @@ public class UpNextView extends LinearLayout {
         if (ShuttleUtils.isLandscape()) {
             disposables.add(Aesthetic.get(getContext()).colorPrimary()
                     .subscribe(color -> {
-                        findViewById(R.id.buttonContainer).setBackgroundColor(color);
-                        findViewById(R.id.textContainer).setBackgroundColor(color);
+                        if (buttonContainer != null) {
+                            buttonContainer.setBackgroundColor(color);
+                        }
+                        if (textcontainer != null) {
+                            textcontainer.setBackgroundColor(color);
+                        }
                     }));
         }
 
