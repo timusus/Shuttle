@@ -29,11 +29,16 @@ import com.simplecity.amp_library.ui.recyclerview.ItemTouchHelperCallback;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.ui.views.PlayerViewAdapter;
 import com.simplecity.amp_library.ui.views.QueueView;
+import com.simplecity.amp_library.ui.views.StatusBarView;
+import com.simplecity.amp_library.ui.views.multisheet.MultiSheetSlideEventRelay;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
+import com.simplecity.amp_library.utils.ResourceUtils;
+import com.simplecity.amp_library.utils.ShuttleUtils;
+import com.simplecity.multisheetview.ui.view.MultiSheetView;
 import com.simplecityapps.recycler_adapter.adapter.CompletionListUpdateCallbackAdapter;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
@@ -54,6 +59,9 @@ public class QueueFragment extends BaseFragment implements
         QueueView {
 
     private static final String TAG = "QueueFragment";
+
+    @BindView(R.id.statusBarView)
+    StatusBarView statusBarView;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -76,6 +84,8 @@ public class QueueFragment extends BaseFragment implements
 
     @Inject
     RequestManager requestManager;
+
+    @Inject MultiSheetSlideEventRelay multiSheetSlideEventRelay;
 
     QueuePresenter queuePresenter;
 
@@ -147,6 +157,15 @@ public class QueueFragment extends BaseFragment implements
                     lineOne.setTextColor(isLight ? Color.BLACK : Color.WHITE);
                     lineTwo.setTextColor(isLight ? Color.BLACK : Color.WHITE);
                 }));
+
+        // In landscape, we need to adjust the status bar's translation depending on the slide offset of the sheet
+        if (ShuttleUtils.isLandscape()) {
+            statusBarView.setTranslationY(ResourceUtils.toPixels(16));
+
+            disposables.add(multiSheetSlideEventRelay.getEvents()
+                    .filter(multiSheetEvent -> multiSheetEvent.sheet == MultiSheetView.Sheet.SECOND)
+                    .subscribe(multiSheetEvent -> statusBarView.setTranslationY((1 - multiSheetEvent.slideOffset) * ResourceUtils.toPixels(16))));
+        }
 
         setupContextualToolbar();
 

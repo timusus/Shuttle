@@ -20,6 +20,8 @@ public class MultiSheetView extends CoordinatorLayout {
 
     public interface SheetStateChangeListener {
         void onSheetStateChanged(@Sheet int sheet, @BottomSheetBehavior.State int state);
+
+        void onSlide(@Sheet int sheet, float slideOffset);
     }
 
     public @interface Sheet {
@@ -62,6 +64,10 @@ public class MultiSheetView extends CoordinatorLayout {
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
                 fadeView(findViewById(getSheetPeekViewResId(Sheet.FIRST)), slideOffset);
+
+                if (sheetStateChangeListener != null) {
+                    sheetStateChangeListener.onSlide(Sheet.FIRST, slideOffset);
+                }
             }
         });
 
@@ -87,6 +93,10 @@ public class MultiSheetView extends CoordinatorLayout {
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
                 bottomSheetBehavior1.setAllowDragging(false);
                 fadeView(findViewById(getSheetPeekViewResId(Sheet.SECOND)), slideOffset);
+
+                if (sheetStateChangeListener != null) {
+                    sheetStateChangeListener.onSlide(Sheet.SECOND, slideOffset);
+                }
             }
         });
 
@@ -132,7 +142,7 @@ public class MultiSheetView extends CoordinatorLayout {
     }
 
     public boolean isHidden() {
-        int peekHeight = getContext().getResources().getDimensionPixelSize(R.dimen.bottom_sheet_height);
+        int peekHeight = getContext().getResources().getDimensionPixelSize(R.dimen.bottom_sheet_peek_1_height);
         return bottomSheetBehavior1.getPeekHeight() < peekHeight;
     }
 
@@ -144,7 +154,7 @@ public class MultiSheetView extends CoordinatorLayout {
      */
     public void hide(boolean collapse, boolean animate) {
         if (!isHidden()) {
-            int peekHeight = getContext().getResources().getDimensionPixelSize(R.dimen.bottom_sheet_height);
+            int peekHeight = getContext().getResources().getDimensionPixelSize(R.dimen.bottom_sheet_peek_1_height);
             if (animate) {
                 ValueAnimator valueAnimator = ValueAnimator.ofInt(peekHeight, 0);
                 valueAnimator.setDuration(200);
@@ -167,7 +177,7 @@ public class MultiSheetView extends CoordinatorLayout {
      */
     public void unhide(boolean animate) {
         if (isHidden()) {
-            int peekHeight = getContext().getResources().getDimensionPixelSize(R.dimen.bottom_sheet_height);
+            int peekHeight = getContext().getResources().getDimensionPixelSize(R.dimen.bottom_sheet_peek_1_height);
             int currentHeight = bottomSheetBehavior1.getPeekHeight();
             float ratio = 1 - (currentHeight / peekHeight);
             if (animate) {
@@ -273,7 +283,7 @@ public class MultiSheetView extends CoordinatorLayout {
         }
     }
 
-    void fadeView(View v, float offset) {
+    private void fadeView(View v, float offset) {
         float alpha = 1 - offset;
         v.setAlpha(alpha);
         v.setVisibility(alpha == 0 ? View.GONE : View.VISIBLE);

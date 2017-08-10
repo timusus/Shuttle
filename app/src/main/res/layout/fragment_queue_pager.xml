@@ -18,6 +18,7 @@
     </android.support.v4.widget.NestedScrollView>
 
     <View
+        android:id="@+id/textProtectionScrim"
         android:layout_width="match_parent"
         android:layout_height="256dp"
         android:background="@drawable/text_protection_scrim"/>

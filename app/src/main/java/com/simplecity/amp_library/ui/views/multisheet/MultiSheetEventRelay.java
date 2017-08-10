@@ -2,11 +2,11 @@ package com.simplecity.amp_library.ui.views.multisheet;
 
 
 import com.jakewharton.rxrelay2.PublishRelay;
+import com.simplecity.multisheetview.ui.view.MultiSheetView;
 
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
-import com.simplecity.multisheetview.ui.view.MultiSheetView;
 
 public class MultiSheetEventRelay {
 
@@ -32,8 +32,11 @@ public class MultiSheetEventRelay {
             int SHOW_IF_HIDDEN = 2;
         }
 
-        @Action int action;
-        @MultiSheetView.Sheet int sheet;
+        @Action
+        public int action;
+
+        @MultiSheetView.Sheet
+        public int sheet;
 
         public MultiSheetEvent(int action, int sheet) {
             this.action = action;

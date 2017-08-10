@@ -11,17 +11,36 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.afollestad.aesthetic.Aesthetic;
+import com.afollestad.aesthetic.LightDarkColorState;
+import com.jakewharton.rxbinding2.widget.RxSeekBar;
+import com.jakewharton.rxbinding2.widget.SeekBarChangeEvent;
+import com.jakewharton.rxbinding2.widget.SeekBarProgressChangeEvent;
+import com.jakewharton.rxbinding2.widget.SeekBarStartChangeEvent;
+import com.jakewharton.rxbinding2.widget.SeekBarStopChangeEvent;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
+import com.simplecity.amp_library.utils.LogUtils;
+import com.simplecity.amp_library.utils.ShuttleUtils;
+
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
 public class UpNextView extends LinearLayout {
+
+    private static final String TAG = "UpNextView";
+
+    @Inject
+    PlayerPresenter playerPresenter;
 
     @BindView(R.id.arrow)
     ImageView arrow;
@@ -32,12 +51,29 @@ public class UpNextView extends LinearLayout {
     @BindView(R.id.queuePosition)
     TextView queuePositionTextView;
 
-    @Inject
-    PlayerPresenter playerPresenter;
+    @Nullable @BindView(R.id.play)
+    PlayPauseView playPauseView;
+
+    @Nullable @BindView(R.id.shuffle)
+    ShuffleButton shuffleButton;
+
+    @Nullable @BindView(R.id.repeat)
+    RepeatButton repeatButton;
+
+    @Nullable @BindView(R.id.next)
+    RepeatingImageButton nextButton;
+
+    @Nullable @BindView(R.id.prev)
+    RepeatingImageButton prevButton;
+
+    @Nullable @BindView(R.id.seekbar)
+    SizableSeekBar seekBar;
+
+    private boolean isSeeking;
 
     private Drawable arrowDrawable;
 
-    private Disposable aestheticDisposable;
+    private CompositeDisposable disposables = new CompositeDisposable();
 
     public UpNextView(Context context) {
         this(context, null);
@@ -57,6 +93,35 @@ public class UpNextView extends LinearLayout {
         ButterKnife.bind(this);
 
         arrowDrawable = DrawableCompat.wrap(arrow.getDrawable());
+
+        if (playPauseView != null) {
+            playPauseView.setOnClickListener(v -> {
+                playPauseView.toggle();
+                playPauseView.postDelayed(() -> playerPresenter.togglePlayback(), 200);
+            });
+        }
+
+        if (repeatButton != null) {
+            repeatButton.setOnClickListener(v -> playerPresenter.toggleRepeat());
+        }
+
+        if (shuffleButton != null) {
+            shuffleButton.setOnClickListener(v -> playerPresenter.toggleShuffle());
+        }
+
+        if (nextButton != null) {
+            nextButton.setOnClickListener(v -> playerPresenter.skip());
+            nextButton.setRepeatListener((v, duration, repeatCount) -> playerPresenter.scanForward(repeatCount, duration));
+        }
+
+        if (prevButton != null) {
+            prevButton.setOnClickListener(v -> playerPresenter.prev(true));
+            prevButton.setRepeatListener((v, duration, repeatCount) -> playerPresenter.scanBackward(repeatCount, duration));
+        }
+
+        if (seekBar != null) {
+            seekBar.setMax(1000);
+        }
     }
 
     @Override
@@ -67,11 +132,46 @@ public class UpNextView extends LinearLayout {
 
         playerPresenter.bindView(playerViewAdapter);
 
-        aestheticDisposable = Aesthetic.get(getContext()).textColorPrimary()
-                .subscribe(color -> {
-                    DrawableCompat.setTint(arrowDrawable, color);
+        disposables.add(Observable.combineLatest(
+                Aesthetic.get(getContext()).textColorPrimary(),
+                Aesthetic.get(getContext()).textColorPrimaryInverse(),
+                Observable.just(ShuttleUtils.isLandscape()),
+                LightDarkColorState.creator())
+                .subscribe(colorState -> {
+                    DrawableCompat.setTint(arrowDrawable, colorState.color());
                     arrow.setImageDrawable(arrowDrawable);
-                });
+                }));
+
+        if (ShuttleUtils.isLandscape()) {
+            disposables.add(Aesthetic.get(getContext()).colorPrimary()
+                    .subscribe(color -> {
+                        findViewById(R.id.buttonContainer).setBackgroundColor(color);
+                        findViewById(R.id.textContainer).setBackgroundColor(color);
+                    }));
+        }
+
+        if (seekBar != null) {
+            Flowable<SeekBarChangeEvent> sharedSeekBarEvents = RxSeekBar.changeEvents(seekBar)
+                    .toFlowable(BackpressureStrategy.LATEST)
+                    .ofType(SeekBarChangeEvent.class)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .share();
+
+            disposables.add(sharedSeekBarEvents.subscribe(seekBarChangeEvent -> {
+                if (seekBarChangeEvent instanceof SeekBarStartChangeEvent) {
+                    isSeeking = true;
+                } else if (seekBarChangeEvent instanceof SeekBarStopChangeEvent) {
+                    isSeeking = false;
+                }
+            }, error -> LogUtils.logException(TAG, "Error in seek change event", error)));
+
+            disposables.add(sharedSeekBarEvents
+                    .ofType(SeekBarProgressChangeEvent.class)
+                    .filter(SeekBarProgressChangeEvent::fromUser)
+                    .debounce(15, TimeUnit.MILLISECONDS)
+                    .subscribe(seekBarChangeEvent -> playerPresenter.seekTo(seekBarChangeEvent.progress()),
+                            error -> LogUtils.logException(TAG, "Error receiving seekbar progress", error)));
+        }
     }
 
     @Override
@@ -80,7 +180,7 @@ public class UpNextView extends LinearLayout {
 
         playerPresenter.unbindView(playerViewAdapter);
 
-        aestheticDisposable.dispose();
+        disposables.dispose();
     }
 
     private PlayerViewAdapter playerViewAdapter = new PlayerViewAdapter() {
@@ -90,6 +190,43 @@ public class UpNextView extends LinearLayout {
 
             queuePositionTextView.setText(String.format("%d / %d", queuePosition, queueLength));
         }
-    };
 
+        @Override
+        public void playbackChanged(boolean isPlaying) {
+            if (playPauseView != null) {
+                if (isPlaying) {
+                    if (playPauseView.isPlay()) {
+                        playPauseView.toggle();
+                        playPauseView.setContentDescription(getContext().getString(R.string.btn_pause));
+                    }
+                } else {
+                    if (!playPauseView.isPlay()) {
+                        playPauseView.toggle();
+                        playPauseView.setContentDescription(getContext().getString(R.string.btn_play));
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void shuffleChanged(int shuffleMode) {
+            if (shuffleButton != null) {
+                shuffleButton.setShuffleMode(shuffleMode);
+            }
+        }
+
+        @Override
+        public void repeatChanged(int repeatMode) {
+            if (repeatButton != null) {
+                repeatButton.setRepeatMode(repeatMode);
+            }
+        }
+
+        @Override
+        public void setSeekProgress(int progress) {
+            if (!isSeeking && seekBar != null) {
+                seekBar.setProgress(progress);
+            }
+        }
+    };
 }

@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:background="#B0363A"/>
 
-    <View
+    <ImageView
         android:id="@+id/backgroundView"
         android:layout_width="0dp"
         android:layout_height="0dp"

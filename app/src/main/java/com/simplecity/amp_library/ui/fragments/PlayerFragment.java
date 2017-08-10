@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ import com.jakewharton.rxbinding2.widget.SeekBarChangeEvent;
 import com.jakewharton.rxbinding2.widget.SeekBarProgressChangeEvent;
 import com.jakewharton.rxbinding2.widget.SeekBarStartChangeEvent;
 import com.jakewharton.rxbinding2.widget.SeekBarStopChangeEvent;
+import com.jp.wasabeef.glide.transformations.BlurTransformation;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
@@ -47,7 +49,9 @@ import com.simplecity.amp_library.ui.views.ShuffleButton;
 import com.simplecity.amp_library.ui.views.SizableSeekBar;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
+import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.SettingsManager;
+import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.StringUtils;
 
 import java.util.concurrent.TimeUnit;
@@ -68,45 +72,46 @@ public class PlayerFragment extends BaseFragment implements
 
     private final String TAG = ((Object) this).getClass().getSimpleName();
 
-    private SizableSeekBar seekBar;
-
     private boolean isSeeking;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    @BindView(R.id.play)
+    @Nullable @BindView(R.id.play)
     PlayPauseView playPauseView;
 
-    @BindView(R.id.shuffle)
+    @Nullable @BindView(R.id.shuffle)
     ShuffleButton shuffleButton;
 
-    @BindView(R.id.repeat)
+    @Nullable @BindView(R.id.repeat)
     RepeatButton repeatButton;
 
-    @BindView(R.id.next)
+    @Nullable @BindView(R.id.next)
     RepeatingImageButton nextButton;
 
-    @BindView(R.id.prev)
+    @Nullable @BindView(R.id.prev)
     RepeatingImageButton prevButton;
 
-    @BindView(R.id.current_time)
+    @Nullable @BindView(R.id.current_time)
     TextView currentTime;
 
-    @BindView(R.id.total_time)
+    @Nullable @BindView(R.id.total_time)
     TextView totalTime;
 
-    @BindView(R.id.text1)
+    @Nullable @BindView(R.id.text1)
     TextView track;
 
-    @BindView(R.id.text2)
+    @Nullable @BindView(R.id.text2)
     TextView album;
 
     @Nullable @BindView(R.id.text3)
     TextView artist;
 
     @BindView(R.id.backgroundView)
-    View backgroundView;
+    ImageView backgroundView;
+
+    @Nullable @BindView(R.id.seekbar)
+    SizableSeekBar seekBar;
 
     private CompositeDisposable disposables = new CompositeDisposable();
 
@@ -150,24 +155,34 @@ public class PlayerFragment extends BaseFragment implements
         menuActionView.setOnClickListener(v -> onMenuItemClick(favoriteMenuItem));
         toolbar.setOnMenuItemClickListener(this);
 
-        playPauseView.setOnClickListener(v -> {
-            playPauseView.toggle();
-            playPauseView.postDelayed(() -> presenter.togglePlayback(), 200);
-        });
+        if (playPauseView != null) {
+            playPauseView.setOnClickListener(v -> {
+                playPauseView.toggle();
+                playPauseView.postDelayed(() -> presenter.togglePlayback(), 200);
+            });
+        }
 
-        repeatButton.setOnClickListener(v -> presenter.toggleRepeat());
+        if (repeatButton != null) {
+            repeatButton.setOnClickListener(v -> presenter.toggleRepeat());
+        }
 
-        shuffleButton = rootView.findViewById(R.id.shuffle);
-        shuffleButton.setOnClickListener(v -> presenter.toggleShuffle());
+        if (shuffleButton != null) {
+            shuffleButton.setOnClickListener(v -> presenter.toggleShuffle());
+        }
 
-        nextButton.setOnClickListener(v -> presenter.skip());
-        nextButton.setRepeatListener((v, duration, repeatcount) -> presenter.scanForward(repeatcount, duration));
+        if (nextButton != null) {
+            nextButton.setOnClickListener(v -> presenter.skip());
+            nextButton.setRepeatListener((v, duration, repeatCount) -> presenter.scanForward(repeatCount, duration));
+        }
 
-        prevButton.setOnClickListener(v -> presenter.prev(true));
-        prevButton.setRepeatListener((v, duration, repeatcount) -> presenter.scanBackward(repeatcount, duration));
+        if (prevButton != null) {
+            prevButton.setOnClickListener(v -> presenter.prev(true));
+            prevButton.setRepeatListener((v, duration, repeatCount) -> presenter.scanBackward(repeatCount, duration));
+        }
 
-        seekBar = rootView.findViewById(R.id.seekbar);
-        seekBar.setMax(1000);
+        if (seekBar != null) {
+            seekBar.setMax(1000);
+        }
 
         if (savedInstanceState == null) {
             getChildFragmentManager().beginTransaction()
@@ -208,26 +223,28 @@ public class PlayerFragment extends BaseFragment implements
                 .colorPrimary()
                 .subscribe(this::invalidateColors));
 
-        Flowable<SeekBarChangeEvent> sharedSeekBarEvents = RxSeekBar.changeEvents(seekBar)
-                .toFlowable(BackpressureStrategy.LATEST)
-                .ofType(SeekBarChangeEvent.class)
-                .observeOn(AndroidSchedulers.mainThread())
-                .share();
+        if (seekBar != null) {
+            Flowable<SeekBarChangeEvent> sharedSeekBarEvents = RxSeekBar.changeEvents(seekBar)
+                    .toFlowable(BackpressureStrategy.LATEST)
+                    .ofType(SeekBarChangeEvent.class)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .share();
 
-        disposables.add(sharedSeekBarEvents.subscribe(seekBarChangeEvent -> {
-            if (seekBarChangeEvent instanceof SeekBarStartChangeEvent) {
-                isSeeking = true;
-            } else if (seekBarChangeEvent instanceof SeekBarStopChangeEvent) {
-                isSeeking = false;
-            }
-        }, error -> LogUtils.logException(TAG, "Error in seek change event", error)));
+            disposables.add(sharedSeekBarEvents.subscribe(seekBarChangeEvent -> {
+                if (seekBarChangeEvent instanceof SeekBarStartChangeEvent) {
+                    isSeeking = true;
+                } else if (seekBarChangeEvent instanceof SeekBarStopChangeEvent) {
+                    isSeeking = false;
+                }
+            }, error -> LogUtils.logException(TAG, "Error in seek change event", error)));
 
-        disposables.add(sharedSeekBarEvents
-                .ofType(SeekBarProgressChangeEvent.class)
-                .filter(SeekBarProgressChangeEvent::fromUser)
-                .debounce(15, TimeUnit.MILLISECONDS)
-                .subscribe(seekBarChangeEvent -> presenter.seekTo(seekBarChangeEvent.progress()),
-                        error -> LogUtils.logException(TAG, "Error receiving seekbar progress", error)));
+            disposables.add(sharedSeekBarEvents
+                    .ofType(SeekBarProgressChangeEvent.class)
+                    .filter(SeekBarProgressChangeEvent::fromUser)
+                    .debounce(15, TimeUnit.MILLISECONDS)
+                    .subscribe(seekBarChangeEvent -> presenter.seekTo(seekBarChangeEvent.progress()),
+                            error -> LogUtils.logException(TAG, "Error receiving seekbar progress", error)));
+        }
     }
 
     @Override
@@ -247,19 +264,23 @@ public class PlayerFragment extends BaseFragment implements
 
     @Override
     public void setSeekProgress(int progress) {
-        if (!isSeeking) {
+        if (!isSeeking && seekBar != null) {
             seekBar.setProgress(progress);
         }
     }
 
     @Override
     public void currentTimeVisibilityChanged(boolean visible) {
-        currentTime.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        if (currentTime != null) {
+            currentTime.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        }
     }
 
     @Override
     public void currentTimeChanged(long seconds) {
-        currentTime.setText(StringUtils.makeTimeString(this.getActivity(), seconds));
+        if (currentTime != null) {
+            currentTime.setText(StringUtils.makeTimeString(this.getActivity(), seconds));
+        }
     }
 
     @Override
@@ -269,27 +290,33 @@ public class PlayerFragment extends BaseFragment implements
 
     @Override
     public void playbackChanged(boolean isPlaying) {
-        if (isPlaying) {
-            if (playPauseView.isPlay()) {
-                playPauseView.toggle();
-                playPauseView.setContentDescription(getString(R.string.btn_pause));
-            }
-        } else {
-            if (!playPauseView.isPlay()) {
-                playPauseView.toggle();
-                playPauseView.setContentDescription(getString(R.string.btn_play));
+        if (playPauseView != null) {
+            if (isPlaying) {
+                if (playPauseView.isPlay()) {
+                    playPauseView.toggle();
+                    playPauseView.setContentDescription(getString(R.string.btn_pause));
+                }
+            } else {
+                if (!playPauseView.isPlay()) {
+                    playPauseView.toggle();
+                    playPauseView.setContentDescription(getString(R.string.btn_play));
+                }
             }
         }
     }
 
     @Override
     public void shuffleChanged(@MusicService.ShuffleMode int shuffleMode) {
-        shuffleButton.setShuffleMode(shuffleMode);
+        if (shuffleButton != null) {
+            shuffleButton.setShuffleMode(shuffleMode);
+        }
     }
 
     @Override
     public void repeatChanged(@MusicService.RepeatMode int repeatMode) {
-        repeatButton.setRepeatMode(repeatMode);
+        if (repeatButton != null) {
+            repeatButton.setRepeatMode(repeatMode);
+        }
     }
 
     @Override
@@ -298,6 +325,8 @@ public class PlayerFragment extends BaseFragment implements
         favoriteActionBarView.setIsFavorite(isFavorite);
     }
 
+    Song song = null;
+
     @Override
     public void trackInfoChanged(@Nullable Song song) {
 
@@ -305,12 +334,37 @@ public class PlayerFragment extends BaseFragment implements
 
         String totalTimeString = StringUtils.makeTimeString(this.getActivity(), song.duration / 1000);
         if (!TextUtils.isEmpty(totalTimeString)) {
-            totalTime.setText(totalTimeString);
+            if (totalTime != null) {
+                totalTime.setText(totalTimeString);
+            }
         }
 
-        track.setText(song.name);
-        track.setSelected(true);
-        album.setText(String.format("%s | %s", song.artistName, song.albumName));
+        if (track != null) {
+            track.setText(song.name);
+            track.setSelected(true);
+        }
+        if (album != null) {
+            album.setText(String.format("%s | %s", song.artistName, song.albumName));
+        }
+
+        if (ShuttleUtils.isLandscape()) {
+            toolbar.setTitle(song.name);
+            toolbar.setSubtitle(String.format("%s | %s", song.artistName, song.albumName));
+
+            Glide.with(this)
+                    .load(song)
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .bitmapTransform(new BlurTransformation(getContext(), 15, 4))
+                    .error(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.name, true))
+                    .thumbnail(Glide
+                            .with(this)
+                            .load(this.song)
+                            .bitmapTransform(new BlurTransformation(getContext(), 15, 4)))
+                    .crossFade(600)
+                    .into(backgroundView);
+
+            this.song = song;
+        }
 
         if (SettingsManager.getInstance().getUsePalette()) {
             //noinspection unchecked
@@ -364,11 +418,23 @@ public class PlayerFragment extends BaseFragment implements
     private void invalidateColors(int color) {
         boolean isColorLight = Util.isColorLight(color);
         int textColor = isColorLight ? Color.BLACK : Color.WHITE;
-        backgroundView.setBackgroundColor(color);
-        currentTime.setTextColor(textColor);
-        totalTime.setTextColor(textColor);
-        track.setTextColor(textColor);
-        album.setTextColor(textColor);
+
+        if (!ShuttleUtils.isLandscape()) {
+            backgroundView.setBackgroundColor(color);
+        }
+
+        if (currentTime != null) {
+            currentTime.setTextColor(textColor);
+        }
+        if (totalTime != null) {
+            totalTime.setTextColor(textColor);
+        }
+        if (track != null) {
+            track.setTextColor(textColor);
+        }
+        if (album != null) {
+            album.setTextColor(textColor);
+        }
         if (artist != null) {
             artist.setTextColor(textColor);
         }

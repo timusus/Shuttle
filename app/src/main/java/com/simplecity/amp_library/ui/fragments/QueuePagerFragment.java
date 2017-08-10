@@ -23,6 +23,7 @@ import com.simplecity.amp_library.ui.presenters.QueuePagerPresenter;
 import com.simplecity.amp_library.ui.views.QueuePagerView;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
+import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 
@@ -48,6 +49,9 @@ public class QueuePagerFragment extends BaseFragment implements
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
+
+    @BindView(R.id.textProtectionScrim)
+    View textProtectionScrim;
 
     @Inject
     RequestManager requestManager;
@@ -87,6 +91,11 @@ public class QueuePagerFragment extends BaseFragment implements
         unbinder = ButterKnife.bind(this, rootView);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+
+        if (ShuttleUtils.isLandscape()) {
+            textProtectionScrim.setVisibility(View.GONE);
+        }
+
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(viewModelAdapter);
@@ -137,7 +146,7 @@ public class QueuePagerFragment extends BaseFragment implements
                 return false;
             }
         });
-
+        
         return rootView;
     }
 

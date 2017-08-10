@@ -47,20 +47,25 @@ public class QueuePagerItemView extends BaseViewModel<QueuePagerItemView.ViewHol
                 .load(song)
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .error(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.name, true))
-                .into((ImageView) holder.itemView);
+                .into((ImageView) holder.imageView);
     }
 
     public static class ViewHolder extends BaseViewHolder<QueuePagerItemView> {
 
+        private ImageView imageView;
+
         public ViewHolder(View itemView) {
             super(itemView);
+
+            imageView = itemView.findViewById(R.id.imageView);
         }
 
         @Override
         public void recycle() {
             super.recycle();
 
-            Glide.clear(itemView);
+
+            Glide.clear(imageView);
         }
     }
 
