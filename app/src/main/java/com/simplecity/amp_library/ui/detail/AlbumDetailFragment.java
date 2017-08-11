@@ -15,6 +15,7 @@ import com.simplecity.amp_library.model.ArtworkProvider;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.dialog.BiographyDialog;
+import com.simplecity.amp_library.ui.modelviews.DiscNumberView;
 import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.utils.ArtworkDialog;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
@@ -120,14 +121,31 @@ public class AlbumDetailFragment extends BaseDetailFragment {
     @NonNull
     @Override
     public List<ViewModel> getSongViewModels(List<Song> songs) {
+        int songSortOrder = getSongSortOrder();
+
         List<ViewModel> songViewModels = super.getSongViewModels(songs);
         Stream.of(songViewModels)
                 .filter(viewModel -> viewModel instanceof SongView)
                 .forEach(viewModel -> {
                     ((SongView) viewModel).showArtistName(false);
                     ((SongView) viewModel).showAlbumName(false);
-                    ((SongView) viewModel).setShowTrackNumber(getSongSortOrder() == SortManager.SongSort.TRACK_NUMBER || getSongSortOrder() == SortManager.SongSort.DETAIL_DEFAULT);
+                    ((SongView) viewModel).setShowTrackNumber(songSortOrder == SortManager.SongSort.TRACK_NUMBER || songSortOrder == SortManager.SongSort.DETAIL_DEFAULT);
                 });
+
+        if (album.numDiscs > 1 && (songSortOrder == SortManager.SongSort.DETAIL_DEFAULT || songSortOrder == SortManager.SongSort.TRACK_NUMBER)) {
+            int discNumber = 0;
+            int length = songViewModels.size();
+            for (int i = 0; i < length; i++) {
+                ViewModel viewModel = songViewModels.get(i);
+                if (viewModel instanceof SongView) {
+                    if (discNumber != ((SongView) viewModel).song.discNumber) {
+                        discNumber = ((SongView) viewModel).song.discNumber;
+                        songViewModels.add(i, new DiscNumberView(discNumber));
+                    }
+                }
+            }
+        }
+
         return songViewModels;
     }
 
