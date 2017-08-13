@@ -74,6 +74,8 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/btn_shuffle_on"
+                android:padding="14dp"
+                android:scaleType="centerInside"
                 android:src="@drawable/ic_shuffle_24dp"/>
 
             <ImageButton
@@ -114,6 +116,8 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/btn_repeat_all"
+                android:padding="14dp"
+                android:scaleType="centerInside"
                 android:src="@drawable/ic_repeat_24dp"/>
         </LinearLayout>
     </RelativeLayout>
