@@ -8,9 +8,41 @@
 </head>
 
 <body>
-<h4>2.0.0-alpha2</h4>
+<h4>2.0.0-beta1</h4>
+<h5>General changes</h5>
 <ul>
-	<li>Lots of stuff!</li>
+	<li>App theme now matches the current artwork. This can be set to only occur on the 'now playing' screen, or turned off in settings</li>
+	<li>Sleep timer now displays time remaining in drawer when active.</li>
+	<li>Lyrics are now displayed in their own popup, instead of on top of the artwork</li>
+</ul>
+<h5>UI changes</h5>
+<ul>
+	<li>Toolbar now collapses when scrolling</li>
+	<li>'Up Next' now slides up from now-playing</li>
+	<li>Artwork is now full-bleed to the top of the screen</li>
+	<li>Major theming overhaul. More stuff is themed correctly now.</li>
+	<li>Landscape mode overhauled</li>
+	<li>More animations!</li>
+	<li>Minor redesign to artist/album/genre/playlist 'detail' screen.</li>
+	<li>Album count shown for artists</li>
+	<li>Song count shown for albums</li>
+	<li>Settings has had a facelift</li>
+	<li>Moved Equaliser &amp; Sleep Timer to Navigation Drawer</li>
+</ul>
+<h5>Major behind-the-scenes changes</h5>
+<ul>
+	<li>Overhauled theming engine</li>
+	<li>Migrated to RxJava 2</li>
+	<li>Removed Umano's SlidingUpPanel in favour of Google's BottomSheet (smoother and less buggy sliding)</li>
+	<li>Begin migrating to MVP architectural pattern (cleaner code, easier to maintain &amp; update)</li>
+	<li>Cleaned up and improved mountains of code</li>
+	<li>Removed lots of old, unused resources - smaller app size, easier to maintain</li>
+</ul>
+<h5>Todo</h5>
+<ul>
+	<li>Folder whitelisting is currently broken</li>
+	<li>Disable lockscreen artwork option has been temporarily removed</li>
+	<li>Fix crashes</li>
 </ul>
 <h4>1.6.7</h4>
 <ul>
@@ -891,6 +923,54 @@
 </ul>
 <h3>Licenses:</h3>
 <p>Shuttle+ uses the following open-source libraries:</p>
+<h4>RxBroadcast</h4>
+<pre>
+Copyright 2015 Adam Cantrowitz
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+</pre>
+<h4>RxAndroid</h4>
+<pre>
+Copyright 2015 The RxAndroid authors
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+</pre>
+<h4>Butterknife</h4>
+<pre>
+Copyright 2013 Jake Wharton
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+</pre>
 <h4>Gradle Play Publisher</h4>
 <pre>
 The MIT License (MIT)
