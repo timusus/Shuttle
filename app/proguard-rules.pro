@@ -28,6 +28,9 @@
 # Custom Switch, referenced via menu action view class
 -keep class com.simplecity.amp_library.ui.views.CustomSwitch { *; }
 
+# Another Switch, referenced via menu action view class
+-keep class com.afollestad.aesthetic.AestheticSwitchCompat
+
 # Glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep public class * extends com.bumptech.glide.AppGlideModule
