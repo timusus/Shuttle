@@ -302,12 +302,13 @@ public class SuggestedFragment extends BaseFragment implements
     Observable<List<ViewModel>> getRecentlyAddedViewModels() {
         return Playlist.recentlyAddedPlaylist
                 .getSongsObservable()
+                .flatMap(songs -> Observable.just(Operators.songsToAlbums(songs)))
                 .flatMapSingle(source -> Observable.fromIterable(source)
-                        .sorted((a, b) -> ComparisonUtils.compareLong(b.playCount, a.playCount))
+                        .sorted((a, b) -> ComparisonUtils.compareLong(b.songPlayCount, a.songPlayCount))
                         .take(20)
                         .toList())
-                .map(songs -> {
-                    if (!songs.isEmpty()) {
+                .map(albums -> {
+                    if (!albums.isEmpty()) {
                         List<ViewModel> viewModels = new ArrayList<>();
 
                         SuggestedHeader recentlyAddedHeader = new SuggestedHeader(getString(R.string.recentlyadded), getString(R.string.suggested_recently_added_subtitle), Playlist.recentlyAddedPlaylist);
@@ -315,12 +316,10 @@ public class SuggestedFragment extends BaseFragment implements
                         recentlyAddedHeaderView.setClickListener(this);
                         viewModels.add(recentlyAddedHeaderView);
 
-                        SongClickListener songClickListener = new SongClickListener(songs);
-
-                        viewModels.addAll(Stream.of(songs).map(song -> {
-                            SuggestedSongView suggestedSongView = new SuggestedSongView(song, requestManager);
-                            suggestedSongView.setClickListener(songClickListener);
-                            return (ViewModel) suggestedSongView;
+                        viewModels.addAll(Stream.of(albums).map(album -> {
+                            AlbumView albumView = new AlbumView(album, ViewType.ALBUM_CARD, requestManager);
+                            albumView.setClickListener(this);
+                            return albumView;
                         }).toList());
 
                         return viewModels;
