@@ -1,5 +1,6 @@
 package android.support.design.widget;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
@@ -18,6 +19,7 @@ import android.support.annotation.RestrictTo;
 import android.support.annotation.StyleRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v4.math.MathUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.WindowInsetsCompat;
@@ -64,7 +66,7 @@ public class CustomCollapsingToolbarLayout extends FrameLayout {
     int mCurrentOffset;
     private int mScrimAlpha;
     private boolean mScrimsAreShown;
-    private ValueAnimatorCompat mScrimAnimator;
+    private ValueAnimator mScrimAnimator;
     private long mScrimAnimationDuration;
     private int mScrimVisibleHeightTrigger = -1;
 
@@ -248,7 +250,7 @@ public class CustomCollapsingToolbarLayout extends FrameLayout {
         }
 
         // If our insets have changed, keep them and invalidate the scroll ranges...
-        if (!ViewUtils.objectEquals(mLastInsets, newInsets)) {
+        if (mLastInsets != newInsets) {
             mLastInsets = newInsets;
             requestLayout();
         }
@@ -560,13 +562,13 @@ public class CustomCollapsingToolbarLayout extends FrameLayout {
     private void animateScrim(int targetAlpha) {
         ensureToolbar();
         if (mScrimAnimator == null) {
-            mScrimAnimator = ViewUtils.createAnimator();
+            mScrimAnimator = new ValueAnimator();
             mScrimAnimator.setDuration(mScrimAnimationDuration);
             mScrimAnimator.setInterpolator(
                     targetAlpha > mScrimAlpha
                             ? AnimationUtils.FAST_OUT_LINEAR_IN_INTERPOLATOR
                             : AnimationUtils.LINEAR_OUT_SLOW_IN_INTERPOLATOR);
-            mScrimAnimator.addUpdateListener(animator -> setScrimAlpha(animator.getAnimatedIntValue()));
+            mScrimAnimator.addUpdateListener(animator -> setScrimAlpha((Integer) animator.getAnimatedValue()));
         } else if (mScrimAnimator.isRunning()) {
             mScrimAnimator.cancel();
         }
@@ -1209,7 +1211,7 @@ public class CustomCollapsingToolbarLayout extends FrameLayout {
                 switch (lp.mCollapseMode) {
                     case LayoutParams.COLLAPSE_MODE_PIN:
                         offsetHelper.setTopAndBottomOffset(
-                                MathUtils.constrain(-verticalOffset, 0, getMaxOffsetForPinChild(child)));
+                                MathUtils.clamp(-verticalOffset, 0, getMaxOffsetForPinChild(child)));
                         break;
                     case LayoutParams.COLLAPSE_MODE_PARALLAX:
                         offsetHelper.setTopAndBottomOffset(

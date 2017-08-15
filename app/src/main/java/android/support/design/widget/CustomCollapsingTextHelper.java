@@ -28,6 +28,7 @@ import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.support.annotation.ColorInt;
+import android.support.v4.math.MathUtils;
 import android.support.v4.text.TextDirectionHeuristicsCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.TintTypedArray;
@@ -366,7 +367,7 @@ public final class CustomCollapsingTextHelper {
      * A value of {@code 1.0} indicates that the layout is fully collapsed.
      */
     public void setExpansionFraction(float fraction) {
-        fraction = MathUtils.constrain(fraction, 0f, 1f);
+        fraction = MathUtils.clamp(fraction, 0f, 1f);
 
         if (fraction != mExpandedFraction) {
             mExpandedFraction = fraction;
