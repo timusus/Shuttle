@@ -1,6 +1,7 @@
 package com.simplecity.amp_library.model;
 
 import com.simplecity.amp_library.interfaces.FileType;
+import com.simplecity.amp_library.utils.FileHelper;
 
 import java.io.File;
 import java.io.Serializable;
@@ -17,6 +18,10 @@ public class BaseFileObject implements Serializable {
     public File getParent() {
         File file = new File(path);
         return file.getParentFile();
+    }
+
+    public boolean canReadWrite() {
+        return FileHelper.canReadWrite(new File(path));
     }
 
     @Override

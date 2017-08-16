@@ -4,7 +4,6 @@
     <!-- Shown when a user attempts to edit tags, but they don't have a 'DocumentProvider' available to pick the directory of their music (and thus give permission to Shuttle)-->
     <string name="R.string.toast_no_document_provider">İzin isteğini el ile giriş yapabilmek için kullanılabilir bir Döküman Sağlayıcı mevcut değil</string>
     <!-- Displayed when an M3U playlist is being saved, but it already exists -->
-    <string name="playlist_save_exists">Şarkı listesi zaten var</string>
     <!-- Displayed when an M3U playlist save fails -->
     <string name="playlist_save_failed">Şarkı listesi kaydedilemedi</string>
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
@@ -40,56 +39,33 @@
     <!-- Toasts after adding song(s) to playlists -->
     <plurals name="NNNtrackstoplaylist">
         <item quantity="one">Şarkı listesine 1 şarkı eklendi.</item>
-        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> şarkı oynatma listesine ekledi.</item>
+        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> şarkılar şarkı listesine ekledi.</item>
     </plurals>
     <!-- Toast after selecting an empty playlist -->
     <string name="emptyplaylist">Seçilen şarkı listesi boş.</string>
-    <!-- Used in sleep message. Example 2 hours (and) 5 minutes -->
-    <string name="and">ve</string>
-    <!-- Alarm confirmation toast: singular hour -->
-    <string name="hour">saat</string>
-    <!-- Alarm confirmation toast: plural hours -->
-    <string name="hours">saat</string>
-    <!-- Alarm confirmation toast: plural minutes -->
-    <string name="minutes">dakika</string>
-    <!-- Alarm toast: Sleep timer set for -->
-    <string name="sleep_message">"Uyku modu ayarland\u0131 "</string>
     <!-- -->
     <string name="initial_dir_set_message">" ba\u015flang\u0131\u00e7 \u200b\u200bdizini olarak ayarla"</string>
     <!-- Transient popup message shown after deleting a playlist -->
     <string name="playlist_deleted_message">Şarkı listesi silindi.</string>
     <!-- Transient popup message shown after renaming a playlist -->
-    <string name="playlist_renamed_message">Şarkı listesi yeniden adlandırıldı</string>
+    <string name="playlist_renamed_message">Liste yeniden adlandırıldı.</string>
     <!-- Toast confirming that song(s) was/were deleted. -->
-    <plurals name="NNNtracksdeleted">
-        <item quantity="one">1 şarkı silindi.</item>
-        <item quantity="other"><xliff:g id="songs_to_delete">%d</xliff:g> şarkı silindi.</item>
-    </plurals>
     <!-- -->
     <plurals name="NNNtrackstoqueue">
-        <item quantity="one">1 şarkı sıraya eklendi</item>
-        <item quantity="other">"<xliff:g id="number" example="27">%d</xliff:g> şarkı sıraya eklendi
-      "</item>
+        <item quantity="one">1 şarkı sıraya eklendi.</item>
+        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> şarkı sıraya eklendi.</item>
     </plurals>
     <!-- Toasts after adding song(s) to playlists -->
-    <plurals name="NNNtrackstofavourites">
-        <item quantity="one">1 şarkı favorilere eklendi.</item>
-        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> 
-şarkı favorilere eklendi.</item>
-    </plurals>
     <string name="song_to_favourites"><xliff:g id="song_name">%s</xliff:g> favorilere eklendi.</string>
     <string name="song_removed_from_favourites"><xliff:g id="song_name">%s</xliff:g> favorilerden kaldırıldı.</string>
     <!-- ## Dialogs ## -->
     <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_tite">Yeniden başlatma gerekli</string>
     <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_message">Shuttle yeniden başlatılana kadar değişiklikler geçerli olmayacak</string>
     <!-- Restart now button -->
     <string name="restart_button">Şimdi yeniden başlat</string>
     <!-- Displays when picking a theme color -->
     <string name="color_pick">Bir Renk Seçin</string>
     <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
-    <string name="dialog_custom">Özel</string>
     <!-- Displays when sharing a file fails -->
     <string name="share_failed">Maalesef, bu dosya paylaşılamaz</string>
     <!-- Displays when you click 'share' -->
@@ -101,7 +77,7 @@
     <!-- Displays when you need to choose which app to share the song with -->
     <string name="share_via">Şarkıyı paylaş:</string>
     <!-- Displayed when an M3U playlist is being saved-->
-    <string name="saving_playlist">Şarkı Listesi\'ni Kaydet</string>
+    <string name="saving_playlist">Şarkı listesi kaydediliyor</string>
     <!-- Displayed when whitelisting a folder, as the app gathers the songs-->
     <string name="gathering_songs">Şarkılar toplanıyor...</string>
     <!-- -->
@@ -118,33 +94,31 @@
     <string name="upgraded_title">Teşekkürler</string>
     <string name="upgraded_message">Başarıyla Shuttle+ \'a yükselttiniz. Desteğiniz için teşekkür ederim.
 \n\nTüm özelliklerin etkinleştirilmesini sağlamak için lütfen uygulamayı yeniden başlatın</string>
-    <string name="upgrade_dialog_message">Yükseltme Shuttle ek özelliklerinin kilidi açılacak, dahil olacaklar:
+    <string name="upgrade_dialog_message">Yükseltme, Shuttle\'daki ek özelliklerin kilidini açacaktır, dahil olacaklar:
 \n\n•Fazladan tonlarca tema
 \n•Etiket düzenleme
 \n•Klasör tarama
 \n•ChromeCast Desteği
 \n\n\Üstelik uygulamanın geliştirilmesine de yardımcı olur.\n\nShuttle+ mevcutsa yükseltme gerekmez</string>
-    <string name="get_pro_button_play_store">Play Store</string>
-    <string name="get_pro_button_amazon">Amazon</string>
     <string name="btn_upgrade">Yükselt</string>
     <!-- -->
-    <string name="get_pro_button_no">Hayır Teşekkürler</string>
+    <string name="get_pro_button_no">Hayır teşekkürler</string>
     <!-- Dialog 'close' button -->
     <string name="close">Kapat</string>
     <!-- No internet connection warning -->
     <string name="connection_unavailable">İnternet bağlantısı bulunamadı</string>
     <!-- Prompt in dialog when creating a playlist. The user will enter the name of the playlist in a textfield underneath this prompt. -->
-    <string name="create_playlist_create_text_prompt">Şarkı Listesi İsmi</string>
+    <string name="create_playlist_create_text_prompt">Şarkı listesi adı</string>
     <!-- Text for the "cancel" button in the "delete" and "create playlist" confirmation dialogs -->
     <string name="cancel">İptal</string>
     <!-- Delete confirmation dialog when deleting an entire artist -->
     <string name="delete_album_artist_desc"><xliff:g id="album-artist">%s</xliff:g> tüm şarkıları kalıcı olarak silinecek.</string>
     <!-- Delete confirmation dialog message when deleting artists -->
-    <string name="delete_album_artist_desc_multiple">Aşağıdaki albüm sanatçılarının tüm şarkıları:<xliff:g id="album-artist">%s</xliff:g>kalıcı olarak silinecek.</string>
+    <string name="delete_album_artist_desc_multiple">Aşağıdaki albüm sanatçılarının tüm şarkıları:<xliff:g id="album-artist">%s</xliff:g> kalıcı olarak silinecek.</string>
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc"><xliff:g id="album">%s</xliff:g> albümde ki tüm şarkılar kalıcı olarak silinecek.</string>
     <!-- Delete confirmation dialog message when deleting albums -->
-    <string name="delete_album_desc_multiple">Aşağıdaki albümlerin tüm şarkıları:<xliff:g id="album">%s</xliff:g>kalıcı olarak silinecek.</string>
+    <string name="delete_album_desc_multiple">Aşağıdaki albümlerin tüm şarkıları:<xliff:g id="album">%s</xliff:g> kalıcı olarak silinecek.</string>
     <!-- Delete confirmation dialog when deleting a single song -->
     <string name="delete_song_desc"><xliff:g id="song">%s</xliff:g> kalıcı olarak silinecek.</string>
     <!-- Delete confirmation dialog message title when deleting songs -->
@@ -156,32 +130,30 @@
     <!-- Delete confirmation dialog, confirmation button text -->
     <string name="button_ok">TAMAM</string>
     <!-- -->
-    <string name="delete_folder_confirmation_dialog">\"<xliff:g id="folder">%s</xliff:g>\" Kalıcı olarak silmek istediğinizden emin misiniz? Bu klasördeki tüm öğeleri ve dosya tarayıcısında gizli öğeleri de dahil olmak üzere, silinecektir.</string>
+    <string name="delete_folder_confirmation_dialog">\"<xliff:g id="folder">%s</xliff:g>\" Kalıcı olarak silmek istediğinizden emin misiniz? Shuttle dosya tarayıcısında görünmeyebilecek öğeler de dahil olmak üzere, bu klasördeki tüm öğeleri silecektir.</string>
     <!-- -->
-    <string name="delete_file_confirmation_dialog">\"<xliff:g id="file">%s</xliff:g>\"  Kalıcı olarak silmek istediğinizden emin misiniz?</string>
+    <string name="delete_file_confirmation_dialog">\"<xliff:g id="file">%s</xliff:g>\"  kalıcı olarak silmek istediğinizden emin misiniz?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">Cihazınızdan tüm albüm kapaklarını kalıcı olarak silmek istediğinizden emin misiniz?</string>
-    <!-- QuickLyric button -->
-    <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
     <string name="dialog_title_set_ringtone">Zil sesi olarak ayarla</string>
     <!-- "Set Ringtone" message -->
-    <string name="dialog_message_set_ringtone">Shuttle sizin zil sesi olarak ayarlamanız için \'yazma ayarları\' izin gerektirir.\n\nİzin verilmesinin ardından, tekrar zil sesi ayarlamayı deneyin.</string>
+    <string name="dialog_message_set_ringtone">Shuttle, zil sesini ayarlamak için \'ayarları yazma\' izni gerektirir.\n\nİzin verdikten sonra zil sesini tekrar ayarlamayı deneyin.</string>
     <!-- Message displayed in dialog when attempting to add duplicates to playlist -->
-    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%s</xliff:g> - <xliff:g id="song">%s</xliff:g> zaten oynatma listesinde var. Yine de eklensin mi?</string>
+    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%1$s</xliff:g> - <xliff:g id="song">%2$s</xliff:g> zaten şarkı listesinde var. Yine de eklensin mi?</string>
     <!-- Checkbox text 'apply to all' -->
     <string name="dialog_checkbox_playlist_duplicate_apply_all">Tümüne uygula (<xliff:g id="number">%d</xliff:g>)</string>
     <!-- Title displayed in dialog when attempting to add duplicates to playlist -->
-    <string name="dialog_title_playlist_duplicates">Tekrarlananlar Bulundu</string>
+    <string name="dialog_title_playlist_duplicates">Tekrarlamalar Bulundu</string>
     <!-- Button displayed in dialog when attempting to add duplicates to playlist (Add) -->
     <string name="dialog_button_playlist_duplicate_add">Ekle</string>
     <!-- Button displayed in dialog when attempting to add duplicates to playlist (Skip) -->
     <string name="dialog_button_playlist_duplicate_skip">Atla</string>
     <!-- Checkbox text 'always add duplicates' -->
-    <string name="dialog_checkbox_playlist_duplicate_always_add">Tekrarlananları her zaman ekle</string>
+    <string name="dialog_checkbox_playlist_duplicate_always_add">Tekrarları her zaman ekle</string>
     <!-- ## Widgets ## -->
     <!-- Checkbox text to invert colors of buttons & text -->
-    <string name="widget_background_color">Arka Plan</string>
+    <string name="widget_background_color">Arka plan</string>
     <string name="widget_background_transparency">Şeffaf</string>
     <string name="widget_text_color">Yazı</string>
     <string name="widget_invert_icons">Simgeleri ters çevir</string>
@@ -190,26 +162,28 @@
     <string name="widget_show_artwork">Albüm kapağını göster</string>
     <!-- ## Menu Headings ## -->
     <!-- Context menu in navigation drawer - option to save playlist as M3U -->
-    <string name="export_playlist">Şarkı listesini dışa aktar</string>
+    <string name="export_playlist">Dışa aktar</string>
     <!-- context menu item to remove the selected item from the playlist -->
     <!-- Menu option 'clear queue' -->
-    <string name="clear_queue">Sırayı sil</string>
+    <string name="clear_queue">Sırayı temizle</string>
     <!-- -->
-    <string name="fav_add">Sık Kullanılanlara Ekle</string>
+    <string name="fav_add">Favori</string>
     <!-- Context menu item -->
     <string name="play_selection">Çal</string>
+    <!-- Multi select menu item-->
+    <string name="menu_add_to">Ekle...</string>
+    <!-- Multi select menu item-->
+    <string name="menu_playlist">Şarkı listesi</string>
+    <!-- Multi select menu item-->
+    <string name="menu_queue">Sıra</string>
     <!-- Context menu item -->
-    <string name="add_to_playlist">Şarkı listesine ekle</string>
     <!-- Context menu item -->
     <string name="new_playlist">Yeni</string>
-    <!-- Button for lyrics -->
-    <string name="lyrics">Şarkı Sözleri</string>
     <!-- menu item to save the current list as a new playlist -->
-    <string name="save_as_playlist">Şarkı listesi kaydet</string>
+    <string name="save_as_playlist">Şarkı listesi olarak kaydet</string>
     <!-- Context menu item to remove the selected item from the playlist -->
-    <string name="remove_from_playlist">Şarkı listesinden kaldır</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
-    <string name="remove_from_queue">Kuyruktan kaldır</string>
+    <!-- Context menu item to remove the selected item from the queue -->
+    <string name="remove_from_queue">Kaldır</string>
     <!-- Context menu item -->
     <string name="play_next">Sıradakini çal</string>
     <!-- Menu text for the settings item -->
@@ -219,12 +193,10 @@
     <!-- -->
     <string name="library_title">Kütüphane</string>
     <!-- -->
-    <string name="share_title">Paylaş</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Ara</string>
     <string name="search_filter">Filtre</string>
     <!-- Playlist context menu item to delete the selected playlist. -->
-    <string name="delete_playlist_menu">Sil</string>
     <!-- Playlist context menu item to clear the selected playlist. -->
     <string name="clear_playlist_menu">Temizle</string>
     <!-- Playlist context menu item to edit the selected playlist -->
@@ -239,8 +211,6 @@
     <string name="nowplaying_title">Şimdi Çalınıyor</string>
     <!-- -->
     <string name="up_next_title">Sırada Olanlar</string>
-    <!-- Context menu item -->
-    <string name="add_to_queue">Sıraya ekle</string>
     <!-- Popup menu item -->
     <string name="go_to">Git...</string>
     <!-- 'More' button -->
@@ -249,48 +219,45 @@
     <string name="share">Paylaş</string>
     <!-- ## Navigation Drawer ## -->
     <!-- Accessibility description 'open navigation drawer'-->
-    <string name="navigation_drawer_open">Gezinti çekmecesi açık</string>
+    <string name="navigation_drawer_open">Gezinme çekmecesini aç</string>
     <!-- Accessibility description 'close navigation drawer'-->
     <string name="navigation_drawer_close">Gezinti çekmecesi kapalı</string>
     <!-- ## Preference Menu ## -->
     <!--Settings title for white accent color) -->
-    <string name="pref_title_theme_white_accent">Vurgu Rengini Beyaz Kullan</string>
     <!--Settings summary for white accent color-->
-    <string name="pref_summary_theme_white_accent">Durumunu göstermesi gerekenler dışında beyaz kullanır (karıştır ve tekrar et, açık olduklarını göstermek için beyazdan farklı bir renk gerektirebilir).</string>
     <!--Settings category for 'navigation' items -->
-    <string name="pref_category_navigation">Gezinti</string>
+    <string name="pref_category_navigation">Gezinme</string>
     <!--Settings category for 'notification' items -->
     <string name="pref_category_notif_drawer">Bildirim Çekmecesi</string>
     <!-- Settings title for inverting the notification drawer text & icons -->
-    <string name="pref_title_invert_notif_icons">Bildirim Simgeleri ve Yazı Rengini Tersine Çevir</string>
+    <string name="pref_title_invert_notif_icons">Bildirim Simgelerini ve Yazı Rengini Tersine Çevir</string>
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Diğer</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
     <string name="pref_title_choose_tabs">Sekme Öğelerini Seç</string>
     <!--Settings summary for opening the dialog to pick which categories are shown as tab headings -->
-    <string name="pref_summary_choose_tabs">Ekranın üst kısmında sekmeler halinde görüntülenen kategorileri seçin ve yeniden düzenleyin</string>
+    <string name="pref_summary_choose_tabs">Ekranın üst kısmında sekme olarak görüntülenen kategorileri seçin ve yeniden düzenleyin</string>
     <!--Settings title for picking the primary theme color -->
     <string name="pref_title_theme_pick_color">Tema Rengi</string>
     <!--Settings summary for picking the primary theme color-->
-    <string name="pref_summary_theme_pick_color">Tema için renk seçin</string>
+    <string name="pref_summary_theme_pick_color">Temanızın rengini seçin</string>
     <!--Settings title for for picking the accent theme color-->
     <string name="pref_title_theme_pick_accent_color">Vurgu Rengi</string>
     <!--Settings summary for picking the accent theme color-->
-    <string name="pref_summary_theme_pick_accent_color">Tema için vurgu rengi seçin</string>
+    <string name="pref_summary_theme_pick_accent_color">Temanızın vurdu rengini seçin</string>
     <!--Settings title for enabling the tinted navigation bar -->
-    <string name="pref_title_tinted_nav">Renkli Gezinti Çubuğu Kullan</string>
+    <string name="pref_title_tinted_nav">Renkli Gezinme Çubuğu Kullan</string>
     <!--Settings summary for enabling the tinted navigation bar -->
-    <string name="pref_summary_tinted_nav">Gezinti çubuğu renklendirmeyi etkinleştir/devre dışı bırak</string>
+    <string name="pref_summary_tinted_nav">Gezinti çubuğu renklendirme etkin/devre dışı</string>
     <!-- Settings title for the themes -->
     <string name="pref_string_title_themes">Temalar</string>
     <!--Settings titles for the themes -->
-    <string name="pref_title_base_theme">Tema Arka Plan Rengi</string>
-    <string name="pref_summary_base_theme">Tema arka plan rengini seçiniz (açık veya koyu)</string>
-    <string name="pref_title_theme_dark">Koyu Tema</string>
-    <string name="pref_title_theme_light">Açık Tema</string>
+    <string name="pref_title_base_theme">Tema Ana Rengi</string>
+    <string name="pref_summary_base_theme">Tema ana rengini seçiniz (açık veya koyu)</string>
+    <string name="pref_title_theme_dark">Koyu</string>
+    <string name="pref_title_theme_light">Açık</string>
     <string name="pref_title_theme_black">Siyah</string>
     <!--Settings summary for the downloading more themes -->
-    <string name="pref_summary_get_pro_themes">Shuttle+ için daha fazla tema mevcut</string>
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">Beyaz/Kara Liste</string>
     <!--Settings title for viewing blacklist-->
@@ -302,47 +269,46 @@
     <!--Settings title for clearing whitelist-->
     <string name="pref_title_clear_whitelist">Temizle</string>
     <!--Settings title for clearing whitelist-->
-    <string name="pref_title_update_whitelist">Güncelle</string>
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">Albüm Kapağını Kırpın</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
-    <string name="pref_summary_crop_album_art">\'Şimdi çalınıyor\' ekranının kullanılabilir bölümün tamamında albüm kapağı görüntülenir</string>
+    <string name="pref_summary_crop_album_art">\'Şimdi çalınıyor\' ekranında mevcut alanın tamamında albüm kapağı görüntülenir</string>
     <!-- Settings title for showing artwork in the queue screen -->
-    <string name="pref_title_artwork_queue">\'Sırada Olanlar\' da Albüm Kapağı</string>
+    <string name="pref_title_artwork_queue">\'Sırada Olanlar\' da Albüm Kapağını Göster</string>
     <!-- Settings title for embedded artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_prefer_embedded_art">Yerleşik Albüm Kapağını Tercih Et</string>
+    <string name="pref_title_prefer_embedded_art">Yerleşik albüm kapağını tercih et</string>
     <!-- Settings summary for the ignore embedded artwork checkbox-->
-    <string name="pref_summary_prefer_embedded_art">Müzik dizinleri içinde arama yapmadan önce, Shuttle\'ın müzik dosyalarınıza gömülmüş resmi araması için bu kutuyu işaretleyin</string>
+    <string name="pref_summary_prefer_embedded_art">Müzik dizinlerinde arama yapmadan önce, müzik dosyalarınızda gömülü olan albüm kapaklarını aramak için Shuttle\'ı tercih etmek istiyorsanız bu kutuyu işaretleyin</string>
     <!-- Settings title for ignore embedded artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_ignore_embedded_art">Yerleşik Albüm Kapaklarını Yoksay</string>
+    <string name="pref_title_ignore_embedded_art">Yerleşik albüm kapaklarını yoksay</string>
     <!-- Settings summary for the ignore folder artwork checkbox-->
-    <string name="pref_summary_ignore_embedded_art">İçerisinde yerleşik olan müzik dosyaları için albüm kapağı arama</string>
+    <string name="pref_summary_ignore_embedded_art">İçerisinde yerleşik albüm kapağı olan müzik dosyaları arama yapma</string>
     <!-- Settings title for ignore embedded artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_ignore_mediastore_art">Medya Store Albüm Kapağını Yoksay</string>
+    <string name="pref_title_ignore_mediastore_art">Medya Depolama albüm kapağını yoksay</string>
     <!-- Settings summary for the ignore folder artwork checkbox-->
-    <string name="pref_summary_ignore_mediastore_art">Android Medya Store yerleşik olan albüm kapaklarını buluyor ve düşük çözünürlükte depolamış görünüyor. MediaStore\'u atlamak için bunu değiştirin (biraz daha yavaş albüm kapağı yükleme)</string>
+    <string name="pref_summary_ignore_mediastore_art">Android Medya Depolama yerleşik olan albüm kapaklarını bulmuş ve düşük çözünürlükte depolamış görünüyor. Medya Depolamayı atlamak için bunu değiştirin (biraz daha yavaş albüm kapağı yükleme)</string>
     <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_ignore_folder_art">Klasörde Kapağı Olanları Yoksay</string>
+    <string name="pref_title_ignore_folder_art">Klasör albüm kapaklarını yoksay</string>
     <!-- Settings summary for the embedded artwork checkbox-->
-    <string name="pref_summary_ignore_folder_art">Klasör içeririsinde albüm kapağı olan müzik dosyaları için albüm kapağı arama</string>
+    <string name="pref_summary_ignore_folder_art">Müzik dizinlerinde depolanmış albüm kapaklarında arama yapma</string>
     <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_prefer_lastfm">Last.fm Albüm Kapağını Tercih Et</string>
+    <string name="pref_title_prefer_lastfm">Last.fm albüm kapağını tercih et</string>
     <!-- Settings summary for the embedded artwork checkbox-->
-    <string name="pref_summary_prefer_lastfm">ITunes sunucularında arama yapmadan önce Shuttle\'ın Last.fm\'deki resmi aramasını istiyorsanız bu kutuyu işaretleyin. (Yalnızca Albüm Kapakları)</string>
+    <string name="pref_summary_prefer_lastfm">iTunes sunucularında arama yapmadan önce Shuttle\'ın Last.fm\'de albüm kapağı aramasını istiyorsanız bu kutuyu işaretleyin. (Yalnızca albüm kapağı)</string>
     <!-- Settings title for Artwork settings heading -->
-    <string name="pref_string_title_artwork">Albüm Kapağı</string>
+    <string name="pref_string_title_artwork">Albüm kapağı</string>
     <!-- Settings title for the download artwork button -->
     <string name="pref_title_download_artwork">Albüm Kapağı İndir</string>
     <!-- Settings summary for the download artwork button-->
     <string name="pref_summary_download_artwork">Eksik sanatçı ve albüm kapaklarını indir</string>
     <!-- Settings warning for the download artwork button -->
-    <string name="pref_warning_download_artwork">Shuttle ağınıza bakılmaksızın tüm albüm kapaklarını indirir. Veri kullanım ücreti alınabilir.</string>
+    <string name="pref_warning_download_artwork">Shuttle ağ tercihinizi (Wi-Fi veya Mobil veri) dikkate almadan tüm albüm kapaklarını indirir. Veri kullanım ücreti alınabilir.</string>
     <!-- Settings title for the delete artwork button-->
     <string name="pref_title_delete_artwork">Albüm Kapaklarını Sil</string>
     <!-- Settings summary for the delete artwork button -->
-    <string name="pref_summary_delete_artwork">Sanatçı ve albüm kapaklarını sil</string>
+    <string name="pref_summary_delete_artwork">Cihazda bulunan sanatçı ve albüm kapaklarını sil</string>
     <!-- Shown when a user changes artwork source, and is prompted to delete existing artwork-->
-    <string name="pref_summary_change_artwork_source">Albüm kapağında ki değişiklikler daha önce alınan albüm kapaklarında etkili olmaz. Albüm kapağını kaldırmak ister misiniz?</string>
+    <string name="pref_summary_change_artwork_source">Albüm kapağında ki değişiklikler daha önce alınan albüm kapakları için geçerli olmayacaktır. Albüm kapağını kaldırmak ister misiniz?</string>
     <!-- The 'remove' artwork confirmation button-->
     <string name="pref_button_remove_artwork">Kaldır</string>
     <!-- Settings title for the option to download artwork automatically-->
@@ -350,18 +316,16 @@
     <!-- Settings summary for the option to download artwork automatically-->
     <string name="pref_summary_download_artwork_auto">Eksik sanatçı ve albüm kapaklarını otomatik olarak indir</string>
     <!-- Settings title for the download via Wi-Fi checkbox -->
-    <string name="pref_title_download_wifi_only">Sadece Wi-Fi Kullanarak İndir</string>
+    <string name="pref_title_download_wifi_only">Yalnızca Wi-Fi ile indir</string>
     <!-- Settings summary for the download via Wi-Fi checkbox -->
-    <string name="pref_summary_download_wifi_only">Sanatçı ve albüm kapakları yalnızca Wİ-Fİ aktifken indirilecektir</string>
+    <string name="pref_summary_download_wifi_only">Sanatçı ve albüm kapakları sadece bir Wi-Fi bağlantısı mevcutsa indirilir</string>
     <!-- Settings title for gmail style placeholders checkbox-->
     <string name="pref_title_placeholders">Gmail Harf Görsellerini Kullan</string>
     <!-- Settings summary for gmail style placeholders checkbox-->
     <string name="pref_summary_placeholders">Varsayılan olarak \'Gmail\' harf görselleri kullanılacaktır.
 Bu seçenek işaretli değilse, Shuttle simgesi kullanılacaktır.</string>
     <!-- Settings title for the enable lockscreen controls checkbox -->
-    <string name="pref_title_lockscreen">Kilit Ekranında Albüm Kapağı</string>
     <!-- Settings summary for the enable lockscreen controls checkbox -->
-    <string name="pref_summary_lockscreen">Kilit ekranında albüm kapağını etkinleştirir veya devre dışı bırakır</string>
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">Ekran</string>
     <!-- Settings title for the keep screen on checkbox -->
@@ -375,36 +339,35 @@ Bu seçenek işaretli değilse, Shuttle simgesi kullanılacaktır.</string>
     <!-- Settings title for the headset control options -->
     <string name="pref_title_headset_bluetooth">Kulaklık/Bluetooth</string>
     <!-- Settings title for the headset resume on connect option -->
-    <string name="pref_title_headset_con">Kulaklık bağlanınca devam et</string>
+    <string name="pref_title_headset_con">Kulaklık takıldığında devam et</string>
     <!-- Settings summary for the headset resume on connect option -->
-    <string name="pref_summary_headset_con">"Kulaklık bağlanınca şarkıya kaldığı yerden devam eder.
-    "</string>
+    <string name="pref_summary_headset_con">Kulaklık takıldığında şarkıyı oynatmaya devam eder</string>
     <!-- Settings title for the headset pause on disconnect -->
-    <string name="pref_title_headset_disconnect">Kulaklık çıkarımında durdur</string>
+    <string name="pref_title_headset_disconnect">Kulaklık çıkarıldığında durdur</string>
     <!-- Settings summary for the headset pause on disconnect -->
-    <string name="pref_summary_headset_disconnect">Kulaklık çıkarıldığında şarkıyı durdurur</string>
+    <string name="pref_summary_headset_disconnect">Kulaklık çıkarıldığında şarkıyı duraklatır</string>
     <!-- Settings title 'headset' -->
-    <string name="pref_title_headset">Kulaklık Ayarları</string>
+    <string name="pref_title_headset">Kulaklık</string>
     <!-- Settings title 'bluetooth' -->
     <string name="pref_title_bluetooth">Bluetooth</string>
     <!-- Settings summary for the bluetooth pause on disconnect -->
-    <string name="pref_summary_bluetooth_disconnect">Bluetooth bağlantısı kesildiğinde oynatma duraklar</string>
+    <string name="pref_summary_bluetooth_disconnect">Bluetooth bağlantısı kesildiğinde şarkıyı duraklatır</string>
     <!-- Settings summary for the bluetooth resume on connect -->
-    <string name="pref_summary_bluetooth_connect">Bluetooth ile bağlanıldığında çalmaya devam eder</string>
+    <string name="pref_summary_bluetooth_connect">Bluetooth ile bağlanıldığında şarkıyı oynatmaya devam eder</string>
     <!-- Settings title for the scrobbling heading -->
     <string name="pref_title_scrobbling">Skroplama</string>
     <!-- Settings title for Simple Last.fm scrobbler -->
     <string name="pref_title_simple_scrobbler">Basit Last.FM Scrobbler</string>
     <!-- Settings title for the enable last.fm scrobbling checkbox -->
-    <string name="pref_title_simple_enable">Scrobbling\'i aç</string>
+    <string name="pref_title_simple_enable">Skroplamayı Etkinleştir</string>
     <!-- Settings summary for the enable last.fm scrobbling checkbox -->
-    <string name="pref_summary_simple_enable">Simple Last.fm Scrobbler\'ı aktive et</string>
+    <string name="pref_summary_simple_enable">Basit Last.fm Scrobbler\'ı ile skroplamayı etkinleştir</string>
     <!-- Settings title for downloading the Simple Last.fm scrobbler -->
     <string name="download">İndir</string>
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <string name="pref_summary_simple_download">Simple Last.FM Scrobbler\'ı Google Play Store\'dan indir</string>
     <!-- Settings title for the About heading -->
-    <string name="pref_title_about">Değişiklikler</string>
+    <string name="pref_title_changelog">Değişiklikler</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Destek</string>
     <string name="pref_title_version">Versiyon</string>
@@ -412,16 +375,16 @@ Bu seçenek işaretli değilse, Shuttle simgesi kullanılacaktır.</string>
     <string name="pref_summary_faq">Bir sorunuz mu var? Yardıma mı ihtiyacınız var? SSS leri görmek için buraya tıklayın @ www.shuttlemusicplayer.com</string>
     <string name="pref_title_gplus">Yardım Alın</string>
     <string name="pref_summary_gplus">Shuttle kullanıcıların çok aktif bir Google+ topluluğu vardır. Sorularınız varsa veya yardıma ihtiyacınız varsa, burası uğramanız gereken en doğru yerdir.</string>
-    <string name="pref_title_rate">Teşekkür etmek için</string>
+    <string name="pref_title_rate">Teşekkür Et</string>
     <string name="pref_summary_rate">Eğer Shuttle\'ı beğendiyseniz, bir yorum bırakmayı düşünün lütfen</string>
     <string name="pref_title_headset_beep">Bip Sesini Atla</string>
     <string name="pref_summary_headset_beep">Kulaklık kontrolleriyle şarkı atlanırken bip sesi</string>
     <!-- Settings title for ignore playlist duplicates -->
-    <string name="pref_title_ignore_duplicates">Oynatma listesinde ki tekrarları yoksay</string>
+    <string name="pref_title_ignore_duplicates">Şarkı listesinde ki tekrarları yoksay</string>
     <!-- Settings summary for ignore playlist duplicates -->
-    <string name="pref_summary_ignore_duplicates">Bir çalma listesine şarkı eklerken, kopyaları aramaz ve atlamayacağınızı öneremez</string>
+    <string name="pref_summary_ignore_duplicates">Bir şarkı listesine şarkı eklerken, tekrarları arama ve atlamayı önerme</string>
     <!-- Displayed on the settings page to choose the default main page -->
-    <string name="select_default_page">Varsayılan Sayfa Olarak Seçiniz</string>
+    <string name="select_default_page">Varsayılan Sayfayı Seç</string>
     <!-- Option to view the list as a list or grid -->
     <string name="view_as_title">Görünüm</string>
     <!-- List ('view as' option) -->
@@ -435,13 +398,13 @@ Bu seçenek işaretli değilse, Shuttle simgesi kullanılacaktır.</string>
     <!-- Grid size (number of columns in grid view) -->
     <string name="menu_grid_size">Izgara boyutu</string>
     <!-- -->
-    <string name="whitelist_title">Beyaz Liste</string>
+    <string name="whitelist_title">Beyaz liste</string>
     <!-- -->
-    <string name="blacklist_title">Kara Liste</string>
+    <string name="blacklist_title">Kara liste</string>
     <!-- -->
     <string name="blacklist_description">Şarkıların üzerinde bulunan seçenek (3 dikey nokta) tuşuna basarak, \'kara liste\' seçeneği ile kara listeye eklenebilir.</string>
     <!-- -->
-    <string name="whitelist_description">Şarkılar, klasör tarayıcıdaki ayarlar düğmesine basarak, \'beyaz liste\' seçilerek, eklenecek klasörler seçilerek beyaz listeye eklenebilir.</string>
+    <string name="whitelist_description">Şarkılar, klasör tarayıcıdaki ayarlar düğmesine basarak, \'beyaz liste\' seçilerek beyaz listeye eklenebilir, ardından beyaz listeye eklemek istediğiniz klasörleri seçerek beyaz listeye eklenebilir.</string>
     <!-- ## Detail Activity - Info for artists/albums ## -->
     <!-- The viewpager tab title for the artist/album info -->
     <string name="info">Biyografi</string>
@@ -460,24 +423,26 @@ Bu seçenek işaretli değilse, Shuttle simgesi kullanılacaktır.</string>
     <string name="disc_number">Disk \#</string>
     <string name="disc_total">Toplam diskler</string>
     <!-- Track count. i.e "1 of 15" -->
-    <string name="track_count"><xliff:g id="track">%s</xliff:g> / <xliff:g id="total tracks">%s</xliff:g></string>
+    <string name="track_count"><xliff:g id="track">%1$s</xliff:g> / <xliff:g id="total tracks">%2$s</xliff:g></string>
     <!-- Button text for saving tags  -->
     <string name="save">Kaydet</string>
     <!-- Message displayed when tag editing fails -->
     <string name="tag_edit_error">Etiketleri düzenlerken bir hata oluştu.</string>
-    <string name="tag_error_lollipop">Etiketleri düzenlerken bir hata oluştu. Dosya bir SD kart üzerine kayıtlı ise, Shutlle\'ın erişim için izni olmayabilir.</string>
-    <string name="tag_error_kitkat">Etiketleri düzenlerken bir hata oluştu. Dosya SD Kart saklanmaktadır? Eğer öyleyse, Google bu dosyanın etiketinin düzenlemesini olanaksız hale getirdi.</string>
-    <string name="tag_editor_document_tree_message">Android 5.0 değişiklikler nedeniyle, Google artık bir uygulamanın SD kartta bulunan klasörler de düzenleme yapabilmesi için bunu belirtmek ve izin vermek gerektirir.\n\nShuttle şimdi dosya seçiciyi açacaktır. Değiştirmek istediğiniz dosyaların üst klasörünü seçiniz.</string>
+    <string name="tag_error_lollipop">Etiketler düzenlenirken bir hata oluştu. Dosya bir SD Kartta depolanıyorsa, Shuttle\'ın ona erişme izni olmayabilir.</string>
+    <string name="tag_error_kitkat">Etiketler düzenlenirken bir hata oluştu. Dosya bir SD Kartta mı depolanıyor? Eğer öyleyse Google, bu dosyanın etiketinin düzenlemesini olanaksız hale getirdi.</string>
+    <string name="tag_editor_document_tree_message">Android 5.0 \'daki değişiklikler nedeniyle Google, şimdi bir SD karttaki hangi uygulamanın hangi klasörleri düzenlenmesine izin verdiğinizi belirtmenizi gerektiriyor.\n\nShuttle şimdi dosya seçiciyi açacaktır. Değiştirmek istediğiniz dosyaların üst klasörünü seçiniz.</string>
     <string name="tag_editor_check_permission">İzinler denetleniyor. Bu biraz zaman alabilir ...\n\nGoogle\'ı suçlayın!</string>
-    <string name="tag_editor_document_tree_permission_failed">Shuttle\' ın hala dosyaları düzenlemek için izni yok görünüyor. Dosya seçiciden dosya yolunun doğru olduğunu tekrar kontrol edin.</string>
+    <string name="tag_editor_document_tree_permission_failed">Görünüşe göre Shuttle hala dosyaları düzenleme iznine sahip değil. Dosya seçicideki dizini kontrol edin.</string>
     <string name="tag_retrieve_error">Etiketler alınırken bir hata oluştu.</string>
     <!-- ## Folder browsing ## -->
     <!-- -->
     <string name="rename_folder">Klasörü yeniden adlandır</string>
     <!-- -->
     <string name="rename_file">Dosyayı yeniden adlandır</string>
+    <!-- -->
+    <string name="rename">Ad değiştir</string>
     <!-- Menu option to save current folder as initial (starting) directory -->
-    <string name="set_initial_dir">Ana klasör olarak ayarla</string>
+    <string name="set_initial_dir">Başlangıç dizini olarak ayarla</string>
     <!-- Label in folder view - number of folders within the current folder -->
     <string name="onefolder">1 dosya</string>
     <plurals name="Nfolders">
@@ -486,7 +451,7 @@ dosyalar</item>
         <item quantity="one"><xliff:g id="count">%d</xliff:g></item>
     </plurals>
     <!-- -->
-    <string name="parent_folder">Ana Klasör</string>
+    <string name="parent_folder">Üst Klasör</string>
     <!-- -->
     <string name="show_filenames">Dosya Adlarını Göster</string>
     <!-- 'Scan'-->
@@ -515,7 +480,7 @@ dosyalar</item>
     <!-- The name of the pseudo-playlist that holds all the podcasts, shown in title bar of songs list -->
     <string name="podcasts_title">Podcast\'ler</string>
     <!-- The name of the pseudo-playlist that holds all the recently added files, shown in list view -->
-    <string name="recentlyadded">En son eklenen</string>
+    <string name="recentlyadded">Son eklenenler</string>
     <!-- The name of the pseudo-playlist that holds all the most-played files, shown in list view -->
     <string name="mostplayed">En çok çalınan</string>
     <!-- Artist (singular) -->
@@ -529,36 +494,33 @@ dosyalar</item>
     <!-- Genre (singular)-->
     <string name="genre_title">Tür</string>
     <!-- Album artist (singular)-->
-    <string name="album_artist_title">Albüm-Sanatçı</string>
-    <!-- ## Lyrics ## -->
-    <!-- -->
-    <string name="no_lyrics">Hiçbir şarkı sözü bulunamadı</string>
+    <string name="album_artist_title">Albüm-Sanatçısı</string>
     <!-- ## Equalizer ## -->
     <!-- Menu item to open the equalizer -->
     <string name="equalizer">Ekolayzer</string>
     <!-- Displayed at the top of the preset selection screen in the equalizer -->
-    <string name="select_preset">Ön Ayar Seçiniz</string>
+    <string name="select_preset">Hazır Ayarları Seç</string>
     <!-- Bass boost strength -->
     <string name="bass_boost_strength">Bass Kuvvetlendirme Gücü</string>
     <!-- Virtualizer strength -->
-    <string name="virtualizer_strength">Virtualizer Gücü</string>
+    <string name="virtualizer_strength">Görselleştirici Gücü</string>
     <!-- Button to open external equalizer (DSP manager) -->
     <string name="open_dsp">Harici EQ</string>
     <!-- Equalizer 'custom' preset -->
     <string name="custom">Özel</string>
     <!-- ## Empty list messages ## -->
     <!-- -->
-    <string name="empty_artists">Hiçbir sanatçı algılanmadı. Cihazınıza birkaç şarkı aktarın.</string>
+    <string name="empty_artists">Hiçbir sanatçı bulunamadı. Bazı şarkıları cihazınıza kopyalayın.</string>
     <!-- -->
-    <string name="empty_albums">Hiçbir albüm algılanmadı. Cihazınıza birkaç şarkı aktarın.</string>
+    <string name="empty_albums">Hiçbir albüm bulunamadı. Bazı şarkıları cihazınıza kopyalayın.</string>
     <!-- -->
-    <string name="empty_genres">Hiçbir tür tespit edilmedi.</string>
+    <string name="empty_genres">Hiçbir tür bulunamadı.</string>
     <!-- -->
-    <string name="empty_playlist">Bu şarkı listesi boş. Bir sanatçı, albüm veya şarkıya uzun basılı tutun \'Şarkı Listesine Ekle\', ya da başlamak için + simgesini tıklatın.</string>
+    <string name="empty_playlist">Bu şarkı listesi boş. Bir sanatçı, albüm veya şarkıya uzun basılı tutun \'Şarkı Listesine Ekle\' basın, ya da başlamak için + simgesini basın.</string>
     <!-- -->
-    <string name="empty_songlist">Hiçbir şarkı algılanmadı. Cihazınıza birkaç şarkı aktarın.</string>
+    <string name="empty_songlist">Hiçbir şarkı bulunamadı. Bazı şarkıları cihazınıza kopyalayın.</string>
     <!-- -->
-    <string name="empty_suggested">Biraz daha fazla müzik çalın ve öneriler burada gösterilir.</string>
+    <string name="empty_suggested">Daha fazla müzik çalın ve öneriler burada görünecektir.</string>
     <string name="empty_search">Hiçbir arama sonucu bulunamadı.</string>
     <!-- ## Sort options ## -->
     <string name="sorting">Sıralama</string>
@@ -579,20 +541,25 @@ dosyalar</item>
     <string name="sort_files_size">Boyut</string>
     <string name="sort_files_song_artist_name">Sanatçı Adı</string>
     <string name="sort_files_album_name">Albüm Adı</string>
-    <string name="sort_files_track_name">Şarkı Adı</string>
+    <string name="sort_files_track_name">Parça Adı</string>
     <!-- ## Sleep Timer ## -->
-    <!-- Options Menu - Sleep Timer Title -->
-    <string name="timer">Uyku modu</string>
-    <!-- -->
+    <!-- Sleep timer title -->
+    <!--Sleep timer "Play last song to end" -->
     <string name="sleep_timer_play_to_end">Sonlandırmak için son şarkıyı çal</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_set">Ayarla</string>
-    <!-- Sleep timer "set" -->
-    <string name="timer_stop">Durdur</string>
+    <!-- Sleep timer "Stop" -->
+    <!-- Sleep timer stop message "Stop sleep timer?" -->
+    <!-- Toast when sleep timer is set -->
+    <!-- Sleep timer "Set time..." -->
+    <!-- Sleep timer "5 minutes" -->
+    <!-- Sleep timer "15 minutes" -->
+    <!-- Sleep timer "30 minutes" -->
+    <!-- Sleep timer "1 hour" -->
+    <!-- Sleep timer label "Minutes" (limited space here) -->
     <!-- Button name in time span picker -->
     <string name="button_done">Tamam</string>
     <!-- Title of time span picker -->
-    <string name="weekpicker_title">Shuttle içerisinde \'En son\' aranan müziklerin kaç geçmiş haftayı kapsayacağını seçin.</string>
+    <string name="weekpicker_title">Geçmişte Shuttle\'ın \'son\' müzik için kaç hafta araması gerektiğini seçin.</string>
     <!-- ## Notification bar text ## -->
     <!-- Message in notification bar when downloading -->
     <string name="notif_downloading_art">Albüm Kapağı İndiriliyor</string>
@@ -630,11 +597,11 @@ dosyalar</item>
     <!-- Tag editor 'comment' field-->
     <string name="comment">Yorum</string>
     <!-- Chromecast button for choosing which Chromecast device to play on -->
-    <string name="media_route_menu_title">Oynatılan&#8230;</string>
+    <string name="media_route_menu_title">Çalınan&#8230;</string>
     <!-- Action bar button text for saving a selected items to whitelist -->
     <string name="save_whitelist">Beyaz Listeyi Kaydet</string>
     <!-- DashClock Extension Description -->
-    <string name="extension_description">Şarkı bilgilerini gösterir</string>
+    <string name="extension_description">Şarkı bilgisini görüntüler</string>
     <!-- Week Selector title -->
     <string name="week_selector">Hafta Seçici</string>
     <!-- Displayed under the 'Most Played' section of the 'suggested' tab.. Artist, Album, Song -->
@@ -645,26 +612,20 @@ dosyalar</item>
     <string name="suggested_favorite_subtitle">Favori şarkılar</string>
     <string name="suggested_recently_added_subtitle">Son eklenen albümler</string>
     <!-- Shows when multiple items are selected after-long pressing-->
-    <string name="action_mode_selection_count"><xliff:g id="number">%d</xliff:g> seçilmiş</string>
+    <string name="action_mode_selection_count"><xliff:g id="number">%d</xliff:g> seçildi</string>
     <!-- ## Unknown artist/album metadata ##-->
     <!-- Default name of artist that doesn't have a name in the metadata -->
-    <string name="unknown_artist_name">Bilinmeyen sanatçı</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_name">Bilinmeyen albüm</string>
     <!-- Default name of genre that doesn't have a name in the metadata -->
-    <string name="unknown_genre_name">Bilinmeyen tür</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_artist_name">Bilinmeyen albüm sanatçısı</string>
+    <!-- Default value if album year unknown -->
+    <string name="unknown_year">Yıl bilinmiyor</string>
     <!-- Song Info overflow option-->
     <string name="song_info">Şarkı Bilgisi</string>
     <!-- Artwork Download Service Label-->
     <string name="download_service">İndirme Servisi</string>
-    <!-- ## Better Pickers Strings ## -->
-    <string name="picker_set">TAMAM</string>
-    <string name="timer_delete">Sil</string>
-    <string name="time_picker_time_seperator">:</string>
     <!-- Accessibility button description -->
-    <string name="btn_play">Oynat</string>
+    <string name="btn_play">Çal</string>
     <!-- Accessibility button description -->
     <string name="btn_pause">Durdur</string>
     <!-- Accessibility button description -->
@@ -674,7 +635,6 @@ dosyalar</item>
     <!-- Accessibility button description -->
     <string name="btn_prev">Önceki</string>
     <!-- Accessibility button description -->
-    <string name="btn_queue">Çalma kuyruğu görünümü</string>
     <!-- Accessibility button description -->
     <string name="btn_close">Kapat</string>
     <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
@@ -690,14 +650,12 @@ dosyalar</item>
     <!-- Accessibility button description -->
     <string name="btn_shuffle_off">Karıştırma kapalı</string>
     <!-- Accessibility button description -->
-    <string name="btn_show_queue">Sırayı göster</string>
     <!-- Accessibility button description -->
-    <string name="btn_fab_shuffle">Karıştır &amp; güncel listeyi oynat</string>
+    <string name="btn_fab_shuffle">Karıştır ve geçerli listeyi çal</string>
     <!-- Accessibility now playing 'mini player' description. Example: Now playing <Wannabe> by <Spice Girls> -->
-    <string name="btn_now_playing">Şimdi çalınan %2$s ile %1$s</string>
+    <string name="btn_now_playing">Şimdi %2$s sanatçısından %1$s çalınıyor</string>
     <!-- Accessibility 'show lyrics' -->
-    <string name="btn_show_lyrics">Sözleri göster</string>
-    <string name="pref_summary_restore_purchases">Zaten Shuttle\'ı yükseltilmişdir, ama yine de ücretsiz sürümü olarak ise gösteriyor, bu basın.</string>
+    <string name="pref_summary_restore_purchases">Shuttle\'ı zaten yükselttiyseniz ancak hala ücretsiz sürüm olarak görünüyorsa, bu tuşa basın.</string>
     <string name="pref_title_restore_purchases">Satın Almayı Geri Yükle</string>
     <string name="blacklist_empty">Herhangi bir şarkı kara listede değil!</string>
     <string name="whitelist_empty">Herhangi bir klasör beyaz listede değil!</string>
@@ -710,17 +668,16 @@ dosyalar</item>
     <string name="song_info_play_count">Çalma Sayısı</string>
     <string name="song_info_bitrate_suffix">" kbps"</string>
     <string name="song_info_sample_rate_suffix">" kHz"</string>
-    <string name="iab_purchase_restored">Satın alma yenilendi. Lütfen Shuttle\'ı yeniden başlatın</string>
+    <string name="iab_purchase_restored">Satın alma geri yüklendi. Lütfen Shuttle\'ı tekrar başlatın</string>
     <string name="iab_purchase_not_found">Geçmiş satın alma bulunamadı.</string>
-    <string name="iab_already_upgraded">Shuttle zaten geliştirilmiş. Uygulamayı yeniden başlatmayı deneyin.</string>
+    <string name="iab_already_upgraded">Shuttle zaten yükseltilmiş. Uygulamayı yeniden başlatmayı deneyin.</string>
     <string name="iab_purchase_failed">Bir şeyler yanlış gitti. Lütfen daha sonra tekrar deneyin..</string>
     <string name="snackbar_rate_text">Shuttle kullanmaktan keyif aldınız mı?</string>
     <string name="snackbar_rate_action">Oy Verin!</string>
-    <string name="toast_purchase_failed">Bir şeyler yanlış gitti. Lütfen daha sonra tekrar deneyiniz..</string>
     <string name="dialog_create_playlist_error">Şarkı listesi oluşturma hatası</string>
     <!-- Artwork picker -->
     <string name="artwork_edit">Albüm kapağı seçin</string>
-    <string name="artwork_type_media_store">Medya Mağazası</string>
+    <string name="artwork_type_media_store">Medya Depolama</string>
     <string name="artwork_type_tag">Etiket</string>
     <string name="artwork_type_lastfm">Last.FM</string>
     <string name="artwork_type_itunes">iTunes</string>
@@ -734,9 +691,9 @@ dosyalar</item>
     <!-- "Shuffle" Shortcut label disabled. Shows when shuffle not available (I don't think this ever happens)-->
     <string name="shortcut_shuffle_disabled">Karıştırma kullanılabilir değil</string>
     <!-- "Play" Shortcut label. Max 10 characters.-->
-    <string name="shortcut_play_short_label">Oynat</string>
+    <string name="shortcut_play_short_label">Çal</string>
     <!-- "Play" Shortcut long label. Max 25 characters.-->
-    <string name="shortcut_play_long_label">Oynat</string>
+    <string name="shortcut_play_long_label">Çal</string>
     <!-- "Play" Shortcut label disabled. Shows when music is already playing-->
     <string name="shortcut_play_disabled">Zaten çalınıyor</string>
     <!-- "Folders" Shortcut label. Max 10 characters.-->
@@ -746,18 +703,23 @@ dosyalar</item>
     <!-- "Folders" Shortcut label disabled. (I don't think this ever happens)-->
     <string name="shortcut_folders_disabled">Klasörler kullanılabilir değil</string>
     <!-- "Playlist" Shortcut label. Max 10 characters.-->
-    <string name="shortcut_playlist_short_label">Şarkı listesi</string>
     <!-- "Playlist" Shortcut long label. Max 25 characters.-->
-    <string name="shortcut_playlist_long_label">Favori Şarkı Listelerini Aç</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
-    <string name="shortcut_playlist_disabled">Şarkı listesi kullanılabilir değil</string>
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">Disk <xliff:g id="number">%d</xliff:g></string>
     <!-- Search Filter-->
     <string name="search_fuzzy">Bulanık</string>
-    <string name="search_title_only">Sadece Başlık</string>
     <string name="search_artists">Sanatçılar</string>
     <string name="search_albums">Albümler</string>
     <!-- Changelog -->
     <string name="changelog_show_on_launch">Başlangıçta göster</string>
+    <!-- Lyrics -->
+    <!-- QuickLyric button -->
+    <string name="quicklyric">QuickLyric</string>
+    <!-- Button for lyrics -->
+    <string name="lyrics">Şarkı Sözleri</string>
+    <!-- Shown when there are no lyrics -->
+    <string name="no_lyrics">Hiçbir şarkı sözü bulunamadı.</string>
+    <!-- QuickLyric info dialog message-->
+    <string name="quicklyric_info">QuickLyric,  Google Play Store\'da bulunan açık kaynak kodlu şarkı sözü bulma uygulamasıdır.\n\nKurulduktan sonra, Shuttle içerisinde ki \'QuickLyric\' düğmesine dokunduğunuzda sizi uygulama içindeki şarkı sözlerine yönlendirir.</string>
 </resources>

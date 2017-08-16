@@ -1,13 +1,13 @@
 package com.simplecity.amp_library.ui.views;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 /**
  * A class that represents a breadcrumb item
  */
-public class BreadcrumbItem extends TextView {
+public class BreadcrumbItem extends AppCompatTextView {
 
     private String mItemPath;
 

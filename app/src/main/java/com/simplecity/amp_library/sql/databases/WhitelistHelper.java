@@ -5,11 +5,13 @@ import android.content.ContentValues;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.model.WhitelistFolder;
 import com.simplecity.amp_library.utils.DataManager;
-import com.squareup.sqlbrite.BriteDatabase;
+import com.squareup.sqlbrite2.BriteDatabase;
 
+import java.util.Collections;
 import java.util.List;
 
-import rx.Observable;
+import io.reactivex.Single;
+
 
 public class WhitelistHelper {
 
@@ -43,10 +45,11 @@ public class WhitelistHelper {
         DataManager.getInstance().getWhitelistDatabase().delete(WhitelistDbOpenHelper.TABLE_FOLDERS, WhitelistDbOpenHelper.COLUMN_ID + " = " + folder.id);
     }
 
-    public static Observable<List<WhitelistFolder>> getWhitelistFolders() {
+    public static Single<List<WhitelistFolder>> getWhitelistFolders() {
         return DataManager.getInstance().getWhitelistDatabase()
                 .createQuery(WhitelistDbOpenHelper.TABLE_FOLDERS, "SELECT * FROM " + WhitelistDbOpenHelper.TABLE_FOLDERS)
-                .mapToList(WhitelistFolder::new);
+                .mapToList(WhitelistFolder::new)
+                .first(Collections.emptyList());
     }
 
     public static void deleteAllFolders() {

@@ -1,47 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <com.simplecity.amp_library.ui.views.CustomPreferenceCategory
-        android:layout="@layout/preference_category"
+<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.support.v7.preference.PreferenceCategory
         android:title="@string/pref_title_headset">
-        <CheckBoxPreference
+
+        <android.support.v7.preference.SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="pref_headset_disconnect"
-            android:layout="@layout/preference"
             android:summary="@string/pref_summary_headset_disconnect"
-            android:title="@string/pref_title_headset_disconnect"
-            android:widgetLayout="@layout/preference_widget_checkbox" />
-        <CheckBoxPreference
+            android:title="@string/pref_title_headset_disconnect" />
+
+        <android.support.v7.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="pref_headset_connect"
-            android:layout="@layout/preference"
             android:summary="@string/pref_summary_headset_con"
-            android:title="@string/pref_title_headset_con"
-            android:widgetLayout="@layout/preference_widget_checkbox" />
-        <CheckBoxPreference
+            android:title="@string/pref_title_headset_con" />
+
+        <android.support.v7.preference.SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="pref_headset_beep"
-            android:layout="@layout/preference"
             android:summary="@string/pref_summary_headset_beep"
-            android:title="@string/pref_title_headset_beep"
-            android:widgetLayout="@layout/preference_widget_checkbox" />
-    </com.simplecity.amp_library.ui.views.CustomPreferenceCategory>
-    <com.simplecity.amp_library.ui.views.CustomPreferenceCategory
-        android:layout="@layout/preference_category"
+            android:title="@string/pref_title_headset_beep" />
+
+    </android.support.v7.preference.PreferenceCategory>
+
+    <android.support.v7.preference.PreferenceCategory
         android:title="@string/pref_title_bluetooth">
-        <CheckBoxPreference
+
+        <android.support.v7.preference.SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="pref_bluetooth_disconnect"
-            android:layout="@layout/preference"
             android:summary="@string/pref_summary_bluetooth_disconnect"
-            android:title="@string/pref_title_headset_disconnect"
-            android:widgetLayout="@layout/preference_widget_checkbox" />
-        <CheckBoxPreference
+            android:title="@string/pref_title_headset_disconnect" />
+
+        <android.support.v7.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="pref_bluetooth_connect"
-            android:layout="@layout/preference"
             android:summary="@string/pref_summary_bluetooth_connect"
-            android:title="@string/pref_title_headset_con"
-            android:widgetLayout="@layout/preference_widget_checkbox" />
-    </com.simplecity.amp_library.ui.views.CustomPreferenceCategory>
-</PreferenceScreen>
+            android:title="@string/pref_title_headset_con" />
+
+    </android.support.v7.preference.PreferenceCategory>
+
+</android.support.v7.preference.PreferenceScreen>

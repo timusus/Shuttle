@@ -1,12 +1,8 @@
 package com.simplecity.amp_library.ui.fragments;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.drawable.LayerDrawable;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -17,40 +13,59 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.afollestad.aesthetic.Aesthetic;
+import com.afollestad.aesthetic.Util;
+import com.afollestad.aesthetic.ViewBackgroundAction;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.glide.utils.GlideUtils;
+import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.Song;
-import com.simplecity.amp_library.playback.MusicService;
-import com.simplecity.amp_library.ui.activities.MainActivity;
-import com.simplecity.amp_library.ui.activities.PlayerActivity;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.ui.views.PlayPauseView;
-import com.simplecity.amp_library.ui.views.PlayerView;
-import com.simplecity.amp_library.utils.ColorUtils;
-import com.simplecity.amp_library.utils.DrawableUtils;
-import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
+import com.simplecity.amp_library.ui.views.PlayerViewAdapter;
+import com.simplecity.amp_library.utils.PlaceholderProvider;
+import com.simplecity.multisheetview.ui.view.MultiSheetView;
 
-public class MiniPlayerFragment extends BaseFragment implements PlayerView {
+import javax.inject.Inject;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+import io.reactivex.disposables.CompositeDisposable;
+
+import static com.afollestad.aesthetic.Rx.distinctToMainThread;
+import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
+
+public class MiniPlayerFragment extends BaseFragment {
 
     private static final String TAG = "MiniPlayerFragment";
 
-    private View rootView;
+    View rootView;
 
-    private PlayPauseView playPauseView;
-    private ProgressBar progressBar;
+    @BindView(R.id.mini_play)
+    PlayPauseView playPauseView;
 
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener;
+    @BindView(R.id.progressbar)
+    ProgressBar progressBar;
 
-    private PlayerPresenter presenter = new PlayerPresenter();
+    @BindView(R.id.track_name)
+    TextView trackName;
 
-    private TextView trackName;
-    private TextView artistName;
-    private ImageView miniArtwork;
+    @BindView(R.id.artist_name)
+    TextView artistName;
+
+    @BindView(R.id.mini_album_artwork)
+    ImageView miniArtwork;
+
+    @Inject
+    PlayerPresenter presenter;
+
+    private CompositeDisposable disposable = new CompositeDisposable();
+
+    private Unbinder unbinder;
 
     public MiniPlayerFragment() {
 
@@ -67,37 +82,41 @@ public class MiniPlayerFragment extends BaseFragment implements PlayerView {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
-        onSharedPreferenceChangeListener = (sharedPreferences, key) -> {
-            if (key.equals("pref_theme_highlight_color") || key.equals("pref_theme_accent_color") || key.equals("pref_theme_white_accent")) {
-                themeUIComponents();
-            }
-        };
-        sharedPreferences.registerOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
+        ShuttleApplication.getInstance().getAppComponent()
+                .plus(new FragmentModule(this))
+                .inject(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         rootView = inflater.inflate(R.layout.fragment_mini_player, container, false);
-        rootView.setBackgroundColor(ColorUtils.getPrimaryColor());
+
+        unbinder = ButterKnife.bind(this, rootView);
+
+        rootView.setOnClickListener(v -> {
+            MultiSheetView multiSheetView = MultiSheetView.getParentMultiSheetView(rootView);
+            if (multiSheetView != null) {
+                multiSheetView.expandSheet(MultiSheetView.Sheet.FIRST);
+            }
+        });
         rootView.setOnTouchListener(new OnSwipeTouchListener(getActivity()));
 
-        playPauseView = (PlayPauseView) rootView.findViewById(R.id.mini_play);
         playPauseView.setOnClickListener(v -> {
             playPauseView.toggle();
             playPauseView.postDelayed(() -> presenter.togglePlayback(), 200);
         });
 
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progressbar);
         progressBar.setMax(1000);
 
-        trackName = (TextView) rootView.findViewById(R.id.track_name);
-        artistName = (TextView) rootView.findViewById(R.id.artist_name);
-        miniArtwork = (ImageView) rootView.findViewById(R.id.mini_album_artwork);
-
-        themeUIComponents();
+        disposable.add(Aesthetic.get(getContext())
+                .colorPrimary()
+                .compose(distinctToMainThread())
+                .subscribe(color -> {
+                    boolean isDark = !Util.isColorLight(color);
+                    trackName.setTextColor(isDark ? Color.WHITE : Color.BLACK);
+                    artistName.setTextColor(isDark ? Color.WHITE : Color.BLACK);
+                    ViewBackgroundAction.create(rootView).accept(color);
+                }, onErrorLogAndRethrow()));
 
         return rootView;
     }
@@ -106,7 +125,7 @@ public class MiniPlayerFragment extends BaseFragment implements PlayerView {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        presenter.bindView(this);
+        presenter.bindView(playerViewAdapter);
     }
 
     @Override
@@ -119,37 +138,18 @@ public class MiniPlayerFragment extends BaseFragment implements PlayerView {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
     public void onDestroyView() {
+        presenter.unbindView(playerViewAdapter);
+        disposable.clear();
+        unbinder.unbind();
         super.onDestroyView();
-
-        presenter.unbindView(this);
     }
 
     @Override
     public void onDestroy() {
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
         rootView.setOnTouchListener(null);
 
         super.onDestroy();
-    }
-
-    private void themeUIComponents() {
-        if (progressBar != null) {
-            progressBar.setProgressDrawable(DrawableUtils.getProgressDrawable(getActivity(), (LayerDrawable) progressBar.getProgressDrawable()));
-        }
-        if (rootView != null) {
-            rootView.setBackgroundColor(ColorUtils.getPrimaryColor());
-        }
-    }
-
-    void updateMiniPlayerVisibility() {
-        boolean show = !(MusicServiceConnectionUtils.sServiceBinder == null || MusicUtils.getSongId() == -1);
-        ((MainActivity) getActivity()).togglePanelVisibility(show);
     }
 
     private class OnSwipeTouchListener implements View.OnTouchListener {
@@ -170,13 +170,15 @@ public class MiniPlayerFragment extends BaseFragment implements PlayerView {
 
         public boolean onTouch(View v, MotionEvent event) {
 
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                rootView.setPressed(true);
-            } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                rootView.setPressed(false);
+            boolean consumed = gestureDetector.onTouchEvent(event);
+
+            if (!consumed) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    v.performClick();
+                }
             }
 
-            return gestureDetector.onTouchEvent(event);
+            return consumed;
         }
 
         private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -190,20 +192,6 @@ public class MiniPlayerFragment extends BaseFragment implements PlayerView {
             @Override
             public boolean onDown(MotionEvent e) {
                 return true;
-            }
-
-            @Override
-            public boolean onSingleTapUp(MotionEvent e) {
-                Activity parent = getActivity();
-                if (getResources().getBoolean(R.bool.isSlidingEnabled)) {
-                    if (parent instanceof MainActivity) {
-                        ((MainActivity) parent).togglePane();
-                    }
-                } else {
-                    Intent intent = new Intent(parent, PlayerActivity.class);
-                    parent.startActivityForResult(intent, MainActivity.REQUEST_SEARCH);
-                }
-                return super.onSingleTapUp(e);
             }
 
             @Override
@@ -227,76 +215,44 @@ public class MiniPlayerFragment extends BaseFragment implements PlayerView {
         return TAG;
     }
 
+    PlayerViewAdapter playerViewAdapter = new PlayerViewAdapter() {
 
-    @Override
-    public void setSeekProgress(int progress) {
-        progressBar.setProgress(progress);
-    }
+        @Override
+        public void setSeekProgress(int progress) {
+            progressBar.setProgress(progress);
+        }
 
-    @Override
-    public void currentTimeVisibilityChanged(boolean visible) {
 
-    }
-
-    @Override
-    public void currentTimeChanged(long seconds) {
-
-    }
-
-    @Override
-    public void queueChanged(int queuePosition, int queueLength) {
-
-    }
-
-    @Override
-    public void playbackChanged(boolean isPlaying) {
-        if (isPlaying) {
-            if (playPauseView.isPlay()) {
-                playPauseView.toggle();
-            }
-        } else {
-            if (!playPauseView.isPlay()) {
-                playPauseView.toggle();
+        @Override
+        public void playbackChanged(boolean isPlaying) {
+            if (isPlaying) {
+                if (playPauseView.isPlay()) {
+                    playPauseView.toggle();
+                }
+            } else {
+                if (!playPauseView.isPlay()) {
+                    playPauseView.toggle();
+                }
             }
         }
-    }
 
-    @Override
-    public void shuffleChanged(@MusicService.ShuffleMode int shuffleMode) {
+        @Override
+        public void trackInfoChanged(@Nullable Song song) {
 
-    }
+            if (song == null) return;
 
-    @Override
-    public void repeatChanged(@MusicService.RepeatMode int repeatMode) {
+            trackName.setText(song.name);
+            artistName.setText(String.format("%s | %s", song.artistName, song.albumName));
 
-    }
+            Glide.with(getContext())
+                    .load(song)
+                    .priority(Priority.HIGH)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.name, false))
+                    .into(miniArtwork);
 
-    @Override
-    public void favoriteChanged() {
+            rootView.setContentDescription(getString(R.string.btn_now_playing, song.name, song.artistName));
 
-    }
-
-    @Override
-    public void trackInfoChanged(@Nullable Song song) {
-
-        if (song == null) return;
-
-        ((MainActivity) getActivity()).togglePanelVisibility(true);
-
-        trackName.setText(song.name);
-        artistName.setText(String.format("%s | %s", song.artistName, song.albumName));
-
-        Glide.with(getContext())
-                .load(song)
-                .priority(Priority.HIGH)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .placeholder(GlideUtils.getMediumPlaceHolderResId())
-                .into(miniArtwork);
-
-        rootView.setContentDescription(getString(R.string.btn_now_playing, song.name, song.artistName));
-
-    }
+        }
+    };
 }
-
-
-

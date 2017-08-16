@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <com.simplecity.amp_library.ui.views.CustomPreferenceCategory
-        android:layout="@layout/preference_category"
+<android.support.v7.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.support.v7.preference.PreferenceCategory
         android:title="@string/blacklist_title">
-        <Preference
-            android:layout="@layout/preference"
-            android:summary="@string/blacklist_description"/>
-        <Preference
+
+        <android.support.v7.preference.Preference
             android:key="pref_blacklist_view"
-            android:layout="@layout/preference"
+            android:summary="@string/blacklist_description"
             android:title="@string/pref_title_view_blacklist"/>
-    </com.simplecity.amp_library.ui.views.CustomPreferenceCategory>
-    <com.simplecity.amp_library.ui.views.CustomPreferenceCategory
-        android:layout="@layout/preference_category"
+
+    </android.support.v7.preference.PreferenceCategory>
+
+    <android.support.v7.preference.PreferenceCategory
         android:title="@string/whitelist_title">
-        <Preference
-            android:layout="@layout/preference"
-            android:summary="@string/whitelist_description"/>
-        <Preference
+
+        <android.support.v7.preference.Preference
             android:key="pref_whitelist_view"
-            android:layout="@layout/preference"
+            android:summary="@string/whitelist_description"
             android:title="@string/pref_title_view_whitelist"/>
-    </com.simplecity.amp_library.ui.views.CustomPreferenceCategory>
-</PreferenceScreen>
+    </android.support.v7.preference.PreferenceCategory>
+
+</android.support.v7.preference.PreferenceScreen>

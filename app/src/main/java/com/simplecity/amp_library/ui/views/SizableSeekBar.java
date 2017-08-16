@@ -9,114 +9,63 @@ import android.view.Gravity;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.SeekBar;
 
-import com.simplecity.amp_library.utils.ResourceUtils;
+import com.afollestad.aesthetic.AestheticSeekBar;
 
-public class SizableSeekBar extends SeekBar {
+public class SizableSeekBar extends AestheticSeekBar {
 
-    private ValueAnimator.AnimatorUpdateListener mAnimatorListener = new ValueAnimator.AnimatorUpdateListener() {
-        @Override
-        public void onAnimationUpdate(ValueAnimator valueAnimator) {
-            mCurrentThumbSizeRatio = (Float) valueAnimator.getAnimatedValue();
-            mThumb.setLevel((int) (10000F * (mCurrentThumbSizeRatio / mMaxThumbSizeRatio)));
-            SizableSeekBar.this.invalidate();
-        }
-    };
+    private static final String TAG = "SizableSeekBar";
 
-    float mCurrentThumbSizeRatio = 1.0f;
+    private static final float maxThumbSizeRatio = 2.0f;
 
-    private OnSeekBarChangeListener mInternalListener = new OnSeekBarChangeListener() {
-
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-            startThumbShrinkAnimation();
-            if (mSeekListener != null)
-                mSeekListener.onStopTrackingTouch(SizableSeekBar.this);
-        }
-
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-            startThumbGrowAnimation();
-            if (mSeekListener != null)
-                mSeekListener.onStartTrackingTouch(SizableSeekBar.this);
-        }
-
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            if (mSeekListener != null)
-                mSeekListener.onProgressChanged(SizableSeekBar.this, progress, fromUser);
-        }
-
-    };
-
-    float mMaxThumbSizeRatio = 2.0f;
-    OnSeekBarChangeListener mSeekListener;
-    private Drawable mPendingThumb;
-    Drawable mThumb;
-    private ValueAnimator mThumbGrowAnimator;
-    private ValueAnimator mThumbShrinkAnimator;
-    private AccelerateDecelerateInterpolator mInterpolator = new AccelerateDecelerateInterpolator();
+    private float currentThumbSizeRatio = 1.0f;
+    private OnSeekBarChangeListener seekListener;
+    private Drawable pendingThumb;
+    private Drawable thumb;
+    private ValueAnimator thumbGrowAnimator;
+    private ValueAnimator thumbShrinkAnimator;
+    private AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();
 
     public SizableSeekBar(Context context) {
-        super(context);
-        super.setOnSeekBarChangeListener(mInternalListener);
-
-        setThumb(mPendingThumb);
-        mPendingThumb = null;
-        configureThumbPadding();
+        this(context, null);
     }
 
     public SizableSeekBar(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        super.setOnSeekBarChangeListener(mInternalListener);
+        super.setOnSeekBarChangeListener(internalListener);
 
-        setThumb(mPendingThumb);
-        mPendingThumb = null;
-        configureThumbPadding();
-    }
-
-    private void configureThumbPadding() {
-        setThumbOffset(getThumbOffset() - ResourceUtils.toPixels(4.5f));
+        setThumb(pendingThumb);
+        pendingThumb = null;
     }
 
     void startThumbGrowAnimation() {
-        if (mThumbShrinkAnimator != null) {
-            mThumbShrinkAnimator.cancel();
-            mThumbShrinkAnimator = null;
+        if (thumbShrinkAnimator != null) {
+            thumbShrinkAnimator.cancel();
+            thumbShrinkAnimator = null;
         }
-        mThumbGrowAnimator = ValueAnimator.ofFloat(mCurrentThumbSizeRatio, mMaxThumbSizeRatio);
-        mThumbGrowAnimator.setInterpolator(mInterpolator);
-        mThumbGrowAnimator.addUpdateListener(mAnimatorListener);
-        mThumbGrowAnimator.setDuration(300);
-        mThumbGrowAnimator.start();
+        thumbGrowAnimator = ValueAnimator.ofFloat(currentThumbSizeRatio, maxThumbSizeRatio);
+        thumbGrowAnimator.setInterpolator(interpolator);
+        thumbGrowAnimator.addUpdateListener(mAnimatorListener);
+        thumbGrowAnimator.setDuration(300);
+        thumbGrowAnimator.start();
 
     }
 
     void startThumbShrinkAnimation() {
-        if (mThumbGrowAnimator != null) {
-            mThumbGrowAnimator.cancel();
-            mThumbGrowAnimator = null;
+        if (thumbGrowAnimator != null) {
+            thumbGrowAnimator.cancel();
+            thumbGrowAnimator = null;
         }
-        mThumbShrinkAnimator = ValueAnimator.ofFloat(mCurrentThumbSizeRatio, 1.0f);
-        mThumbShrinkAnimator.setInterpolator(mInterpolator);
-        mThumbShrinkAnimator.addUpdateListener(mAnimatorListener);
-        mThumbShrinkAnimator.setDuration(300);
-        mThumbShrinkAnimator.start();
-    }
-
-    @Override
-    protected void onSizeChanged(int i, int j, int k, int l) {
-        super.onSizeChanged(i, j, k, l);
-        configureThumbPadding();
+        thumbShrinkAnimator = ValueAnimator.ofFloat(currentThumbSizeRatio, 1.0f);
+        thumbShrinkAnimator.setInterpolator(interpolator);
+        thumbShrinkAnimator.addUpdateListener(mAnimatorListener);
+        thumbShrinkAnimator.setDuration(300);
+        thumbShrinkAnimator.start();
     }
 
     @Override
     public void setOnSeekBarChangeListener(OnSeekBarChangeListener listener) {
-        mSeekListener = listener;
-    }
-
-    public void setInterpolator(AccelerateDecelerateInterpolator interpolator) {
-        mInterpolator = interpolator;
+        seekListener = listener;
     }
 
     @Override
@@ -129,13 +78,46 @@ public class SizableSeekBar extends SeekBar {
             thumb = new ScaleDrawable(thumb, Gravity.CENTER, 1.0F, 1.0F);
         }
 
-        mThumb = thumb;
-        mThumb.setLevel((int) (10000F * (1.0F / mMaxThumbSizeRatio)));
-        configureThumbPadding();
-        super.setThumb(mThumb);
+        this.thumb = thumb;
+        int level = (int) (10000F * (1.0F / maxThumbSizeRatio));
+        this.thumb.setLevel(level);
+        super.setThumb(this.thumb);
     }
 
     public Drawable getThumb() {
-        return mThumb;
+        return thumb;
     }
+
+    private ValueAnimator.AnimatorUpdateListener mAnimatorListener = new ValueAnimator.AnimatorUpdateListener() {
+        @Override
+        public void onAnimationUpdate(ValueAnimator valueAnimator) {
+            currentThumbSizeRatio = (Float) valueAnimator.getAnimatedValue();
+            int level = (int) (10000F * (currentThumbSizeRatio / maxThumbSizeRatio));
+            thumb.setLevel(level);
+            SizableSeekBar.this.invalidate();
+        }
+    };
+
+    private OnSeekBarChangeListener internalListener = new OnSeekBarChangeListener() {
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            startThumbShrinkAnimation();
+            if (seekListener != null)
+                seekListener.onStopTrackingTouch(SizableSeekBar.this);
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+            startThumbGrowAnimation();
+            if (seekListener != null)
+                seekListener.onStartTrackingTouch(SizableSeekBar.this);
+        }
+
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            if (seekListener != null)
+                seekListener.onProgressChanged(SizableSeekBar.this, progress, fromUser);
+        }
+    };
 }

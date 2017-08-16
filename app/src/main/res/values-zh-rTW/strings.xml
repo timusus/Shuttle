@@ -4,7 +4,6 @@
     <!-- Shown when a user attempts to edit tags, but they don't have a 'DocumentProvider' available to pick the directory of their music (and thus give permission to Shuttle)-->
     <string name="R.string.toast_no_document_provider">找不到可處理這項權限要求的文件提供者</string>
     <!-- Displayed when an M3U playlist is being saved, but it already exists -->
-    <string name="playlist_save_exists">播放清單已存在</string>
     <!-- Displayed when an M3U playlist save fails -->
     <string name="playlist_save_failed">無法儲存播放清單</string>
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
@@ -43,16 +42,6 @@
     </plurals>
     <!-- Toast after selecting an empty playlist -->
     <string name="emptyplaylist">選取的播放清單是空的</string>
-    <!-- Used in sleep message. Example 2 hours (and) 5 minutes -->
-    <string name="and">" \u8207 "</string>
-    <!-- Alarm confirmation toast: singular hour -->
-    <string name="hour">" \u5c0f\u6642"</string>
-    <!-- Alarm confirmation toast: plural hours -->
-    <string name="hours">" \u5c0f\u6642"</string>
-    <!-- Alarm confirmation toast: plural minutes -->
-    <string name="minutes">" \u5206\u9418"</string>
-    <!-- Alarm toast: Sleep timer set for -->
-    <string name="sleep_message">\u4f11\u7720\u8a08\u6642\u5df2\u8a2d\u70ba</string>
     <!-- -->
     <string name="initial_dir_set_message">\u8a2d\u70ba\u8d77\u59cb\u4f4d\u7f6e</string>
     <!-- Transient popup message shown after deleting a playlist -->
@@ -60,30 +49,21 @@
     <!-- Transient popup message shown after renaming a playlist -->
     <string name="playlist_renamed_message">已重新命名播放清單</string>
     <!-- Toast confirming that song(s) was/were deleted. -->
-    <plurals name="NNNtracksdeleted">
-        <item quantity="other">已刪除 <xliff:g id="songs_to_delete">%d</xliff:g> 首曲目</item>
-    </plurals>
     <!-- -->
     <plurals name="NNNtrackstoqueue">
         <item quantity="other">已將 <xliff:g id="number" example="27">%d</xliff:g> 首曲目新增至佇列</item>
     </plurals>
     <!-- Toasts after adding song(s) to playlists -->
-    <plurals name="NNNtrackstofavourites">
-        <item quantity="other">已將 <xliff:g example="27" id="number">%d</xliff:g> 首曲目加入至最愛</item>
-    </plurals>
     <string name="song_to_favourites">已將「<xliff:g id="song_name">%s</xliff:g>」加入至最愛</string>
     <string name="song_removed_from_favourites">已將「<xliff:g id="song_name">%s</xliff:g>」從最愛中移除</string>
     <!-- ## Dialogs ## -->
     <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_tite">需要重新啟動</string>
     <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_message">您的變更將在重新啟動 Shuttle 後生效</string>
     <!-- Restart now button -->
     <string name="restart_button">立即重新啟動</string>
     <!-- Displays when picking a theme color -->
     <string name="color_pick">選擇色彩</string>
     <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
-    <string name="dialog_custom">自訂</string>
     <!-- Displays when sharing a file fails -->
     <string name="share_failed">很抱歉，無法分享這個檔案</string>
     <!-- Displays when you click 'share' -->
@@ -118,8 +98,6 @@
 \n• 資料夾瀏覽模式
 \n• 支援 ChromeCast
 \n\n這也有助於開發者持續增進產品功能與改善使用體驗\n\n若您已擁有 Shuttle+ 則不需再次進行升級</string>
-    <string name="get_pro_button_play_store">Play 商店</string>
-    <string name="get_pro_button_amazon">Amazon</string>
     <string name="btn_upgrade">升級</string>
     <!-- -->
     <string name="get_pro_button_no">不用了，謝謝</string>
@@ -155,15 +133,12 @@
     <string name="delete_file_confirmation_dialog">您確定要永久刪除「<xliff:g id="file">%s</xliff:g>」嗎？</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">您確定要永久刪除裝置中的所有專輯封面嗎？</string>
-    <!-- QuickLyric Play Store Link -->
-    <!-- QuickLyric button -->
-    <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
     <string name="dialog_title_set_ringtone">設為鈴聲</string>
     <!-- "Set Ringtone" message -->
     <string name="dialog_message_set_ringtone">Shuttle 需要「寫入設定」權限才能設定鈴聲。\n\n請在您允許權限後再一次設定鈴聲</string>
     <!-- Message displayed in dialog when attempting to add duplicates to playlist -->
-    <string name="dialog_message_playlist_add_duplicate">「<xliff:g id="artist">%s</xliff:g>—<xliff:g id="song">%s</xliff:g>」已存在於這個播放清單中。要繼續加入嗎？</string>
+    <string name="dialog_message_playlist_add_duplicate">「<xliff:g id="artist">%1$s</xliff:g>—<xliff:g id="song">%2$s</xliff:g>」已存在於這個播放清單中。要繼續加入嗎？</string>
     <!-- Checkbox text 'apply to all' -->
     <string name="dialog_checkbox_playlist_duplicate_apply_all">全部套用 (<xliff:g id="number">%d</xliff:g>)</string>
     <!-- Title displayed in dialog when attempting to add duplicates to playlist -->
@@ -193,17 +168,16 @@
     <string name="fav_add">加入我的最愛</string>
     <!-- Context menu item -->
     <string name="play_selection">播放</string>
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
     <!-- Context menu item -->
-    <string name="add_to_playlist">加入至播放清單</string>
     <!-- Context menu item -->
     <string name="new_playlist">新增</string>
-    <!-- Button for lyrics -->
-    <string name="lyrics">歌詞</string>
     <!-- menu item to save the current list as a new playlist -->
     <string name="save_as_playlist">另存播放清單</string>
     <!-- Context menu item to remove the selected item from the playlist -->
-    <string name="remove_from_playlist">從播放清單中移除</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
+    <!-- Context menu item to remove the selected item from the queue -->
     <string name="remove_from_queue">從佇列中移除</string>
     <!-- Context menu item -->
     <string name="play_next">播放下一首</string>
@@ -214,11 +188,10 @@
     <!-- -->
     <string name="library_title">音樂庫</string>
     <!-- -->
-    <string name="share_title">分享</string>
     <!-- Library screen, menu item -->
     <string name="search_title">搜尋</string>
+    <string name="search_filter">篩選器</string>
     <!-- Playlist context menu item to delete the selected playlist. -->
-    <string name="delete_playlist_menu">刪除</string>
     <!-- Playlist context menu item to clear the selected playlist. -->
     <string name="clear_playlist_menu">清除</string>
     <!-- Playlist context menu item to edit the selected playlist -->
@@ -233,8 +206,6 @@
     <string name="nowplaying_title">現正播放</string>
     <!-- -->
     <string name="up_next_title">Up Next</string>
-    <!-- Context menu item -->
-    <string name="add_to_queue">新增至佇列</string>
     <!-- Popup menu item -->
     <string name="go_to">前往</string>
     <!-- 'More' button -->
@@ -248,13 +219,13 @@
     <string name="navigation_drawer_close">關閉側邊選單</string>
     <!-- ## Preference Menu ## -->
     <!--Settings title for white accent color) -->
-    <string name="pref_title_theme_white_accent">使用白色輔助色</string>
     <!--Settings summary for white accent color-->
-    <string name="pref_summary_theme_white_accent">以白色作為狀態顯示外的輔助色 (隨機播放或重複模式按鍵需要白色以外的色彩來辨別為啟用)</string>
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">導覽</string>
     <!--Settings category for 'notification' items -->
+    <string name="pref_category_notif_drawer">通知介面</string>
     <!-- Settings title for inverting the notification drawer text & icons -->
+    <string name="pref_title_invert_notif_icons">反轉通知圖示與文字的色彩</string>
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">其他</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
@@ -282,7 +253,6 @@
     <string name="pref_title_theme_light">淺色</string>
     <string name="pref_title_theme_black">黑色</string>
     <!--Settings summary for the downloading more themes -->
-    <string name="pref_summary_get_pro_themes">升級至 Shuttle+ 以取得更多主題</string>
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">黑 / 白名單</string>
     <!--Settings title for viewing blacklist-->
@@ -294,7 +264,6 @@
     <!--Settings title for clearing whitelist-->
     <string name="pref_title_clear_whitelist">清除</string>
     <!--Settings title for clearing whitelist-->
-    <string name="pref_title_update_whitelist">更新</string>
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">裁剪專輯封面</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -350,9 +319,7 @@
     <!-- Settings summary for gmail style placeholders checkbox-->
     <string name="pref_summary_placeholders">顯示 Gmail 樣式的預設專輯封面。若取消勾選則會以 Shuttle 圖示替代</string>
     <!-- Settings title for the enable lockscreen controls checkbox -->
-    <string name="pref_title_lockscreen">啟用鎖定螢幕播放控制</string>
     <!-- Settings summary for the enable lockscreen controls checkbox -->
-    <string name="pref_summary_lockscreen">啟用 / 停用鎖定螢幕顯示音樂資訊、專輯封面及播放控制面板</string>
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">顯示</string>
     <!-- Settings title for the keep screen on checkbox -->
@@ -394,7 +361,7 @@
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <string name="pref_summary_simple_download">從 Play 商店下載 Simple Last.FM Scrobbler</string>
     <!-- Settings title for the About heading -->
-    <string name="pref_title_about">更新紀錄</string>
+    <string name="pref_title_changelog">更新紀錄</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">支援</string>
     <string name="pref_title_version">版本</string>
@@ -404,6 +371,8 @@
     <string name="pref_summary_gplus">我們在 Google+ 上有個非常活躍的 Shuttle 社群，若您有任何問題或需要協助，您可拜訪這個好地方</string>
     <string name="pref_title_rate">感謝與評分</string>
     <string name="pref_summary_rate">若您喜歡 Shuttle，您可給予評價</string>
+    <string name="pref_title_headset_beep">略過提醒</string>
+    <string name="pref_summary_headset_beep">透過耳機跳過曲目時發出提示音</string>
     <!-- Settings title for ignore playlist duplicates -->
     <string name="pref_title_ignore_duplicates">略過播放清單重複項目</string>
     <!-- Settings summary for ignore playlist duplicates -->
@@ -448,7 +417,7 @@
     <string name="disc_number">唱片 \#</string>
     <string name="disc_total">唱片總計</string>
     <!-- Track count. i.e "1 of 15" -->
-    <string name="track_count"><xliff:g id="total tracks">%s</xliff:g> 中的 <xliff:g id="track">%s</xliff:g></string>
+    <string name="track_count"><xliff:g id="total tracks">%2$s</xliff:g> 中的 <xliff:g id="track">%1$s</xliff:g></string>
     <!-- Button text for saving tags  -->
     <string name="save">儲存</string>
     <!-- Message displayed when tag editing fails -->
@@ -464,6 +433,7 @@
     <string name="rename_folder">重新命名資料夾</string>
     <!-- -->
     <string name="rename_file">重新命名檔案</string>
+    <!-- -->
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">設為起始位置</string>
     <!-- Label in folder view - number of folders within the current folder -->
@@ -516,9 +486,6 @@
     <string name="genre_title">類型</string>
     <!-- Album artist (singular)-->
     <string name="album_artist_title">專輯-演出者</string>
-    <!-- ## Lyrics ## -->
-    <!-- -->
-    <string name="no_lyrics">找不到歌詞</string>
     <!-- ## Equalizer ## -->
     <!-- Menu item to open the equalizer -->
     <string name="equalizer">等化器</string>
@@ -545,6 +512,7 @@
     <string name="empty_songlist">尚未搜尋到任何曲目。請複製一些曲目至您的裝置</string>
     <!-- -->
     <string name="empty_suggested">播放一些音樂後，這裡將會顯示建議</string>
+    <string name="empty_search">找不到任何項目</string>
     <!-- ## Sort options ## -->
     <string name="sorting">排序</string>
     <string name="sort_default">預設</string>
@@ -566,14 +534,19 @@
     <string name="sort_files_album_name">專輯名稱</string>
     <string name="sort_files_track_name">音軌名稱</string>
     <!-- ## Sleep Timer ## -->
-    <!-- Options Menu - Sleep Timer Title -->
-    <string name="timer">休眠計時</string>
-    <!-- -->
+    <!-- Sleep timer title -->
+    <!--Sleep timer "Play last song to end" -->
     <string name="sleep_timer_play_to_end">播放最後一首曲目後結束</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_set">設定</string>
-    <!-- Sleep timer "set" -->
-    <string name="timer_stop">停止</string>
+    <!-- Sleep timer "Stop" -->
+    <!-- Sleep timer stop message "Stop sleep timer?" -->
+    <!-- Toast when sleep timer is set -->
+    <!-- Sleep timer "Set time..." -->
+    <!-- Sleep timer "5 minutes" -->
+    <!-- Sleep timer "15 minutes" -->
+    <!-- Sleep timer "30 minutes" -->
+    <!-- Sleep timer "1 hour" -->
+    <!-- Sleep timer label "Minutes" (limited space here) -->
     <!-- Button name in time span picker -->
     <string name="button_done">完成</string>
     <!-- Title of time span picker -->
@@ -631,33 +604,27 @@
     <string name="action_mode_selection_count"><xliff:g id="number">%d</xliff:g> 已選擇</string>
     <!-- ## Unknown artist/album metadata ##-->
     <!-- Default name of artist that doesn't have a name in the metadata -->
-    <string name="unknown_artist_name">未知的演出者</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_name">未知的專輯</string>
     <!-- Default name of genre that doesn't have a name in the metadata -->
-    <string name="unknown_genre_name">未知的類型</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_artist_name">未知的專輯演出者</string>
+    <!-- Default value if album year unknown -->
     <!-- Song Info overflow option-->
     <string name="song_info">音樂資訊</string>
     <!-- Artwork Download Service Label-->
     <string name="download_service">下載服務</string>
-    <!-- ## Better Pickers Strings ## -->
-    <string name="picker_set">確定</string>
-    <string name="timer_delete">刪除</string>
-    <string name="time_picker_time_seperator">：</string>
     <!-- Accessibility button description -->
     <string name="btn_play">播放</string>
     <!-- Accessibility button description -->
     <string name="btn_pause">暫停</string>
     <!-- Accessibility button description -->
+    <string name="btn_play_pause">播放 / 暫停</string>
     <!-- Accessibility button description -->
     <string name="btn_skip">跳過</string>
     <!-- Accessibility button description -->
     <string name="btn_prev">上一首</string>
     <!-- Accessibility button description -->
-    <string name="btn_queue">顯示播放佇列</string>
     <!-- Accessibility button description -->
+    <string name="btn_close">關閉</string>
     <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
     <string name="btn_options">%s 選項</string>
     <!-- Accessibility button description -->
@@ -671,13 +638,11 @@
     <!-- Accessibility button description -->
     <string name="btn_shuffle_off">隨機播放關閉</string>
     <!-- Accessibility button description -->
-    <string name="btn_show_queue">顯示佇列</string>
     <!-- Accessibility button description -->
     <string name="btn_fab_shuffle">隨機播放目前的清單</string>
     <!-- Accessibility now playing 'mini player' description. Example: Now playing <Wannabe> by <Spice Girls> -->
     <string name="btn_now_playing">現正播放 %1$s—%2$s</string>
     <!-- Accessibility 'show lyrics' -->
-    <string name="btn_show_lyrics">顯示歌詞</string>
     <string name="pref_summary_restore_purchases">若您已升級 Shuttle，但仍顯示為免費版本，請按這裡</string>
     <string name="pref_title_restore_purchases">還原購買資料</string>
     <string name="blacklist_empty">您目前沒有任何已加入至黑名單的曲目</string>
@@ -697,7 +662,6 @@
     <string name="iab_purchase_failed">發生錯誤。請稍後再試</string>
     <string name="snackbar_rate_text">喜歡 Shuttle 嗎？</string>
     <string name="snackbar_rate_action">立即評分！</string>
-    <string name="toast_purchase_failed">發生一些問題，請稍後再試..</string>
     <string name="dialog_create_playlist_error">建立播放清單時發生錯誤</string>
     <!-- Artwork picker -->
     <string name="artwork_edit">選擇專輯封面</string>
@@ -727,13 +691,22 @@
     <!-- "Folders" Shortcut label disabled. (I don't think this ever happens)-->
     <string name="shortcut_folders_disabled">資料夾無法使用</string>
     <!-- "Playlist" Shortcut label. Max 10 characters.-->
-    <string name="shortcut_playlist_short_label">播放清單</string>
     <!-- "Playlist" Shortcut long label. Max 25 characters.-->
-    <string name="shortcut_playlist_long_label">開啟最愛的播放清單</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
-    <string name="shortcut_playlist_disabled">播放清單無法使用</string>
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label"><xliff:g id="number">%d</xliff:g> 張唱片</string>
     <!-- Search Filter-->
+    <string name="search_fuzzy">模糊</string>
+    <string name="search_artists">演出者</string>
+    <string name="search_albums">專輯</string>
     <!-- Changelog -->
+    <string name="changelog_show_on_launch">啟動時顯示</string>
+    <!-- Lyrics -->
+    <!-- QuickLyric button -->
+    <string name="quicklyric">QuickLyric</string>
+    <!-- Button for lyrics -->
+    <string name="lyrics">歌詞</string>
+    <!-- Shown when there are no lyrics -->
+    <string name="no_lyrics">找不到歌詞</string>
+    <!-- QuickLyric info dialog message-->
 </resources>

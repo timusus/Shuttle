@@ -1,8 +1,6 @@
 package com.simplecity.amp_library.ui.modelviews;
 
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -21,15 +19,22 @@ import com.simplecity.amp_library.glide.utils.BitmapAndSize;
 import com.simplecity.amp_library.glide.utils.BitmapAndSizeDecoder;
 import com.simplecity.amp_library.model.ArtworkModel;
 import com.simplecity.amp_library.model.ArtworkProvider;
-import com.simplecity.amp_library.utils.ColorUtils;
+import com.simplecity.amp_library.ui.adapters.ViewType;
+import com.simplecityapps.recycler_adapter.model.BaseViewModel;
+import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.List;
 
-public class ArtworkView extends BaseAdaptableItem<ArtworkModel, ArtworkView.ViewHolder> {
+public class ArtworkView extends BaseViewModel<ArtworkView.ViewHolder> {
 
     public interface GlideListener {
         void onArtworkLoadFailed(ArtworkView artworkView);
+    }
+
+    public interface ClickListener {
+        void onClick(ArtworkView artworkView);
     }
 
     @ArtworkProvider.Type
@@ -37,7 +42,7 @@ public class ArtworkView extends BaseAdaptableItem<ArtworkModel, ArtworkView.Vie
 
     private ArtworkProvider artworkProvider;
 
-    private GlideListener listener;
+    private GlideListener glideListener;
 
     public File file;
 
@@ -45,16 +50,27 @@ public class ArtworkView extends BaseAdaptableItem<ArtworkModel, ArtworkView.Vie
 
     private boolean isCustom;
 
-    public ArtworkView(int type, ArtworkProvider artworkProvider, GlideListener listener) {
-        this(type, artworkProvider, listener, null, false);
+    @Nullable
+    private ClickListener listener;
+
+    public ArtworkView(int type, ArtworkProvider artworkProvider, GlideListener glideListener) {
+        this(type, artworkProvider, glideListener, null, false);
     }
 
-    public ArtworkView(int type, ArtworkProvider artworkProvider, GlideListener listener, File file, boolean isCustom) {
+    public ArtworkView(int type, ArtworkProvider artworkProvider, GlideListener glideListener, File file, boolean isCustom) {
         this.type = type;
         this.artworkProvider = artworkProvider;
-        this.listener = listener;
+        this.glideListener = glideListener;
         this.file = file;
         this.isCustom = isCustom;
+    }
+
+    public ArtworkModel getItem() {
+        return new ArtworkModel(type, file);
+    }
+
+    public void setListener(@Nullable ClickListener listener) {
+        this.listener = listener;
     }
 
     public void setSelected(boolean selected) {
@@ -75,8 +91,15 @@ public class ArtworkView extends BaseAdaptableItem<ArtworkModel, ArtworkView.Vie
         return R.layout.list_item_artwork;
     }
 
+    void onClick() {
+        if (listener != null) {
+            listener.onClick(this);
+        }
+    }
+
     @Override
     public void bindView(ViewHolder holder) {
+        super.bindView(holder);
 
         long time = System.currentTimeMillis();
 
@@ -95,10 +118,10 @@ public class ArtworkView extends BaseAdaptableItem<ArtworkModel, ArtworkView.Vie
                 .listener(new RequestListener<ArtworkProvider, BitmapAndSize>() {
                     @Override
                     public boolean onException(Exception e, ArtworkProvider model, Target<BitmapAndSize> target, boolean isFirstResource) {
-                        if (listener != null) {
+                        if (glideListener != null) {
                             if (holder.itemView.getHandler() != null) {
                                 holder.itemView.getHandler().postDelayed(() ->
-                                        listener.onArtworkLoadFailed(ArtworkView.this), System.currentTimeMillis() + 1000 - time);
+                                        glideListener.onArtworkLoadFailed(ArtworkView.this), System.currentTimeMillis() + 1000 - time);
                             }
                         }
                         return false;
@@ -109,7 +132,7 @@ public class ArtworkView extends BaseAdaptableItem<ArtworkModel, ArtworkView.Vie
                         return false;
                     }
                 })
-                .into(new ImageViewTarget<BitmapAndSize>(((ArtworkView.ViewHolder) holder).imageView) {
+                .into(new ImageViewTarget<BitmapAndSize>(((ViewHolder) holder).imageView) {
                     @Override
                     protected void setResource(BitmapAndSize resource) {
                         holder.textContainer.setBackgroundResource(R.drawable.text_protection_scrim_reversed);
@@ -134,16 +157,18 @@ public class ArtworkView extends BaseAdaptableItem<ArtworkModel, ArtworkView.Vie
     }
 
     @Override
-    public ViewHolder getViewHolder(ViewGroup parent) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutResId(), parent, false));
+    public void bindView(ViewHolder holder, int position, List payloads) {
+        super.bindView(holder, position, payloads);
+
+        holder.checkView.setVisibility(isSelected() ? View.VISIBLE : View.GONE);
     }
 
     @Override
-    public ArtworkModel getItem() {
-        return new ArtworkModel(type, file);
+    public ViewHolder createViewHolder(ViewGroup parent) {
+        return new ViewHolder(createView(parent));
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends BaseViewHolder<ArtworkView> {
 
         public ImageView imageView;
         public TextView lineOne;
@@ -155,14 +180,14 @@ public class ArtworkView extends BaseAdaptableItem<ArtworkModel, ArtworkView.Vie
         public ViewHolder(View itemView) {
             super(itemView);
 
-            imageView = (ImageView) itemView.findViewById(R.id.imageView);
-            lineOne = (TextView) itemView.findViewById(R.id.line_one);
-            lineTwo = (TextView) itemView.findViewById(R.id.line_two);
+            imageView = itemView.findViewById(R.id.imageView);
+            lineOne = itemView.findViewById(R.id.line_one);
+            lineTwo = itemView.findViewById(R.id.line_two);
             checkView = itemView.findViewById(R.id.checkView);
             textContainer = itemView.findViewById(R.id.textContainer);
-            progressBar = (ProgressBar) itemView.findViewById(R.id.progressBar);
+            progressBar = itemView.findViewById(R.id.progressBar);
 
-            DrawableCompat.setTint(DrawableCompat.wrap(checkView.getBackground()), ColorUtils.getAccentColor());
+            itemView.setOnClickListener(v -> viewModel.onClick());
         }
 
         @Override

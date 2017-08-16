@@ -4,10 +4,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.annimon.stream.Stream;
-import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.http.HttpClient;
-import com.simplecity.amp_library.lastfm.ItunesResult;
-import com.simplecity.amp_library.lastfm.LastFmResult;
+import com.simplecity.amp_library.http.itunes.ItunesResult;
+import com.simplecity.amp_library.http.lastfm.LastFmResult;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.StringUtils;
@@ -16,10 +15,11 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import io.reactivex.Single;
 import retrofit2.Call;
-import rx.Observable;
 
 public class AlbumArtist implements
         Serializable,
@@ -37,11 +37,12 @@ public class AlbumArtist implements
         this.name = name;
         this.albums = albums;
     }
-    
-    public Observable<List<Song>> getSongsObservable() {
+
+    public Single<List<Song>> getSongsSingle() {
         return DataManager.getInstance().getSongsObservable(song -> Stream.of(albums)
                 .map(album -> album.id)
-                .anyMatch(albumId -> albumId == song.albumId));
+                .anyMatch(albumId -> albumId == song.albumId))
+                .first(Collections.emptyList());
     }
 
     @Override
@@ -96,10 +97,6 @@ public class AlbumArtist implements
             numSongs += album.numSongs;
         }
         return numSongs;
-    }
-
-    public String getNumAlbumsSongsLabel() {
-        return StringUtils.makeAlbumAndSongsLabel(ShuttleApplication.getInstance(), getNumAlbums(), getNumSongs());
     }
 
     @Override

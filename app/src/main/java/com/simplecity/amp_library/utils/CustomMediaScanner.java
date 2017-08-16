@@ -1,14 +1,28 @@
 package com.simplecity.amp_library.utils;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.model.FolderObject;
+import com.simplecity.amp_library.rx.UnsafeConsumer;
 
+import java.io.File;
+import java.util.Collections;
 import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
 public class CustomMediaScanner implements MediaScannerConnection.MediaScannerConnectionClient {
 
@@ -95,5 +109,59 @@ public class CustomMediaScanner implements MediaScannerConnection.MediaScannerCo
             handler.removeCallbacksAndMessages(null);
             handler = null;
         }
+    }
+
+    public static void scanFile(Context context, FolderObject folderObject) {
+
+        @SuppressLint("InflateParams")
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_progress, null);
+        TextView pathsTextView = view.findViewById(R.id.paths);
+        pathsTextView.setText(folderObject.path);
+
+        MaterialProgressBar indeterminateProgress = view.findViewById(R.id.indeterminateProgress);
+        MaterialProgressBar horizontalProgress = view.findViewById(R.id.horizontalProgress);
+
+        MaterialDialog dialog = DialogUtils.getBuilder(context)
+                .title(R.string.scanning)
+                .customView(view, false)
+                .negativeText(R.string.close)
+                .show();
+
+        FileHelper.getPathList(new File(folderObject.path), true, false)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(paths -> {
+                    ViewUtils.fadeOut(indeterminateProgress, null);
+                    ViewUtils.fadeIn(horizontalProgress, null);
+                    horizontalProgress.setMax(paths.size());
+
+                    CustomMediaScanner.scanFiles(paths, new ScanCompletionListener() {
+                        @Override
+                        public void onPathScanned(String path) {
+                            horizontalProgress.setProgress(horizontalProgress.getProgress() + 1);
+                            pathsTextView.setText(path);
+                        }
+
+                        @Override
+                        public void onScanCompleted() {
+                            if (dialog.isShowing()) {
+                                dialog.dismiss();
+                            }
+                        }
+                    });
+                });
+    }
+
+    public static void scanFile(String path, UnsafeConsumer<String> message) {
+        CustomMediaScanner.scanFiles(Collections.singletonList(path), new CustomMediaScanner.ScanCompletionListener() {
+            @Override
+            public void onPathScanned(String path) {
+
+            }
+
+            @Override
+            public void onScanCompleted() {
+                message.accept(ShuttleApplication.getInstance().getString(R.string.scan_complete));
+            }
+        });
     }
 }

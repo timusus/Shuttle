@@ -1,9 +1,9 @@
 package com.simplecity.amp_library.utils;
 
 import android.os.Looper;
-import android.support.v4.preferencefragment.BuildConfig;
 
 import com.crashlytics.android.core.CrashlyticsCore;
+import com.simplecity.amp_library.BuildConfig;
 
 public class ThreadUtils {
 

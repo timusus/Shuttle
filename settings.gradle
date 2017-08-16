@@ -1,5 +1,9 @@
 include ':app',
-        'libraries/:android-support-v4-preferencefragment',
-        'libraries/:AndroidSlidingUpPanel',
         'libraries/:glidepalette',
-        'libraries/:ccl'
+        'libraries/:ccl',
+        'libraries/:navigation',
+        'libraries/:recycler-adapter',
+        'libraries/:multisheetview',
+        'libraries/:aesthetic',
+        'libraries/material-dialogs/:commons',
+        'libraries/material-dialogs/:core'

@@ -2,11 +2,11 @@ package com.simplecity.amp_library.utils;
 
 
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 
@@ -23,12 +23,10 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -42,37 +40,15 @@ import static org.mockito.Mockito.when;
 @Config(sdk = 23)
 @RunWith(RobolectricTestRunner.class)
 public class ShuttleUtilsTest {
-    @Test
-    public void testOpenShuttleLinkNullInput() throws Exception {
-        Activity mockActivity = mock(Activity.class);
-        String fakePackage = "fake.package.name";
-
-        ShuttleUtils.openShuttleLink(null, null);
-        verify(mockActivity, never()).startActivity(any(Intent.class));
-
-        ShuttleUtils.openShuttleLink(mockActivity, null);
-        verify(mockActivity, never()).startActivity(any(Intent.class));
-
-        ShuttleUtils.openShuttleLink(null, fakePackage);
-        verify(mockActivity, never()).startActivity(any(Intent.class));
-    }
 
     @Test
-    public void testOpenShuttleLinkMarketLink() throws Exception {
-        Activity mockActivity = mock(Activity.class);
+    public void getShuttleStoreIntent() throws Exception {
         String fakePackage = "fake.package.name";
 
-        // Call the method and capture the "fired" intent
-        ShuttleUtils.openShuttleLink(mockActivity, fakePackage);
-        ArgumentCaptor<Intent> intentCaptor = new ArgumentCaptor<>();
-        verify(mockActivity).startActivity(intentCaptor.capture());
-        Intent intent = intentCaptor.getValue();
+        Intent intent = ShuttleUtils.getShuttleStoreIntent(fakePackage);
 
         assertThat(intent.getAction()).isEqualTo(Intent.ACTION_VIEW);
 
-        // Todo:
-        // Is this the correct approach, or should this be run under two different tests?
-        // Also, I guess ShuttleUtils.isAmazonBuild() needs to be tested or we can't trust this test
         if (ShuttleUtils.isAmazonBuild()) {
             assertThat(intent.getData()).isEqualTo(Uri.parse("amzn://apps/android?p=" + fakePackage));
         } else {
@@ -81,24 +57,39 @@ public class ShuttleUtilsTest {
     }
 
     @Test
-    public void testOpenShuttleLinkWebLink() throws Exception {
-        Activity mockActivity = mock(Activity.class);
+    public void getShuttleWebIntent() throws Exception {
         String fakePackage = "fake.package.name";
 
-        // Setup the mock to throw an ActivityNotFoundException only the first time startActivity is called
-        doThrow(new ActivityNotFoundException()).doNothing().when(mockActivity).startActivity(any(Intent.class));
+        Intent intent = ShuttleUtils.getShuttleWebIntent(fakePackage);
+
+        assertThat(intent.getAction()).isEqualTo(Intent.ACTION_VIEW);
+
+        if (ShuttleUtils.isAmazonBuild()) {
+            assertThat(intent.getData()).isEqualTo(Uri.parse("http://www.amazon.com/gp/mas/dl/android?p=" + fakePackage));
+        } else {
+            assertThat(intent.getData()).isEqualTo(Uri.parse("https://play.google.com/store/apps/details?id=" + fakePackage));
+        }
+    }
+
+    @Test
+    public void testOpenShuttleLink() throws Exception {
+
+        // Todo:
+        // Need to determine how to test the case where resolveActivity() fails in ShuttleUtils.openShuttleLink()
+        // so the 'backup' intent is used..
+
+        Activity mockActivity = mock(Activity.class);
+        PackageManager mockPackageManager = mock(PackageManager.class);
+        String fakePackage = "fake.package.name";
 
         // Call the method and capture the "fired" intent
-        ShuttleUtils.openShuttleLink(mockActivity, fakePackage);
+        ShuttleUtils.openShuttleLink(mockActivity, fakePackage, mockPackageManager);
         ArgumentCaptor<Intent> intentCaptor = new ArgumentCaptor<>();
-        verify(mockActivity, times(2)).startActivity(intentCaptor.capture());
+        verify(mockActivity).startActivity(intentCaptor.capture());
         Intent intent = intentCaptor.getValue();
 
         assertThat(intent.getAction()).isEqualTo(Intent.ACTION_VIEW);
 
-        // Todo:
-        // Is this the correct approach, or should this be run under two different tests?
-        // Also, I guess ShuttleUtils.isAmazonBuild() needs to be tested or we can't trust this test
         if (ShuttleUtils.isAmazonBuild()) {
             assertThat(intent.getData()).isEqualTo(Uri.parse("http://www.amazon.com/gp/mas/dl/android?p=" + fakePackage));
         } else {

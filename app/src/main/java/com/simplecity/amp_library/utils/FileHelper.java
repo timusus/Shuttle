@@ -8,7 +8,7 @@ import android.os.Environment;
 import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 
-import com.annimon.stream.Collectors;
+import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.model.BaseFileObject;
 import com.simplecity.amp_library.model.FileObject;
@@ -22,8 +22,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import rx.Observable;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.schedulers.Schedulers;
 
 public class FileHelper {
 
@@ -196,6 +197,20 @@ public class FileHelper {
     }
 
     /**
+     * Recursively collects all the files for the given directory and
+     * all of its sub-directories. Must be called Asynchronously.
+     *
+     * @param file      the File to retrieve the song Id's from
+     * @param recursive whether to recursively check the sub-directories for song Id's
+     * @return long[] a list of the songId's for the given fileObject's directory & sub-directories
+     */
+    public static Observable<List<String>> getPathList(final File file, final boolean recursive, final boolean inSameDir) {
+        return Observable.fromCallable(
+                () -> walk(file, new ArrayList<>(), recursive, inSameDir))
+                .subscribeOn(Schedulers.io());
+    }
+
+    /**
      * Recursively collects all the song id's for the given directory and
      * all of its sub-directories. Must be called Asynchronously.
      *
@@ -203,27 +218,24 @@ public class FileHelper {
      * @param recursive whether to recursively check the sub-directories for song Id's
      * @return long[] a list of the songId's for the given fileObject's directory & sub-directories
      */
-    public static Observable<List<Song>> getSongList(final File file, final boolean recursive, final boolean inSameDir) {
-
-        return Observable.fromCallable(() -> walk(file, new ArrayList<>(), recursive, inSameDir)).flatMap(filePaths -> DataManager.getInstance().getSongsRelay()
-                .map(songs -> Stream.of(songs)
-                        .filter(song -> filePaths.contains(song.path))
-                        .collect(Collectors.toList()))
-                .subscribeOn(Schedulers.io()));
+    public static Single<List<Song>> getSongList(final File file, final boolean recursive, final boolean inSameDir) {
+        return Single.fromCallable(
+                () -> walk(file, new ArrayList<>(), recursive, inSameDir))
+                .flatMap(filePaths -> DataManager.getInstance()
+                        .getSongsObservable(song -> song.path.contains(FileHelper.getPath(file)))
+                        .first(Collections.emptyList()))
+                .subscribeOn(Schedulers.io());
     }
 
     /**
      * Gets the song for a given file
-     *
-     * @param file the file to retrieve the song Id's from
-     * @return long[] a list of the songId's for the given fileObject's directory & sub-directories
      */
-    public static Observable<Song> getSong(File file) {
-        return DataManager.getInstance().getSongsRelay()
-                .map(songs -> Stream.of(songs)
-                        .filter(song -> song.path.contains(FileHelper.getPath(file)))
-                        .findFirst()
-                        .orElse(null));
+    public static Single<Optional<Song>> getSong(File file) {
+        return DataManager.getInstance()
+                .getSongsObservable(song -> song.path.contains(FileHelper.getPath(file)))
+                .first(Collections.emptyList())
+                .map(songs -> Stream.of(songs).findFirst())
+                .subscribeOn(Schedulers.io());
     }
 
     /**

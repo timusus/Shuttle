@@ -9,13 +9,6 @@ public class Artist implements Serializable {
     public int numAlbums;
     public int numSongs;
 
-    public Artist(long id, String name, int numAlbums, int numSongs) {
-        this.id = id;
-        this.name = name;
-        this.numAlbums = numAlbums;
-        this.numSongs = numSongs;
-    }
-
     public Artist(long id, String name) {
         this.id = id;
         this.name = name;

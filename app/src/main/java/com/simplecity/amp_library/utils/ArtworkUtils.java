@@ -57,10 +57,7 @@ public class ArtworkUtils {
             File parent = file.getParentFile();
             if (parent.exists() && parent.isDirectory()) {
                 final Pattern pattern = Pattern.compile("(folder|cover|album).*\\.(jpg|jpeg|png)", Pattern.CASE_INSENSITIVE);
-                files = parent.listFiles(file1 -> {
-                            return pattern.matcher(file1.getName()).matches();
-                        }
-                );
+                files = parent.listFiles(file1 -> pattern.matcher(file1.getName()).matches());
 
                 if (files.length > 0) {
                     try {
@@ -194,10 +191,7 @@ public class ArtworkUtils {
             File parent = new File(path).getParentFile();
             if (parent.exists() && parent.isDirectory()) {
                 final Pattern pattern = Pattern.compile("(folder|cover|album).*\\.(jpg|jpeg|png)", Pattern.CASE_INSENSITIVE);
-                files = parent.listFiles(file1 -> {
-                            return pattern.matcher(file1.getName()).matches();
-                        }
-                );
+                files = parent.listFiles(file1 -> pattern.matcher(file1.getName()).matches());
 
                 if (files.length != 0) {
                     for (File file : files) {

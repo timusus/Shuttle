@@ -7,13 +7,15 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.playback.MusicService;
-import com.simplecity.amp_library.utils.ShuttleUtils;
+import com.simplecity.amp_library.utils.LogUtils;
+import com.simplecity.amp_library.utils.PlaylistUtils;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class ShortcutTrampolineActivity extends AppCompatActivity {
+
+    private static final String TAG = "ShortcutTrampolineActiv";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,23 +32,21 @@ public class ShortcutTrampolineActivity extends AppCompatActivity {
                 break;
             case MusicService.ShortcutCommands.FOLDERS:
                 intent = new Intent(this, MainActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.setAction(action);
                 startActivity(intent);
                 finish();
                 break;
             case MusicService.ShortcutCommands.PLAYLIST:
                 intent = new Intent(this, MainActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.setAction(action);
-                Observable.fromCallable(Playlist::favoritesPlaylist)
+                Playlist.favoritesPlaylist()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(playlist -> {
-                            intent.putExtra(ShuttleUtils.ARG_PLAYLIST, Playlist.favoritesPlaylist());
+                            intent.putExtra(PlaylistUtils.ARG_PLAYLIST, playlist);
                             startActivity(intent);
                             finish();
-                        });
+                        }, error -> LogUtils.logException(TAG, "Error starting activity", error));
                 break;
         }
     }

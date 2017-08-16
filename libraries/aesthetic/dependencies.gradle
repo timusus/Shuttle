@@ -1,0 +1,16 @@
+ext.versions = [
+        minSdk            : 16,
+        compileSdk        : 26,
+        buildTools        : '26.0.0',
+        publishVersion    : '0.4.7',
+        publishVersionCode: 19,
+        gradlePlugin      : '3.0.0-alpha4',
+        spotlessPlugin    : '3.4.0',
+        supportLib        : '25.4.0',
+        mdProgressBar     : '1.4.1',
+        butterKnife       : '8.6.0',
+        rxJava            : '2.1.0',
+        rxAndroid         : '2.0.1',
+        rxPrefs           : '2.0.0-RC2',
+        materialDialogs   : '0.9.4.5'
+]

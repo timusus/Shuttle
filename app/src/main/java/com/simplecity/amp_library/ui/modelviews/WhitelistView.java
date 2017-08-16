@@ -1,17 +1,28 @@
 package com.simplecity.amp_library.ui.modelviews;
 
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.WhitelistFolder;
-import com.simplecity.amp_library.utils.DrawableUtils;
+import com.simplecityapps.recycler_adapter.model.BaseViewModel;
+import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 
-public class WhitelistView extends BaseAdaptableItem<WhitelistFolder, WhitelistView.ViewHolder> {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+import static com.simplecity.amp_library.R.id.btn_overflow;
+import static com.simplecity.amp_library.R.id.line_one;
+import static com.simplecity.amp_library.R.layout.list_item_one_line;
+import static com.simplecity.amp_library.ui.adapters.ViewType.BLACKLIST;
+
+public class WhitelistView extends BaseViewModel<WhitelistView.ViewHolder> {
+
+    public interface ClickListener {
+        void onRemove(WhitelistView WhitelistView);
+    }
 
     public WhitelistFolder whitelistFolder;
 
@@ -19,42 +30,55 @@ public class WhitelistView extends BaseAdaptableItem<WhitelistFolder, WhitelistV
         this.whitelistFolder = whitelistFolder;
     }
 
+    @Nullable ClickListener listener;
+
+    public void setClickListener(@Nullable ClickListener listener) {
+        this.listener = listener;
+    }
+
+    private void onRemove() {
+        if (listener != null) {
+            listener.onRemove(this);
+        }
+    }
+
     @Override
     public int getViewType() {
-        return ViewType.BLACKLIST;
+        return BLACKLIST;
     }
 
     @Override
     public int getLayoutResId() {
-        return R.layout.list_item_one_line;
+        return list_item_one_line;
     }
 
     @Override
     public void bindView(ViewHolder holder) {
+        super.bindView(holder);
+
         holder.lineOne.setText(whitelistFolder.folder);
     }
 
     @Override
-    public ViewHolder getViewHolder(ViewGroup parent) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutResId(), parent, false));
+    public ViewHolder createViewHolder(ViewGroup parent) {
+        return new ViewHolder(createView(parent));
     }
 
-    @Override
-    public WhitelistFolder getItem() {
-        return whitelistFolder;
-    }
+    public static class ViewHolder extends BaseViewHolder<WhitelistView> {
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-
+        @BindView(line_one)
         public TextView lineOne;
+
+        @BindView(btn_overflow)
         public ImageButton overflow;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            lineOne = (TextView) itemView.findViewById(R.id.line_one);
+
+            ButterKnife.bind(this, itemView);
+
             lineOne.setSingleLine(false);
-            overflow = (ImageButton) itemView.findViewById(R.id.btn_overflow);
-            overflow.setImageDrawable(DrawableUtils.getBaseDrawable(itemView.getContext(), R.drawable.ic_cancel));
+            overflow.setOnClickListener(v -> viewModel.onRemove());
         }
 
         @Override

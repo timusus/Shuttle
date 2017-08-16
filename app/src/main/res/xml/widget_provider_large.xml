@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:configure="com.simplecity.amp_library.ui.activities.WidgetConfigureLarge"
+                    android:configure="com.simplecity.amp_library.ui.appwidget.WidgetConfigureLarge"
                     android:initialKeyguardLayout="@layout/widget_layout_large"
                     android:initialLayout="@layout/widget_layout_large"
                     android:minHeight="128dp"

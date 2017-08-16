@@ -1,48 +1,70 @@
 package com.simplecity.amp_library.ui.fragments;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PagerSnapHelper;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
-import com.bumptech.glide.Glide;
+import com.bumptech.glide.GenericRequestBuilder;
+import com.bumptech.glide.ListPreloader;
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.model.Song;
-import com.simplecity.amp_library.playback.MusicService;
-import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
+import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.FragmentModule;
+import com.simplecity.amp_library.glide.preloader.RecyclerViewPreloader;
+import com.simplecity.amp_library.ui.modelviews.QueuePagerItemView;
+import com.simplecity.amp_library.ui.presenters.QueuePagerPresenter;
+import com.simplecity.amp_library.ui.views.QueuePagerView;
 import com.simplecity.amp_library.utils.MusicUtils;
-import com.simplecity.amp_library.utils.PermissionUtils;
+import com.simplecity.amp_library.utils.PlaceholderProvider;
+import com.simplecity.amp_library.utils.ShuttleUtils;
+import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
+import com.simplecityapps.recycler_adapter.model.ViewModel;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import javax.inject.Inject;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 
 public class QueuePagerFragment extends BaseFragment implements
-        ViewPager.OnPageChangeListener,
-        RequestManagerProvider {
+        RequestManagerProvider,
+        QueuePagerView {
 
     private final String TAG = "QueuePagerFragment";
 
-    private View mRootView;
+    private Unbinder unbinder;
 
-    private ViewPager mPager;
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
 
-    private ImagePagerAdapter mAdapter;
+    @BindView(R.id.textProtectionScrim)
+    View textProtectionScrim;
 
-    private RequestManager requestManager;
+    @Inject
+    RequestManager requestManager;
+
+    @Inject
+    QueuePagerPresenter queuePagerPresenter;
+
+    private ViewModelAdapter viewModelAdapter;
+
+    private int[] imageSize = new int[2];
 
     public static QueuePagerFragment newInstance() {
-
         Bundle args = new Bundle();
-
         QueuePagerFragment fragment = new QueuePagerFragment();
         fragment.setArguments(args);
         return fragment;
@@ -55,63 +77,97 @@ public class QueuePagerFragment extends BaseFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(MusicService.InternalIntents.META_CHANGED);
-        intentFilter.addAction(MusicService.InternalIntents.REPEAT_CHANGED);
-        intentFilter.addAction(MusicService.InternalIntents.SHUFFLE_CHANGED);
-        intentFilter.addAction(MusicService.InternalIntents.QUEUE_CHANGED);
-        getActivity().registerReceiver(mReceiver, intentFilter);
+        viewModelAdapter = new ViewModelAdapter();
 
-        if (requestManager == null) {
-            requestManager = Glide.with(this);
-        }
+        ShuttleApplication.getInstance().getAppComponent()
+                .plus(new FragmentModule(this))
+                .inject(this);
     }
 
     @Override
-    public void onPause() {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_queue_pager, container, false);
 
-        if (getParentFragment() != null && getParentFragment() instanceof PlayerFragment) {
-            ((PlayerFragment) getParentFragment()).setDragView(null);
+        unbinder = ButterKnife.bind(this, rootView);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+
+        if (ShuttleUtils.isLandscape()) {
+            textProtectionScrim.setVisibility(View.GONE);
         }
 
-        super.onPause();
+        recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(viewModelAdapter);
+        SnapHelper snapHelper = new PagerSnapHelper() {
+            @Override
+            public int findTargetSnapPosition(RecyclerView.LayoutManager layoutManager, int velocityX, int velocityY) {
+
+                int snapPosition = super.findTargetSnapPosition(layoutManager, velocityX, velocityY);
+
+                if (snapPosition < viewModelAdapter.items.size()) {
+                    Observable.defer(() -> {
+                        if (MusicUtils.getQueuePosition() != snapPosition) {
+                            MusicUtils.setQueuePosition(snapPosition);
+                        }
+                        return Observable.empty();
+                    })
+                            .delaySubscription(150, TimeUnit.MILLISECONDS)
+                            .subscribeOn(Schedulers.io())
+                            .subscribe();
+                }
+
+                return snapPosition;
+            }
+        };
+        snapHelper.attachToRecyclerView(recyclerView);
+
+        recyclerView.addOnScrollListener(new RecyclerViewPreloader<>(new ListPreloader.PreloadModelProvider<QueuePagerItemView>() {
+            @Override
+            public List<QueuePagerItemView> getPreloadItems(int position) {
+                QueuePagerItemView queuePagerItemView = (QueuePagerItemView) viewModelAdapter.items.get(position);
+                return Collections.singletonList(queuePagerItemView);
+            }
+
+            @Override
+            public GenericRequestBuilder getPreloadRequestBuilder(QueuePagerItemView item) {
+                return requestManager
+                        .load(item.song)
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .error(PlaceholderProvider.getInstance().getPlaceHolderDrawable(item.song.name, true));
+            }
+        }, (item, adapterPosition, perItemPosition) -> imageSize, 3));
+
+        recyclerView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                imageSize = new int[]{recyclerView.getWidth(), recyclerView.getHeight()};
+                recyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+                return false;
+            }
+        });
+        
+        return rootView;
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        if (getParentFragment() != null && getParentFragment() instanceof PlayerFragment) {
-            ((PlayerFragment) getParentFragment()).setDragView(mRootView);
-        }
+        queuePagerPresenter.bindView(this);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (mRootView == null) {
-            mRootView = inflater.inflate(R.layout.fragment_queue_pager, container, false);
-            mPager = (ViewPager) mRootView.findViewById(R.id.pager);
-            resetAdapter();
-        }
-        return mRootView;
+    public void onPause() {
+        super.onPause();
+
+        queuePagerPresenter.unbindView(this);
     }
 
     @Override
-    public void onDestroy() {
-        getActivity().unregisterReceiver(mReceiver);
-        super.onDestroy();
-    }
-
-    private void refreshAdapterItems() {
-        PermissionUtils.RequestStoragePermissions(() -> {
-            if (getActivity() != null && isAdded()) {
-                mAdapter.setData(MusicUtils.getQueue());
-                mPager.clearOnPageChangeListeners();
-                mPager.setAdapter(mAdapter);
-                mPager.setCurrentItem(MusicUtils.getQueuePosition());
-                mPager.addOnPageChangeListener(this);
-            }
-        });
+    public void onDestroyView() {
+        unbinder.unbind();
+        super.onDestroyView();
     }
 
     @Override
@@ -119,85 +175,17 @@ public class QueuePagerFragment extends BaseFragment implements
         return requestManager;
     }
 
-    private static class ImagePagerAdapter extends FragmentStatePagerAdapter {
-
-        private List<Song> songs = new ArrayList<>();
-
-        ImagePagerAdapter(FragmentManager fragmentManager) {
-            super(fragmentManager);
-        }
-
-        public void setData(List<Song> songs) {
-            this.songs.clear();
-            this.songs.addAll(songs);
-            notifyDataSetChanged();
-        }
-
-        public void clear() {
-            songs.clear();
-            notifyDataSetChanged();
-        }
-
-        @Override
-        public int getCount() {
-            return songs.size();
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return ArtworkFragment.newInstance(songs.get(position));
-        }
-    }
-
-    public void updateQueuePosition() {
-        if (mPager == null) {
-            return;
-        }
-        mPager.clearOnPageChangeListeners();
-        mPager.setCurrentItem(MusicUtils.getQueuePosition(), true);
-        mPager.addOnPageChangeListener(this);
+    @Override
+    public void loadData(List<ViewModel> viewModels, int position) {
+        viewModelAdapter.items.clear();
+        viewModelAdapter.items.addAll(viewModels);
+        viewModelAdapter.notifyDataSetChanged();
+        recyclerView.getLayoutManager().scrollToPosition(position);
     }
 
     @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        int oldPos = MusicUtils.getQueuePosition();
-        if (position > oldPos) {
-            MusicUtils.next();
-        } else if (position < oldPos) {
-            MusicUtils.previous(false);
-        }
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-    }
-
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            final String action = intent.getAction();
-            switch (action) {
-                case MusicService.InternalIntents.META_CHANGED:
-                    updateQueuePosition();
-                    break;
-                case MusicService.InternalIntents.REPEAT_CHANGED:
-                case MusicService.InternalIntents.SHUFFLE_CHANGED:
-                case MusicService.InternalIntents.QUEUE_CHANGED:
-                    resetAdapter();
-                    break;
-            }
-        }
-    };
-
-    public void resetAdapter() {
-        if (MusicServiceConnectionUtils.sServiceBinder != null) {
-            mAdapter = new ImagePagerAdapter(getChildFragmentManager());
-            refreshAdapterItems();
-        }
+    public void updateQueuePosition(int position) {
+        recyclerView.getLayoutManager().scrollToPosition(position);
     }
 
     @Override

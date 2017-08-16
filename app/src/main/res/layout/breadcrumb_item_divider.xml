@@ -5,4 +5,4 @@
            android:layout_marginLeft="-2dp"
            android:layout_marginRight="-2dp"
            android:gravity="center"
-           android:src="?attr/breadcrumb_divider"/>
+           android:src="@drawable/ic_arrow_right_24dp"/>

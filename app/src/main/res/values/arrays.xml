@@ -7,12 +7,6 @@
         <item>@string/pref_title_theme_black</item>
     </string-array>
 
-    <string-array name="baseThemeValues">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
-
     <array name="pastel_colors">
         <item>@color/red_300</item>
         <item>@color/pink_300</item>
@@ -36,5 +30,13 @@
         <item>3</item>
         <item>4</item>
     </array>
+
+    <string-array name="timerValues">
+        <item>@string/sleep_timer_5_mins</item>
+        <item>@string/sleep_timer_15_mins</item>
+        <item>@string/sleep_timer_30_mins</item>
+        <item>@string/sleep_timer_1_hour</item>
+        <item>@string/sleep_timer_set_time</item>
+    </string-array>
 
 </resources>

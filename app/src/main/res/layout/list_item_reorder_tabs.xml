@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.simplecity.amp_library.ui.views.ForegroundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.internal.ForegroundLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="48dp"
@@ -7,39 +8,34 @@
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
-    <com.simplecity.amp_library.ui.views.DragGripView
+    <com.simplecity.amp_library.ui.views.DragHandle
         android:id="@+id/drag_handle"
-        android:layout_width="wrap_content"
+        android:layout_width="40dp"
         android:layout_height="match_parent"
-        android:layout_gravity="fill_vertical|start"
-        android:layout_marginLeft="4dp"
-        android:alpha="0.5"
-        android:color="?attr/drag_grip"
-        android:paddingBottom="16dp"
-        android:paddingLeft="8dp"
-        android:paddingRight="24dp"
-        android:paddingTop="16dp" />
+        android:alpha="0.7"
+        android:importantForAccessibility="no"
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp"
+        android:src="@drawable/ic_drag_grip"/>
 
     <TextView
         android:id="@+id/line_one"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginLeft="-12dp"
         android:layout_weight="1"
-        android:ellipsize="marquee"
-        android:fadingEdge="horizontal"
-        android:fontFamily="sans-serif-light"
+        android:fontFamily="sans-serif"
         android:gravity="center_vertical"
+        android:lines="1"
         android:textSize="14sp"
-        tools:text="Line One"
-        android:maxLines="1" />
+        tools:text="Line One"/>
 
-    <com.simplecity.amp_library.ui.views.CustomCheckBox
+    <CheckBox
         android:id="@+id/checkBox1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginRight="8dp"
-        android:clickable="false" />
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:clickable="false"/>
 
-</com.simplecity.amp_library.ui.views.ForegroundLinearLayout>
+</android.support.design.internal.ForegroundLinearLayout>

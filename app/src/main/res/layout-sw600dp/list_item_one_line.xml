@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.simplecity.amp_library.ui.views.ForegroundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.internal.ForegroundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="68dp"
     android:descendantFocusability="blocksDescendants"
@@ -11,13 +11,12 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="16dp"
         android:layout_weight="1"
-        android:ellipsize="marquee"
         android:gravity="center_vertical"
         android:scrollHorizontally="true"
         android:textSize="16sp"
-        android:maxLines="1" />
+        android:lines="1" />
 
-    <com.simplecity.amp_library.ui.views.NonScrollImageButton
+    <com.simplecity.amp_library.ui.views.OverflowButton
         android:id="@+id/btn_overflow"
         android:layout_width="40dp"
         android:layout_height="48dp"
@@ -25,6 +24,5 @@
         android:layout_marginLeft="-16dp"
         android:layout_marginRight="8dp"
         android:alpha="0.8"
-        android:background="@null"
-        android:src="@drawable/ic_overflow_white" />
-</com.simplecity.amp_library.ui.views.ForegroundLinearLayout>
+        android:background="@null"/>
+</android.support.design.internal.ForegroundLinearLayout>

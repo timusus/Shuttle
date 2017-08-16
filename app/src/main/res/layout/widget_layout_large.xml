@@ -39,9 +39,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:ellipsize="end"
-                    android:fadingEdge="horizontal"
                     android:gravity="center_vertical"
-
                     android:maxLines="1"
                     android:textSize="14sp"/>
 
@@ -52,10 +50,8 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:ellipsize="end"
-                    android:fadingEdge="horizontal"
                     android:gravity="center_vertical"
-
-                    android:maxLines="1"
+                    android:lines="1"
                     android:textSize="14sp"/>
 
                 <TextView
@@ -65,9 +61,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:ellipsize="end"
-                    android:fadingEdge="horizontal"
                     android:gravity="center_vertical"
-
                     android:maxLines="1"
                     android:textSize="14sp"/>
             </LinearLayout>
@@ -88,7 +82,8 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/btn_shuffle_on"
-                android:src="@drawable/ic_shuffle_white"/>
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_shuffle_24dp_scaled"/>
 
             <ImageButton
                 android:id="@+id/prev_button"
@@ -98,7 +93,7 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/btn_prev"
-                android:src="@drawable/ic_prev_white"/>
+                android:src="@drawable/ic_skip_previous_24dp"/>
 
             <ImageButton
                 android:id="@+id/play_button"
@@ -108,7 +103,7 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/btn_play_pause"
-                android:src="@drawable/ic_play_white"/>
+                android:src="@drawable/ic_play_24dp"/>
 
             <ImageButton
                 android:id="@+id/next_button"
@@ -118,7 +113,7 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/btn_skip"
-                android:src="@drawable/ic_skip_white"/>
+                android:src="@drawable/ic_skip_next_24dp"/>
 
             <ImageButton
                 android:id="@+id/repeat_button"
@@ -128,7 +123,8 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/btn_repeat_all"
-                android:src="@drawable/ic_repeat_white"/>
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_repeat_24dp_scaled"/>
         </LinearLayout>
 
     </LinearLayout>

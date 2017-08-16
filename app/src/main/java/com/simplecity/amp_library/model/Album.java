@@ -4,10 +4,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 
-import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.http.HttpClient;
-import com.simplecity.amp_library.lastfm.ItunesResult;
-import com.simplecity.amp_library.lastfm.LastFmResult;
+import com.simplecity.amp_library.http.itunes.ItunesResult;
+import com.simplecity.amp_library.http.lastfm.LastFmResult;
 import com.simplecity.amp_library.utils.ArtworkUtils;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.DataManager;
@@ -19,8 +18,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Single;
 import retrofit2.Call;
-import rx.Observable;
 
 public class Album implements
         Serializable,
@@ -67,8 +66,8 @@ public class Album implements
         setArtworkKey();
     }
 
-    public Observable<List<Song>> getSongsObservable() {
-        return DataManager.getInstance().getSongsObservable(song -> song.albumId == id);
+    public Single<List<Song>> getSongsSingle() {
+        return DataManager.getInstance().getSongsObservable(song -> song.albumId == id).firstOrError();
     }
 
     public static class Builder {
@@ -151,10 +150,6 @@ public class Album implements
         public Album build() {
             return new Album(id, name, artists, albumArtistName, numSongs, numDiscs, year, lastPlayed, dateAdded, paths, songPlayCount);
         }
-    }
-
-    public String getNumSongsLabel() {
-        return StringUtils.makeAlbumsLabel(ShuttleApplication.getInstance(), 0, numSongs, true);
     }
 
     public AlbumArtist getAlbumArtist() {

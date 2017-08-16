@@ -4,40 +4,11 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.Nullable;
-import android.text.TextUtils;
-
-import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.ShuttleApplication;
-import com.simplecity.amp_library.utils.PlaceholderProvider;
-import com.simplecity.amp_library.utils.SettingsManager;
-import com.simplecity.amp_library.utils.ThemeUtils;
 
 public class GlideUtils {
 
     private GlideUtils() {
 
-    }
-
-    @DrawableRes
-    public static int getMediumPlaceHolderResId() {
-        return ThemeUtils.getInstance().isThemeDark() ? R.drawable.ic_placeholder_dark_medium : R.drawable.ic_placeholder_light_medium;
-    }
-
-    @DrawableRes
-    public static int getLargePlaceHolderResId() {
-        return ThemeUtils.getInstance().isThemeDark() ? R.drawable.ic_placeholder_dark_large : R.drawable.ic_placeholder_light_large;
-    }
-
-    public static Drawable getPlaceHolderDrawable(@Nullable String displayName, boolean large) {
-        Drawable drawable;
-        if (!TextUtils.isEmpty(displayName) && SettingsManager.getInstance().useGmailPlaceholders()) {
-            drawable = PlaceholderProvider.getInstance().getLetterTile(displayName);
-        } else {
-            drawable = ShuttleApplication.getInstance().getResources().getDrawable(large ? getLargePlaceHolderResId() : getMediumPlaceHolderResId());
-        }
-        return drawable;
     }
 
     public static Bitmap drawableToBitmap(Drawable drawable) {
@@ -61,6 +32,4 @@ public class GlideUtils {
         drawable.draw(canvas);
         return bitmap;
     }
-
-
 }

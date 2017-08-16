@@ -1,15 +1,15 @@
 package com.simplecity.amp_library.model;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
 
+import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
 
 import java.io.Serializable;
 import java.util.List;
 
-import rx.Observable;
+import io.reactivex.Single;
 
 public class Genre implements Serializable {
 
@@ -44,26 +44,10 @@ public class Genre implements Serializable {
         this.name = name;
     }
 
-    public Observable<List<Song>> getSongsObservable(Context context) {
+    public Single<List<Song>> getSongsObservable() {
         Query query = Song.getQuery();
         query.uri = MediaStore.Audio.Genres.Members.getContentUri("external", id);
-        return SqlBriteUtils.createQuery(context, Song::new, query);
-    }
-
-    public Observable<Integer> getSongCountObservable(Context context) {
-        Query query = Song.getQuery();
-        query.uri = MediaStore.Audio.Genres.Members.getContentUri("external", id);
-        return SqlBriteUtils.createContinuousQuery(context, query).map(query1 -> {
-            Cursor cursor = query1.run();
-            if (cursor != null) {
-                try {
-                    return cursor.getCount();
-                } finally {
-                    cursor.close();
-                }
-            }
-            return 0;
-        }).first();
+        return SqlBriteUtils.createSingleList(ShuttleApplication.getInstance(), Song::new, query);
     }
 
     @Override

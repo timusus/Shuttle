@@ -4,7 +4,6 @@
     <!-- Shown when a user attempts to edit tags, but they don't have a 'DocumentProvider' available to pick the directory of their music (and thus give permission to Shuttle)-->
     <string name="R.string.toast_no_document_provider">Geen DocumentProvider beschikbaar om machtigingsverzoek af te handelen</string>
     <!-- Displayed when an M3U playlist is being saved, but it already exists -->
-    <string name="playlist_save_exists">Afspeellijst bestaat al</string>
     <!-- Displayed when an M3U playlist save fails -->
     <string name="playlist_save_failed">Kan afspeellijst niet opslaan</string>
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
@@ -22,11 +21,11 @@
     <!-- Displayed when a file couldn't be renamed-->
     <string name="rename_file_failed">Fout bij hernoemen bestand.\n\nMogelijk is dit bestand schrijfbeveiligd, of is er al een bestand met dezelfde naam.</string>
     <!-- Toast after turning shuffle on -->
-    <string name="shuffle_on_notif">Shuffle ingeschakeld.</string>
+    <string name="shuffle_on_notif">Shuffle aan</string>
     <!-- Toast after turning shuffle off -->
     <string name="shuffle_off_notif">Shuffle uitgeschakeld</string>
     <!-- Toast after turning repeat off -->
-    <string name="repeat_off_notif">Herhalen uitgeschakeld.</string>
+    <string name="repeat_off_notif">Herhalen uit</string>
     <!-- Toast after turning single repeat on -->
     <string name="repeat_current_notif">Huidige nummer herhalen</string>
     <!-- Toast after turning repeat all on -->
@@ -44,16 +43,6 @@
     </plurals>
     <!-- Toast after selecting an empty playlist -->
     <string name="emptyplaylist">Gekozen afspeellijst is leeg.</string>
-    <!-- Used in sleep message. Example 2 hours (and) 5 minutes -->
-    <string name="and">" en "</string>
-    <!-- Alarm confirmation toast: singular hour -->
-    <string name="hour">" uur"</string>
-    <!-- Alarm confirmation toast: plural hours -->
-    <string name="hours">" uren"</string>
-    <!-- Alarm confirmation toast: plural minutes -->
-    <string name="minutes">" minuten"</string>
-    <!-- Alarm toast: Sleep timer set for -->
-    <string name="sleep_message">Slaaptimer ingesteld voor</string>
     <!-- -->
     <string name="initial_dir_set_message">" instellen als beginmap"</string>
     <!-- Transient popup message shown after deleting a playlist -->
@@ -61,33 +50,22 @@
     <!-- Transient popup message shown after renaming a playlist -->
     <string name="playlist_renamed_message">Naam van afspeellijst gewijzigd.</string>
     <!-- Toast confirming that song(s) was/were deleted. -->
-    <plurals name="NNNtracksdeleted">
-        <item quantity="one">1 nummer verwijderd.</item>
-        <item quantity="other"><xliff:g id="songs_to_delete">%d</xliff:g> nummers verwijderd.</item>
-    </plurals>
     <!-- -->
     <plurals name="NNNtrackstoqueue">
-        <item quantity="one">1 nummer toegevoegd aan de wachtrij.</item>
-        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> nummers toegevoegd aan de wachtrij.</item>
+        <item quantity="one">1 nummer toegevoegd aan wachtrij.</item>
+        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> nummers toegevoegd aan wachtrij.</item>
     </plurals>
     <!-- Toasts after adding song(s) to playlists -->
-    <plurals name="NNNtrackstofavourites">
-        <item quantity="one">1 nummer toegevoegd aan favorieten.</item>
-        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> nummers toegevoegd aan favorieten.</item>
-    </plurals>
     <string name="song_to_favourites"><xliff:g id="song_name">%s</xliff:g> toegevoegd aan favorieten.</string>
     <string name="song_removed_from_favourites"><xliff:g id="song_name">%s</xliff:g> verwijderd uit favorieten.</string>
     <!-- ## Dialogs ## -->
     <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_tite">Herstart nodig</string>
     <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_message">De wijzigingen worden toegepast na een herstart van Shuttle</string>
     <!-- Restart now button -->
     <string name="restart_button">Nu herstarten</string>
     <!-- Displays when picking a theme color -->
     <string name="color_pick">Kies een kleur</string>
     <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
-    <string name="dialog_custom">Aangepast</string>
     <!-- Displays when sharing a file fails -->
     <string name="share_failed">Sorry, dit bestand kan niet gedeeld worden</string>
     <!-- Displays when you click 'share' -->
@@ -97,7 +75,7 @@
     <!-- Option to share audio file -->
     <string name="share_option_audio_file">Het geluidsbestand</string>
     <!-- Displays when you need to choose which app to share the song with -->
-    <string name="share_via">Huidig nummer delen via:</string>
+    <string name="share_via">Nummer delen via:</string>
     <!-- Displayed when an M3U playlist is being saved-->
     <string name="saving_playlist">Afspeellijst opslaan</string>
     <!-- Displayed when whitelisting a folder, as the app gathers the songs-->
@@ -107,23 +85,21 @@
     <!-- -->
     <string name="get_pro_message">Als je Shuttle leuk vindt, overweeg dan een upgrade.
 \n\nFuncties:
-\n\Veel extra thema\'s
-\n\Tags bewerken (beperkte ondersteuning in Android 4.4. Kitkat)
-\n\Bladeren in mappen\
-\n\ChromeCast-ondersteuning\n\nTevens steun je zo verdere ontwikkeling.</string>
+\n\• Veel extra thema\'s
+\n\• Tags bewerken
+\n\• Bladeren in mappen
+\n\• ChromeCast-ondersteuning\n\nOok steun je zo verdere ontwikkeling.</string>
     <!-- -->
     <string name="upgraded_title">Bedankt</string>
     <string name="upgraded_message">De upgrade naar Shuttle+ is gelukt, bedankt voor de steun.
-\n\nHerstart de app om er zeker van te zijn dat de nieuwe functies werken.</string>
+\n\nHerstart de app om te zorgen dat alle functies werken.</string>
     <string name="upgrade_dialog_message">Upgraden zal aanvullende functies in Shuttle ontgrendelen, waaronder:
-\n\n\Heel veel extra thema\'s
-\n\Tags bewerken (beperkte ondersteuning in Android 4.4 Kitkat)
-\n\Bladeren in mappen
-\n\ChromeCast-ondersteuning
-\n\nJe steunt zo ook verdere ontwikkeling.\n\nJe hoeft niet te upgraden als je Shuttle+ al hebt</string>
-    <string name="get_pro_button_play_store">Play Store</string>
-    <string name="get_pro_button_amazon">Amazon</string>
-    <string name="btn_upgrade">Upgrade</string>
+\n\n\• Heel veel extra thema\'s
+\n\• Tags bewerken
+\n\• Bladeren in mappen
+\n\• ChromeCast-ondersteuning
+\n\nOok steun je zo verdere ontwikkeling.\n\nJe hoeft niet te upgraden als je Shuttle+ al hebt</string>
+    <string name="btn_upgrade">Upgraden</string>
     <!-- -->
     <string name="get_pro_button_no">Nee bedankt</string>
     <!-- Dialog 'close' button -->
@@ -139,13 +115,13 @@
     <!-- Delete confirmation dialog message when deleting artists -->
     <string name="delete_album_artist_desc_multiple">Alle  nummers van de volgende albumartiesten:<xliff:g id="album-artist">%s</xliff:g>worden permanent verwijderd.</string>
     <!-- Delete confirmation dialog when deleting an entire album -->
-    <string name="delete_album_desc">Het hele album <xliff:g id="album">%s</xliff:g> wordt permanent verwijderd.</string>
+    <string name="delete_album_desc">Alle nummers van het album <xliff:g id="album">%s</xliff:g> worden permanent verwijderd.</string>
     <!-- Delete confirmation dialog message when deleting albums -->
-    <string name="delete_album_desc_multiple">De volgende albums:<xliff:g id="album">%s</xliff:g>Worden permanent verwijderd.</string>
+    <string name="delete_album_desc_multiple">Alle nummers van de volgende albums:<xliff:g id="album">%s</xliff:g>worden permanent verwijderd.</string>
     <!-- Delete confirmation dialog when deleting a single song -->
     <string name="delete_song_desc"><xliff:g id="song">%s</xliff:g> wordt permanent verwijderd.</string>
     <!-- Delete confirmation dialog message title when deleting songs -->
-    <string name="delete_song_desc_multiple">De volgende nummers:<xliff:g id="song">%s</xliff:g>Worden permanent verwijderd.</string>
+    <string name="delete_song_desc_multiple">De volgende nummers:<xliff:g id="song">%s</xliff:g>worden permanent verwijderd.</string>
     <!-- Toast shown when songs are successfully deleted -->
     <string name="delete_songs_success_toast"><xliff:g id="number">%d</xliff:g> nummers verwijderd.</string>
     <!-- Toast shown when failing to delete songs-->
@@ -158,14 +134,12 @@
     <string name="delete_file_confirmation_dialog">Weet je zeker dat je \"<xliff:g id="file">%s</xliff:g>\" permanent wil verwijderen?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">Weet je zeker dat je alle albumillustraties wilt verwijderen?</string>
-    <!-- QuickLyric button -->
-    <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
     <string name="dialog_title_set_ringtone">Stel in als Ringtone</string>
     <!-- "Set Ringtone" message -->
     <string name="dialog_message_set_ringtone">Shuttle heeft recht om \'instellingen te schrijven\' nodig om je beltoon in te stellen.\n\nProbeer opnieuw je beltoon in te stellen na toestemming te hebben gegeven.</string>
     <!-- Message displayed in dialog when attempting to add duplicates to playlist -->
-    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%s</xliff:g> - <xliff:g id="song">%s</xliff:g> staat al in deze afspeellijst. Toch toevoegen?</string>
+    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%1$s</xliff:g> - <xliff:g id="song">%2$s</xliff:g> staat al in deze afspeellijst. Toch toevoegen?</string>
     <!-- Checkbox text 'apply to all' -->
     <string name="dialog_checkbox_playlist_duplicate_apply_all">Toepassen op alle (<xliff:g id="number">%d</xliff:g>)</string>
     <!-- Title displayed in dialog when attempting to add duplicates to playlist -->
@@ -187,26 +161,28 @@
     <string name="widget_show_artwork">Toon albumillustraties</string>
     <!-- ## Menu Headings ## -->
     <!-- Context menu in navigation drawer - option to save playlist as M3U -->
-    <string name="export_playlist">Afspeellijst opslaan</string>
+    <string name="export_playlist">Exporteren</string>
     <!-- context menu item to remove the selected item from the playlist -->
     <!-- Menu option 'clear queue' -->
     <string name="clear_queue">Wachtrij legen</string>
     <!-- -->
-    <string name="fav_add">Toevoegen aan favorieten</string>
+    <string name="fav_add">Favoriet</string>
     <!-- Context menu item -->
     <string name="play_selection">Afspelen</string>
+    <!-- Multi select menu item-->
+    <string name="menu_add_to">Toev. aan...</string>
+    <!-- Multi select menu item-->
+    <string name="menu_playlist">Afspeellijst</string>
+    <!-- Multi select menu item-->
+    <string name="menu_queue">Wachtrij</string>
     <!-- Context menu item -->
-    <string name="add_to_playlist">Toevoegen aan afspeellijst</string>
     <!-- Context menu item -->
     <string name="new_playlist">Nieuw</string>
-    <!-- Button for lyrics -->
-    <string name="lyrics">Songteksten</string>
     <!-- menu item to save the current list as a new playlist -->
     <string name="save_as_playlist">Opslaan als afspeellijst</string>
     <!-- Context menu item to remove the selected item from the playlist -->
-    <string name="remove_from_playlist">Verwijderen uit afspeellijst</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
-    <string name="remove_from_queue">Verwijderen uit wachtrij</string>
+    <!-- Context menu item to remove the selected item from the queue -->
+    <string name="remove_from_queue">Verwijderen</string>
     <!-- Context menu item -->
     <string name="play_next">Volgende afspelen</string>
     <!-- Menu text for the settings item -->
@@ -216,12 +192,10 @@
     <!-- -->
     <string name="library_title">Bibliotheek</string>
     <!-- -->
-    <string name="share_title">Delen</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Zoeken</string>
     <string name="search_filter">Filter</string>
     <!-- Playlist context menu item to delete the selected playlist. -->
-    <string name="delete_playlist_menu">Verwijderen</string>
     <!-- Playlist context menu item to clear the selected playlist. -->
     <string name="clear_playlist_menu">Wissen</string>
     <!-- Playlist context menu item to edit the selected playlist -->
@@ -236,8 +210,6 @@
     <string name="nowplaying_title">Speelt nu</string>
     <!-- -->
     <string name="up_next_title">Volgende</string>
-    <!-- Context menu item -->
-    <string name="add_to_queue">Toevoegen aan wachtrij</string>
     <!-- Popup menu item -->
     <string name="go_to">Ga naar...</string>
     <!-- 'More' button -->
@@ -251,9 +223,7 @@
     <string name="navigation_drawer_close">Navigatiepaneel sluiten</string>
     <!-- ## Preference Menu ## -->
     <!--Settings title for white accent color) -->
-    <string name="pref_title_theme_white_accent">Witte accenten gebruiken</string>
     <!--Settings summary for white accent color-->
-    <string name="pref_summary_theme_white_accent">Gebruik wit voor alle kleuraccenten, behalve degene die status tonen (shuffle en herhalen hebben een andere kleur nodig wanneer ze zijn ingeschakeld).</string>
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">Navigatie</string>
     <!--Settings category for 'notification' items -->
@@ -275,7 +245,7 @@
     <!--Settings summary for picking the accent theme color-->
     <string name="pref_summary_theme_pick_accent_color">Kies de accentkleur voor je thema</string>
     <!--Settings title for enabling the tinted navigation bar -->
-    <string name="pref_title_tinted_nav">Gekleurde navigatiebalk gebruiken</string>
+    <string name="pref_title_tinted_nav">Gekleurde navigatiebalk</string>
     <!--Settings summary for enabling the tinted navigation bar -->
     <string name="pref_summary_tinted_nav">Zet de gekleurde navigatiebalk aan/uit</string>
     <!-- Settings title for the themes -->
@@ -287,7 +257,6 @@
     <string name="pref_title_theme_light">Licht</string>
     <string name="pref_title_theme_black">Zwart</string>
     <!--Settings summary for the downloading more themes -->
-    <string name="pref_summary_get_pro_themes">Meer thema\'s zijn beschikbaar in Shuttle+</string>
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">White/blacklist</string>
     <!--Settings title for viewing blacklist-->
@@ -299,7 +268,6 @@
     <!--Settings title for clearing whitelist-->
     <string name="pref_title_clear_whitelist">Legen</string>
     <!--Settings title for clearing whitelist-->
-    <string name="pref_title_update_whitelist">Werk bij</string>
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">Albumhoes bijsnijden</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -307,23 +275,23 @@
     <!-- Settings title for showing artwork in the queue screen -->
     <string name="pref_title_artwork_queue">Afbeeldingen tonen in \'Volgende\'</string>
     <!-- Settings title for embedded artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_prefer_embedded_art">Gebruik ingesloten albumillustraties</string>
+    <string name="pref_title_prefer_embedded_art">Ingesloten illustraties gebruiken</string>
     <!-- Settings summary for the ignore embedded artwork checkbox-->
-    <string name="pref_summary_prefer_embedded_art">Aanvinken als je wilt dat Shuttle eerst naar de bij de muziekbestanden ingesloten albumillustraties zoekt voordat er gezocht wordt in de muziek mappen.</string>
+    <string name="pref_summary_prefer_embedded_art">Aanvinken als je wilt dat Shuttle eerst naar de in de muziekbestanden ingesloten albumillustraties zoekt voordat er gezocht wordt in de muziekmappen.</string>
     <!-- Settings title for ignore embedded artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_ignore_embedded_art">Ingesloten albumillustraties negeren</string>
+    <string name="pref_title_ignore_embedded_art">Ingesloten illustraties negeren</string>
     <!-- Settings summary for the ignore folder artwork checkbox-->
-    <string name="pref_summary_ignore_embedded_art">Niet zoeken naar de bij de muziekbestanden ingesloten albumillustraties</string>
+    <string name="pref_summary_ignore_embedded_art">Niet zoeken naar in de muziekbestanden ingesloten albumillustraties</string>
     <!-- Settings title for ignore embedded artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_ignore_mediastore_art">Negeer Media Store illustraties</string>
+    <string name="pref_title_ignore_mediastore_art">Media Store-illustraties negeren</string>
     <!-- Settings summary for the ignore folder artwork checkbox-->
-    <string name="pref_summary_ignore_mediastore_art">Android Media Store vindt illustraties en slaat ze op in een lagere resolutie. Toggle dit om MediaStore te negeren. (Illustraties laden is trager)</string>
+    <string name="pref_summary_ignore_mediastore_art">De Android Media Store vindt ingesloten illustraties en slaat ze op in een lage resolutie. Selecteer dit om MediaStore te negeren. (illustraties laden is iets trager)</string>
     <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_ignore_folder_art">Albumillustraties in mappen negeren</string>
+    <string name="pref_title_ignore_folder_art">Illustraties in mappen negeren</string>
     <!-- Settings summary for the embedded artwork checkbox-->
-    <string name="pref_summary_ignore_folder_art">Niet zoeken naar albumillustraties die zijn opgeslagen in de muziek mappen.</string>
+    <string name="pref_summary_ignore_folder_art">Niet zoeken naar albumillustraties die zijn opgeslagen in de muziekmappen.</string>
     <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_prefer_lastfm">Bij voorkeur Last.fm albumillustraties</string>
+    <string name="pref_title_prefer_lastfm">Bij voorkeur Last.fm-illustraties</string>
     <!-- Settings summary for the embedded artwork checkbox-->
     <string name="pref_summary_prefer_lastfm">Aanvinken als je wil dat Shuttle voor albumillustraties eerst op Last.fm kijkt, voordat er gezocht wordt op iTunes-servers.</string>
     <!-- Settings title for Artwork settings heading -->
@@ -353,12 +321,10 @@
     <!-- Settings title for gmail style placeholders checkbox-->
     <string name="pref_title_placeholders">Plaatshouders in Gmail-stijl</string>
     <!-- Settings summary for gmail style placeholders checkbox-->
-    <string name="pref_summary_placeholders">Standaard plaatshouders in Gmail-stijl weergeven.
-Anders wordt het Shuttle-icoon als plaatshouder gebruikt</string>
+    <string name="pref_summary_placeholders">Standaard Gmail-stijl plaatshouders weergeven.
+Indien uitgeschakeld wordt het Shuttle-icoon als plaatshouder gebruikt</string>
     <!-- Settings title for the enable lockscreen controls checkbox -->
-    <string name="pref_title_lockscreen">Albumillustraties op vergrendelscherm</string>
     <!-- Settings summary for the enable lockscreen controls checkbox -->
-    <string name="pref_summary_lockscreen">Schakelt weergave van albumillustraties aan/uit wanneer het scherm vergrendeld is.</string>
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">Weergave</string>
     <!-- Settings title for the keep screen on checkbox -->
@@ -396,11 +362,11 @@ Anders wordt het Shuttle-icoon als plaatshouder gebruikt</string>
     <!-- Settings summary for the enable last.fm scrobbling checkbox -->
     <string name="pref_summary_simple_enable">Scrobbling via Simple Last.fm Scrobbler inschakelen</string>
     <!-- Settings title for downloading the Simple Last.fm scrobbler -->
-    <string name="download">Download</string>
+    <string name="download">Downloaden</string>
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <string name="pref_summary_simple_download">Download Simple Last.fm Scobbler uit de Google Play Store</string>
     <!-- Settings title for the About heading -->
-    <string name="pref_title_about">Wijzigingen</string>
+    <string name="pref_title_changelog">Wijzigingen</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Ondersteuning</string>
     <string name="pref_title_version">Versie</string>
@@ -437,7 +403,7 @@ Anders wordt het Shuttle-icoon als plaatshouder gebruikt</string>
     <!-- -->
     <string name="blacklist_description">Nummers kunnen aan de blacklist worden toegevoegd door \'Blacklist\' te kiezen in het overloopmenu (3 verticale stippen) bij een nummer.</string>
     <!-- -->
-    <string name="whitelist_description">Nummers kunnen aan de whitelist worden toegevoegd door in de mapbrowser op de instellingenknop te drukken en daarna \'muziekbibibliotheek beperken\' te kiezen, en dan de mappen te kiezen die je in de whitelist wil hebben.</string>
+    <string name="whitelist_description">Nummers kunnen aan de whitelist worden toegevoegd door in de mapbrowser op de instellingenknop te drukken, \'Whitelist\' te kiezen, en dan de mappen te kiezen die je in de whitelist wil hebben.</string>
     <!-- ## Detail Activity - Info for artists/albums ## -->
     <!-- The viewpager tab title for the artist/album info -->
     <string name="info">Biografie</string>
@@ -456,7 +422,7 @@ Anders wordt het Shuttle-icoon als plaatshouder gebruikt</string>
     <string name="disc_number">CD \#</string>
     <string name="disc_total">Totaal aantal CD\'s</string>
     <!-- Track count. i.e "1 of 15" -->
-    <string name="track_count"><xliff:g id="track">%s</xliff:g> van de <xliff:g id="total tracks">%s</xliff:g></string>
+    <string name="track_count"><xliff:g id="track">%1$s</xliff:g> van de <xliff:g id="total tracks">%2$s</xliff:g></string>
     <!-- Button text for saving tags  -->
     <string name="save">Opslaan</string>
     <!-- Message displayed when tag editing fails -->
@@ -472,6 +438,8 @@ Anders wordt het Shuttle-icoon als plaatshouder gebruikt</string>
     <string name="rename_folder">Folder hernoemen</string>
     <!-- -->
     <string name="rename_file">Bestand hernoemen</string>
+    <!-- -->
+    <string name="rename">Hernoemen</string>
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">Instellen als standaardmap</string>
     <!-- Label in folder view - number of folders within the current folder -->
@@ -527,9 +495,6 @@ map "</item>
     <string name="genre_title">Genre</string>
     <!-- Album artist (singular)-->
     <string name="album_artist_title">Album-Artiest</string>
-    <!-- ## Lyrics ## -->
-    <!-- -->
-    <string name="no_lyrics">Geen ingesloten songteksten gevonden</string>
     <!-- ## Equalizer ## -->
     <!-- Menu item to open the equalizer -->
     <string name="equalizer">Equalizer</string>
@@ -578,14 +543,19 @@ map "</item>
     <string name="sort_files_album_name">Albumnaam</string>
     <string name="sort_files_track_name">Nummernaam</string>
     <!-- ## Sleep Timer ## -->
-    <!-- Options Menu - Sleep Timer Title -->
-    <string name="timer">Slaaptimer</string>
-    <!-- -->
+    <!-- Sleep timer title -->
+    <!--Sleep timer "Play last song to end" -->
     <string name="sleep_timer_play_to_end">Speel het laatste nummer helemaal</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_set">Instellen</string>
-    <!-- Sleep timer "set" -->
-    <string name="timer_stop">Stoppen</string>
+    <!-- Sleep timer "Stop" -->
+    <!-- Sleep timer stop message "Stop sleep timer?" -->
+    <!-- Toast when sleep timer is set -->
+    <!-- Sleep timer "Set time..." -->
+    <!-- Sleep timer "5 minutes" -->
+    <!-- Sleep timer "15 minutes" -->
+    <!-- Sleep timer "30 minutes" -->
+    <!-- Sleep timer "1 hour" -->
+    <!-- Sleep timer label "Minutes" (limited space here) -->
     <!-- Button name in time span picker -->
     <string name="button_done">Klaar</string>
     <!-- Title of time span picker -->
@@ -645,23 +615,17 @@ map "</item>
     <string name="action_mode_selection_count"><xliff:g id="number">%d</xliff:g> geselecteerd</string>
     <!-- ## Unknown artist/album metadata ##-->
     <!-- Default name of artist that doesn't have a name in the metadata -->
-    <string name="unknown_artist_name">Onbekende artiest</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_name">Onbekend album</string>
     <!-- Default name of genre that doesn't have a name in the metadata -->
-    <string name="unknown_genre_name">Onbekende genre</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_artist_name">Onbekende album artiest</string>
+    <!-- Default value if album year unknown -->
+    <string name="unknown_year">Jaar onbekend</string>
     <!-- Song Info overflow option-->
     <string name="song_info">Nummer info</string>
     <!-- Artwork Download Service Label-->
     <string name="download_service">Download Service</string>
-    <!-- ## Better Pickers Strings ## -->
-    <string name="picker_set">OK</string>
-    <string name="timer_delete">Verwijderen</string>
-    <string name="time_picker_time_seperator">:</string>
     <!-- Accessibility button description -->
-    <string name="btn_play">Speel/pauzeer</string>
+    <string name="btn_play">Afspelen</string>
     <!-- Accessibility button description -->
     <string name="btn_pause">Pauze</string>
     <!-- Accessibility button description -->
@@ -671,7 +635,6 @@ map "</item>
     <!-- Accessibility button description -->
     <string name="btn_prev">Vorige</string>
     <!-- Accessibility button description -->
-    <string name="btn_queue">Afspeelwachtrij zien</string>
     <!-- Accessibility button description -->
     <string name="btn_close">Sluiten</string>
     <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
@@ -687,13 +650,11 @@ map "</item>
     <!-- Accessibility button description -->
     <string name="btn_shuffle_off">Shuffle uit</string>
     <!-- Accessibility button description -->
-    <string name="btn_show_queue">Wachtrij tonen</string>
     <!-- Accessibility button description -->
     <string name="btn_fab_shuffle">Shuffle en huidige lijst afspelen</string>
     <!-- Accessibility now playing 'mini player' description. Example: Now playing <Wannabe> by <Spice Girls> -->
     <string name="btn_now_playing">Nu speelt %1$s door %2$s</string>
     <!-- Accessibility 'show lyrics' -->
-    <string name="btn_show_lyrics">Songteksten tonen</string>
     <string name="pref_summary_restore_purchases">Als je Shuttle al hebt geüpgraded, met zegt dat je de gratis versie hebt, druk hier.</string>
     <string name="pref_title_restore_purchases">Herstel aankopen</string>
     <string name="blacklist_empty">Je hebt geen nummers geblacklist!</string>
@@ -713,7 +674,6 @@ map "</item>
     <string name="iab_purchase_failed">Er is iets verkeerd gegaan. Probeer het later opnieuw.</string>
     <string name="snackbar_rate_text">Plezier met het gebruiken van Shuttle?</string>
     <string name="snackbar_rate_action">Beoordeel het!</string>
-    <string name="toast_purchase_failed">Er ging iets fout. Probeer later opnieuw..</string>
     <string name="dialog_create_playlist_error">Fout bij het creëeren van de afspeellijst</string>
     <!-- Artwork picker -->
     <string name="artwork_edit">Illustraties kiezen</string>
@@ -743,18 +703,23 @@ map "</item>
     <!-- "Folders" Shortcut label disabled. (I don't think this ever happens)-->
     <string name="shortcut_folders_disabled">Mappen niet beschikbaar</string>
     <!-- "Playlist" Shortcut label. Max 10 characters.-->
-    <string name="shortcut_playlist_short_label">Afspeellijst</string>
     <!-- "Playlist" Shortcut long label. Max 25 characters.-->
-    <string name="shortcut_playlist_long_label">Favorieten-afspeellijst openen</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
-    <string name="shortcut_playlist_disabled">Afspeellijst niet beschikbaar</string>
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">CD <xliff:g id="number">%d</xliff:g></string>
     <!-- Search Filter-->
     <string name="search_fuzzy">Fuzzy</string>
-    <string name="search_title_only">Alleen titel</string>
     <string name="search_artists">Artiesten</string>
     <string name="search_albums">Albums</string>
     <!-- Changelog -->
     <string name="changelog_show_on_launch">Tonen bij opstarten</string>
+    <!-- Lyrics -->
+    <!-- QuickLyric button -->
+    <string name="quicklyric">QuickLyric</string>
+    <!-- Button for lyrics -->
+    <string name="lyrics">Songteksten</string>
+    <!-- Shown when there are no lyrics -->
+    <string name="no_lyrics">Geen ingesloten songteksten gevonden.</string>
+    <!-- QuickLyric info dialog message-->
+    <string name="quicklyric_info">QuickLyric is een opensource ophaler van songteksten in de Google Play Store.\n\nZodra deze is geïnstalleerd, zal QuickLyric worden geopend vanuit Shuttle wanneer je op de \'QuickLyric\' menuknop tikt.</string>
 </resources>

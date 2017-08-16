@@ -1,28 +1,45 @@
 package com.simplecity.amp_library.ui.presenters;
 
+import android.content.Context;
 import android.content.IntentFilter;
 import android.support.annotation.NonNull;
+import android.widget.Toast;
 
-import com.f2prateek.rx.receivers.RxBroadcastReceiver;
+import com.cantrowitz.rxbroadcast.RxBroadcast;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.lyrics.LyricsDialog;
+import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.playback.PlaybackMonitor;
+import com.simplecity.amp_library.tagger.TaggerDialog;
+import com.simplecity.amp_library.ui.dialog.BiographyDialog;
 import com.simplecity.amp_library.ui.views.PlayerView;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
+import com.simplecity.amp_library.utils.PlaylistUtils;
 
 import java.util.concurrent.TimeUnit;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import javax.inject.Inject;
+
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class PlayerPresenter extends Presenter<PlayerView> {
+
+    private static final String TAG = "PlayerPresenter";
 
     private long startSeekPos = 0;
     private long lastSeekEventTime;
 
     private long currentPlaybackTime;
     private boolean currentPlaybackTimeVisible;
+
+    @Inject
+    public PlayerPresenter() {
+    }
 
     @Override
     public void unbindView(@NonNull PlayerView view) {
@@ -38,36 +55,43 @@ public class PlayerPresenter extends Presenter<PlayerView> {
         updatePlaystate();
         updateRepeatMode();
 
-        addSubcscription(PlaybackMonitor.getInstance().getProgressObservable()
+        addDisposable(PlaybackMonitor.getInstance().getProgressObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(progress -> view.setSeekProgress((int) (progress * 1000))));
+                .subscribe(progress -> view.setSeekProgress((int) (progress * 1000)),
+                        error -> LogUtils.logException(TAG, "PlayerPresenter: Error updating seek progress", error)));
 
-        addSubcscription(PlaybackMonitor.getInstance().getCurrentTimeObservable()
+        addDisposable(PlaybackMonitor.getInstance().getCurrentTimeObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(pos -> refreshCurrentTimeText(pos / 1000)));
+                .subscribe(pos -> refreshCurrentTimeText(pos / 1000),
+                        error -> LogUtils.logException(TAG, "PlayerPresenter: Error refreshing time text", error)));
 
-        addSubcscription(Observable.interval(500, TimeUnit.MILLISECONDS)
+        addDisposable(Flowable.interval(500, TimeUnit.MILLISECONDS)
                 .onBackpressureDrop()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(aLong -> setCurrentTimeVisibility(MusicUtils.isPlaying() || !currentPlaybackTimeVisible)));
+                .subscribe(aLong -> setCurrentTimeVisibility(MusicUtils.isPlaying() || !currentPlaybackTimeVisible),
+                        error -> LogUtils.logException(TAG, "PlayerPresenter: Error emitting current time", error)));
 
         final IntentFilter filter = new IntentFilter();
         filter.addAction(MusicService.InternalIntents.META_CHANGED);
+        filter.addAction(MusicService.InternalIntents.QUEUE_CHANGED);
         filter.addAction(MusicService.InternalIntents.PLAY_STATE_CHANGED);
         filter.addAction(MusicService.InternalIntents.SHUFFLE_CHANGED);
         filter.addAction(MusicService.InternalIntents.REPEAT_CHANGED);
         filter.addAction(MusicService.InternalIntents.SERVICE_CONNECTED);
 
-        addSubcscription(RxBroadcastReceiver.create(ShuttleApplication.getInstance(), filter)
-                .onBackpressureLatest()
+        addDisposable(RxBroadcast.fromBroadcast(ShuttleApplication.getInstance(), filter)
+                .toFlowable(BackpressureStrategy.LATEST)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(intent -> {
                     final String action = intent.getAction();
                     if (action != null) {
                         switch (action) {
                             case MusicService.InternalIntents.META_CHANGED:
+                                updateTrackInfo();
+                                break;
+                            case MusicService.InternalIntents.QUEUE_CHANGED:
                                 updateTrackInfo();
                                 break;
                             case MusicService.InternalIntents.PLAY_STATE_CHANGED:
@@ -89,23 +113,23 @@ public class PlayerPresenter extends Presenter<PlayerView> {
                                 break;
                         }
                     }
-                }));
+                }, error -> LogUtils.logException(TAG, "PlayerPresenter: Error sending broadcast", error)));
     }
 
 
     private void refreshCurrentTimeText(long playbackTime) {
-        PlayerView view = getView();
-        if (playbackTime != this.currentPlaybackTime) {
+        if (playbackTime != currentPlaybackTime) {
+            PlayerView view = getView();
             if (view != null) {
                 view.currentTimeChanged(playbackTime);
             }
         }
-        this.currentPlaybackTime = playbackTime;
+        currentPlaybackTime = playbackTime;
     }
 
     private void setCurrentTimeVisibility(boolean visible) {
-        PlayerView view = getView();
         if (visible != currentPlaybackTimeVisible) {
+            PlayerView view = getView();
             if (view != null) {
                 view.currentTimeVisibilityChanged(visible);
             }
@@ -113,13 +137,25 @@ public class PlayerPresenter extends Presenter<PlayerView> {
         currentPlaybackTimeVisible = visible;
     }
 
+    private void updateFavorite() {
+        PlayerView view = getView();
+        if (view != null) {
+            addDisposable(PlaylistUtils.isFavorite(MusicUtils.getSong())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(view::favoriteChanged,
+                            error -> LogUtils.logException(TAG, "Update favorite failed", error)));
+        }
+    }
+
     public void updateTrackInfo() {
         PlayerView view = getView();
         if (view != null) {
-            view.favoriteChanged();
             view.trackInfoChanged(MusicUtils.getSong());
             view.currentTimeChanged(MusicUtils.getPosition() / 1000);
             view.queueChanged(MusicUtils.getQueuePosition() + 1, MusicUtils.getQueue().size());
+
+            updateFavorite();
         }
     }
 
@@ -148,6 +184,16 @@ public class PlayerPresenter extends Presenter<PlayerView> {
     public void togglePlayback() {
         MusicUtils.playOrPause();
         updatePlaystate();
+    }
+
+    public void toggleFavorite() {
+        PlaylistUtils.toggleFavorite(message -> {
+            updateFavorite();
+            PlayerView playerView = getView();
+            if (playerView != null) {
+                playerView.showToast(message, Toast.LENGTH_SHORT);
+            }
+        });
     }
 
     public void skip() {
@@ -222,6 +268,30 @@ public class PlayerPresenter extends Presenter<PlayerView> {
             if (delta - lastSeekEventTime > 250 || repeatCount < 0) {
                 MusicUtils.seekTo(newpos);
                 lastSeekEventTime = delta;
+            }
+        }
+    }
+
+    public void showLyrics(Context context) {
+        PlayerView playerView = getView();
+        if (playerView != null) {
+            playerView.showLyricsDialog(new LyricsDialog().getDialog(context));
+        }
+    }
+
+    public void editTagsClicked() {
+        PlayerView playerView = getView();
+        if (playerView != null) {
+            playerView.showTaggerDialog(TaggerDialog.newInstance(MusicUtils.getSong()));
+        }
+    }
+
+    public void songInfoClicked(Context context) {
+        PlayerView playerView = getView();
+        if (playerView != null) {
+            Song song = MusicUtils.getSong();
+            if (song != null) {
+                playerView.showSongInfoDialog(BiographyDialog.getSongInfoDialog(context, song));
             }
         }
     }

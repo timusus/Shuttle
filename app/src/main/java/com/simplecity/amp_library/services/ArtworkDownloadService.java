@@ -1,10 +1,8 @@
 package com.simplecity.amp_library.services;
 
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -18,20 +16,24 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.glide.loader.ArtworkModelLoader;
 import com.simplecity.amp_library.model.ArtworkProvider;
+import com.simplecity.amp_library.notifications.NotificationHelper;
 import com.simplecity.amp_library.utils.DataManager;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * A service which will download all artist & album artworkProvider, via an AsyncTask, and display the progress in a notification.
@@ -45,31 +47,33 @@ public class ArtworkDownloadService extends Service {
 
     private static final int NOTIFICATION_ID = 200;
 
-    private NotificationCompat.Builder notificationBuilder;
-    private NotificationManager notificationManager;
-
     private int progress = 0;
     private int max = 100;
 
-    private CompositeSubscription subscription;
+    private CompositeDisposable disposables = new CompositeDisposable();
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
+    NotificationHelper notificationHelper;
 
-        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    private NotificationCompat.Builder getNotificationBuilder() {
 
         final ComponentName serviceName = new ComponentName(this, ArtworkDownloadService.class);
         Intent intent = new Intent(ACTION_CANCEL);
         intent.setComponent(serviceName);
         PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, 0);
 
-        notificationBuilder = new NotificationCompat.Builder(this)
+        return new NotificationCompat.Builder(this, NotificationHelper.NOTIFICATION_CHANNEL_ID)
                 .setContentTitle(getResources().getString(R.string.notif_downloading_art))
                 .setSmallIcon(android.R.drawable.stat_sys_download)
                 .setOngoing(true)
                 .setProgress(100, 0, true)
-                .addAction(new NotificationCompat.Action(R.drawable.ic_action_navigation_close, getString(R.string.cancel), pendingIntent));
+                .addAction(new NotificationCompat.Action(R.drawable.ic_close_24dp, getString(R.string.cancel), pendingIntent));
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        notificationHelper = new NotificationHelper(this);
 
         if (!ShuttleUtils.isOnline(false)) {
             Toast toast = Toast.makeText(this, getResources().getString(R.string.connection_unavailable), Toast.LENGTH_SHORT);
@@ -78,33 +82,27 @@ public class ArtworkDownloadService extends Service {
             return;
         }
 
-        if (notificationBuilder != null) {
-            notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
-        }
+        notificationHelper.notify(NOTIFICATION_ID, getNotificationBuilder().build());
 
-        subscription = new CompositeSubscription();
-
-        Observable<List<ArtworkProvider>> sharedItemsObservable = DataManager.getInstance()
+        Single<List<ArtworkProvider>> sharedItemsSingle = DataManager.getInstance()
                 .getAlbumArtistsRelay()
-                .first()
-                .<ArtworkProvider>flatMap(Observable::from)
+                .first(Collections.emptyList())
+                .<ArtworkProvider>flatMapObservable(Observable::fromIterable)
                 .mergeWith(DataManager.getInstance().getAlbumsRelay()
-                        .first()
-                        .flatMap(Observable::from))
-                .toList()
-                .share();
+                        .first(Collections.emptyList())
+                        .flatMapObservable(Observable::fromIterable))
+                .toList();
 
-        subscription.add(sharedItemsObservable
+        disposables.add(sharedItemsSingle
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(list -> {
                     max = list.size();
                     updateProgress();
-                }));
+                }, error -> LogUtils.logException(TAG, "Error determining max", error)));
 
 
-        subscription.add(sharedItemsObservable.flatMap(Observable::from)
+        disposables.add(sharedItemsSingle.flatMapObservable(Observable::fromIterable)
                 .flatMap(artworkProvider -> Observable.just(artworkProvider)
-                        .subscribeOn(Schedulers.computation())
                         .map(artwork -> {
                             FutureTarget<File> futureTarget = Glide.with(ArtworkDownloadService.this)
                                     .using(new ArtworkModelLoader(true), InputStream.class)
@@ -117,12 +115,11 @@ public class ArtworkDownloadService extends Service {
                                 Log.e(TAG, "Error downloading artworkProvider: " + e);
                             }
                             Glide.clear(futureTarget);
-                            return null;
+                            return artwork;
                         }))
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(item -> {
-                    updateProgress();
-                }));
+                .subscribe(item -> updateProgress(), error -> LogUtils.logException(TAG, "Error downloading artwork", error)));
     }
 
     @Override
@@ -138,10 +135,10 @@ public class ArtworkDownloadService extends Service {
 
     @Override
     public void onDestroy() {
-        if (subscription != null) {
-            subscription.unsubscribe();
+        if (disposables != null) {
+            disposables.clear();
         }
-        notificationManager.cancel(NOTIFICATION_ID);
+        notificationHelper.cancel(NOTIFICATION_ID);
         super.onDestroy();
     }
 
@@ -153,13 +150,12 @@ public class ArtworkDownloadService extends Service {
     private void updateProgress() {
         progress++;
 
-        if (notificationBuilder != null) {
-            notificationBuilder.setProgress(max, progress, false);
-            notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
-        }
+        NotificationCompat.Builder notificationBuilder = getNotificationBuilder();
+        notificationBuilder.setProgress(max, progress, false);
+        notificationHelper.notify(NOTIFICATION_ID, notificationBuilder.build());
 
         if (progress >= max) {
-            notificationManager.cancel(NOTIFICATION_ID);
+            notificationHelper.cancel(NOTIFICATION_ID);
         }
     }
 
@@ -169,9 +165,8 @@ public class ArtworkDownloadService extends Service {
             final String action = intent.getAction();
             if (action != null && action.equals(ACTION_CANCEL)) {
                 //Handle a notification cancel action click:
-                subscription.unsubscribe();
-                notificationBuilder = null;
-                notificationManager.cancel(NOTIFICATION_ID);
+                disposables.clear();
+                notificationHelper.cancel(NOTIFICATION_ID);
                 stopSelf();
             }
 

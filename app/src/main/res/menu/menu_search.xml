@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/search"
+        android:icon="@drawable/ic_search_24dp"
+        android:title="@string/search_title"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="always|collapseActionView"/>
+
+    <item
+        android:icon="@drawable/ic_sort_24dp"
+        android:title="@string/search_filter"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/search_fuzzy"
+                android:checkable="true"
+                android:checked="true"
+                android:title="@string/search_fuzzy"/>
+            <item
+                android:id="@+id/search_artist"
+                android:checkable="true"
+                android:checked="true"
+                android:title="@string/search_artists"/>
+            <item
+                android:id="@+id/search_album"
+                android:checkable="true"
+                android:checked="true"
+                android:title="@string/search_albums"/>
+        </menu>
+
+    </item>
+
+</menu>

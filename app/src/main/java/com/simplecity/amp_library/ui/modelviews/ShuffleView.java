@@ -1,16 +1,26 @@
 package com.simplecity.amp_library.ui.modelviews;
 
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.utils.DrawableUtils;
+import com.simplecity.amp_library.ui.adapters.ViewType;
+import com.simplecityapps.recycler_adapter.model.BaseViewModel;
+import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 
+public class ShuffleView extends BaseViewModel<ShuffleView.ViewHolder> {
 
-public class ShuffleView extends BaseAdaptableItem<Object, ShuffleView.ViewHolder> {
+    public interface ShuffleClickListener {
+        void onShuffleItemClick();
+    }
+
+    @Nullable
+    private ShuffleClickListener listener;
+
+    public void setClickListener(@Nullable ShuffleClickListener listener) {
+        this.listener = listener;
+    }
 
     @Override
     public int getViewType() {
@@ -23,17 +33,29 @@ public class ShuffleView extends BaseAdaptableItem<Object, ShuffleView.ViewHolde
     }
 
     @Override
-    public ViewHolder getViewHolder(ViewGroup parent) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutResId(), parent, false));
+    public ViewHolder createViewHolder(ViewGroup parent) {
+        return new ViewHolder(createView(parent));
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public void bindView(ViewHolder holder) {
+        super.bindView(holder);
+
+        holder.bind(this);
+    }
+
+    private void onItemClick() {
+        if (listener != null) {
+            listener.onShuffleItemClick();
+        }
+    }
+
+    public static class ViewHolder extends BaseViewHolder<ShuffleView> {
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            ImageView imageView = (ImageView) itemView.findViewById(R.id.icon);
-            imageView.setImageDrawable(DrawableUtils.getColoredAccentDrawable(itemView.getContext(), itemView.getResources().getDrawable(R.drawable.ic_shuffle_white)));
+            itemView.setOnClickListener(v -> viewModel.onItemClick());
         }
 
         @Override

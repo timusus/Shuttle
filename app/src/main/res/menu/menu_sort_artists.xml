@@ -4,10 +4,9 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/sort"
-        android:icon="?attr/btn_sort"
+        android:icon="@drawable/ic_sort_24dp"
         android:title="@string/sorting"
-        app:showAsAction="ifRoom">
+        app:showAsAction="never">
         <menu>
             <group android:checkableBehavior="single">
                 <item

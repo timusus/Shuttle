@@ -4,7 +4,6 @@
     <!-- Shown when a user attempts to edit tags, but they don't have a 'DocumentProvider' available to pick the directory of their music (and thus give permission to Shuttle)-->
     <string name="R.string.toast_no_document_provider">Не може да се изпълни поради липсата на DocumentProvider</string>
     <!-- Displayed when an M3U playlist is being saved, but it already exists -->
-    <string name="playlist_save_exists">Плейлистът вече съществува</string>
     <!-- Displayed when an M3U playlist save fails -->
     <string name="playlist_save_failed">Запазването на плейлиста е неуспешно</string>
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
@@ -44,16 +43,6 @@
     </plurals>
     <!-- Toast after selecting an empty playlist -->
     <string name="emptyplaylist">Избраният плейлист е празен.</string>
-    <!-- Used in sleep message. Example 2 hours (and) 5 minutes -->
-    <string name="and">" \u0438 "</string>
-    <!-- Alarm confirmation toast: singular hour -->
-    <string name="hour">" \u0447\u0430\u0441"</string>
-    <!-- Alarm confirmation toast: plural hours -->
-    <string name="hours">" \u0447\u0430\u0441\u0430"</string>
-    <!-- Alarm confirmation toast: plural minutes -->
-    <string name="minutes">" \u043c\u0438\u043d\u0443\u0442\u0438"</string>
-    <!-- Alarm toast: Sleep timer set for -->
-    <string name="sleep_message">"\u0422\u0430\u0439\u043c\u0435\u0440 \u0437\u0430 \u0430\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u043d\u043e \u0438\u0437\u043a\u043b\u044e\u0447\u0432\u0430\u043d\u0435 \u0437\u0430\u0434\u0430\u0434\u0435\u043d \u0437\u0430 "</string>
     <!-- -->
     <string name="initial_dir_set_message">" \u0437\u0430\u0434\u0430\u0439 \u043a\u0430\u0442\u043e \u043d\u0430\u0447\u0430\u043b\u043d\u0430 \u0434\u0438\u0440\u0435\u043a\u0442\u043e\u0440\u0438\u044f"</string>
     <!-- Transient popup message shown after deleting a playlist -->
@@ -61,10 +50,6 @@
     <!-- Transient popup message shown after renaming a playlist -->
     <string name="playlist_renamed_message">Плейлистът е преименуван.</string>
     <!-- Toast confirming that song(s) was/were deleted. -->
-    <plurals name="NNNtracksdeleted">
-        <item quantity="one">1 изтрита песен</item>
-        <item quantity="other"><xliff:g id="SONGS_TO_DELETE">%d</xliff:g> песни бяха изтрити.</item>
-    </plurals>
     <!-- -->
     <plurals name="NNNtrackstoqueue">
         <item quantity="one">Една песен добавена към опашката за слушане</item>
@@ -73,23 +58,16 @@
 		"</item>
     </plurals>
     <!-- Toasts after adding song(s) to playlists -->
-    <plurals name="NNNtrackstofavourites">
-        <item quantity="one">1 песен е добавена към любими.</item>
-        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> песни са добавени към любими.</item>
-    </plurals>
     <string name="song_to_favourites"><xliff:g id="song_name">%s</xliff:g> добавено към любимите.</string>
     <string name="song_removed_from_favourites"><xliff:g id="song_name">%s</xliff:g> премахнато от любимите.</string>
     <!-- ## Dialogs ## -->
     <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_tite">Необходим е рестарт</string>
     <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_message">Тези промени ще влязат в сила след рестарт на Shuttle</string>
     <!-- Restart now button -->
     <string name="restart_button">Рестартирай сега</string>
     <!-- Displays when picking a theme color -->
     <string name="color_pick">Избери цвят</string>
     <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
-    <string name="dialog_custom">Избери сам</string>
     <!-- Displays when sharing a file fails -->
     <string name="share_failed">Съжаляваме, споделянето на този файл е невъзможно</string>
     <!-- Displays when you click 'share' -->
@@ -117,8 +95,6 @@
     <string name="upgraded_title">Благодаря Ви</string>
     <string name="upgraded_message">Вие успешно надстроихте до Shuttle+. Оценявам подкрепата Ви.\n\nМоля рестартирайте приложението, за да се уверите, че всички функции са включени.</string>
     <string name="upgrade_dialog_message">Актуализирането ще ви отключи допълнителни функции на Shuttle като:\n\n\&#8226;-Голям брой теми\n\&#8226;-Редактиране на информация за изп.(ограничена поддръжка при Андроид 4.4 КитКат)\n\&#8226;-Преглеждане на музика в папки\n\&#8226;-Поддръжка на ChromeCast\n\nПодпомагате за развитието на приложението.\n\nНяма нужда да актуализирате, ако вече притежавате Shuttle+</string>
-    <string name="get_pro_button_play_store">Play Store</string>
-    <string name="get_pro_button_amazon">Amazon</string>
     <string name="btn_upgrade">Актуализирай</string>
     <!-- -->
     <string name="get_pro_button_no">Не, благодаря</string>
@@ -154,15 +130,12 @@
     <string name="delete_file_confirmation_dialog">Сигурни ли сте, че искате да изтриете окончателно \"<xliff:g id="file">%s</xliff:g>\"?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">Сигурни ли сте, че искате да изтриете всички корици от устройството?</string>
-    <!-- QuickLyric Play Store Link -->
-    <!-- QuickLyric button -->
-    <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
     <string name="dialog_title_set_ringtone">Задай тон на звънене</string>
     <!-- "Set Ringtone" message -->
     <string name="dialog_message_set_ringtone">Shuttle има нужда от допълнително разрешение, за да настрои тон на звънене.\n\nСлед като дадете разрешение, опитайте да промените тона на звънене повторно.</string>
     <!-- Message displayed in dialog when attempting to add duplicates to playlist -->
-    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%s</xliff:g> - <xliff:g id="song">%s</xliff:g> вече е в този плейлист. Добавяне все пак?</string>
+    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%1$s</xliff:g> - <xliff:g id="song">%2$s</xliff:g> вече е в този плейлист. Добавяне все пак?</string>
     <!-- Checkbox text 'apply to all' -->
     <string name="dialog_checkbox_playlist_duplicate_apply_all">Приложи за всички (<xliff:g id="number">%d</xliff:g>)</string>
     <!-- Title displayed in dialog when attempting to add duplicates to playlist -->
@@ -192,17 +165,16 @@
     <string name="fav_add">Добави в \"Любими\"</string>
     <!-- Context menu item -->
     <string name="play_selection">Старт</string>
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
     <!-- Context menu item -->
-    <string name="add_to_playlist">Добавяне към плейлиста</string>
     <!-- Context menu item -->
     <string name="new_playlist">Ново</string>
-    <!-- Button for lyrics -->
-    <string name="lyrics">Текстове</string>
     <!-- menu item to save the current list as a new playlist -->
     <string name="save_as_playlist">Запазване като плейлист</string>
     <!-- Context menu item to remove the selected item from the playlist -->
-    <string name="remove_from_playlist">Премахване от плейлиста</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
+    <!-- Context menu item to remove the selected item from the queue -->
     <string name="remove_from_queue">Премахни от опашката</string>
     <!-- Context menu item -->
     <string name="play_next">Пусни следваща песен</string>
@@ -213,11 +185,9 @@
     <!-- -->
     <string name="library_title">Библиотека</string>
     <!-- -->
-    <string name="share_title">Споделяне</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Търсене</string>
     <!-- Playlist context menu item to delete the selected playlist. -->
-    <string name="delete_playlist_menu">Изтриване</string>
     <!-- Playlist context menu item to clear the selected playlist. -->
     <string name="clear_playlist_menu">Изчисти</string>
     <!-- Playlist context menu item to edit the selected playlist -->
@@ -232,8 +202,6 @@
     <string name="nowplaying_title">Възпроизвежда се сега</string>
     <!-- -->
     <string name="up_next_title">Следва</string>
-    <!-- Context menu item -->
-    <string name="add_to_queue">Добави към опашката за слушане</string>
     <!-- Popup menu item -->
     <string name="go_to">Отиди...</string>
     <!-- 'More' button -->
@@ -246,9 +214,7 @@
     <string name="navigation_drawer_close">Затворете навигационната лента</string>
     <!-- ## Preference Menu ## -->
     <!--Settings title for white accent color) -->
-    <string name="pref_title_theme_white_accent">Използвай бял акцент</string>
     <!--Settings summary for white accent color-->
-    <string name="pref_summary_theme_white_accent">Използва бяло за всички цветови акценти с изкл. на тези, които показват състояние (разбъркване и повторение ползват различен цвят, когато са активни).</string>
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">Начало</string>
     <!--Settings category for 'notification' items -->
@@ -280,7 +246,6 @@
     <string name="pref_title_theme_light">Светла тема</string>
     <string name="pref_title_theme_black">Черно</string>
     <!--Settings summary for the downloading more themes -->
-    <string name="pref_summary_get_pro_themes">Shuttle+ поддържа повече теми</string>
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">Черен/бял списък</string>
     <!--Settings title for viewing blacklist-->
@@ -292,7 +257,6 @@
     <!--Settings title for clearing whitelist-->
     <string name="pref_title_clear_whitelist">Изчисти белия списък</string>
     <!--Settings title for clearing whitelist-->
-    <string name="pref_title_update_whitelist">Обнови</string>
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">Подрежи обложката на албума</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -349,10 +313,7 @@
     <string name="pref_summary_placeholders">Използване на стила \"Gmail\" по подразбиране
  Ако опцията не е активна, иконата на Shuttle ще се показва като placeholder</string>
     <!-- Settings title for the enable lockscreen controls checkbox -->
-    <string name="pref_title_lockscreen">Активирай контроли когато екранът е заключен</string>
     <!-- Settings summary for the enable lockscreen controls checkbox -->
-    <string name="pref_summary_lockscreen">"Активира/Деактивира контроли, информация и обложки на албуми, когато екранът е заключен. (ICS +)
-	"</string>
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">Дисплей</string>
     <!-- Settings title for the keep screen on checkbox -->
@@ -397,7 +358,7 @@
     <string name="pref_summary_simple_download">"Изтегляне на Simple Last.FM Scrobbler от Google Play Store
 	"</string>
     <!-- Settings title for the About heading -->
-    <string name="pref_title_about">Информация за апликацията</string>
+    <string name="pref_title_changelog">Информация за апликацията</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Поддръжка.</string>
     <string name="pref_title_version">Версия</string>
@@ -451,7 +412,7 @@
     <string name="disc_number">Диск №</string>
     <string name="disc_total">Общ брой дискове</string>
     <!-- Track count. i.e "1 of 15" -->
-    <string name="track_count"><xliff:g id="track">%s</xliff:g> от <xliff:g id="total tracks">%s</xliff:g></string>
+    <string name="track_count"><xliff:g id="track">%1$s</xliff:g> от <xliff:g id="total tracks">%2$s</xliff:g></string>
     <!-- Button text for saving tags  -->
     <string name="save">Запази</string>
     <!-- Message displayed when tag editing fails -->
@@ -467,6 +428,7 @@
     <string name="rename_folder">Преименувай папката</string>
     <!-- -->
     <string name="rename_file">Преименувай файла</string>
+    <!-- -->
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">Задай като първоначална директория</string>
     <!-- Label in folder view - number of folders within the current folder -->
@@ -520,9 +482,6 @@
     <string name="genre_title">Жанр</string>
     <!-- Album artist (singular)-->
     <string name="album_artist_title">Изпълнител на албума</string>
-    <!-- ## Lyrics ## -->
-    <!-- -->
-    <string name="no_lyrics">Не е открит вграден текст на песента</string>
     <!-- ## Equalizer ## -->
     <!-- Menu item to open the equalizer -->
     <string name="equalizer">Еквалайзер</string>
@@ -570,14 +529,19 @@
     <string name="sort_files_album_name">Име на албума</string>
     <string name="sort_files_track_name">Име на песента</string>
     <!-- ## Sleep Timer ## -->
-    <!-- Options Menu - Sleep Timer Title -->
-    <string name="timer">Таймер за автоматично изключване</string>
-    <!-- -->
+    <!-- Sleep timer title -->
+    <!--Sleep timer "Play last song to end" -->
     <string name="sleep_timer_play_to_end">Пуснете последната песен, за да завършите</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_set">Задай</string>
-    <!-- Sleep timer "set" -->
-    <string name="timer_stop">Спри</string>
+    <!-- Sleep timer "Stop" -->
+    <!-- Sleep timer stop message "Stop sleep timer?" -->
+    <!-- Toast when sleep timer is set -->
+    <!-- Sleep timer "Set time..." -->
+    <!-- Sleep timer "5 minutes" -->
+    <!-- Sleep timer "15 minutes" -->
+    <!-- Sleep timer "30 minutes" -->
+    <!-- Sleep timer "1 hour" -->
+    <!-- Sleep timer label "Minutes" (limited space here) -->
     <!-- Button name in time span picker -->
     <string name="button_done">Готово</string>
     <!-- Title of time span picker -->
@@ -637,21 +601,14 @@
     <string name="action_mode_selection_count"><xliff:g id="number">%d</xliff:g> избрани</string>
     <!-- ## Unknown artist/album metadata ##-->
     <!-- Default name of artist that doesn't have a name in the metadata -->
-    <string name="unknown_artist_name">Неизвестен изпълнител</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_name">Неизвестен албум</string>
     <!-- Default name of genre that doesn't have a name in the metadata -->
-    <string name="unknown_genre_name">Неизвестен жанр</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_artist_name">Незивестен изпълнител на албума</string>
+    <!-- Default value if album year unknown -->
     <!-- Song Info overflow option-->
     <string name="song_info">Инфо за песента</string>
     <!-- Artwork Download Service Label-->
     <string name="download_service">Услуга за изтегляне</string>
-    <!-- ## Better Pickers Strings ## -->
-    <string name="picker_set">ОК</string>
-    <string name="timer_delete">Изтрий</string>
-    <string name="time_picker_time_seperator">:</string>
     <!-- Accessibility button description -->
     <string name="btn_play">Изпълни</string>
     <!-- Accessibility button description -->
@@ -662,7 +619,6 @@
     <!-- Accessibility button description -->
     <string name="btn_prev">Предишно</string>
     <!-- Accessibility button description -->
-    <string name="btn_queue">Виж списъка текущо изпълнявани</string>
     <!-- Accessibility button description -->
     <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
     <string name="btn_options">%s опции</string>
@@ -677,13 +633,11 @@
     <!-- Accessibility button description -->
     <string name="btn_shuffle_off">Разбъркването е изкл.</string>
     <!-- Accessibility button description -->
-    <string name="btn_show_queue">Покажи опашката</string>
     <!-- Accessibility button description -->
     <string name="btn_fab_shuffle">Разбъркай и изпълни списъка</string>
     <!-- Accessibility now playing 'mini player' description. Example: Now playing <Wannabe> by <Spice Girls> -->
     <string name="btn_now_playing">Сега се изпълнява песента %1$s на %2$s</string>
     <!-- Accessibility 'show lyrics' -->
-    <string name="btn_show_lyrics">Покажи текста</string>
     <string name="pref_summary_restore_purchases">Ако сте надстроили Shuttle, но все още се показва като безплатната версия, докоснете тук.</string>
     <string name="pref_title_restore_purchases">Възстанови покупките</string>
     <string name="blacklist_empty">Няма песни в черния списък!</string>
@@ -703,7 +657,6 @@
     <string name="iab_purchase_failed">Нещо се обърка. Моля, опитвайте отново по-късно...</string>
     <string name="snackbar_rate_text">Харесва ли ви Shuttle?</string>
     <string name="snackbar_rate_action">Оценето го!</string>
-    <string name="toast_purchase_failed">Нещо се обърка. Моля, опитвайте отново по-късно...</string>
     <string name="dialog_create_playlist_error">Грешка при създаването на плейлист</string>
     <!-- Artwork picker -->
     <string name="artwork_edit">Промени обложката</string>
@@ -733,13 +686,18 @@
     <!-- "Folders" Shortcut label disabled. (I don't think this ever happens)-->
     <string name="shortcut_folders_disabled">Няма достъп до папките</string>
     <!-- "Playlist" Shortcut label. Max 10 characters.-->
-    <string name="shortcut_playlist_short_label">Плейлист</string>
     <!-- "Playlist" Shortcut long label. Max 25 characters.-->
-    <string name="shortcut_playlist_long_label">Отвори плейлиста \"Любими\"</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
-    <string name="shortcut_playlist_disabled">Плейлистът не е достъпен</string>
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">Диск <xliff:g id="number">%d</xliff:g></string>
     <!-- Search Filter-->
     <!-- Changelog -->
+    <!-- Lyrics -->
+    <!-- QuickLyric button -->
+    <string name="quicklyric">QuickLyric</string>
+    <!-- Button for lyrics -->
+    <string name="lyrics">Текстове</string>
+    <!-- Shown when there are no lyrics -->
+    <string name="no_lyrics">Не е открит вграден текст на песента</string>
+    <!-- QuickLyric info dialog message-->
 </resources>

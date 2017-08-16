@@ -4,7 +4,6 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/view_as"
         android:title="@string/view_as_title"
         app:showAsAction="never">
         <menu>

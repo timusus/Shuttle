@@ -4,16 +4,16 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import rx.Subscription;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 public class Presenter<V> {
 
     @NonNull
-    private final CompositeSubscription subscriptions = new CompositeSubscription();
+    private final CompositeDisposable disposables = new CompositeDisposable();
 
-    protected void addSubcscription(@NonNull Subscription subscription) {
-        subscriptions.add(subscription);
+    protected void addDisposable(@NonNull Disposable disposable) {
+        this.disposables.add(disposable);
     }
 
     @Nullable
@@ -46,8 +46,8 @@ public class Presenter<V> {
             throw new IllegalStateException("Unexpected view! previousView = " + previousView + ", view to unbind = " + view);
         }
 
-        // Unsubscribe all subscriptions that need to be unsubscribed in this lifecycle state.
-        subscriptions.clear();
+        // Unsubscribe all disposables that need to be unsubscribed in this lifecycle state.
+        disposables.clear();
     }
 
 }

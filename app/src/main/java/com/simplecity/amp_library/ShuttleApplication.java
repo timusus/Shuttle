@@ -6,18 +6,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Environment;
-import android.os.Handler;
 import android.os.StrictMode;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.multidex.MultiDex;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
@@ -27,8 +25,12 @@ import com.google.android.libraries.cast.companionlibrary.cast.CastConfiguration
 import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.simplecity.amp_library.constants.Config;
+import com.simplecity.amp_library.dagger.component.AppComponent;
+import com.simplecity.amp_library.dagger.component.DaggerAppComponent;
+import com.simplecity.amp_library.dagger.module.AppModule;
 import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Query;
+import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.model.UserSelectedArtwork;
 import com.simplecity.amp_library.services.EqualizerService;
 import com.simplecity.amp_library.sql.SqlUtils;
@@ -37,14 +39,12 @@ import com.simplecity.amp_library.sql.providers.PlayCountTable;
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
 import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.SettingsManager;
-import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
 import org.jaudiotagger.tag.TagOptionSingleton;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,15 +53,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import io.fabric.sdk.android.Fabric;
-import rx.Observable;
-import rx.schedulers.Schedulers;
+import io.reactivex.Completable;
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 
 public class ShuttleApplication extends Application {
 
-    private static ShuttleApplication sInstance;
+    private static ShuttleApplication instance;
 
     public static synchronized ShuttleApplication getInstance() {
-        return sInstance;
+        return instance;
     }
 
     private static final String TAG = "ShuttleApplication";
@@ -77,11 +78,13 @@ public class ShuttleApplication extends Application {
     private static Logger jaudioTaggerLogger1 = Logger.getLogger("org.jaudiotagger.audio");
     private static Logger jaudioTaggerLogger2 = Logger.getLogger("org.jaudiotagger");
 
+    private AppComponent appComponent;
+
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
 
-        if (BuildConfig.MULTIDEX_ENABLED) {
+        if (BuildConfig.FLAVOR.equals("dev")) {
             MultiDex.install(base);
         }
     }
@@ -90,13 +93,25 @@ public class ShuttleApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        refWatcher = LeakCanary.install(this);
-        sInstance = this;
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+
+        instance = this;
 
         if (BuildConfig.DEBUG) {
             Log.w(TAG, "**Debug mode is ON**");
-            enableStrictMode();
+
+            // Traceur.enableLogging();
+
+            // enableStrictMode();
         }
+
+        appComponent = initDagger(this);
+
+        refWatcher = LeakCanary.install(this);
 
         //Crashlytics
         CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build();
@@ -105,16 +120,6 @@ public class ShuttleApplication extends Application {
         //Firebase Analytics
         FirebaseAnalytics.getInstance(this);
 
-        //Possible fix for ClipboardUIManager leak.
-        //See https://gist.github.com/pepyakin/8d2221501fd572d4a61c and
-        //https://github.com/square/leakcanary/blob/master/leakcanary-android/src/main/java/com/squareup/leakcanary/AndroidExcludedRefs.java
-        try {
-            Class<?> cls = Class.forName("android.sec.clipboard.ClipboardUIManager");
-            Method m = cls.getDeclaredMethod("getInstance", Context.class);
-            Object o = m.invoke(null, this);
-        } catch (Exception ignored) {
-        }
-
         VideoCastManager.initialize(this,
                 new CastConfiguration.Builder(Config.CHROMECAST_APP_ID)
                         .enableLockScreen()
@@ -122,16 +127,16 @@ public class ShuttleApplication extends Application {
                         .build()
         );
 
-        final SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        setIsUpgraded(mPrefs.getBoolean("pref_theme_gold", false));
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        setIsUpgraded(prefs.getBoolean("pref_theme_gold", false));
 
         // we cannot call setDefaultValues for multiple fragment based XML preference
         // files with readAgain flag set to false, so always check KEY_HAS_SET_DEFAULT_VALUES
-        if (!mPrefs.getBoolean(PreferenceManager.KEY_HAS_SET_DEFAULT_VALUES, false)) {
+        if (!prefs.getBoolean(PreferenceManager.KEY_HAS_SET_DEFAULT_VALUES, false)) {
+            PreferenceManager.setDefaultValues(this, R.xml.settings_headers, true);
             PreferenceManager.setDefaultValues(this, R.xml.settings_artwork, true);
             PreferenceManager.setDefaultValues(this, R.xml.settings_blacklist, true);
             PreferenceManager.setDefaultValues(this, R.xml.settings_display, true);
-            PreferenceManager.setDefaultValues(this, R.xml.settings_headers, true);
             PreferenceManager.setDefaultValues(this, R.xml.settings_headset, true);
             PreferenceManager.setDefaultValues(this, R.xml.settings_scrobbling, true);
             PreferenceManager.setDefaultValues(this, R.xml.settings_themes, true);
@@ -147,7 +152,7 @@ public class ShuttleApplication extends Application {
 
         startService(new Intent(this, EqualizerService.class));
 
-        Observable.fromCallable(() -> {
+        Completable.fromAction(() -> {
             Query query = new Query.Builder()
                     .uri(CustomArtworkTable.URI)
                     .projection(new String[]{CustomArtworkTable.COLUMN_ID, CustomArtworkTable.COLUMN_KEY, CustomArtworkTable.COLUMN_TYPE, CustomArtworkTable.COLUMN_PATH})
@@ -161,20 +166,26 @@ public class ShuttleApplication extends Application {
                                             cursor.getString(cursor.getColumnIndexOrThrow(CustomArtworkTable.COLUMN_PATH)))
                             ),
                     query);
-            return null;
         })
                 .subscribeOn(Schedulers.io())
                 .subscribe();
 
-        //Clean up the genres database - remove any genres which contain no songs. Also, populates song counts.
-        cleanGenres();
+        // Clean up the genres database - remove any genres which contain no songs. Also, populates song counts.
+        // Since this is called on app launch, let's delay to allow more important tasks to complete.
+        cleanGenres()
+                .delaySubscription(5000, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .subscribe();
 
-        //Clean up the 'most played' playlist. We delay this call to allow the app to finish launching,
-        //since it's not time critical.
-        new Handler().postDelayed(this::cleanMostPlayedPlaylist, 5000);
+        cleanMostPlayedPlaylist()
+                .delay(7500, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .subscribe();
 
-        //Clean up any old, unused resources.
-        new Handler().postDelayed(this::deleteOldResources, 10000);
+        deleteOldResources()
+                .delay(10000, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .subscribe();
     }
 
     public RefWatcher getRefWatcher() {
@@ -188,9 +199,19 @@ public class ShuttleApplication extends Application {
         Glide.get(this).clearMemory();
     }
 
+    public AppComponent getAppComponent() {
+        return appComponent;
+    }
+
+    protected AppComponent initDagger(ShuttleApplication application) {
+        return DaggerAppComponent.builder()
+                .appModule(new AppModule(application))
+                .build();
+    }
+
     public static String getVersion() {
         try {
-            return sInstance.getPackageManager().getPackageInfo(sInstance.getPackageName(), 0).versionName;
+            return instance.getPackageManager().getPackageInfo(instance.getPackageName(), 0).versionName;
         } catch (PackageManager.NameNotFoundException | NullPointerException ignored) {
 
         }
@@ -206,38 +227,34 @@ public class ShuttleApplication extends Application {
         return isUpgraded || BuildConfig.DEBUG;
     }
 
-    private void deleteOldResources() {
-        ShuttleUtils.execute(new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
+    @NonNull
+    private Completable deleteOldResources() {
 
-                //Delete albumthumbs/artists directory
-                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                    File file = new File(Environment.getExternalStorageDirectory() + "/albumthumbs/artists/");
-                    if (file.exists() && file.isDirectory()) {
-                        File[] files = file.listFiles();
-                        if (files != null) {
-                            for (File child : files) {
-                                child.delete();
-                            }
+        return Completable.fromAction(() -> {
+            //Delete albumthumbs/artists directory
+            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                File file = new File(Environment.getExternalStorageDirectory() + "/albumthumbs/artists/");
+                if (file.exists() && file.isDirectory()) {
+                    File[] files = file.listFiles();
+                    if (files != null) {
+                        for (File child : files) {
+                            child.delete();
                         }
-                        file.delete();
                     }
+                    file.delete();
                 }
+            }
 
-                //Delete old http cache
-                File oldHttpCache = getDiskCacheDir("http");
-                if (oldHttpCache != null && oldHttpCache.exists()) {
-                    oldHttpCache.delete();
-                }
+            //Delete old http cache
+            File oldHttpCache = getDiskCacheDir("http");
+            if (oldHttpCache != null && oldHttpCache.exists()) {
+                oldHttpCache.delete();
+            }
 
-                //Delete old thumbs cache
-                File oldThumbsCache = getDiskCacheDir("thumbs");
-                if (oldThumbsCache != null && oldThumbsCache.exists()) {
-                    oldThumbsCache.delete();
-                }
-
-                return null;
+            //Delete old thumbs cache
+            File oldThumbsCache = getDiskCacheDir("thumbs");
+            if (oldThumbsCache != null && oldThumbsCache.exists()) {
+                oldThumbsCache.delete();
             }
         });
     }
@@ -267,13 +284,14 @@ public class ShuttleApplication extends Application {
      * <p>
      * If they don't, remove them from the playlist.
      */
-    private void cleanMostPlayedPlaylist() {
+    @NonNull
+    private Completable cleanMostPlayedPlaylist() {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            return;
+            return Completable.complete();
         }
 
-        Observable.fromCallable(() -> {
+        return Completable.fromAction(() -> {
             List<Integer> playCountIds = new ArrayList<>();
 
             Query query = new Query.Builder()
@@ -298,7 +316,7 @@ public class ShuttleApplication extends Application {
 
             selection.append(TextUtils.join(",", Stream.of(playCountIds)
                     .filter(playCountId -> !songIds.contains(playCountId))
-                    .collect(Collectors.toList())));
+                    .toList()));
 
             selection.append(")");
 
@@ -306,17 +324,14 @@ public class ShuttleApplication extends Application {
                 getContentResolver().delete(PlayCountTable.URI, selection.toString(), null);
             } catch (IllegalArgumentException ignored) {
             }
-
-            return null;
-        })
-                .subscribeOn(Schedulers.io())
-                .subscribe();
+        });
     }
 
-    private void cleanGenres() {
+    @NonNull
+    private Observable<List<Song>> cleanGenres() {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            return;
+            return Observable.empty();
         }
 
         // This observable emits a genre every 250ms. We then make a query against the genre database to populate the song count.
@@ -325,13 +340,12 @@ public class ShuttleApplication extends Application {
         // If the maximum number of cursors is created (based on memory/processor speed or god knows what else), then the device
         // will start throwing CursorWindow exceptions, and the queries will slow down massively. This ends up making all queries slow.
         // This task isn't time critical, so we can afford to let it just casually do its job.
-        SqlBriteUtils.createQuery(ShuttleApplication.getInstance(), Genre::new, Genre.getQuery())
-                .first()
-                .flatMap(Observable::from)
+        return SqlBriteUtils.createSingleList(ShuttleApplication.getInstance(), Genre::new, Genre.getQuery())
+                .flatMapObservable(Observable::fromIterable)
                 .concatMap(genre -> Observable.just(genre).delay(250, TimeUnit.MILLISECONDS))
-                .flatMap(genre -> genre.getSongCountObservable(ShuttleApplication.getInstance())
-                        .doOnNext(numSongs -> {
-                            if (numSongs == 0) {
+                .flatMapSingle(genre -> genre.getSongsObservable()
+                        .doOnSuccess(songs -> {
+                            if (songs.isEmpty()) {
                                 try {
                                     getContentResolver().delete(MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI, MediaStore.Audio.Genres._ID + " == " + genre.id, null);
                                 } catch (IllegalArgumentException | UnsupportedOperationException ignored) {
@@ -339,10 +353,7 @@ public class ShuttleApplication extends Application {
                                 }
                             }
                         })
-                )
-                // Since this is called on app launch, let's delay to allow more important tasks to complete.
-                .delaySubscription(2500, TimeUnit.MILLISECONDS)
-                .subscribe();
+                );
     }
 
     private void enableStrictMode() {

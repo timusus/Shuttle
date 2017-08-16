@@ -3,7 +3,6 @@
     <!-- ## Toast Messages ## -->
     <!-- Shown when a user attempts to edit tags, but they don't have a 'DocumentProvider' available to pick the directory of their music (and thus give permission to Shuttle)-->
     <!-- Displayed when an M3U playlist is being saved, but it already exists -->
-    <string name="playlist_save_exists">Playlist already exists</string>
     <!-- Displayed when an M3U playlist save fails -->
     <string name="playlist_save_failed">Couldn\'t save playlist</string>
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
@@ -25,20 +24,12 @@
     <string name="repeat_current_notif">Repeating current song.</string>
     <!-- Toast after turning repeat all on -->
     <!-- Individual song context menu item -->
-    <string name="ringtone_menu">Use as phone ringtone</string>
+    <string name="ringtone_menu">Set as ringtone</string>
     <!-- Toast after setting a song as phone ringtone -->
     <!-- Toast if setting ringtone fails -->
     <!-- Toasts after adding song(s) to playlists -->
     <!-- Toast after selecting an empty playlist -->
     <string name="emptyplaylist">Selected playlist is empty.</string>
-    <!-- Used in sleep message. Example 2 hours (and) 5 minutes -->
-    <string name="and">" and "</string>
-    <!-- Alarm confirmation toast: singular hour -->
-    <string name="hour">" hour"</string>
-    <!-- Alarm confirmation toast: plural hours -->
-    <!-- Alarm confirmation toast: plural minutes -->
-    <string name="minutes">" minutes"</string>
-    <!-- Alarm toast: Sleep timer set for -->
     <!-- -->
     <!-- Transient popup message shown after deleting a playlist -->
     <!-- Transient popup message shown after renaming a playlist -->
@@ -83,8 +74,6 @@
     <!-- -->
     <!-- -->
     <!-- Displayed when user presses 'delete artwork' -->
-    <!-- QuickLyric Play Store Link -->
-    <!-- QuickLyric button -->
     <!--"Set Ringtone" title -->
     <!-- "Set Ringtone" message -->
     <!-- Message displayed in dialog when attempting to add duplicates to playlist -->
@@ -103,12 +92,14 @@
     <!-- -->
     <string name="fav_add">Add to Favourites</string>
     <!-- Context menu item -->
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
     <!-- Context menu item -->
     <!-- Context menu item -->
-    <!-- Button for lyrics -->
     <!-- menu item to save the current list as a new playlist -->
     <!-- Context menu item to remove the selected item from the playlist -->
-    <!-- Context menu item to remove the selected item from the playlist -->
+    <!-- Context menu item to remove the selected item from the queue -->
     <!-- Context menu item -->
     <!-- Menu text for the settings item -->
     <!-- Playing screen, menu item -->
@@ -124,7 +115,6 @@
     <!-- Menu item to play back all the songs in the currently showing list in shuffle mode -->
     <!-- title of the "current playlist" screen when not in party shuffle mode -->
     <!-- -->
-    <!-- Context menu item -->
     <!-- Popup menu item -->
     <!-- 'More' button -->
     <!-- Share option-->
@@ -134,7 +124,6 @@
     <!-- ## Preference Menu ## -->
     <!--Settings title for white accent color) -->
     <!--Settings summary for white accent color-->
-    <string name="pref_summary_theme_white_accent">Uses white for all colour accents, except those which need to show state (shuffle and repeat need a colour other than white to show they are turned on).</string>
     <!--Settings category for 'navigation' items -->
     <!--Settings category for 'notification' items -->
     <!-- Settings title for inverting the notification drawer text & icons -->
@@ -238,6 +227,7 @@
     <!-- ## Folder browsing ## -->
     <!-- -->
     <!-- -->
+    <!-- -->
     <!-- Menu option to save current folder as initial (starting) directory -->
     <!-- Label in folder view - number of folders within the current folder -->
     <!-- -->
@@ -263,8 +253,6 @@
     <!-- Year (singular)-->
     <!-- Genre (singular)-->
     <!-- Album artist (singular)-->
-    <!-- ## Lyrics ## -->
-    <!-- -->
     <!-- ## Equalizer ## -->
     <!-- Menu item to open the equalizer -->
     <string name="equalizer">Equaliser</string>
@@ -282,10 +270,18 @@
     <!-- -->
     <!-- ## Sort options ## -->
     <!-- ## Sleep Timer ## -->
-    <!-- Options Menu - Sleep Timer Title -->
-    <!-- -->
+    <!-- Sleep timer title -->
+    <!--Sleep timer "Play last song to end" -->
     <!-- Sleep timer "set" -->
-    <!-- Sleep timer "set" -->
+    <!-- Sleep timer "Stop" -->
+    <!-- Sleep timer stop message "Stop sleep timer?" -->
+    <!-- Toast when sleep timer is set -->
+    <!-- Sleep timer "Set time..." -->
+    <!-- Sleep timer "5 minutes" -->
+    <!-- Sleep timer "15 minutes" -->
+    <!-- Sleep timer "30 minutes" -->
+    <!-- Sleep timer "1 hour" -->
+    <!-- Sleep timer label "Minutes" (limited space here) -->
     <!-- Button name in time span picker -->
     <!-- Title of time span picker -->
     <!-- ## Notification bar text ## -->
@@ -318,9 +314,9 @@
     <!-- Default name of album artist that doesn't have a name in the metadata -->
     <!-- Default name of genre that doesn't have a name in the metadata -->
     <!-- Default name of album artist that doesn't have a name in the metadata -->
+    <!-- Default value if album year unknown -->
     <!-- Song Info overflow option-->
     <!-- Artwork Download Service Label-->
-    <!-- ## Better Pickers Strings ## -->
     <!-- Accessibility button description -->
     <!-- Accessibility button description -->
     <!-- Accessibility button description -->
@@ -355,4 +351,9 @@
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <!-- Search Filter-->
     <!-- Changelog -->
+    <!-- Lyrics -->
+    <!-- QuickLyric button -->
+    <!-- Button for lyrics -->
+    <!-- Shown when there are no lyrics -->
+    <!-- QuickLyric info dialog message-->
 </resources>

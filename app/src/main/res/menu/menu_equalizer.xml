@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_equalizer"
+        android:title="@string/equalizer"
+        app:actionViewClass="com.afollestad.aesthetic.AestheticSwitchCompat"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/menu_dsp"
+        android:icon="@drawable/ic_settings_24dp"
+        android:title="@string/open_dsp"
+        app:showAsAction="ifRoom"/>
+
+</menu>

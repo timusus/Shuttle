@@ -4,7 +4,6 @@
     <!-- Shown when a user attempts to edit tags, but they don't have a 'DocumentProvider' available to pick the directory of their music (and thus give permission to Shuttle)-->
     <string name="R.string.toast_no_document_provider">Kein Dokumenten-Provider verfügbar um diese Erlaubnisanfrage zu bearbeiten.</string>
     <!-- Displayed when an M3U playlist is being saved, but it already exists -->
-    <string name="playlist_save_exists">"Playlist ist bereits vorhanden. "</string>
     <!-- Displayed when an M3U playlist save fails -->
     <string name="playlist_save_failed">Playlist konnte nicht gespeichert werden</string>
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
@@ -44,16 +43,6 @@
     </plurals>
     <!-- Toast after selecting an empty playlist -->
     <string name="emptyplaylist">Ausgewählte Playlist ist leer.</string>
-    <!-- Used in sleep message. Example 2 hours (and) 5 minutes -->
-    <string name="and">" und "</string>
-    <!-- Alarm confirmation toast: singular hour -->
-    <string name="hour">" Stunde"</string>
-    <!-- Alarm confirmation toast: plural hours -->
-    <string name="hours">" Stunden"</string>
-    <!-- Alarm confirmation toast: plural minutes -->
-    <string name="minutes">" Minuten"</string>
-    <!-- Alarm toast: Sleep timer set for -->
-    <string name="sleep_message">"Einschlaf-Timer gesetzt f\u00fcr "</string>
     <!-- -->
     <string name="initial_dir_set_message">" als Startverzeichnis gesetzt"</string>
     <!-- Transient popup message shown after deleting a playlist -->
@@ -61,10 +50,6 @@
     <!-- Transient popup message shown after renaming a playlist -->
     <string name="playlist_renamed_message">Playlist umbenannt.</string>
     <!-- Toast confirming that song(s) was/were deleted. -->
-    <plurals name="NNNtracksdeleted">
-        <item quantity="one">1 Titel wurde gelöscht.</item>
-        <item quantity="other"><xliff:g id="SONGS_TO_DELETE">%d</xliff:g> Titel wurden gelöscht.</item>
-    </plurals>
     <!-- -->
     <plurals name="NNNtrackstoqueue">
         <item quantity="one">1 Titel in die Warteschlange aufgenommen.</item>
@@ -72,23 +57,16 @@
 		"</item>
     </plurals>
     <!-- Toasts after adding song(s) to playlists -->
-    <plurals name="NNNtrackstofavourites">
-        <item quantity="one">1 Titel wurde zu den Favoriten hinzugefügt.</item>
-        <item quantity="other"><xliff:g id="number" example="27">%d</xliff:g> Titel wurden zu den Favoriten hinzugefügt.</item>
-    </plurals>
     <string name="song_to_favourites"><xliff:g id="song_name">%s</xliff:g> zu Favoriten hinzugefügt.</string>
     <string name="song_removed_from_favourites"><xliff:g id="song_name">%s</xliff:g> aus Favoriten entfernt.</string>
     <!-- ## Dialogs ## -->
     <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_tite">Neustart erforderlich</string>
     <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_message">Diese Veränderungen treten erst in Kraft, wenn Shuttle neu gestartet wird</string>
     <!-- Restart now button -->
     <string name="restart_button">Neu starten</string>
     <!-- Displays when picking a theme color -->
     <string name="color_pick">Wähle eine Farbe</string>
     <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
-    <string name="dialog_custom">Benutzerd.</string>
     <!-- Displays when sharing a file fails -->
     <string name="share_failed">Entschuldige, diese Datei konnte nicht geteilt werden.</string>
     <!-- Displays when you click 'share' -->
@@ -123,8 +101,6 @@
         \n• Ordneransicht
         \n• ChromeCast-Unterstützung
         \n\nAußerdem unterstützt du die weitere Entwicklung.\n\nWenn du Shuttle+ bereits besitzt ist ein Upgrade nicht nötig.</string>
-    <string name="get_pro_button_play_store">Play Store</string>
-    <string name="get_pro_button_amazon">Amazon</string>
     <string name="btn_upgrade">Upgrade</string>
     <!-- -->
     <string name="get_pro_button_no">Nein Danke</string>
@@ -160,14 +136,12 @@
     <string name="delete_file_confirmation_dialog">Bist Du sicher, dass Du die Datei \"<xliff:g id="file">%s</xliff:g>\" endgültig löschen willst?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">Bist du sicher, dass du alle Bilder endgültig löschen willst?</string>
-    <!-- QuickLyric button -->
-    <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
     <string name="dialog_title_set_ringtone">Klingelton festlegen</string>
     <!-- "Set Ringtone" message -->
     <string name="dialog_message_set_ringtone">Shuttle benötigt Schreibrechte damit ein Klingelton gesetzt werden kann.\n\nVersuche das einstellen erneut, wenn diese Rechte gewährt wurden.</string>
     <!-- Message displayed in dialog when attempting to add duplicates to playlist -->
-    <string name="dialog_message_playlist_add_duplicate">"<xliff:g id="artist">%s</xliff:g> - <xliff:g id="song">%s</xliff:g> existiert bereits in dieser Playlist. Trotzdem hinzufügen? "</string>
+    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%1$s</xliff:g> - <xliff:g id="song">%2$s</xliff:g> existiert bereits in dieser Playlist. Trotzdem hinzufügen?</string>
     <!-- Checkbox text 'apply to all' -->
     <string name="dialog_checkbox_playlist_duplicate_apply_all">Auf alle anwenden (<xliff:g id="number">%d</xliff:g>)</string>
     <!-- Title displayed in dialog when attempting to add duplicates to playlist -->
@@ -197,17 +171,16 @@
     <string name="fav_add">Zu Favoriten hinzufügen</string>
     <!-- Context menu item -->
     <string name="play_selection">Wiedergeben</string>
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
+    <!-- Multi select menu item-->
     <!-- Context menu item -->
-    <string name="add_to_playlist">Zur Playlist hinzufügen</string>
     <!-- Context menu item -->
     <string name="new_playlist">Neu</string>
-    <!-- Button for lyrics -->
-    <string name="lyrics">Songtext</string>
     <!-- menu item to save the current list as a new playlist -->
     <string name="save_as_playlist">Als Playlist speichern</string>
     <!-- Context menu item to remove the selected item from the playlist -->
-    <string name="remove_from_playlist">Von Playlist entfernen</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
+    <!-- Context menu item to remove the selected item from the queue -->
     <string name="remove_from_queue">Aus Warteschlange entfernen</string>
     <!-- Context menu item -->
     <string name="play_next">Nächster Titel</string>
@@ -218,12 +191,10 @@
     <!-- -->
     <string name="library_title">Bibliothek</string>
     <!-- -->
-    <string name="share_title">Teilen</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Suche</string>
     <string name="search_filter">Filter</string>
     <!-- Playlist context menu item to delete the selected playlist. -->
-    <string name="delete_playlist_menu">Löschen</string>
     <!-- Playlist context menu item to clear the selected playlist. -->
     <string name="clear_playlist_menu">Leeren</string>
     <!-- Playlist context menu item to edit the selected playlist -->
@@ -238,8 +209,6 @@
     <string name="nowplaying_title">Aktuelle Wiedergabe</string>
     <!-- -->
     <string name="up_next_title">als Nächstes</string>
-    <!-- Context menu item -->
-    <string name="add_to_queue">Zur Warteschlange hinzufügen</string>
     <!-- Popup menu item -->
     <string name="go_to">Gehe zu...</string>
     <!-- 'More' button -->
@@ -253,9 +222,7 @@
     <string name="navigation_drawer_close">Navigationsmenü schliessen</string>
     <!-- ## Preference Menu ## -->
     <!--Settings title for white accent color) -->
-    <string name="pref_title_theme_white_accent">Weiße Akzentfarbe verwenden</string>
     <!--Settings summary for white accent color-->
-    <string name="pref_summary_theme_white_accent">Verwendet Weiß für alle Farbakzente, außer den Statusanzeigen (Shuffle und Wiederholen benötigen eine andere Farbe als Weiß um darzustellen, dass sie eingeschaltet sind).</string>
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">Navigation</string>
     <!--Settings category for 'notification' items -->
@@ -289,7 +256,6 @@
     <string name="pref_title_theme_light">Helles Theme</string>
     <string name="pref_title_theme_black">Schwarz</string>
     <!--Settings summary for the downloading more themes -->
-    <string name="pref_summary_get_pro_themes">"Weitere Themen sind in Shuttle+ verfügbar "</string>
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">White/Blacklist</string>
     <!--Settings title for viewing blacklist-->
@@ -301,7 +267,6 @@
     <!--Settings title for clearing whitelist-->
     <string name="pref_title_clear_whitelist">Leeren</string>
     <!--Settings title for clearing whitelist-->
-    <string name="pref_title_update_whitelist">Update</string>
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">Albencover zuschneiden</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -361,9 +326,7 @@
     <string name="pref_summary_placeholders">"Platzhalter im Gmail-Stil werden verwendet. Wenn abgewählt, wird das Shuttle-Symbol als Platzhalter verwendet.
     "</string>
     <!-- Settings title for the enable lockscreen controls checkbox -->
-    <string name="pref_title_lockscreen">Albumcover im Sperrbildschirm anzeigen</string>
     <!-- Settings summary for the enable lockscreen controls checkbox -->
-    <string name="pref_summary_lockscreen">Aktiviert / deaktiviert die Cover-Anzeige im Sperrbildschirm</string>
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">Anzeigeeinstellungen</string>
     <!-- Settings title for the keep screen on checkbox -->
@@ -408,7 +371,7 @@
     <string name="pref_summary_simple_download">"Simple Last.FM Scrobbler aus dem Play Store herunterladen
 	"</string>
     <!-- Settings title for the About heading -->
-    <string name="pref_title_about">Versionhistorie</string>
+    <string name="pref_title_changelog">Versionhistorie</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Support</string>
     <string name="pref_title_version">Version</string>
@@ -464,7 +427,7 @@
     <string name="disc_number">Album \#</string>
     <string name="disc_total">Gesamtanzahl Alben</string>
     <!-- Track count. i.e "1 of 15" -->
-    <string name="track_count"><xliff:g id="track">%s</xliff:g> von <xliff:g id="total tracks">%s</xliff:g></string>
+    <string name="track_count"><xliff:g id="track">%1$s</xliff:g> von <xliff:g id="total tracks">%2$s</xliff:g></string>
     <!-- Button text for saving tags  -->
     <string name="save">Speichern</string>
     <!-- Message displayed when tag editing fails -->
@@ -480,6 +443,7 @@
     <string name="rename_folder">Ordner umbenennen</string>
     <!-- -->
     <string name="rename_file">Datei umbenennen</string>
+    <!-- -->
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">Als Start-Verzeichnis einstellen</string>
     <!-- Label in folder view - number of folders within the current folder -->
@@ -539,9 +503,6 @@
     <string name="genre_title">Genre</string>
     <!-- Album artist (singular)-->
     <string name="album_artist_title">Album-Interpret</string>
-    <!-- ## Lyrics ## -->
-    <!-- -->
-    <string name="no_lyrics">Keine eingebetteten Songtexte gefunden</string>
     <!-- ## Equalizer ## -->
     <!-- Menu item to open the equalizer -->
     <string name="equalizer">Equalizer</string>
@@ -590,14 +551,19 @@
     <string name="sort_files_album_name">Albumname</string>
     <string name="sort_files_track_name">Songname</string>
     <!-- ## Sleep Timer ## -->
-    <!-- Options Menu - Sleep Timer Title -->
-    <string name="timer">Einschlaf-Timer</string>
-    <!-- -->
+    <!-- Sleep timer title -->
+    <!--Sleep timer "Play last song to end" -->
     <string name="sleep_timer_play_to_end">Spiele den letzten Song zu Ende</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_set">Einstellen</string>
-    <!-- Sleep timer "set" -->
-    <string name="timer_stop">Anhalten</string>
+    <!-- Sleep timer "Stop" -->
+    <!-- Sleep timer stop message "Stop sleep timer?" -->
+    <!-- Toast when sleep timer is set -->
+    <!-- Sleep timer "Set time..." -->
+    <!-- Sleep timer "5 minutes" -->
+    <!-- Sleep timer "15 minutes" -->
+    <!-- Sleep timer "30 minutes" -->
+    <!-- Sleep timer "1 hour" -->
+    <!-- Sleep timer label "Minutes" (limited space here) -->
     <!-- Button name in time span picker -->
     <string name="button_done">Fertig</string>
     <!-- Title of time span picker -->
@@ -657,21 +623,15 @@
     <string name="action_mode_selection_count"><xliff:g id="number">%d</xliff:g> ausgewählt</string>
     <!-- ## Unknown artist/album metadata ##-->
     <!-- Default name of artist that doesn't have a name in the metadata -->
-    <string name="unknown_artist_name">Unbekannter Interpret</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_name">Unbekanntes Album</string>
     <!-- Default name of genre that doesn't have a name in the metadata -->
-    <string name="unknown_genre_name">Unbekanntes Genre</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_artist_name">Unbekannter Album-Interpret</string>
+    <!-- Default value if album year unknown -->
+    <string name="unknown_year">Unbekanntes Jahr</string>
     <!-- Song Info overflow option-->
     <string name="song_info">Titel-Info</string>
     <!-- Artwork Download Service Label-->
     <string name="download_service">Lade Service</string>
-    <!-- ## Better Pickers Strings ## -->
-    <string name="picker_set">OK</string>
-    <string name="timer_delete">Löschen</string>
-    <string name="time_picker_time_seperator">:</string>
     <!-- Accessibility button description -->
     <string name="btn_play">Abspielen/Pause</string>
     <!-- Accessibility button description -->
@@ -683,7 +643,6 @@
     <!-- Accessibility button description -->
     <string name="btn_prev">Zurück</string>
     <!-- Accessibility button description -->
-    <string name="btn_queue">Zeige Warteschlange</string>
     <!-- Accessibility button description -->
     <string name="btn_close">Schließen</string>
     <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
@@ -699,13 +658,11 @@
     <!-- Accessibility button description -->
     <string name="btn_shuffle_off">Shuffle aus</string>
     <!-- Accessibility button description -->
-    <string name="btn_show_queue">Warteschlange zeigen</string>
     <!-- Accessibility button description -->
     <string name="btn_fab_shuffle">Zufallswiedergabe für aktuelle Liste starten.</string>
     <!-- Accessibility now playing 'mini player' description. Example: Now playing <Wannabe> by <Spice Girls> -->
     <string name="btn_now_playing">Spielt %1$s von %2$s</string>
     <!-- Accessibility 'show lyrics' -->
-    <string name="btn_show_lyrics">Text anzeigen</string>
     <string name="pref_summary_restore_purchases">Klicke hier wenn Shuttle trotz Upgrade noch als Gratis-Version angezeigt wird.</string>
     <string name="pref_title_restore_purchases">Käufe wiederherstellen</string>
     <string name="blacklist_empty">Du hast keine Titel in deiner Blacklist!</string>
@@ -725,7 +682,6 @@
     <string name="iab_purchase_failed">Etwas ist schiefgelaufen. Bitte versuch es später erneut...</string>
     <string name="snackbar_rate_text">Gefällt dir Shuttle ?</string>
     <string name="snackbar_rate_action">Bewerte die App</string>
-    <string name="toast_purchase_failed">Etwas ist schief gelaufen. Bitte versuch es später nochmal..</string>
     <string name="dialog_create_playlist_error">Fehler beim erstellen einer Playlist</string>
     <!-- Artwork picker -->
     <string name="artwork_edit">Cover bearbeiten</string>
@@ -755,14 +711,22 @@
     <!-- "Folders" Shortcut label disabled. (I don't think this ever happens)-->
     <string name="shortcut_folders_disabled">Ordner nicht verfügbar</string>
     <!-- "Playlist" Shortcut label. Max 10 characters.-->
-    <string name="shortcut_playlist_short_label">Playlist</string>
     <!-- "Playlist" Shortcut long label. Max 25 characters.-->
-    <string name="shortcut_playlist_long_label">Favoriten-Playlist öffnen</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
-    <string name="shortcut_playlist_disabled">Playlist nicht verfügbar</string>
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">Album <xliff:g id="number">%d</xliff:g></string>
     <!-- Search Filter-->
+    <string name="search_fuzzy">Fuzzy</string>
+    <string name="search_artists">Interpreten</string>
+    <string name="search_albums">Alben</string>
     <!-- Changelog -->
     <string name="changelog_show_on_launch">Beim Appstart anzeigen</string>
+    <!-- Lyrics -->
+    <!-- QuickLyric button -->
+    <string name="quicklyric">QuickLyric</string>
+    <!-- Button for lyrics -->
+    <string name="lyrics">Songtext</string>
+    <!-- Shown when there are no lyrics -->
+    <string name="no_lyrics">Keine eingebetteten Songtexte gefunden</string>
+    <!-- QuickLyric info dialog message-->
 </resources>

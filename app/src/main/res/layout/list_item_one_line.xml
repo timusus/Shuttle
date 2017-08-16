@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.simplecity.amp_library.ui.views.ForegroundLinearLayout
+<android.support.design.internal.ForegroundLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,28 +7,21 @@
     android:descendantFocusability="blocksDescendants"
     android:foreground="?attr/list_selector"
     android:gravity="center"
-    android:orientation="horizontal"
-    android:paddingLeft="16dp"
-    android:paddingRight="8dp">
+    android:orientation="horizontal">
 
     <TextView
         android:id="@+id/line_one"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:layout_weight="1"
         android:ellipsize="end"
         android:gravity="center_vertical"
+        android:maxLines="1"
         android:textSize="16sp"
-        tools:text="Line One"
-        android:maxLines="1" />
+        tools:text="Line One"/>
 
-    <com.simplecity.amp_library.ui.views.NonScrollImageButton
-        android:id="@+id/btn_overflow"
-        android:layout_width="40dp"
-        android:layout_height="48dp"
-        android:layout_marginLeft="-4dp"
-        android:layout_marginRight="4dp"
-        android:alpha="0.8"
-        android:background="@null"
-        android:src="@drawable/ic_overflow_white"/>
-</com.simplecity.amp_library.ui.views.ForegroundLinearLayout>
+    <include layout="@layout/overflow_button"/>
+
+</android.support.design.internal.ForegroundLinearLayout>

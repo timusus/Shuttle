@@ -59,7 +59,7 @@
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/btn_prev"
                 android:gravity="center_vertical"
-                android:src="@drawable/ic_prev_white"/>
+                android:src="@drawable/ic_skip_previous_24dp"/>
 
             <ImageButton
                 android:id="@+id/play_button"
@@ -69,7 +69,7 @@
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/btn_play_pause"
                 android:gravity="center_vertical"
-                android:src="@drawable/ic_play_white"/>
+                android:src="@drawable/ic_play_24dp"/>
 
             <ImageButton
                 android:id="@+id/next_button"
@@ -79,7 +79,7 @@
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/btn_skip"
                 android:gravity="center_vertical"
-                android:src="@drawable/ic_skip_white"/>
+                android:src="@drawable/ic_skip_next_24dp"/>
         </LinearLayout>
     </LinearLayout>
 

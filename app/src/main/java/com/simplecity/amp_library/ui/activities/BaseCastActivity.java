@@ -15,18 +15,18 @@ public abstract class BaseCastActivity extends BaseActivity {
 
     private static final String TAG = "BaseCastActivity";
 
-    public VideoCastManager mCastManager;
-    private VideoCastConsumer mCastConsumer;
+    public VideoCastManager castManager;
+    private VideoCastConsumer castConsumer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (ShuttleUtils.isUpgraded()) {
-            mCastManager = VideoCastManager.getInstance();
+            castManager = VideoCastManager.getInstance();
         }
 
-        mCastConsumer = new VideoCastConsumerImpl() {
+        castConsumer = new VideoCastConsumerImpl() {
             @Override
             public void onConnectionSuspended(int cause) {
                 Log.d(TAG, "onConnectionSuspended() was called with cause: " + cause);
@@ -39,16 +39,16 @@ public abstract class BaseCastActivity extends BaseActivity {
             }
         };
 
-        if (mCastManager != null) {
-            mCastManager.reconnectSessionIfPossible();
+        if (castManager != null) {
+            castManager.reconnectSessionIfPossible();
         }
     }
 
     @Override
     protected void onPause() {
 
-        if (mCastManager != null) {
-            mCastManager.removeVideoCastConsumer(mCastConsumer);
+        if (castManager != null) {
+            castManager.removeVideoCastConsumer(castConsumer);
         }
 
         super.onPause();
@@ -59,15 +59,15 @@ public abstract class BaseCastActivity extends BaseActivity {
         super.onResume();
 
         if (ShuttleUtils.isUpgraded()) {
-            mCastManager = VideoCastManager.getInstance();
-            mCastManager.addVideoCastConsumer(mCastConsumer);
+            castManager = VideoCastManager.getInstance();
+            castManager.addVideoCastConsumer(castConsumer);
         }
     }
 
     @Override
     public boolean dispatchKeyEvent(@NonNull KeyEvent event) {
-        if (mCastManager != null) {
-            return mCastManager.onDispatchVolumeKeyEvent(event, ShuttleApplication.VOLUME_INCREMENT)
+        if (castManager != null) {
+            return castManager.onDispatchVolumeKeyEvent(event, ShuttleApplication.VOLUME_INCREMENT)
                     || super.dispatchKeyEvent(event);
         }
         return super.dispatchKeyEvent(event);

@@ -382,15 +382,15 @@ public class MiniController extends RelativeLayout implements IMiniController {
     }
 
     private void loadViews() {
-        mIcon = (ImageView) findViewById(R.id.icon_view);
-        mTitle = (TextView) findViewById(R.id.title_view);
-        mSubTitle = (TextView) findViewById(R.id.subtitle_view);
-        mPlayPause = (ImageView) findViewById(R.id.play_pause);
-        mLoading = (ProgressBar) findViewById(R.id.loading_view);
+        mIcon = findViewById(R.id.icon_view);
+        mTitle = findViewById(R.id.title_view);
+        mSubTitle = findViewById(R.id.subtitle_view);
+        mPlayPause = findViewById(R.id.play_pause);
+        mLoading = findViewById(R.id.loading_view);
         mMainContainer = findViewById(R.id.container_current);
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-        mUpcomingIcon = (ImageView) findViewById(R.id.icon_view_upcoming);
-        mUpcomingTitle = (TextView) findViewById(R.id.title_view_upcoming);
+        mProgressBar = findViewById(R.id.progressBar);
+        mUpcomingIcon = findViewById(R.id.icon_view_upcoming);
+        mUpcomingTitle = findViewById(R.id.title_view_upcoming);
         mUpcomingContainer = findViewById(R.id.container_upcoming);
         mUpcomingPlay = findViewById(R.id.play_upcoming);
         mUpcomingStop = findViewById(R.id.stop_upcoming);

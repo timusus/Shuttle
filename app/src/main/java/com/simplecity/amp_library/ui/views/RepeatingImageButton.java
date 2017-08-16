@@ -1,39 +1,25 @@
-/*
- * Copyright (C) 2008 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.simplecity.amp_library.ui.views;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageButton;
 
 /**
  * A button that will repeatedly call a 'listener' method
  * as long as the button is pressed.
  */
-public class RepeatingImageButton extends ImageButton {
+public class RepeatingImageButton extends android.support.v7.widget.AppCompatImageButton {
 
-    private long mStartTime;
-    private int mRepeatCount;
-    private RepeatListener mListener;
-    long mInterval = 500;
+    private long startTime;
+    private int repeatCount;
+    private RepeatListener listener;
+    long interval = 500;
 
     public RepeatingImageButton(Context context) {
         this(context, null);
@@ -47,6 +33,10 @@ public class RepeatingImageButton extends ImageButton {
         super(context, attrs, defStyle);
         setFocusable(true);
         setLongClickable(true);
+
+        Drawable drawable = DrawableCompat.wrap(getDrawable().mutate());
+        DrawableCompat.setTint(drawable, Color.WHITE);
+        setImageDrawable(drawable);
     }
 
     /**
@@ -56,13 +46,13 @@ public class RepeatingImageButton extends ImageButton {
      * @param l The listener that will be called
      */
     public void setRepeatListener(RepeatListener l) {
-        mListener = l;
+        listener = l;
     }
 
     @Override
     public boolean performLongClick() {
-        mStartTime = SystemClock.elapsedRealtime();
-        mRepeatCount = 0;
+        startTime = SystemClock.elapsedRealtime();
+        repeatCount = 0;
         post(mRepeater);
         return true;
     }
@@ -72,9 +62,9 @@ public class RepeatingImageButton extends ImageButton {
         if (event.getAction() == MotionEvent.ACTION_UP) {
             // remove the repeater, but call the hook one more time
             removeCallbacks(mRepeater);
-            if (mStartTime != 0) {
+            if (startTime != 0) {
                 doRepeat(true);
-                mStartTime = 0;
+                startTime = 0;
             }
         }
         return super.onTouchEvent(event);
@@ -100,9 +90,9 @@ public class RepeatingImageButton extends ImageButton {
             case KeyEvent.KEYCODE_ENTER:
                 // remove the repeater, but call the hook one more time
                 removeCallbacks(mRepeater);
-                if (mStartTime != 0) {
+                if (startTime != 0) {
                     doRepeat(true);
-                    mStartTime = 0;
+                    startTime = 0;
                 }
         }
         return super.onKeyUp(keyCode, event);
@@ -112,15 +102,15 @@ public class RepeatingImageButton extends ImageButton {
         public void run() {
             doRepeat(false);
             if (isPressed()) {
-                postDelayed(this, mInterval);
+                postDelayed(this, interval);
             }
         }
     };
 
     void doRepeat(boolean last) {
         long now = SystemClock.elapsedRealtime();
-        if (mListener != null) {
-            mListener.onRepeat(this, now - mStartTime, last ? -1 : mRepeatCount++);
+        if (listener != null) {
+            listener.onRepeat(this, now - startTime, last ? -1 : repeatCount++);
         }
     }
 
@@ -132,10 +122,10 @@ public class RepeatingImageButton extends ImageButton {
          *
          * @param v           The button as a View.
          * @param duration    The number of milliseconds the button has been pressed so far.
-         * @param repeatcount The number of previous calls in this sequence.
+         * @param repeatCount The number of previous calls in this sequence.
          *                    If this is going to be the last call in this sequence (i.e. the user
          *                    just stopped pressing the button), the value will be -1.
          */
-        void onRepeat(View v, long duration, int repeatcount);
+        void onRepeat(View v, long duration, int repeatCount);
     }
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:enabled="false"
+        android:title="@string/albums_title"/>
+
+    <group
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/sort_album_default"
+            android:title="@string/sort_default"/>
+        <item
+            android:id="@+id/sort_album_name"
+            android:title="@string/sort_album_name"/>
+        <item
+            android:id="@+id/sort_album_year"
+            android:title="@string/sort_album_year"/>
+    </group>
+
+    <item
+        android:id="@+id/sort_albums_ascending"
+        android:checkable="true"
+        android:checked="true"
+        android:title="@string/sort_ascending"/>
+
+</menu>

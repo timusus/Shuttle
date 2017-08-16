@@ -1,0 +1,54 @@
+apply plugin: 'com.android.library'
+apply from: 'dependencies.gradle'
+
+ext {
+    PUBLISH_GROUP_ID = 'com.afollestad'
+    PUBLISH_ARTIFACT_ID = 'aesthetic'
+    PUBLISH_VERSION = versions.publishVersion
+}
+
+android {
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
+
+    defaultConfig {
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.compileSdk
+        versionCode versions.publishVersionCode
+        versionName versions.publishVersion
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        main.res.srcDirs = [
+                'src/main/res',
+                'src/main/res-public'
+        ]
+    }
+}
+
+dependencies {
+    repositories {
+        maven {
+            url 'https://maven.google.com'
+        }
+    }
+
+    compile 'com.android.support:appcompat-v7:' + versions.supportLib
+    compile 'com.android.support:cardview-v7:' + versions.supportLib
+
+    compile 'com.android.support:design:' + versions.supportLib
+    compile 'com.android.support:recyclerview-v7:' + versions.supportLib
+
+    compile 'io.reactivex.rxjava2:rxjava:' + versions.rxJava
+    compile 'io.reactivex.rxjava2:rxandroid:' + versions.rxAndroid
+    compile 'com.f2prateek.rx.preferences2:rx-preferences:' + versions.rxPrefs
+
+    compile 'me.zhanghai.android.materialprogressbar:library:' + versions.mdProgressBar
+}
+
+//apply from: 'https://raw.githubusercontent.com/afollestad/aidanfollestad.com/master/android-lib-release.gradle'

@@ -4,7 +4,6 @@
     <!-- Shown when a user attempts to edit tags, but they don't have a 'DocumentProvider' available to pick the directory of their music (and thus give permission to Shuttle)-->
     <string name="R.string.toast_no_document_provider">Không có DocumentProvider khả dụng để xử lý yêu cầu truy nhập</string>
     <!-- Displayed when an M3U playlist is being saved, but it already exists -->
-    <string name="playlist_save_exists">Danh sách đã tồn tại</string>
     <!-- Displayed when an M3U playlist save fails -->
     <string name="playlist_save_failed">Không thể lưu danh sách</string>
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
@@ -43,16 +42,6 @@
     </plurals>
     <!-- Toast after selecting an empty playlist -->
     <string name="emptyplaylist">Danh sách đã chọn rỗng.</string>
-    <!-- Used in sleep message. Example 2 hours (and) 5 minutes -->
-    <string name="and">" v\u00e0 "</string>
-    <!-- Alarm confirmation toast: singular hour -->
-    <string name="hour">" gi\u1edd"</string>
-    <!-- Alarm confirmation toast: plural hours -->
-    <string name="hours">" gi\u1edd"</string>
-    <!-- Alarm confirmation toast: plural minutes -->
-    <string name="minutes">" ph\u00fat"</string>
-    <!-- Alarm toast: Sleep timer set for -->
-    <string name="sleep_message">"H\u1eb9n gi\u1edd t\u1eaft sau "</string>
     <!-- -->
     <string name="initial_dir_set_message">" \u0111\u1eb7t l\u00e0m th\u01b0 m\u1ee5c kh\u1edfi t\u1ea1o"</string>
     <!-- Transient popup message shown after deleting a playlist -->
@@ -60,31 +49,22 @@
     <!-- Transient popup message shown after renaming a playlist -->
     <string name="playlist_renamed_message">Đã đổi tên danh sách.</string>
     <!-- Toast confirming that song(s) was/were deleted. -->
-    <plurals name="NNNtracksdeleted">
-        <item quantity="other"><xliff:g id="songs_to_delete">%d</xliff:g> bài hát đã được xoá.</item>
-    </plurals>
     <!-- -->
     <plurals name="NNNtrackstoqueue">
         <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g>
             bài hát được thêm vào danh sách chờ.</item>
     </plurals>
     <!-- Toasts after adding song(s) to playlists -->
-    <plurals name="NNNtrackstofavourites">
-        <item quantity="other"><xliff:g id="number" example="27">%d</xliff:g> bài hát được thêm vào yêu thích.</item>
-    </plurals>
     <string name="song_to_favourites"><xliff:g id="song_name">%s</xliff:g> được thêm vào yêu thích.</string>
     <string name="song_removed_from_favourites"><xliff:g id="song_name">%s</xliff:g> được xoá khỏi yêu thích.</string>
     <!-- ## Dialogs ## -->
     <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_tite">Yêu cầu khởi động lại</string>
     <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_message">Những thay đổi này sẽ không có hiệu lực cho đến hi bạn khởi động lại Shuttle</string>
     <!-- Restart now button -->
     <string name="restart_button">Khởi động lại ngay</string>
     <!-- Displays when picking a theme color -->
     <string name="color_pick">Chọn màu</string>
     <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
-    <string name="dialog_custom">Tuỳ biến</string>
     <!-- Displays when sharing a file fails -->
     <string name="share_failed">Rất tiếc, không thể chia sẻ tập tin này</string>
     <!-- Displays when you click 'share' -->
@@ -118,8 +98,6 @@
         \nDuyệt thư mục
         \nHỗ trợ ChromeCast
         \n\nViệc này cũng giúp đỡ việc phát triển trong tương lai.\n\nBạn không cần nâng cấp nếu bạn đã có  Shuttle+</string>
-    <string name="get_pro_button_play_store">CH Play</string>
-    <string name="get_pro_button_amazon">Amazon</string>
     <string name="btn_upgrade">Nâng cấp</string>
     <!-- -->
     <string name="get_pro_button_no">Không, cảm ơn</string>
@@ -155,14 +133,12 @@
     <string name="delete_file_confirmation_dialog">Bạn chắc muốn xoá vĩnh viễn \"<xliff:g id="file">%s</xliff:g>\"?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">Bạn chắc muốn xoá vĩnh viễn tất cả ảnh bìa khỏi thiết bị?</string>
-    <!-- QuickLyric button -->
-    <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
     <string name="dialog_title_set_ringtone">Đặt làm nhạc chuông</string>
     <!-- "Set Ringtone" message -->
     <string name="dialog_message_set_ringtone">Shuttle yêu cầu quyền \'ghi thiết lập\' để đặt nhạc chuông.\n\nSau khi cấp quyền, hãy thử đặt nhạc chuông lần nữa.</string>
     <!-- Message displayed in dialog when attempting to add duplicates to playlist -->
-    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%s</xliff:g> - <xliff:g id="song">%s</xliff:g> đã có trong danh sách. Vẫn cứ thêm vào?</string>
+    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%1$s</xliff:g> - <xliff:g id="song">%2$s</xliff:g> đã có trong danh sách. Vẫn cứ thêm vào?</string>
     <!-- Checkbox text 'apply to all' -->
     <string name="dialog_checkbox_playlist_duplicate_apply_all">Áp dụng cho tất cả (<xliff:g id="number">%d</xliff:g>)</string>
     <!-- Title displayed in dialog when attempting to add duplicates to playlist -->
@@ -192,17 +168,19 @@
     <string name="fav_add">Thêm vào Yêu thích</string>
     <!-- Context menu item -->
     <string name="play_selection">Phát</string>
+    <!-- Multi select menu item-->
+    <string name="menu_add_to">Thêm vào...</string>
+    <!-- Multi select menu item-->
+    <string name="menu_playlist">Danh sách</string>
+    <!-- Multi select menu item-->
+    <string name="menu_queue">Danh sách chờ</string>
     <!-- Context menu item -->
-    <string name="add_to_playlist">Thêm vào danh sách</string>
     <!-- Context menu item -->
     <string name="new_playlist">Mới</string>
-    <!-- Button for lyrics -->
-    <string name="lyrics">Lời bài hát</string>
     <!-- menu item to save the current list as a new playlist -->
     <string name="save_as_playlist">Lưu danh sách</string>
     <!-- Context menu item to remove the selected item from the playlist -->
-    <string name="remove_from_playlist">Xoá khỏi danh sách</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
+    <!-- Context menu item to remove the selected item from the queue -->
     <string name="remove_from_queue">Xoá khỏi danh sách chờ</string>
     <!-- Context menu item -->
     <string name="play_next">Phát kế tiếp</string>
@@ -213,12 +191,10 @@
     <!-- -->
     <string name="library_title">Thư viện</string>
     <!-- -->
-    <string name="share_title">Chia sẻ</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Tìm kiếm</string>
     <string name="search_filter">Lọc</string>
     <!-- Playlist context menu item to delete the selected playlist. -->
-    <string name="delete_playlist_menu">Xoá</string>
     <!-- Playlist context menu item to clear the selected playlist. -->
     <string name="clear_playlist_menu">Xoá</string>
     <!-- Playlist context menu item to edit the selected playlist -->
@@ -233,8 +209,6 @@
     <string name="nowplaying_title">Đang phát</string>
     <!-- -->
     <string name="up_next_title">Tiếp theo</string>
-    <!-- Context menu item -->
-    <string name="add_to_queue">Thêm vào danh sách chờ</string>
     <!-- Popup menu item -->
     <string name="go_to">Chuyển đến...</string>
     <!-- 'More' button -->
@@ -248,9 +222,7 @@
     <string name="navigation_drawer_close">Đóng ngăn điều hướng</string>
     <!-- ## Preference Menu ## -->
     <!--Settings title for white accent color) -->
-    <string name="pref_title_theme_white_accent">Dùng màu chủ đề trắng</string>
     <!--Settings summary for white accent color-->
-    <string name="pref_summary_theme_white_accent">Dùng màu trắng cho tất cả các màu nhấn mạnh, trừ những màu cần để hiện tình trạng (ngẫu nhiên và lặp lại cần một màu khác màu trắng đển hiển thị khi chúng được bật)</string>
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">Điều hướng</string>
     <!--Settings category for 'notification' items -->
@@ -284,7 +256,6 @@
     <string name="pref_title_theme_light">Sáng</string>
     <string name="pref_title_theme_black">Đen</string>
     <!--Settings summary for the downloading more themes -->
-    <string name="pref_summary_get_pro_themes">Nhiều chủ đề hơn trong Shuttle+</string>
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">Danh sách trắng/đen</string>
     <!--Settings title for viewing blacklist-->
@@ -296,7 +267,6 @@
     <!--Settings title for clearing whitelist-->
     <string name="pref_title_clear_whitelist">Xoá</string>
     <!--Settings title for clearing whitelist-->
-    <string name="pref_title_update_whitelist">Cập nhật</string>
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">Cắt ảnh album</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -353,9 +323,7 @@
     <string name="pref_summary_placeholders">Hiển thị mặc định chỗ dành sẵn kiểu \'Gmail\'.
  Nếu không chọn, biểu tượng Shuttle sẽ được sử dụng làm chỗ dành sẵn</string>
     <!-- Settings title for the enable lockscreen controls checkbox -->
-    <string name="pref_title_lockscreen">Kích hoạt ảnh bìa màn hình khoá</string>
     <!-- Settings summary for the enable lockscreen controls checkbox -->
-    <string name="pref_summary_lockscreen">Kích hoạt/vô hiệu ảnh bìa trên màn hình khoá.</string>
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">Hiển thị</string>
     <!-- Settings title for the keep screen on checkbox -->
@@ -397,7 +365,7 @@
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <string name="pref_summary_simple_download">Tải Simple Last.fm scrobbler trên CH Play</string>
     <!-- Settings title for the About heading -->
-    <string name="pref_title_about">Thay đổi</string>
+    <string name="pref_title_changelog">Thay đổi</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Hỗ trợ</string>
     <string name="pref_title_version">Phiên bản</string>
@@ -453,7 +421,7 @@
     <string name="disc_number">Đĩa \#</string>
     <string name="disc_total">Tổng số đĩa</string>
     <!-- Track count. i.e "1 of 15" -->
-    <string name="track_count"><xliff:g id="track">%s</xliff:g> trên <xliff:g id="total tracks">%s</xliff:g></string>
+    <string name="track_count"><xliff:g id="track">%1$s</xliff:g> trên <xliff:g id="total tracks">%2$s</xliff:g></string>
     <!-- Button text for saving tags  -->
     <string name="save">Lưu</string>
     <!-- Message displayed when tag editing fails -->
@@ -469,6 +437,8 @@
     <string name="rename_folder">Đổi tên thư mục</string>
     <!-- -->
     <string name="rename_file">Đổi tên tập tin</string>
+    <!-- -->
+    <string name="rename">Đổi tên</string>
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">Đặt làm thư mục khởi tạo</string>
     <!-- Label in folder view - number of folders within the current folder -->
@@ -524,9 +494,6 @@
     <string name="genre_title">Thể loại</string>
     <!-- Album artist (singular)-->
     <string name="album_artist_title">Album-Nghệ sĩ</string>
-    <!-- ## Lyrics ## -->
-    <!-- -->
-    <string name="no_lyrics">Không tìm thấy lời nhúng sẵn</string>
     <!-- ## Equalizer ## -->
     <!-- Menu item to open the equalizer -->
     <string name="equalizer">Bộ chỉnh âm</string>
@@ -575,14 +542,19 @@
     <string name="sort_files_album_name">Tên album</string>
     <string name="sort_files_track_name">Tên bài hát</string>
     <!-- ## Sleep Timer ## -->
-    <!-- Options Menu - Sleep Timer Title -->
-    <string name="timer">Hẹn giờ</string>
-    <!-- -->
+    <!-- Sleep timer title -->
+    <!--Sleep timer "Play last song to end" -->
     <string name="sleep_timer_play_to_end">Phát hết bài cuối</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_set">Đặt</string>
-    <!-- Sleep timer "set" -->
-    <string name="timer_stop">Dừng</string>
+    <!-- Sleep timer "Stop" -->
+    <!-- Sleep timer stop message "Stop sleep timer?" -->
+    <!-- Toast when sleep timer is set -->
+    <!-- Sleep timer "Set time..." -->
+    <!-- Sleep timer "5 minutes" -->
+    <!-- Sleep timer "15 minutes" -->
+    <!-- Sleep timer "30 minutes" -->
+    <!-- Sleep timer "1 hour" -->
+    <!-- Sleep timer label "Minutes" (limited space here) -->
     <!-- Button name in time span picker -->
     <string name="button_done">Xong</string>
     <!-- Title of time span picker -->
@@ -640,21 +612,15 @@
     <string name="action_mode_selection_count">Đã chọn <xliff:g id="number">%d</xliff:g></string>
     <!-- ## Unknown artist/album metadata ##-->
     <!-- Default name of artist that doesn't have a name in the metadata -->
-    <string name="unknown_artist_name">Nghệ sĩ chưa xác định</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_name">Album chưa xác định</string>
     <!-- Default name of genre that doesn't have a name in the metadata -->
-    <string name="unknown_genre_name">Thể loại chưa xác định</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_artist_name">Nghê sĩ album chưa xác định</string>
+    <!-- Default value if album year unknown -->
+    <string name="unknown_year">Năm chưa rõ</string>
     <!-- Song Info overflow option-->
     <string name="song_info">Thông tin bài hát</string>
     <!-- Artwork Download Service Label-->
     <string name="download_service">Dịch vụ tải xuống</string>
-    <!-- ## Better Pickers Strings ## -->
-    <string name="picker_set">OK</string>
-    <string name="timer_delete">Xoá</string>
-    <string name="time_picker_time_seperator">:</string>
     <!-- Accessibility button description -->
     <string name="btn_play">Phát</string>
     <!-- Accessibility button description -->
@@ -666,7 +632,6 @@
     <!-- Accessibility button description -->
     <string name="btn_prev">Bài trước</string>
     <!-- Accessibility button description -->
-    <string name="btn_queue">Xem danh sách chờ phát</string>
     <!-- Accessibility button description -->
     <string name="btn_close">Đóng</string>
     <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
@@ -682,13 +647,11 @@
     <!-- Accessibility button description -->
     <string name="btn_shuffle_off">Tắt ngẫu nhiên</string>
     <!-- Accessibility button description -->
-    <string name="btn_show_queue">Hiện danh sách chờ</string>
     <!-- Accessibility button description -->
     <string name="btn_fab_shuffle">Phát ngẫu nhiên danh sách hiện tại</string>
     <!-- Accessibility now playing 'mini player' description. Example: Now playing <Wannabe> by <Spice Girls> -->
     <string name="btn_now_playing">Hiện đang phát %1$s do %2$s trình bài</string>
     <!-- Accessibility 'show lyrics' -->
-    <string name="btn_show_lyrics">Hiện lời bài hát</string>
     <string name="pref_summary_restore_purchases">Nếu bạn đã nâng cấp Shuttle rồi nhưng vẫn hiện là bản miễn phí, hãy chạm vào đây.</string>
     <string name="pref_title_restore_purchases">Phục hồi mua hàng</string>
     <string name="blacklist_empty">Bạn chưa đưa bài hát nào vào danh sách đen cả</string>
@@ -708,7 +671,6 @@
     <string name="iab_purchase_failed">Có gì đó không đúng. Hãy thử lại sau.</string>
     <string name="snackbar_rate_text">Thích sử dụng Shuttle?</string>
     <string name="snackbar_rate_action">Hãy đánh giá nó!</string>
-    <string name="toast_purchase_failed">Có gì đó không đúng. Hãy thử lại sau..</string>
     <string name="dialog_create_playlist_error">Lỗi tạo danh sách phát</string>
     <!-- Artwork picker -->
     <string name="artwork_edit">Chọn ảnh bìa</string>
@@ -738,18 +700,23 @@
     <!-- "Folders" Shortcut label disabled. (I don't think this ever happens)-->
     <string name="shortcut_folders_disabled">Thư mục không khả dụng</string>
     <!-- "Playlist" Shortcut label. Max 10 characters.-->
-    <string name="shortcut_playlist_short_label">Danh sách</string>
     <!-- "Playlist" Shortcut long label. Max 25 characters.-->
-    <string name="shortcut_playlist_long_label">Mở danh sách yêu thích</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
-    <string name="shortcut_playlist_disabled">Danh sách không khả dụng</string>
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">Đĩa <xliff:g id="number">%d</xliff:g></string>
     <!-- Search Filter-->
     <string name="search_fuzzy">Gần đúng</string>
-    <string name="search_title_only">Chỉ tiêu đề</string>
     <string name="search_artists">Nghệ sĩ</string>
     <string name="search_albums">Album</string>
     <!-- Changelog -->
     <string name="changelog_show_on_launch">Hiện lúc khởi động</string>
+    <!-- Lyrics -->
+    <!-- QuickLyric button -->
+    <string name="quicklyric">QuickLyric</string>
+    <!-- Button for lyrics -->
+    <string name="lyrics">Lời bài hát</string>
+    <!-- Shown when there are no lyrics -->
+    <string name="no_lyrics">Không tìm thấy lời nhúng sẵn</string>
+    <!-- QuickLyric info dialog message-->
+    <string name="quicklyric_info">QuickLyric là một tiện ích tải lời bài hát mã nguồn mở trên CH Play.\n\nKhi được cài đặt, QuickLyric sẽ được mở từ Shuttle lúc bạn chọn nút menu \'QuickLyric\'.</string>
 </resources>

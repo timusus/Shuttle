@@ -1,46 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <com.simplecity.amp_library.ui.views.CustomPreferenceCategory
-        android:layout="@layout/preference_category"
+<android.support.v7.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v7.preference.PreferenceCategory
         android:title="@string/pref_string_title_themes">
-        <ListPreference
+
+        <Preference
             android:defaultValue="0"
-            android:entries="@array/baseThemeArray"
-            android:entryValues="@array/baseThemeValues"
             android:key="pref_theme_base"
-            android:layout="@layout/preference"
             android:summary="@string/pref_summary_base_theme"
-            android:title="@string/pref_title_base_theme" />
+            android:title="@string/pref_title_base_theme"/>
 
-        <Preference
-            android:defaultValue="-12607520"
-            android:key="pref_theme_highlight_color"
-            android:layout="@layout/preference"
+        <android.support.v7.preference.Preference
+            android:key="pref_theme_primary_color"
             android:summary="@string/pref_summary_theme_pick_color"
-            android:title="@string/pref_title_theme_pick_color" />
+            android:title="@string/pref_title_theme_pick_color"/>
 
-        <Preference
-            android:defaultValue="-16728193"
+        <android.support.v7.preference.Preference
             android:key="pref_theme_accent_color"
-            android:layout="@layout/preference"
             android:summary="@string/pref_summary_theme_pick_accent_color"
-            android:title="@string/pref_title_theme_pick_accent_color" />
+            android:title="@string/pref_title_theme_pick_accent_color"/>
 
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="pref_theme_white_accent"
-            android:layout="@layout/preference"
-            android:summary="@string/pref_summary_theme_white_accent"
-            android:title="@string/pref_title_theme_white_accent"
-            android:widgetLayout="@layout/preference_widget_checkbox" />
-
-        <CheckBoxPreference
+        <android.support.v7.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="pref_nav_bar"
-            android:layout="@layout/preference"
             android:summary="@string/pref_summary_tinted_nav"
             android:title="@string/pref_title_tinted_nav"
-            android:widgetLayout="@layout/preference_widget_checkbox" />
-    </com.simplecity.amp_library.ui.views.CustomPreferenceCategory>
-</PreferenceScreen>
+            app:defaultValue="false"/>
+
+    </android.support.v7.preference.PreferenceCategory>
+
+    <android.support.v7.preference.PreferenceCategory
+        android:title="@string/pref_group_palette">
+
+        <android.support.v7.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="pref_theme_use_palette"
+            android:summary="@string/pref_summary_palette"
+            android:title="@string/pref_title_palette"/>
+
+        <android.support.v7.preference.SwitchPreferenceCompat
+            android:dependency="pref_theme_use_palette"
+            android:key="pref_theme_use_palette_now_playing"
+            android:title="@string/pref_title_palette_now_playing"/>
+
+    </android.support.v7.preference.PreferenceCategory>
+
+</android.support.v7.preference.PreferenceScreen>

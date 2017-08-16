@@ -17,14 +17,14 @@
         android:textSize="16sp"
         tools:text="'Tool - The Patient' already exists in this playlist. Add it anyway?" />
 
-    <com.simplecity.amp_library.ui.views.CustomCheckBox
+    <CheckBox
         android:id="@+id/applyToAll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         tools:text="Apply to all (15)" />
 
-    <com.simplecity.amp_library.ui.views.CustomCheckBox
+    <CheckBox
         android:id="@+id/alwaysAdd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

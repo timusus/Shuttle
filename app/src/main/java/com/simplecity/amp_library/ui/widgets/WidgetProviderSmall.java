@@ -56,8 +56,8 @@ public class WidgetProviderSmall extends BaseWidgetProvider {
         views.setTextViewText(R.id.text2, res.getText(R.string.widget_initial_text));
 
         int textColor = mPrefs.getInt(ARG_WIDGET_TEXT_COLOR + appWidgetId, context.getResources().getColor(R.color.white));
-        views.setImageViewResource(R.id.next_button, R.drawable.ic_skip_white);
-        views.setImageViewResource(R.id.prev_button, R.drawable.ic_prev_white);
+        views.setImageViewResource(R.id.next_button, R.drawable.ic_skip_next_24dp);
+        views.setImageViewResource(R.id.prev_button, R.drawable.ic_skip_previous_24dp);
         views.setTextColor(R.id.text2, textColor);
         views.setTextColor(R.id.text1, textColor);
 
@@ -131,15 +131,15 @@ public class WidgetProviderSmall extends BaseWidgetProvider {
             final boolean isPlaying = service.isPlaying();
             if (isPlaying) {
                 if (invertIcons) {
-                    views.setImageViewBitmap(R.id.play_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_pause_white));
+                    views.setImageViewBitmap(R.id.play_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_pause_24dp));
                 } else {
-                    views.setImageViewResource(R.id.play_button, R.drawable.ic_pause_white);
+                    views.setImageViewResource(R.id.play_button, R.drawable.ic_pause_24dp);
                 }
             } else {
                 if (invertIcons) {
-                    views.setImageViewBitmap(R.id.play_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_play_white));
+                    views.setImageViewBitmap(R.id.play_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_play_24dp));
                 } else {
-                    views.setImageViewResource(R.id.play_button, R.drawable.ic_play_white);
+                    views.setImageViewResource(R.id.play_button, R.drawable.ic_play_24dp);
                 }
             }
 
@@ -149,11 +149,11 @@ public class WidgetProviderSmall extends BaseWidgetProvider {
 
             int textColor = mPrefs.getInt(ARG_WIDGET_TEXT_COLOR + appWidgetId, service.getResources().getColor(R.color.white));
             if (invertIcons) {
-                views.setImageViewBitmap(R.id.next_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_skip_white));
-                views.setImageViewBitmap(R.id.prev_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_prev_white));
+                views.setImageViewBitmap(R.id.next_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_skip_next_24dp));
+                views.setImageViewBitmap(R.id.prev_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_skip_previous_24dp));
             } else {
-                views.setImageViewResource(R.id.next_button, R.drawable.ic_skip_white);
-                views.setImageViewResource(R.id.prev_button, R.drawable.ic_prev_white);
+                views.setImageViewResource(R.id.next_button, R.drawable.ic_skip_next_24dp);
+                views.setImageViewResource(R.id.prev_button, R.drawable.ic_skip_previous_24dp);
             }
 
             views.setTextColor(R.id.text2, textColor);

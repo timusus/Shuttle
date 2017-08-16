@@ -1,17 +1,9 @@
 package com.simplecity.amp_library.ui.fragments;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,78 +15,63 @@ import android.widget.Toast;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
-import com.bignerdranch.android.multiselector.ModalMultiSelectorCallback;
-import com.bignerdranch.android.multiselector.MultiSelector;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.model.AdaptableItem;
-import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
-import com.simplecity.amp_library.sql.databases.BlacklistHelper;
-import com.simplecity.amp_library.ui.adapters.SongAdapter;
+import com.simplecity.amp_library.ui.adapters.SectionedAdapter;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
+import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
 import com.simplecity.amp_library.ui.modelviews.ShuffleView;
 import com.simplecity.amp_library.ui.modelviews.SongView;
-import com.simplecity.amp_library.utils.ColorUtils;
+import com.simplecity.amp_library.ui.views.ContextualToolbar;
+import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.DataManager;
-import com.simplecity.amp_library.utils.DialogUtils;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
-import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.SortManager;
-import com.simplecity.amp_library.utils.ThemeUtils;
+import com.simplecityapps.recycler_adapter.model.ViewModel;
+import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.Collections;
 import java.util.List;
 
-import rx.Observable;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 public class SongFragment extends BaseFragment implements
         MusicUtils.Defs,
-        RecyclerView.RecyclerListener,
-        SongAdapter.SongListener {
+        SongView.ClickListener,
+        ShuffleView.ShuffleClickListener {
 
     private static final String TAG = "SongFragment";
 
     private static final String ARG_PAGE_TITLE = "page_title";
 
-    private SharedPreferences mPrefs;
+    private FastScrollRecyclerView recyclerView;
 
-    private FastScrollRecyclerView mRecyclerView;
-
-    private SongAdapter songsAdapter;
-
-    MultiSelector multiSelector = new MultiSelector();
-
-    ActionMode actionMode;
-
-    boolean inActionMode = false;
-
-    private BroadcastReceiver mReceiver;
-
-    private SharedPreferences.OnSharedPreferenceChangeListener mSharedPreferenceChangeListener;
+    private SectionedAdapter adapter;
 
     private boolean sortOrderChanged = false;
 
-    private Subscription subscription;
+    private Disposable disposable;
 
     private ShuffleView shuffleView;
+
+    private ContextualToolbarHelper<Song> contextualToolbarHelper;
 
     public SongFragment() {
 
     }
 
     public static SongFragment newInstance(String pageTitle) {
-
         SongFragment fragment = new SongFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PAGE_TITLE, pageTitle);
         fragment.setArguments(args);
-
         return fragment;
     }
 
@@ -104,73 +81,30 @@ public class SongFragment extends BaseFragment implements
 
         setHasOptionsMenu(true);
 
-        songsAdapter = new SongAdapter();
-        songsAdapter.setListener(this);
-
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
-
-        mReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (intent.getAction() != null && intent.getAction().equals("restartLoader")) {
-                    refreshAdapterItems();
-                }
-            }
-        };
-
-        mSharedPreferenceChangeListener = (sharedPreferences, key) -> {
-            if (key.equals("pref_theme_highlight_color") || key.equals("pref_theme_accent_color") || key.equals("pref_theme_white_accent")) {
-                songsAdapter.notifyItemRangeChanged(0, songsAdapter.getItemCount());
-                themeUIComponents();
-            } else if (key.equals("songWhitelist")) {
-                refreshAdapterItems();
-            }
-        };
-
-        mPrefs.registerOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
+        adapter = new SectionedAdapter();
 
         shuffleView = new ShuffleView();
-    }
-
-    private void themeUIComponents() {
-        ThemeUtils.themeRecyclerView(mRecyclerView);
-        mRecyclerView.setThumbColor(ColorUtils.getAccentColor());
-        mRecyclerView.setPopupBgColor(ColorUtils.getAccentColor());
-        mRecyclerView.setPopupTextColor(ColorUtils.getAccentColorSensitiveTextColor(getContext()));
-
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                ThemeUtils.themeRecyclerView(recyclerView);
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-        });
+        shuffleView.setClickListener(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        if (mRecyclerView == null) {
-
-            mRecyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            mRecyclerView.setRecyclerListener(this);
-            mRecyclerView.setAdapter(songsAdapter);
-
-            themeUIComponents();
-        }
-
-        return mRecyclerView;
+        recyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setRecyclerListener(new RecyclerListener());
+        recyclerView.setAdapter(adapter);
+        return recyclerView;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("restartLoader");
-        getActivity().registerReceiver(mReceiver, filter);
 
         refreshAdapterItems();
+
+        if (getUserVisibleHint()) {
+            setupContextualToolbar();
+        }
     }
 
     void refreshAdapterItems() {
@@ -179,35 +113,49 @@ public class SongFragment extends BaseFragment implements
 
                         boolean ascending = SortManager.getInstance().getSongsAscending();
 
-                        subscription = DataManager.getInstance().getSongsRelay()
-                                .flatMap(songs -> {
+                        disposable = DataManager.getInstance().getSongsRelay()
+                                .flatMapSingle(songs -> {
                                     //Sort
                                     SortManager.getInstance().sortSongs(songs);
                                     //Reverse if required
                                     if (!ascending) {
                                         Collections.reverse(songs);
                                     }
-                                    return Observable.from(songs)
-                                            .map(song -> (AdaptableItem) new SongView(song, multiSelector, null))
+                                    return Observable.fromIterable(songs)
+                                            .map(song -> {
+
+                                                // Look for an existing SongView wrapping the song, we'll reuse it if it exists.
+                                                SongView songView = (SongView) Stream.of(adapter.items)
+                                                        .filter(viewModel -> viewModel instanceof SongView && (((SongView) viewModel).song.equals(song)))
+                                                        .findFirst()
+                                                        .orElse(null);
+
+                                                if (songView == null) {
+                                                    songView = new SongView(song, null);
+                                                    songView.setClickListener(this);
+                                                }
+
+                                                return (ViewModel) songView;
+                                            })
                                             .toList();
                                 })
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(items -> {
 
                                     if (items.isEmpty()) {
-                                        songsAdapter.setEmpty(new EmptyView(R.string.empty_songlist));
+                                        adapter.setItems(Collections.singletonList(new EmptyView(R.string.empty_songlist)));
                                     } else {
                                         items.add(0, shuffleView);
-                                        songsAdapter.setItems(items);
+                                        adapter.setItems(items);
                                     }
 
                                     //Move the RV back to the top if we've had a sort order change.
                                     if (sortOrderChanged) {
-                                        mRecyclerView.scrollToPosition(0);
+                                        recyclerView.scrollToPosition(0);
                                     }
 
                                     sortOrderChanged = false;
-                                });
+                                }, error -> LogUtils.logException(TAG, "Error refreshing adapter items", error));
                     }
                 }
         );
@@ -215,21 +163,12 @@ public class SongFragment extends BaseFragment implements
 
     @Override
     public void onPause() {
-        if (mReceiver != null) {
-            getActivity().unregisterReceiver(mReceiver);
-        }
 
-        if (subscription != null) {
-            subscription.unsubscribe();
+        if (disposable != null) {
+            disposable.dispose();
         }
 
         super.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        mPrefs.unregisterOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
-        super.onDestroy();
     }
 
     @Override
@@ -326,149 +265,79 @@ public class SongFragment extends BaseFragment implements
     }
 
     @Override
-    public void onItemClick(View v, int position, Song song) {
-        if (inActionMode) {
-            multiSelector.setSelected(position, songsAdapter.getItemId(position), !multiSelector.isSelected(position, songsAdapter.getItemId(position)));
-
-            if (multiSelector.getSelectedPositions().size() == 0) {
-                if (actionMode != null) {
-                    actionMode.finish();
-                }
-            }
-
-            updateActionModeSelectionCount();
-        } else {
-            List<Song> songs = Stream.of(songsAdapter.items)
+    public void onSongClick(int position, SongView songView) {
+        if (!contextualToolbarHelper.handleClick(position, songView)) {
+            List<Song> songs = Stream.of(adapter.items)
                     .filter(adaptableItem -> adaptableItem instanceof SongView)
                     .map(adaptableItem -> ((SongView) adaptableItem).song)
-                    .collect(Collectors.toList());
+                    .toList();
 
-            int pos = songs.indexOf(song);
-
-            MusicUtils.playAll(songs, pos, () -> {
-                final String message = getContext().getString(R.string.emptyplaylist);
-                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-            });
+            MusicUtils.playAll(songs, songs.indexOf(songView.song), (String message) ->
+                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show());
         }
     }
 
     @Override
-    public void onOverflowClick(View v, int position, final Song song) {
+    public void onSongOverflowClick(int position, View v, Song song) {
         PopupMenu menu = new PopupMenu(SongFragment.this.getActivity(), v);
-        MenuUtils.addSongMenuOptions(getActivity(), menu);
-        MenuUtils.addClickHandler((AppCompatActivity) getActivity(), menu, song, item -> {
-            switch (item.getItemId()) {
-                case BLACKLIST: {
-                    BlacklistHelper.addToBlacklist(song);
-                    return true;
-                }
-            }
-            return false;
-        });
+        MenuUtils.setupSongMenu(getContext(), menu, false);
+        menu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), song,
+                taggerDialog -> taggerDialog.show(getFragmentManager()),
+                null));
         menu.show();
     }
 
     @Override
-    public void onLongClick(View v, int position, Song song) {
-        if (inActionMode) {
-            return;
-        }
-
-        if (multiSelector.getSelectedPositions().size() == 0) {
-            actionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(mActionModeCallback);
-            inActionMode = true;
-        }
-
-        multiSelector.setSelected(position, songsAdapter.getItemId(position), !multiSelector.isSelected(position, songsAdapter.getItemId(position)));
-
-        updateActionModeSelectionCount();
+    public boolean onSongLongClick(int position, SongView songView) {
+        return contextualToolbarHelper.handleLongClick(position, songView);
     }
 
     @Override
-    public void onShuffleClick() {
-        MusicUtils.shuffleAll(getContext());
+    public void onStartDrag(SongView.ViewHolder viewHolder) {
+        // Nothing to do
     }
 
     @Override
-    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-        //Nothing to do.
+    public void onShuffleItemClick() {
+        MusicUtils.shuffleAll(message -> Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show());
     }
 
-    private void updateActionModeSelectionCount() {
-        if (actionMode != null && multiSelector != null) {
-            actionMode.setTitle(getString(R.string.action_mode_selection_count, multiSelector.getSelectedPositions().size()));
-        }
-    }
-
-    private ActionMode.Callback mActionModeCallback = new ModalMultiSelectorCallback(multiSelector) {
-
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            ThemeUtils.themeContextualActionBar(getActivity());
-            inActionMode = true;
-            getActivity().getMenuInflater().inflate(R.menu.context_menu_songs, menu);
-            SubMenu sub = menu.getItem(0).getSubMenu();
-            PlaylistUtils.makePlaylistMenu(getActivity(), sub, SONG_FRAGMENT_GROUP_ID);
-            return true;
-        }
-
-        @Override
-        public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
-
-            final List<Song> checkedSongs = getCheckedSongs();
-
-            if (checkedSongs == null || checkedSongs.size() == 0) {
-                return true;
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            setupContextualToolbar();
+        } else {
+            if (contextualToolbarHelper != null) {
+                contextualToolbarHelper.finish();
             }
-
-            switch (item.getItemId()) {
-                case NEW_PLAYLIST:
-                    PlaylistUtils.createPlaylistDialog(getActivity(), checkedSongs);
-                    break;
-                case PLAYLIST_SELECTED:
-                    Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(ShuttleUtils.ARG_PLAYLIST);
-                    PlaylistUtils.addToPlaylist(getContext(), playlist, checkedSongs);
-                    break;
-                case R.id.delete:
-                    new DialogUtils.DeleteDialogBuilder()
-                            .context(getContext())
-                            .singleMessageId(R.string.delete_song_desc)
-                            .multipleMessage(R.string.delete_song_desc_multiple)
-                            .itemNames(Stream.of(checkedSongs)
-                                    .map(song -> song.name)
-                                    .collect(Collectors.toList()))
-                            .songsToDelete(Observable.just(checkedSongs))
-                            .build()
-                            .show();
-                    mode.finish();
-                    break;
-                case R.id.menu_add_to_queue:
-                    MusicUtils.addToQueue(SongFragment.this.getActivity(), checkedSongs);
-                    break;
-            }
-            return true;
         }
-
-        @Override
-        public void onDestroyActionMode(ActionMode actionMode) {
-            super.onDestroyActionMode(actionMode);
-            inActionMode = false;
-            SongFragment.this.actionMode = null;
-            multiSelector.clearSelections();
-        }
-    };
-
-    List<Song> getCheckedSongs() {
-        return Stream.of(multiSelector.getSelectedPositions())
-                .map(i -> songsAdapter.getSong(i))
-                .collect(Collectors.toList());
     }
 
-    @Override
-    public void onViewRecycled(RecyclerView.ViewHolder holder) {
-        if (holder.getAdapterPosition() != -1) {
-            songsAdapter.items.get(holder.getAdapterPosition()).recycle(holder);
+    private void setupContextualToolbar() {
+        ContextualToolbar contextualToolbar = ContextualToolbar.findContextualToolbar(this);
+        if (contextualToolbar != null) {
+            contextualToolbar.getMenu().clear();
+            contextualToolbar.inflateMenu(R.menu.context_menu_songs);
+            SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
+            PlaylistUtils.makePlaylistMenu(getActivity(), sub);
+
+            contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), () -> Stream.of(contextualToolbarHelper.getItems())
+                    .map(SelectableViewModel::getItem)
+                    .collect(Collectors.toList())));
+            contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
+                @Override
+                public void notifyItemChanged(int position) {
+                    adapter.notifyItemChanged(position, 0);
+                }
+
+                @Override
+                public void notifyDatasetChanged() {
+                    adapter.notifyItemRangeChanged(0, adapter.items.size(), 0);
+                }
+            });
         }
+        Log.i(TAG, "setupContextualToolbar.. Visible to user: " + getUserVisibleHint());
     }
 
     @Override

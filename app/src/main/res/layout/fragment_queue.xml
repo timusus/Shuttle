@@ -1,51 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:windowBackground"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/header"
+    <com.simplecity.amp_library.ui.views.StatusBarView
+        android:id="@+id/statusBarView"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:paddingLeft="60dp"
-        android:paddingRight="16dp">
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"/>
 
-        <TextView
-            android:id="@+id/line1"
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Regular Toolbar steals touch events, but we need the events to be passed to our peek view -->
+        <com.simplecity.amp_library.ui.views.NonClickableToolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="8dp"
-            android:gravity="center_vertical"
-            android:text="@string/nowplaying_title"
-            android:textColor="@color/primary_text_dark"
-            android:textSize="16sp" />
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:navigationIcon="?attr/homeAsUpIndicator">
 
-        <TextView
-            android:id="@+id/line2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:alpha="0.7"
-            android:gravity="center_vertical"
-            android:textColor="@color/primary_text_dark"
-            android:textSize="12sp"
-            tools:text="Naysayer - Kill Stuff"
-            android:maxLines="1" />
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
 
-    <com.simplecity.amp_library.ui.recyclerview.ScrollBlockingRecyclerView
+                <TextView
+                    android:id="@+id/line1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:tag=":aesthetic_ignore"
+                    android:text="@string/nowplaying_title"
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/line2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:tag=":aesthetic_ignore"
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="12sp"
+                    tools:text="Naysayer - Kill Stuff"/>
+            </LinearLayout>
+        </com.simplecity.amp_library.ui.views.NonClickableToolbar>
+
+        <include
+            android:id="@+id/contextualToolbar"
+            layout="@layout/contextual_toolbar"/>
+
+    </FrameLayout>
+
+    <com.simplecity.amp_library.ui.views.AestheticFastScrollRecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="?android:windowBackground"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:listitem="@layout/list_item_two_lines" />
+        tools:listitem="@layout/list_item_two_lines"/>
 
 </LinearLayout>

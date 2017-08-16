@@ -9,22 +9,22 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.R;
@@ -37,75 +37,52 @@ import com.simplecity.amp_library.sql.SqlUtils;
 import com.simplecity.amp_library.sql.providers.PlayCountTable;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
-/**
- * General helpers
- */
 public final class ShuttleUtils {
 
     //Arguments supplied to various bundles
 
-    public static final String ARG_ALBUM_ARTIST = "album_artist";
-    public static final String ARG_ARTIST = "artist";
-    public static final String ARG_ALBUM = "album";
-    public static final String ARG_SONG = "song";
-    public static final String ARG_PLAYLIST = "playlist";
-    public static final String ARG_GENRE = "genre";
-
     private final static String TAG = "ShuttleUtils";
-    public static final int NEW_ALBUM_PHOTO = 100;
-    public static final int NEW_ARTIST_PHOTO = 200;
 
-    public static void openShuttleLink(Activity activity, String appPackageName) {
-        if (activity == null || appPackageName == null) {
-            return;
-        }
-        try {
-            activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(ShuttleUtils.getShuttleMarketUri(appPackageName))));
-        } catch (android.content.ActivityNotFoundException ignored) {
-            activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(ShuttleUtils.getShuttleWebUri(appPackageName))));
-        }
-    }
-
-    public static boolean isAmazonBuild() {
-        return BuildConfig.FLAVOR.equals("amazonFree") || BuildConfig.FLAVOR.equals("amazonPaid");
-    }
-
-    public static String getShuttleMarketUri(String packageName) {
+    @NonNull
+    public static Intent getShuttleStoreIntent(@NonNull String packageName) {
         String uri;
         if (isAmazonBuild()) {
             uri = "amzn://apps/android?p=" + packageName;
         } else {
             uri = "market://details?id=" + packageName;
         }
-        return uri;
+        return new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
     }
 
-    public static String getShuttleWebUri(String packageName) {
+    @NonNull
+    public static Intent getShuttleWebIntent(@NonNull String packageName) {
         String uri;
         if (isAmazonBuild()) {
             uri = "http://www.amazon.com/gp/mas/dl/android?p=" + packageName;
         } else {
             uri = "https://play.google.com/store/apps/details?id=" + packageName;
         }
-        return uri;
+        return new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
     }
 
-    /**
-     * Execute an {@link AsyncTask} on a thread pool
-     *
-     * @param task Task to execute
-     * @param args Optional arguments to pass to{@link  AsyncTask#execute(Object[])}
-     * @param <T>  Task argument type
-     */
-    @SuppressLint("NewApi")
-    public static <T> void execute(AsyncTask<T, ?, ?> task, T... args) {
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, args);
+    public static void openShuttleLink(@NonNull Activity activity, @NonNull String packageName, PackageManager packageManager) {
+        Intent intent = getShuttleStoreIntent(packageName);
+        if (packageManager.resolveActivity(intent, 0) == null) {
+            intent = getShuttleWebIntent(packageName);
+        }
+        activity.startActivity(intent);
+    }
+
+    public static boolean isAmazonBuild() {
+        return BuildConfig.FLAVOR.equals("amazonFree") || BuildConfig.FLAVOR.equals("amazonPaid");
     }
 
     /**
@@ -183,7 +160,8 @@ public final class ShuttleUtils {
                 .map(success -> success ? context.getString(R.string.ringtone_set, song.name) : context.getString(R.string.ringtone_set_failed))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(message -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show());
+                .subscribe(message -> Toast.makeText(context, message,
+                        Toast.LENGTH_SHORT).show(), error -> LogUtils.logException(TAG, "Error setting ringtone", error));
 
     }
 
@@ -193,22 +171,19 @@ public final class ShuttleUtils {
      * @param careAboutWifiOnly whether we care if the preference 'download via wifi only' is checked
      * @return true if we have a connection, false otherwise
      */
-
     public static boolean isOnline(boolean careAboutWifiOnly) {
 
-        Context context = ShuttleApplication.getInstance();
-
-        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ShuttleApplication.getInstance());
 
         //Check if we are restricted to download over wifi only
-        boolean wifiOnly = mPrefs.getBoolean("pref_download_wifi_only", true);
+        boolean wifiOnly = prefs.getBoolean("pref_download_wifi_only", true);
 
         //If we don't care whether wifi is allowed or not, set wifiOnly to false
         if (!careAboutWifiOnly) {
             wifiOnly = false;
         }
 
-        final ConnectivityManager cm = (ConnectivityManager) context
+        final ConnectivityManager cm = (ConnectivityManager) ShuttleApplication.getInstance()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
 
         //Check the state of the wifi network
@@ -274,13 +249,6 @@ public final class ShuttleUtils {
     }
 
     /**
-     * @return true if device is running API >= 22
-     */
-    public static boolean hasLollipopMR1() {
-        return Build.VERSION.SDK_INT >= 22;
-    }
-
-    /**
      * @return true if device is running API >= 23
      */
     public static boolean hasMarshmallow() {
@@ -294,13 +262,6 @@ public final class ShuttleUtils {
         return Build.VERSION.SDK_INT >= 24;
     }
 
-    /**
-     * @return true if device is running API >= 24
-     */
-    public static boolean hasNougatMR1() {
-        return Build.VERSION.SDK_INT >= 25;
-    }
-
     public static boolean isLandscape() {
         final int orientation = ShuttleApplication.getInstance().getResources().getConfiguration().orientation;
         return orientation == Configuration.ORIENTATION_LANDSCAPE;
@@ -310,15 +271,19 @@ public final class ShuttleUtils {
         return ShuttleApplication.getInstance().getResources().getBoolean(R.bool.isTablet);
     }
 
-    static Observable<List<Song>> getSongsForFileObjects(List<BaseFileObject> fileObjects) {
-        List<Observable<List<Song>>> observables = Stream.of(fileObjects)
-                .map(fileObject -> FileHelper.getSongList(new File(fileObject.path), true, false))
-                .collect(Collectors.toList());
+    static Single<List<Song>> getSongsForFileObjects(List<BaseFileObject> fileObjects) {
 
-        return Observable.concat(observables).reduce((songs, songs2) -> {
-            songs.addAll(songs2);
-            return songs;
-        });
+        List<Single<List<Song>>> observables = Stream.of(fileObjects)
+                .map(fileObject -> FileHelper.getSongList(new File(fileObject.path), true, false))
+                .toList();
+
+        return Single.concat(observables)
+                .reduce((songs, songs2) -> {
+                    List<Song> allSongs = new ArrayList<>();
+                    allSongs.addAll(songs);
+                    allSongs.addAll(songs2);
+                    return allSongs;
+                }).toSingle();
     }
 
     public static void incrementPlayCount(Context context, Song song) {
@@ -350,5 +315,9 @@ public final class ShuttleUtils {
         arrayOfObject[2] = 0xFF & i >> 16;
         arrayOfObject[3] = 0xFF & i >> 24;
         return String.format("%d.%d.%d.%d", arrayOfObject);
+    }
+
+    public static boolean canDrawBehindStatusBar() {
+        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH);
     }
 }

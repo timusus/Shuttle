@@ -4,7 +4,6 @@
     <!-- Shown when a user attempts to edit tags, but they don't have a 'DocumentProvider' available to pick the directory of their music (and thus give permission to Shuttle)-->
     <string name="R.string.toast_no_document_provider">이 권한 요청을 처리할 문서 제공자가 없습니다.</string>
     <!-- Displayed when an M3U playlist is being saved, but it already exists -->
-    <string name="playlist_save_exists">재생 목록이 이미 존재합니다.</string>
     <!-- Displayed when an M3U playlist save fails -->
     <string name="playlist_save_failed">재생 목록을 저장할 수 없습니다.</string>
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
@@ -43,16 +42,6 @@
     </plurals>
     <!-- Toast after selecting an empty playlist -->
     <string name="emptyplaylist">선택한 재생 목록이 비어 있습니다.</string>
-    <!-- Used in sleep message. Example 2 hours (and) 5 minutes -->
-    <string name="and">" \uadf8\ub9ac\uace0 "</string>
-    <!-- Alarm confirmation toast: singular hour -->
-    <string name="hour">" \uc2dc\uac04"</string>
-    <!-- Alarm confirmation toast: plural hours -->
-    <string name="hours">" \uc2dc\uac04"</string>
-    <!-- Alarm confirmation toast: plural minutes -->
-    <string name="minutes">" \ubd84"</string>
-    <!-- Alarm toast: Sleep timer set for -->
-    <string name="sleep_message">"\uc885\ub8cc \ud0c0\uc774\uba38 \uc124\uc815 : "</string>
     <!-- -->
     <string name="initial_dir_set_message">" \ucd08\uae30 \ub514\ub809\ud1a0\ub9ac\ub85c \uc124\uc815"</string>
     <!-- Transient popup message shown after deleting a playlist -->
@@ -60,31 +49,22 @@
     <!-- Transient popup message shown after renaming a playlist -->
     <string name="playlist_renamed_message">재생 목록 이름이 변경되었습니다.</string>
     <!-- Toast confirming that song(s) was/were deleted. -->
-    <plurals name="NNNtracksdeleted">
-        <item quantity="other"><xliff:g id="songs_to_delete">%d</xliff:g>개의 노래가 삭제되었습니다.</item>
-    </plurals>
     <!-- -->
     <plurals name="NNNtrackstoqueue">
         <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g>
             개의 노래가 대기열에 추가되었습니다.</item>
     </plurals>
     <!-- Toasts after adding song(s) to playlists -->
-    <plurals name="NNNtrackstofavourites">
-        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g>개의 노래가 즐겨찾기에 추가되었습니다.</item>
-    </plurals>
     <string name="song_to_favourites"><xliff:g id="song_name">%s</xliff:g>이(가) 즐겨찾기에 추가되었습니다.</string>
     <string name="song_removed_from_favourites"><xliff:g id="song_name">%s</xliff:g>이(가) 즐겨찾기에서 삭제되었습니다.</string>
     <!-- ## Dialogs ## -->
     <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_tite">앱 재시작 필요</string>
     <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_message">이 변경 사항은 Shuttle을 재시작해야 적용됩니다.</string>
     <!-- Restart now button -->
     <string name="restart_button">지금 재시작</string>
     <!-- Displays when picking a theme color -->
     <string name="color_pick">색상 선택</string>
     <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
-    <string name="dialog_custom">사용자 지정</string>
     <!-- Displays when sharing a file fails -->
     <string name="share_failed">죄송합니다. 이 파일은 공유할 수 없습니다</string>
     <!-- Displays when you click 'share' -->
@@ -119,8 +99,6 @@
         \n• 폴더 브라우징
         \n• ChromeCast 지원
         \n\n추가적인 개발에도 도움이 됩니다.\n\nShuttle+를 이미 가지고 계신다면 업그레이드하실 필요가 없습니다.</string>
-    <string name="get_pro_button_play_store">Play 스토어</string>
-    <string name="get_pro_button_amazon">Amazon</string>
     <string name="btn_upgrade">업그레이드</string>
     <!-- -->
     <string name="get_pro_button_no">아니오</string>
@@ -156,14 +134,12 @@
     <string name="delete_file_confirmation_dialog">정말 \"<xliff:g id="file">%s</xliff:g>\"을(를) 영구적으로 삭제하시겠습니까?</string>
     <!-- Displayed when user presses 'delete artwork' -->
     <string name="delete_artwork_confirmation_dialog">정말 기기에 있는 모든 앨범 사진들을 삭제하시겠습니까?</string>
-    <!-- QuickLyric button -->
-    <string name="quicklyric">QuickLyric</string>
     <!--"Set Ringtone" title -->
     <string name="dialog_title_set_ringtone">벨소리 설정</string>
     <!-- "Set Ringtone" message -->
     <string name="dialog_message_set_ringtone">Shuttle이 벨소리를 설정하기 위해 \'시스템 설정 수정\' 권한이 필요합니다.\n\n권한 허용 후, 다시 시도해주세요.</string>
     <!-- Message displayed in dialog when attempting to add duplicates to playlist -->
-    <string name="dialog_message_playlist_add_duplicate">재생 목록에 <xliff:g id="artist">%s</xliff:g> - <xliff:g id="song">%s</xliff:g> 이(가) 이미 존재합니다. 그래도 추가하시겠습니까?</string>
+    <string name="dialog_message_playlist_add_duplicate">재생 목록에 <xliff:g id="artist">%1$s</xliff:g> - <xliff:g id="song">%2$s</xliff:g> 이(가) 이미 존재합니다. 그래도 추가하시겠습니까?</string>
     <!-- Checkbox text 'apply to all' -->
     <string name="dialog_checkbox_playlist_duplicate_apply_all">모두 적용 (<xliff:g id="number">%d</xliff:g>)</string>
     <!-- Title displayed in dialog when attempting to add duplicates to playlist -->
@@ -185,26 +161,28 @@
     <string name="widget_show_artwork">앨범아트 보기</string>
     <!-- ## Menu Headings ## -->
     <!-- Context menu in navigation drawer - option to save playlist as M3U -->
-    <string name="export_playlist">재생 목록 내보내기</string>
+    <string name="export_playlist">내보내기</string>
     <!-- context menu item to remove the selected item from the playlist -->
     <!-- Menu option 'clear queue' -->
     <string name="clear_queue">대기열 비우기</string>
     <!-- -->
-    <string name="fav_add">즐겨찾기에 추가</string>
+    <string name="fav_add">즐겨찾기</string>
     <!-- Context menu item -->
     <string name="play_selection">재생</string>
+    <!-- Multi select menu item-->
+    <string name="menu_add_to">다음으로 추가...</string>
+    <!-- Multi select menu item-->
+    <string name="menu_playlist">재생 목록</string>
+    <!-- Multi select menu item-->
+    <string name="menu_queue">대기열</string>
     <!-- Context menu item -->
-    <string name="add_to_playlist">재생 목록에 추가</string>
     <!-- Context menu item -->
     <string name="new_playlist">새로 만들기</string>
-    <!-- Button for lyrics -->
-    <string name="lyrics">가사</string>
     <!-- menu item to save the current list as a new playlist -->
     <string name="save_as_playlist">재생 목록으로 저장</string>
     <!-- Context menu item to remove the selected item from the playlist -->
-    <string name="remove_from_playlist">재생 목록에서 삭제</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
-    <string name="remove_from_queue">대기열에서 삭제</string>
+    <!-- Context menu item to remove the selected item from the queue -->
+    <string name="remove_from_queue">삭제</string>
     <!-- Context menu item -->
     <string name="play_next">이어서 재생</string>
     <!-- Menu text for the settings item -->
@@ -214,12 +192,10 @@
     <!-- -->
     <string name="library_title">라이브러리</string>
     <!-- -->
-    <string name="share_title">공유</string>
     <!-- Library screen, menu item -->
     <string name="search_title">검색</string>
     <string name="search_filter">필터</string>
     <!-- Playlist context menu item to delete the selected playlist. -->
-    <string name="delete_playlist_menu">삭제</string>
     <!-- Playlist context menu item to clear the selected playlist. -->
     <string name="clear_playlist_menu">비우기</string>
     <!-- Playlist context menu item to edit the selected playlist -->
@@ -234,8 +210,6 @@
     <string name="nowplaying_title">지금 재생 중</string>
     <!-- -->
     <string name="up_next_title">재생 대기열</string>
-    <!-- Context menu item -->
-    <string name="add_to_queue">대기열에 추가</string>
     <!-- Popup menu item -->
     <string name="go_to">다음으로 가기</string>
     <!-- 'More' button -->
@@ -249,9 +223,7 @@
     <string name="navigation_drawer_close">내비게이션 서랍 닫기</string>
     <!-- ## Preference Menu ## -->
     <!--Settings title for white accent color) -->
-    <string name="pref_title_theme_white_accent">강조 색상으로 흰색 사용</string>
     <!--Settings summary for white accent color-->
-    <string name="pref_summary_theme_white_accent">필요한 곳을 제외한 모든 강조되는 부분을 흰색으로 사용합니다. (랜덤 재생 및 반복 버튼은 켜진 상태를 표시하기 위하여 다른 색상이 필요합니다)</string>
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">내비게이션</string>
     <!--Settings category for 'notification' items -->
@@ -285,7 +257,6 @@
     <string name="pref_title_theme_light">밝은 테마</string>
     <string name="pref_title_theme_black">검정 테마</string>
     <!--Settings summary for the downloading more themes -->
-    <string name="pref_summary_get_pro_themes">Shuttle+에서 더 많은 테마를 사용할 수 있습니다.</string>
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">화이트리스트/블랙리스트</string>
     <!--Settings title for viewing blacklist-->
@@ -297,7 +268,6 @@
     <!--Settings title for clearing whitelist-->
     <string name="pref_title_clear_whitelist">비우기</string>
     <!--Settings title for clearing whitelist-->
-    <string name="pref_title_update_whitelist">업데이트</string>
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">앨범아트 자르기</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -354,9 +324,7 @@
     <string name="pref_summary_placeholders">Gmail 스타일 플레이스 홀더를 사용합니다.
         이 항목을 비활성화하면 Gmail식 첫 글자 플레이스 홀더 대신 Shuttle 아이콘을 사용합니다.</string>
     <!-- Settings title for the enable lockscreen controls checkbox -->
-    <string name="pref_title_lockscreen">잠금 화면 앨범아트 활성화</string>
     <!-- Settings summary for the enable lockscreen controls checkbox -->
-    <string name="pref_summary_lockscreen">잠금 화면에 앨범아트를 표시합니다.</string>
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">화면</string>
     <!-- Settings title for the keep screen on checkbox -->
@@ -398,7 +366,7 @@
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <string name="pref_summary_simple_download">Google Play 스토어에서 Simple Last.FM Scrobbler를 다운로드합니다</string>
     <!-- Settings title for the About heading -->
-    <string name="pref_title_about">변경 사항</string>
+    <string name="pref_title_changelog">변경 사항</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">지원</string>
     <string name="pref_title_version">버전</string>
@@ -454,7 +422,7 @@
     <string name="disc_number">디스크 \#</string>
     <string name="disc_total">총 디스크</string>
     <!-- Track count. i.e "1 of 15" -->
-    <string name="track_count"><xliff:g id="total tracks">%s</xliff:g> 중 <xliff:g id="track">%s</xliff:g>번</string>
+    <string name="track_count"><xliff:g id="total tracks">%2$s</xliff:g> 중 <xliff:g id="track">%1$s</xliff:g>번</string>
     <!-- Button text for saving tags  -->
     <string name="save">저장</string>
     <!-- Message displayed when tag editing fails -->
@@ -470,6 +438,8 @@
     <string name="rename_folder">폴더 이름 바꾸기</string>
     <!-- -->
     <string name="rename_file">파일 이름 바꾸기</string>
+    <!-- -->
+    <string name="rename">이름 바꾸기</string>
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">초기 디렉토리로 설정</string>
     <!-- Label in folder view - number of folders within the current folder -->
@@ -518,14 +488,11 @@
     <!-- Title (singular) -->
     <string name="song_title">제목</string>
     <!-- Year (singular)-->
-    <string name="year_title">년도</string>
+    <string name="year_title">연도</string>
     <!-- Genre (singular)-->
     <string name="genre_title">장르</string>
     <!-- Album artist (singular)-->
     <string name="album_artist_title">앨범 아티스트</string>
-    <!-- ## Lyrics ## -->
-    <!-- -->
-    <string name="no_lyrics">파일에 포함된 가사가 없습니다</string>
     <!-- ## Equalizer ## -->
     <!-- Menu item to open the equalizer -->
     <string name="equalizer">이퀄라이저</string>
@@ -559,9 +526,9 @@
     <string name="sort_ascending">오름차순</string>
     <string name="sort_artist_name">아티스트 이름</string>
     <string name="sort_album_name">앨범 제목</string>
-    <string name="sort_album_year">앨범 년도</string>
+    <string name="sort_album_year">앨범 연도</string>
     <string name="sort_song_name">노래 제목</string>
-    <string name="sort_song_year">노래 년도</string>
+    <string name="sort_song_year">노래 연도</string>
     <string name="sort_song_duration">노래 길이</string>
     <string name="sort_song_track_number">트랙 번호</string>
     <string name="sort_song_date_added">추가된 날짜</string>
@@ -574,14 +541,19 @@
     <string name="sort_files_album_name">앨범</string>
     <string name="sort_files_track_name">제목</string>
     <!-- ## Sleep Timer ## -->
-    <!-- Options Menu - Sleep Timer Title -->
-    <string name="timer">종료 타이머</string>
-    <!-- -->
+    <!-- Sleep timer title -->
+    <!--Sleep timer "Play last song to end" -->
     <string name="sleep_timer_play_to_end">마지막 노래를 끝까지 재생</string>
     <!-- Sleep timer "set" -->
-    <string name="timer_set">설정</string>
-    <!-- Sleep timer "set" -->
-    <string name="timer_stop">정지</string>
+    <!-- Sleep timer "Stop" -->
+    <!-- Sleep timer stop message "Stop sleep timer?" -->
+    <!-- Toast when sleep timer is set -->
+    <!-- Sleep timer "Set time..." -->
+    <!-- Sleep timer "5 minutes" -->
+    <!-- Sleep timer "15 minutes" -->
+    <!-- Sleep timer "30 minutes" -->
+    <!-- Sleep timer "1 hour" -->
+    <!-- Sleep timer label "Minutes" (limited space here) -->
     <!-- Button name in time span picker -->
     <string name="button_done">완료</string>
     <!-- Title of time span picker -->
@@ -639,21 +611,15 @@
     <string name="action_mode_selection_count"><xliff:g id="number">%d</xliff:g>개 선택됨</string>
     <!-- ## Unknown artist/album metadata ##-->
     <!-- Default name of artist that doesn't have a name in the metadata -->
-    <string name="unknown_artist_name">알 수 없는 아티스트</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_name">알 수 없는 앨범</string>
     <!-- Default name of genre that doesn't have a name in the metadata -->
-    <string name="unknown_genre_name">알 수 없는 장르</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_artist_name">알 수 없는 앨범 아티스트</string>
+    <!-- Default value if album year unknown -->
+    <string name="unknown_year">알 수 없는 연도</string>
     <!-- Song Info overflow option-->
     <string name="song_info">노래 정보</string>
     <!-- Artwork Download Service Label-->
     <string name="download_service">다운로드 서비스</string>
-    <!-- ## Better Pickers Strings ## -->
-    <string name="picker_set">확인</string>
-    <string name="timer_delete">삭제</string>
-    <string name="time_picker_time_seperator">:</string>
     <!-- Accessibility button description -->
     <string name="btn_play">재생</string>
     <!-- Accessibility button description -->
@@ -665,7 +631,6 @@
     <!-- Accessibility button description -->
     <string name="btn_prev">이전</string>
     <!-- Accessibility button description -->
-    <string name="btn_queue">재생 대기열 보기</string>
     <!-- Accessibility button description -->
     <string name="btn_close">닫기</string>
     <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
@@ -681,13 +646,11 @@
     <!-- Accessibility button description -->
     <string name="btn_shuffle_off">랜덤 재생 끄기</string>
     <!-- Accessibility button description -->
-    <string name="btn_show_queue">대기열 보기</string>
     <!-- Accessibility button description -->
     <string name="btn_fab_shuffle">현재 목록 랜덤 재생</string>
     <!-- Accessibility now playing 'mini player' description. Example: Now playing <Wannabe> by <Spice Girls> -->
     <string name="btn_now_playing">지금 %2$s 가 부른 %1$s 재생 중</string>
     <!-- Accessibility 'show lyrics' -->
-    <string name="btn_show_lyrics">자막 보기</string>
     <string name="pref_summary_restore_purchases">Shuttle을 구매했는데도 무료 버전이 나타난다면 여기를 누르십시오.</string>
     <string name="pref_title_restore_purchases">구매 기록 복원</string>
     <string name="blacklist_empty">블랙리스트에 추가한 노래가 없습니다!</string>
@@ -707,7 +670,6 @@
     <string name="iab_purchase_failed">뭔가가 잘못되었습니다. 나중에 다시 시도해 주세요..</string>
     <string name="snackbar_rate_text">Shuttle을 유용하게 사용하고 계시나요?</string>
     <string name="snackbar_rate_action">평가해 주세요!</string>
-    <string name="toast_purchase_failed">뭔가가 잘못되었습니다. 나중에 다시 시도해 주세요..</string>
     <string name="dialog_create_playlist_error">재생 목록 생성 오류</string>
     <!-- Artwork picker -->
     <string name="artwork_edit">앨범아트 선택</string>
@@ -737,18 +699,23 @@
     <!-- "Folders" Shortcut label disabled. (I don't think this ever happens)-->
     <string name="shortcut_folders_disabled">폴더 사용 불가</string>
     <!-- "Playlist" Shortcut label. Max 10 characters.-->
-    <string name="shortcut_playlist_short_label">재생 목록</string>
     <!-- "Playlist" Shortcut long label. Max 25 characters.-->
-    <string name="shortcut_playlist_long_label">즐겨찾는 재생 목록 열기</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
-    <string name="shortcut_playlist_disabled">재생 목록 사용 불가</string>
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">디스크 <xliff:g id="number">%d</xliff:g></string>
     <!-- Search Filter-->
     <string name="search_fuzzy">퍼지</string>
-    <string name="search_title_only">제목만</string>
     <string name="search_artists">아티스트</string>
     <string name="search_albums">앨범</string>
     <!-- Changelog -->
     <string name="changelog_show_on_launch">실행 시 표시</string>
+    <!-- Lyrics -->
+    <!-- QuickLyric button -->
+    <string name="quicklyric">QuickLyric</string>
+    <!-- Button for lyrics -->
+    <string name="lyrics">가사</string>
+    <!-- Shown when there are no lyrics -->
+    <string name="no_lyrics">파일에 포함된 가사가 없습니다.</string>
+    <!-- QuickLyric info dialog message-->
+    <string name="quicklyric_info">QuickLyric는 Google Play 스토어에서 받을 수 있는 오픈 소스 가사 도우미입니다.\n\n설치하면, Shuttle에서 \'QuickLyric\' 메뉴 버튼을 누를 때 QuickLyric가 열릴 것입니다.</string>
 </resources>

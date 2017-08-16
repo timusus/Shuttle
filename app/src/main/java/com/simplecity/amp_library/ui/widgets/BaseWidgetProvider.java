@@ -19,10 +19,9 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.glide.utils.CustomAppWidgetTarget;
 import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.ui.activities.MainActivity;
 import com.simplecity.amp_library.utils.DrawableUtils;
-
-import rx.functions.Action0;
 
 public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
@@ -34,8 +33,8 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
     public abstract int getRootViewId();
 
-    protected void doOnMainThread(Action0 action) {
-        new Handler(Looper.getMainLooper()).post(action::call);
+    protected void doOnMainThread(UnsafeAction action) {
+        new Handler(Looper.getMainLooper()).post(action::run);
     }
 
     public static final String ARG_WIDGET_BACKGROUND_COLOR = "widget_background_color_";
@@ -154,18 +153,18 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     void setupRepeatView(MusicService service, RemoteViews views, boolean invertIcons) {
         switch (service.getRepeatMode()) {
             case MusicService.RepeatMode.ALL:
-                views.setImageViewBitmap(R.id.repeat_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_repeat_white));
+                views.setImageViewBitmap(R.id.repeat_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_repeat_24dp_scaled));
                 views.setContentDescription(R.id.shuffle_button, service.getString(R.string.btn_repeat_current));
                 break;
             case MusicService.RepeatMode.ONE:
-                views.setImageViewBitmap(R.id.repeat_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_repeat_one_white));
+                views.setImageViewBitmap(R.id.repeat_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_repeat_one_24dp_scaled));
                 views.setContentDescription(R.id.shuffle_button, service.getString(R.string.btn_repeat_off));
                 break;
             default:
                 if (invertIcons) {
-                    views.setImageViewBitmap(R.id.repeat_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_repeat_white));
+                    views.setImageViewBitmap(R.id.repeat_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_repeat_24dp_scaled));
                 } else {
-                    views.setImageViewResource(R.id.repeat_button, R.drawable.ic_repeat_white);
+                    views.setImageViewResource(R.id.repeat_button, R.drawable.ic_repeat_24dp_scaled);
                 }
                 views.setContentDescription(R.id.shuffle_button, service.getString(R.string.btn_repeat_all));
                 break;
@@ -176,14 +175,14 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         switch (service.getShuffleMode()) {
             case MusicService.ShuffleMode.OFF:
                 if (invertIcons) {
-                    views.setImageViewBitmap(R.id.shuffle_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_shuffle_white));
+                    views.setImageViewBitmap(R.id.shuffle_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_shuffle_24dp_scaled));
                 } else {
-                    views.setImageViewResource(R.id.shuffle_button, R.drawable.ic_shuffle_white);
+                    views.setImageViewResource(R.id.shuffle_button, R.drawable.ic_shuffle_24dp_scaled);
                 }
                 views.setContentDescription(R.id.shuffle_button, service.getString(R.string.btn_shuffle_on));
                 break;
             default:
-                views.setImageViewBitmap(R.id.shuffle_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_shuffle_white));
+                views.setImageViewBitmap(R.id.shuffle_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_shuffle_24dp_scaled));
                 views.setContentDescription(R.id.shuffle_button, service.getString(R.string.btn_shuffle_off));
                 break;
         }

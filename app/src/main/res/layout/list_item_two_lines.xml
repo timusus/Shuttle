@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.simplecity.amp_library.ui.views.ForegroundLinearLayout
+<android.support.design.internal.ForegroundLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,14 +9,16 @@
     android:gravity="center"
     android:orientation="horizontal"
     android:paddingLeft="16dp"
-    android:paddingRight="8dp">
+    android:paddingStart="16dp">
 
     <TextView
         android:id="@+id/trackNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="20dp"
+        android:layout_marginStart="8dp"
         android:gravity="center"
         android:minEms="1"
         android:visibility="gone"
@@ -41,6 +43,7 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
+            android:textColor="?android:textColorPrimary"
             android:textSize="16sp"
             tools:text="Feeling Kind Of Anxious"/>
 
@@ -54,6 +57,7 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
+            android:textColor="?android:textColorSecondary"
             android:textSize="14sp"
             tools:text="Franz Ferdinand - Tonight"/>
 
@@ -86,13 +90,6 @@
         android:textSize="14sp"
         tools:text="3:20"/>
 
-    <com.simplecity.amp_library.ui.views.NonScrollImageButton
-        android:id="@+id/btn_overflow"
-        android:layout_width="40dp"
-        android:layout_height="48dp"
-        android:layout_marginLeft="-4dp"
-        android:layout_marginRight="4dp"
-        android:alpha="0.8"
-        android:background="@null"
-        android:src="@drawable/ic_overflow_white"/>
-</com.simplecity.amp_library.ui.views.ForegroundLinearLayout>
+    <include layout="@layout/overflow_button"/>
+
+</android.support.design.internal.ForegroundLinearLayout>

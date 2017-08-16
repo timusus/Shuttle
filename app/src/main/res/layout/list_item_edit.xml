@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.simplecity.amp_library.ui.views.ForegroundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.internal.ForegroundLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="72dp"
     android:descendantFocusability="blocksDescendants"
     android:foreground="?attr/list_selector"
     android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:paddingRight="8dp">
+    android:orientation="horizontal">
 
-    <ImageView
+    <com.simplecity.amp_library.ui.views.DragHandle
         android:id="@+id/drag_handle"
         android:layout_width="40dp"
         android:layout_height="match_parent"
-        android:alpha="0.5"
+        android:alpha="0.7"
         android:importantForAccessibility="no"
         android:paddingLeft="14dp"
         android:paddingRight="14dp"
-        android:src="@drawable/ic_drag_grip" />
+        android:src="@drawable/ic_drag_grip"/>
 
     <com.simplecity.amp_library.ui.views.SquareImageView
         android:id="@+id/image"
         android:layout_width="48dp"
         android:layout_height="wrap_content"
         android:layout_marginRight="8dp"
-        tools:src="@mipmap/ic_launcher" />
+        tools:src="@mipmap/ic_launcher"/>
 
     <LinearLayout
         android:layout_width="0dp"
@@ -41,9 +41,10 @@
             android:layout_marginBottom="2dp"
             android:ellipsize="end"
             android:gravity="center_vertical"
+            android:maxLines="1"
+            android:textColor="?android:textColorPrimary"
             android:textSize="16sp"
-            tools:text="Feeling Kinda Anxious"
-            android:maxLines="1" />
+            tools:text="Feeling Kinda Anxious"/>
 
         <TextView
             android:id="@+id/line_two"
@@ -52,9 +53,10 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:gravity="center_vertical"
+            android:maxLines="1"
+            android:textColor="?android:textColorSecondary"
             android:textSize="14sp"
-            tools:text="Franz Ferdinand - Tonight"
-            android:maxLines="1" />
+            tools:text="Franz Ferdinand - Tonight"/>
     </LinearLayout>
 
     <TextView
@@ -64,19 +66,12 @@
         android:layout_height="24dp"
         android:ellipsize="end"
         android:gravity="center"
+        android:maxLines="1"
         android:minEms="3"
+        android:textColor="?android:textColorSecondary"
         android:textSize="14sp"
-        tools:text="3:20"
-        android:maxLines="1" />
+        tools:text="3:20"/>
 
-    <com.simplecity.amp_library.ui.views.NonScrollImageButton
-        android:id="@+id/btn_overflow"
-        android:layout_width="40dp"
-        android:layout_height="48dp"
-        android:layout_marginLeft="-4dp"
-        android:layout_marginRight="4dp"
-        android:alpha="0.8"
-        android:background="@null"
-        android:src="@drawable/ic_overflow_white" />
+    <include layout="@layout/overflow_button"/>
 
-</com.simplecity.amp_library.ui.views.ForegroundLinearLayout>
+</android.support.design.internal.ForegroundLinearLayout>

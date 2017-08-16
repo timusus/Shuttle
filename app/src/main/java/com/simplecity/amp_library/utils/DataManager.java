@@ -1,9 +1,8 @@
 package com.simplecity.amp_library.utils;
 
-import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
-import com.crashlytics.android.Crashlytics;
-import com.jakewharton.rxrelay.BehaviorRelay;
+import com.annimon.stream.function.Predicate;
+import com.jakewharton.rxrelay2.BehaviorRelay;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
@@ -15,16 +14,15 @@ import com.simplecity.amp_library.model.WhitelistFolder;
 import com.simplecity.amp_library.sql.databases.BlacklistDbOpenHelper;
 import com.simplecity.amp_library.sql.databases.WhitelistDbOpenHelper;
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
-import com.squareup.sqlbrite.BriteDatabase;
-import com.squareup.sqlbrite.SqlBrite;
+import com.squareup.sqlbrite2.BriteDatabase;
+import com.squareup.sqlbrite2.SqlBrite;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
-import rx.Subscription;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class DataManager {
 
@@ -32,27 +30,27 @@ public class DataManager {
 
     private static DataManager instance;
 
-    private Subscription songsSubscription;
+    private Disposable songsSubscription;
     private BehaviorRelay<List<Song>> songsRelay = BehaviorRelay.create();
 
-    private Subscription albumsSubscription;
+    private Disposable albumsSubscription;
     private BehaviorRelay<List<Album>> albumsRelay = BehaviorRelay.create();
 
-    private Subscription albumArtistsSubscription;
+    private Disposable albumArtistsSubscription;
     private BehaviorRelay<List<AlbumArtist>> albumArtistsRelay = BehaviorRelay.create();
 
-    private Subscription genresSubscription;
+    private Disposable genresSubscription;
     private BehaviorRelay<List<Genre>> genresRelay = BehaviorRelay.create();
 
-    private Subscription playlistsSubscription;
+    private Disposable playlistsSubscription;
     private BehaviorRelay<List<Playlist>> playlistsRelay = BehaviorRelay.create();
 
     private BriteDatabase blacklistDatabase;
-    private Subscription blacklistSubscription;
+    private Disposable blacklistSubscription;
     private BehaviorRelay<List<BlacklistedSong>> blacklistRelay = BehaviorRelay.create();
 
     private BriteDatabase whitelistDatabase;
-    private Subscription whitelistSubscription;
+    private Disposable whitelistSubscription;
     private BehaviorRelay<List<WhitelistFolder>> whitelistRelay = BehaviorRelay.create();
 
     public static DataManager getInstance() {
@@ -86,9 +84,9 @@ public class DataManager {
      */
     public Observable<List<Song>> getSongsRelay() {
 
-        if (songsSubscription == null || songsSubscription.isUnsubscribed()) {
+        if (songsSubscription == null || songsSubscription.isDisposed()) {
 
-            Observable<List<Song>> songsObservable = SqlBriteUtils.createContinuousQuery(ShuttleApplication.getInstance(), Song::new, Song.getQuery());
+            Observable<List<Song>> songsObservable = SqlBriteUtils.createObservableList(ShuttleApplication.getInstance(), Song::new, Song.getQuery());
 
             songsSubscription = Observable.combineLatest(songsObservable, getBlacklistRelay(), getWhitelistRelay(), (songs, blacklistedSongs, whitelistFolders) ->
             {
@@ -99,7 +97,7 @@ public class DataManager {
                     result = Stream.of(songs)
                             .filter(song -> !Stream.of(blacklistedSongs)
                                     .anyMatch(blacklistedSong -> blacklistedSong.songId == song.id))
-                            .collect(Collectors.toList());
+                            .toList();
                 }
 
                 //Filter out non-whitelisted folders
@@ -107,13 +105,16 @@ public class DataManager {
                     result = Stream.of(result)
                             .filter(song -> Stream.of(whitelistFolders)
                                     .anyMatch(whitelistFolder -> StringUtils.containsIgnoreCase(song.path, whitelistFolder.folder)))
-                            .collect(Collectors.toList());
+                            .toList();
                 }
 
                 return result;
-            }).subscribe(songsRelay, error -> Crashlytics.log("getSongsRelay error: " + error.getMessage()));
+            })
+                    .subscribe(songsRelay, error -> LogUtils.logException(TAG, "getSongsRelay threw error", error));
         }
-        return songsRelay.subscribeOn(Schedulers.io()).map(ArrayList::new);
+        return songsRelay
+                .subscribeOn(Schedulers.io())
+                .map(ArrayList::new);
     }
 
     /**
@@ -136,10 +137,10 @@ public class DataManager {
      * {@link Schedulers#io()} {@code scheduler}.
      */
     public Observable<List<Album>> getAlbumsRelay() {
-        if (albumsSubscription == null || albumsSubscription.isUnsubscribed()) {
+        if (albumsSubscription == null || albumsSubscription.isDisposed()) {
             albumsSubscription = getSongsRelay()
                     .flatMap(songs -> Observable.just(Operators.songsToAlbums(songs)))
-                    .subscribe(albumsRelay, error -> Crashlytics.log("getAlbumsRelay error: " + error.getMessage()));
+                    .subscribe(albumsRelay, error -> LogUtils.logException(TAG, "getAlbumsRelay threw error: ", error));
         }
         return albumsRelay.subscribeOn(Schedulers.io()).map(ArrayList::new);
     }
@@ -164,10 +165,10 @@ public class DataManager {
      * {@link Schedulers#io()} {@code scheduler}.
      */
     public Observable<List<AlbumArtist>> getAlbumArtistsRelay() {
-        if (albumArtistsSubscription == null || albumArtistsSubscription.isUnsubscribed()) {
+        if (albumArtistsSubscription == null || albumArtistsSubscription.isDisposed()) {
             albumArtistsSubscription = getAlbumsRelay()
                     .flatMap(albums -> Observable.just(Operators.albumsToAlbumArtists(albums)))
-                    .subscribe(albumArtistsRelay, error -> Crashlytics.log("getAlbumArtistsRelay error: " + error.getMessage()));
+                    .subscribe(albumArtistsRelay, error -> LogUtils.logException(TAG, "getAlbumArtistsRelay threw error", error));
         }
         return albumArtistsRelay.subscribeOn(Schedulers.io()).map(ArrayList::new);
     }
@@ -191,16 +192,16 @@ public class DataManager {
      * {@link Schedulers#io()} {@code scheduler}.
      */
     public Observable<List<Genre>> getGenresRelay() {
-        if (genresSubscription == null || genresSubscription.isUnsubscribed()) {
-            genresSubscription = SqlBriteUtils.createContinuousQuery(ShuttleApplication.getInstance(), Genre::new, Genre.getQuery())
-                    .subscribe(genresRelay, error -> Crashlytics.log("getGenresRelay error: " + error.getMessage()));
+        if (genresSubscription == null || genresSubscription.isDisposed()) {
+            genresSubscription = SqlBriteUtils.createObservableList(ShuttleApplication.getInstance(), Genre::new, Genre.getQuery())
+                    .subscribe(genresRelay, error -> LogUtils.logException(TAG, "getGenresRelay threw error", error));
         }
 
         return genresRelay.subscribeOn(Schedulers.io()).map(ArrayList::new);
     }
 
-    public void updateGenresRelay(List<Genre> genres){
-        genresRelay.call(genres);
+    public void updateGenresRelay(List<Genre> genres) {
+        genresRelay.accept(genres);
     }
 
     /**
@@ -222,23 +223,21 @@ public class DataManager {
      * {@link Schedulers#io()} {@code scheduler}.
      */
     public Observable<List<Playlist>> getPlaylistsRelay() {
-        if (playlistsSubscription == null || playlistsSubscription.isUnsubscribed()) {
-            playlistsSubscription = SqlBriteUtils.createContinuousQuery(ShuttleApplication.getInstance(), Playlist::new, Playlist.getQuery())
-                    .subscribe(playlistsRelay, error -> Crashlytics.log("getPlaylistRelay error: " + error.getMessage()));
+        if (playlistsSubscription == null || playlistsSubscription.isDisposed()) {
+            playlistsSubscription = SqlBriteUtils.createObservableList(ShuttleApplication.getInstance(), Playlist::new, Playlist.getQuery())
+                    .subscribe(playlistsRelay, error -> LogUtils.logException(TAG, "getPlaylistRelay threw error", error));
         }
         return playlistsRelay.subscribeOn(Schedulers.io()).map(ArrayList::new);
     }
 
     /**
-     * Returns an Observable<List<Song>> from the songs relay, filtered by the passed in predicate.
-     * <p>
-     * This Observable is finite (it only emits once),
+     * Returns an {@link Observable<List>} from the songs relay, filtered by the passed in predicate.
      */
-    public Observable<List<Song>> getSongsObservable(Func1<Song, Boolean> predicate) {
+    public Observable<List<Song>> getSongsObservable(Predicate<Song> predicate) {
         return getSongsRelay()
-                .first()
-                .flatMap(Observable::from)
-                .filter(predicate).toList();
+                .map(songs -> Stream.of(songs)
+                        .filter(predicate)
+                        .toList());
     }
 
     /**
@@ -256,11 +255,11 @@ public class DataManager {
      * @return a <b>continuous</b> stream of {@link List<BlacklistedSong>>}, backed by a behavior relay for caching query results.
      */
     private Observable<List<BlacklistedSong>> getBlacklistRelay() {
-        if (blacklistSubscription == null || blacklistSubscription.isUnsubscribed()) {
+        if (blacklistSubscription == null || blacklistSubscription.isDisposed()) {
             blacklistSubscription = getBlacklistDatabase()
                     .createQuery(BlacklistDbOpenHelper.TABLE_SONGS, "SELECT * FROM " + BlacklistDbOpenHelper.TABLE_SONGS)
                     .mapToList(BlacklistedSong::new)
-                    .subscribe(blacklistRelay, error -> Crashlytics.log("getBlacklistRelay error: " + error.getMessage()));
+                    .subscribe(blacklistRelay, error -> LogUtils.logException(TAG, "getBlacklistRelay threw rror", error));
         }
         return blacklistRelay.subscribeOn(Schedulers.io()).map(ArrayList::new);
     }
@@ -280,11 +279,11 @@ public class DataManager {
      * @return a <b>continuous</b> stream of {@link List<WhitelistFolder>>}, backed by a behavior relay for caching query results.
      */
     private Observable<List<WhitelistFolder>> getWhitelistRelay() {
-        if (whitelistSubscription == null || whitelistSubscription.isUnsubscribed()) {
+        if (whitelistSubscription == null || whitelistSubscription.isDisposed()) {
             whitelistSubscription = getWhitelistDatabase()
                     .createQuery(WhitelistDbOpenHelper.TABLE_FOLDERS, "SELECT * FROM " + WhitelistDbOpenHelper.TABLE_FOLDERS)
                     .mapToList(WhitelistFolder::new)
-                    .subscribe(whitelistRelay, error -> Crashlytics.log("getWhitelistRelay error: " + error.getMessage()));
+                    .subscribe(whitelistRelay, error -> LogUtils.logException(TAG, "getWhitelistRelay threw error", error));
         }
         return whitelistRelay.subscribeOn(Schedulers.io()).map(ArrayList::new);
     }

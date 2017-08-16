@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/media_route_menu_item"
+        android:title="@string/media_route_menu_title"
+        app:actionProviderClass="com.simplecity.amp_library.ui.views.CustomMediaRouteActionProvider"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/sorting"
+        android:icon="@drawable/ic_sort_24dp"
+        android:title="@string/sorting"
+        app:showAsAction="ifRoom">
+
+        <menu/>
+    </item>
+
+    <item
+        android:id="@+id/play"
+        android:title="@string/play_selection"/>
+
+    <item
+        android:title="@string/menu_add_to">
+        <menu>
+            <item
+                android:id="@+id/addToPlaylist"
+                android:title="@string/menu_playlist">
+                <menu/>
+            </item>
+
+            <item
+                android:id="@+id/addToQueue"
+                android:title="@string/menu_queue"/>
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/editTags"
+        android:title="@string/edit_tags"
+        android:visible="false"/>
+
+    <item
+        android:id="@+id/info"
+        android:title="@string/info"
+        android:visible="false"/>
+
+    <item
+        android:id="@+id/artwork"
+        android:title="@string/artwork_edit"
+        android:visible="false"/>
+</menu>

@@ -3,7 +3,6 @@ package com.simplecity.amp_library.utils;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
 
-import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.glide.utils.Size;
 
 public class ResourceUtils {
@@ -15,8 +14,7 @@ public class ResourceUtils {
      * @return A float value to represent px equivalent to dp depending on device density
      */
     public static int toPixels(float dp) {
-        Resources resources = ShuttleApplication.getInstance().getResources();
-        DisplayMetrics metrics = resources.getDisplayMetrics();
+        DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
         return (int) (dp * (metrics.densityDpi / 160f));
     }
 
@@ -27,8 +25,7 @@ public class ResourceUtils {
      * @return A float value to represent dp equivalent to px value
      */
     public static float toDips(float px) {
-        Resources resources = ShuttleApplication.getInstance().getResources();
-        DisplayMetrics metrics = resources.getDisplayMetrics();
+        DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
         return px / (metrics.densityDpi / 160f);
     }
 

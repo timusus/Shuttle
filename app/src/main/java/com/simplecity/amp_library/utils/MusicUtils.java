@@ -4,20 +4,20 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
-import android.widget.Toast;
 
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.rx.UnsafeConsumer;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class MusicUtils {
 
@@ -29,38 +29,7 @@ public class MusicUtils {
         int USE_AS_RINGTONE = 3;
         int PLAYLIST_SELECTED = 4;
         int NEW_PLAYLIST = 5;
-        int PLAY_SELECTION = 6;
-        int SHUFFLE_ALL = 9;
-        int TIMER = 10;
-        int LYRICS = 11;
-        int QUEUE = 13;
         int CHILD_MENU_BASE = 15;
-        int REMOVE = 16;
-        int DELETE_ITEM = 18;
-        int SET_INITIAL_DIR = 20;
-        int RENAME = 21;
-        int TAGGER = 22;
-        int EQUALIZER = 24;
-        int CLEAR_QUEUE = 26;
-        int RESCAN = 28;
-        int VIEW_AS = 30;
-        int OPTIONS = 31;
-        int BLACKLIST = 42;
-        int GO_TO = 43;
-        int GO_TO_ARTIST = 44;
-        int GO_TO_ALBUM = 45;
-        int TOGGLE_QUEUE = 46;
-        int VIEW_INFO = 47;
-        int EDIT_ARTWORK = 48;
-        int SHARE = 29;
-
-        int ARTIST_FRAGMENT_GROUP_ID = 2;
-        int ALBUM_FRAGMENT_GROUP_ID = 3;
-        int SONG_FRAGMENT_GROUP_ID = 4;
-        int PLAYLIST_FRAGMENT_GROUP_ID = 5;
-        int FOLDER_FRAGMENT_GROUP_ID = 6;
-        int QUEUE_FRAGMENT_GROUP_ID = 7;
-        int SUGGESTED_FRAGMENT_GROUP_ID = 8;
     }
 
     public interface PlaylistIds {
@@ -70,26 +39,15 @@ public class MusicUtils {
         long RECENTLY_PLAYED_PLAYLIST = -5;
     }
 
-    public interface PlaylistMenuOrder {
-        int DELETE_PLAYLIST = Defs.CHILD_MENU_BASE + 1;
-        int CLEAR_PLAYLIST = Defs.CHILD_MENU_BASE + 2;
-        int EDIT_PLAYLIST = Defs.CHILD_MENU_BASE + 3;
-        int RENAME_PLAYLIST = Defs.CHILD_MENU_BASE + 4;
-        int EXPORT_PLAYLIST = Defs.CHILD_MENU_BASE + 5;
-    }
-
-    public static void playAll(Context context, Observable<List<Song>> songsObservable) {
-        songsObservable.observeOn(AndroidSchedulers.mainThread())
-                .subscribe(songs -> playAll(songs, () -> {
-                    final String message = context.getString(R.string.emptyplaylist);
-                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-                }));
+    public static void playAll(Single<List<Song>> songsSingle, UnsafeConsumer<String> onEmpty) {
+        songsSingle.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(songs -> playAll(songs, onEmpty));
     }
 
     /**
      * @param songs list of songs to play
      */
-    public static void playAll(List<Song> songs, Action0 onEmpty) {
+    public static void playAll(List<Song> songs, UnsafeConsumer<String> onEmpty) {
         playAll(songs, 0, false, onEmpty);
     }
 
@@ -97,7 +55,7 @@ public class MusicUtils {
      * @param songs    list of songs to play
      * @param position position of the pressed song
      */
-    public static void playAll(List<Song> songs, int position, Action0 onEmpty) {
+    public static void playAll(List<Song> songs, int position, UnsafeConsumer<String> onEmpty) {
         playAll(songs, position, false, onEmpty);
     }
 
@@ -108,13 +66,13 @@ public class MusicUtils {
      * @param position     int
      * @param forceShuffle boolean
      */
-    public static void playAll(List<Song> songs, int position, boolean forceShuffle, Action0 onEmpty) {
+    public static void playAll(List<Song> songs, int position, boolean forceShuffle, UnsafeConsumer<String> onEmpty) {
 
         if (songs.size() == 0
                 || MusicServiceConnectionUtils.sServiceBinder == null
                 || MusicServiceConnectionUtils.sServiceBinder.getService() == null) {
 
-            onEmpty.call();
+            onEmpty.accept(ShuttleApplication.getInstance().getResources().getString(R.string.empty_playlist));
             return;
         }
 
@@ -129,22 +87,19 @@ public class MusicUtils {
     /**
      * Shuffles the passed in song list
      */
-    public static void shuffleAll(Context context, Observable<List<Song>> songsObservable) {
-        songsObservable.observeOn(AndroidSchedulers.mainThread())
+    public static void shuffleAll(Single<List<Song>> songsSingle, UnsafeConsumer<String> onEmpty) {
+        songsSingle.observeOn(AndroidSchedulers.mainThread())
                 .subscribe(songs -> {
                     setShuffleMode(MusicService.ShuffleMode.ON);
-                    playAll(songs, 0, true, () -> {
-                        final String message = context.getString(R.string.emptyplaylist);
-                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-                    });
-                });
+                    playAll(songs, 0, true, onEmpty);
+                }, e -> LogUtils.logException(TAG, "Shuffle all threw error", e));
     }
 
     /**
      * Shuffles all songs on the device
      */
-    public static void shuffleAll(Context context) {
-        shuffleAll(context, DataManager.getInstance().getSongsRelay().first());
+    public static void shuffleAll(UnsafeConsumer<String> onEmpty) {
+        shuffleAll(DataManager.getInstance().getSongsRelay().firstOrError(), onEmpty);
     }
 
     /**
@@ -438,18 +393,11 @@ public class MusicUtils {
         }
     }
 
-    static Observable<Boolean> isFavorite() {
+    static Single<Boolean> isFavorite() {
         if (MusicServiceConnectionUtils.sServiceBinder != null && MusicServiceConnectionUtils.sServiceBinder.getService() != null) {
             return MusicServiceConnectionUtils.sServiceBinder.getService().isFavorite();
         }
-        return Observable.just(false);
-    }
-
-    public static void toggleLockscreenArtwork() {
-        if (MusicServiceConnectionUtils.sServiceBinder.getService() == null) {
-            return;
-        }
-        MusicServiceConnectionUtils.sServiceBinder.getService().notifyChange(MusicService.InternalIntents.META_CHANGED);
+        return Single.just(false);
     }
 
     public static void toggleShuffleMode() {
@@ -466,22 +414,20 @@ public class MusicUtils {
         MusicServiceConnectionUtils.sServiceBinder.getService().toggleRepeat();
     }
 
-    public static void addToQueue(Context context, List<Song> songs) {
+    public static void addToQueue(List<Song> songs, UnsafeConsumer<String> onAdded) {
         if (MusicServiceConnectionUtils.sServiceBinder.getService() == null) {
             return;
         }
         MusicServiceConnectionUtils.sServiceBinder.getService().enqueue(songs, MusicService.EnqueueAction.LAST);
-        final String message = context.getResources().getQuantityString(R.plurals.NNNtrackstoqueue, songs.size(), songs.size());
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+        onAdded.accept(ShuttleApplication.getInstance().getResources().getQuantityString(R.plurals.NNNtrackstoqueue, songs.size(), songs.size()));
     }
 
-    public static void playNext(Context context, List<Song> songs) {
+    public static void playNext(List<Song> songs, UnsafeConsumer<String> onAdded) {
         if (MusicServiceConnectionUtils.sServiceBinder.getService() == null) {
             return;
         }
         MusicServiceConnectionUtils.sServiceBinder.getService().enqueue(songs, MusicService.EnqueueAction.NEXT);
-        final String message = context.getResources().getQuantityString(R.plurals.NNNtrackstoqueue, songs.size(), songs.size());
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+        onAdded.accept(ShuttleApplication.getInstance().getResources().getQuantityString(R.plurals.NNNtrackstoqueue, songs.size(), songs.size()));
     }
 
     public static void setQueuePosition(final int position) {
@@ -494,39 +440,11 @@ public class MusicUtils {
         MusicServiceConnectionUtils.sServiceBinder.getService().clearQueue();
     }
 
-    public static void setTimer(int sleepNumber) {
-        if (MusicServiceConnectionUtils.sServiceBinder == null || MusicServiceConnectionUtils.sServiceBinder.getService() == null) {
-            return;
-        }
-        MusicServiceConnectionUtils.sServiceBinder.getService().sleep(sleepNumber);
-    }
-
-    public static void stopTimer() {
-        if (MusicServiceConnectionUtils.sServiceBinder == null || MusicServiceConnectionUtils.sServiceBinder.getService() == null) {
-            return;
-        }
-        MusicServiceConnectionUtils.sServiceBinder.getService().stopTimer();
-    }
-
     public static List<Song> getQueue() {
         if (MusicServiceConnectionUtils.sServiceBinder != null && MusicServiceConnectionUtils.sServiceBinder.getService() != null) {
             return MusicServiceConnectionUtils.sServiceBinder.getService().getQueue();
         }
         return new ArrayList<>();
-    }
-
-    public static boolean getTimerActive() {
-        if (MusicServiceConnectionUtils.sServiceBinder == null || MusicServiceConnectionUtils.sServiceBinder.getService() == null) {
-            return false;
-        }
-        return MusicServiceConnectionUtils.sServiceBinder.getService().isTimerActive();
-    }
-
-    public static long getTimeRemaining() {
-        if (MusicServiceConnectionUtils.sServiceBinder.getService() == null) {
-            return 0;
-        }
-        return MusicServiceConnectionUtils.sServiceBinder.getService().timeRemaining();
     }
 
     public static int getQueuePosition() {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.simplecity.amp_library.ui.views.ForegroundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.internal.ForegroundLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="68dp"
     android:descendantFocusability="blocksDescendants"
@@ -13,10 +14,11 @@
         android:layout_weight="5"
         android:ellipsize="end"
         android:gravity="center_vertical"
+        android:maxLines="1"
         android:paddingLeft="8dp"
         android:scrollHorizontally="true"
-        android:textSize="14sp"
-        android:maxLines="1" />
+        android:textColor="?android:textColorPrimary"
+        android:textSize="14sp"/>
 
     <TextView
         android:id="@+id/line_two"
@@ -25,10 +27,11 @@
         android:layout_weight="5"
         android:ellipsize="end"
         android:gravity="center_vertical"
+        android:maxLines="1"
         android:paddingLeft="8dp"
         android:scrollHorizontally="true"
-        android:textSize="14sp"
-        android:maxLines="1" />
+        android:textColor="?android:textColorSecondary"
+        android:textSize="14sp"/>
 
     <TextView
         android:id="@+id/play_count"
@@ -41,19 +44,17 @@
         android:minWidth="28dp"
         android:textColor="@color/default_text_color_holo_dark"
         android:textSize="14sp"
-        android:visibility="visible" />
+        android:visibility="visible"/>
 
     <TextView
         android:id="@+id/line_three"
         android:layout_width="56dp"
         android:layout_height="match_parent"
-        android:ellipsize="marquee"
-        android:fadingEdge="horizontal"
         android:gravity="center"
-        android:textSize="12sp"
-        android:maxLines="1" />
+        android:lines="1"
+        android:textSize="12sp"/>
 
-    <com.simplecity.amp_library.ui.views.NonScrollImageButton
+    <com.simplecity.amp_library.ui.views.OverflowButton
         android:id="@+id/btn_overflow"
         android:layout_width="40dp"
         android:layout_height="48dp"
@@ -61,6 +62,5 @@
         android:layout_marginLeft="-8dp"
         android:layout_marginRight="4dp"
         android:alpha="0.8"
-        android:background="@null"
-        android:src="@drawable/ic_overflow_white" />
-</com.simplecity.amp_library.ui.views.ForegroundLinearLayout>
+        android:background="@null"/>
+</android.support.design.internal.ForegroundLinearLayout>

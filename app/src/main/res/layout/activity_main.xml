@@ -1,53 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.simplecity.amp_library.ui.views.CustomDrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
 
-    <FrameLayout
+    <android.support.design.internal.ScrimInsetsFrameLayout
+        android:id="@+id/mainContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <include layout="@layout/drawer_content" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <FrameLayout
-                android:id="@+id/dummyStatusBar"
-                android:layout_width="match_parent"
-                android:layout_height="24dp"
-                android:background="?attr/colorPrimaryDark"
-                android:visibility="gone" />
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:minHeight="?attr/actionBarSize"
-                app:popupTheme="?attr/toolbar_popup_theme"
-                app:theme="?attr/toolbar_theme" />
-        </LinearLayout>
-    </FrameLayout>
-
-    <com.simplecity.amp_library.ui.views.ScrimInsetsFrameLayout
-        android:layout_width="@dimen/navigation_drawer_width"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="@color/white"
-        android:elevation="10dp"
-        android:fitsSystemWindows="true"
-        app:insetForeground="#4000">
+        android:fitsSystemWindows="true"/>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start">
 
         <fragment
-            android:id="@+id/navigation_drawer"
-            android:name="com.simplecity.amp_library.ui.fragments.NavigationDrawerFragment"
+            android:id="@+id/navDrawerFragment"
+            android:name="com.simplecity.amp_library.ui.drawer.DrawerFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="start" />
-    </com.simplecity.amp_library.ui.views.ScrimInsetsFrameLayout>
+            android:layout_height="match_parent"/>
+    </android.support.design.widget.NavigationView>
 
-</com.simplecity.amp_library.ui.views.CustomDrawerLayout>
+</android.support.v4.widget.DrawerLayout>

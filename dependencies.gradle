@@ -4,102 +4,111 @@ ext.versions = [
         // App versions
         // /////////////////////////////////////////////////////////////////////////
 
-        name                   : "1.6.6",
+        name                          : "2.0.0-beta3",
 
         // //////////////////////////////////////////////////////////////////////////
         // Compile versions
         // /////////////////////////////////////////////////////////////////////////
 
-        minSdk                 : 16,
-        targetSdk              : 25,
-        compileSdk             : 25,
-        buildTools             : "25.0.2",
+        minSdk                        : 16,
+        targetSdk                     : 26,
+        compileSdk                    : 26,
+        buildTools                    : "26.0.0",
 
         // //////////////////////////////////////////////////////////////////////////
         // Plugin versions
         // /////////////////////////////////////////////////////////////////////////
 
-        androidGradlePlugin    : "2.3.1",
-        dexcountGradlePlugin   : "0.6.4",
-        retrolambdaGradlePlugin: "3.6.0",
-        fabricGradlePlugin     : "1.+",
-        googleServicesPlugin   : "3.0.0",
-        playPublisher          : "1.2.0",
+        androidGradlePlugin           : "2.3.3",
+        dexcountGradlePlugin          : "0.7.1",
+        fabricGradlePlugin            : "1.+",
+        googleServicesPlugin          : "3.0.0",
+        playPublisher                 : "1.2.0",
+        gradleVersions                : "0.15.0",
+        retroLambda                   : "3.6.1",
 
         // //////////////////////////////////////////////////////////////////////////
         // Google lib versions
         // /////////////////////////////////////////////////////////////////////////
 
-        supportLib             : "25.3.1",
-        firebaseCore           : "10.2.1",
-        chromecast             : "10.2.1",
-        constraintLayout       : "1.0.2",
+        supportLib                    : "26.0.1",
+        firebaseCore                  : "11.0.0",
+        chromecast                    : "11.0.0",
+        constraintLayout              : "1.0.2",
 
         // //////////////////////////////////////////////////////////////////////////
         // Square lib versions
         // /////////////////////////////////////////////////////////////////////////
 
-        haha                   : "2.0.3",
-        leakCanary             : "1.5",
-        okio                   : "1.12.0",
-        okhttp                 : "3.7.0",
-        retrofit               : "2.2.0",
-        retrofitGson           : "2.2.0",
-        sqlBrite               : "1.1.1",
+        haha                          : "2.0.3",
+        leakCanary                    : "1.5.1",
+        okio                          : "1.12.0",
+        okhttp                        : "3.7.0",
+        retrofit                      : "2.2.0",
+        retrofitGson                  : "2.2.0",
+        sqlBrite                      : "2.0.0-SNAPSHOT",
 
         // //////////////////////////////////////////////////////////////////////////
         // Third party lib versions
         // /////////////////////////////////////////////////////////////////////////
 
-        nanoHttp               : "2.3.1",
-        crashlytics            : "2.6.4@aar",
-        dashClockApi           : "2.0.0",
-        fastScroll             : "1.0.14",
-        glide                  : "3.8.0-SNAPSHOT",
-        glideOkhttp            : "1.4.0@aar",
-        lambdaBackport         : "2.5.1",
-        materialDialogs        : "0.9.4.3",
-        multiSelViewHolder     : "0.2",
-        permiso                : "0.3.0",
-        rxAndroid              : "1.2.1",
-        rxBindings             : "0.4.0",
-        rxBindingsAppCompat    : "0.4.0",
-        rxImageSel             : "1.3.1",
-        rxJava                 : "1.2.0",
-        rxRelay                : "1.2.0",
-        rxReceivers            : "0.1.0",
-        streams                : "1.1.7",
+        nanoHttp                      : "2.3.1",
+        crashlytics                   : "2.6.4@aar",
+        dashClockApi                  : "2.0.0",
+        fastScroll                    : "1.0.15",
+        glide                         : "3.8.0-SNAPSHOT",
+        glideOkhttp                   : "1.4.0@aar",
+        materialDialogs               : "0.9.4.5",
+        permiso                       : "0.3.0",
+        streams                       : "1.1.7",
+        butterknife                   : "8.6.0",
+        butterknifeAnnotationProcessor: "8.6.0",
+        dagger                        : "2.11",
+        daggerAnnotationProcessor     : "2.11",
+        expandableRecyclerView        : "3.0.0-RC1",
+        aesthetic                     : "0.4.0",
+        betterPickers                 : "3.1.0",
+
+        // RX
+        rxAndroid                     : "2.0.1",
+        rxBinding                     : "2.0.0",
+        rxBindingAppCompat            : "2.0.0",
+        rxImagePicker                 : "2.0.0",
+        rxJava                        : "2.1.0",
+        rxRelay                       : "2.0.0",
+        rxBroadcast                   : "2.0.0",
 
         // //////////////////////////////////////////////////////////////////////////
         // MultiDex
         // /////////////////////////////////////////////////////////////////////////
-        multiDex               : "1.0.1",
+        multiDex                      : "1.0.1",
 
         // //////////////////////////////////////////////////////////////////////////
         // Testing
         // /////////////////////////////////////////////////////////////////////////
 
-        junit                  : "4.12",
-        espressoCore           : "2.2.2",
-        assertj                : "3.6.1",
+        junit                         : "4.12",
+        espressoCore                  : "2.2.2",
+        assertj                       : "3.6.1",
 
         // Mockito version restriction -- PowerMock does not fully support Mockito2 yet.
         // https://github.com/powermock/powermock/wiki/Mockito2_maven
-        mockito                : "1.10.19",
-        powermock              : "1.6.6",
+        mockito                       : "1.10.19",
+        powermock                     : "1.6.6",
 
         // Future note: PowerMock and Robolectric can't work together until Robolectric 3.3 is released
         // https://github.com/robolectric/robolectric/wiki/Using-PowerMock
-        robolectric            : "3.2.2"
+        robolectric                   : "3.2.2"
 ]
 
 ext.gradlePlugins = [
         android       : "com.android.tools.build:gradle:$versions.androidGradlePlugin",
         dexcount      : "com.getkeepsafe.dexcount:dexcount-gradle-plugin:$versions.dexcountGradlePlugin",
         fabric        : "io.fabric.tools:gradle:$versions.fabricGradlePlugin",
-        retrolambda   : "me.tatarka:gradle-retrolambda:$versions.retrolambdaGradlePlugin",
         googleServices: "com.google.gms:google-services:$versions.googleServicesPlugin",
-        playPublisher : "com.github.triplet.gradle:play-publisher:$versions.playPublisher"
+        playPublisher : "com.github.triplet.gradle:play-publisher:$versions.playPublisher",
+        gradleVersions: "com.github.ben-manes:gradle-versions-plugin:$versions.gradleVersions",
+        retroLambda   : "me.tatarka:gradle-retrolambda:$versions.retroLambda"
 ]
 
 ext.libs = [
@@ -108,98 +117,118 @@ ext.libs = [
         // Google libs
         // /////////////////////////////////////////////////////////////////////////
 
-        ccl                : project(':libraries/:ccl'),
-        cardView           : "com.android.support:cardview-v7:$versions.supportLib",
-        design             : "com.android.support:design:$versions.supportLib",
-        palette            : "com.android.support:palette-v7:$versions.supportLib",
-        recyclerView       : "com.android.support:recyclerview-v7:$versions.supportLib",
-        supportv4          : "com.android.support:support-v4:$versions.supportLib",
-        firebaseCore       : "com.google.firebase:firebase-core:$versions.firebaseCore",
-        appcompat          : "com.android.support:appcompat-v7:${versions.supportLib}",
-        mediarouter        : "com.android.support:mediarouter-v7:${versions.supportLib}",
-        chromecast         : "com.google.android.gms:play-services-cast:${versions.chromecast}",
-        constraintLayout   : "com.android.support.constraint:constraint-layout:${versions.constraintLayout}",
+        ccl                           : project(':libraries/:ccl'),
+        cardView                      : "com.android.support:cardview-v7:$versions.supportLib",
+        design                        : "com.android.support:design:$versions.supportLib",
+        palette                       : "com.android.support:palette-v7:$versions.supportLib",
+        recyclerView                  : "com.android.support:recyclerview-v7:$versions.supportLib",
+        supportv4                     : "com.android.support:support-v4:$versions.supportLib",
+        firebaseCore                  : "com.google.firebase:firebase-core:$versions.firebaseCore",
+        appcompat                     : "com.android.support:appcompat-v7:${versions.supportLib}",
+        mediarouter                   : "com.android.support:mediarouter-v7:${versions.supportLib}",
+        chromecast                    : "com.google.android.gms:play-services-cast:${versions.chromecast}",
+        constraintLayout              : "com.android.support.constraint:constraint-layout:${versions.constraintLayout}",
+        prefCompat                    : "com.android.support:preference-v7:${versions.supportLib}",
+        prefCompatv14                 : "com.android.support:preference-v14:${versions.supportLib}",
 
         // //////////////////////////////////////////////////////////////////////////
         // Square libs https://github.com/square
         // /////////////////////////////////////////////////////////////////////////
 
-        haha               : "com.squareup.haha:haha:$versions.haha",
-        leakCanaryDebug    : "com.squareup.leakcanary:leakcanary-android:$versions.leakCanary",
-        leakCanaryRel      : "com.squareup.leakcanary:leakcanary-android-no-op:$versions.leakCanary",
-        okio               : "com.squareup.okio:okio:$versions.okio",
-        okhttp             : "com.squareup.okhttp3:okhttp:$versions.okhttp",
-        retrofit           : "com.squareup.retrofit2:retrofit:$versions.retrofit",
-        retrofitGson       : "com.squareup.retrofit2:converter-gson:$versions.retrofitGson",
-        sqlBrite           : "com.squareup.sqlbrite:sqlbrite:$versions.sqlBrite",
+        haha                          : "com.squareup.haha:haha:$versions.haha",
+        leakCanaryDebug               : "com.squareup.leakcanary:leakcanary-android:$versions.leakCanary",
+        leakCanaryRel                 : "com.squareup.leakcanary:leakcanary-android-no-op:$versions.leakCanary",
+        okio                          : "com.squareup.okio:okio:$versions.okio",
+        okhttp                        : "com.squareup.okhttp3:okhttp:$versions.okhttp",
+        retrofit                      : "com.squareup.retrofit2:retrofit:$versions.retrofit",
+        retrofitGson                  : "com.squareup.retrofit2:converter-gson:$versions.retrofitGson",
+        sqlBrite                      : "com.squareup.sqlbrite2:sqlbrite:$versions.sqlBrite",
 
         // //////////////////////////////////////////////////////////////////////////
         // Third party libs
         // /////////////////////////////////////////////////////////////////////////
 
+        // Internal navigation library
+        navigation                    : project(':libraries/:navigation'),
+        // Internal recycler adapter library
+        recyclerAdapter               : project(':libraries/:recycler-adapter'),
+        // Multi Sheet View
+        multiSheetView                : project(':libraries/:multisheetview'),
+
         // NanoHttp - https://github.com/NanoHttpd/nanohttpd (Various)
-        nanoHttp           : "org.nanohttpd:nanohttpd-webserver:$versions.nanoHttp",
+        nanoHttp                      : "org.nanohttpd:nanohttpd-webserver:$versions.nanoHttp",
         // Crashlytics - https://fabric.io/kits/android/crashlytics
-        crashlytics        : "com.crashlytics.sdk.android:crashlytics:$versions.crashlytics",
+        crashlytics                   : "com.crashlytics.sdk.android:crashlytics:$versions.crashlytics",
         // Dashclock - https://git.io/vix9g (Roman Nurik)
-        dashClockApi       : "com.google.android.apps.dashclock:dashclock-api:$versions.dashClockApi",
+        dashClockApi                  : "com.google.android.apps.dashclock:dashclock-api:$versions.dashClockApi",
         // RecyclerView-FastScroll - https://git.io/vix5z (dumb fuck)
-        fastScroll         : "com.simplecityapps:recyclerview-fastscroll:$versions.fastScroll",
+        fastScroll                    : "com.simplecityapps:recyclerview-fastscroll:$versions.fastScroll",
         // Glide - https://git.io/vtn9K (Bump)
-        glide              : "com.github.bumptech.glide:glide:$versions.glide",
+        glide                         : "com.github.bumptech.glide:glide:$versions.glide",
         // Glide - OkHttp  integration - https://git.io/vihvW (Bump)
-        glideOkhttp        : "com.github.bumptech.glide:okhttp3-integration:$versions.glideOkhttp",
-        // Change RetroLambda version - https://git.io/ve2N9 (Esko Luontola)
-        lambdaBackport     : "net.orfjackal.retrolambda:retrolambda:$versions.lambdaBackport",
+        glideOkhttp                   : "com.github.bumptech.glide:okhttp3-integration:$versions.glideOkhttp",
         // Material Dialogs - https://git.io/vixHf (Aidan Follestad)
-        materialDialogs    : "com.afollestad.material-dialogs:core:$versions.materialDialogs",
-        // Multiselect ViewHolder - https://git.io/vix5l (Big Nerd Ranch)
-        multiSelViewHolder : "com.bignerdranch.android:recyclerview-multiselect:$versions.multiSelViewHolder",
+//        materialDialogs               : "com.afollestad.material-dialogs:core:$versions.materialDialogs",
+//        materialDialogCommons         : "com.afollestad.material-dialogs:commons:$versions.materialDialogs",
+        materialDialogs               : project(':libraries/material-dialogs/:core'),
+        materialDialogCommons         : project(':libraries/material-dialogs/:commons'),
+
         // Permiso - https://git.io/vixQ4 (Greyson Parrelli)
-        permiso            : "com.greysonparrelli.permiso:permiso:$versions.permiso",
-        // RxJava - https://git.io/vihv0 (ReactiveX)
-        rxAndroid          : "io.reactivex:rxandroid:$versions.rxAndroid",
-        // RxBindings - https://git.io/vix5y (Jake Wharton)
-        rxBindings         : "com.jakewharton.rxbinding:rxbinding:$versions.rxBindings",
-        // RxBindings AppCompat - https://git.io/vix5y (Jake Wharton)
-        rxBindingsAppCompat: "com.jakewharton.rxbinding:rxbinding-appcompat-v7:$versions.rxBindingsAppCompat",
-        // RxJava - https://git.io/rxjava (ReactiveX)
-        rxJava             : "io.reactivex:rxjava:$versions.rxJava",
-        // RX Image Picker - https://git.io/vix5H (MLSDev )
-        rxImageSel         : "com.mlsdev.rximagepicker:library:$versions.rxImageSel",
-        // RX Relay - https://github.com/JakeWharton/RxRelay
-        rxRelay            : "com.jakewharton.rxrelay:rxrelay:$versions.rxRelay",
-        // Rx Receivers - https://github.com/f2prateek/rx-receivers
-        rxReceivers        : "com.f2prateek.rx.receivers:rx-receivers:$versions.rxReceivers",
+        permiso                       : "com.greysonparrelli.permiso:permiso:$versions.permiso",
         // Streams Backport - https://git.io/vCazA (Victor Melnik)
-        streams            : "com.annimon:stream:$versions.streams",
+        streams                       : "com.annimon:stream:$versions.streams",
         // Glide Palette - https://git.io/vix57 (Florent Champigny)
-        glidePalette       : project(":libraries/:glidepalette"),
-        // Sliding up panel - https://git.io/vUruG (Umano)
-        slidingUpPanel     : project(":libraries/:AndroidSlidingUpPanel"),
-        // Preferences Compat
-        prefCompat         : project(':libraries/:android-support-v4-preferencefragment'),
+        glidePalette                  : project(":libraries/:glidepalette"),
+        // Butterknife
+        butterknife                   : "com.jakewharton:butterknife:$versions.butterknife",
+        butterknifeAnnotationProcessor: "com.jakewharton:butterknife-compiler:$versions.butterknifeAnnotationProcessor",
+        // Dagger
+        dagger                        : "com.google.dagger:dagger:$versions.dagger",
+        daggerAnnotationProcessor     : "com.google.dagger:dagger-compiler:$versions.daggerAnnotationProcessor",
+        // Expandable Recycler View - https://github.com/thoughtbot/expandable-recycler-view
+        expandableRecyclerView        : "com.bignerdranch.android:expandablerecyclerview:$versions.expandableRecyclerView",
+        // Aesthetic - Theming Engine
+        aesthetic                     : project(":libraries/:aesthetic"),
+        // Better pickers - https://github.com/code-troopers/android-betterpickers
+        betterPickers                 : "com.code-troopers.betterpickers:library:$versions.betterPickers",
+
+        // RX
+
+        // RxJava - https://git.io/vihv0 (ReactiveX)
+        rxAndroid                     : "io.reactivex.rxjava2:rxandroid:$versions.rxAndroid",
+        // rxBinding - https://git.io/vix5y (Jake Wharton)
+        rxBinding                     : "com.jakewharton.rxbinding2:rxbinding:$versions.rxBinding",
+        // rxBinding AppCompat - https://git.io/vix5y (Jake Wharton)
+        rxBindingAppCompat            : "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:$versions.rxBindingAppCompat",
+        // RxJava - https://git.io/rxjava (ReactiveX)
+        rxJava                        : "io.reactivex.rxjava2:rxjava:$versions.rxJava",
+        // RX Image Picker - https://git.io/vix5H (MLSDev )
+        rxImagePicker                 : "com.mlsdev.rximagepicker:library:$versions.rxImagePicker",
+        // RX Relay - https://github.com/JakeWharton/RxRelay
+        rxRelay                       : "com.jakewharton.rxrelay2:rxrelay:$versions.rxRelay",
+        // Rx Receivers - https://github.com/f2prateek/rx-receivers
+        rxBroadcast                   : "com.cantrowitz:rxbroadcast:$versions.rxBroadcast",
 
         // //////////////////////////////////////////////////////////////////////////
         // MultiDex
         // /////////////////////////////////////////////////////////////////////////
-        multiDex           : "com.android.support:multidex:$versions.multiDex",
+        multiDex                      : "com.android.support:multidex:$versions.multiDex",
 
         // //////////////////////////////////////////////////////////////////////////
         // Testing
         // /////////////////////////////////////////////////////////////////////////
 
         // JUnit
-        junit              : "junit:junit:$versions.junit",
+        junit                         : "junit:junit:$versions.junit",
         // Espresso
-        espresso           : "com.android.support.test.espresso:espresso-core:$versions.espressoCore",
+        espresso                      : "com.android.support.test.espresso:espresso-core:$versions.espressoCore",
         // Mockito - https://github.com/mockito/mockito
-        mockito            : "org.mockito:mockito-core:$versions.mockito",
+        mockito                       : "org.mockito:mockito-core:$versions.mockito",
         // Powermock - https://github.com/powermock/powermock
-        powermock          : "org.powermock:powermock-api-mockito:$versions.powermock",
-        powermockjunit     : "org.powermock:powermock-module-junit4:$versions.powermock",
+        powermock                     : "org.powermock:powermock-api-mockito:$versions.powermock",
+        powermockjunit                : "org.powermock:powermock-module-junit4:$versions.powermock",
         // Robolectric - https://github.com/robolectric/robolectric
-        robolectric        : "org.robolectric:robolectric:$versions.robolectric",
+        robolectric                   : "org.robolectric:robolectric:$versions.robolectric",
         // AssertJ - http://joel-costigliola.github.io/assertj/
-        assertj            : "org.assertj:assertj-core:$versions.assertj"
+        assertj                       : "org.assertj:assertj-core:$versions.assertj"
 ]

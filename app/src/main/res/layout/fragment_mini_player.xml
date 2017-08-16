@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/mini_player_height"
-    android:clickable="true"
+    android:background="?colorPrimary"
     android:elevation="4dp"
     android:foreground="?attr/list_selector">
 
@@ -10,29 +13,32 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:alpha="0.15"
-        android:src="@color/white" />
+        android:src="@color/white"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ProgressBar
+        <me.zhanghai.android.materialprogressbar.MaterialProgressBar
             android:id="@+id/progressbar"
-            style="@style/CustomProgressBar"
+            style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:layout_toEndOf="@+id/mini_album_artwork"
             android:layout_toRightOf="@+id/mini_album_artwork"
+            android:background="#20000000"
             android:indeterminate="false"
-            android:maxHeight="3dp"
-            android:minHeight="3dp" />
+            app:mpb_progressStyle="horizontal"
+            app:mpb_showProgressBackground="false"
+            app:mpb_useIntrinsicPadding="false"
+            tools:progress="50"/>
 
         <ImageView
             android:id="@+id/mini_album_artwork"
             android:layout_width="@dimen/mini_player_height"
             android:layout_height="@dimen/mini_player_height"
             android:layout_centerVertical="true"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -49,29 +55,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:ellipsize="marquee"
                 android:gravity="center_vertical"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:maxLines="1" />
+                android:lines="1"
+                android:tag=":aesthetic_ignore"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="16sp"/>
 
             <TextView
                 android:id="@+id/artist_name"
-                style="@style/SecondaryTextDark"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:ellipsize="marquee"
                 android:gravity="center_vertical"
-                android:textSize="14sp"
-                android:maxLines="1" />
+                android:lines="1"
+                android:tag=":aesthetic_ignore"
+                android:textColor="?android:textColorSecondary"
+                android:textSize="14sp"/>
         </LinearLayout>
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:layout_alignParentTop="true"
-            android:src="@drawable/card_shadow" />
+            android:src="@drawable/card_shadow"/>
 
         <com.simplecity.amp_library.ui.views.PlayPauseView
             android:id="@+id/mini_play"
@@ -82,6 +88,6 @@
             android:layout_marginRight="4dp"
             android:background="?attr/circular_ripple"
             android:contentDescription="@string/btn_play"
-            android:padding="40dp" />
+            android:padding="40dp"/>
     </RelativeLayout>
 </FrameLayout>

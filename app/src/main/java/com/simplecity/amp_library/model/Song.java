@@ -13,11 +13,10 @@ import android.text.TextUtils;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.http.HttpClient;
-import com.simplecity.amp_library.lastfm.ItunesResult;
-import com.simplecity.amp_library.lastfm.LastFmResult;
+import com.simplecity.amp_library.http.itunes.ItunesResult;
+import com.simplecity.amp_library.http.lastfm.LastFmResult;
 import com.simplecity.amp_library.sql.SqlUtils;
 import com.simplecity.amp_library.sql.providers.PlayCountTable;
-import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
 import com.simplecity.amp_library.utils.ArtworkUtils;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.FileHelper;
@@ -29,7 +28,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import retrofit2.Call;
-import rx.Observable;
 
 public class Song implements
         Serializable,
@@ -308,18 +306,6 @@ public class Song implements
                 .name(albumArtistName)
                 .album(getAlbum())
                 .build();
-    }
-
-    public Observable<Genre> getGenreObservable(Context context) {
-        Query query = Genre.getQuery();
-        query.uri = MediaStore.Audio.Genres.getContentUriForAudioId("external", (int) id);
-        return SqlBriteUtils.createSingleQuery(context, Genre::new, query);
-    }
-
-    public Genre getGenre(Context context) {
-        Query query = Genre.getQuery();
-        query.uri = MediaStore.Audio.Genres.getContentUriForAudioId("external", (int) id);
-        return SqlUtils.createSingleQuery(context, Genre::new, query);
     }
 
     public void share(Context context) {

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/media_route_menu_item"
+        android:title="@string/media_route_menu_title"
+        app:actionProviderClass="com.simplecity.amp_library.ui.views.CustomMediaRouteActionProvider"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/favorite"
+        android:title="@string/fav_add"
+        app:actionLayout="@layout/action_bar_favorite"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/lyrics"
+        android:icon="@drawable/ic_action_lyrics_24dp"
+        android:title="@string/lyrics"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:title="@string/go_to"
+        app:showAsAction="never">
+        <menu>
+            <item
+                android:id="@+id/goToArtist"
+                android:title="@string/artist_title"/>
+
+            <item
+                android:id="@+id/goToAlbum"
+                android:title="@string/album_title"/>
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/editTags"
+        android:title="@string/edit_tags"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/songInfo"
+        android:title="@string/song_info"
+        app:showAsAction="never"/>
+
+</menu>

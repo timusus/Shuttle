@@ -1,19 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Swipe dismiss list view animation -->
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
 
-    <!-- Notification Styles -->
+        <item name="colorPrimaryDark">@color/grey_600</item>
+        <item name="colorPrimary">@color/grey_500</item>
+        <item name="colorAccent">@color/grey_250</item>
 
-    <style name="notification_button">
-        <item name="android:background">?android:listChoiceBackgroundIndicator</item>
-        <item name="android:layout_width">48dp</item>
-        <item name="android:layout_height">48dp</item>
+        <item name="list_selector">@drawable/list_selector_dark</item>
+        <item name="listDividerColor">@color/list_divider_dark</item>
+        <item name="circular_ripple">@drawable/ripple_circular_dark</item>
+
+        <item name="preferenceTheme">
+            @style/PreferenceThemeOverlay.v14.Material
+        </item>
     </style>
 
+    <style name="AppTheme.Light" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <item name="colorPrimaryDark">@color/grey_600</item>
+        <item name="colorPrimary">@color/grey_500</item>
+        <item name="colorAccent">@color/grey_250</item>
+
+        <item name="list_selector">@drawable/list_selector_light</item>
+        <item name="listDividerColor">@color/list_divider_light</item>
+        <item name="circular_ripple">@drawable/ripple_circular_light</item>
+    </style>
+
+    <style name="AppTheme.Black" parent="AppTheme">
+        <item name="android:windowBackground">@color/black</item>
+    </style>
+
+    <style name="TranslucentTheme" parent="Theme.AppCompat">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@color/semitransparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="WallpaperTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimaryDark">@color/grey_600</item>
+        <item name="colorPrimary">@color/grey_500</item>
+        <item name="colorAccent">@color/grey_250</item>
+        <item name="android:windowShowWallpaper">true</item>
+        <item name="android:windowBackground">@color/transparent</item>
+    </style>
+
+    <style name="Theme.Transparent" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="Theme.AppCompat.NoActionBar.FullScreen" parent="@style/Theme.AppCompat"/>
+
+    <style name="CollapsingToolbarExpandedTextAppearance" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">#fff</item>
+    </style>
+
+    <style name="CollapsingToolbarCollapsedTextAppearance" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">#fff</item>
+    </style>
+
+    <style name="CustomCollapsingToolbarLayout" parent="@style/Widget.Design.CollapsingToolbar"/>
+
+    <style name="CollapsedSubtitleAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Subtitle">
+        <item name="android:textColor">#fff</item>
+    </style>
+
+    <style name="ExpandedSubtitleAppearance" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textColor">#fff</item>
+    </style>
+
+    <style name="BetterPickers" parent="BetterPickersDialogFragment">
+        <item name="bpButtonBackground">@drawable/list_selector_light</item>
+        <item name="bpKeyboardIndicatorColor">@drawable/list_selector_light</item>
+    </style>
+
+    <style name="BetterPickersLight" parent="BetterPickersDialogFragment.Light">
+        <item name="bpButtonBackground">@drawable/list_selector_dark</item>
+        <item name="bpKeyboardIndicatorColor">@drawable/list_selector_dark</item>
+    </style>
+
+    <!-- Swipe dismiss list view animation -->
+
     <style name="SeekBar" parent="android:Widget.SeekBar">
-        <item name="android:progressDrawable">@drawable/scrubber_progress_horizontal_material
-        </item>
+        <item name="android:progressDrawable">@drawable/scrubber_progress_horizontal_material</item>
         <item name="android:indeterminateDrawable">@drawable/scrubber_progress_horizontal_material
         </item>
         <item name="android:thumb">@drawable/scrubber_control_from_pressed_mtrl_000</item>
@@ -25,40 +103,10 @@
         <!--<item name="android:background">?attr/selectableItemBackgroundBorderless</item>-->
     </style>
 
-    <style name="CustomProgressBar" parent="android:Widget.ProgressBar.Horizontal">
-        <item name="android:progressDrawable">@drawable/scrubber_progress_horizontal_transparent
+    <style name="SeekBar.NoBackground">
+        <item name="android:progressDrawable">
+            @drawable/scrubber_progress_horizontal_material_no_background
         </item>
-        <item name="android:indeterminateDrawable">
-            @drawable/scrubber_progress_horizontal_transparent
-        </item>
-        <item name="android:minHeight">4dip</item>
-        <item name="android:maxHeight">4dip</item>
-    </style>
-
-    <style name="BetterPickersDialogFragment">
-        <item name="bpDialogBackground">@drawable/dialog_full_holo_dark</item>
-        <item name="bpTitleColor">@color/dialog_text_color_holo_dark</item>
-        <item name="bpTextColor">@color/dialog_text_color_holo_dark</item>
-        <item name="bpDeleteIcon">@drawable/ic_backspace_dark</item>
-        <item name="bpCheckIcon">@drawable/ic_check_dark</item>
-        <item name="bpKeyBackground">@drawable/key_background_dark</item>
-        <item name="bpButtonBackground">@drawable/button_background_dark</item>
-        <item name="bpTitleDividerColor">@color/default_keyboard_indicator_color_dark</item>
-        <item name="bpDividerColor">@color/default_divider_color_dark</item>
-        <item name="bpKeyboardIndicatorColor">@color/default_keyboard_indicator_color_dark</item>
-    </style>
-
-    <style name="BetterPickersDialogFragment.Light">
-        <item name="bpDialogBackground">@drawable/dialog_full_holo_light</item>
-        <item name="bpTitleColor">@color/dialog_text_color_holo_light</item>
-        <item name="bpTextColor">@color/dialog_text_color_holo_light</item>
-        <item name="bpDeleteIcon">@drawable/ic_backspace_light</item>
-        <item name="bpCheckIcon">@drawable/ic_check_light</item>
-        <item name="bpKeyBackground">@drawable/key_background_light</item>
-        <item name="bpButtonBackground">@drawable/button_background_light</item>
-        <item name="bpTitleDividerColor">@color/default_keyboard_indicator_color_dark</item>
-        <item name="bpDividerColor">@color/default_divider_color_light</item>
-        <item name="bpKeyboardIndicatorColor">@color/default_keyboard_indicator_color_light</item>
     </style>
 
     <style name="AppWidget_TextView">

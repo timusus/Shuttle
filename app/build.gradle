@@ -3,24 +3,30 @@ buildscript {
         jcenter()
         maven { url 'https://maven.fabric.io/public' }
         maven { url "https://jitpack.io" }
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+        maven { url "https://maven.google.com" }
+        mavenCentral()
     }
     dependencies {
         classpath gradlePlugins.android
         classpath gradlePlugins.dexcount
         classpath gradlePlugins.fabric
+        classpath gradlePlugins.retroLambda
     }
 }
 
 apply plugin: 'com.android.application'
 apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'io.fabric'
-apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.github.triplet.play'
+apply plugin: 'me.tatarka.retrolambda'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
     maven { url "https://jitpack.io" }
-    maven { name 'glide-snapshot'; url 'http://oss.sonatype.org/content/repositories/snapshots' }
+    maven {
+        url 'http://oss.sonatype.org/content/repositories/snapshots'
+    }
 }
 
 //For some reason this needs to be placed below the dependencies in order for gms services to work..
@@ -28,7 +34,7 @@ apply plugin: 'com.google.gms.google-services'
 
 @Nullable
 def getProperties(String fileName) {
-    final def Properties properties = new Properties()
+    final Properties properties = new Properties()
     def file = file(fileName)
     if (file.exists()) {
         file.withInputStream { stream -> properties.load(stream) }
@@ -36,8 +42,8 @@ def getProperties(String fileName) {
     return properties
 }
 
-def getProperty(@Nullable Properties properties, String name) {
-    return properties.getProperty(name) ?: "$name missing";
+static def getProperty(@Nullable Properties properties, String name) {
+    return properties.getProperty(name) ?: "$name missing"
 }
 
 android {
@@ -54,9 +60,10 @@ android {
         targetSdkVersion versions.targetSdk
 
         versionName versions.name
-        versionCode gitCommitCount() + 3200 // Add 3200 to account for moving to github and resetting commit count.
+        versionCode gitCommitCount() + 3200
+        // Add 3200 to account for moving to github and resetting commit count.
 
-        resConfigs "en", "zh-rCN", "ja", "fr", "de", "ko", "it", "ru", "nl", "tr", "pl", "ro", "hu", "uk", "bg-rBG", "en-rGB", "vi", "pt-rBR", "es", "en-rNZ", "zh-rTW", "es-rES", "hr", "en-rAU", "eu-rES"
+        resConfigs "en", "zh-rCN", "fr", "de", "ko", "it", "nl", "tr", "pl", "hu", "uk", "bg-rBG", "en-rGB", "vi", "pt-rBR", "es", "en-rNZ", "zh-rTW", "es-rES", "hr", "en-rAU", "eu-rES"
 
         renderscriptTargetApi 23
 
@@ -101,23 +108,22 @@ android {
             manifestPlaceholders = [CRASHLYTICS_API_KEY: "${getProperty(getProperties('../private.properties'), 'CRASHLYTICS_API_KEY')}"]
         }
 
+        /* Todo: Figure out how to reinstate with new Gradle version
         applicationVariants.all { variant ->
 
             if (variant.buildType.name.contains('release')) {
-                variant.outputs.each { output ->
-                    def apk = output.outputFile;
-                    def newName = "shuttle-" + variant.baseName.replace("-release", "") + "-v" + defaultConfig.versionName + ".apk";
-                    output.outputFile = new File(apk.parentFile, newName);
+                variant.outputs.all { output ->
+                    outputFileName = "${variant.name}-v${variant.versionName}.apk"
                 }
 
                 //Reveal in explorer/finder
                 variant.assemble.doLast {
-                    def path = null;
+                    def path = null
                     variant.outputs.each { output ->
                         path = output.outputFile
 
                         //Delete the unaligned apk file
-                        File unaligned = output.packageApplication.outputFile;
+                        File unaligned = output.packageApplication.outputFile
                         File aligned = output.outputFile
                         if (!unaligned.getName().equalsIgnoreCase(aligned.getName())) {
                             unaligned.delete()
@@ -134,16 +140,17 @@ android {
                 }
             }
         }
+        */
     }
 
-    //Ignore useless variants, such as devRelease.
+    // Ignore useless variants, such as devRelease.
     variantFilter { variant ->
 
         def names = variant.flavors*.name
         def buildTypes = variant.buildType*.name
 
-        def debugFilters = ["paid", "free", 'amazonPaid', "amazonFree"];
-        def relFilters = ["dev", "devPre21"];
+        def debugFilters = ["paid", "free", 'amazonPaid', "amazonFree"]
+        def relFilters = ["dev", "devPre21"]
 
         def filter = { name -> names.contains(name) }
         def debugIgnore = buildTypes.contains("debug") && debugFilters.stream().anyMatch(filter)
@@ -152,38 +159,44 @@ android {
         setIgnore(debugIgnore || releaseIgnore)
     }
 
-    // Used to enable Java8 features (via RetroLambda)
+    // Used to enable Java8 features
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    flavorDimensions "all"
+
     productFlavors {
 
         dev {
+            dimension "all"
+
             applicationId "com.simplecity.amp_pro"
 
             //Enable multiDex for debug builds, since they don't use proguard
             multiDexEnabled true
-            minSdkVersion 21
         }
 
-        devPre21 {
+        paid {
+            dimension "all"
             applicationId "com.simplecity.amp_pro"
-
-            //Enable multiDex for debug builds, since they don't use proguard
-            multiDexEnabled true
-            // Indicates that we're using Multidex, so we can set it up in our Application.onCreate()
-            buildConfigField "boolean", "MULTIDEX_ENABLED", "true"
         }
 
-        paid.applicationId "com.simplecity.amp_pro"
+        free {
+            dimension "all"
+            applicationId "another.music.player"
+        }
 
-        free.applicationId "another.music.player"
+        amazonPaid {
+            dimension "all"
+            applicationId "com.simplecity.amp_pro"
+        }
 
-        amazonPaid.applicationId "com.simplecity.amp_pro"
-
-        amazonFree.applicationId "another.music.player"
+        amazonFree {
+            dimension "all"
+            applicationId "another.music.player"
+        }
     }
 
     sourceSets {
@@ -213,6 +226,10 @@ android {
         ignore 'ExtraTranslation', 'MissingTranslation'
         abortOnError false
     }
+
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
+    }
 }
 
 dependencies {
@@ -226,6 +243,7 @@ dependencies {
     compile libs.design
     compile libs.palette
     compile libs.prefCompat
+    compile libs.prefCompatv14
     compile libs.recyclerView
     compile libs.supportv4
     compile libs.firebaseCore
@@ -248,7 +266,9 @@ dependencies {
     // External libs
     // /////////////////////////////////////////////////////////////////////////
 
-    retrolambdaConfig libs.lambdaBackport
+    compile libs.navigation
+    compile libs.recyclerAdapter
+    compile libs.multiSheetView
     compile libs.ccl
     compile libs.nanoHttp
     compile libs.dashClockApi
@@ -256,23 +276,30 @@ dependencies {
     compile libs.glide
     compile libs.glideOkhttp
     compile libs.glidePalette
-    compile libs.multiSelViewHolder
     compile libs.permiso
+
     compile libs.rxAndroid
-    compile libs.rxBindings
-    compile libs.rxBindingsAppCompat
-    compile libs.rxImageSel
+    compile libs.rxBinding
+    compile libs.rxBindingAppCompat
+    compile libs.rxImagePicker
     compile libs.rxJava
     compile libs.rxRelay
-    compile libs.rxReceivers
-    compile libs.slidingUpPanel
+    compile libs.rxBroadcast
+    compile 'com.tspoon.traceur:traceur:1.0.1'
+
     compile libs.streams
     compile(libs.crashlytics) {
-        transitive = true;
+        transitive = true
     }
-    compile(libs.materialDialogs) {
-        transitive = true;
-    }
+    compile libs.materialDialogs
+    compile libs.materialDialogCommons
+    compile libs.butterknife
+    annotationProcessor libs.butterknifeAnnotationProcessor
+    compile libs.dagger
+    annotationProcessor libs.daggerAnnotationProcessor
+    compile libs.expandableRecyclerView
+    compile libs.aesthetic
+    compile libs.betterPickers
 
     // //////////////////////////////////////////////////////////////////////////
     // Multidex (Only used in non-proguard pre-21 builds)
@@ -294,6 +321,19 @@ dependencies {
     }
 }
 
+configurations.all {
+    resolutionStrategy {
+        eachDependency { details ->
+            // Force all of the primary support libraries to use the same version.
+            if (details.requested.group == 'com.android.support'
+                    && details.requested.name != 'multidex'
+                    && details.requested.name != 'multidex-instrumentation') {
+                details.useVersion versions.supportLib
+            }
+        }
+    }
+}
+
 def gitCommitCount() {
     def commitCount = 0
     try {
@@ -310,30 +350,33 @@ def gitCommitCount() {
     return commitCount
 }
 
-//Fix an issue where launcher shortcuts don't use the correct package name based on the build flavours.
-def replaceInShortcuts(variant, fromString, toString) {
-    def flavor = variant.productFlavors.get(0)
-    def buildtype = variant.buildType
-    def shortcutsFile = "$buildDir/intermediates/res/merged/${flavor.name}/${buildtype.name}/xml/shortcuts.xml"
-    def file = new File(shortcutsFile);
-    def updatedContent = file.getText('UTF-8').replaceAll(fromString, toString)
-    file.write(updatedContent, 'UTF-8')
-}
+/* Todo: Possibly no longer required..
 
-afterEvaluate {
-    android.applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            output.processResources.doFirst {
-                replaceInShortcuts(variant, '\\{applicationId\\}', variant.applicationId)
+    //Fix an issue where launcher shortcuts don't use the correct package name based on the build flavours.
+    def replaceInShortcuts(variant, fromString, toString) {
+        def flavor = variant.productFlavors.get(0)
+        def buildtype = variant.buildType
+        def shortcutsFile = "$buildDir/intermediates/res/merged/${flavor.name}/${buildtype.name}/xml/shortcuts.xml"
+        def file = new File(shortcutsFile)
+        def updatedContent = file.getText('UTF-8').replaceAll(fromString, toString)
+        file.write(updatedContent, 'UTF-8')
+    }
 
+    afterEvaluate {
+        android.applicationVariants.all { variant ->
+            variant.outputs.each { output ->
+                output.processResources.doFirst {
+                    replaceInShortcuts(variant, '\\{applicationId\\}', variant.applicationId)
+
+                }
             }
         }
     }
-}
+*/
 
 play {
     track = 'beta'
-//    untrackOld = true
+    // untrackOld = true
     serviceAccountEmail = 'app-deployment@api-5801704373554614142-812229.iam.gserviceaccount.com'
     jsonFile = file('../deployment_keys.json')
 }

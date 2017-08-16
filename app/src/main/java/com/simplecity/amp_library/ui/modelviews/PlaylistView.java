@@ -1,61 +1,93 @@
 package com.simplecity.amp_library.ui.modelviews;
 
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.ui.views.NonScrollImageButton;
-import com.simplecity.amp_library.utils.DrawableUtils;
+import com.simplecityapps.recycler_adapter.model.BaseViewModel;
+import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 
-public class PlaylistView extends BaseAdaptableItem<Playlist, PlaylistView.ViewHolder> {
+import static com.simplecity.amp_library.R.id.btn_overflow;
+import static com.simplecity.amp_library.R.id.line_one;
+import static com.simplecity.amp_library.R.layout.list_item_one_line;
+import static com.simplecity.amp_library.R.string.btn_options;
+import static com.simplecity.amp_library.ui.adapters.ViewType.PLAYLIST;
+import static com.simplecity.amp_library.ui.fragments.PlaylistFragment.PlaylistClickListener;
+
+public class PlaylistView extends BaseViewModel<PlaylistView.ViewHolder> {
+
+    public interface OnClickListener {
+
+        void onPlaylistClick(int position, PlaylistView playlistView);
+
+        void onPlaylistOverflowClick(int position, View v, Playlist playlist);
+    }
 
     public Playlist playlist;
+
+    @Nullable
+    private OnClickListener listener;
 
     public PlaylistView(Playlist playlist) {
         this.playlist = playlist;
     }
 
+    public void setListener(@Nullable OnClickListener listener) {
+        this.listener = listener;
+    }
+
     @Override
     public int getViewType() {
-        return ViewType.PLAYLIST;
+        return PLAYLIST;
     }
 
     @Override
     public int getLayoutResId() {
-        return R.layout.list_item_one_line;
+        return list_item_one_line;
     }
 
     @Override
     public void bindView(ViewHolder holder) {
+        super.bindView(holder);
+
         holder.lineOne.setText(playlist.name);
-        holder.overflowButton.setContentDescription(holder.itemView.getResources().getString(R.string.btn_options, playlist.name));
+        holder.overflowButton.setContentDescription(holder.itemView.getResources().getString(btn_options, playlist.name));
+    }
+
+    void onPlaylistClicked(int position) {
+        if (listener != null) {
+            listener.onPlaylistClick(position, this);
+        }
+    }
+
+    void onOverflowClicked(int position, View v) {
+        if (listener != null) {
+            listener.onPlaylistOverflowClick(position, v, playlist);
+        }
     }
 
     @Override
-    public ViewHolder getViewHolder(ViewGroup parent) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutResId(), parent, false));
+    public ViewHolder createViewHolder(ViewGroup parent) {
+        return new ViewHolder(createView(parent));
     }
 
-    @Override
-    public Playlist getItem() {
-        return playlist;
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends BaseViewHolder<PlaylistView> {
 
         public TextView lineOne;
         public NonScrollImageButton overflowButton;
+        public PlaylistClickListener listener;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            lineOne = (TextView) itemView.findViewById(R.id.line_one);
-            overflowButton = (NonScrollImageButton) itemView.findViewById(R.id.btn_overflow);
-            overflowButton.setImageDrawable(DrawableUtils.getColoredStateListDrawable(itemView.getContext(), R.drawable.ic_overflow_white));
+            lineOne = itemView.findViewById(line_one);
+            overflowButton = itemView.findViewById(btn_overflow);
+
+            itemView.setOnClickListener(v -> viewModel.onPlaylistClicked(getAdapterPosition()));
+            overflowButton.setOnClickListener(v -> viewModel.onOverflowClicked(getAdapterPosition(), v));
         }
 
         @Override

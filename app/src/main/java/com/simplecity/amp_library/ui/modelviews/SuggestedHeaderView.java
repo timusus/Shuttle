@@ -1,22 +1,42 @@
 package com.simplecity.amp_library.ui.modelviews;
 
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.SuggestedHeader;
-import com.simplecity.amp_library.utils.ColorUtils;
-import com.simplecity.amp_library.utils.DrawableUtils;
+import com.simplecity.amp_library.ui.adapters.ViewType;
+import com.simplecityapps.recycler_adapter.model.BaseViewModel;
+import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 
-public class SuggestedHeaderView extends BaseAdaptableItem<SuggestedHeader, SuggestedHeaderView.ViewHolder> {
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-    public SuggestedHeader suggestedHeader;
+public class SuggestedHeaderView extends BaseViewModel<SuggestedHeaderView.ViewHolder> {
+
+    public interface ClickListener {
+        void onSuggestedHeaderClick(SuggestedHeader suggestedHeader);
+    }
+
+    private SuggestedHeader suggestedHeader;
+
+    @Nullable
+    private ClickListener listener;
 
     public SuggestedHeaderView(SuggestedHeader suggestedHeader) {
         this.suggestedHeader = suggestedHeader;
+    }
+
+    public void setClickListener(@Nullable ClickListener listener) {
+        this.listener = listener;
+    }
+
+    private void onClick() {
+        if (listener != null) {
+            listener.onSuggestedHeaderClick(suggestedHeader);
+        }
     }
 
     @Override
@@ -31,10 +51,10 @@ public class SuggestedHeaderView extends BaseAdaptableItem<SuggestedHeader, Sugg
 
     @Override
     public void bindView(ViewHolder holder) {
+        super.bindView(holder);
+
         holder.titleOne.setText(suggestedHeader.title);
         holder.titleTwo.setText(suggestedHeader.subtitle);
-        holder.titleThree.setBackground(DrawableUtils.getColoredAccentDrawable((holder.itemView.getContext()), holder.titleThree.getBackground(), false, true));
-        holder.titleThree.setTextColor(ColorUtils.getAccentColorSensitiveTextColor(holder.itemView.getContext()));
         if (suggestedHeader.subtitle == null || suggestedHeader.subtitle.length() == 0) {
             holder.titleTwo.setVisibility(View.GONE);
         } else {
@@ -45,26 +65,27 @@ public class SuggestedHeaderView extends BaseAdaptableItem<SuggestedHeader, Sugg
     }
 
     @Override
-    public ViewHolder getViewHolder(ViewGroup parent) {
-        return new SuggestedHeaderView.ViewHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutResId(), parent, false));
+    public ViewHolder createViewHolder(ViewGroup parent) {
+        return new ViewHolder(createView(parent));
     }
 
-    @Override
-    public SuggestedHeader getItem() {
-        return suggestedHeader;
-    }
+    public static class ViewHolder extends BaseViewHolder<SuggestedHeaderView> {
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-
+        @BindView(R.id.text1)
         TextView titleOne;
+
+        @BindView(R.id.text2)
         TextView titleTwo;
-        TextView titleThree;
+
+        @BindView(R.id.button)
+        TextView button;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            titleOne = (TextView) itemView.findViewById(R.id.text1);
-            titleTwo = (TextView) itemView.findViewById(R.id.text2);
-            titleThree = (TextView) itemView.findViewById(R.id.text3);
+
+            ButterKnife.bind(this, itemView);
+
+            itemView.setOnClickListener(v -> viewModel.onClick());
         }
 
         @Override
@@ -81,7 +102,6 @@ public class SuggestedHeaderView extends BaseAdaptableItem<SuggestedHeader, Sugg
         SuggestedHeaderView that = (SuggestedHeaderView) o;
 
         return suggestedHeader != null ? suggestedHeader.equals(that.suggestedHeader) : that.suggestedHeader == null;
-
     }
 
     @Override

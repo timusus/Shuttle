@@ -1,43 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceScreen
-        android:icon="@drawable/ic_settings_display"
+<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.support.v7.preference.PreferenceScreen
+        android:icon="@drawable/ic_tv_24dp"
         android:key="pref_display"
-        android:layout="@layout/preference_header"
-        android:title="@string/pref_title_display" />
-    <PreferenceScreen
-        android:icon="@drawable/ic_settings_themes"
+        android:title="@string/pref_title_display"/>
+
+    <android.support.v7.preference.PreferenceScreen
+        android:icon="@drawable/ic_palette_24dp"
         android:key="pref_themes"
-        android:layout="@layout/preference_header"
-        android:title="@string/pref_string_title_themes" />
-    <PreferenceScreen
-        android:icon="@drawable/ic_settings_artwork"
+        android:title="@string/pref_string_title_themes"/>
+
+    <android.support.v7.preference.PreferenceScreen
+        android:icon="@drawable/ic_image_24dp"
         android:key="pref_artwork"
-        android:layout="@layout/preference_header"
-        android:title="@string/pref_string_title_artwork" />
-    <PreferenceScreen
-        android:icon="@drawable/ic_settings_headset"
+        android:title="@string/pref_string_title_artwork"/>
+
+    <android.support.v7.preference.PreferenceScreen
+        android:icon="@drawable/ic_headset_24dp"
         android:key="pref_headset"
-        android:layout="@layout/preference_header"
-        android:title="@string/pref_title_headset_bluetooth" />
-    <PreferenceScreen
+        android:title="@string/pref_title_headset_bluetooth"/>
+
+    <android.support.v7.preference.PreferenceScreen
         android:icon="@drawable/ic_settings_scrobbling"
         android:key="pref_scrobbling"
-        android:layout="@layout/preference_header"
-        android:title="@string/pref_title_scrobbling" />
-    <PreferenceScreen
-        android:icon="@drawable/ic_settings_blacklist"
+        android:title="@string/pref_title_scrobbling"/>
+
+    <android.support.v7.preference.PreferenceScreen
+        android:icon="@drawable/ic_view_list_24dp"
         android:key="pref_blacklist"
-        android:layout="@layout/preference_header"
-        android:title="@string/pref_title_blacklist" />
-    <Preference
-        android:icon="@drawable/ic_settings_about"
-        android:key="pref_about"
-        android:layout="@layout/preference_header"
-        android:title="@string/pref_title_about" />
-    <Preference
-        android:icon="@drawable/ic_settings_purchase"
+        android:title="@string/pref_title_blacklist"/>
+
+    <android.support.v7.preference.Preference
+        android:icon="@drawable/ic_add_circle_outline_24dp"
         android:key="pref_upgrade"
-        android:layout="@layout/preference_header"
-        android:title="@string/get_pro_title" />
-</PreferenceScreen>
+        android:title="@string/get_pro_title"/>
+
+</android.support.v7.preference.PreferenceScreen>

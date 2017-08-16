@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="240dp"
-             android:layout_height="240dp"
-             android:background="#10000000">
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="240dp"
+    android:layout_height="240dp"
+    android:background="#10000000">
 
     <ImageView
         android:id="@+id/imageView"
@@ -13,12 +14,19 @@
         android:scaleType="fitCenter"
         tools:background="@mipmap/ic_launcher"/>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center"
+        android:indeterminate="true"/>
+
     <LinearLayout
         android:id="@+id/textContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_weight="1"
+        android:baselineAligned="false"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingBottom="16dp"
@@ -40,10 +48,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
                 android:ellipsize="end"
+                android:maxLines="1"
+                android:tag=":aesthetic_ignore"
                 android:textColor="#ffffff"
                 android:textSize="16sp"
-                tools:text="cover.jpeg"
-                android:maxLines="1" />
+                tools:text="cover.jpeg"/>
 
             <TextView
                 android:id="@+id/line_two"
@@ -52,10 +61,11 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
+                android:maxLines="1"
+                android:tag=":aesthetic_ignore"
                 android:textColor="#ffffff"
                 android:textSize="12sp"
-                tools:text="500x500px"
-                android:maxLines="1" />
+                tools:text="500x500px"/>
         </LinearLayout>
 
         <FrameLayout
@@ -67,21 +77,13 @@
             tools:visibility="visible">
 
             <ImageView
-                android:id="@+id/imageView2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_margin="8dp"
-                android:src="@drawable/ic_tick_white"/>
+                android:src="@drawable/ic_check_24dp"/>
 
         </FrameLayout>
     </LinearLayout>
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_gravity="center"
-        android:indeterminate="true"/>
 
 </FrameLayout>

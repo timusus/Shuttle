@@ -1,23 +1,46 @@
 package com.simplecity.amp_library.ui.fragments;
 
 import android.content.res.Resources;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.Menu;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import com.google.android.libraries.cast.companionlibrary.cast.BaseCastManager;
+import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.FragmentModule;
+import com.simplecity.amp_library.ui.activities.BaseCastActivity;
+import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
 import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.squareup.leakcanary.RefWatcher;
 
 import java.lang.reflect.Field;
 
-public abstract class BaseFragment extends Fragment {
+import javax.inject.Inject;
+
+import test.com.androidnavigation.fragment.BaseController;
+
+public abstract class BaseFragment extends BaseController {
 
     private static final String TAG = "BaseFragment";
 
     // Arbitrary value; set it to some reasonable default
     private static final int DEFAULT_CHILD_ANIMATION_DURATION = 250;
+
+    @Inject MultiSheetEventRelay multiSheetEventRelay;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        ShuttleApplication.getInstance().getAppComponent()
+                .plus(new FragmentModule(this))
+                .inject(this);
+    }
 
     @Override
     public void onResume() {
@@ -82,6 +105,15 @@ public abstract class BaseFragment extends Fragment {
         super.onDestroy();
         RefWatcher refWatcher = ShuttleApplication.getInstance().getRefWatcher();
         refWatcher.watch(this);
+    }
+
+    protected void setupCastMenu(Menu menu) {
+        if (getActivity() instanceof BaseCastActivity) {
+            BaseCastManager castManager = ((BaseCastActivity) getActivity()).castManager;
+            if (castManager != null) {
+                castManager.addMediaRouterButton(menu, R.id.media_route_menu_item);
+            }
+        }
     }
 
     protected abstract String screenName();

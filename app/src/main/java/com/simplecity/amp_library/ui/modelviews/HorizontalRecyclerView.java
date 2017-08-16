@@ -2,78 +2,68 @@ package com.simplecity.amp_library.ui.modelviews;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.model.AdaptableItem;
-import com.simplecity.amp_library.ui.adapters.ItemAdapter;
-import com.simplecity.amp_library.ui.recyclerview.CustomSwappingHolder;
-import com.simplecity.amp_library.utils.ThemeUtils;
+import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
+import com.simplecityapps.recycler_adapter.model.BaseViewModel;
+import com.simplecityapps.recycler_adapter.model.ViewModel;
+import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 
 import java.util.List;
 
-public class HorizontalRecyclerView extends BaseAdaptableItem<Object, HorizontalRecyclerView.ViewHolder> {
+import static android.support.v7.widget.LinearLayoutManager.HORIZONTAL;
+import static com.simplecity.amp_library.R.layout.recycler_header;
+import static com.simplecity.amp_library.ui.adapters.ViewType.HORIZONTAL_RECYCLERVIEW;
 
-    public HorizontalAdapter itemAdapter;
+public class HorizontalRecyclerView extends BaseViewModel<HorizontalRecyclerView.ViewHolder> {
+
+    public ViewModelAdapter viewModelAdapter;
 
     public HorizontalRecyclerView() {
-        this.itemAdapter = new HorizontalAdapter();
+        this.viewModelAdapter = new ViewModelAdapter();
     }
 
-    public void setItems(List<AdaptableItem> items) {
-        itemAdapter.setItems(items);
-    }
-
-    public void setListener(HorizontalAdapter.ItemListener listener) {
-        itemAdapter.setListener(listener);
+    public void setItems(List<ViewModel> items) {
+        viewModelAdapter.setItems(items);
     }
 
     public int getCount() {
-        return itemAdapter.getItemCount();
+        return viewModelAdapter.getItemCount();
     }
 
     @Override
     public int getViewType() {
-        return ViewType.HORIZONTAL_RECYCLERVIEW;
+        return HORIZONTAL_RECYCLERVIEW;
     }
 
     @Override
     public int getLayoutResId() {
-        return R.layout.recycler_header;
+        return recycler_header;
     }
 
     @Override
     public void bindView(ViewHolder holder) {
-        ((RecyclerView) holder.itemView).setAdapter(itemAdapter);
+        super.bindView(holder);
+
+        ((RecyclerView) holder.itemView).setAdapter(viewModelAdapter);
     }
 
     @Override
-    public ViewHolder getViewHolder(ViewGroup parent) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutResId(), parent, false));
+    public ViewHolder createViewHolder(ViewGroup parent) {
+        return new ViewHolder(createView(parent));
     }
 
-    public static class ViewHolder extends CustomSwappingHolder {
+    public static class ViewHolder extends BaseViewHolder {
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            LinearLayoutManager layoutManager = new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.HORIZONTAL, false);
-            //Todo: Reinstate when updating support lib
-//            layoutManager.setInitialPrefetchItemCount(4);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(itemView.getContext(), HORIZONTAL, false);
+            layoutManager.setInitialPrefetchItemCount(4);
             ((RecyclerView) itemView).setLayoutManager(layoutManager);
             //noinspection RedundantCast
             ((RecyclerView) itemView).setNestedScrollingEnabled(false);
-            ThemeUtils.themeRecyclerView(((RecyclerView) itemView));
-
-            ((RecyclerView) itemView).addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                    ThemeUtils.themeRecyclerView(recyclerView);
-                    super.onScrollStateChanged(recyclerView, newState);
-                }
-            });
         }
 
         @Override
@@ -82,40 +72,18 @@ public class HorizontalRecyclerView extends BaseAdaptableItem<Object, Horizontal
         }
     }
 
-    public static class HorizontalAdapter extends ItemAdapter {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        public interface ItemListener {
+        HorizontalRecyclerView that = (HorizontalRecyclerView) o;
 
-            void onItemClick(ItemAdapter adapter, View v, int position, Object item);
+        return viewModelAdapter != null ? viewModelAdapter.equals(that.viewModelAdapter) : that.viewModelAdapter == null;
+    }
 
-            void onOverflowClick(View v, int position, Object item);
-        }
-
-        private ItemListener listener;
-
-        public void setListener(ItemListener listener) {
-            this.listener = listener;
-        }
-
-        public Object getItem(int position) {
-            return (items.get(position)).getItem();
-        }
-
-        @Override
-        protected void attachListeners(RecyclerView.ViewHolder viewHolder) {
-            super.attachListeners(viewHolder);
-
-            viewHolder.itemView.setOnClickListener(v -> {
-                if (listener != null && viewHolder.getAdapterPosition() != -1) {
-                    listener.onItemClick(this, v, viewHolder.getAdapterPosition(), getItem(viewHolder.getAdapterPosition()));
-                }
-            });
-
-            ((MultiItemView.ViewHolder) viewHolder).overflowButton.setOnClickListener(v -> {
-                if (listener != null && viewHolder.getAdapterPosition() != -1) {
-                    listener.onOverflowClick(v, viewHolder.getAdapterPosition(), getItem(viewHolder.getAdapterPosition()));
-                }
-            });
-        }
+    @Override
+    public int hashCode() {
+        return viewModelAdapter != null ? viewModelAdapter.hashCode() : 0;
     }
 }

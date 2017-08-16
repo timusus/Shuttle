@@ -90,7 +90,7 @@ public class TaggerUtils {
         // start with root of SD card and then parse through document tree.
         DocumentFile document = DocumentFile.fromTreeUri(ShuttleApplication.getInstance(), treeUri);
 
-        String[] parts = relativePath.split("\\/");
+        String[] parts = relativePath.split("/");
         for (String part : parts) {
             DocumentFile nextDocument = document.findFile(part);
             if (nextDocument != null) {

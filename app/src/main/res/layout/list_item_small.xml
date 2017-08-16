@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.simplecity.amp_library.ui.views.ForegroundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.internal.ForegroundLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="56dp"
     android:descendantFocusability="blocksDescendants"
     android:foreground="?attr/list_selector"
     android:paddingBottom="4dp"
-    android:paddingLeft="2dp"
-    android:paddingRight="2dp"
     android:paddingTop="4dp">
 
     <ImageView
@@ -14,14 +13,16 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_centerVertical="true"
-        android:scaleType="centerCrop" />
+        android:layout_marginLeft="2dp"
+        android:layout_marginStart="2dp"
+        android:scaleType="centerCrop"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_weight="1"
         android:layout_height="match_parent"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="-12dp"
+        android:layout_weight="1"
         android:orientation="vertical"
         android:paddingBottom="4dp"
         android:paddingTop="4dp">
@@ -31,10 +32,10 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:ellipsize="marquee"
             android:gravity="center_vertical"
-            android:textSize="14sp"
-            android:maxLines="1" />
+            android:lines="1"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="14sp"/>
 
         <TextView
             android:id="@+id/line_two"
@@ -42,24 +43,13 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:ellipsize="marquee"
             android:gravity="center_vertical"
-            android:textSize="14sp"
-            android:maxLines="1" />
+            android:lines="1"
+            android:textColor="?android:textColorSecondary"
+            android:textSize="14sp"/>
     </LinearLayout>
 
-    <com.simplecity.amp_library.ui.views.NonScrollImageButton
-        android:id="@+id/btn_overflow"
-        android:layout_width="48dp"
-        android:layout_height="56dp"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="0dp"
-        android:alpha="0.8"
-        android:background="@null"
-        android:paddingBottom="16dp"
-        android:paddingLeft="16dp"
-        android:paddingTop="16dp"
-        android:src="@drawable/ic_overflow_white" />
+    <include layout="@layout/overflow_button"/>
 
-</com.simplecity.amp_library.ui.views.ForegroundLinearLayout>
+</android.support.design.internal.ForegroundLinearLayout>
 
