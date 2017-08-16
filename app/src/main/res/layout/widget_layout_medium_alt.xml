@@ -71,9 +71,7 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/btn_shuffle_on"
-                android:padding="5dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_shuffle_24dp"/>
+                android:src="@drawable/ic_shuffle_24dp_scaled"/>
 
             <ImageButton
                 android:id="@+id/prev_button"
@@ -109,9 +107,7 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/btn_repeat_all"
-                android:padding="5dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_repeat_24dp"/>
+                android:src="@drawable/ic_repeat_24dp_scaled"/>
         </LinearLayout>
 
     </LinearLayout>
