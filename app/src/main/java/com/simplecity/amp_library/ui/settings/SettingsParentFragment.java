@@ -228,13 +228,6 @@ public class SettingsParentFragment extends BaseNavigationController implements 
                 });
             }
 
-            SwitchPreferenceCompat invertNotificationIconsPreference = (SwitchPreferenceCompat) findPreference("pref_invert_notif_icons");
-            if (invertNotificationIconsPreference != null) {
-                if (!ShuttleUtils.hasLollipop()) {
-                    invertNotificationIconsPreference.setVisible(false);
-                }
-            }
-
             // Themes
 
             Preference baseThemePreference = findPreference(SettingsManager.KEY_PREF_THEME_BASE);

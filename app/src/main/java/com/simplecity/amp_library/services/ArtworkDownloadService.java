@@ -1,10 +1,8 @@
 package com.simplecity.amp_library.services;
 
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -18,6 +16,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.glide.loader.ArtworkModelLoader;
 import com.simplecity.amp_library.model.ArtworkProvider;
+import com.simplecity.amp_library.notifications.NotificationHelper;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
@@ -48,31 +47,33 @@ public class ArtworkDownloadService extends Service {
 
     private static final int NOTIFICATION_ID = 200;
 
-    private NotificationCompat.Builder notificationBuilder;
-    private NotificationManager notificationManager;
-
     private int progress = 0;
     private int max = 100;
 
     private CompositeDisposable disposables = new CompositeDisposable();
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
+    NotificationHelper notificationHelper;
 
-        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    private NotificationCompat.Builder getNotificationBuilder() {
 
         final ComponentName serviceName = new ComponentName(this, ArtworkDownloadService.class);
         Intent intent = new Intent(ACTION_CANCEL);
         intent.setComponent(serviceName);
         PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, 0);
 
-        notificationBuilder = new NotificationCompat.Builder(this)
+        return new NotificationCompat.Builder(this, NotificationHelper.NOTIFICATION_CHANNEL_ID)
                 .setContentTitle(getResources().getString(R.string.notif_downloading_art))
                 .setSmallIcon(android.R.drawable.stat_sys_download)
                 .setOngoing(true)
                 .setProgress(100, 0, true)
                 .addAction(new NotificationCompat.Action(R.drawable.ic_close_24dp, getString(R.string.cancel), pendingIntent));
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        notificationHelper = new NotificationHelper(this);
 
         if (!ShuttleUtils.isOnline(false)) {
             Toast toast = Toast.makeText(this, getResources().getString(R.string.connection_unavailable), Toast.LENGTH_SHORT);
@@ -81,9 +82,7 @@ public class ArtworkDownloadService extends Service {
             return;
         }
 
-        if (notificationBuilder != null) {
-            notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
-        }
+        notificationHelper.notify(NOTIFICATION_ID, getNotificationBuilder().build());
 
         Single<List<ArtworkProvider>> sharedItemsSingle = DataManager.getInstance()
                 .getAlbumArtistsRelay()
@@ -139,7 +138,7 @@ public class ArtworkDownloadService extends Service {
         if (disposables != null) {
             disposables.clear();
         }
-        notificationManager.cancel(NOTIFICATION_ID);
+        notificationHelper.cancel(NOTIFICATION_ID);
         super.onDestroy();
     }
 
@@ -151,13 +150,12 @@ public class ArtworkDownloadService extends Service {
     private void updateProgress() {
         progress++;
 
-        if (notificationBuilder != null) {
-            notificationBuilder.setProgress(max, progress, false);
-            notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
-        }
+        NotificationCompat.Builder notificationBuilder = getNotificationBuilder();
+        notificationBuilder.setProgress(max, progress, false);
+        notificationHelper.notify(NOTIFICATION_ID, notificationBuilder.build());
 
         if (progress >= max) {
-            notificationManager.cancel(NOTIFICATION_ID);
+            notificationHelper.cancel(NOTIFICATION_ID);
         }
     }
 
@@ -168,8 +166,7 @@ public class ArtworkDownloadService extends Service {
             if (action != null && action.equals(ACTION_CANCEL)) {
                 //Handle a notification cancel action click:
                 disposables.clear();
-                notificationBuilder = null;
-                notificationManager.cancel(NOTIFICATION_ID);
+                notificationHelper.cancel(NOTIFICATION_ID);
                 stopSelf();
             }
 

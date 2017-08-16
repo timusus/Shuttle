@@ -3,8 +3,6 @@ package com.simplecity.amp_library.playback;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
@@ -27,7 +25,6 @@ import android.media.AudioManager;
 import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.media.RemoteControlClient;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -45,12 +42,10 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.annimon.stream.function.Predicate;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.crashlytics.android.Crashlytics;
@@ -65,12 +60,12 @@ import com.google.android.libraries.cast.companionlibrary.cast.callbacks.VideoCa
 import com.google.android.libraries.cast.companionlibrary.cast.exceptions.CastException;
 import com.google.android.libraries.cast.companionlibrary.cast.exceptions.NoConnectionException;
 import com.google.android.libraries.cast.companionlibrary.cast.exceptions.TransientNetworkDisconnectionException;
-import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.glide.utils.GlideUtils;
 import com.simplecity.amp_library.http.HttpServer;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.notifications.MusicNotificationHelper;
 import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.rx.UnsafeConsumer;
 import com.simplecity.amp_library.services.EqualizerService;
@@ -79,7 +74,6 @@ import com.simplecity.amp_library.ui.widgets.WidgetProviderLarge;
 import com.simplecity.amp_library.ui.widgets.WidgetProviderMedium;
 import com.simplecity.amp_library.ui.widgets.WidgetProviderSmall;
 import com.simplecity.amp_library.utils.DataManager;
-import com.simplecity.amp_library.utils.DrawableUtils;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MediaButtonIntentReceiver;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
@@ -108,8 +102,6 @@ import io.reactivex.schedulers.Schedulers;
 public class MusicService extends Service {
 
     private static final String TAG = "MusicService";
-
-    private static final int NOTIFICATION_ID = 150;
 
     public @interface ShuffleMode {
         int OFF = 0;
@@ -166,6 +158,7 @@ public class MusicService extends Service {
         String SHUFFLE_ACTION = SERVICE_COMMAND_PREFIX + ".shuffle";
         String REPEAT_ACTION = SERVICE_COMMAND_PREFIX + ".repeat";
         String SHUTDOWN = SERVICE_COMMAND_PREFIX + ".shutdown";
+        String TOGGLE_FAVORITE = SERVICE_COMMAND_PREFIX + ".togglefavorite";
     }
 
     public interface ExternalIntents {
@@ -257,7 +250,7 @@ public class MusicService extends Service {
     private boolean headsetReceiverIsRegistered;
     private boolean bluetoothReceiverIsRegistered;
 
-    MediaSessionCompat session;
+    MediaSessionCompat mediaSession;
 
     private ComponentName mediaButtonReceiverComponent;
 
@@ -265,7 +258,7 @@ public class MusicService extends Service {
 
     //Todo:
     // Don't make this public. The MultiPlayer uses it. Just attach a listener to the MultiPlayer
-    //to listen for onCompletion, and acquire the wakelock there.
+    // to listen for onCompletion, and acquire the wakelock there.
     public WakeLock wakeLock;
 
     private int serviceStartId = -1;
@@ -281,8 +274,7 @@ public class MusicService extends Service {
      */
     private long lastPlayedTime;
 
-    NotificationManager notificationManager;
-    Notification notification;
+    private MusicNotificationHelper notificationHelper;
 
     private static final int NOTIFY_MODE_NONE = 0;
     private static final int NOTIFY_MODE_FOREGROUND = 1;
@@ -524,7 +516,6 @@ public class MusicService extends Service {
                         releaseServiceUiAndStop();
                     } else if (MediaButtonCommand.TOGGLE_FAVORITE.equals(cmd)) {
                         PlaylistUtils.toggleFavorite(message -> Toast.makeText(MusicService.this, message, Toast.LENGTH_SHORT).show());
-                        notifyChange(InternalIntents.FAVORITE_CHANGED);
                     }
                     if (WidgetProviderSmall.CMDAPPWIDGETUPDATE.equals(cmd)) {
                         // Someone asked us to refresh a set of specific widgets,
@@ -557,6 +548,8 @@ public class MusicService extends Service {
     public void onCreate() {
         super.onCreate();
 
+        notificationHelper = new MusicNotificationHelper(this);
+
         servicePrefs = getSharedPreferences("Service", 0);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -577,8 +570,6 @@ public class MusicService extends Service {
         registerBluetoothReceiver();
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-
-        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         mediaButtonReceiverComponent = new ComponentName(getPackageName(),
                 MediaButtonIntentReceiver.class.getName());
@@ -656,8 +647,8 @@ public class MusicService extends Service {
     }
 
     private void setupMediaSession() {
-        session = new MediaSessionCompat(this, "Shuttle", mediaButtonReceiverComponent, null);
-        session.setCallback(new MediaSessionCompat.Callback() {
+        mediaSession = new MediaSessionCompat(this, "Shuttle", mediaButtonReceiverComponent, null);
+        mediaSession.setCallback(new MediaSessionCompat.Callback() {
             @Override
             public void onPause() {
                 pause();
@@ -698,11 +689,11 @@ public class MusicService extends Service {
                 return true;
             }
         });
-        session.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS | MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
+        mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS | MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
 
         //For some reason, MediaSessionCompat doesn't seem to pass all of the available 'actions' on as
         //transport control flags for the RCC, so we do that manually
-        RemoteControlClient remoteControlClient = (RemoteControlClient) session.getRemoteControlClient();
+        RemoteControlClient remoteControlClient = (RemoteControlClient) mediaSession.getRemoteControlClient();
         if (remoteControlClient != null) {
             remoteControlClient.setTransportControlFlags(
                     RemoteControlClient.FLAG_KEY_MEDIA_PAUSE
@@ -866,7 +857,7 @@ public class MusicService extends Service {
 
         // Remove the audio focus listener and lock screen controls
         audioManager.abandonAudioFocus(audioFocusListener);
-        session.release();
+        mediaSession.release();
 
         unregisterHeadsetPlugReceiver();
         unregisterBluetoothReceiver();
@@ -927,12 +918,11 @@ public class MusicService extends Service {
                 toggleShuffleMode();
             } else if (ServiceCommand.REPEAT_ACTION.equals(action)) {
                 toggleRepeat();
-            } else if (MediaButtonCommand.TOGGLE_FAVORITE.equals(action)) {
+            } else if (MediaButtonCommand.TOGGLE_FAVORITE.equals(action) || ServiceCommand.TOGGLE_FAVORITE.equals(action)) {
                 PlaylistUtils.toggleFavorite(message -> Toast.makeText(MusicService.this, message, Toast.LENGTH_SHORT).show());
                 notifyChange(InternalIntents.FAVORITE_CHANGED);
             } else if (ExternalIntents.PLAY_STATUS_REQUEST.equals(action)) {
                 notifyChange(ExternalIntents.PLAY_STATUS_RESPONSE);
-
             } else if (ServiceCommand.SHUTDOWN.equals(action)) {
                 shutdownScheduled = false;
                 releaseServiceUiAndStop();
@@ -974,7 +964,7 @@ public class MusicService extends Service {
         cancelNotification();
         audioManager.abandonAudioFocus(audioFocusListener);
 
-        session.setActive(false);
+        mediaSession.setActive(false);
 
         if (!serviceInUse) {
             saveQueue(true);
@@ -1777,9 +1767,9 @@ public class MusicService extends Service {
             }
         }
 
-        if (session != null && !session.isActive()) {
+        if (mediaSession != null && !mediaSession.isActive()) {
             try {
-                session.setActive(true);
+                mediaSession.setActive(true);
             } catch (Exception e) {
                 Log.e(TAG, "mSession.setActive() failed");
             }
@@ -1890,7 +1880,7 @@ public class MusicService extends Service {
 
         if (what.equals(InternalIntents.PLAY_STATE_CHANGED) || what.equals(InternalIntents.POSITION_CHANGED)) {
             //noinspection WrongConstant
-            session.setPlaybackState(new PlaybackStateCompat.Builder()
+            mediaSession.setPlaybackState(new PlaybackStateCompat.Builder()
                     .setActions(playbackActions)
                     .setState(playState, getPosition(), 1.0f)
                     .build());
@@ -1924,21 +1914,21 @@ public class MusicService extends Service {
                                 metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap);
                             }
                             try {
-                                session.setMetadata(metaData.build());
+                                mediaSession.setMetadata(metaData.build());
                             } catch (NullPointerException e) {
                                 metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, null);
-                                session.setMetadata(metaData.build());
+                                mediaSession.setMetadata(metaData.build());
                             }
                         }
 
                         @Override
                         public void onLoadFailed(Exception e, Drawable errorDrawable) {
                             super.onLoadFailed(e, errorDrawable);
-                            session.setMetadata(metaData.build());
+                            mediaSession.setMetadata(metaData.build());
                         }
                     }));
 
-            session.setPlaybackState(new PlaybackStateCompat.Builder()
+            mediaSession.setPlaybackState(new PlaybackStateCompat.Builder()
                     .setActions(playbackActions)
                     .setState(playState, getPosition(), 1.0f)
                     .build());
@@ -1959,11 +1949,11 @@ public class MusicService extends Service {
 
         switch (notifyMode) {
             case NOTIFY_MODE_FOREGROUND:
-                startForegroundImpl(NOTIFICATION_ID, buildNotification());
+                startForegroundImpl();
                 break;
             case NOTIFY_MODE_BACKGROUND:
                 try {
-                    notificationManager.notify(NOTIFICATION_ID, buildNotification());
+                    notificationHelper.notify(this, currentSong, mediaSession);
                 } catch (ConcurrentModificationException e) {
                     LogUtils.logException(TAG, "Exception while attempting to show notification", e);
                 }
@@ -1971,169 +1961,26 @@ public class MusicService extends Service {
                 break;
             case NOTIFY_MODE_NONE:
                 stopForegroundImpl(false, false);
-                notificationManager.cancel(NOTIFICATION_ID);
+                notificationHelper.cancel();
                 break;
         }
     }
 
     private void cancelNotification() {
         stopForegroundImpl(true, true);
-        notificationManager.cancel(NOTIFICATION_ID);
-    }
-
-    private Notification buildNotification() {
-
-        final boolean isPlaying = isPlaying();
-
-        if (notification == null) {
-
-            Intent intent = new Intent(BuildConfig.APPLICATION_ID + (ShuttleUtils.isTablet() ? ".TABLET_PLAYBACK_VIEWER" : ".PLAYBACK_VIEWER"));
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            PendingIntent contentIntent = PendingIntent.getActivity(MusicService.this, 0, intent, 0);
-
-            Notification.Builder builder = new Notification.Builder(this);
-
-            builder.setSmallIcon(R.drawable.ic_stat_notification)
-                    .setContentIntent(contentIntent)
-                    .setPriority(Notification.PRIORITY_MAX);
-
-            if (ShuttleUtils.hasJellyBeanMR1()) {
-                builder.setShowWhen(false);
-            }
-
-            if (ShuttleUtils.hasLollipop()) {
-                builder.setVisibility(Notification.VISIBILITY_PUBLIC);
-            }
-
-            if (ShuttleUtils.hasNougat()) {
-                builder.setStyle(new Notification.DecoratedCustomViewStyle());
-            }
-
-            notification = builder.build();
-        }
-
-        boolean invertIconsAndText = SettingsManager.getInstance().invertNotificationIcons() && ShuttleUtils.hasLollipop();
-
-        int baseLayoutResId = invertIconsAndText ? R.layout.notification_template_base_inverse : R.layout.notification_template_base;
-        int baseBigLayoutResId = invertIconsAndText ? R.layout.notification_template_big_base_inverse : R.layout.notification_template_big_base;
-
-        if (ShuttleUtils.hasNougat()) {
-            baseLayoutResId = invertIconsAndText ? R.layout.notification_template_base_v24_inverse : R.layout.notification_template_base_v24;
-            baseBigLayoutResId = invertIconsAndText ? R.layout.notification_template_big_base_v24_inverse : R.layout.notification_template_big_base_v24;
-        }
-
-        RemoteViews contentView = new RemoteViews(getPackageName(), baseLayoutResId);
-        RemoteViews bigContentView = new RemoteViews(getPackageName(), baseBigLayoutResId);
-
-        String artistName = getArtistName();
-        String albumName = getAlbumName();
-        String trackName = getSongName();
-        if (artistName != null && albumName != null) {
-            contentView.setTextViewText(R.id.text, String.format("%s | %s", artistName, albumName));
-            bigContentView.setTextViewText(R.id.text, String.format("%s | %s", artistName, albumName));
-        }
-        if (trackName != null) {
-            contentView.setTextViewText(R.id.title, trackName);
-            bigContentView.setTextViewText(R.id.title, trackName);
-        }
-
-        contentView.setImageViewBitmap(R.id.pause, DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_pause_24dp));
-        contentView.setImageViewBitmap(R.id.next, DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_skip_next_24dp));
-        contentView.setImageViewBitmap(R.id.prev, DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_skip_previous_24dp));
-
-        bigContentView.setImageViewBitmap(R.id.pause, DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_pause_24dp));
-        bigContentView.setImageViewBitmap(R.id.next, DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_skip_next_24dp));
-        bigContentView.setImageViewBitmap(R.id.prev, DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_skip_previous_24dp));
-
-        PendingIntent pendingIntent = retrievePlaybackAction(ServiceCommand.PREV_ACTION);
-        bigContentView.setOnClickPendingIntent(R.id.prev, pendingIntent);
-
-        pendingIntent = retrievePlaybackAction(ServiceCommand.TOGGLE_PAUSE_ACTION);
-        contentView.setOnClickPendingIntent(R.id.pause, pendingIntent);
-        bigContentView.setOnClickPendingIntent(R.id.pause, pendingIntent);
-
-        pendingIntent = retrievePlaybackAction(ServiceCommand.NEXT_ACTION);
-        contentView.setOnClickPendingIntent(R.id.next, pendingIntent);
-        bigContentView.setOnClickPendingIntent(R.id.next, pendingIntent);
-
-        pendingIntent = retrievePlaybackAction(ServiceCommand.PREV_ACTION);
-        contentView.setOnClickPendingIntent(R.id.prev, pendingIntent);
-        bigContentView.setOnClickPendingIntent(R.id.prev, pendingIntent);
-
-        pendingIntent = retrievePlaybackAction(ServiceCommand.STOP_ACTION);
-        contentView.setOnClickPendingIntent(R.id.close, pendingIntent);
-        bigContentView.setOnClickPendingIntent(R.id.close, pendingIntent);
-
-        doOnMainThread(() -> Glide.with(MusicService.this)
-                .load(getAlbum())
-                .asBitmap()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .override(600, 600)
-                .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(albumName, false))
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        try {
-                            if (resource != null) {
-                                contentView.setImageViewBitmap(R.id.icon, resource);
-                                bigContentView.setImageViewBitmap(R.id.icon, resource);
-                            }
-                            notificationManager.notify(NOTIFICATION_ID, notification);
-                        } catch (NullPointerException | ConcurrentModificationException e) {
-                            LogUtils.logException(TAG, "Exception while attempting to update notification with glide image.", e);
-                        }
-                    }
-
-                    @Override
-                    public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                        super.onLoadFailed(e, errorDrawable);
-                        contentView.setImageViewBitmap(R.id.icon, GlideUtils.drawableToBitmap(errorDrawable));
-                        bigContentView.setImageViewBitmap(R.id.icon, GlideUtils.drawableToBitmap(errorDrawable));
-                        notificationManager.notify(NOTIFICATION_ID, notification);
-                    }
-                }));
-
-        notification.contentView = contentView;
-
-        try {
-            notification.bigContentView = bigContentView;
-        } catch (NoSuchFieldError ignored) {
-
-        }
-
-        if (ShuttleUtils.hasAndroidLPreview()) {
-            notification.contentView.setImageViewBitmap(R.id.pause, !isPlaying ? DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_play_24dp) : DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_pause_24dp));
-        } else {
-            notification.contentView.setImageViewResource(R.id.pause, !isPlaying ? R.drawable.ic_play_24dp : R.drawable.ic_pause_24dp);
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            try {
-                if (notification.bigContentView != null) {
-                    if (ShuttleUtils.hasAndroidLPreview()) {
-                        notification.bigContentView.setImageViewBitmap(R.id.pause, !isPlaying ? DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_play_24dp) : DrawableUtils.getTintedNotificationDrawable(this, R.drawable.ic_pause_24dp));
-                    } else {
-                        notification.bigContentView.setImageViewResource(R.id.pause, !isPlaying ? R.drawable.ic_play_24dp : R.drawable.ic_pause_24dp
-                        );
-                    }
-                }
-            } catch (NoSuchFieldError ignored) {
-            }
-        }
-
-        return notification;
+        notificationHelper.cancel();
     }
 
     private void doOnMainThread(UnsafeAction action) {
         mainHandler.post(action::run);
     }
 
-    private PendingIntent retrievePlaybackAction(final String action) {
-        final ComponentName serviceName = new ComponentName(this, MusicService.class);
+    public static PendingIntent retrievePlaybackAction(Context context, final String action) {
+        final ComponentName serviceName = new ComponentName(context, MusicService.class);
         Intent intent = new Intent(action);
         intent.setComponent(serviceName);
 
-        return PendingIntent.getService(this, 0, intent, 0);
+        return PendingIntent.getService(context, 0, intent, 0);
     }
 
     private void stop(final boolean goToIdle) {
@@ -2872,15 +2719,12 @@ public class MusicService extends Service {
     }
 
     /**
-     * Starts the foreground notification, and cancels any stop messaged
-     *
-     * @param id           hte notification id
-     * @param notification the notification to start
+     * Starts the foreground notification, and cancels any stop messages
      */
-    private void startForegroundImpl(int id, Notification notification) {
+    private void startForegroundImpl() {
         try {
             notificationStateHandler.sendEmptyMessage(NotificationStateHandler.START_FOREGROUND);
-            startForeground(id, notification);
+            notificationHelper.startForeground(this, currentSong, mediaSession);
         } catch (NullPointerException | ConcurrentModificationException e) {
             Crashlytics.log("startForegroundImpl error: " + e.getMessage());
         }

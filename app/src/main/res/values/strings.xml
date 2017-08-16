@@ -246,10 +246,6 @@
     <!-- ## Preference Menu ## -->
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">Navigation</string>
-    <!--Settings category for 'notification' items -->
-    <string name="pref_category_notif_drawer">Notification Drawer</string>
-    <!-- Settings title for inverting the notification drawer text & icons -->
-    <string name="pref_title_invert_notif_icons">Invert Notification Icons/Text</string>
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Other</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->

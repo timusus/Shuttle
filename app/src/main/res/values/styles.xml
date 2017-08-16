@@ -90,14 +90,6 @@
 
     <!-- Swipe dismiss list view animation -->
 
-    <!-- Notification Styles -->
-
-    <style name="notification_button">
-        <item name="android:background">?android:listChoiceBackgroundIndicator</item>
-        <item name="android:layout_width">48dp</item>
-        <item name="android:layout_height">48dp</item>
-    </style>
-
     <style name="SeekBar" parent="android:Widget.SeekBar">
         <item name="android:progressDrawable">@drawable/scrubber_progress_horizontal_material</item>
         <item name="android:indeterminateDrawable">@drawable/scrubber_progress_horizontal_material
@@ -115,16 +107,6 @@
         <item name="android:progressDrawable">
             @drawable/scrubber_progress_horizontal_material_no_background
         </item>
-    </style>
-
-    <style name="CustomProgressBar" parent="android:Widget.ProgressBar.Horizontal">
-        <item name="android:progressDrawable">@drawable/scrubber_progress_horizontal_transparent
-        </item>
-        <item name="android:indeterminateDrawable">
-            @drawable/scrubber_progress_horizontal_transparent
-        </item>
-        <item name="android:minHeight">4dip</item>
-        <item name="android:maxHeight">4dip</item>
     </style>
 
     <style name="AppWidget_TextView">

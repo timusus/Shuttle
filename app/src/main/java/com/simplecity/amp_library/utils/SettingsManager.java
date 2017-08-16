@@ -372,12 +372,6 @@ public class SettingsManager {
         setBooleanValue(KEY_PLAYLIST_IGNORE_DUPLICATES, ignoreDuplicates);
     }
 
-    private static final String KEY_INVERT_NOTIFICATION_ICONS = "pref_invert_notif_icons";
-
-    public boolean invertNotificationIcons() {
-        return getBooleanValue(KEY_INVERT_NOTIFICATION_ICONS, false);
-    }
-
     // Search settings
 
     private static final String KEY_SEARCH_FUZZY = "search_fuzzy";
