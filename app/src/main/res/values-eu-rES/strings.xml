@@ -60,8 +60,6 @@ abesti ilarara gehituak.</item>
     <string name="song_to_favourites"><xliff:g id="song_name">%s</xliff:g> gogokoetara gehitua.</string>
     <string name="song_removed_from_favourites"><xliff:g id="song_name">%s</xliff:g> gogokoetik kendua.</string>
     <!-- ## Dialogs ## -->
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <!-- Displays when a restart is required due to a change (themes etc) -->
     <!-- Restart now button -->
     <string name="restart_button">Orain berrabiarazi</string>
     <!-- Displays when picking a theme color -->
@@ -119,6 +117,8 @@ abesti ilarara gehituak.</item>
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc"><xliff:g id="album">%s</xliff:g> albumaren abesti guztiak betirako ezabatuak izango dira.</string>
     <!-- Delete confirmation dialog message when deleting albums -->
+    <string name="get_pro_button_play_store">Play Store</string>
+    <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">Hurrengo albumen kanta guztiak:<xliff:g id="album">%s</xliff:g>betirako ezabatuak izango dira.</string>
     <!-- Delete confirmation dialog when deleting a single song -->
     <string name="delete_song_desc">\"<xliff:g id="song">%s</xliff:g>\" betirako ezabatua izango da.</string>
@@ -163,7 +163,7 @@ abesti ilarara gehituak.</item>
     <string name="widget_show_artwork">Album karatulak erakutsi</string>
     <!-- ## Menu Headings ## -->
     <!-- Context menu in navigation drawer - option to save playlist as M3U -->
-    <string name="export_playlist">Zerrenda esportatu</string>
+    <string name="export_playlist">Esportatu</string>
     <!-- context menu item to remove the selected item from the playlist -->
     <!-- Menu option 'clear queue' -->
     <string name="clear_queue">Ilara garbitu</string>
@@ -172,8 +172,11 @@ abesti ilarara gehituak.</item>
     <!-- Context menu item -->
     <string name="play_selection">Erreproduzitu</string>
     <!-- Multi select menu item-->
+    <string name="menu_add_to">Gehitu...</string>
     <!-- Multi select menu item-->
+    <string name="menu_playlist">Zerrenda</string>
     <!-- Multi select menu item-->
+    <string name="menu_queue">Ilara</string>
     <!-- Context menu item -->
     <!-- Context menu item -->
     <string name="new_playlist">Berria</string>
@@ -181,7 +184,7 @@ abesti ilarara gehituak.</item>
     <string name="save_as_playlist">Zerrenda bezala gorde</string>
     <!-- Context menu item to remove the selected item from the playlist -->
     <!-- Context menu item to remove the selected item from the queue -->
-    <string name="remove_from_queue">Ilaratik kendu</string>
+    <string name="remove_from_queue">Kendu</string>
     <!-- Context menu item -->
     <string name="play_next">Hurrengoa erreproduzitu</string>
     <!-- Menu text for the settings item -->
@@ -194,7 +197,6 @@ abesti ilarara gehituak.</item>
     <!-- Library screen, menu item -->
     <string name="search_title">Bilatu</string>
     <string name="search_filter">Filtratu</string>
-    <!-- Playlist context menu item to delete the selected playlist. -->
     <!-- Playlist context menu item to clear the selected playlist. -->
     <string name="clear_playlist_menu">Garbitu</string>
     <!-- Playlist context menu item to edit the selected playlist -->
@@ -221,14 +223,8 @@ abesti ilarara gehituak.</item>
     <!-- Accessibility description 'close navigation drawer'-->
     <string name="navigation_drawer_close">Nabigazio kaxa itxi</string>
     <!-- ## Preference Menu ## -->
-    <!--Settings title for white accent color) -->
-    <!--Settings summary for white accent color-->
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">Nabigazioa</string>
-    <!--Settings category for 'notification' items -->
-    <string name="pref_category_notif_drawer">Notifikazio kaxa</string>
-    <!-- Settings title for inverting the notification drawer text & icons -->
-    <string name="pref_title_invert_notif_icons">Notifikazio Ikonoak/Testua irauli</string>
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Bestelakoak</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
@@ -236,9 +232,9 @@ abesti ilarara gehituak.</item>
     <!--Settings summary for opening the dialog to pick which categories are shown as tab headings -->
     <string name="pref_summary_choose_tabs">Aukeratu eta ordenatu pantailaren goikaldeko erlaitzean agertzen diren kategoriak</string>
     <!--Settings title for picking the primary theme color -->
-    <string name="pref_title_theme_pick_color">Gaiaren kolorea</string>
+    <string name="pref_title_theme_pick_color">Kolore Nagusia</string>
     <!--Settings summary for picking the primary theme color-->
-    <string name="pref_summary_theme_pick_color">Aukeratu zure gaiaren kolorea</string>
+    <string name="pref_summary_theme_pick_color">Aukeratu zure gaiaren kolore nagusia</string>
     <!--Settings title for for picking the accent theme color-->
     <string name="pref_title_theme_pick_accent_color">Azentu kolorea</string>
     <!--Settings summary for picking the accent theme color-->
@@ -255,7 +251,6 @@ abesti ilarara gehituak.</item>
     <string name="pref_title_theme_dark">Iluna</string>
     <string name="pref_title_theme_light">Argia</string>
     <string name="pref_title_theme_black">Beltza</string>
-    <!--Settings summary for the downloading more themes -->
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">Zerrenda zuria/beltza</string>
     <!--Settings title for viewing blacklist-->
@@ -266,7 +261,6 @@ abesti ilarara gehituak.</item>
     <string name="pref_title_view_whitelist">Zerrenda zuria ikusi/editatu</string>
     <!--Settings title for clearing whitelist-->
     <string name="pref_title_clear_whitelist">Ezabatu</string>
-    <!--Settings title for clearing whitelist-->
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">Karatula ebaki</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -322,8 +316,6 @@ abesti ilarara gehituak.</item>
     <!-- Settings summary for gmail style placeholders checkbox-->
     <string name="pref_summary_placeholders">\'Gmail\' estiloko karatulak erakusten ditu berez.
 Desaktibatzen bada, Shuttle-en ikonoa erabiliko da bere ordez</string>
-    <!-- Settings title for the enable lockscreen controls checkbox -->
-    <!-- Settings summary for the enable lockscreen controls checkbox -->
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">Pantaila</string>
     <!-- Settings title for the keep screen on checkbox -->
@@ -365,7 +357,6 @@ Desaktibatzen bada, Shuttle-en ikonoa erabiliko da bere ordez</string>
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <string name="pref_summary_simple_download">Simple Last.FM scrobbler-a deskargatu Google Play Storetik</string>
     <!-- Settings title for the About heading -->
-    <string name="pref_title_changelog">Aldaketak</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Laguntza</string>
     <string name="pref_title_version">Bertsioa</string>
@@ -438,6 +429,7 @@ Desaktibatzen bada, Shuttle-en ikonoa erabiliko da bere ordez</string>
     <!-- -->
     <string name="rename_file">Fitxategia berrizendatu</string>
     <!-- -->
+    <string name="rename">Berrizendatu</string>
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">Hasierako karpeta bezala ezarri</string>
     <!-- Label in folder view - number of folders within the current folder -->
@@ -541,18 +533,27 @@ karpeta</item>
     <string name="sort_files_track_name">Abestiaren izena</string>
     <!-- ## Sleep Timer ## -->
     <!-- Sleep timer title -->
+    <string name="sleep_timer">Atsedeneko tenporizadorea</string>
     <!--Sleep timer "Play last song to end" -->
     <string name="sleep_timer_play_to_end">Azken abestia bukaeraraino erreproduzitu</string>
-    <!-- Sleep timer "set" -->
     <!-- Sleep timer "Stop" -->
+    <string name="sleep_timer_stop_button">Gelditu</string>
     <!-- Sleep timer stop message "Stop sleep timer?" -->
+    <string name="sleep_timer_stop_title">Atsedeneko tenporizadorea gelditu?</string>
     <!-- Toast when sleep timer is set -->
+    <string name="sleep_timer_started">Atsedeneko tenporizadorea hasieratua</string>
     <!-- Sleep timer "Set time..." -->
+    <string name="sleep_timer_set_time">Ezarri denbora...</string>
     <!-- Sleep timer "5 minutes" -->
+    <string name="sleep_timer_5_mins">5 minutu</string>
     <!-- Sleep timer "15 minutes" -->
+    <string name="sleep_timer_15_mins">15 minutu</string>
     <!-- Sleep timer "30 minutes" -->
+    <string name="sleep_timer_30_mins">30 minutu</string>
     <!-- Sleep timer "1 hour" -->
+    <string name="sleep_timer_1_hour">1 ordu</string>
     <!-- Sleep timer label "Minutes" (limited space here) -->
+    <string name="sleep_timer_label_minutes">Min</string>
     <!-- Button name in time span picker -->
     <string name="button_done">Bukatuta</string>
     <!-- Title of time span picker -->
@@ -611,13 +612,9 @@ karpeta</item>
     <!-- Shows when multiple items are selected after-long pressing-->
     <string name="action_mode_selection_count"><xliff:g id="number">%d</xliff:g> aukeratuta</string>
     <!-- ## Unknown artist/album metadata ##-->
-    <!-- Default name of artist that doesn't have a name in the metadata -->
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <!-- Default name of genre that doesn't have a name in the metadata -->
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
     <!-- Default value if album year unknown -->
     <string name="unknown_year">Urte ezezaguna</string>
-    <!-- Song Info overflow option-->
+    <!-- Song info overflow option-->
     <string name="song_info">Abesti info.</string>
     <!-- Artwork Download Service Label-->
     <string name="download_service">Deskarga zerbitzua</string>
@@ -699,9 +696,6 @@ karpeta</item>
     <string name="shortcut_folders_long_label">Karpeta arakatzailea zabaldu</string>
     <!-- "Folders" Shortcut label disabled. (I don't think this ever happens)-->
     <string name="shortcut_folders_disabled">Karpetak ez daude eskuragarri</string>
-    <!-- "Playlist" Shortcut label. Max 10 characters.-->
-    <!-- "Playlist" Shortcut long label. Max 25 characters.-->
-    <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label"><xliff:g id="number">%d</xliff:g>. Diskoa</string>
     <!-- Search Filter-->
@@ -719,4 +713,70 @@ karpeta</item>
     <string name="no_lyrics">Ez dira txertatutako hitzak aurkitu.</string>
     <!-- QuickLyric info dialog message-->
     <string name="quicklyric_info">QuickLyric abesti-hitzak lortzeko kode zabalduko app bat da Google Play Storen.\n\nInstalatzerakoan, \'QuickLyric\' menuko botoiari ematerakoan Shuttle-etik zabalduko da.</string>
+    <!-- "Playlist" Shortcut label. Max 10 characters.-->
+    <string name="shortcut_playlist_short_label">Zerrenda</string>
+    <!-- "Playlist" Shortcut long label. Max 25 characters.-->
+    <string name="shortcut_playlist_long_label">Gogokoenen erreprodukzio-zerrenda zabaldu</string>
+    <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
+    <string name="shortcut_playlist_disabled">Zerrenda ez dago eskuragarri</string>
+    <!-- Displayed when an M3U playlist is being saved, but it already exists -->
+    <string name="playlist_save_exists">Erreprodukzio zerrenda jada existizen da</string>
+    <plurals name="NNNtracksdeleted">
+        <item quantity="one">Abesti bat ezabatua izan da.</item>
+        <item quantity="other"><xliff:g id="songs_to_delete">%d</xliff:g> abesti ezabatuak izan dira.</item>
+    </plurals>
+    <plurals name="NNNtrackstofavourites">
+        <item quantity="one">Abesti bat gogokoetara gehitua.</item>
+        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> abesti gogokoetara gehituak.</item>
+    </plurals>
+    <!-- Displays when a restart is required due to a change (themes etc) -->
+    <string name="restart_tite">Berrabiarazpena beharrezkoa</string>
+    <!-- Displays when a restart is required due to a change (themes etc) -->
+    <string name="restart_message">Aldaketa hauek ez dira ikusiko Shuttle berrabiarazi arte</string>
+    <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
+    <string name="dialog_custom">Pertsonalizatua</string>
+    <!-- Context menu item -->
+    <string name="add_to_playlist">Zerrenda</string>
+    <!-- Context menu item to remove the selected item from the playlist -->
+    <string name="remove_from_playlist">Zerrendatik kendu</string>
+    <!-- -->
+    <string name="share_title">Banatu</string>
+    <!-- Playlist context menu item to delete the selected playlist. -->
+    <string name="delete_playlist_menu">Ezabatu</string>
+    <!--Settings title for white accent color) -->
+    <string name="pref_title_theme_white_accent">Azentu zuria erabili</string>
+    <!--Settings summary for white accent color-->
+    <string name="pref_summary_theme_white_accent">Zuria erabiltzen du kolore azentu guztientzako, egoera azaldu behar dutenak ezik (nahastu eta errepikatu zuriaren beste kolore bat behar dute piztuta daudela adierazteko).</string>
+    <!--Settings category for 'notification' items -->
+    <string name="pref_category_notif_drawer">Notifikazio kaxa</string>
+    <!-- Settings title for inverting the notification drawer text & icons -->
+    <string name="pref_title_invert_notif_icons">Notifikazio Ikonoak/Testua irauli</string>
+    <!--Settings summary for the downloading more themes -->
+    <string name="pref_summary_get_pro_themes">Gai gehiago daude eskuragarri Shuttle+entzako</string>
+    <!--Settings title for clearing whitelist-->
+    <string name="pref_title_update_whitelist">Eguneratu</string>
+    <!-- Settings title for the enable lockscreen controls checkbox -->
+    <string name="pref_title_lockscreen">Blokeo-pantailaren karatula aktibatu</string>
+    <!-- Settings summary for the enable lockscreen controls checkbox -->
+    <string name="pref_summary_lockscreen">Blokeo-pantailako karatulak aktibatu/desaktibatzen ditu</string>
+    <!-- Settings title for the About heading -->
+    <string name="pref_title_about">Aldaketak</string>
+    <!-- Sleep timer "set" -->
+    <string name="sleep_timer_set">Ezarri</string>
+    <!-- Default name of artist that doesn't have a name in the metadata -->
+    <string name="unknown_artist_name">Artista ezezaguna</string>
+    <!-- Default name of album artist that doesn't have a name in the metadata -->
+    <string name="unknown_album_name">Album ezezaguna</string>
+    <!-- Default name of genre that doesn't have a name in the metadata -->
+    <string name="unknown_genre_name">Genero ezezaguna</string>
+    <!-- Default name of album artist that doesn't have a name in the metadata -->
+    <string name="unknown_album_artist_name">Album-artista ezezaguna</string>
+    <!-- Accessibility button description -->
+    <string name="btn_queue">Erreprodukzio ilara ikusi</string>
+    <!-- Accessibility button description -->
+    <string name="btn_show_queue">Ilara ikusi</string>
+    <!-- Accessibility 'show lyrics' -->
+    <string name="btn_show_lyrics">Hitzak ikusi</string>
+    <string name="toast_purchase_failed">Zerbait txarto joan da. Mesedez saiatu berriz geroago...</string>
+    <string name="search_title_only">Izennburua bakarrik</string>
 </resources>

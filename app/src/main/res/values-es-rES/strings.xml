@@ -59,8 +59,6 @@
     <string name="song_to_favourites"><xliff:g id="song_name">%s</xliff:g> añadida a favoritos.</string>
     <string name="song_removed_from_favourites"><xliff:g id="song_name">%s</xliff:g> eliminada de favoritos.</string>
     <!-- ## Dialogs ## -->
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <!-- Displays when a restart is required due to a change (themes etc) -->
     <!-- Restart now button -->
     <string name="restart_button">Reiniciar ahora</string>
     <!-- Displays when picking a theme color -->
@@ -106,6 +104,8 @@
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">Todas las canciones del álbum <xliff:g id="album">%s</xliff:g> serán eliminadas permanentemente.</string>
     <!-- Delete confirmation dialog message when deleting albums -->
+    <string name="get_pro_button_play_store">Play Store</string>
+    <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">Todas las canciones de los siguientes albumes:<xliff:g id="album">%s</xliff:g>serán eliminadas permanentemente.</string>
     <!-- Delete confirmation dialog when deleting a single song -->
     <string name="delete_song_desc">\"<xliff:g id="song">%s</xliff:g>\" será eliminada permanentemente.</string>
@@ -184,7 +184,6 @@
     <!-- Library screen, menu item -->
     <string name="search_title">Buscar</string>
     <string name="search_filter">Filtrar</string>
-    <!-- Playlist context menu item to delete the selected playlist. -->
     <!-- Playlist context menu item to clear the selected playlist. -->
     <string name="clear_playlist_menu">Limpiar</string>
     <!-- Playlist context menu item to edit the selected playlist -->
@@ -211,14 +210,8 @@
     <!-- Accessibility description 'close navigation drawer'-->
     <string name="navigation_drawer_close">Cerrar panel de navegación</string>
     <!-- ## Preference Menu ## -->
-    <!--Settings title for white accent color) -->
-    <!--Settings summary for white accent color-->
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">Navegación</string>
-    <!--Settings category for 'notification' items -->
-    <string name="pref_category_notif_drawer">Panel de Notificaciones</string>
-    <!-- Settings title for inverting the notification drawer text & icons -->
-    <string name="pref_title_invert_notif_icons">Invertir iconos/Texto de Notificaciones</string>
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Otro</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
@@ -245,7 +238,6 @@
     <string name="pref_title_theme_dark">Oscuro</string>
     <string name="pref_title_theme_light">Claro</string>
     <string name="pref_title_theme_black">Negro</string>
-    <!--Settings summary for the downloading more themes -->
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">Lista blanca/negra</string>
     <!--Settings title for viewing blacklist-->
@@ -256,7 +248,6 @@
     <string name="pref_title_view_whitelist">Ver/Editar lista blanca</string>
     <!--Settings title for clearing whitelist-->
     <string name="pref_title_clear_whitelist">Eliminar</string>
-    <!--Settings title for clearing whitelist-->
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">Recortar carátula</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -313,8 +304,6 @@
     <!-- Settings summary for gmail style placeholders checkbox-->
     <string name="pref_summary_placeholders">Mostrar carátulas predeterminadas estilo \'Gmail\'. 
 Si no está seleccionado, se usará el icono de Shuttle en su lugar</string>
-    <!-- Settings title for the enable lockscreen controls checkbox -->
-    <!-- Settings summary for the enable lockscreen controls checkbox -->
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">Pantalla</string>
     <!-- Settings title for the keep screen on checkbox -->
@@ -358,7 +347,6 @@ Si no está seleccionado, se usará el icono de Shuttle en su lugar</string>
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <string name="pref_summary_simple_download">Descargar Simple Last.FM Scrobbler desde la Play Store</string>
     <!-- Settings title for the About heading -->
-    <string name="pref_title_changelog">Lista de cambios</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Soporte</string>
     <string name="pref_title_version">Versión</string>
@@ -536,7 +524,6 @@ carpetas</item>
     <!-- Sleep timer title -->
     <!--Sleep timer "Play last song to end" -->
     <string name="sleep_timer_play_to_end">Reproducir última canción completa</string>
-    <!-- Sleep timer "set" -->
     <!-- Sleep timer "Stop" -->
     <!-- Sleep timer stop message "Stop sleep timer?" -->
     <!-- Toast when sleep timer is set -->
@@ -604,13 +591,9 @@ carpetas</item>
     <!-- Shows when multiple items are selected after-long pressing-->
     <string name="action_mode_selection_count"><xliff:g id="number">%d</xliff:g> seleccionado(s)</string>
     <!-- ## Unknown artist/album metadata ##-->
-    <!-- Default name of artist that doesn't have a name in the metadata -->
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <!-- Default name of genre that doesn't have a name in the metadata -->
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
     <!-- Default value if album year unknown -->
     <string name="unknown_year">Año desconocido</string>
-    <!-- Song Info overflow option-->
+    <!-- Song info overflow option-->
     <string name="song_info">Información de canción</string>
     <!-- Artwork Download Service Label-->
     <string name="download_service">Descargar servicio</string>
@@ -692,9 +675,6 @@ carpetas</item>
     <string name="shortcut_folders_long_label">Abrir Explorador de Carpetas</string>
     <!-- "Folders" Shortcut label disabled. (I don't think this ever happens)-->
     <string name="shortcut_folders_disabled">Carpetas no disponibles</string>
-    <!-- "Playlist" Shortcut label. Max 10 characters.-->
-    <!-- "Playlist" Shortcut long label. Max 25 characters.-->
-    <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">Disco <xliff:g id="number">%d</xliff:g></string>
     <!-- Search Filter-->
@@ -712,4 +692,68 @@ carpetas</item>
     <string name="no_lyrics">No se han encontrado letras para esta canción</string>
     <!-- QuickLyric info dialog message-->
     <string name="quicklyric_info">QuickLyric es un buscador de letras de canciones open-source que hay  en Google Play Store.\n\nUna vez instalado, QuickLyric se abrira desde Shuttle cada vez que pulses el botón de menú de \'QuickLyric\'</string>
+    <!-- "Playlist" Shortcut label. Max 10 characters.-->
+    <string name="shortcut_playlist_short_label">Lista</string>
+    <!-- "Playlist" Shortcut long label. Max 25 characters.-->
+    <string name="shortcut_playlist_long_label">Abrir Lista de Favoritos</string>
+    <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
+    <string name="shortcut_playlist_disabled">Lista de Reproducción no disponible</string>
+    <!-- Displayed when an M3U playlist is being saved, but it already exists -->
+    <string name="playlist_save_exists">La lista de reproducción ya existe</string>
+    <plurals name="NNNtracksdeleted">
+        <item quantity="one">1 canción ha sido eliminada.</item>
+        <item quantity="other"><xliff:g id="songs_to_delete">%d</xliff:g> canciones han sido eliminadas.</item>
+    </plurals>
+    <plurals name="NNNtrackstofavourites">
+        <item quantity="one">1 canción añadida a favoritos.</item>
+        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> canciones añadidas a favoritos.</item>
+    </plurals>
+    <!-- Displays when a restart is required due to a change (themes etc) -->
+    <string name="restart_tite">Reinicio requerido</string>
+    <!-- Displays when a restart is required due to a change (themes etc) -->
+    <string name="restart_message">Los cambios no surtirán efecto hasta que reinicie Shuttle</string>
+    <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
+    <string name="dialog_custom">Personalizado</string>
+    <!-- Context menu item -->
+    <string name="add_to_playlist">Añadir a lista de reproducción</string>
+    <!-- Context menu item to remove the selected item from the playlist -->
+    <string name="remove_from_playlist">Eliminar de lista de reproducción</string>
+    <!-- -->
+    <string name="share_title">Compartir</string>
+    <!-- Playlist context menu item to delete the selected playlist. -->
+    <string name="delete_playlist_menu">Eliminar</string>
+    <!--Settings title for white accent color) -->
+    <string name="pref_title_theme_white_accent">Usar Blanco como acento.</string>
+    <!--Settings summary for white accent color-->
+    <string name="pref_summary_theme_white_accent">Usa el blanco para todos los acentos de color, excepto aquellos que necesita mostrar un estado (reprod. aleatoria y repetición necesitan un color distinto para mostrar que están activados).</string>
+    <!--Settings category for 'notification' items -->
+    <string name="pref_category_notif_drawer">Panel de Notificaciones</string>
+    <!-- Settings title for inverting the notification drawer text & icons -->
+    <string name="pref_title_invert_notif_icons">Invertir iconos/Texto de Notificaciones</string>
+    <!--Settings summary for the downloading more themes -->
+    <string name="pref_summary_get_pro_themes">Hay más temas disponibles en Shuttle+</string>
+    <!--Settings title for clearing whitelist-->
+    <string name="pref_title_update_whitelist">Actualizar</string>
+    <!-- Settings title for the enable lockscreen controls checkbox -->
+    <string name="pref_title_lockscreen">Activar carátula en pantalla de bloqueo</string>
+    <!-- Settings summary for the enable lockscreen controls checkbox -->
+    <string name="pref_summary_lockscreen">Activa/desactiva la carátula en la pantalla de bloqueo</string>
+    <!-- Settings title for the About heading -->
+    <string name="pref_title_about">Lista de cambios</string>
+    <!-- Default name of artist that doesn't have a name in the metadata -->
+    <string name="unknown_artist_name">Artista desconocido</string>
+    <!-- Default name of album artist that doesn't have a name in the metadata -->
+    <string name="unknown_album_name">Álbum desconocido</string>
+    <!-- Default name of genre that doesn't have a name in the metadata -->
+    <string name="unknown_genre_name">Género desconocido</string>
+    <!-- Default name of album artist that doesn't have a name in the metadata -->
+    <string name="unknown_album_artist_name">Artista desconocido</string>
+    <!-- Accessibility button description -->
+    <string name="btn_queue">Ver lista de reproducción</string>
+    <!-- Accessibility button description -->
+    <string name="btn_show_queue">Mostrar cola</string>
+    <!-- Accessibility 'show lyrics' -->
+    <string name="btn_show_lyrics">Mostrar letras</string>
+    <string name="toast_purchase_failed">Algo ha ido mal. Por favor prueba más tarde..</string>
+    <string name="search_title_only">Solo Título</string>
 </resources>

@@ -64,8 +64,6 @@
     <string name="song_to_favourites"><xliff:g id="song_name">%s</xliff:g> додано у вибрані.</string>
     <string name="song_removed_from_favourites"><xliff:g id="song_name">%s</xliff:g> вилучено з вибраних.</string>
     <!-- ## Dialogs ## -->
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <!-- Displays when a restart is required due to a change (themes etc) -->
     <!-- Restart now button -->
     <string name="restart_button">Перезавантажити зараз</string>
     <!-- Displays when picking a theme color -->
@@ -122,6 +120,8 @@
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">Усі пісні з альбому \"<xliff:g id="album">%s</xliff:g>\" буде назавжди видалено.</string>
     <!-- Delete confirmation dialog message when deleting albums -->
+    <string name="get_pro_button_play_store">Play Store</string>
+    <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">Всі пісні з поточних альбомів:<xliff:g id="album">%s</xliff:g>буде назавжди видалено.</string>
     <!-- Delete confirmation dialog when deleting a single song -->
     <string name="delete_song_desc">\"<xliff:g id="song">%s</xliff:g>\" буде назавжди видалено.</string>
@@ -197,7 +197,6 @@
     <!-- Library screen, menu item -->
     <string name="search_title">Пошук</string>
     <string name="search_filter">Фільтр</string>
-    <!-- Playlist context menu item to delete the selected playlist. -->
     <!-- Playlist context menu item to clear the selected playlist. -->
     <string name="clear_playlist_menu">Очистити</string>
     <!-- Playlist context menu item to edit the selected playlist -->
@@ -223,12 +222,8 @@
     <!-- Accessibility description 'close navigation drawer'-->
     <string name="navigation_drawer_close">Закрити слайд меню</string>
     <!-- ## Preference Menu ## -->
-    <!--Settings title for white accent color) -->
-    <!--Settings summary for white accent color-->
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">Навігація</string>
-    <!--Settings category for 'notification' items -->
-    <!-- Settings title for inverting the notification drawer text & icons -->
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Інші</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
@@ -255,7 +250,6 @@
     <string name="pref_title_theme_dark">Темна</string>
     <string name="pref_title_theme_light">Світла</string>
     <string name="pref_title_theme_black">Чорний</string>
-    <!--Settings summary for the downloading more themes -->
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">Білий/чорний список</string>
     <!--Settings title for viewing blacklist-->
@@ -266,7 +260,6 @@
     <string name="pref_title_view_whitelist">Перегляд/редагування білого списку</string>
     <!--Settings title for clearing whitelist-->
     <string name="pref_title_clear_whitelist">Очистити</string>
-    <!--Settings title for clearing whitelist-->
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">Обрізати обкладинку альбома</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -322,8 +315,6 @@
     <!-- Settings summary for gmail style placeholders checkbox-->
     <string name="pref_summary_placeholders">Використовувати іконки в стилі \'Gmail\' за замовчуванням.
 Якщо не вибрано, - використовуватиметься іконка Shuttle</string>
-    <!-- Settings title for the enable lockscreen controls checkbox -->
-    <!-- Settings summary for the enable lockscreen controls checkbox -->
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">Екран</string>
     <!-- Settings title for the keep screen on checkbox -->
@@ -365,7 +356,6 @@
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <string name="pref_summary_simple_download">Завантажити Simple Last.FM Scrobbler з Google Play</string>
     <!-- Settings title for the About heading -->
-    <string name="pref_title_changelog">Звітування змін</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Підтримка</string>
     <string name="pref_title_version">Версія</string>
@@ -540,7 +530,6 @@
     <!-- Sleep timer title -->
     <!--Sleep timer "Play last song to end" -->
     <string name="sleep_timer_play_to_end">Відтворити останній трек до кінця</string>
-    <!-- Sleep timer "set" -->
     <!-- Sleep timer "Stop" -->
     <!-- Sleep timer stop message "Stop sleep timer?" -->
     <!-- Toast when sleep timer is set -->
@@ -612,13 +601,9 @@
     <!-- Shows when multiple items are selected after-long pressing-->
     <string name="action_mode_selection_count"><xliff:g id="number">%d</xliff:g> вибрано</string>
     <!-- ## Unknown artist/album metadata ##-->
-    <!-- Default name of artist that doesn't have a name in the metadata -->
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <!-- Default name of genre that doesn't have a name in the metadata -->
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
     <!-- Default value if album year unknown -->
     <string name="unknown_year">Невідомий рік</string>
-    <!-- Song Info overflow option-->
+    <!-- Song info overflow option-->
     <string name="song_info">Про трек</string>
     <!-- Artwork Download Service Label-->
     <string name="download_service">Сервіс завантажувань</string>
@@ -700,9 +685,6 @@
     <string name="shortcut_folders_long_label">Відкрити оглядач папок</string>
     <!-- "Folders" Shortcut label disabled. (I don't think this ever happens)-->
     <string name="shortcut_folders_disabled">Теки недоступні</string>
-    <!-- "Playlist" Shortcut label. Max 10 characters.-->
-    <!-- "Playlist" Shortcut long label. Max 25 characters.-->
-    <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <!-- Search Filter-->
     <string name="search_artists">Виконавці</string>
@@ -717,4 +699,68 @@
     <!-- Shown when there are no lyrics -->
     <string name="no_lyrics">Вбудованих текстів для цього треку не знайдено</string>
     <!-- QuickLyric info dialog message-->
+    <!-- "Playlist" Shortcut label. Max 10 characters.-->
+    <string name="shortcut_playlist_short_label">Плейлист</string>
+    <!-- "Playlist" Shortcut long label. Max 25 characters.-->
+    <string name="shortcut_playlist_long_label">Відкрити Вибраний плейлист</string>
+    <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
+    <string name="shortcut_playlist_disabled">Плейлист недоступний</string>
+    <!-- Displayed when an M3U playlist is being saved, but it already exists -->
+    <string name="playlist_save_exists">Плейлист вже існує</string>
+    <plurals name="NNNtracksdeleted">
+        <item quantity="one">1 композицію було видалено.</item>
+        <item quantity="other"><xliff:g id="songs_to_delete">%d</xliff:g> композиції було видалено.</item>
+        <item quantity="few"><xliff:g id="songs_to_delete">%d</xliff:g> композицій було видалено.</item>
+        <item quantity="many"><xliff:g id="songs_to_delete">%d</xliff:g> композицій було видалено.</item>
+    </plurals>
+    <plurals name="NNNtrackstofavourites">
+        <item quantity="one">1 композицію додано у вибрані.</item>
+        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> композиції додано у вибрані.</item>
+        <item quantity="few"><xliff:g example="27" id="number">%d</xliff:g> композицій додано у вибрані.</item>
+        <item quantity="many"><xliff:g example="27" id="number">%d</xliff:g> композицій додано у вибрані.</item>
+    </plurals>
+    <!-- Displays when a restart is required due to a change (themes etc) -->
+    <string name="restart_tite">Необхідно перезавантаження</string>
+    <!-- Displays when a restart is required due to a change (themes etc) -->
+    <string name="restart_message">Для того щоб зміни вступили в силу потрібно перезавантажити Shuttle</string>
+    <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
+    <string name="dialog_custom">Свій</string>
+    <!-- Context menu item -->
+    <string name="add_to_playlist">Додати в плейлист</string>
+    <!-- Context menu item to remove the selected item from the playlist -->
+    <string name="remove_from_playlist">Видалити з плейлисту</string>
+    <!-- -->
+    <string name="share_title">Поділитися</string>
+    <!-- Playlist context menu item to delete the selected playlist. -->
+    <string name="delete_playlist_menu">Видалити</string>
+    <!--Settings title for white accent color) -->
+    <string name="pref_title_theme_white_accent">Використовувати білий акцент</string>
+    <!--Settings summary for white accent color-->
+    <string name="pref_summary_theme_white_accent">Використовує білий для всіх кольорових акцентів, виключаючи ті, які повинні відображати стан (тасування та повтор потребують кольору відмінного від білого щоб показати, що вони увімкнені)</string>
+    <!--Settings summary for the downloading more themes -->
+    <string name="pref_summary_get_pro_themes">Більше тем доступно в Shuttle+</string>
+    <!--Settings title for clearing whitelist-->
+    <string name="pref_title_update_whitelist">Оновлення</string>
+    <!-- Settings title for the enable lockscreen controls checkbox -->
+    <string name="pref_title_lockscreen">Увімкнути обкладинку на екрані блокуванні</string>
+    <!-- Settings summary for the enable lockscreen controls checkbox -->
+    <string name="pref_summary_lockscreen">Вмикає/вимикає обкладинку на екрані блокування</string>
+    <!-- Settings title for the About heading -->
+    <string name="pref_title_about">Звітування змін</string>
+    <!-- Default name of artist that doesn't have a name in the metadata -->
+    <string name="unknown_artist_name">Невідомий виконавець</string>
+    <!-- Default name of album artist that doesn't have a name in the metadata -->
+    <string name="unknown_album_name">Невідомий альбом</string>
+    <!-- Default name of genre that doesn't have a name in the metadata -->
+    <string name="unknown_genre_name">Невідомий жанр</string>
+    <!-- Default name of album artist that doesn't have a name in the metadata -->
+    <string name="unknown_album_artist_name">Невідомий виконавець альбому</string>
+    <!-- Accessibility button description -->
+    <string name="btn_queue">Переглянути чергу відтворення</string>
+    <!-- Accessibility button description -->
+    <string name="btn_show_queue">Показати чергу</string>
+    <!-- Accessibility 'show lyrics' -->
+    <string name="btn_show_lyrics">Показати слова</string>
+    <string name="toast_purchase_failed">Щось пішло не так. Будь ласка, спробуйте ще раз пізніше..</string>
+    <string name="search_title_only">Тільки назва</string>
 </resources>

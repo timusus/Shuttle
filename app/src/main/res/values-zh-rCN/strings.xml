@@ -57,8 +57,6 @@
     <string name="song_to_favourites"><xliff:g id="song_name">%s</xliff:g>已添加到我的最爱</string>
     <string name="song_removed_from_favourites"><xliff:g id="song_name">%s</xliff:g>已从我的最爱中移除</string>
     <!-- ## Dialogs ## -->
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <!-- Displays when a restart is required due to a change (themes etc) -->
     <!-- Restart now button -->
     <string name="restart_button">立即重启</string>
     <!-- Displays when picking a theme color -->
@@ -99,7 +97,7 @@
 \n\n您的付费升级也是对我们开发者最大的支持! 如果您已购买Shuttle+便不需要购买本更新</string>
     <string name="btn_upgrade">升级</string>
     <!-- -->
-    <string name="get_pro_button_no">不,谢谢!</string>
+    <string name="get_pro_button_no">不,要</string>
     <!-- Dialog 'close' button -->
     <string name="close">关闭</string>
     <!-- No internet connection warning -->
@@ -115,6 +113,8 @@
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">整张专辑<xliff:g id="album">%s</xliff:g>信息将被永久删除</string>
     <!-- Delete confirmation dialog message when deleting albums -->
+    <string name="get_pro_button_play_store">Play Store</string>
+    <string name="get_pro_button_amazon">亚马逊</string>
     <string name="delete_album_desc_multiple">以下的专辑:<xliff:g id="album">%s</xliff:g>将被永久删除</string>
     <!-- Delete confirmation dialog when deleting a single song -->
     <string name="delete_song_desc"><xliff:g id="song">%s</xliff:g>将被永久删除</string>
@@ -193,7 +193,6 @@
     <!-- Library screen, menu item -->
     <string name="search_title">搜索</string>
     <string name="search_filter">过滤</string>
-    <!-- Playlist context menu item to delete the selected playlist. -->
     <!-- Playlist context menu item to clear the selected playlist. -->
     <string name="clear_playlist_menu">清除</string>
     <!-- Playlist context menu item to edit the selected playlist -->
@@ -220,14 +219,8 @@
     <!-- Accessibility description 'close navigation drawer'-->
     <string name="navigation_drawer_close">关闭导航抽屉</string>
     <!-- ## Preference Menu ## -->
-    <!--Settings title for white accent color) -->
-    <!--Settings summary for white accent color-->
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">导航</string>
-    <!--Settings category for 'notification' items -->
-    <string name="pref_category_notif_drawer">通知抽屉</string>
-    <!-- Settings title for inverting the notification drawer text & icons -->
-    <string name="pref_title_invert_notif_icons">反转通知图标/文本</string>
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">其它</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
@@ -254,7 +247,6 @@
     <string name="pref_title_theme_dark">深暗</string>
     <string name="pref_title_theme_light">明亮</string>
     <string name="pref_title_theme_black">黑色</string>
-    <!--Settings summary for the downloading more themes -->
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">黑/白名单</string>
     <!--Settings title for viewing blacklist-->
@@ -265,7 +257,6 @@
     <string name="pref_title_view_whitelist">查看/编辑白名单</string>
     <!--Settings title for clearing whitelist-->
     <string name="pref_title_clear_whitelist">清空白名单</string>
-    <!--Settings title for clearing whitelist-->
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">裁剪专辑封面</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -325,8 +316,6 @@
     <!-- Settings summary for gmail style placeholders checkbox-->
     <string name="pref_summary_placeholders">如果歌曲没有封面将显示\'Gmail\'的占位符风格
 取消选中Shuttle图标将被用作封面代替</string>
-    <!-- Settings title for the enable lockscreen controls checkbox -->
-    <!-- Settings summary for the enable lockscreen controls checkbox -->
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">显示</string>
     <!-- Settings title for the keep screen on checkbox -->
@@ -370,7 +359,6 @@
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <string name="pref_summary_simple_download">从Google Play Store下载Simple Last.FM Scrobbler</string>
     <!-- Settings title for the About heading -->
-    <string name="pref_title_changelog">更新日志</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">支持</string>
     <string name="pref_title_version">版本</string>
@@ -444,6 +432,7 @@ www.shuttlemusicplayer.com</string>
     <!-- -->
     <string name="rename_file">重命名文件</string>
     <!-- -->
+    <string name="rename">重命名</string>
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">设置为初始目录</string>
     <!-- Label in folder view - number of folders within the current folder -->
@@ -545,18 +534,27 @@ www.shuttlemusicplayer.com</string>
     <string name="sort_files_track_name">音轨名称</string>
     <!-- ## Sleep Timer ## -->
     <!-- Sleep timer title -->
+    <string name="sleep_timer">睡眠定时器</string>
     <!--Sleep timer "Play last song to end" -->
     <string name="sleep_timer_play_to_end">播放完最后一首歌曲后休眠</string>
-    <!-- Sleep timer "set" -->
     <!-- Sleep timer "Stop" -->
+    <string name="sleep_timer_stop_button">停止</string>
     <!-- Sleep timer stop message "Stop sleep timer?" -->
+    <string name="sleep_timer_stop_title">停止休眠时钟?</string>
     <!-- Toast when sleep timer is set -->
+    <string name="sleep_timer_started">睡眠定时器开始了！</string>
     <!-- Sleep timer "Set time..." -->
+    <string name="sleep_timer_set_time">设置时间...</string>
     <!-- Sleep timer "5 minutes" -->
+    <string name="sleep_timer_5_mins">5分钟</string>
     <!-- Sleep timer "15 minutes" -->
+    <string name="sleep_timer_15_mins">15分钟</string>
     <!-- Sleep timer "30 minutes" -->
+    <string name="sleep_timer_30_mins">30分钟</string>
     <!-- Sleep timer "1 hour" -->
+    <string name="sleep_timer_1_hour">1小时</string>
     <!-- Sleep timer label "Minutes" (limited space here) -->
+    <string name="sleep_timer_label_minutes">分钟</string>
     <!-- Button name in time span picker -->
     <string name="button_done">完成</string>
     <!-- Title of time span picker -->
@@ -613,13 +611,9 @@ www.shuttlemusicplayer.com</string>
     <!-- Shows when multiple items are selected after-long pressing-->
     <string name="action_mode_selection_count">已选择<xliff:g id="number">%d</xliff:g>首</string>
     <!-- ## Unknown artist/album metadata ##-->
-    <!-- Default name of artist that doesn't have a name in the metadata -->
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <!-- Default name of genre that doesn't have a name in the metadata -->
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
     <!-- Default value if album year unknown -->
     <string name="unknown_year">未知年份</string>
-    <!-- Song Info overflow option-->
+    <!-- Song info overflow option-->
     <string name="song_info">歌曲信息</string>
     <!-- Artwork Download Service Label-->
     <string name="download_service">下载服务</string>
@@ -701,9 +695,6 @@ www.shuttlemusicplayer.com</string>
     <string name="shortcut_folders_long_label">打开文件夹浏览器</string>
     <!-- "Folders" Shortcut label disabled. (I don't think this ever happens)-->
     <string name="shortcut_folders_disabled">文件夹不可用</string>
-    <!-- "Playlist" Shortcut label. Max 10 characters.-->
-    <!-- "Playlist" Shortcut long label. Max 25 characters.-->
-    <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">音轨<xliff:g id="number">%d</xliff:g></string>
     <!-- Search Filter-->
@@ -721,4 +712,68 @@ www.shuttlemusicplayer.com</string>
     <string name="no_lyrics">未找到该音轨歌词</string>
     <!-- QuickLyric info dialog message-->
     <string name="quicklyric_info">QuickLyric是Google Play商店上的开源歌词提取器\n\n安装后,只要您点击“QuickLyric\""菜单按钮QuickLyric将从Shuttle中打开</string>
+    <!-- "Playlist" Shortcut label. Max 10 characters.-->
+    <string name="shortcut_playlist_short_label">播放列表</string>
+    <!-- "Playlist" Shortcut long label. Max 25 characters.-->
+    <string name="shortcut_playlist_long_label">打开收藏列表</string>
+    <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
+    <string name="shortcut_playlist_disabled">播放列表不可用</string>
+    <!-- Displayed when an M3U playlist is being saved, but it already exists -->
+    <string name="playlist_save_exists">播放列表已存在</string>
+    <plurals name="NNNtracksdeleted">
+        <item quantity="other">已删除<xliff:g id="songs_to_delete">%d</xliff:g>首歌曲</item>
+    </plurals>
+    <plurals name="NNNtrackstofavourites">
+        <item quantity="other">已添加<xliff:g example="27" id="number">%d</xliff:g>首歌到我的最爱</item>
+    </plurals>
+    <!-- Displays when a restart is required due to a change (themes etc) -->
+    <string name="restart_tite">需要重新启动</string>
+    <!-- Displays when a restart is required due to a change (themes etc) -->
+    <string name="restart_message">在重启本应用之前这些更改不会生效</string>
+    <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
+    <string name="dialog_custom">自定义</string>
+    <!-- Context menu item -->
+    <string name="add_to_playlist">添加到播放列表</string>
+    <!-- Context menu item to remove the selected item from the playlist -->
+    <string name="remove_from_playlist">从播放列表中删除</string>
+    <!-- -->
+    <string name="share_title">分享</string>
+    <!-- Playlist context menu item to delete the selected playlist. -->
+    <string name="delete_playlist_menu">删除</string>
+    <!--Settings title for white accent color) -->
+    <string name="pref_title_theme_white_accent">白色主题</string>
+    <!--Settings summary for white accent color-->
+    <string name="pref_summary_theme_white_accent">为所有除需要显示状态的地方以外使用白色（随机或重复需要一个除白色以外的颜色来标示出启用）</string>
+    <!--Settings category for 'notification' items -->
+    <string name="pref_category_notif_drawer">通知抽屉</string>
+    <!-- Settings title for inverting the notification drawer text & icons -->
+    <string name="pref_title_invert_notif_icons">反转通知图标/文本</string>
+    <!--Settings summary for the downloading more themes -->
+    <string name="pref_summary_get_pro_themes">升级到Shuttle+以获取更多主题</string>
+    <!--Settings title for clearing whitelist-->
+    <string name="pref_title_update_whitelist">更新</string>
+    <!-- Settings title for the enable lockscreen controls checkbox -->
+    <string name="pref_title_lockscreen">启用锁屏控制</string>
+    <!-- Settings summary for the enable lockscreen controls checkbox -->
+    <string name="pref_summary_lockscreen">当屏幕锁定时启用/禁用控制、信息和专辑封面</string>
+    <!-- Settings title for the About heading -->
+    <string name="pref_title_about">更新日志</string>
+    <!-- Sleep timer "set" -->
+    <string name="sleep_timer_set">设定</string>
+    <!-- Default name of artist that doesn't have a name in the metadata -->
+    <string name="unknown_artist_name">未知艺术家</string>
+    <!-- Default name of album artist that doesn't have a name in the metadata -->
+    <string name="unknown_album_name">未知专辑</string>
+    <!-- Default name of genre that doesn't have a name in the metadata -->
+    <string name="unknown_genre_name">未知流派</string>
+    <!-- Default name of album artist that doesn't have a name in the metadata -->
+    <string name="unknown_album_artist_name">未知专辑艺术家</string>
+    <!-- Accessibility button description -->
+    <string name="btn_queue">查看播放队列</string>
+    <!-- Accessibility button description -->
+    <string name="btn_show_queue">显示队列</string>
+    <!-- Accessibility 'show lyrics' -->
+    <string name="btn_show_lyrics">显示歌词</string>
+    <string name="toast_purchase_failed">出了些问题,请稍后再试...</string>
+    <string name="search_title_only">仅标题</string>
 </resources>

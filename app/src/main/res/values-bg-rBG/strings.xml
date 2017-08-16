@@ -61,8 +61,6 @@
     <string name="song_to_favourites"><xliff:g id="song_name">%s</xliff:g> добавено към любимите.</string>
     <string name="song_removed_from_favourites"><xliff:g id="song_name">%s</xliff:g> премахнато от любимите.</string>
     <!-- ## Dialogs ## -->
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <!-- Displays when a restart is required due to a change (themes etc) -->
     <!-- Restart now button -->
     <string name="restart_button">Рестартирай сега</string>
     <!-- Displays when picking a theme color -->
@@ -113,6 +111,8 @@
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">Целият албум \"<xliff:g id="album">%s</xliff:g>\" ще бъде окончателно премахнат от USB устройството.</string>
     <!-- Delete confirmation dialog message when deleting albums -->
+    <string name="get_pro_button_play_store">Play Store</string>
+    <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">Следните албуми ще бъдат изтрити за постоянно: <xliff:g id="album">%s</xliff:g>.</string>
     <!-- Delete confirmation dialog when deleting a single song -->
     <string name="delete_song_desc">\"<xliff:g id="song">%s</xliff:g>\" ще бъде окончателно премахната от картата памет.</string>
@@ -187,7 +187,6 @@
     <!-- -->
     <!-- Library screen, menu item -->
     <string name="search_title">Търсене</string>
-    <!-- Playlist context menu item to delete the selected playlist. -->
     <!-- Playlist context menu item to clear the selected playlist. -->
     <string name="clear_playlist_menu">Изчисти</string>
     <!-- Playlist context menu item to edit the selected playlist -->
@@ -213,12 +212,8 @@
     <!-- Accessibility description 'close navigation drawer'-->
     <string name="navigation_drawer_close">Затворете навигационната лента</string>
     <!-- ## Preference Menu ## -->
-    <!--Settings title for white accent color) -->
-    <!--Settings summary for white accent color-->
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">Начало</string>
-    <!--Settings category for 'notification' items -->
-    <!-- Settings title for inverting the notification drawer text & icons -->
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Други</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
@@ -245,7 +240,6 @@
     <string name="pref_title_theme_dark">Тъмна тема</string>
     <string name="pref_title_theme_light">Светла тема</string>
     <string name="pref_title_theme_black">Черно</string>
-    <!--Settings summary for the downloading more themes -->
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">Черен/бял списък</string>
     <!--Settings title for viewing blacklist-->
@@ -256,7 +250,6 @@
     <string name="pref_title_view_whitelist">Преглед/Редакция на белия списък</string>
     <!--Settings title for clearing whitelist-->
     <string name="pref_title_clear_whitelist">Изчисти белия списък</string>
-    <!--Settings title for clearing whitelist-->
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">Подрежи обложката на албума</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -312,8 +305,6 @@
     <!-- Settings summary for gmail style placeholders checkbox-->
     <string name="pref_summary_placeholders">Използване на стила \"Gmail\" по подразбиране
  Ако опцията не е активна, иконата на Shuttle ще се показва като placeholder</string>
-    <!-- Settings title for the enable lockscreen controls checkbox -->
-    <!-- Settings summary for the enable lockscreen controls checkbox -->
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">Дисплей</string>
     <!-- Settings title for the keep screen on checkbox -->
@@ -358,7 +349,6 @@
     <string name="pref_summary_simple_download">"Изтегляне на Simple Last.FM Scrobbler от Google Play Store
 	"</string>
     <!-- Settings title for the About heading -->
-    <string name="pref_title_changelog">Информация за апликацията</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Поддръжка.</string>
     <string name="pref_title_version">Версия</string>
@@ -532,7 +522,6 @@
     <!-- Sleep timer title -->
     <!--Sleep timer "Play last song to end" -->
     <string name="sleep_timer_play_to_end">Пуснете последната песен, за да завършите</string>
-    <!-- Sleep timer "set" -->
     <!-- Sleep timer "Stop" -->
     <!-- Sleep timer stop message "Stop sleep timer?" -->
     <!-- Toast when sleep timer is set -->
@@ -600,12 +589,8 @@
     <!-- Shows when multiple items are selected after-long pressing-->
     <string name="action_mode_selection_count"><xliff:g id="number">%d</xliff:g> избрани</string>
     <!-- ## Unknown artist/album metadata ##-->
-    <!-- Default name of artist that doesn't have a name in the metadata -->
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <!-- Default name of genre that doesn't have a name in the metadata -->
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
     <!-- Default value if album year unknown -->
-    <!-- Song Info overflow option-->
+    <!-- Song info overflow option-->
     <string name="song_info">Инфо за песента</string>
     <!-- Artwork Download Service Label-->
     <string name="download_service">Услуга за изтегляне</string>
@@ -685,9 +670,6 @@
     <string name="shortcut_folders_long_label">Преглед на папките</string>
     <!-- "Folders" Shortcut label disabled. (I don't think this ever happens)-->
     <string name="shortcut_folders_disabled">Няма достъп до папките</string>
-    <!-- "Playlist" Shortcut label. Max 10 characters.-->
-    <!-- "Playlist" Shortcut long label. Max 25 characters.-->
-    <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">Диск <xliff:g id="number">%d</xliff:g></string>
     <!-- Search Filter-->
@@ -700,4 +682,64 @@
     <!-- Shown when there are no lyrics -->
     <string name="no_lyrics">Не е открит вграден текст на песента</string>
     <!-- QuickLyric info dialog message-->
+    <!-- "Playlist" Shortcut label. Max 10 characters.-->
+    <string name="shortcut_playlist_short_label">Плейлист</string>
+    <!-- "Playlist" Shortcut long label. Max 25 characters.-->
+    <string name="shortcut_playlist_long_label">Отвори плейлиста \"Любими\"</string>
+    <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
+    <string name="shortcut_playlist_disabled">Плейлистът не е достъпен</string>
+    <!-- Displayed when an M3U playlist is being saved, but it already exists -->
+    <string name="playlist_save_exists">Плейлистът вече съществува</string>
+    <plurals name="NNNtracksdeleted">
+        <item quantity="one">1 изтрита песен</item>
+        <item quantity="other"><xliff:g id="SONGS_TO_DELETE">%d</xliff:g> песни бяха изтрити.</item>
+    </plurals>
+    <plurals name="NNNtrackstofavourites">
+        <item quantity="one">1 песен е добавена към любими.</item>
+        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> песни са добавени към любими.</item>
+    </plurals>
+    <!-- Displays when a restart is required due to a change (themes etc) -->
+    <string name="restart_tite">Необходим е рестарт</string>
+    <!-- Displays when a restart is required due to a change (themes etc) -->
+    <string name="restart_message">Тези промени ще влязат в сила след рестарт на Shuttle</string>
+    <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
+    <string name="dialog_custom">Избери сам</string>
+    <!-- Context menu item -->
+    <string name="add_to_playlist">Добавяне към плейлиста</string>
+    <!-- Context menu item to remove the selected item from the playlist -->
+    <string name="remove_from_playlist">Премахване от плейлиста</string>
+    <!-- -->
+    <string name="share_title">Споделяне</string>
+    <!-- Playlist context menu item to delete the selected playlist. -->
+    <string name="delete_playlist_menu">Изтриване</string>
+    <!--Settings title for white accent color) -->
+    <string name="pref_title_theme_white_accent">Използвай бял акцент</string>
+    <!--Settings summary for white accent color-->
+    <string name="pref_summary_theme_white_accent">Използва бяло за всички цветови акценти с изкл. на тези, които показват състояние (разбъркване и повторение ползват различен цвят, когато са активни).</string>
+    <!--Settings summary for the downloading more themes -->
+    <string name="pref_summary_get_pro_themes">Shuttle+ поддържа повече теми</string>
+    <!--Settings title for clearing whitelist-->
+    <string name="pref_title_update_whitelist">Обнови</string>
+    <!-- Settings title for the enable lockscreen controls checkbox -->
+    <string name="pref_title_lockscreen">Активирай контроли когато екранът е заключен</string>
+    <!-- Settings summary for the enable lockscreen controls checkbox -->
+    <string name="pref_summary_lockscreen">"Активира/Деактивира контроли, информация и обложки на албуми, когато екранът е заключен. (ICS +)
+	"</string>
+    <!-- Settings title for the About heading -->
+    <string name="pref_title_about">Информация за апликацията</string>
+    <!-- Default name of artist that doesn't have a name in the metadata -->
+    <string name="unknown_artist_name">Неизвестен изпълнител</string>
+    <!-- Default name of album artist that doesn't have a name in the metadata -->
+    <string name="unknown_album_name">Неизвестен албум</string>
+    <!-- Default name of genre that doesn't have a name in the metadata -->
+    <string name="unknown_genre_name">Неизвестен жанр</string>
+    <!-- Default name of album artist that doesn't have a name in the metadata -->
+    <string name="unknown_album_artist_name">Незивестен изпълнител на албума</string>
+    <!-- Accessibility button description -->
+    <string name="btn_queue">Виж списъка текущо изпълнявани</string>
+    <!-- Accessibility button description -->
+    <string name="btn_show_queue">Покажи опашката</string>
+    <!-- Accessibility 'show lyrics' -->
+    <string name="btn_show_lyrics">Покажи текста</string>
+    <string name="toast_purchase_failed">Нещо се обърка. Моля, опитвайте отново по-късно...</string>
 </resources>
