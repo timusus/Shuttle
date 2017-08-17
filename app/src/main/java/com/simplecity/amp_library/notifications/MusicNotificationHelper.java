@@ -67,6 +67,7 @@ public class MusicNotificationHelper extends NotificationHelper {
                 .setContentTitle(song.name)
                 .setContentText(song.albumArtistName + " - " + song.albumName)
                 .setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle()
+                        .setShowActionsInCompactView(0, 1, 2)
                         .setMediaSession(mediaSessionCompat.getSessionToken()))
                 .addAction(
                         R.drawable.ic_skip_previous_24dp,
