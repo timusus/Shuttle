@@ -350,8 +350,6 @@ def gitCommitCount() {
     return commitCount
 }
 
-/* Todo: Possibly no longer required..
-
     //Fix an issue where launcher shortcuts don't use the correct package name based on the build flavours.
     def replaceInShortcuts(variant, fromString, toString) {
         def flavor = variant.productFlavors.get(0)
@@ -372,7 +370,7 @@ def gitCommitCount() {
             }
         }
     }
-*/
+
 
 play {
     track = 'beta'
