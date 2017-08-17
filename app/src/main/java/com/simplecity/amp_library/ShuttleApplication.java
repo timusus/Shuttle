@@ -38,6 +38,7 @@ import com.simplecity.amp_library.sql.databases.CustomArtworkTable;
 import com.simplecity.amp_library.sql.providers.PlayCountTable;
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
 import com.simplecity.amp_library.utils.AnalyticsManager;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
@@ -150,7 +151,11 @@ public class ShuttleApplication extends Application {
 
         SettingsManager.getInstance().incrementLaunchCount();
 
-        startService(new Intent(this, EqualizerService.class));
+        try {
+            startService(new Intent(this, EqualizerService.class));
+        } catch (IllegalStateException e) {
+            LogUtils.logException(TAG, "Error starting Equalizer", e);
+        }
 
         Completable.fromAction(() -> {
             Query query = new Query.Builder()
