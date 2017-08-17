@@ -293,11 +293,11 @@ public class SettingsPresenter extends Presenter<SettingsView> {
     }
 
     private void deleteArtwork() {
-        Completable.fromAction(() -> {
-            //Clear Glide' mem & disk cache
-            Glide.get(ShuttleApplication.getInstance()).clearMemory();
-            Glide.get(ShuttleApplication.getInstance()).clearDiskCache();
-        })
+        //Clear Glide' mem & disk cache
+
+        Glide.get(ShuttleApplication.getInstance()).clearMemory();
+
+        Completable.fromAction(() -> Glide.get(ShuttleApplication.getInstance()).clearDiskCache())
                 .subscribeOn(Schedulers.io())
                 .subscribe();
     }
