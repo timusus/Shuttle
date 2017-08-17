@@ -1,25 +1,37 @@
 package com.simplecity.amp_library.ui.activities;
 
+import android.content.ContentUris;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.afollestad.aesthetic.Aesthetic;
 import com.greysonparrelli.permiso.Permiso;
 import com.simplecity.amp_library.IabManager;
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.model.Playlist;
+import com.simplecity.amp_library.model.Query;
+import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
 import com.simplecity.amp_library.ui.drawer.DrawerProvider;
 import com.simplecity.amp_library.ui.fragments.MainController;
+import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
+import com.simplecity.amp_library.utils.MusicUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import test.com.androidnavigation.fragment.BackPressHandler;
 import test.com.androidnavigation.fragment.BackPressListener;
 
@@ -35,6 +47,8 @@ public class MainActivity extends BaseCastActivity implements
     private DrawerLayout drawerLayout;
 
     private View navigationView;
+
+    private boolean mHasPendingPlaybackRequest;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,6 +86,68 @@ public class MainActivity extends BaseCastActivity implements
                     .add(R.id.mainContainer, MainController.newInstance())
                     .commit();
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handlePlaybackRequest(intent);
+    }
+
+
+    private void handlePlaybackRequest(Intent intent) {
+        if (intent == null) {
+            return;
+        } else if (MusicServiceConnectionUtils.sServiceBinder == null) {
+            mHasPendingPlaybackRequest = true;
+            return;
+        }
+
+        final Uri uri = intent.getData();
+        final String mimeType = intent.getType();
+
+        if (uri != null && uri.toString().length() > 0) {
+            MusicUtils.playFile(uri);
+            // Make sure to process intent only once
+            setIntent(new Intent());
+        } else if (MediaStore.Audio.Playlists.CONTENT_TYPE.equals(mimeType)) {
+            long id = parseIdFromIntent(intent, "playlistId", "playlist", -1);
+            if (id >= 0) {
+
+
+                Query query = Playlist.getQuery();
+                query.uri = ContentUris.withAppendedId(query.uri, id);
+
+
+                SqlBriteUtils.createSingle(this, Playlist::new, query, null)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(playlist -> {
+                            MusicUtils.playAll(playlist.getSongsObservable().first(new ArrayList<>()), message -> Toast.makeText(this, message, Toast.LENGTH_SHORT).show());
+                            // Make sure to process intent only once
+                            setIntent(new Intent());
+                        });
+            }
+        }
+
+        mHasPendingPlaybackRequest = false;
+    }
+
+
+    private long parseIdFromIntent(Intent intent, String longKey,
+                                   String stringKey, long defaultId) {
+        long id = intent.getLongExtra(longKey, -1);
+        if (id < 0) {
+            String idString = intent.getStringExtra(stringKey);
+            if (idString != null) {
+                try {
+                    id = Long.parseLong(idString);
+                } catch (NumberFormatException e) {
+                    Log.e(TAG, e.getMessage());
+                }
+            }
+        }
+        return id;
     }
 
     @Override
