@@ -557,7 +557,6 @@ public class MenuUtils implements MusicUtils.Defs {
 
         if (!fileObject.canReadWrite()) {
             menu.getMenu().findItem(R.id.rename).setVisible(false);
-            menu.getMenu().findItem(R.id.remove).setVisible(false);
         }
 
         switch (fileObject.fileType) {
