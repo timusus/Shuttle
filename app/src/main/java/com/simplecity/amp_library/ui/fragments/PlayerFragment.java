@@ -35,6 +35,7 @@ import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.glide.palette.PaletteBitmap;
 import com.simplecity.amp_library.glide.palette.PaletteBitmapTranscoder;
+import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.tagger.TaggerDialog;
@@ -47,6 +48,7 @@ import com.simplecity.amp_library.ui.views.RepeatButton;
 import com.simplecity.amp_library.ui.views.RepeatingImageButton;
 import com.simplecity.amp_library.ui.views.ShuffleButton;
 import com.simplecity.amp_library.ui.views.SizableSeekBar;
+import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
@@ -54,6 +56,7 @@ import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.StringUtils;
 
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -63,8 +66,10 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class PlayerFragment extends BaseFragment implements
         PlayerView,
@@ -471,7 +476,18 @@ public class PlayerFragment extends BaseFragment implements
                 presenter.showLyrics(getContext());
                 return true;
             case R.id.goToArtist:
-                navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_ARTIST, MusicUtils.getAlbumArtist(), true));
+                AlbumArtist currentAlbumArtist = MusicUtils.getAlbumArtist();
+                // MusicUtils.getAlbumArtist() is only populate with the album the current Song belongs to.
+                // Let's find the matching AlbumArtist in the DataManager.albumArtistRelay
+                DataManager.getInstance().getAlbumArtistsRelay()
+                        .first(Collections.emptyList())
+                        .flatMapObservable(Observable::fromIterable)
+                        .filter(albumArtist -> {
+                            return currentAlbumArtist != null && albumArtist.name.equals(currentAlbumArtist.name) && albumArtist.albums.containsAll(currentAlbumArtist.albums);
+                        })
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(albumArtist -> navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_ARTIST, albumArtist, true)));
                 return true;
             case R.id.goToAlbum:
                 navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_ALBUM, MusicUtils.getAlbum(), true));
