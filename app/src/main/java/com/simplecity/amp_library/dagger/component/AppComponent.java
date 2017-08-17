@@ -6,6 +6,7 @@ import com.simplecity.amp_library.dagger.module.DrawerModule;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.dagger.module.ModelsModule;
 import com.simplecity.amp_library.dagger.module.MultiSheetModule;
+import com.simplecity.amp_library.ui.activities.MainActivity;
 import com.simplecity.amp_library.ui.fragments.LibraryController;
 import com.simplecity.amp_library.ui.fragments.MainController;
 import com.simplecity.amp_library.ui.views.UpNextView;
@@ -25,6 +26,8 @@ import dagger.Component;
 public interface AppComponent {
 
     FragmentComponent plus(FragmentModule module);
+
+    void inject(MainActivity target);
 
     void inject(CustomMultiSheetView target);
 
