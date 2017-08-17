@@ -70,7 +70,7 @@ public class NavigationEventRelay {
          * @param type the {@link Type of event}
          * @param data optional Object to be passed with this event
          */
-        NavigationEvent(int type, @Nullable Object data) {
+        public NavigationEvent(int type, @Nullable Object data) {
             this.type = type;
             this.data = data;
         }
