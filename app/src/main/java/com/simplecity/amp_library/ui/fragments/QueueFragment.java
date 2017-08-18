@@ -133,7 +133,7 @@ public class QueueFragment extends BaseFragment implements
         toolbar.inflateMenu(R.menu.menu_queue);
 
         SubMenu sub = toolbar.getMenu().addSubMenu(0, MusicUtils.Defs.ADD_TO_PLAYLIST, 1, R.string.save_as_playlist);
-        PlaylistUtils.makePlaylistMenu(getContext(), sub);
+        PlaylistUtils.makePlaylistMenu(sub);
 
         toolbar.setOnMenuItemClickListener(toolbarListener);
 
@@ -209,7 +209,7 @@ public class QueueFragment extends BaseFragment implements
         contextualToolbar.getMenu().clear();
         contextualToolbar.inflateMenu(R.menu.context_menu_queue);
         SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-        PlaylistUtils.makePlaylistMenu(getActivity(), sub);
+        PlaylistUtils.makePlaylistMenu(sub);
         contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), MusicUtils::getQueue));
         contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
             @Override

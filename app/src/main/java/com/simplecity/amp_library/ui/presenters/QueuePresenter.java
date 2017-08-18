@@ -156,7 +156,7 @@ public class QueuePresenter extends Presenter<QueueView> {
         @Override
         public void onSongOverflowClick(int position, View v, Song song) {
             PopupMenu menu = new PopupMenu(v.getContext(), v);
-            MenuUtils.setupSongMenu(v.getContext(), menu, true);
+            MenuUtils.setupSongMenu(menu, true);
             menu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(v.getContext(), song,
                     taggerDialog -> {
                         QueueView queueView = getView();

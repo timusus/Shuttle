@@ -380,7 +380,7 @@ public class FolderFragment extends BaseFragment implements
     @Override
     public void onFileObjectOverflowClick(View v, FolderView folderView) {
         PopupMenu menu = new PopupMenu(getActivity(), v);
-        MenuUtils.setupFolderMenu(getContext(), menu, folderView.baseFileObject);
+        MenuUtils.setupFolderMenu(menu, folderView.baseFileObject);
         menu.setOnMenuItemClickListener(MenuUtils.getFolderMenuClickListener(
                 getContext(),
                 folderView.baseFileObject, taggerDialog -> taggerDialog.show(getFragmentManager()),

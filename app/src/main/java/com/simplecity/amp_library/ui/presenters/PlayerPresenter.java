@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.widget.Toast;
 
 import com.cantrowitz.rxbroadcast.RxBroadcast;
+import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.lyrics.LyricsDialog;
 import com.simplecity.amp_library.model.Song;
@@ -137,14 +138,10 @@ public class PlayerPresenter extends Presenter<PlayerView> {
         currentPlaybackTimeVisible = visible;
     }
 
-    private void updateFavorite() {
+    private void updateFavorite(boolean isFavorite) {
         PlayerView view = getView();
         if (view != null) {
-            addDisposable(PlaylistUtils.isFavorite(MusicUtils.getSong())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(view::favoriteChanged,
-                            error -> LogUtils.logException(TAG, "Update favorite failed", error)));
+            view.favoriteChanged(isFavorite);
         }
     }
 
@@ -155,7 +152,10 @@ public class PlayerPresenter extends Presenter<PlayerView> {
             view.currentTimeChanged(MusicUtils.getPosition() / 1000);
             view.queueChanged(MusicUtils.getQueuePosition() + 1, MusicUtils.getQueue().size());
 
-            updateFavorite();
+            addDisposable(PlaylistUtils.isFavorite(MusicUtils.getSong())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(isFavorite -> updateFavorite((isFavorite))));
         }
     }
 
@@ -187,13 +187,20 @@ public class PlayerPresenter extends Presenter<PlayerView> {
     }
 
     public void toggleFavorite() {
-        PlaylistUtils.toggleFavorite(message -> {
-            updateFavorite();
-            PlayerView playerView = getView();
-            if (playerView != null) {
-                playerView.showToast(message, Toast.LENGTH_SHORT);
-            }
-        });
+        Song song = MusicUtils.getSong();
+        if (song != null) {
+            PlaylistUtils.toggleFavorite(song, isFavorite -> {
+                PlayerView playerView = getView();
+                if (playerView != null) {
+                    playerView.favoriteChanged(isFavorite);
+                    if (isFavorite) {
+                        playerView.showToast(ShuttleApplication.getInstance().getResources().getString(R.string.song_to_favourites, song.name), Toast.LENGTH_SHORT);
+                    } else {
+                        playerView.showToast(ShuttleApplication.getInstance().getResources().getString(R.string.song_removed_from_favourites, song.name), Toast.LENGTH_SHORT);
+                    }
+                }
+            });
+        }
     }
 
     public void skip() {

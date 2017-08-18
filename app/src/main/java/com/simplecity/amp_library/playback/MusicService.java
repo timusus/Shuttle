@@ -237,6 +237,7 @@ public class MusicService extends Service {
     List<Song> playlist = new ArrayList<>();
     List<Song> shuffleList = new ArrayList<>();
 
+    @Nullable
     Song currentSong;
 
     int playPos = -1;
@@ -456,9 +457,6 @@ public class MusicService extends Service {
 
             @Override
             public void onRemoteMediaPlayerStatusUpdated() {
-
-                Log.i(TAG, "onRemoteMediaPlayerStatusUpdated.. Status: " + castManager.getPlaybackStatus());
-
                 //Only send a track finished message if the state has changed..
                 if (castManager.getPlaybackStatus() != castMediaStatus) {
                     if (castManager.getPlaybackStatus() == MediaStatus.PLAYER_STATE_IDLE
@@ -515,7 +513,11 @@ public class MusicService extends Service {
                         pausedByTransientLossOfFocus = false;
                         releaseServiceUiAndStop();
                     } else if (MediaButtonCommand.TOGGLE_FAVORITE.equals(cmd)) {
-                        PlaylistUtils.toggleFavorite(message -> Toast.makeText(MusicService.this, message, Toast.LENGTH_SHORT).show());
+                        if (currentSong != null) {
+                            PlaylistUtils.toggleFavorite(currentSong, success -> {
+                                Toast.makeText(MusicService.this, getString(R.string.song_to_favourites, currentSong.name), Toast.LENGTH_SHORT).show();
+                            });
+                        }
                     }
                     if (WidgetProviderSmall.CMDAPPWIDGETUPDATE.equals(cmd)) {
                         // Someone asked us to refresh a set of specific widgets,
@@ -919,8 +921,9 @@ public class MusicService extends Service {
             } else if (ServiceCommand.REPEAT_ACTION.equals(action)) {
                 toggleRepeat();
             } else if (MediaButtonCommand.TOGGLE_FAVORITE.equals(action) || ServiceCommand.TOGGLE_FAVORITE.equals(action)) {
-                PlaylistUtils.toggleFavorite(message -> Toast.makeText(MusicService.this, message, Toast.LENGTH_SHORT).show());
-                notifyChange(InternalIntents.FAVORITE_CHANGED);
+                if (currentSong != null) {
+                    PlaylistUtils.toggleFavorite(currentSong, success -> Toast.makeText(MusicService.this, getString(R.string.song_to_favourites, currentSong.name), Toast.LENGTH_SHORT).show());
+                }
             } else if (ExternalIntents.PLAY_STATUS_REQUEST.equals(action)) {
                 notifyChange(ExternalIntents.PLAY_STATUS_RESPONSE);
             } else if (ServiceCommand.SHUTDOWN.equals(action)) {
@@ -2507,6 +2510,7 @@ public class MusicService extends Service {
         return null;
     }
 
+    @Nullable
     public Song getSong() {
         return currentSong;
     }
@@ -2603,7 +2607,7 @@ public class MusicService extends Service {
     }
 
     public Single<Boolean> isFavorite() {
-        return PlaylistUtils.isFavorite(getSong());
+        return PlaylistUtils.isFavorite(currentSong);
     }
 
     public void toggleShuffleMode() {

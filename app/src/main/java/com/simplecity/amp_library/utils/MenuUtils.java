@@ -106,7 +106,7 @@ public class MenuUtils implements MusicUtils.Defs {
         MusicUtils.removeFromQueue(song, true);
     }
 
-    public static void setupSongMenu(Context context, PopupMenu menu, boolean showRemoveButton) {
+    public static void setupSongMenu(PopupMenu menu, boolean showRemoveButton) {
         menu.inflate(R.menu.menu_song);
 
         if (!showRemoveButton) {
@@ -115,7 +115,7 @@ public class MenuUtils implements MusicUtils.Defs {
 
         // Add playlist menu
         SubMenu sub = menu.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-        PlaylistUtils.makePlaylistMenu(context, sub);
+        PlaylistUtils.makePlaylistMenu(sub);
     }
 
     public static Toolbar.OnMenuItemClickListener getSongMenuClickListener(Context context, UnsafeCallable<List<Song>> callable) {
@@ -547,13 +547,13 @@ public class MenuUtils implements MusicUtils.Defs {
         return FileHelper.getSongList(new File(folderObject.path), true, false);
     }
 
-    public static void setupFolderMenu(Context context, PopupMenu menu, BaseFileObject fileObject) {
+    public static void setupFolderMenu(PopupMenu menu, BaseFileObject fileObject) {
 
         menu.inflate(R.menu.menu_file);
 
         // Add playlist menu
         SubMenu sub = menu.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-        PlaylistUtils.makePlaylistMenu(context, sub);
+        PlaylistUtils.makePlaylistMenu(sub);
 
         if (!fileObject.canReadWrite()) {
             menu.getMenu().findItem(R.id.rename).setVisible(false);

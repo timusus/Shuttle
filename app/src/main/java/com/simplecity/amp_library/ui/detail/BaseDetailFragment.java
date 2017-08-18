@@ -453,7 +453,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
         // Create playlist menu
         final SubMenu sub = toolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-        PlaylistUtils.makePlaylistMenu(getActivity(), sub);
+        PlaylistUtils.makePlaylistMenu(sub);
 
         // Inflate sorting menus
         MenuItem item = toolbar.getMenu().findItem(R.id.sorting);
@@ -738,7 +738,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     @Override
     public void onSongOverflowClick(int position, View v, Song song) {
         PopupMenu popupMenu = new PopupMenu(getContext(), v);
-        MenuUtils.setupSongMenu(getContext(), popupMenu, false);
+        MenuUtils.setupSongMenu(popupMenu, false);
         popupMenu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), song,
                 taggerDialog -> taggerDialog.show(getFragmentManager()),
                 null));

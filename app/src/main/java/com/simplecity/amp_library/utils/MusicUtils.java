@@ -393,13 +393,6 @@ public class MusicUtils {
         }
     }
 
-    static Single<Boolean> isFavorite() {
-        if (MusicServiceConnectionUtils.sServiceBinder != null && MusicServiceConnectionUtils.sServiceBinder.getService() != null) {
-            return MusicServiceConnectionUtils.sServiceBinder.getService().isFavorite();
-        }
-        return Single.just(false);
-    }
-
     public static void toggleShuffleMode() {
         if (MusicServiceConnectionUtils.sServiceBinder.getService() == null) {
             return;
