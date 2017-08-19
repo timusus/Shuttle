@@ -74,6 +74,8 @@ public class FolderFragment extends BaseFragment implements
 
     private static final String ARG_CURRENT_DIR = "current_dir";
 
+    private static final String ARG_DISPLAYED_IN_TABS = "displayed_in_tabs";
+
     private ViewModelAdapter adapter;
 
     @BindView(R.id.recyclerView)
@@ -97,6 +99,8 @@ public class FolderFragment extends BaseFragment implements
 
     String currentDir;
 
+    boolean displayedInTabs = false;
+
     FileBrowser fileBrowser;
 
     boolean showCheckboxes;
@@ -114,10 +118,11 @@ public class FolderFragment extends BaseFragment implements
     public FolderFragment() {
     }
 
-    public static FolderFragment newInstance(String pageTitle) {
+    public static FolderFragment newInstance(String pageTitle, boolean isDisplayedInTabs) {
         FolderFragment fragment = new FolderFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PAGE_TITLE, pageTitle);
+        args.putBoolean(ARG_DISPLAYED_IN_TABS, isDisplayedInTabs);
         fragment.setArguments(args);
         return fragment;
     }
@@ -135,6 +140,8 @@ public class FolderFragment extends BaseFragment implements
         if (savedInstanceState != null) {
             currentDir = savedInstanceState.getString(ARG_CURRENT_DIR);
         }
+
+        displayedInTabs = getArguments().getBoolean(ARG_DISPLAYED_IN_TABS);
     }
 
     @Override
@@ -144,17 +151,17 @@ public class FolderFragment extends BaseFragment implements
 
         unbinder = ButterKnife.bind(this, rootView);
 
-//        if (getParentFragment() == null) {
+        //        if (getParentFragment() == null) {
         showBreadcrumbsInList = false;
         breadcrumb.addBreadcrumbListener(this);
         if (!TextUtils.isEmpty(currentDir)) {
             breadcrumb.changeBreadcrumbPath(currentDir);
         }
-//        } else {
-//            showBreadcrumbsInList = true;
-//            changeBreadcrumbPath();
-//            toolbar.setVisibility(View.GONE);
-//        }
+        //        } else {
+        //            showBreadcrumbsInList = true;
+        //            changeBreadcrumbPath();
+        //            toolbar.setVisibility(View.GONE);
+        //        }
 
         toolbar.inflateMenu(R.menu.menu_sort_folders);
         toolbar.setNavigationOnClickListener(v -> getNavigationController().popViewController());
@@ -199,7 +206,9 @@ public class FolderFragment extends BaseFragment implements
 
         getNavigationController().addBackPressListener(this);
 
-        DrawerLockManager.getInstance().addDrawerLock(this);
+        if (!displayedInTabs) {
+            DrawerLockManager.getInstance().addDrawerLock(this);
+        }
 
         if (isVisible()) {
             setupContextualToolbar();
@@ -212,7 +221,9 @@ public class FolderFragment extends BaseFragment implements
 
         getNavigationController().removeBackPressListener(this);
 
-        DrawerLockManager.getInstance().removeDrawerLock(this);
+        if (!displayedInTabs) {
+            DrawerLockManager.getInstance().removeDrawerLock(this);
+        }
 
         super.onPause();
     }
@@ -464,11 +475,11 @@ public class FolderFragment extends BaseFragment implements
             contextualToolbar.setOnMenuItemClickListener(menuItem -> {
                 switch (menuItem.getItemId()) {
                     case R.id.menu_save:
-//                            WhitelistHelper.deleteAllFolders();
-//                            WhitelistHelper.addToWhitelist(paths);
-//                            showCheckboxes(false);
-//                            adapter.notifyDataSetChanged();
-//                            mode.finish();
+                        //                            WhitelistHelper.deleteAllFolders();
+                        //                            WhitelistHelper.addToWhitelist(paths);
+                        //                            showCheckboxes(false);
+                        //                            adapter.notifyDataSetChanged();
+                        //                            mode.finish();
                         return true;
                 }
                 return false;

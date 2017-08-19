@@ -118,7 +118,7 @@ public class MainController extends BaseNavigationController implements BackPres
                             popToRootViewController();
                             break;
                         case NavigationEventRelay.NavigationEvent.Type.FOLDERS_SELECTED:
-                            delayHandler.postDelayed(() -> pushViewController(FolderFragment.newInstance("PageTitle"), "FolderFragment"), 250);
+                            delayHandler.postDelayed(() -> pushViewController(FolderFragment.newInstance(getString(R.string.folders_title), false), "FolderFragment"), 250);
                             break;
                         case NavigationEventRelay.NavigationEvent.Type.SLEEP_TIMER_SELECTED:
                             UnsafeAction showToast = () -> Toast.makeText(getContext(), R.string.sleep_timer_started, Toast.LENGTH_SHORT).show();
