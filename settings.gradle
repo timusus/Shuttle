@@ -4,6 +4,4 @@ include ':app',
         'libraries/:navigation',
         'libraries/:recycler-adapter',
         'libraries/:multisheetview',
-        'libraries/:aesthetic',
-        'libraries/material-dialogs/:commons',
-        'libraries/material-dialogs/:core'
+        'libraries/:aesthetic'
