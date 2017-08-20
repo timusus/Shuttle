@@ -38,6 +38,7 @@ import com.simplecity.amp_library.glide.palette.PaletteBitmapTranscoder;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.rx.UnsafeConsumer;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.drawer.NavigationEventRelay;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
@@ -123,7 +124,10 @@ public class PlayerFragment extends BaseFragment implements
     @Inject PlayerPresenter presenter;
 
     @Inject NavigationEventRelay navigationEventRelay;
+
     private Unbinder unbinder;
+
+    private int currentColor = Color.TRANSPARENT;
 
     public PlayerFragment() {
     }
@@ -384,27 +388,27 @@ public class PlayerFragment extends BaseFragment implements
                         public void onResourceReady(PaletteBitmap resource, GlideAnimation<? super PaletteBitmap> glideAnimation) {
                             Palette.Swatch swatch = resource.palette.getDarkMutedSwatch();
                             if (swatch != null) {
-                                if (!SettingsManager.getInstance().getUsePaletteNowPlayingOnly()) {
-                                    // Set Aesthetic colors globally, based on the current Palette swatch
-                                    Aesthetic.get(getContext())
-                                            .colorPrimary()
-                                            .take(1)
-                                            .subscribe(integer -> {
-                                                ValueAnimator valueAnimator = ValueAnimator.ofInt(integer, swatch.getRgb());
-                                                valueAnimator.setEvaluator(new ArgbEvaluator());
-                                                valueAnimator.setDuration(450);
-                                                valueAnimator.addUpdateListener(animator -> Aesthetic.get(getContext())
-                                                        .colorPrimary((Integer) animator.getAnimatedValue())
-                                                        .colorStatusBarAuto()
-                                                        .apply());
-                                                valueAnimator.start();
-                                            });
+                                if (SettingsManager.getInstance().getUsePalette()) {
+                                    if (SettingsManager.getInstance().getUsePaletteNowPlayingOnly()) {
+                                        animateColors(currentColor, swatch.getRgb(), color -> invalidateColors(color));
+                                    } else {
+                                        // Set Aesthetic colors globally, based on the current Palette swatch
+                                        Aesthetic.get(getContext())
+                                                .colorPrimary()
+                                                .take(1)
+                                                .subscribe(integer -> animateColors(integer, swatch.getRgb(), color ->
+                                                        Aesthetic.get(getContext())
+                                                                .colorPrimary(color)
+                                                                .colorStatusBarAuto()
+                                                                .apply()));
+                                    }
                                 }
                             } else {
+                                // Failed to generate the dark muted swatch, fall back to the primary theme colour.
                                 Aesthetic.get(getContext())
                                         .colorPrimary()
                                         .take(1)
-                                        .subscribe(color -> invalidateColors(color));
+                                        .subscribe(primaryColor -> animateColors(currentColor, primaryColor, color -> invalidateColors(color)));
                             }
                         }
 
@@ -414,13 +418,16 @@ public class PlayerFragment extends BaseFragment implements
                             Aesthetic.get(getContext())
                                     .colorPrimary()
                                     .take(1)
-                                    .subscribe(color -> invalidateColors(color));
+                                    .subscribe(primaryColor -> animateColors(currentColor, primaryColor, color -> invalidateColors(color)));
                         }
                     });
         }
     }
 
     private void invalidateColors(int color) {
+
+        currentColor = color;
+
         boolean isColorLight = Util.isColorLight(color);
         int textColor = isColorLight ? Color.BLACK : Color.WHITE;
 
@@ -498,5 +505,13 @@ public class PlayerFragment extends BaseFragment implements
                 return true;
         }
         return false;
+    }
+
+    private void animateColors(int from, int to, UnsafeConsumer<Integer> consumer) {
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(from, to);
+        valueAnimator.setEvaluator(new ArgbEvaluator());
+        valueAnimator.setDuration(450);
+        valueAnimator.addUpdateListener(animator -> consumer.accept((Integer) animator.getAnimatedValue()));
+        valueAnimator.start();
     }
 }
