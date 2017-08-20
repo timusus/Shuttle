@@ -199,7 +199,7 @@ public class SettingsPresenter extends Presenter<SettingsView> {
                     new ColorChooserDialog.Builder(context, R.string.pref_title_theme_pick_color)
                             .allowUserColorInput(true)
                             .allowUserColorInputAlpha(false)
-                            .dynamicButtonColor(true)
+                            .dynamicButtonColor(false)
                             .preselect(Aesthetic.get(context).colorPrimary().blockingFirst())
                             .build());
         }
@@ -220,7 +220,7 @@ public class SettingsPresenter extends Presenter<SettingsView> {
                             .accentMode(true)
                             .allowUserColorInput(true)
                             .allowUserColorInputAlpha(false)
-                            .dynamicButtonColor(true)
+                            .dynamicButtonColor(false)
                             .preselect(Aesthetic.get(context).colorAccent().blockingFirst())
                             .build());
         }
