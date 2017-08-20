@@ -319,11 +319,9 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
         boolean songsAscending = getSongsAscending();
 
-        if (songSort != SortManager.SongSort.DETAIL_DEFAULT) {
-            SortManager.getInstance().sortSongs(songs, songSort);
-            if (!songsAscending) {
-                Collections.reverse(songs);
-            }
+        SortManager.getInstance().sortSongs(songs, songSort);
+        if (!songsAscending) {
+            Collections.reverse(songs);
         }
 
         items.add(new SubheaderView(StringUtils.makeSongsLabel(getContext(), songs.size())));
