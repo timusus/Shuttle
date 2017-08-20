@@ -482,9 +482,7 @@ public class PlayerFragment extends BaseFragment implements
                 DataManager.getInstance().getAlbumArtistsRelay()
                         .first(Collections.emptyList())
                         .flatMapObservable(Observable::fromIterable)
-                        .filter(albumArtist -> {
-                            return currentAlbumArtist != null && albumArtist.name.equals(currentAlbumArtist.name) && albumArtist.albums.containsAll(currentAlbumArtist.albums);
-                        })
+                        .filter(albumArtist -> currentAlbumArtist != null && albumArtist.name.equals(currentAlbumArtist.name) && albumArtist.albums.containsAll(currentAlbumArtist.albums))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(albumArtist -> navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_ARTIST, albumArtist, true)));
