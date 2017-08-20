@@ -221,7 +221,7 @@ ext.libs = [
         // Mockito - https://github.com/mockito/mockito
         mockito                       : "org.mockito:mockito-core:$versions.mockito",
         // Powermock - https://github.com/powermock/powermock
-        powermock                     : "org.powermock:powermock-api-mockito:$versions.powermock",
+        powermock                     : "org.powermock:powermock-api-mockito2:$versions.powermock",
         powermockjunit                : "org.powermock:powermock-module-junit4:$versions.powermock",
         // Robolectric - https://github.com/robolectric/robolectric
         robolectric                   : "org.robolectric:robolectric:$versions.robolectric",

@@ -19,8 +19,8 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -84,7 +84,7 @@ public class ShuttleUtilsTest {
 
         // Call the method and capture the "fired" intent
         ShuttleUtils.openShuttleLink(mockActivity, fakePackage, mockPackageManager);
-        ArgumentCaptor<Intent> intentCaptor = new ArgumentCaptor<>();
+        ArgumentCaptor<Intent> intentCaptor = ArgumentCaptor.forClass(Intent.class);
         verify(mockActivity).startActivity(intentCaptor.capture());
         Intent intent = intentCaptor.getValue();
 
@@ -113,12 +113,12 @@ public class ShuttleUtilsTest {
         when(mockContext.getContentResolver()).thenReturn(mockContentResolver);
 
         // Setup to perform the method call on a song with no play counts
-        when(mockContentResolver.update(any(Uri.class), any(ContentValues.class), anyString(), any(String[].class))).thenReturn(0);
+        when(mockContentResolver.update(any(Uri.class), any(ContentValues.class), nullable(String.class), nullable(String[].class))).thenReturn(0);
 
         // Call the method and capture the ContentValues object
-        ArgumentCaptor<ContentValues> contentValuesCaptor = new ArgumentCaptor<>();
+        ArgumentCaptor<ContentValues> contentValuesCaptor = ArgumentCaptor.forClass(ContentValues.class);
         ShuttleUtils.incrementPlayCount(mockContext, spySong);
-        verify(mockContentResolver).update(any(Uri.class), contentValuesCaptor.capture(), anyString(), any(String[].class));
+        verify(mockContentResolver).update(any(Uri.class), contentValuesCaptor.capture(), nullable(String.class), nullable(String[].class));
 
         // Check that the values being updated or inserted match the actual song
         ContentValues values = contentValuesCaptor.getValue();
@@ -128,7 +128,7 @@ public class ShuttleUtilsTest {
 
         // Next, test what happens with a song that already had play counts (should not cause an insert operation)
         reset(mockContentResolver);
-        when(mockContentResolver.update(any(Uri.class), contentValuesCaptor.capture(), anyString(), any(String[].class))).thenReturn(1);
+        when(mockContentResolver.update(any(Uri.class), contentValuesCaptor.capture(), nullable(String.class), nullable(String[].class))).thenReturn(1);
         ShuttleUtils.incrementPlayCount(mockContext, spySong);
         verify(mockContentResolver, never()).insert(any(Uri.class), any(ContentValues.class));
     }
