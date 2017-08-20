@@ -250,6 +250,10 @@
     <string name="pref_title_theme_dark">Koyu</string>
     <string name="pref_title_theme_light">Açık</string>
     <string name="pref_title_theme_black">Siyah</string>
+    <string name="pref_group_palette">Renk Paleti</string>
+    <string name="pref_title_palette">Albüm Kapağından Renkler Kullan</string>
+    <string name="pref_summary_palette">Etkinleştirilirse Shuttle, albüm kapağında ki en belirgin rengi algılar ve bunu uygulamanın tamamında \'ana renk\' olarak kullanır</string>
+    <string name="pref_title_palette_now_playing">Yalnızca \'Şimdi Çalınıyor\' Ekranında</string>
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">Beyaz/Kara Liste</string>
     <!--Settings title for viewing blacklist-->
@@ -356,6 +360,7 @@ Bu seçenek işaretli değilse, Shuttle simgesi kullanılacaktır.</string>
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <string name="pref_summary_simple_download">Simple Last.FM Scrobbler\'ı Google Play Store\'dan indir</string>
     <!-- Settings title for the About heading -->
+    <string name="pref_title_changelog">Değişiklikler</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Destek</string>
     <string name="pref_title_version">Versiyon</string>
@@ -538,9 +543,9 @@ dosyalar</item>
     <!-- Sleep timer "Stop" -->
     <string name="sleep_timer_stop_button">Durdur</string>
     <!-- Sleep timer stop message "Stop sleep timer?" -->
-    <string name="sleep_timer_stop_title">Uyku zamanlayıcısını durdur?</string>
+    <string name="sleep_timer_stop_title">Uyku zamanlayıcıyı durdur?</string>
     <!-- Toast when sleep timer is set -->
-    <string name="sleep_timer_started">Uyku zamanlayıcısı başlatıldı</string>
+    <string name="sleep_timer_started">Uyku zamanlayıcı başlatıldı</string>
     <!-- Sleep timer "Set time..." -->
     <string name="sleep_timer_set_time">Ayarlanan zaman</string>
     <!-- Sleep timer "5 minutes" -->
@@ -614,7 +619,7 @@ dosyalar</item>
     <!-- Default value if album year unknown -->
     <string name="unknown_year">Yıl bilinmiyor</string>
     <!-- Song info overflow option-->
-    <string name="song_info">Şarkı Bilgisi</string>
+    <string name="song_info">Şarkı bilgisi</string>
     <!-- Artwork Download Service Label-->
     <string name="download_service">İndirme Servisi</string>
     <!-- Accessibility button description -->

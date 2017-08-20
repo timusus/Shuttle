@@ -250,6 +250,10 @@
     <string name="pref_title_theme_dark">Тёмная</string>
     <string name="pref_title_theme_light">Светлая</string>
     <string name="pref_title_theme_black">Чёрная</string>
+    <string name="pref_group_palette">Палитра</string>
+    <string name="pref_title_palette">Использовать цвета из обложки</string>
+    <string name="pref_summary_palette">Если включено, Shuttle обнаружит более заметный цвет из обложки, и будет использовать в качестве \'основного цвета\' во всём приложении</string>
+    <string name="pref_title_palette_now_playing">Только на экране \'Сейчас воспроизводится\'</string>
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">Белый/чёрный список</string>
     <!--Settings title for viewing blacklist-->
@@ -357,6 +361,7 @@
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <string name="pref_summary_simple_download">Скачать Simple Last.FM Scrobbler с Google Play Маркета</string>
     <!-- Settings title for the About heading -->
+    <string name="pref_title_changelog">Список изменений</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Поддержка</string>
     <string name="pref_title_version">Версия</string>
