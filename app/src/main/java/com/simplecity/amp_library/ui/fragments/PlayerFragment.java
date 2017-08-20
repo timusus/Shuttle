@@ -396,11 +396,17 @@ public class PlayerFragment extends BaseFragment implements
                                         Aesthetic.get(getContext())
                                                 .colorPrimary()
                                                 .take(1)
-                                                .subscribe(integer -> animateColors(integer, swatch.getRgb(), color ->
-                                                        Aesthetic.get(getContext())
-                                                                .colorPrimary(color)
-                                                                .colorStatusBarAuto()
-                                                                .apply()));
+                                                .subscribe(integer -> animateColors(integer, swatch.getRgb(), color -> {
+                                                    Aesthetic aesthetic = Aesthetic.get(getContext())
+                                                            .colorPrimary(color)
+                                                            .colorStatusBarAuto();
+
+                                                    if (SettingsManager.getInstance().getTintNavBar()) {
+                                                        aesthetic = aesthetic.colorNavigationBar(color);
+                                                    }
+
+                                                    aesthetic.apply();
+                                                }));
                                     }
                                 }
                             } else {

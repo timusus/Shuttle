@@ -242,6 +242,7 @@ public class SettingsPresenter extends Presenter<SettingsView> {
             Aesthetic.get(context)
                     .colorPrimaryRes(R.color.blue_500)
                     .colorStatusBarAuto()
+                    .colorNavigationBarAuto(SettingsManager.getInstance().getTintNavBar())
                     .apply();
         }
     }
@@ -252,6 +253,7 @@ public class SettingsPresenter extends Presenter<SettingsView> {
             Aesthetic.get(context)
                     .colorPrimaryRes(R.color.blue_500)
                     .colorStatusBarAuto()
+                    .colorNavigationBarAuto(SettingsManager.getInstance().getTintNavBar())
                     .apply();
         }
     }

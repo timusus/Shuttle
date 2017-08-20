@@ -314,6 +314,10 @@ public class SettingsManager {
         return getBooleanValue(KEY_PREF_PALETTE_NOW_PLAYING_ONLY, false);
     }
 
+    public boolean getTintNavBar() {
+        return getBooleanValue(KEY_PREF_NAV_BAR, false);
+    }
+
     // Artwork
 
     public static final String KEY_PREFER_LAST_FM = "pref_prefer_lastfm";
