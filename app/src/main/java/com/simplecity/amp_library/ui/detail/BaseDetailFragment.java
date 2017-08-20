@@ -310,11 +310,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         return null;
     }
 
-    @NonNull
-    @Override
-    public List<ViewModel> getSongViewModels(List<Song> songs) {
-        List<ViewModel> items = new ArrayList<>();
-
+    protected void sortSongs(List<Song> songs) {
         @SortManager.SongSort int songSort = getSongSortOrder();
 
         boolean songsAscending = getSongsAscending();
@@ -323,6 +319,12 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         if (!songsAscending) {
             Collections.reverse(songs);
         }
+    }
+
+    @NonNull
+    @Override
+    public List<ViewModel> getSongViewModels(List<Song> songs) {
+        List<ViewModel> items = new ArrayList<>();
 
         items.add(new SubheaderView(StringUtils.makeSongsLabel(getContext(), songs.size())));
 
@@ -334,6 +336,17 @@ public abstract class BaseDetailFragment extends BaseFragment implements
                 }).toList());
 
         return items;
+    }
+
+    protected void sortAlbums(List<Album> albums) {
+        @SortManager.AlbumSort int albumSort = getAlbumSort();
+
+        boolean albumsAscending = getAlbumsAscending();
+
+        SortManager.getInstance().sortAlbums(albums, albumSort);
+        if (!albumsAscending) {
+            Collections.reverse(albums);
+        }
     }
 
     @NonNull
@@ -351,14 +364,6 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         }
 
         List<ViewModel> items = new ArrayList<>();
-
-        boolean albumsAscending = getAlbumsAscending();
-        @SortManager.AlbumSort int albumSort = getAlbumSort();
-
-        SortManager.getInstance().sortAlbums(albums, albumSort);
-        if (!albumsAscending) {
-            Collections.reverse(albums);
-        }
 
         horizontalRecyclerView.setItems(Stream.of(albums)
                 .map(album -> {
