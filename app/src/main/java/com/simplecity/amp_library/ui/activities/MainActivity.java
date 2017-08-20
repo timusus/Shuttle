@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.afollestad.aesthetic.Aesthetic;
 import com.greysonparrelli.permiso.Permiso;
+import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.IabManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
@@ -26,12 +27,14 @@ import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Query;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
+import com.simplecity.amp_library.ui.dialog.ChangelogDialog;
 import com.simplecity.amp_library.ui.drawer.DrawerProvider;
 import com.simplecity.amp_library.ui.drawer.NavigationEventRelay;
 import com.simplecity.amp_library.ui.fragments.MainController;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
+import com.simplecity.amp_library.utils.SettingsManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,6 +105,8 @@ public class MainActivity extends BaseCastActivity implements
         }
 
         handleIntent(getIntent());
+
+        showChangelogDialog();
     }
 
     @Override
@@ -198,6 +203,20 @@ public class MainActivity extends BaseCastActivity implements
             }
         }
         return id;
+    }
+
+    private void showChangelogDialog() {
+        int storedVersionCode = SettingsManager.getInstance().getStoredVersionCode();
+
+        // If we've stored a version code in the past, and it's lower than the current version code,
+        // we can show the changelog.
+        // Don't show the changelog for first time users.
+        if (storedVersionCode != -1 && storedVersionCode < BuildConfig.VERSION_CODE) {
+            if (SettingsManager.getInstance().getShowChangelogOnLaunch()) {
+                ChangelogDialog.getChangelogDialog(this).show();
+            }
+        }
+        SettingsManager.getInstance().setVersionCode();
     }
 
     @Override
