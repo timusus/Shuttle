@@ -29,9 +29,6 @@ repositories {
     }
 }
 
-//For some reason this needs to be placed below the dependencies in order for gms services to work..
-apply plugin: 'com.google.gms.google-services'
-
 @Nullable
 def getProperties(String fileName) {
     final Properties properties = new Properties()
@@ -47,7 +44,6 @@ static def getProperty(@Nullable Properties properties, String name) {
 }
 
 android {
-
     dexOptions {
         jumboMode = true
     }
@@ -350,31 +346,9 @@ def gitCommitCount() {
     return commitCount
 }
 
-    //Fix an issue where launcher shortcuts don't use the correct package name based on the build flavours.
-    def replaceInShortcuts(variant, fromString, toString) {
-        def flavor = variant.productFlavors.get(0)
-        def buildtype = variant.buildType
-        def shortcutsFile = "$buildDir/intermediates/res/merged/${flavor.name}/${buildtype.name}/xml/shortcuts.xml"
-        def file = new File(shortcutsFile)
-        def updatedContent = file.getText('UTF-8').replaceAll(fromString, toString)
-        file.write(updatedContent, 'UTF-8')
-    }
-
-    afterEvaluate {
-        android.applicationVariants.all { variant ->
-            variant.outputs.each { output ->
-                output.processResources.doFirst {
-                    replaceInShortcuts(variant, '\\{applicationId\\}', variant.applicationId)
-
-                }
-            }
-        }
-    }
-
-
 play {
     track = 'beta'
-     untrackOld = true
+    untrackOld = true
     serviceAccountEmail = 'app-deployment@api-5801704373554614142-812229.iam.gserviceaccount.com'
     jsonFile = file('../deployment_keys.json')
 }
