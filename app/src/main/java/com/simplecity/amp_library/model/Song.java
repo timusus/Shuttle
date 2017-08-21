@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 
 import com.simplecity.amp_library.R;
@@ -310,7 +311,8 @@ public class Song implements
 
     public void share(Context context) {
         final Intent intent = new Intent(Intent.ACTION_SEND).setType("audio/*");
-        intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file:///" + path));
+        Uri uri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", new File(path));
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
         context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_via)));
     }
 
