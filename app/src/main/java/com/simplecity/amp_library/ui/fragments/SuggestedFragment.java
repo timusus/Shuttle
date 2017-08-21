@@ -240,6 +240,7 @@ public class SuggestedFragment extends BaseFragment implements
                                         .filter(a -> a.numSongs > 0)
                                         .toSingle()
                         )
+                        .sorted((a, b) -> ComparisonUtils.compareLong(b.lastPlayed, a.lastPlayed))
                         .take(6)
                         .toList()
                 )
