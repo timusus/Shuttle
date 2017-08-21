@@ -302,4 +302,14 @@ public class PlayerPresenter extends Presenter<PlayerView> {
             }
         }
     }
+
+    public void shareClicked(Context context) {
+        PlayerView playerView = getView();
+        if (playerView != null) {
+            Song song = MusicUtils.getSong();
+            if (song != null) {
+                song.share(context);
+            }
+        }
+    }
 }

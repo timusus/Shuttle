@@ -40,6 +40,11 @@
         app:showAsAction="never"/>
 
     <item
+        android:id="@+id/share"
+        android:title="@string/share"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/songInfo"
         android:title="@string/song_info"
         app:showAsAction="never"/>

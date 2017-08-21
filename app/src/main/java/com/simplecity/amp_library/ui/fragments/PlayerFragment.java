@@ -509,6 +509,9 @@ public class PlayerFragment extends BaseFragment implements
             case R.id.songInfo:
                 presenter.songInfoClicked(getContext());
                 return true;
+            case R.id.share:
+                presenter.shareClicked(getContext());
+                return true;
         }
         return false;
     }
