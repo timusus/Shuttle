@@ -105,6 +105,11 @@ public class MainActivity extends BaseCastActivity implements
         }
 
         handleIntent(getIntent());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
         showChangelogDialog();
     }
