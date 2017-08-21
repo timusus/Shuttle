@@ -475,30 +475,56 @@ public class MenuUtils implements MusicUtils.Defs {
         }
     }
 
-    public static PopupMenu.OnMenuItemClickListener getPlaylistClickListener(final Context context, final Playlist playlist) {
-        return item -> {
-            switch (item.getItemId()) {
-                case R.id.playPlaylist:
-                    play(context, playlist.getSongsObservable().first(Collections.emptyList()));
-                    return true;
-                case R.id.deletePlaylist:
-                    delete(context, playlist);
-                    return true;
-                case R.id.editPlaylist:
-                    edit(context, playlist);
-                    return true;
-                case R.id.renamePlaylist:
-                    rename(context, playlist);
-                    return true;
-                case R.id.exportPlaylist:
-                    export(context, playlist);
-                    return true;
-                case R.id.clearPlaylist:
-                    clear(playlist);
-                    return true;
-            }
-            return false;
-        };
+    public static void setupPlaylistMenu(Toolbar toolbar, Playlist playlist) {
+        toolbar.inflateMenu(R.menu.menu_playlist);
+
+        if (!playlist.canDelete) {
+            toolbar.getMenu().findItem(R.id.deletePlaylist).setVisible(false);
+        }
+
+        if (!playlist.canClear) {
+            toolbar.getMenu().findItem(R.id.clearPlaylist).setVisible(false);
+        }
+
+        if (playlist.id != MusicUtils.PlaylistIds.RECENTLY_ADDED_PLAYLIST) {
+            toolbar.getMenu().findItem(R.id.editPlaylist).setVisible(false);
+        }
+
+        if (!playlist.canRename) {
+            toolbar.getMenu().findItem(R.id.renamePlaylist).setVisible(false);
+        }
+
+        if (playlist.id == MusicUtils.PlaylistIds.MOST_PLAYED_PLAYLIST) {
+            toolbar.getMenu().findItem(R.id.exportPlaylist).setVisible(false);
+        }
+    }
+
+    public static PopupMenu.OnMenuItemClickListener getPlaylistPopupMenuClickListener(final Context context, final Playlist playlist) {
+        return item -> handleMenuItemClicks(context, item, playlist);
+    }
+
+    public static boolean handleMenuItemClicks(Context context, MenuItem menuItem, Playlist playlist) {
+        switch (menuItem.getItemId()) {
+            case R.id.playPlaylist:
+                play(context, playlist.getSongsObservable().first(Collections.emptyList()));
+                return true;
+            case R.id.deletePlaylist:
+                delete(context, playlist);
+                return true;
+            case R.id.editPlaylist:
+                edit(context, playlist);
+                return true;
+            case R.id.renamePlaylist:
+                rename(context, playlist);
+                return true;
+            case R.id.exportPlaylist:
+                export(context, playlist);
+                return true;
+            case R.id.clearPlaylist:
+                clear(playlist);
+                return true;
+        }
+        return false;
     }
 
     // Genres

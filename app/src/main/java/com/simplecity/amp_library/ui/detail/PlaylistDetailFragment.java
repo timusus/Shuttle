@@ -4,10 +4,14 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
+import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.Operators;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.SortManager;
@@ -99,6 +103,23 @@ public class PlaylistDetailFragment extends BaseDetailFragment {
             sortAlbums(albums);
             return albums;
         });
+    }
+
+    @Override
+    protected void setupToolbarMenu(Toolbar toolbar) {
+        super.setupToolbarMenu(toolbar);
+
+        MenuUtils.setupPlaylistMenu(toolbar, playlist);
+
+        toolbar.getMenu().findItem(R.id.playPlaylist).setVisible(false);
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        if (MenuUtils.handleMenuItemClicks(getContext(), item, playlist)) {
+            return true;
+        }
+        return super.onMenuItemClick(item);
     }
 
     @NonNull

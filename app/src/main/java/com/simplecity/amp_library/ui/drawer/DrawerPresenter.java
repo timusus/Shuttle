@@ -92,7 +92,7 @@ public class DrawerPresenter extends Presenter<DrawerView> {
                                         public void onOverflowClick(View v, Playlist playlist) {
                                             PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
                                             MenuUtils.setupPlaylistMenu(popupMenu, playlist);
-                                            popupMenu.setOnMenuItemClickListener(MenuUtils.getPlaylistClickListener(v.getContext(), playlist));
+                                            popupMenu.setOnMenuItemClickListener(MenuUtils.getPlaylistPopupMenuClickListener(v.getContext(), playlist));
                                             popupMenu.show();
                                         }
                                     });
