@@ -7,14 +7,18 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.ui.modelviews.SongView;
+import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.Operators;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.SortManager;
+import com.simplecityapps.recycler_adapter.model.ViewModel;
 
 import java.util.Collections;
 import java.util.List;
@@ -92,8 +96,25 @@ public class PlaylistDetailFragment extends BaseDetailFragment {
     public Single<List<Song>> getSongs() {
         return playlist.getSongsObservable().first(Collections.emptyList()).map(songs -> {
             sortSongs(songs);
+
+            int songSortOrder = getSongSortOrder();
+            if (songSortOrder == SortManager.SongSort.DETAIL_DEFAULT) {
+                Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(b.playCount, a.playCount));
+            }
             return songs;
         });
+    }
+
+    @NonNull
+    @Override
+    public List<ViewModel> getSongViewModels(List<Song> songs) {
+        List<ViewModel> viewModels = super.getSongViewModels(songs);
+        return Stream.of(viewModels)
+                .filter(viewModel -> viewModel instanceof SongView)
+                .map(viewModel -> {
+                    ((SongView) viewModel).showPlayCount(true);
+                    return viewModel;
+                }).toList();
     }
 
     @NonNull

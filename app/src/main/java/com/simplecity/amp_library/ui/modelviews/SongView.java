@@ -17,6 +17,7 @@ import com.simplecity.amp_library.format.PrefixHighlighter;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.ui.views.NonScrollImageButton;
+import com.simplecity.amp_library.ui.views.PlayCountView;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.SortManager;
@@ -161,7 +162,7 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder, Song>
         if (holder.playCount != null) {
             if (showPlayCount && song.playCount > 1) {
                 holder.playCount.setVisibility(View.VISIBLE);
-                holder.playCount.setText(String.valueOf(song.playCount));
+                holder.playCount.setCount(song.playCount);
             } else {
                 holder.playCount.setVisibility(View.GONE);
             }
@@ -338,7 +339,7 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder, Song>
         TextView trackNumber;
 
         @Nullable @BindView(R.id.play_count)
-        TextView playCount;
+        PlayCountView playCount;
 
         @BindView(R.id.btn_overflow)
         public NonScrollImageButton overflowButton;
@@ -353,10 +354,6 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder, Song>
             super(itemView);
 
             ButterKnife.bind(this, itemView);
-
-            if (playCount != null) {
-                //Todo: Set background color of playCount
-            }
 
             itemView.setOnClickListener(v -> viewModel.onItemClick(getAdapterPosition()));
             itemView.setOnLongClickListener(v -> viewModel.onItemLongClick(getAdapterPosition()));

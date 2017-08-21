@@ -63,7 +63,7 @@
 
     </LinearLayout>
 
-    <TextView
+    <com.simplecity.amp_library.ui.views.PlayCountView
         android:id="@+id/play_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -71,10 +71,9 @@
         android:gravity="center"
         android:minHeight="28dp"
         android:minWidth="28dp"
-        android:textColor="@color/default_text_color_holo_dark"
+        android:tag=":aesthetic_ignore"
         android:textSize="14sp"
         android:visibility="gone"
-        tools:background="@color/pink_a200"
         tools:text="3"
         tools:visibility="visible"/>
 
