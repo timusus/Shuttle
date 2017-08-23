@@ -466,18 +466,18 @@ public class PlaylistUtils {
                 .subscribe();
     }
 
-    public static void toggleFavorite(Song song, UnsafeConsumer<Boolean> isFavourite) {
+    public static void toggleFavorite(@NonNull Song song, UnsafeConsumer<Boolean> isFavourite) {
         isFavorite(song)
                 .subscribeOn(Schedulers.io())
                 .subscribe(isFavorite -> {
                     if (!isFavorite) {
-                        addToFavorites(success -> {
+                        addToFavorites(song, success -> {
                             if (success) {
                                 isFavourite.accept(true);
                             }
                         });
                     } else {
-                        removeFromFavorites(success -> {
+                        removeFromFavorites(song, success -> {
                             if (success) {
                                 isFavourite.accept(false);
                             }
@@ -489,13 +489,7 @@ public class PlaylistUtils {
     /**
      * Add a song to the favourites playlist
      */
-    public static void addToFavorites(UnsafeConsumer<Boolean> success) {
-        Song song = MusicUtils.getSong();
-
-        if (song == null) {
-            return;
-        }
-
+    public static void addToFavorites(@NonNull Song song, UnsafeConsumer<Boolean> success) {
         Single.zip(
                 Playlist.favoritesPlaylist(),
                 DataManager.getInstance().getFavoriteSongsRelay()
@@ -517,30 +511,36 @@ public class PlaylistUtils {
                 .subscribe(success::accept);
     }
 
-    public static void removeFromFavorites(UnsafeConsumer<Boolean> success) {
-
-        Song song = MusicUtils.getSong();
-
-        if (song == null) {
-            return;
-        }
-
+    public static void removeFromFavorites(@NonNull Song song, @Nullable UnsafeConsumer<Boolean> success) {
         Playlist.favoritesPlaylist()
-                .map(playlist -> {
-                    int numTracksRemoved = 0;
-                    if (playlist.id >= 0) {
-                        final Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlist.id);
-                        numTracksRemoved = ShuttleApplication.getInstance().getContentResolver().delete(uri, MediaStore.Audio.Playlists.Members.AUDIO_ID + "=" + song.id, null);
-                        DataManager.getInstance().invalidateFavoriteSongsRelay();
-                    }
-                    return numTracksRemoved;
-                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        numTracksRemoved -> success.accept(numTracksRemoved > 0),
+                        playlist -> removeFromPlaylist(playlist, song, success),
+                        error -> LogUtils.logException(TAG, "PlaylistUtils: Error Removing from favorites", error));
+
+    }
+
+    public static void removeFromPlaylist(@NonNull Playlist playlist, @NonNull Song song, @Nullable UnsafeConsumer<Boolean> success) {
+        Single.fromCallable(() -> {
+            int numTracksRemoved = 0;
+            if (playlist.id >= 0) {
+                final Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlist.id);
+                numTracksRemoved = ShuttleApplication.getInstance().getContentResolver().delete(uri, MediaStore.Audio.Playlists.Members.AUDIO_ID + "=" + song.id, null);
+                DataManager.getInstance().invalidateFavoriteSongsRelay();
+            }
+            return numTracksRemoved;
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        numTracksRemoved -> {
+                            if (success != null) {
+                                success.accept(numTracksRemoved > 0);
+                            }
+                        },
                         error -> LogUtils.logException(TAG, "PlaylistUtils: Error Removing from favorites", error));
     }
+
 
     public static void showPlaylistToast(Context context, int numTracksAdded) {
         final String message = context.getResources().getQuantityString(R.plurals.NNNtrackstoplaylist, numTracksAdded, numTracksAdded);
@@ -714,5 +714,12 @@ public class PlaylistUtils {
                 }
             }
         }
+    }
+
+    public interface PlaylistIds {
+        long RECENTLY_ADDED_PLAYLIST = -2;
+        long MOST_PLAYED_PLAYLIST = -3;
+        long PODCASTS_PLAYLIST = -4;
+        long RECENTLY_PLAYED_PLAYLIST = -5;
     }
 }

@@ -24,19 +24,9 @@ public class MusicUtils {
     private static final String TAG = "MusicUtils";
 
     public interface Defs {
-        int PLAY_NEXT = 1;
-        int ADD_TO_PLAYLIST = 2;
-        int USE_AS_RINGTONE = 3;
-        int PLAYLIST_SELECTED = 4;
-        int NEW_PLAYLIST = 5;
-        int CHILD_MENU_BASE = 15;
-    }
-
-    public interface PlaylistIds {
-        long RECENTLY_ADDED_PLAYLIST = -2;
-        long MOST_PLAYED_PLAYLIST = -3;
-        long PODCASTS_PLAYLIST = -4;
-        long RECENTLY_PLAYED_PLAYLIST = -5;
+        int ADD_TO_PLAYLIST = 0;
+        int PLAYLIST_SELECTED = 1;
+        int NEW_PLAYLIST = 2;
     }
 
     public static void playAll(Single<List<Song>> songsSingle, UnsafeConsumer<String> onEmpty) {

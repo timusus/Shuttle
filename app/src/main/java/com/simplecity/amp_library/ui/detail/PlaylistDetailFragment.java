@@ -52,6 +52,17 @@ public class PlaylistDetailFragment extends BaseDetailFragment {
     }
 
     @Override
+    boolean showSongOverflowRemoveButton() {
+        return playlist.canEdit;
+    }
+
+    @Override
+    void songRemoved(int position, Song song) {
+        adapter.removeItem(position);
+        playlist.removeSong(song, null);
+    }
+
+    @Override
     void setSongSortOrder(int sortOrder) {
         SortManager.getInstance().setPlaylistDetailSongsSortOrder(sortOrder);
     }

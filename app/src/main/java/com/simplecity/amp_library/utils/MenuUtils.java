@@ -101,11 +101,7 @@ public class MenuUtils implements MusicUtils.Defs {
                 .build()
                 .show();
     }
-
-    public static void remove(Song song) {
-        MusicUtils.removeFromQueue(song, true);
-    }
-
+    
     public static void setupSongMenu(PopupMenu menu, boolean showRemoveButton) {
         menu.inflate(R.menu.menu_song);
 
@@ -179,7 +175,6 @@ public class MenuUtils implements MusicUtils.Defs {
                     if (songRemoved != null) {
                         songRemoved.run();
                     }
-                    remove(song);
                     return true;
             }
             return false;
@@ -434,7 +429,7 @@ public class MenuUtils implements MusicUtils.Defs {
     }
 
     public static void edit(Context context, Playlist playlist) {
-        if (playlist.id == MusicUtils.PlaylistIds.RECENTLY_ADDED_PLAYLIST) {
+        if (playlist.id == PlaylistUtils.PlaylistIds.RECENTLY_ADDED_PLAYLIST) {
             DialogUtils.showWeekSelectorDialog(context);
         }
     }
@@ -462,7 +457,7 @@ public class MenuUtils implements MusicUtils.Defs {
             menu.getMenu().findItem(R.id.clearPlaylist).setVisible(false);
         }
 
-        if (playlist.id != MusicUtils.PlaylistIds.RECENTLY_ADDED_PLAYLIST) {
+        if (playlist.id != PlaylistUtils.PlaylistIds.RECENTLY_ADDED_PLAYLIST) {
             menu.getMenu().findItem(R.id.editPlaylist).setVisible(false);
         }
 
@@ -470,7 +465,7 @@ public class MenuUtils implements MusicUtils.Defs {
             menu.getMenu().findItem(R.id.renamePlaylist).setVisible(false);
         }
 
-        if (playlist.id == MusicUtils.PlaylistIds.MOST_PLAYED_PLAYLIST) {
+        if (playlist.id == PlaylistUtils.PlaylistIds.MOST_PLAYED_PLAYLIST) {
             menu.getMenu().findItem(R.id.exportPlaylist).setVisible(false);
         }
     }
@@ -486,7 +481,7 @@ public class MenuUtils implements MusicUtils.Defs {
             toolbar.getMenu().findItem(R.id.clearPlaylist).setVisible(false);
         }
 
-        if (playlist.id != MusicUtils.PlaylistIds.RECENTLY_ADDED_PLAYLIST) {
+        if (playlist.id != PlaylistUtils.PlaylistIds.RECENTLY_ADDED_PLAYLIST) {
             toolbar.getMenu().findItem(R.id.editPlaylist).setVisible(false);
         }
 
@@ -494,7 +489,7 @@ public class MenuUtils implements MusicUtils.Defs {
             toolbar.getMenu().findItem(R.id.renamePlaylist).setVisible(false);
         }
 
-        if (playlist.id == MusicUtils.PlaylistIds.MOST_PLAYED_PLAYLIST) {
+        if (playlist.id == PlaylistUtils.PlaylistIds.MOST_PLAYED_PLAYLIST) {
             toolbar.getMenu().findItem(R.id.exportPlaylist).setVisible(false);
         }
     }

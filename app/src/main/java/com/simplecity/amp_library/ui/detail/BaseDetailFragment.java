@@ -310,6 +310,13 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         return null;
     }
 
+    boolean showSongOverflowRemoveButton() {
+        return false;
+    }
+
+    void songRemoved(int position, Song song) {
+    }
+
     protected void sortSongs(List<Song> songs) {
         @SortManager.SongSort int songSort = getSongSortOrder();
 
@@ -741,10 +748,10 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     @Override
     public void onSongOverflowClick(int position, View v, Song song) {
         PopupMenu popupMenu = new PopupMenu(getContext(), v);
-        MenuUtils.setupSongMenu(popupMenu, false);
+        MenuUtils.setupSongMenu(popupMenu, showSongOverflowRemoveButton());
         popupMenu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), song,
                 taggerDialog -> taggerDialog.show(getFragmentManager()),
-                null));
+                () -> songRemoved(position, song)));
         popupMenu.show();
     }
 

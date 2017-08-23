@@ -514,9 +514,8 @@ public class MusicService extends Service {
                         releaseServiceUiAndStop();
                     } else if (MediaButtonCommand.TOGGLE_FAVORITE.equals(cmd)) {
                         if (currentSong != null) {
-                            PlaylistUtils.toggleFavorite(currentSong, success -> {
-                                Toast.makeText(MusicService.this, getString(R.string.song_to_favourites, currentSong.name), Toast.LENGTH_SHORT).show();
-                            });
+                            PlaylistUtils.toggleFavorite(currentSong, success ->
+                                    Toast.makeText(MusicService.this, getString(R.string.song_to_favourites, currentSong.name), Toast.LENGTH_SHORT).show());
                         }
                     }
                     if (WidgetProviderSmall.CMDAPPWIDGETUPDATE.equals(cmd)) {

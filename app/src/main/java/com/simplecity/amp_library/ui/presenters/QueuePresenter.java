@@ -103,11 +103,11 @@ public class QueuePresenter extends Presenter<QueueView> {
     }
 
     public void removeFromQueue(int position, Song song) {
-        MusicUtils.removeFromQueue(song, true);
         QueueView queueView = getView();
         if (queueView != null) {
             queueView.removeFromQueue(position);
         }
+        MusicUtils.removeFromQueue(song, true);
     }
 
     private void loadData() {
