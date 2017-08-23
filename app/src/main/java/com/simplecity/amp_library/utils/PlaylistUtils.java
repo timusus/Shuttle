@@ -581,6 +581,7 @@ public class PlaylistUtils {
                     String name = editText.getText().toString();
                     if (!name.isEmpty()) {
                         idForPlaylistObservable(context, name)
+                                .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(id -> {
                                     Uri uri;
@@ -625,6 +626,7 @@ public class PlaylistUtils {
                     ((MaterialDialog) dialog).getActionButton(DialogAction.POSITIVE).setEnabled(true);
                     // check if playlist with current name exists already, and warn the user if so.
                     idForPlaylistObservable(context, newText)
+                            .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(id -> {
                                 if (id >= 0) {
