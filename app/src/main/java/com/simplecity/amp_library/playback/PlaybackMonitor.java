@@ -28,8 +28,8 @@ public class PlaybackMonitor {
     private PlaybackMonitor() {
         progressObservable = Flowable.defer(() -> Observable.interval(32, TimeUnit.MILLISECONDS)
                 .filter(aLong -> {
-                    if (MusicServiceConnectionUtils.sServiceBinder != null
-                            && MusicServiceConnectionUtils.sServiceBinder.getService() != null) {
+                    if (MusicServiceConnectionUtils.serviceBinder != null
+                            && MusicServiceConnectionUtils.serviceBinder.getService() != null) {
                         if (MusicUtils.getDuration() > 0) {
                             return true;
                         }
@@ -41,8 +41,8 @@ public class PlaybackMonitor {
                 .share();
 
         currentTimeObservable = Flowable.defer(() -> Observable.interval(150, TimeUnit.MILLISECONDS)
-                .filter(aLong -> MusicServiceConnectionUtils.sServiceBinder != null
-                        && MusicServiceConnectionUtils.sServiceBinder.getService() != null)
+                .filter(aLong -> MusicServiceConnectionUtils.serviceBinder != null
+                        && MusicServiceConnectionUtils.serviceBinder.getService() != null)
                 .map(time -> MusicUtils.getPosition())
                 .toFlowable(BackpressureStrategy.DROP))
                 .share();

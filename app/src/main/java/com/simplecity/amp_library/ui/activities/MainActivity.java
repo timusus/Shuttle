@@ -163,7 +163,7 @@ public class MainActivity extends BaseCastActivity implements
     private void handlePlaybackRequest(Intent intent) {
         if (intent == null) {
             return;
-        } else if (MusicServiceConnectionUtils.sServiceBinder == null) {
+        } else if (MusicServiceConnectionUtils.serviceBinder == null) {
             hasPendingPlaybackRequest = true;
             return;
         }

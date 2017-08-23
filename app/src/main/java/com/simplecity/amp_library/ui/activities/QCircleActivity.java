@@ -252,7 +252,7 @@ public class QCircleActivity extends BaseActivity {
         if (pauseBtn == null) {
             return;
         }
-        if (MusicServiceConnectionUtils.sServiceBinder != null && MusicUtils.isPlaying()) {
+        if (MusicServiceConnectionUtils.serviceBinder != null && MusicUtils.isPlaying()) {
 
         } else {
 

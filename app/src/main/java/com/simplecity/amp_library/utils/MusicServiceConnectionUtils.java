@@ -15,9 +15,9 @@ import java.util.WeakHashMap;
 
 public class MusicServiceConnectionUtils {
 
-    public static LocalBinder sServiceBinder = null;
+    public static LocalBinder serviceBinder = null;
 
-    private static final WeakHashMap<Context, ServiceBinder> sConnectionMap = new WeakHashMap<>();
+    private static final WeakHashMap<Context, ServiceBinder> connectionMap = new WeakHashMap<>();
 
     private MusicServiceConnectionUtils() {
 
@@ -37,7 +37,7 @@ public class MusicServiceConnectionUtils {
         contextWrapper.startService(new Intent(contextWrapper, MusicService.class));
         final ServiceBinder binder = new ServiceBinder(callback);
         if (contextWrapper.bindService(new Intent().setClass(contextWrapper, MusicService.class), binder, 0)) {
-            sConnectionMap.put(contextWrapper, binder);
+            connectionMap.put(contextWrapper, binder);
             return new ServiceToken(contextWrapper);
         }
         return null;
@@ -50,14 +50,14 @@ public class MusicServiceConnectionUtils {
         if (token == null) {
             return;
         }
-        final ContextWrapper mContextWrapper = token.wrappedContext;
-        final ServiceBinder mBinder = sConnectionMap.remove(mContextWrapper);
-        if (mBinder == null) {
+        final ContextWrapper contextWrapper = token.wrappedContext;
+        final ServiceBinder binder = connectionMap.remove(contextWrapper);
+        if (binder == null) {
             return;
         }
-        mContextWrapper.unbindService(mBinder);
-        if (sConnectionMap.isEmpty()) {
-            sServiceBinder = null;
+        contextWrapper.unbindService(binder);
+        if (connectionMap.isEmpty()) {
+            serviceBinder = null;
         }
     }
 
@@ -72,7 +72,7 @@ public class MusicServiceConnectionUtils {
         @Override
         public void onServiceConnected(final ComponentName className, final IBinder service) {
 
-            sServiceBinder = (LocalBinder) service;
+            serviceBinder = (LocalBinder) service;
 
             if (callback != null) {
                 callback.onServiceConnected(className, service);
@@ -84,7 +84,7 @@ public class MusicServiceConnectionUtils {
             if (callback != null) {
                 callback.onServiceDisconnected(className);
             }
-            sServiceBinder = null;
+            serviceBinder = null;
         }
     }
 
