@@ -46,8 +46,8 @@ public class PlaylistsModel {
                     list.addAll(playlists1);
                     return list;
                 })
-                .flatMap(playlists -> Observable.fromIterable(playlists)
-                        .flatMap(playlist -> playlist.getSongsObservable()
+                .concatMap(playlists -> Observable.fromIterable(playlists)
+                        .concatMap(playlist -> playlist.getSongsObservable()
                                 .first(Collections.emptyList())
                                 .flatMapObservable(songs -> {
                                             if (playlist.type == Playlist.Type.USER_CREATED
