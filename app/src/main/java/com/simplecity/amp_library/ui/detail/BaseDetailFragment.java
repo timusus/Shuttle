@@ -60,6 +60,7 @@ import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.SortManager;
 import com.simplecity.amp_library.utils.StringUtils;
 import com.simplecity.amp_library.utils.TypefaceManager;
+import com.simplecityapps.recycler_adapter.adapter.CompletionListUpdateCallbackAdapter;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
@@ -129,6 +130,8 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     private HorizontalRecyclerView horizontalRecyclerView;
 
     @Nullable Album currentSlideShowAlbum;
+
+    private boolean isFirstLoad = true;
 
     public BaseDetailFragment() {
     }
@@ -690,7 +693,15 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
     @Override
     public void itemsLoaded(List<ViewModel> items) {
-        adapter.setItems(items);
+        adapter.setItems(items, new CompletionListUpdateCallbackAdapter() {
+            @Override
+            public void onComplete() {
+                if (isFirstLoad) {
+                    recyclerView.scheduleLayoutAnimation();
+                    isFirstLoad = false;
+                }
+            }
+        });
     }
 
     @Override
