@@ -4,15 +4,22 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
+import com.annimon.stream.IntStream;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.ui.modelviews.SongView;
+import com.simplecity.amp_library.ui.recyclerview.ItemTouchHelperCallback;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.Operators;
@@ -31,6 +38,8 @@ public class PlaylistDetailFragment extends BaseDetailFragment {
 
     private Playlist playlist;
 
+    private ItemTouchHelper itemTouchHelper;
+
     public static PlaylistDetailFragment newInstance(Playlist playlist) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_PLAYLIST, playlist);
@@ -44,6 +53,54 @@ public class PlaylistDetailFragment extends BaseDetailFragment {
         super.onAttach(context);
 
         playlist = (Playlist) getArguments().getSerializable(ARG_PLAYLIST);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+
+        itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(
+                (fromPosition, toPosition) -> adapter.moveItem(fromPosition, toPosition),
+                (fromPosition, toPosition) -> {
+                    SongView from = (SongView) adapter.items.get(fromPosition);
+                    SongView to = (SongView) adapter.items.get(toPosition);
+
+                    List<SongView> songViews = Stream.of(adapter.items)
+                            .filter(itemView -> itemView instanceof SongView)
+                            .map(itemView -> ((SongView) itemView))
+                            .toList();
+
+                    int adjustedFrom = IntStream.range(0, songViews.size())
+                            .filter(i -> from.equals(songViews.get(i)))
+                            .findFirst()
+                            .orElse(-1);
+
+                    int adjustedTo = IntStream.range(0, songViews.size())
+                            .filter(i -> to.equals(songViews.get(i)))
+                            .findFirst()
+                            .orElse(-1);
+
+                    if (adjustedFrom != -1 && adjustedTo != -1) {
+                        playlist.moveSong(adjustedFrom, adjustedTo);
+                    } else {
+                        throw new IllegalStateException("Fuck you");
+                    }
+                },
+                () -> {
+                    // Nothing to do
+                }) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                if (viewHolder.getItemViewType() == target.getItemViewType()) {
+                    return super.onMove(recyclerView, viewHolder, target);
+                }
+                return false;
+            }
+        });
+
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
+        return rootView;
     }
 
     @Override
@@ -129,6 +186,9 @@ public class PlaylistDetailFragment extends BaseDetailFragment {
                 .filter(viewModel -> viewModel instanceof SongView)
                 .map(viewModel -> {
                     ((SongView) viewModel).showPlayCount(true);
+                    if (playlist.canEdit && getSongSortOrder() == SortManager.SongSort.DETAIL_DEFAULT) {
+                        ((SongView) viewModel).setEditable(true);
+                    }
                     return viewModel;
                 }).toList();
     }
@@ -169,6 +229,13 @@ public class PlaylistDetailFragment extends BaseDetailFragment {
     @Override
     Drawable getPlaceHolderDrawable() {
         return PlaceholderProvider.getInstance().getPlaceHolderDrawable(playlist.name, true);
+    }
+
+    @Override
+    public void onStartDrag(SongView.ViewHolder holder) {
+        super.onStartDrag(holder);
+
+        itemTouchHelper.startDrag(holder);
     }
 
     @Override

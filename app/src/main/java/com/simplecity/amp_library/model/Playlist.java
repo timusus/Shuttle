@@ -175,6 +175,10 @@ public class Playlist implements Serializable {
         PlaylistUtils.removeFromPlaylist(this, song, success);
     }
 
+    public boolean moveSong(int from, int to) {
+        return MediaStore.Audio.Playlists.Members.moveItem(ShuttleApplication.getInstance().getContentResolver(), id, from, to);
+    }
+
     public Observable<List<Song>> getSongsObservable() {
 
         if (id == PlaylistUtils.PlaylistIds.RECENTLY_ADDED_PLAYLIST) {
