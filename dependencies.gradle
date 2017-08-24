@@ -199,7 +199,8 @@ ext.libs = [
         // RxJava - https://git.io/rxjava (ReactiveX)
         rxJava                        : "io.reactivex.rxjava2:rxjava:$versions.rxJava",
         // RX Image Picker - https://git.io/vix5H (MLSDev )
-        rxImagePicker                 : "com.mlsdev.rximagepicker:library:$versions.rxImagePicker",
+//        rxImagePicker                 : "com.mlsdev.rximagepicker:library:$versions.rxImagePicker",
+        rxImagePicker                 : "com.github.timusus:RxImagePicker:permission-check-fix-SNAPSHOT",
         // RX Relay - https://github.com/JakeWharton/RxRelay
         rxRelay                       : "com.jakewharton.rxrelay2:rxrelay:$versions.rxRelay",
         // Rx Receivers - https://github.com/f2prateek/rx-receivers
