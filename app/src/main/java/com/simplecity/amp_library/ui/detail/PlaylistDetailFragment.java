@@ -110,7 +110,12 @@ public class PlaylistDetailFragment extends BaseDetailFragment {
 
             int songSortOrder = getSongSortOrder();
             if (songSortOrder == SortManager.SongSort.DETAIL_DEFAULT) {
-                Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(b.playCount, a.playCount));
+                if (playlist.type == Playlist.Type.MOST_PLAYED) {
+                    Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(b.playCount, a.playCount));
+                }
+                if (playlist.canEdit) {
+                    Collections.sort(songs, (a, b) -> ComparisonUtils.compareLong(a.playlistSongPlayOrder, b.playlistSongPlayOrder));
+                }
             }
             return songs;
         });
