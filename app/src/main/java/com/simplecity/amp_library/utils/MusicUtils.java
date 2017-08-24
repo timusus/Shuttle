@@ -448,4 +448,10 @@ public class MusicUtils {
             MusicServiceConnectionUtils.serviceBinder.getService().removeTracks(songs, notify);
         }
     }
+
+    public static void toggleFavorite(){
+        if (MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null) {
+            MusicServiceConnectionUtils.serviceBinder.getService().toggleFavorite();
+        }
+    }
 }

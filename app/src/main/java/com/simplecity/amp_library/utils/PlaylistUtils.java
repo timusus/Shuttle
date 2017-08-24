@@ -466,20 +466,20 @@ public class PlaylistUtils {
                 .subscribe();
     }
 
-    public static void toggleFavorite(@NonNull Song song, UnsafeConsumer<Boolean> isFavourite) {
+    public static void toggleFavorite(@NonNull Song song, UnsafeConsumer<Boolean> isFavorite) {
         isFavorite(song)
                 .subscribeOn(Schedulers.io())
-                .subscribe(isFavorite -> {
-                    if (!isFavorite) {
+                .subscribe(favorite -> {
+                    if (!favorite) {
                         addToFavorites(song, success -> {
                             if (success) {
-                                isFavourite.accept(true);
+                                isFavorite.accept(true);
                             }
                         });
                     } else {
                         removeFromFavorites(song, success -> {
                             if (success) {
-                                isFavourite.accept(false);
+                                isFavorite.accept(false);
                             }
                         });
                     }

@@ -84,14 +84,11 @@ public class MusicNotificationHelper extends NotificationHelper {
                         context.getString(R.string.btn_skip),
                         MusicService.retrievePlaybackAction(context, MusicService.ServiceCommand.NEXT_ACTION)
                 )
-                //Todo:
-                // Adding to favorites works, but the wrap-around call to update the notification seems to happen
-                // before isPlaylist() returns true.. A bug for another day.
-//                .addAction(
-//                        isFavorite ? R.drawable.ic_favorite_24dp_scaled : R.drawable.ic_favorite_border_24dp_scaled,
-//                        context.getString(R.string.fav_add),
-//                        MusicService.retrievePlaybackAction(context, MusicService.ServiceCommand.TOGGLE_FAVORITE)
-//                )
+                .addAction(
+                        isFavorite ? R.drawable.ic_favorite_24dp_scaled : R.drawable.ic_favorite_border_24dp_scaled,
+                        context.getString(R.string.fav_add),
+                        MusicService.retrievePlaybackAction(context, MusicService.ServiceCommand.TOGGLE_FAVORITE)
+                )
                 .setShowWhen(false)
                 .setVisibility(android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC);
 
