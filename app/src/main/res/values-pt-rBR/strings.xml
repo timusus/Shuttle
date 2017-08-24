@@ -70,7 +70,7 @@ músicas adicionadas à fila.</item>
     <!-- Displays when you click 'share' -->
     <string name="share_dialog_title">O que você quer compartilhar?</string>
     <!-- Option to share song info -->
-    <string name="share_option_song_info">Informações \'Em Reprodução\'</string>
+    <string name="share_option_song_info">Informação da reprodução</string>
     <!-- Option to share audio file -->
     <string name="share_option_audio_file">O arquivo de áudio</string>
     <!-- Displays when you need to choose which app to share the song with -->
@@ -251,6 +251,10 @@ músicas adicionadas à fila.</item>
     <string name="pref_title_theme_dark">Escuro</string>
     <string name="pref_title_theme_light">Claro</string>
     <string name="pref_title_theme_black">Preto</string>
+    <string name="pref_group_palette">Paleta</string>
+    <string name="pref_title_palette">Usar cores da capa</string>
+    <string name="pref_summary_palette">Se habilitado, o Shuttle detectará a cor mais proeminente na capa da música e irá usá-la como a \'cor primária\' do app</string>
+    <string name="pref_title_palette_now_playing">Apenas na tela \'Em Reprodução\'</string>
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">Lista negra/branca</string>
     <!--Settings title for viewing blacklist-->
@@ -357,6 +361,7 @@ Se estiver desmarcado, o ícone do Shuttle será usado como uma capa</string>
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <string name="pref_summary_simple_download">Baixar o Simple Last.FM Scrobbler na Google Play Store</string>
     <!-- Settings title for the About heading -->
+    <string name="pref_title_changelog">Mudanças</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Suporte</string>
     <string name="pref_title_version">Versão</string>

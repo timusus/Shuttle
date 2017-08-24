@@ -27,9 +27,9 @@
     <!-- Toast after turning repeat off -->
     <string name="repeat_off_notif">Повтор трека отключен.</string>
     <!-- Toast after turning single repeat on -->
-    <string name="repeat_current_notif">Включен повтор текущего трека</string>
+    <string name="repeat_current_notif">Повтор текущего трека</string>
     <!-- Toast after turning repeat all on -->
-    <string name="repeat_all_notif">Включен повтор всех песен</string>
+    <string name="repeat_all_notif">Повтор всех треков</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Поставить на звонок</string>
     <!-- Toast after setting a song as phone ringtone -->
@@ -49,8 +49,7 @@
     <!-- -->
     <plurals name="NNNtrackstoqueue">
         <item quantity="one">1 песня добавлена в очередь.</item>
-        <item quantity="other"><xliff:g id="number" example="27">%d</xliff:g>
-песен добавлены в очередь</item>
+        <item quantity="other">Треков в очереди: \"<xliff:g id="number" example="27">%d</xliff:g>\"</item>
         <item quantity="few"><xliff:g id="number" example="27">%d</xliff:g>
 песни добавлены в очередь.</item>
         <item quantity="many"><xliff:g id="number" example="27">%d</xliff:g>
@@ -58,7 +57,7 @@
     </plurals>
     <!-- Toasts after adding song(s) to playlists -->
     <string name="song_to_favourites"><xliff:g id="song_name">%s</xliff:g> добавлено в избранное</string>
-    <string name="song_removed_from_favourites"><xliff:g id="song_name">%s</xliff:g> удалено с избранного</string>
+    <string name="song_removed_from_favourites"><xliff:g id="song_name">%s</xliff:g> удалено из избранного</string>
     <!-- ## Dialogs ## -->
     <!-- Restart now button -->
     <string name="restart_button">Перезапустить!</string>
@@ -70,11 +69,11 @@
     <!-- Displays when you click 'share' -->
     <string name="share_dialog_title">Чем вы хотите поделиться?</string>
     <!-- Option to share song info -->
-    <string name="share_option_song_info">Информация о текущей песне</string>
+    <string name="share_option_song_info">Информация о текущем треке</string>
     <!-- Option to share audio file -->
     <string name="share_option_audio_file">Аудиофайл</string>
     <!-- Displays when you need to choose which app to share the song with -->
-    <string name="share_via">Поделиться текущей песней через:</string>
+    <string name="share_via">Поделиться треком:</string>
     <!-- Displayed when an M3U playlist is being saved-->
     <string name="saving_playlist">Сохранение плейлиста</string>
     <!-- Displayed when whitelisting a folder, as the app gathers the songs-->
@@ -83,11 +82,19 @@
     <string name="get_pro_title">Обновить до Shuttle+</string>
     <!-- -->
     <string name="get_pro_message">Если вам нравится Shuttle Music Player, пожалуйста, подумайте об обновлении до Shuttle+
-\n\nОсобенности:
-\n\• Много дополнительных тем
-\n\• Редактирование тегов (в Android 4.4 Kitkat функциональность ограничена)
-\n\• Возможность просмотра папок
-\n\• Поддержка ChromeCast\n\nЭто также поможет дальнейшей разработке!</string>
+
+
+Особенности:
+
+\Дополнительные темы
+
+\Редактирование тегов
+
+\Просмотр папок
+
+\Поддержка ChromeCast
+
+Это также поможет дальнейшей разработке!</string>
     <!-- -->
     <string name="upgraded_title">Спасибо</string>
     <string name="upgraded_message">Вы успешно обновились до Shuttle+. Спасибо за Вашу поддержку!
@@ -252,8 +259,8 @@
     <string name="pref_title_theme_black">Чёрная</string>
     <string name="pref_group_palette">Палитра</string>
     <string name="pref_title_palette">Использовать цвета из обложки</string>
-    <string name="pref_summary_palette">Если включено, Shuttle обнаружит более заметный цвет из обложки, и будет использовать в качестве \'основного цвета\' во всём приложении</string>
-    <string name="pref_title_palette_now_playing">Только на экране \'Сейчас воспроизводится\'</string>
+    <string name="pref_summary_palette">Если включено, Shuttle обнаружит более заметный цвет из обложки и будет использовать его в качестве основного во всём приложении</string>
+    <string name="pref_title_palette_now_playing">Только на экране Сейчас играет</string>
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">Белый/чёрный список</string>
     <!--Settings title for viewing blacklist-->

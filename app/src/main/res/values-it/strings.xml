@@ -227,11 +227,11 @@
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
     <string name="pref_title_choose_tabs">Scegli schede</string>
     <!--Settings summary for opening the dialog to pick which categories are shown as tab headings -->
-    <string name="pref_summary_choose_tabs">Scegli e riordina le categorie visualizzate come schede nella parte alta dello schermo</string>
+    <string name="pref_summary_choose_tabs">Scegli e riordina le schede da visualizzare nella parte alta dello schermo</string>
     <!--Settings title for picking the primary theme color -->
     <string name="pref_title_theme_pick_color">Colore principale</string>
     <!--Settings summary for picking the primary theme color-->
-    <string name="pref_summary_theme_pick_color">Scegli il colore principale per il tuo tema</string>
+    <string name="pref_summary_theme_pick_color">Scegli il colore principale del tuo tema</string>
     <!--Settings title for for picking the accent theme color-->
     <string name="pref_title_theme_pick_accent_color">Colore in risalto</string>
     <!--Settings summary for picking the accent theme color-->
@@ -250,8 +250,8 @@
     <string name="pref_title_theme_black">Nero</string>
     <string name="pref_group_palette">Tavolozza</string>
     <string name="pref_title_palette">Usa colori della copertina</string>
-    <string name="pref_summary_palette">Se abilitata, Shuttle determinerà il colore prominente della copertina e lo utilizzerà come \"colore principale\" all\'interno dell\'app.</string>
-    <string name="pref_title_palette_now_playing">Solo sulla schermata \"In riproduzione\"</string>
+    <string name="pref_summary_palette">Se abilitata, Shuttle determinerà il colore dominante della copertina e lo utilizzerà come \"colore principale\" all\'interno dell\'app.</string>
+    <string name="pref_title_palette_now_playing">Solo nella schermata \"In riproduzione\"</string>
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">Lista bianca/nera</string>
     <!--Settings title for viewing blacklist-->
@@ -377,7 +377,7 @@
     <!-- Settings title for ignore playlist duplicates -->
     <string name="pref_title_ignore_duplicates">Ignora duplicati nella playlist</string>
     <!-- Settings summary for ignore playlist duplicates -->
-    <string name="pref_summary_ignore_duplicates">Non cercare e proporre di tralasciare i duplicati quando di aggiungono canzoni a una playlist.</string>
+    <string name="pref_summary_ignore_duplicates">Non cercare ed ignora i duplicati quando di aggiungono canzoni a una playlist.</string>
     <!-- Displayed on the settings page to choose the default main page -->
     <string name="select_default_page">Seleziona pagina predefinita</string>
     <!-- Option to view the list as a list or grid -->
@@ -524,7 +524,7 @@ cartelle "</item>
     <string name="sort_ascending">Ascendente</string>
     <string name="sort_artist_name">Nome dell\'artista</string>
     <string name="sort_album_name">Nome dell\'album</string>
-    <string name="sort_album_year">anno dell\'album</string>
+    <string name="sort_album_year">Anno dell\'album</string>
     <string name="sort_song_name">Nome del brano</string>
     <string name="sort_song_year">Anno del brano</string>
     <string name="sort_song_duration">Durata del brano</string>
@@ -595,7 +595,7 @@ cartelle "</item>
     </plurals>
     <!-- Used in artists list view, indicates how many albums exist for a given artist. -->
     <plurals name="Nalbums">
-        <item quantity="one">Un album</item>
+        <item quantity="one">1 album</item>
         <item quantity="other"><xliff:g id="COUNT">%d</xliff:g> album</item>
     </plurals>
     <!--## Miscellaneous ##-->
@@ -706,7 +706,7 @@ cartelle "</item>
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">Disco <xliff:g id="number">%d</xliff:g></string>
     <!-- Search Filter-->
-    <string name="search_fuzzy">Fuzzy</string>
+    <string name="search_fuzzy">Rilevanti</string>
     <string name="search_artists">Artisti</string>
     <string name="search_albums">Album</string>
     <!-- Changelog -->

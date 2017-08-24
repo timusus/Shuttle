@@ -17,9 +17,9 @@
     <!-- Displayed when a file couldn't be deleted -->
     <string name="delete_file_failed">无法删除文件\n该文件可能写保护</string>
     <!-- Displayed when a folder couldn't be renamed-->
-    <string name="rename_folder_failed">无法重命名文件夹\n该文件夹写保护或者已存在同名文件夹</string>
+    <string name="rename_folder_failed">无法重命名文件夹。\n\n该文件夹可能写保护或者已存在同名文件夹。</string>
     <!-- Displayed when a file couldn't be renamed-->
-    <string name="rename_file_failed">无法重命名文件\n该文件写保护或者已存在同名文件</string>
+    <string name="rename_file_failed">无法重命名文件夹。\n\n该文件夹可能被写保护或者已存在同名文件夹。</string>
     <!-- Toast after turning shuffle on -->
     <string name="shuffle_on_notif">已开启随机播放</string>
     <!-- Toast after turning shuffle off -->
@@ -113,7 +113,7 @@
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">整张专辑<xliff:g id="album">%s</xliff:g>信息将被永久删除</string>
     <!-- Delete confirmation dialog message when deleting albums -->
-    <string name="get_pro_button_play_store">Play Store</string>
+    <string name="get_pro_button_play_store">Play 商店</string>
     <string name="get_pro_button_amazon">亚马逊</string>
     <string name="delete_album_desc_multiple">以下的专辑:<xliff:g id="album">%s</xliff:g>将被永久删除</string>
     <!-- Delete confirmation dialog when deleting a single song -->
@@ -247,6 +247,10 @@
     <string name="pref_title_theme_dark">深暗</string>
     <string name="pref_title_theme_light">明亮</string>
     <string name="pref_title_theme_black">黑色</string>
+    <string name="pref_group_palette">调色板</string>
+    <string name="pref_title_palette">使用封面颜色</string>
+    <string name="pref_summary_palette">开启后，Shuttle会将封面中最突出的颜色设置为应用的主题颜色</string>
+    <string name="pref_title_palette_now_playing">仅在“正在播放”界面</string>
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">黑/白名单</string>
     <!--Settings title for viewing blacklist-->
@@ -359,6 +363,7 @@
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <string name="pref_summary_simple_download">从Google Play Store下载Simple Last.FM Scrobbler</string>
     <!-- Settings title for the About heading -->
+    <string name="pref_title_changelog">更新日志</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">支持</string>
     <string name="pref_title_version">版本</string>

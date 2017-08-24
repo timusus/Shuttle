@@ -248,6 +248,7 @@
     <string name="pref_title_theme_dark">深色</string>
     <string name="pref_title_theme_light">淺色</string>
     <string name="pref_title_theme_black">黑色</string>
+    <string name="pref_group_palette">調色板</string>
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">黑 / 白名單</string>
     <!--Settings title for viewing blacklist-->
@@ -353,6 +354,7 @@
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <string name="pref_summary_simple_download">從 Play 商店下載 Simple Last.FM Scrobbler</string>
     <!-- Settings title for the About heading -->
+    <string name="pref_title_changelog">更新紀錄</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">支援</string>
     <string name="pref_title_version">版本</string>
