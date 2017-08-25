@@ -441,10 +441,8 @@
     <!-- Label in folder view - number of folders within the current folder -->
     <string name="onefolder">1 cartella</string>
     <plurals name="Nfolders">
-        <item quantity="other">" <xliff:g id="count">%d</xliff:g>
-cartelle "</item>
-        <item quantity="one">" <xliff:g id="count">%d</xliff:g>
-cartelle "</item>
+        <item quantity="other">" <xliff:g id="count">%d</xliff:g>cartelle "</item>
+        <item quantity="one">" <xliff:g id="count">%d</xliff:g>cartelle "</item>
     </plurals>
     <!-- -->
     <string name="parent_folder">Cartella genitore</string>
