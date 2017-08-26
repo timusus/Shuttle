@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.ui.fragments;
 
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -23,6 +24,7 @@ import android.view.ViewGroup;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.ViewBackgroundAction;
 import com.annimon.stream.Stream;
+import com.cantrowitz.rxbroadcast.RxBroadcast;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Album;
@@ -72,7 +74,7 @@ public class LibraryController extends BaseFragment implements
 
     private static final String TAG = "LibraryController";
 
-    private PagerAdapter adapter;
+    public static final String EVENT_TABS_CHANGED = "tabs_changed";
 
     @BindView(R.id.tabs)
     TabLayout slidingTabLayout;
@@ -91,8 +93,6 @@ public class LibraryController extends BaseFragment implements
 
     @Inject NavigationEventRelay navigationEventRelay;
 
-    private int currentPage = 0;
-
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private Unbinder unbinder;
@@ -110,27 +110,6 @@ public class LibraryController extends BaseFragment implements
 
         ShuttleApplication.getInstance().getAppComponent().inject(this);
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        CategoryItem.getCategoryItems(sharedPreferences);
-
-        adapter = new PagerAdapter(getChildFragmentManager());
-
-        List<CategoryItem> categoryItems = Stream.of(CategoryItem.getCategoryItems(sharedPreferences))
-                .filter(categoryItem -> categoryItem.isEnabled)
-                .toList();
-
-        int defaultPageType = SettingsManager.getInstance().getDefaultPageType();
-        int defaultPage = 1;
-        for (int i = 0; i < categoryItems.size(); i++) {
-            CategoryItem categoryItem = categoryItems.get(i);
-            adapter.addFragment(categoryItem.getFragment(getContext()));
-            if (categoryItem.type == defaultPageType) {
-                defaultPage = i;
-            }
-        }
-
-        currentPage = Math.min(defaultPage, adapter.getCount());
-
         setHasOptionsMenu(true);
     }
 
@@ -143,29 +122,9 @@ public class LibraryController extends BaseFragment implements
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
-        pager.setAdapter(adapter);
-        pager.setOffscreenPageLimit(adapter.getCount() - 1);
-        pager.setCurrentItem(currentPage);
+        setupViewPager();
 
-        slidingTabLayout.setupWithViewPager(pager);
-
-        pager.postDelayed(() -> {
-            if (pager != null) {
-                DialogUtils.showRateSnackbar(getActivity(), pager);
-            }
-        }, 1000);
-
-        Aesthetic.get(getContext())
-                .colorPrimary()
-                .take(1)
-                .subscribe(color -> ViewBackgroundAction.create(appBarLayout)
-                        .accept(color), onErrorLogAndRethrow());
-
-        compositeDisposable.add(Aesthetic.get(getContext())
-                .colorPrimary()
-                .compose(distinctToMainThread())
-                .subscribe(color -> ViewBackgroundAction.create(appBarLayout)
-                        .accept(color), onErrorLogAndRethrow()));
+        compositeDisposable.add(RxBroadcast.fromLocalBroadcast(getContext(), new IntentFilter(EVENT_TABS_CHANGED)).subscribe());
 
         return rootView;
     }
@@ -215,6 +174,53 @@ public class LibraryController extends BaseFragment implements
         return false;
     }
 
+    private void setupViewPager() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        CategoryItem.getCategoryItems(sharedPreferences);
+
+        PagerAdapter adapter = new PagerAdapter(getChildFragmentManager());
+
+        List<CategoryItem> categoryItems = Stream.of(CategoryItem.getCategoryItems(sharedPreferences))
+                .filter(categoryItem -> categoryItem.isEnabled)
+                .toList();
+
+        int defaultPageType = SettingsManager.getInstance().getDefaultPageType();
+        int defaultPage = 1;
+        for (int i = 0; i < categoryItems.size(); i++) {
+            CategoryItem categoryItem = categoryItems.get(i);
+            adapter.addFragment(categoryItem.getFragment(getContext()));
+            if (categoryItem.type == defaultPageType) {
+                defaultPage = i;
+            }
+        }
+
+        int currentPage = Math.min(defaultPage, adapter.getCount());
+
+        pager.setAdapter(adapter);
+        pager.setOffscreenPageLimit(adapter.getCount() - 1);
+        pager.setCurrentItem(currentPage);
+
+        slidingTabLayout.setupWithViewPager(pager);
+
+        pager.postDelayed(() -> {
+            if (pager != null) {
+                DialogUtils.showRateSnackbar(getActivity(), pager);
+            }
+        }, 1000);
+
+        Aesthetic.get(getContext())
+                .colorPrimary()
+                .take(1)
+                .subscribe(color -> ViewBackgroundAction.create(appBarLayout)
+                        .accept(color), onErrorLogAndRethrow());
+
+        compositeDisposable.add(Aesthetic.get(getContext())
+                .colorPrimary()
+                .compose(distinctToMainThread())
+                .subscribe(color -> ViewBackgroundAction.create(appBarLayout)
+                        .accept(color), onErrorLogAndRethrow()));
+    }
+
     private void openSearch() {
         getNavigationController().pushViewController(SearchFragment.newInstance(null), "SearchFragment");
     }
@@ -250,7 +256,7 @@ public class LibraryController extends BaseFragment implements
         if (transitionView != null) {
             String transitionName = ViewCompat.getTransitionName(transitionView);
             transitions.add(new Pair<>(transitionView, transitionName));
-//            transitions.add(new Pair<>(toolbar, "toolbar"));
+            //            transitions.add(new Pair<>(toolbar, "toolbar"));
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                 Transition moveTransition = TransitionInflater.from(getContext()).inflateTransition(R.transition.image_transition);
