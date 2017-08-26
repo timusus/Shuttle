@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -153,6 +154,8 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         if (requestManager == null) {
             requestManager = Glide.with(this);
         }
+
+        isFirstLoad = true;
     }
 
     @Override
@@ -175,6 +178,10 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         recyclerView.setRecyclerListener(new RecyclerListener());
         recyclerView.setAdapter(adapter);
 
+        if (isFirstLoad) {
+            recyclerView.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_from_bottom));
+        }
+
         toolbarLayout.setTitle(getToolbarTitle());
         toolbarLayout.setSubtitle(getToolbarSubtitle());
         toolbarLayout.setExpandedTitleTypeface(TypefaceManager.getInstance().getTypeface(TypefaceManager.SANS_SERIF_LIGHT));
@@ -183,7 +190,9 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         String transitionName = getArguments().getString(ARG_TRANSITION_NAME);
         ViewCompat.setTransitionName(headerImageView, transitionName);
 
-        fab.setVisibility(View.GONE);
+        if (isFirstLoad) {
+            fab.setVisibility(View.GONE);
+        }
 
         if (transitionName == null) {
             fadeInUi();
@@ -241,6 +250,8 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         detailPresenter.unbindView(this);
 
         unbinder.unbind();
+
+        isFirstLoad = false;
 
         super.onDestroyView();
     }
@@ -693,13 +704,11 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
     @Override
     public void itemsLoaded(List<ViewModel> items) {
+
         adapter.setItems(items, new CompletionListUpdateCallbackAdapter() {
             @Override
             public void onComplete() {
-                if (isFirstLoad) {
-                    recyclerView.scheduleLayoutAnimation();
-                    isFirstLoad = false;
-                }
+                recyclerView.scheduleLayoutAnimation();
             }
         });
     }
