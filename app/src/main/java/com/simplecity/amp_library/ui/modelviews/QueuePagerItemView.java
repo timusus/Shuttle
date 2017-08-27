@@ -47,7 +47,7 @@ public class QueuePagerItemView extends BaseViewModel<QueuePagerItemView.ViewHol
                 .load(song)
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .error(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.name, true))
-                .into((ImageView) holder.imageView);
+                .into(holder.imageView);
     }
 
     public static class ViewHolder extends BaseViewHolder<QueuePagerItemView> {

@@ -89,7 +89,7 @@ public class MainActivity extends BaseCastActivity implements
         navigationView = findViewById(R.id.navView);
 
         //Ensure the drawer draws a content scrim over the status bar.
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout = findViewById(R.id.drawer_layout);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
             drawerLayout.setOnApplyWindowInsetsListener((view, windowInsets) -> {
                 navigationView.dispatchApplyWindowInsets(windowInsets);
@@ -252,7 +252,7 @@ public class MainActivity extends BaseCastActivity implements
 
     @Override
     public void toolbarAttached(Toolbar toolbar) {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {

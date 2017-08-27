@@ -68,10 +68,6 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
 
     private float alpha = 0.15f;
 
-    /**
-     * The pager widget, which handles animation and allows swiping horizontally to access previous
-     * and next wizard steps.
-     */
     private ViewPager pager;
 
     /**
@@ -122,35 +118,35 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
         textColor = prefs.getInt(BaseWidgetProvider.ARG_WIDGET_TEXT_COLOR + appWidgetId, Color.WHITE);
         showAlbumArt = prefs.getBoolean(BaseWidgetProvider.ARG_WIDGET_SHOW_ARTWORK + appWidgetId, true);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         layouts = getWidgetLayouts();
 
         // Instantiate a ViewPager and a PagerAdapter.
-        pager = (ViewPager) findViewById(R.id.pager);
+        pager = findViewById(R.id.pager);
         adapter = new WidgetPagerAdapter(getSupportFragmentManager());
         pager.setAdapter(adapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(pager);
 
-        Button doneButton = (Button) findViewById(R.id.btn_done);
+        Button doneButton = findViewById(R.id.btn_done);
         doneButton.setOnClickListener(this);
 
-        backgroundColorButton = (Button) findViewById(R.id.btn_background_color);
+        backgroundColorButton = findViewById(R.id.btn_background_color);
         backgroundColorButton.setOnClickListener(this);
 
-        textColorButton = (Button) findViewById(R.id.btn_text_color);
+        textColorButton = findViewById(R.id.btn_text_color);
         textColorButton.setOnClickListener(this);
 
-        CheckBox showAlbumArtCheckbox = (CheckBox) findViewById(R.id.checkBox1);
+        CheckBox showAlbumArtCheckbox = findViewById(R.id.checkBox1);
         showAlbumArtCheckbox.setOnCheckedChangeListener(this);
 
-        CheckBox invertedIconsCheckbox = (CheckBox) findViewById(R.id.checkBox2);
+        CheckBox invertedIconsCheckbox = findViewById(R.id.checkBox2);
         invertedIconsCheckbox.setOnCheckedChangeListener(this);
 
-        seekBar = (SizableSeekBar) findViewById(R.id.seekBar1);
+        seekBar = findViewById(R.id.seekBar1);
         seekBar.setOnSeekBarChangeListener(this);
 
         updateWidgetUI();
@@ -270,10 +266,6 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
         super.onServiceConnected(componentName, iBinder);
     }
 
-    /**
-     * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
-     * sequence.
-     */
     private class WidgetPagerAdapter extends FragmentStatePagerAdapter {
         public WidgetPagerAdapter(FragmentManager fm) {
             super(fm);
