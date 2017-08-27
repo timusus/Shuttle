@@ -77,19 +77,7 @@
     <style name="ExpandedSubtitleAppearance" parent="TextAppearance.AppCompat.Headline">
         <item name="android:textColor">#fff</item>
     </style>
-
-    <style name="BetterPickers" parent="BetterPickersDialogFragment">
-        <item name="bpButtonBackground">@drawable/list_selector_light</item>
-        <item name="bpKeyboardIndicatorColor">@drawable/list_selector_light</item>
-    </style>
-
-    <style name="BetterPickersLight" parent="BetterPickersDialogFragment.Light">
-        <item name="bpButtonBackground">@drawable/list_selector_dark</item>
-        <item name="bpKeyboardIndicatorColor">@drawable/list_selector_dark</item>
-    </style>
-
-    <!-- Swipe dismiss list view animation -->
-
+    
     <style name="SeekBar" parent="android:Widget.SeekBar">
         <item name="android:progressDrawable">@drawable/scrubber_progress_horizontal_material</item>
         <item name="android:indeterminateDrawable">@drawable/scrubber_progress_horizontal_material

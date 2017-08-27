@@ -185,8 +185,6 @@ ext.libs = [
         expandableRecyclerView        : "com.bignerdranch.android:expandablerecyclerview:$versions.expandableRecyclerView",
         // Aesthetic - Theming Engine
         aesthetic                     : project(":libraries/:aesthetic"),
-        // Better pickers - https://github.com/code-troopers/android-betterpickers
-        betterPickers                 : "com.code-troopers.betterpickers:library:$versions.betterPickers",
 
         // RX
 

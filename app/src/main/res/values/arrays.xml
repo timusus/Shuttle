@@ -36,7 +36,7 @@
         <item>@string/sleep_timer_15_mins</item>
         <item>@string/sleep_timer_30_mins</item>
         <item>@string/sleep_timer_1_hour</item>
-        <item>@string/sleep_timer_set_time</item>
+        <item>@string/sleep_timer_set_minutes</item>
     </string-array>
 
 </resources>

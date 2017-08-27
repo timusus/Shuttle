@@ -124,7 +124,7 @@ public class MainController extends BaseNavigationController implements BackPres
                             UnsafeAction showToast = () -> Toast.makeText(getContext(), R.string.sleep_timer_started, Toast.LENGTH_SHORT).show();
                             SleepTimer.getInstance().getDialog(
                                     getContext(),
-                                    () -> SleepTimer.getInstance().showHmsPicker(getContext(), getFragmentManager(), showToast),
+                                    () -> SleepTimer.getInstance().showMinutesDialog(getContext(), showToast),
                                     showToast
                             ).show();
                             break;

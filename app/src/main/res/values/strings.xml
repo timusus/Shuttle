@@ -592,8 +592,8 @@
     <string name="sleep_timer_stop_title">Stop sleep timer?</string>
     <!-- Toast when sleep timer is set -->
     <string name="sleep_timer_started">Sleep timer started</string>
-    <!-- Sleep timer "Set time..." -->
-    <string name="sleep_timer_set_time">Set time…</string>
+    <!-- Sleep timer "Set minutes..." -->
+    <string name="sleep_timer_set_minutes">Set minutes…</string>
     <!-- Sleep timer "5 minutes" -->
     <string name="sleep_timer_5_mins">5 minutes</string>
     <!-- Sleep timer "15 minutes" -->

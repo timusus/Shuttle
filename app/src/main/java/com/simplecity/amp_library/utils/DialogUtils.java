@@ -87,7 +87,7 @@ public class DialogUtils {
                 .title(R.string.week_selector)
                 .customView(view, false)
                 .negativeText(R.string.cancel)
-                .positiveText(R.string.picker_set)
+                .positiveText(R.string.button_ok)
                 .onPositive((materialDialog, dialogAction) -> {
                     int numweeks;
                     numweeks = numberPicker.getValue();
