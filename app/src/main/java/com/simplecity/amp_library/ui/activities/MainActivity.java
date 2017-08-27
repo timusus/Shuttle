@@ -226,11 +226,12 @@ public class MainActivity extends BaseCastActivity implements
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (IabManager.getInstance().iabHelper == null) return;
-
-        if (!IabManager.getInstance().iabHelper.handleActivityResult(requestCode, resultCode, data)) {
-            super.onActivityResult(requestCode, resultCode, data);
+        if (IabManager.getInstance().iabHelper != null
+                && IabManager.getInstance().iabHelper.handleActivityResult(requestCode, resultCode, data)) {
+            return;
         }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
