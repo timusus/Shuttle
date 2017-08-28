@@ -24,6 +24,7 @@ import com.simplecity.amp_library.ui.detail.PlaylistDetailFragment;
 import com.simplecity.amp_library.ui.drawer.DrawerLockController;
 import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
 import com.simplecity.amp_library.ui.drawer.DrawerProvider;
+import com.simplecity.amp_library.ui.drawer.MiniPlayerLockManager;
 import com.simplecity.amp_library.ui.drawer.NavigationEventRelay;
 import com.simplecity.amp_library.ui.settings.SettingsParentFragment;
 import com.simplecity.amp_library.ui.views.UpNextView;
@@ -194,7 +195,7 @@ public class MainController extends BaseNavigationController implements BackPres
     private void toggleBottomSheetVisibility(boolean collapse, boolean animate) {
         if (MusicUtils.getQueue().isEmpty()) {
             multiSheetView.hide(collapse, false);
-        } else {
+        } else if (MiniPlayerLockManager.getInstance().canShowMiniPlayer()) {
             multiSheetView.unhide(animate);
         }
     }

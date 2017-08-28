@@ -33,6 +33,7 @@ import com.simplecity.amp_library.constants.OpenSLESConstants;
 import com.simplecity.amp_library.services.EqualizerService;
 import com.simplecity.amp_library.ui.adapters.RobotoSpinnerAdapter;
 import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
+import com.simplecity.amp_library.ui.drawer.MiniPlayerLockManager;
 import com.simplecity.amp_library.ui.views.SizableSeekBar;
 import com.simplecity.amp_library.utils.MusicUtils;
 
@@ -48,7 +49,8 @@ import butterknife.Unbinder;
 public class EqualizerFragment extends BaseFragment implements
         Toolbar.OnMenuItemClickListener,
         CompoundButton.OnCheckedChangeListener,
-        DrawerLockManager.DrawerLock {
+        DrawerLockManager.DrawerLock,
+        MiniPlayerLockManager.MiniPlayerLock {
 
     private static final String TAG = "EqualizerFragment";
 
@@ -422,6 +424,7 @@ public class EqualizerFragment extends BaseFragment implements
         super.onResume();
 
         DrawerLockManager.getInstance().addDrawerLock(this);
+        MiniPlayerLockManager.getInstance().addMiniPlayerLock(this);
 
         if (serviceConnection == null) {
             serviceConnection = new ServiceConnection() {
@@ -449,6 +452,7 @@ public class EqualizerFragment extends BaseFragment implements
         getActivity().unbindService(serviceConnection);
 
         DrawerLockManager.getInstance().removeDrawerLock(this);
+        MiniPlayerLockManager.getInstance().removeMiniPlayerLock(this);
 
         super.onPause();
     }
