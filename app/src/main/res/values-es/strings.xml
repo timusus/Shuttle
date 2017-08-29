@@ -239,6 +239,10 @@
     <string name="pref_title_theme_dark">Oscuro</string>
     <string name="pref_title_theme_light">Claro</string>
     <string name="pref_title_theme_black">Negro</string>
+    <string name="pref_group_palette">Paleta</string>
+    <string name="pref_title_palette">Usar colores del álbum</string>
+    <string name="pref_summary_palette">Si se activa, Shuttle detectará el color más prominente en el álbum y usará este color como el \"color primario\" en la aplicación</string>
+    <string name="pref_title_palette_now_playing">Sólo en la pantalla de \"Escuchando ahora\"</string>
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">Lista Negra/Lista Blanca</string>
     <!--Settings title for viewing blacklist-->
@@ -345,6 +349,7 @@
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <string name="pref_summary_simple_download">Descargar Simple Last.FM scrobbler desde Google Play Store</string>
     <!-- Settings title for the About heading -->
+    <string name="pref_title_changelog">Lista de cambios</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Soporte</string>
     <string name="pref_title_version">"Versión "</string>
@@ -531,8 +536,7 @@
     <string name="sleep_timer_stop_title">¿Detener el temporizador?</string>
     <!-- Toast when sleep timer is set -->
     <string name="sleep_timer_started">Temporizador iniciado</string>
-    <!-- Sleep timer "Set time..." -->
-    <string name="sleep_timer_set_time">Establecer tiempo</string>
+    <!-- Sleep timer "Set minutes..." -->
     <!-- Sleep timer "5 minutes" -->
     <string name="sleep_timer_5_mins">5 minutos</string>
     <!-- Sleep timer "15 minutes" -->
@@ -753,6 +757,8 @@
     <string name="pref_title_about">Lista de cambios</string>
     <!-- Sleep timer "set" -->
     <string name="sleep_timer_set">Establecer</string>
+    <!-- Sleep timer "Set time..." -->
+    <string name="sleep_timer_set_time">Establecer tiempo</string>
     <!-- Default name of artist that doesn't have a name in the metadata -->
     <string name="unknown_artist_name">Artista desconocido</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->

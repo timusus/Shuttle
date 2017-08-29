@@ -553,8 +553,7 @@ Po wyłączeniu, jako obraz zastępczy będzie używana ikona programu.</string>
     <string name="sleep_timer_stop_button">Zatrzymaj</string>
     <!-- Sleep timer stop message "Stop sleep timer?" -->
     <!-- Toast when sleep timer is set -->
-    <!-- Sleep timer "Set time..." -->
-    <string name="sleep_timer_set_time">Ustal czas…</string>
+    <!-- Sleep timer "Set minutes..." -->
     <!-- Sleep timer "5 minutes" -->
     <string name="sleep_timer_5_mins">5 minut</string>
     <!-- Sleep timer "15 minutes" -->
@@ -782,6 +781,8 @@ Po wyłączeniu, jako obraz zastępczy będzie używana ikona programu.</string>
     <string name="pref_title_about">Lista zmian</string>
     <!-- Sleep timer "set" -->
     <string name="sleep_timer_set">Ustal</string>
+    <!-- Sleep timer "Set time..." -->
+    <string name="sleep_timer_set_time">Ustal czas…</string>
     <!-- Default name of artist that doesn't have a name in the metadata -->
     <string name="unknown_artist_name">Nieznany wykonawca</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->

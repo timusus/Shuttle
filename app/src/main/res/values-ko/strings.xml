@@ -133,7 +133,7 @@
     <!-- -->
     <string name="delete_file_confirmation_dialog">정말 \"<xliff:g id="file">%s</xliff:g>\"을(를) 영구적으로 삭제하시겠습니까?</string>
     <!-- Displayed when user presses 'delete artwork' -->
-    <string name="delete_artwork_confirmation_dialog">정말 기기에 있는 모든 앨범 사진들을 삭제하시겠습니까?</string>
+    <string name="delete_artwork_confirmation_dialog">정말 기기에 있는 모든 앨범아트들을 삭제하시겠습니까?</string>
     <!--"Set Ringtone" title -->
     <string name="dialog_title_set_ringtone">벨소리 설정</string>
     <!-- "Set Ringtone" message -->
@@ -249,6 +249,10 @@
     <string name="pref_title_theme_dark">어두운 테마</string>
     <string name="pref_title_theme_light">밝은 테마</string>
     <string name="pref_title_theme_black">검정 테마</string>
+    <string name="pref_group_palette">팔레트</string>
+    <string name="pref_title_palette">앨범아트의 색상 사용</string>
+    <string name="pref_summary_palette">활성화하면 Shuttle에서 가장 두드러진 색상을 찾아, 앱의 \'주 색상\'으로 사용합니다.</string>
+    <string name="pref_title_palette_now_playing">\'지금 재생 중\' 화면에서만</string>
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">화이트리스트/블랙리스트</string>
     <!--Settings title for viewing blacklist-->
@@ -355,6 +359,7 @@
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <string name="pref_summary_simple_download">Google Play 스토어에서 Simple Last.FM Scrobbler를 다운로드합니다</string>
     <!-- Settings title for the About heading -->
+    <string name="pref_title_changelog">변경 사항</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">지원</string>
     <string name="pref_title_version">버전</string>
@@ -539,8 +544,8 @@
     <string name="sleep_timer_stop_title">수면 타이머를 정지하겠습니까?</string>
     <!-- Toast when sleep timer is set -->
     <string name="sleep_timer_started">수면 타이머 시작됨</string>
-    <!-- Sleep timer "Set time..." -->
-    <string name="sleep_timer_set_time">시간 설정...</string>
+    <!-- Sleep timer "Set minutes..." -->
+    <string name="sleep_timer_set_minutes">분 단위 설정...</string>
     <!-- Sleep timer "5 minutes" -->
     <string name="sleep_timer_5_mins">5 분</string>
     <!-- Sleep timer "15 minutes" -->
@@ -756,6 +761,8 @@
     <string name="pref_title_about">변경 사항</string>
     <!-- Sleep timer "set" -->
     <string name="sleep_timer_set">설정</string>
+    <!-- Sleep timer "Set time..." -->
+    <string name="sleep_timer_set_time">시간 설정...</string>
     <!-- Default name of artist that doesn't have a name in the metadata -->
     <string name="unknown_artist_name">알 수 없는 아티스트</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->

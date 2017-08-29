@@ -251,6 +251,10 @@ abesti ilarara gehituak.</item>
     <string name="pref_title_theme_dark">Iluna</string>
     <string name="pref_title_theme_light">Argia</string>
     <string name="pref_title_theme_black">Beltza</string>
+    <string name="pref_group_palette">Paleta</string>
+    <string name="pref_title_palette">Karatularen koloreak erabili</string>
+    <string name="pref_summary_palette">Aukeratzen bada, Shuttle-ek karatularen kolorea hartuko du, eta interfazearen kolorea aldatuko du karatulara egokitzeko app osoan</string>
+    <string name="pref_title_palette_now_playing">\'Orain Erreproduzitzen\' pantailan bakarrik</string>
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">Zerrenda zuria/beltza</string>
     <!--Settings title for viewing blacklist-->
@@ -357,6 +361,7 @@ Desaktibatzen bada, Shuttle-en ikonoa erabiliko da bere ordez</string>
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <string name="pref_summary_simple_download">Simple Last.FM scrobbler-a deskargatu Google Play Storetik</string>
     <!-- Settings title for the About heading -->
+    <string name="pref_title_changelog">Aldaketa log-a</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Laguntza</string>
     <string name="pref_title_version">Bertsioa</string>
@@ -542,8 +547,8 @@ karpeta</item>
     <string name="sleep_timer_stop_title">Atsedeneko tenporizadorea gelditu?</string>
     <!-- Toast when sleep timer is set -->
     <string name="sleep_timer_started">Atsedeneko tenporizadorea hasieratua</string>
-    <!-- Sleep timer "Set time..." -->
-    <string name="sleep_timer_set_time">Ezarri denbora...</string>
+    <!-- Sleep timer "Set minutes..." -->
+    <string name="sleep_timer_set_minutes">Ezarri minutuak...</string>
     <!-- Sleep timer "5 minutes" -->
     <string name="sleep_timer_5_mins">5 minutu</string>
     <!-- Sleep timer "15 minutes" -->
@@ -615,7 +620,7 @@ karpeta</item>
     <!-- Default value if album year unknown -->
     <string name="unknown_year">Urte ezezaguna</string>
     <!-- Song info overflow option-->
-    <string name="song_info">Abesti info.</string>
+    <string name="song_info">Abestiaren info</string>
     <!-- Artwork Download Service Label-->
     <string name="download_service">Deskarga zerbitzua</string>
     <!-- Accessibility button description -->
@@ -763,6 +768,8 @@ karpeta</item>
     <string name="pref_title_about">Aldaketak</string>
     <!-- Sleep timer "set" -->
     <string name="sleep_timer_set">Ezarri</string>
+    <!-- Sleep timer "Set time..." -->
+    <string name="sleep_timer_set_time">Ezarri denbora...</string>
     <!-- Default name of artist that doesn't have a name in the metadata -->
     <string name="unknown_artist_name">Artista ezezaguna</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->

@@ -562,8 +562,8 @@
     <string name="sleep_timer_stop_title">Остановить таймер сна?</string>
     <!-- Toast when sleep timer is set -->
     <string name="sleep_timer_started">Таймер сна запущен</string>
-    <!-- Sleep timer "Set time..." -->
-    <string name="sleep_timer_set_time">Установить время...</string>
+    <!-- Sleep timer "Set minutes..." -->
+    <string name="sleep_timer_set_minutes">Установить минуты...</string>
     <!-- Sleep timer "5 minutes" -->
     <string name="sleep_timer_5_mins">5 минут</string>
     <!-- Sleep timer "15 minutes" -->
@@ -785,6 +785,8 @@
     <string name="pref_title_about">Список изменений</string>
     <!-- Sleep timer "set" -->
     <string name="sleep_timer_set">Установить</string>
+    <!-- Sleep timer "Set time..." -->
+    <string name="sleep_timer_set_time">Установить время...</string>
     <!-- Default name of artist that doesn't have a name in the metadata -->
     <string name="unknown_artist_name">Неизвестный исполнитель</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->

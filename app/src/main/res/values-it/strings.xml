@@ -92,7 +92,7 @@
     <string name="upgraded_message">Hai effettuato con successo l\'upgrade a Shuttle+. Ti ringrazio per il supporto.\n\nPer favore riavvia l\'app per attivare tutte le caratteristiche.</string>
     <string name="upgrade_dialog_message">Effettuando l\'upgrade verranno sbloccate alcune caratteristiche addizionali, tra le quali:
 \n\n\&#8226;-Numerosi temi aggiuntivi
-\n\&#8226;-Editor dei tag (supporto limitato su Android 4.4 KitKat)
+\n\&#8226;-Editor dei tag
 \n\&#8226;-Navigazione a cartelle
 \n\&#8226;-Supporto a ChromeCast
 \n\nPermette inoltre di promuovere il futuro sviluppo dell\'applicazione. \n\n Non è necessario effettuare l\'upgrade se hai già acquistato Shuttle+.</string>
@@ -362,7 +362,7 @@
     <string name="pref_summary_simple_download">"Scarica Simple Last.FM Scrobbler dal Google Play Store
 	"</string>
     <!-- Settings title for the About heading -->
-    <string name="pref_title_changelog">Note di versione</string>
+    <string name="pref_title_changelog">Note di rilascio</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Supporto</string>
     <string name="pref_title_version">Versione</string>
@@ -441,10 +441,8 @@
     <!-- Label in folder view - number of folders within the current folder -->
     <string name="onefolder">1 cartella</string>
     <plurals name="Nfolders">
-        <item quantity="other">" <xliff:g id="count">%d</xliff:g>
-cartelle "</item>
-        <item quantity="one">" <xliff:g id="count">%d</xliff:g>
-cartelle "</item>
+        <item quantity="other">" <xliff:g id="count">%d</xliff:g> cartelle "</item>
+        <item quantity="one">" <xliff:g id="count">%d</xliff:g> cartelle "</item>
     </plurals>
     <!-- -->
     <string name="parent_folder">Cartella genitore</string>
@@ -549,8 +547,8 @@ cartelle "</item>
     <string name="sleep_timer_stop_title">Fermare lo spegnimento automatico?</string>
     <!-- Toast when sleep timer is set -->
     <string name="sleep_timer_started">Spegnimento automatico avviato</string>
-    <!-- Sleep timer "Set time..." -->
-    <string name="sleep_timer_set_time">Imposta tempo...</string>
+    <!-- Sleep timer "Set minutes..." -->
+    <string name="sleep_timer_set_minutes">Imposta i minuti</string>
     <!-- Sleep timer "5 minutes" -->
     <string name="sleep_timer_5_mins">5 minuti</string>
     <!-- Sleep timer "15 minutes" -->
@@ -717,7 +715,7 @@ cartelle "</item>
     <!-- Button for lyrics -->
     <string name="lyrics">Testi</string>
     <!-- Shown when there are no lyrics -->
-    <string name="no_lyrics">Nessun testo incorporato</string>
+    <string name="no_lyrics">Nessun testo incorporato.</string>
     <!-- QuickLyric info dialog message-->
     <string name="quicklyric_info">QuickLyric è un\'app open-source per trovare testi presente sul Play Store,\nUna volta installata, QuickLyric verrà aperta da Shuttle ogni qualvolta si tocca il pulsante \"QuickLyric\" sul menu.</string>
     <!-- "Playlist" Shortcut label. Max 10 characters.-->
@@ -743,7 +741,7 @@ cartelle "</item>
     <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
     <string name="dialog_custom">Personale</string>
     <!-- Context menu item -->
-    <string name="add_to_playlist">Aggiungi a playlist</string>
+    <string name="add_to_playlist">Playlist</string>
     <!-- Context menu item to remove the selected item from the playlist -->
     <string name="remove_from_playlist">Rimuovi da playlist</string>
     <!-- -->
@@ -770,6 +768,8 @@ cartelle "</item>
     <string name="pref_title_about">Note di versione</string>
     <!-- Sleep timer "set" -->
     <string name="sleep_timer_set">Imposta</string>
+    <!-- Sleep timer "Set time..." -->
+    <string name="sleep_timer_set_time">Imposta tempo...</string>
     <!-- Default name of artist that doesn't have a name in the metadata -->
     <string name="unknown_artist_name">Artista sconosciuto</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->

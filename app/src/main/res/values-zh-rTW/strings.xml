@@ -538,8 +538,7 @@
     <string name="sleep_timer_stop_title">停止休眠計時？</string>
     <!-- Toast when sleep timer is set -->
     <string name="sleep_timer_started">休眠計時已啟動</string>
-    <!-- Sleep timer "Set time..." -->
-    <string name="sleep_timer_set_time">設定時間…</string>
+    <!-- Sleep timer "Set minutes..." -->
     <!-- Sleep timer "5 minutes" -->
     <string name="sleep_timer_5_mins">5 分鐘</string>
     <!-- Sleep timer "15 minutes" -->
@@ -755,6 +754,8 @@
     <string name="pref_title_about">更新紀錄</string>
     <!-- Sleep timer "set" -->
     <string name="sleep_timer_set">設定</string>
+    <!-- Sleep timer "Set time..." -->
+    <string name="sleep_timer_set_time">設定時間…</string>
     <!-- Default name of artist that doesn't have a name in the metadata -->
     <string name="unknown_artist_name">未知的演出者</string>
     <!-- Default name of album artist that doesn't have a name in the metadata -->
