@@ -102,6 +102,8 @@ public class LibraryController extends BaseFragment implements
 
     private boolean refreshPagerAdapter = false;
 
+    private PagerAdapter pagerAdapter;
+
     public static FragmentInfo fragmentInfo() {
         return new FragmentInfo(LibraryController.class, null, "LibraryController");
     }
@@ -130,6 +132,18 @@ public class LibraryController extends BaseFragment implements
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         setupViewPager();
+
+        Aesthetic.get(getContext())
+                .colorPrimary()
+                .take(1)
+                .subscribe(color -> ViewBackgroundAction.create(appBarLayout)
+                        .accept(color), onErrorLogAndRethrow());
+
+        compositeDisposable.add(Aesthetic.get(getContext())
+                .colorPrimary()
+                .compose(distinctToMainThread())
+                .subscribe(color -> ViewBackgroundAction.create(appBarLayout)
+                        .accept(color), onErrorLogAndRethrow()));
 
         return rootView;
     }
@@ -189,31 +203,35 @@ public class LibraryController extends BaseFragment implements
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         CategoryItem.getCategoryItems(sharedPreferences);
 
-        PagerAdapter adapter = new PagerAdapter(getChildFragmentManager());
-
-        if (refreshPagerAdapter) {
-            adapter.removeAllFragments();
-            refreshPagerAdapter = false;
-        }
-
-        List<CategoryItem> categoryItems = Stream.of(CategoryItem.getCategoryItems(sharedPreferences))
-                .filter(categoryItem -> categoryItem.isEnabled)
-                .toList();
-
-        int defaultPageType = SettingsManager.getInstance().getDefaultPageType();
-        int defaultPage = 1;
-        for (int i = 0; i < categoryItems.size(); i++) {
-            CategoryItem categoryItem = categoryItems.get(i);
-            adapter.addFragment(categoryItem.getFragment(getContext()));
-            if (categoryItem.type == defaultPageType) {
-                defaultPage = i;
+        if (pagerAdapter != null) {
+            if (refreshPagerAdapter) {
+                pagerAdapter.removeAllChildFragments();
+                refreshPagerAdapter = false;
+                pagerAdapter = null;
             }
         }
 
-        int currentPage = Math.min(defaultPage, adapter.getCount());
+        int defaultPage = 1;
 
-        pager.setAdapter(adapter);
-        pager.setOffscreenPageLimit(adapter.getCount() - 1);
+        if (pagerAdapter == null) {
+            pagerAdapter = new PagerAdapter(getChildFragmentManager());
+            List<CategoryItem> categoryItems = Stream.of(CategoryItem.getCategoryItems(sharedPreferences))
+                    .filter(categoryItem -> categoryItem.isEnabled)
+                    .toList();
+
+            int defaultPageType = SettingsManager.getInstance().getDefaultPageType();
+            for (int i = 0; i < categoryItems.size(); i++) {
+                CategoryItem categoryItem = categoryItems.get(i);
+                pagerAdapter.addFragment(categoryItem.getFragment(getContext()));
+                if (categoryItem.type == defaultPageType) {
+                    defaultPage = i;
+                }
+            }
+        }
+
+        int currentPage = Math.min(defaultPage, pagerAdapter.getCount());
+        pager.setAdapter(pagerAdapter);
+        pager.setOffscreenPageLimit(pagerAdapter.getCount() - 1);
         pager.setCurrentItem(currentPage);
 
         slidingTabLayout.setupWithViewPager(pager);
@@ -223,18 +241,6 @@ public class LibraryController extends BaseFragment implements
                 DialogUtils.showRateSnackbar(getActivity(), pager);
             }
         }, 1000);
-
-        Aesthetic.get(getContext())
-                .colorPrimary()
-                .take(1)
-                .subscribe(color -> ViewBackgroundAction.create(appBarLayout)
-                        .accept(color), onErrorLogAndRethrow());
-
-        compositeDisposable.add(Aesthetic.get(getContext())
-                .colorPrimary()
-                .compose(distinctToMainThread())
-                .subscribe(color -> ViewBackgroundAction.create(appBarLayout)
-                        .accept(color), onErrorLogAndRethrow()));
     }
 
     private void openSearch() {

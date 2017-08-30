@@ -4,11 +4,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.util.SparseArray;
+import android.view.ViewGroup;
 
-import com.annimon.stream.Stream;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.annimon.stream.IntStream;
 
 public class PagerAdapter extends FragmentPagerAdapter {
 
@@ -16,16 +15,8 @@ public class PagerAdapter extends FragmentPagerAdapter {
 
     private FragmentManager fragmentManager;
 
-    /**
-     * The data used in this {@link FragmentPagerAdapter}
-     */
-    private final List<Fragment> fragments = new ArrayList<>();
+    private SparseArray<Fragment> fragmentMap = new SparseArray<>();
 
-    /**
-     * Constructor for <code>PagerAdapter</code>
-     *
-     * @param fragmentManager The {@link FragmentManager} to use
-     */
     public PagerAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
         this.fragmentManager = fragmentManager;
@@ -33,15 +24,19 @@ public class PagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        if (fragments.size() == 0) {
-            return null;
-        }
-        return fragments.get(position);
+        return fragmentMap.get(position);
+    }
+
+    @Override
+    public Object instantiateItem(ViewGroup container, int position) {
+        Fragment fragment = (Fragment) super.instantiateItem(container, position);
+        fragmentMap.put(position, fragment);
+        return fragment;
     }
 
     @Override
     public int getCount() {
-        return fragments.size();
+        return fragmentMap.size();
     }
 
     @Override
@@ -49,30 +44,20 @@ public class PagerAdapter extends FragmentPagerAdapter {
         return getItem(position).getArguments().getString(ARG_PAGE_TITLE);
     }
 
-    /**
-     * Builds the data for this {@link FragmentPagerAdapter}
-     *
-     * @param data The data to add to this {@link FragmentPagerAdapter}
-     */
-    public void addFragment(Fragment data) {
-        fragments.add(data);
+    public void addFragment(Fragment fragment) {
+        fragmentMap.put(fragmentMap.size(), fragment);
         notifyDataSetChanged();
     }
 
-    /**
-     * Clears the data in this {@link FragmentPagerAdapter}
-     */
     public void clear() {
-        fragments.clear();
+        fragmentMap.clear();
+
         notifyDataSetChanged();
     }
 
-    /**
-     * Remove all child fragments from the fragment manager
-     */
-    public void removeAllFragments() {
+    public void removeAllChildFragments() {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        Stream.of(fragmentManager.getFragments()).forEach(fragmentTransaction::remove);
+        IntStream.range(0, fragmentMap.size()).forEach(value -> fragmentTransaction.remove(fragmentMap.get(value)));
         fragmentTransaction.commitAllowingStateLoss();
 
         clear();
