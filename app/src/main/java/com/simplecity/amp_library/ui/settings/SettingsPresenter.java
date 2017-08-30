@@ -1,13 +1,5 @@
 package com.simplecity.amp_library.ui.settings;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
-import android.preference.PreferenceManager;
-import android.support.v4.content.IntentCompat;
-
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
@@ -28,6 +20,15 @@ import com.simplecity.amp_library.ui.presenters.Presenter;
 import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
+
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.IntentCompat;
 
 import java.util.List;
 
@@ -248,7 +249,7 @@ public class SettingsPresenter extends Presenter<SettingsView> {
             int storedColor = SettingsManager.getInstance().getPrimaryColor();
 
             Aesthetic.get(context)
-                    .colorPrimary(storedColor == -1 ? context.getResources().getColor(R.color.blue_500) : storedColor)
+                    .colorPrimary(storedColor == -1 ? ContextCompat.getColor(context, R.color.blue_500) : storedColor)
                     .colorStatusBarAuto()
                     .colorNavigationBarAuto(SettingsManager.getInstance().getTintNavBar())
                     .apply();
@@ -261,7 +262,7 @@ public class SettingsPresenter extends Presenter<SettingsView> {
             int storedColor = SettingsManager.getInstance().getPrimaryColor();
 
             Aesthetic.get(context)
-                    .colorPrimary(storedColor == -1 ? context.getResources().getColor(R.color.blue_500) : storedColor)
+                    .colorPrimary(storedColor == -1 ? ContextCompat.getColor(context, R.color.blue_500) : storedColor)
                     .colorStatusBarAuto()
                     .colorNavigationBarAuto(SettingsManager.getInstance().getTintNavBar())
                     .apply();

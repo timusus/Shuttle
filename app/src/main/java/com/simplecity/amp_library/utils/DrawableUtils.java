@@ -39,7 +39,7 @@ public class DrawableUtils {
      */
     public static Bitmap getBlackBitmap(Context context, int baseDrawableResId) {
         Drawable baseDrawable = ContextCompat.getDrawable(context, baseDrawableResId).getConstantState().newDrawable();
-        ColorFilter colorFilter = new LightingColorFilter(context.getResources().getColor(R.color.black), 0);
+        ColorFilter colorFilter = new LightingColorFilter(ContextCompat.getColor(context, R.color.black), 0);
         baseDrawable.mutate().setColorFilter(colorFilter);
 
         Bitmap bitmap = Bitmap.createBitmap(baseDrawable.getIntrinsicWidth(), baseDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
