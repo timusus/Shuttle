@@ -210,6 +210,8 @@ public class SettingsPresenter extends Presenter<SettingsView> {
                 .colorPrimary(color)
                 .colorStatusBarAuto()
                 .apply();
+
+        SettingsManager.getInstance().storePrimaryColor(color);
     }
 
     public void accentColorClicked(Context context) {
@@ -230,6 +232,8 @@ public class SettingsPresenter extends Presenter<SettingsView> {
         Aesthetic.get(context)
                 .colorAccent(color)
                 .apply();
+
+        SettingsManager.getInstance().storeAccentColor(color);
     }
 
     public void tintNavBarClicked(Context context, boolean tintNavBar) {
@@ -241,8 +245,10 @@ public class SettingsPresenter extends Presenter<SettingsView> {
     public void usePaletteClicked(Context context, boolean usePalette) {
         // If we're not using palette any more, set the primary color back to default
         if (!usePalette) {
+            int storedColor = SettingsManager.getInstance().getPrimaryColor();
+
             Aesthetic.get(context)
-                    .colorPrimaryRes(R.color.blue_500)
+                    .colorPrimary(storedColor == -1 ? context.getResources().getColor(R.color.blue_500) : storedColor)
                     .colorStatusBarAuto()
                     .colorNavigationBarAuto(SettingsManager.getInstance().getTintNavBar())
                     .apply();
@@ -252,8 +258,10 @@ public class SettingsPresenter extends Presenter<SettingsView> {
     public void usePaletteNowPlayingOnlyClicked(Context context, boolean usePaletteNowPlayingOnly) {
         // If we're only using palette for 'now playing', set the primary color back to default
         if (usePaletteNowPlayingOnly) {
+            int storedColor = SettingsManager.getInstance().getPrimaryColor();
+
             Aesthetic.get(context)
-                    .colorPrimaryRes(R.color.blue_500)
+                    .colorPrimary(storedColor == -1 ? context.getResources().getColor(R.color.blue_500) : storedColor)
                     .colorStatusBarAuto()
                     .colorNavigationBarAuto(SettingsManager.getInstance().getTintNavBar())
                     .apply();

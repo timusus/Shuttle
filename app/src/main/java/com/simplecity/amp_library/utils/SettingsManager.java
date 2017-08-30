@@ -322,6 +322,22 @@ public class SettingsManager {
         return getBool(KEY_PREF_NAV_BAR, false);
     }
 
+    public void storePrimaryColor(int color) {
+        setInt(KEY_PREF_PRIMARY_COLOR, color);
+    }
+
+    public int getPrimaryColor() {
+        return getInt(KEY_PREF_PRIMARY_COLOR, -1);
+    }
+
+    public void storeAccentColor(int color) {
+        setInt(KEY_PREF_ACCENT_COLOR, color);
+    }
+
+    public int getAccentColor() {
+        return getInt(KEY_PREF_ACCENT_COLOR, -1);
+    }
+
     // Artwork
 
     public static final String KEY_PREFER_LAST_FM = "pref_prefer_lastfm";
