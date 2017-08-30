@@ -15,7 +15,7 @@ public class PagerAdapter extends FragmentPagerAdapter {
     /**
      * The data used in this {@link FragmentPagerAdapter}
      */
-    private final List<Fragment> mFragments = new ArrayList<>();
+    private final List<Fragment> fragments = new ArrayList<>();
 
     /**
      * Constructor for <code>PagerAdapter</code>
@@ -42,15 +42,15 @@ public class PagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        if (mFragments.size() == 0) {
+        if (fragments.size() == 0) {
             return null;
         }
-        return mFragments.get(position);
+        return fragments.get(position);
     }
 
     @Override
     public int getCount() {
-        return mFragments.size();
+        return fragments.size();
     }
 
     @Override
@@ -64,7 +64,7 @@ public class PagerAdapter extends FragmentPagerAdapter {
      * @param data The data to add to this {@link FragmentPagerAdapter}
      */
     public void addFragment(Fragment data) {
-        mFragments.add(data);
+        fragments.add(data);
         notifyDataSetChanged();
     }
 
@@ -72,7 +72,7 @@ public class PagerAdapter extends FragmentPagerAdapter {
      * Clears the data in this {@link FragmentPagerAdapter}
      */
     public void clear() {
-        mFragments.clear();
+        fragments.clear();
         notifyDataSetChanged();
     }
 }
