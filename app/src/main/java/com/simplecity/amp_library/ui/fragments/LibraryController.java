@@ -58,6 +58,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import test.com.androidnavigation.fragment.FragmentInfo;
 
 import static com.afollestad.aesthetic.Rx.distinctToMainThread;
@@ -95,6 +96,8 @@ public class LibraryController extends BaseFragment implements
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
+    private Disposable tabChangedDisposable;
+
     private Unbinder unbinder;
 
     private boolean refreshPager = false;
@@ -113,6 +116,8 @@ public class LibraryController extends BaseFragment implements
         ShuttleApplication.getInstance().getAppComponent().inject(this);
 
         setHasOptionsMenu(true);
+
+        tabChangedDisposable = RxBroadcast.fromLocalBroadcast(getContext(), new IntentFilter(EVENT_TABS_CHANGED)).subscribe(onNext -> refreshPager = true);
     }
 
     @Nullable
@@ -123,8 +128,6 @@ public class LibraryController extends BaseFragment implements
         unbinder = ButterKnife.bind(this, rootView);
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
-        RxBroadcast.fromLocalBroadcast(getContext(), new IntentFilter(EVENT_TABS_CHANGED)).subscribe(onNext -> refreshPager = true);
 
         setupViewPager();
 
@@ -156,6 +159,12 @@ public class LibraryController extends BaseFragment implements
         compositeDisposable.clear();
         unbinder.unbind();
         super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        tabChangedDisposable.dispose();
+        super.onDestroy();
     }
 
     @Override
