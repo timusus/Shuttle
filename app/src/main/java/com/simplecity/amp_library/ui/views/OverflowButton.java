@@ -1,15 +1,16 @@
 package com.simplecity.amp_library.ui.views;
 
+import com.afollestad.aesthetic.Aesthetic;
+import com.afollestad.aesthetic.LightDarkColorState;
+import com.simplecity.amp_library.R;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
-
-import com.afollestad.aesthetic.Aesthetic;
-import com.afollestad.aesthetic.LightDarkColorState;
-import com.simplecity.amp_library.R;
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
@@ -30,7 +31,7 @@ public class OverflowButton extends NonScrollImageButton {
             dark = typedArray.getBoolean(R.styleable.OverflowButton_isDark, false);
         }
 
-        drawable = DrawableCompat.wrap(getResources().getDrawable(R.drawable.ic_overflow_20dp)).mutate();
+        drawable = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.ic_overflow_20dp)).mutate();
     }
 
     @Override

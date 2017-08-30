@@ -1,15 +1,5 @@
 package com.simplecity.amp_library.ui.modelviews;
 
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.ImageButton;
-import android.widget.TextView;
-
 import com.afollestad.aesthetic.Aesthetic;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.interfaces.FileType;
@@ -21,6 +11,17 @@ import com.simplecity.amp_library.ui.views.CircleImageView;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.StringUtils;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
+
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -217,9 +218,9 @@ public class FolderView extends BaseSelectableViewModel<FolderView.ViewHolder, B
 
             int colorPrimary = Aesthetic.get(itemView.getContext()).colorPrimary().blockingFirst();
 
-            folderDrawable = itemView.getContext().getResources().getDrawable(R.drawable.ic_folder_24dp);
-            parentFolderDrawable = itemView.getContext().getResources().getDrawable(R.drawable.ic_folder_open_24dp);
-            fileDrawable = itemView.getContext().getResources().getDrawable(R.drawable.ic_headphones_white);
+            folderDrawable = ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_folder_24dp);
+            parentFolderDrawable = ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_folder_open_24dp);
+            fileDrawable = ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_headphones_white);
 
             imageView.setColorFilter(colorPrimary);
         }
