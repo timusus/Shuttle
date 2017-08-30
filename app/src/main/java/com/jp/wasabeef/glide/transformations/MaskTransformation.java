@@ -16,6 +16,12 @@ package com.jp.wasabeef.glide.transformations;
  * limitations under the License.
  */
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.Transformation;
+import com.bumptech.glide.load.engine.Resource;
+import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+import com.bumptech.glide.load.resource.bitmap.BitmapResource;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -23,13 +29,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.Drawable;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.Transformation;
-import com.bumptech.glide.load.engine.Resource;
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.resource.bitmap.BitmapResource;
-import com.jp.wasabeef.glide.transformations.internal.Utils;
+import android.support.v4.content.ContextCompat;
 
 public class MaskTransformation implements Transformation<Bitmap> {
 
@@ -69,7 +69,7 @@ public class MaskTransformation implements Transformation<Bitmap> {
             result = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         }
 
-        Drawable mask = Utils.getMaskDrawable(mContext, mMaskId);
+        Drawable mask = ContextCompat.getDrawable(mContext, mMaskId);
 
         Canvas canvas = new Canvas(result);
         mask.setBounds(0, 0, width, height);
