@@ -5,12 +5,16 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 
+import com.annimon.stream.Stream;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class PagerAdapter extends FragmentPagerAdapter {
 
     private static final String ARG_PAGE_TITLE = "page_title";
+
+    private FragmentManager fragmentManager;
 
     /**
      * The data used in this {@link FragmentPagerAdapter}
@@ -22,22 +26,9 @@ public class PagerAdapter extends FragmentPagerAdapter {
      *
      * @param fragmentManager The {@link FragmentManager} to use
      */
-    public PagerAdapter(FragmentManager fragmentManager, boolean refreshPager) {
+    public PagerAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
-
-        /*
-		 * Removing all displayed fragments to avoid the problem when changing the displayed tabs
-         */
-        if (refreshPager) {
-            List<Fragment> childFragments = fragmentManager.getFragments();
-            if (childFragments != null && !childFragments.isEmpty()) {
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                for (Fragment childFragment : childFragments) {
-                    if (childFragment != null) fragmentTransaction.remove(childFragment);
-                }
-                fragmentTransaction.commitAllowingStateLoss();
-            }
-        }
+        this.fragmentManager = fragmentManager;
     }
 
     @Override
@@ -74,5 +65,16 @@ public class PagerAdapter extends FragmentPagerAdapter {
     public void clear() {
         fragments.clear();
         notifyDataSetChanged();
+    }
+
+    /**
+     * Remove all child fragments from the fragment manager
+     */
+    public void removeAllFragments() {
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        Stream.of(fragmentManager.getFragments()).forEach(fragmentTransaction::remove);
+        fragmentTransaction.commitAllowingStateLoss();
+
+        clear();
     }
 }

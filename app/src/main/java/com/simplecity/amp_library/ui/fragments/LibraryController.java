@@ -124,7 +124,7 @@ public class LibraryController extends BaseFragment implements
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
-        RxBroadcast.fromLocalBroadcast(getContext(), new IntentFilter(EVENT_TABS_CHANGED)).subscribe(onNext -> {refreshPager = true;});
+        RxBroadcast.fromLocalBroadcast(getContext(), new IntentFilter(EVENT_TABS_CHANGED)).subscribe(onNext -> refreshPager = true);
 
         setupViewPager();
 
@@ -180,7 +180,10 @@ public class LibraryController extends BaseFragment implements
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         CategoryItem.getCategoryItems(sharedPreferences);
 
-        PagerAdapter adapter = new PagerAdapter(getChildFragmentManager(), refreshPager);
+        PagerAdapter adapter = new PagerAdapter(getChildFragmentManager());
+        if (refreshPager) {
+            adapter.removeAllFragments();
+        }
         refreshPager = false;
 
         List<CategoryItem> categoryItems = Stream.of(CategoryItem.getCategoryItems(sharedPreferences))
