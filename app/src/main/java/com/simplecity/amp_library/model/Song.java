@@ -10,7 +10,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
+import android.widget.Toast;
 
+import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.http.HttpClient;
@@ -21,6 +23,7 @@ import com.simplecity.amp_library.sql.providers.PlayCountTable;
 import com.simplecity.amp_library.utils.ArtworkUtils;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.FileHelper;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.StringUtils;
 
 import java.io.File;
@@ -310,10 +313,19 @@ public class Song implements
     }
 
     public void share(Context context) {
-        final Intent intent = new Intent(Intent.ACTION_SEND).setType("audio/*");
-        Uri uri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", new File(path));
-        intent.putExtra(Intent.EXTRA_STREAM, uri);
-        context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_via)));
+        try {
+            final Intent intent = new Intent(Intent.ACTION_SEND).setType("audio/*");
+            Uri uri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", new File(path));
+            intent.putExtra(Intent.EXTRA_STREAM, uri);
+            context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_via)));
+        } catch (IllegalArgumentException e) {
+            LogUtils.logException(TAG, "Failed to share track", e);
+
+            // Todo: Once this issue is resolved, remove toast message.
+            if (BuildConfig.VERSION_NAME.contains("beta")) {
+                Toast.makeText(context, "Something went wrong sharing the song. Bad developer. This issue has been logged.", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     @Override
