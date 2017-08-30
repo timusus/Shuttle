@@ -100,7 +100,7 @@ public class LibraryController extends BaseFragment implements
 
     private Unbinder unbinder;
 
-    private boolean refreshPager = false;
+    private boolean refreshPagerAdapter = false;
 
     public static FragmentInfo fragmentInfo() {
         return new FragmentInfo(LibraryController.class, null, "LibraryController");
@@ -117,7 +117,7 @@ public class LibraryController extends BaseFragment implements
 
         setHasOptionsMenu(true);
 
-        tabChangedDisposable = RxBroadcast.fromLocalBroadcast(getContext(), new IntentFilter(EVENT_TABS_CHANGED)).subscribe(onNext -> refreshPager = true);
+        tabChangedDisposable = RxBroadcast.fromLocalBroadcast(getContext(), new IntentFilter(EVENT_TABS_CHANGED)).subscribe(onNext -> refreshPagerAdapter = true);
     }
 
     @Nullable
@@ -190,10 +190,11 @@ public class LibraryController extends BaseFragment implements
         CategoryItem.getCategoryItems(sharedPreferences);
 
         PagerAdapter adapter = new PagerAdapter(getChildFragmentManager());
-        if (refreshPager) {
+
+        if (refreshPagerAdapter) {
             adapter.removeAllFragments();
+            refreshPagerAdapter = false;
         }
-        refreshPager = false;
 
         List<CategoryItem> categoryItems = Stream.of(CategoryItem.getCategoryItems(sharedPreferences))
                 .filter(categoryItem -> categoryItem.isEnabled)
