@@ -437,7 +437,7 @@ public class PlayerFragment extends BaseFragment implements
         boolean isColorLight = Util.isColorLight(color);
         int textColor = isColorLight ? Color.BLACK : Color.WHITE;
 
-        if (!ShuttleUtils.isLandscape()) {
+        if (!ShuttleUtils.isLandscape() && backgroundView != null) {
             backgroundView.setBackgroundColor(color);
         }
 
