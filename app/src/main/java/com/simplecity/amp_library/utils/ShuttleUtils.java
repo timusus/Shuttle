@@ -1,5 +1,16 @@
 package com.simplecity.amp_library.utils;
 
+import com.annimon.stream.Stream;
+import com.simplecity.amp_library.BuildConfig;
+import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.constants.Config;
+import com.simplecity.amp_library.model.BaseFileObject;
+import com.simplecity.amp_library.model.Query;
+import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.sql.SqlUtils;
+import com.simplecity.amp_library.sql.providers.PlayCountTable;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -24,17 +35,6 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
-
-import com.annimon.stream.Stream;
-import com.simplecity.amp_library.BuildConfig;
-import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.ShuttleApplication;
-import com.simplecity.amp_library.constants.Config;
-import com.simplecity.amp_library.model.BaseFileObject;
-import com.simplecity.amp_library.model.Query;
-import com.simplecity.amp_library.model.Song;
-import com.simplecity.amp_library.sql.SqlUtils;
-import com.simplecity.amp_library.sql.providers.PlayCountTable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -209,6 +209,12 @@ public final class ShuttleUtils {
         } catch (Exception ignored) {
         }
 
+        //Another check if something goes wrong with first package check
+        try {
+            if (ShuttleApplication.getInstance().getPackageName().equals(Config.PACKAGE_NAME_FREE)) return false;
+        } catch (Exception ignored) {
+        }
+
         //If something goes wrong, assume the user has the pro version
         return true;
     }
@@ -260,6 +266,13 @@ public final class ShuttleUtils {
      */
     public static boolean hasNougat() {
         return Build.VERSION.SDK_INT >= 24;
+    }
+
+    /**
+     * @return true if device is running API >= 26
+     */
+    public static boolean hasOreo() {
+        return Build.VERSION.SDK_INT >= 26;
     }
 
     public static boolean isLandscape() {

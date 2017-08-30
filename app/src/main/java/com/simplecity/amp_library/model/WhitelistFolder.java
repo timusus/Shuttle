@@ -19,9 +19,7 @@ public class WhitelistFolder {
 
         WhitelistFolder that = (WhitelistFolder) o;
 
-        if (id != that.id) return false;
-        return folder != null ? folder.equals(that.folder) : that.folder == null;
-
+        return id == that.id && (folder != null ? folder.equals(that.folder) : that.folder == null);
     }
 
     @Override

@@ -21,10 +21,7 @@ public class Artist implements Serializable {
 
         Artist artist = (Artist) o;
 
-        if (id != artist.id) return false;
-        if (numAlbums != artist.numAlbums) return false;
-        if (numSongs != artist.numSongs) return false;
-        return name != null ? name.equals(artist.name) : artist.name == null;
+        return id == artist.id && numAlbums == artist.numAlbums && numSongs == artist.numSongs && (name != null ? name.equals(artist.name) : artist.name == null);
     }
 
     @Override

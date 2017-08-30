@@ -42,9 +42,7 @@ public class ArtworkModel {
 
         ArtworkModel that = (ArtworkModel) o;
 
-        if (type != that.type) return false;
-        return file != null ? file.equals(that.file) : that.file == null;
-
+        return type == that.type && (file != null ? file.equals(that.file) : that.file == null);
     }
 
     @Override

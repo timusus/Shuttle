@@ -536,7 +536,7 @@ public class IabHelper {
     /**
      * Queries the inventory. This will query all owned items from the server, as well as
      * information on additional skus, if specified. This method may block or take long to execute.
-     * Do not call from a UI thread. For that, use the non-blocking version {@link #refreshInventoryAsync}.
+     * Do not call from a UI thread. For that, use the non-blocking version {@link #queryInventoryAsync}.
      *
      * @param querySkuDetails if true, SKU details (price, description, etc) will be queried as well
      *                        as purchase information.
@@ -730,7 +730,7 @@ public class IabHelper {
     }
 
     /**
-     * Same as {@link consumeAsync}, but for multiple items at once.
+     * Same as {@link #consumeAsync}, but for multiple items at once.
      *
      * @param purchases The list of PurchaseInfo objects representing the purchases to consume.
      * @param listener  The listener to notify when the consumption operation finishes.

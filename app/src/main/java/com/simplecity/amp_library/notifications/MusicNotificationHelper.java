@@ -1,19 +1,5 @@
 package com.simplecity.amp_library.notifications;
 
-import android.app.Notification;
-import android.app.PendingIntent;
-import android.app.Service;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.os.Handler;
-import android.os.Looper;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.media.session.MediaSessionCompat;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -28,6 +14,20 @@ import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.PlaylistUtils;
+
+import android.app.Notification;
+import android.app.PendingIntent;
+import android.app.Service;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.media.session.MediaSessionCompat;
 
 import java.util.ConcurrentModificationException;
 
@@ -63,7 +63,7 @@ public class MusicNotificationHelper extends NotificationHelper {
                 .setSmallIcon(R.drawable.ic_stat_notification)
                 .setContentIntent(contentIntent)
                 .setChannelId(NOTIFICATION_CHANNEL_ID)
-                .setPriority(Notification.PRIORITY_MAX)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setContentTitle(song.name)
                 .setContentText(song.artistName + " - " + song.albumName)
                 .setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle()

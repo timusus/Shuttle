@@ -1,5 +1,15 @@
 package com.simplecity.amp_library.ui.fragments;
 
+import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.constants.OpenSLESConstants;
+import com.simplecity.amp_library.services.EqualizerService;
+import com.simplecity.amp_library.ui.adapters.RobotoSpinnerAdapter;
+import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
+import com.simplecity.amp_library.ui.drawer.MiniPlayerLockManager;
+import com.simplecity.amp_library.ui.views.SizableSeekBar;
+import com.simplecity.amp_library.utils.MusicUtils;
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.ComponentName;
@@ -26,16 +36,6 @@ import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.ShuttleApplication;
-import com.simplecity.amp_library.constants.OpenSLESConstants;
-import com.simplecity.amp_library.services.EqualizerService;
-import com.simplecity.amp_library.ui.adapters.RobotoSpinnerAdapter;
-import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
-import com.simplecity.amp_library.ui.drawer.MiniPlayerLockManager;
-import com.simplecity.amp_library.ui.views.SizableSeekBar;
-import com.simplecity.amp_library.utils.MusicUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.Formatter;
@@ -622,9 +622,7 @@ public class EqualizerFragment extends BaseFragment implements
         eqPresetNames = new String[numPresets + 1];
 
         String[] presetNames = prefs.getString("equalizer.preset_names", "").split("\\|");
-        for (short i = 0; i < numPresets; i++) {
-            eqPresetNames[i] = presetNames[i];
-        }
+        System.arraycopy(presetNames, 0, eqPresetNames, 0, numPresets + 1);
         eqPresetNames[numPresets] = getString(R.string.custom);
         eqCustomPresetPosition = numPresets;
 

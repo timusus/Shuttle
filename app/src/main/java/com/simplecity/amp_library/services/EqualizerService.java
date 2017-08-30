@@ -1,5 +1,8 @@
 package com.simplecity.amp_library.services;
 
+import com.crashlytics.android.Crashlytics;
+import com.simplecity.amp_library.utils.SettingsManager;
+
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,9 +17,6 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
-
-import com.crashlytics.android.Crashlytics;
-import com.simplecity.amp_library.utils.SettingsManager;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -246,11 +246,7 @@ public class EqualizerService extends Service {
 
         unregisterReceiver(mAudioSessionReceiver);
 
-        for (EffectSet gone : mAudioSessions.values()) {
-            if (gone != null) {
-                gone.release();
-            }
-        }
+        mAudioSessions.values().stream().filter(s -> s != null).forEach(EffectSet::release);
 
         super.onDestroy();
     }

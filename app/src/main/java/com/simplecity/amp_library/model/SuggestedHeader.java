@@ -19,11 +19,9 @@ public class SuggestedHeader {
 
         SuggestedHeader that = (SuggestedHeader) o;
 
-        if (title != null ? !title.equals(that.title) : that.title != null) return false;
-        if (subtitle != null ? !subtitle.equals(that.subtitle) : that.subtitle != null)
-            return false;
-        return playlist != null ? playlist.equals(that.playlist) : that.playlist == null;
-
+        return (title != null ? title.equals(that.title) : that.title == null) &&
+               (subtitle != null ? subtitle.equals(that.subtitle) : that.subtitle == null) &&
+               (playlist != null ? playlist.equals(that.playlist) : that.playlist == null);
     }
 
     @Override
