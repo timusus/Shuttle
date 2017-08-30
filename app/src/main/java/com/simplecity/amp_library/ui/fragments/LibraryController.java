@@ -203,12 +203,10 @@ public class LibraryController extends BaseFragment implements
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         CategoryItem.getCategoryItems(sharedPreferences);
 
-        if (pagerAdapter != null) {
-            if (refreshPagerAdapter) {
-                pagerAdapter.removeAllChildFragments();
-                refreshPagerAdapter = false;
-                pagerAdapter = null;
-            }
+        if (pagerAdapter != null && refreshPagerAdapter) {
+            pagerAdapter.removeAllChildFragments();
+            refreshPagerAdapter = false;
+            pagerAdapter = null;
         }
 
         int defaultPage = 1;
