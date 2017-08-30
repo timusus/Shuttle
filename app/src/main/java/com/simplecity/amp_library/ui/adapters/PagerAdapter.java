@@ -3,6 +3,7 @@ package com.simplecity.amp_library.ui.adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +22,22 @@ public class PagerAdapter extends FragmentPagerAdapter {
      *
      * @param fragmentManager The {@link FragmentManager} to use
      */
-    public PagerAdapter(FragmentManager fragmentManager) {
+    public PagerAdapter(FragmentManager fragmentManager, boolean refreshPager) {
         super(fragmentManager);
+
+        /*
+		 * Removing all displayed fragments to avoid the problem when changing the displayed tabs
+         */
+        if (refreshPager) {
+            List<Fragment> childFragments = fragmentManager.getFragments();
+            if (childFragments != null && !childFragments.isEmpty()) {
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                for (Fragment childFragment : childFragments) {
+                    if (childFragment != null) fragmentTransaction.remove(childFragment);
+                }
+                fragmentTransaction.commitAllowingStateLoss();
+            }
+        }
     }
 
     @Override
