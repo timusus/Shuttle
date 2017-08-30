@@ -31,6 +31,8 @@ package com.android.vending.billing.utils;
  * @version 1.3
  */
 
+import com.simplecity.amp_library.BuildConfig;
+
 /**
  * Base64 converter class. This code is not a complete MIME encoder;
  * it simply converts binary data to base64 data and back.
@@ -276,7 +278,7 @@ public class Base64 {
 
         // If doPadding is false, set length to truncate '='
         // padding characters
-        while (doPadding == false && outLen > 0) {
+        while (!doPadding && outLen > 0) {
             if (outBuff[outLen - 1] != '=') {
                 break;
             }
@@ -341,7 +343,7 @@ public class Base64 {
             e += 4;
         }
 
-        assert (e == outBuff.length);
+        if (BuildConfig.DEBUG && !(e == outBuff.length)) throw new AssertionError();
         return outBuff;
     }
 

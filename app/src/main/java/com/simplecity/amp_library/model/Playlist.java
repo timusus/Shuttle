@@ -1,12 +1,5 @@
 package com.simplecity.amp_library.model;
 
-import android.content.ContentUris;
-import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.MediaStore;
-import android.util.Pair;
-
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
@@ -18,6 +11,13 @@ import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
+
+import android.content.ContentUris;
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.util.Pair;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -274,8 +274,7 @@ public class Playlist implements Serializable {
 
         Playlist playlist = (Playlist) o;
 
-        if (id != playlist.id) return false;
-        return name != null ? name.equals(playlist.name) : playlist.name == null;
+        return id == playlist.id && (name != null ? name.equals(playlist.name) : playlist.name == null);
     }
 
     @Override

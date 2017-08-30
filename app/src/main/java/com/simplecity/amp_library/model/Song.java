@@ -1,17 +1,5 @@
 package com.simplecity.amp_library.model;
 
-import android.content.ContentUris;
-import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.FileProvider;
-import android.text.TextUtils;
-import android.widget.Toast;
-
 import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
@@ -25,6 +13,18 @@ import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.FileHelper;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.StringUtils;
+
+import android.content.ContentUris;
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
+import android.text.TextUtils;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.InputStream;
@@ -336,7 +336,6 @@ public class Song implements
         Song song = (Song) o;
 
         return id == song.id && artistId == song.artistId && albumId == song.albumId;
-
     }
 
     @Override

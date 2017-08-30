@@ -1,9 +1,5 @@
 package com.simplecity.amp_library.model;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.WorkerThread;
-
 import com.simplecity.amp_library.http.HttpClient;
 import com.simplecity.amp_library.http.itunes.ItunesResult;
 import com.simplecity.amp_library.http.lastfm.LastFmResult;
@@ -11,6 +7,10 @@ import com.simplecity.amp_library.utils.ArtworkUtils;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.StringUtils;
+
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 
 import java.io.File;
 import java.io.InputStream;
@@ -166,8 +166,7 @@ public class Album implements
 
         Album album = (Album) o;
 
-        if (id != album.id) return false;
-        return name != null ? name.equals(album.name) : album.name == null;
+        return id == album.id && (name != null ? name.equals(album.name) : album.name == null);
     }
 
     @Override

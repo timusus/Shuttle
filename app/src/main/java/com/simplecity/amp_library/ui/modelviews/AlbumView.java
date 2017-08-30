@@ -1,15 +1,15 @@
 package com.simplecity.amp_library.ui.modelviews;
 
-import android.support.annotation.Nullable;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.format.PrefixHighlighter;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.StringUtils;
+
+import android.support.annotation.Nullable;
+import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.Arrays;
 import java.util.List;
@@ -85,10 +85,7 @@ public class AlbumView extends MultiItemView<AlbumView.ViewHolder, Album> implem
     }
 
     private boolean onAlbumLongclick(int position) {
-        if (listener != null) {
-            return listener.onAlbumLongClick(position, this);
-        }
-        return false;
+        return listener != null && listener.onAlbumLongClick(position, this);
     }
 
     public void showYear(boolean showYear) {
@@ -218,8 +215,7 @@ public class AlbumView extends MultiItemView<AlbumView.ViewHolder, Album> implem
 
         AlbumView albumView = (AlbumView) o;
 
-        if (viewType != albumView.viewType) return false;
-        return album != null ? album.equals(albumView.album) : albumView.album == null;
+        return viewType == albumView.viewType && (album != null ? album.equals(albumView.album) : albumView.album == null);
 
     }
 
@@ -232,10 +228,7 @@ public class AlbumView extends MultiItemView<AlbumView.ViewHolder, Album> implem
 
     @Override
     public boolean areContentsEqual(Object other) {
-        if (other instanceof AlbumView) {
-            return album.equals(((AlbumView) other).album) && Arrays.equals(prefix, ((AlbumView) other).prefix);
-        }
-        return false;
+        return other instanceof AlbumView && album.equals(((AlbumView) other).album) && Arrays.equals(prefix, ((AlbumView) other).prefix);
     }
 
     public static class ViewHolder extends MultiItemView.ViewHolder<AlbumView> {

@@ -1,15 +1,16 @@
 package com.simplecity.amp_library.ui.views;
 
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.widget.AppCompatTextView;
-import android.util.AttributeSet;
-
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.Util;
 import com.simplecity.amp_library.R;
+
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.widget.AppCompatTextView;
+import android.util.AttributeSet;
 
 import io.reactivex.disposables.Disposable;
 
@@ -32,7 +33,7 @@ public class PlayCountView extends AppCompatTextView {
     }
 
     private void init() {
-        backgroundDrawable = DrawableCompat.wrap(getResources().getDrawable(R.drawable.bg_rounded));
+        backgroundDrawable = DrawableCompat.wrap(ContextCompat.getDrawable(getContext(), R.drawable.bg_rounded));
     }
 
     public void setCount(int count) {

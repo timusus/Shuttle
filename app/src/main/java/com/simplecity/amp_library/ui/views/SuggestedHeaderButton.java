@@ -1,16 +1,17 @@
 package com.simplecity.amp_library.ui.views;
 
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
-import android.util.AttributeSet;
-
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.ColorIsDarkState;
 import com.afollestad.aesthetic.Rx;
 import com.afollestad.aesthetic.Util;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.utils.ResourceUtils;
+
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
+import android.support.v4.content.ContextCompat;
+import android.util.AttributeSet;
 
 import io.reactivex.disposables.Disposable;
 
@@ -58,7 +59,7 @@ public class SuggestedHeaderButton extends android.support.v7.widget.AppCompatTe
                 });
 
         if (isInEditMode()) {
-            backgroundDrawable.setColor(getResources().getColor(R.color.colorAccent));
+            backgroundDrawable.setColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
         }
     }
 

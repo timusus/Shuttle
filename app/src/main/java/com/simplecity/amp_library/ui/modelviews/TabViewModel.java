@@ -1,18 +1,17 @@
 package com.simplecity.amp_library.ui.modelviews;
 
-import android.support.annotation.Nullable;
-import android.support.v4.view.MotionEventCompat;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.TextView;
-
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.CategoryItem;
 import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecityapps.recycler_adapter.model.BaseViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
+
+import android.support.annotation.Nullable;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.TextView;
 
 public class TabViewModel extends BaseViewModel<TabViewModel.ViewHolder> {
 
@@ -82,7 +81,7 @@ public class TabViewModel extends BaseViewModel<TabViewModel.ViewHolder> {
             checkBox.setOnClickListener(view -> viewModel.onCheckboxClicked(((CheckBox) view).isChecked()));
 
             dragHandle.setOnTouchListener((v, event) -> {
-                if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
+                if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
                     viewModel.onStartDrag(this);
                 }
                 return true;

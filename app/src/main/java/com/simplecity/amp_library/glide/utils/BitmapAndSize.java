@@ -19,9 +19,7 @@ public class BitmapAndSize {
 
         BitmapAndSize that = (BitmapAndSize) o;
 
-        if (bitmap != null ? !bitmap.equals(that.bitmap) : that.bitmap != null) return false;
-        return size != null ? size.equals(that.size) : that.size == null;
-
+        return bitmap != null ? bitmap.equals(that.bitmap) : that.bitmap == null && (size != null ? size.equals(that.size) : that.size == null);
     }
 
     @Override

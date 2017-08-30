@@ -26,7 +26,6 @@ public class BlacklistedSong {
         BlacklistedSong that = (BlacklistedSong) o;
 
         return id == that.id && songId == that.songId;
-
     }
 
     @Override

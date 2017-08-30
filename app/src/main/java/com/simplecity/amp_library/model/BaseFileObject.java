@@ -40,11 +40,7 @@ public class BaseFileObject implements Serializable {
 
         BaseFileObject that = (BaseFileObject) o;
 
-        if (size != that.size) return false;
-        if (fileType != that.fileType) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        return path != null ? path.equals(that.path) : that.path == null;
-
+        return size == that.size && fileType == that.fileType && (name != null ? name.equals(that.name) : that.name == null) && (path != null ? path.equals(that.path) : that.path == null);
     }
 
     @Override

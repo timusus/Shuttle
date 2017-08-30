@@ -1,20 +1,21 @@
 package com.simplecity.amp_library.ui.dialog;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.CheckBox;
-import android.widget.ProgressBar;
-
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ViewUtils;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.CheckBox;
+import android.widget.ProgressBar;
 
 public class ChangelogDialog {
 
@@ -28,7 +29,7 @@ public class ChangelogDialog {
         View customView = LayoutInflater.from(context).inflate(R.layout.dialog_changelog, null);
 
         WebView webView = customView.findViewById(R.id.webView);
-        webView.setBackgroundColor(context.getResources().getColor(android.R.color.transparent));
+        webView.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent));
 
         CheckBox checkBox = customView.findViewById(R.id.checkbox);
         checkBox.setChecked(SettingsManager.getInstance().getShowChangelogOnLaunch());

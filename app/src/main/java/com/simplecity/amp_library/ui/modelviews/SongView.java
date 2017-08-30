@@ -1,14 +1,5 @@
 package com.simplecity.amp_library.ui.modelviews;
 
-import android.support.annotation.Nullable;
-import android.support.v4.view.MotionEventCompat;
-import android.text.TextUtils;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -23,6 +14,14 @@ import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.SortManager;
 import com.simplecity.amp_library.utils.StringUtils;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
+
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.Arrays;
 import java.util.List;
@@ -131,10 +130,7 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder, Song>
     }
 
     private boolean onItemLongClick(int position) {
-        if (listener != null) {
-            return listener.onSongLongClick(position, this);
-        }
-        return false;
+        return listener != null && listener.onSongLongClick(position, this);
     }
 
     private void onStartDrag(ViewHolder holder) {
@@ -282,11 +278,7 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder, Song>
 
     @Override
     public boolean areContentsEqual(Object other) {
-        if (other instanceof SongView) {
-            return this.song.equals(((SongView) other).song)
-                    && Arrays.equals(prefix, ((SongView) other).prefix);
-        }
-        return false;
+        return other instanceof SongView && this.song.equals(((SongView) other).song) && Arrays.equals(prefix, ((SongView) other).prefix);
     }
 
     @Override
@@ -301,14 +293,14 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder, Song>
 
         SongView songView = (SongView) o;
 
-        if (editable != songView.editable) return false;
-        if (showAlbumArt != songView.showAlbumArt) return false;
-        if (showPlayCount != songView.showPlayCount) return false;
-        if (showTrackNumber != songView.showTrackNumber) return false;
-        if (showArtistName != songView.showArtistName) return false;
-        if (showAlbumName != songView.showAlbumName) return false;
-        if (isCurrentTrack != songView.isCurrentTrack) return false;
-        return song != null ? song.equals(songView.song) : songView.song == null;
+        return editable == songView.editable &&
+               showAlbumArt == songView.showAlbumArt &&
+               showPlayCount == songView.showPlayCount &&
+               showTrackNumber == songView.showTrackNumber &&
+               showArtistName == songView.showArtistName &&
+               showAlbumName == songView.showAlbumName &&
+               isCurrentTrack == songView.isCurrentTrack &&
+               (song != null ? song.equals(songView.song) : songView.song == null);
     }
 
     @Override
@@ -362,7 +354,7 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder, Song>
 
             if (dragHandle != null) {
                 dragHandle.setOnTouchListener((v, event) -> {
-                    if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
+                    if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
                         viewModel.onStartDrag(this);
                     }
                     return true;

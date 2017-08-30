@@ -1,17 +1,5 @@
 package com.simplecity.amp_library.ui.detail;
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.annimon.stream.IntStream;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
@@ -26,6 +14,18 @@ import com.simplecity.amp_library.utils.Operators;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.SortManager;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
+
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.Collections;
 import java.util.List;
@@ -91,10 +91,7 @@ public class PlaylistDetailFragment extends BaseDetailFragment {
                 }) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                if (viewHolder.getItemViewType() == target.getItemViewType()) {
-                    return super.onMove(recyclerView, viewHolder, target);
-                }
-                return false;
+                return viewHolder.getItemViewType() == target.getItemViewType() && super.onMove(recyclerView, viewHolder, target);
             }
         });
 
@@ -213,10 +210,7 @@ public class PlaylistDetailFragment extends BaseDetailFragment {
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        if (MenuUtils.handleMenuItemClicks(getContext(), item, playlist)) {
-            return true;
-        }
-        return super.onMenuItemClick(item);
+        return MenuUtils.handleMenuItemClicks(getContext(), item, playlist) || super.onMenuItemClick(item);
     }
 
     @NonNull

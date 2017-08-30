@@ -1,11 +1,5 @@
 package com.simplecity.amp_library.ui.modelviews;
 
-import android.support.annotation.Nullable;
-import android.support.v4.view.ViewCompat;
-import android.text.TextUtils;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.florent37.glidepalette.BitmapPalette;
@@ -17,6 +11,12 @@ import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.SortManager;
 import com.simplecity.amp_library.utils.StringUtils;
+
+import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
+import android.text.TextUtils;
+import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.Arrays;
 import java.util.List;
@@ -76,10 +76,7 @@ public class AlbumArtistView extends MultiItemView<AlbumArtistView.ViewHolder, A
     }
 
     private boolean onItemLongClick(int positon) {
-        if (listener != null) {
-            return listener.onAlbumArtistLongClick(positon, this);
-        }
-        return false;
+        return listener != null && listener.onAlbumArtistLongClick(positon, this);
     }
 
     @Override
@@ -183,8 +180,7 @@ public class AlbumArtistView extends MultiItemView<AlbumArtistView.ViewHolder, A
 
         AlbumArtistView that = (AlbumArtistView) o;
 
-        if (viewType != that.viewType) return false;
-        return albumArtist != null ? albumArtist.equals(that.albumArtist) : that.albumArtist == null;
+        return viewType == that.viewType && (albumArtist != null ? albumArtist.equals(that.albumArtist) : that.albumArtist == null);
     }
 
     @Override
@@ -196,10 +192,7 @@ public class AlbumArtistView extends MultiItemView<AlbumArtistView.ViewHolder, A
 
     @Override
     public boolean areContentsEqual(Object other) {
-        if (other instanceof AlbumArtistView) {
-            return albumArtist.equals(((AlbumArtistView) other).albumArtist) && Arrays.equals(prefix, ((AlbumArtistView) other).prefix);
-        }
-        return false;
+        return other instanceof AlbumArtistView && albumArtist.equals(((AlbumArtistView) other).albumArtist) && Arrays.equals(prefix, ((AlbumArtistView) other).prefix);
     }
 
     public static class ViewHolder extends MultiItemView.ViewHolder<AlbumArtistView> {

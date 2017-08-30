@@ -1,15 +1,5 @@
 package com.simplecity.amp_library.ui.fragments;
 
-import android.content.IntentFilter;
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.support.v4.widget.DrawerLayout;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.cantrowitz.rxbroadcast.RxBroadcast;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
@@ -33,6 +23,16 @@ import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.SleepTimer;
 import com.simplecity.multisheetview.ui.view.MultiSheetView;
+
+import android.content.IntentFilter;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.Nullable;
+import android.support.v4.widget.DrawerLayout;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import javax.inject.Inject;
 
@@ -213,11 +213,7 @@ public class MainController extends BaseNavigationController implements BackPres
 
     @Override
     public boolean consumeBackPress() {
-        if (multiSheetView.consumeBackPress()) {
-            return true;
-        }
-
-        return super.consumeBackPress();
+        return multiSheetView.consumeBackPress() || super.consumeBackPress();
     }
 
     @Override

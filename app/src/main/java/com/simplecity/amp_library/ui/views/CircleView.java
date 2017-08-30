@@ -1,15 +1,16 @@
 package com.simplecity.amp_library.ui.views;
 
+import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.utils.ResourceUtils;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
-
-import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.utils.ResourceUtils;
 
 public class CircleView extends View {
 
@@ -30,7 +31,7 @@ public class CircleView extends View {
             paint.setColor(Color.RED);
         }
 
-        tickDrawable = getResources().getDrawable(R.drawable.ic_check_24dp);
+        tickDrawable = ContextCompat.getDrawable(context, R.drawable.ic_check_24dp);
     }
 
     public void setColor(int color) {

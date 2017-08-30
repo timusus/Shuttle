@@ -1,14 +1,15 @@
 package com.simplecity.amp_library.ui.views;
 
+import com.simplecity.amp_library.R;
+
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-
-import com.simplecity.amp_library.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,8 +34,8 @@ public class FavoriteActionBarView extends FrameLayout {
 
         ButterKnife.bind(this);
 
-        normalDrawable = getContext().getResources().getDrawable(R.drawable.ic_favorite_border_24dp);
-        selectedDrawable = getContext().getResources().getDrawable(R.drawable.ic_favorite_24dp);
+        normalDrawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_favorite_border_24dp);
+        selectedDrawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_favorite_24dp);
 
         setIsFavorite(isFavorite);
     }

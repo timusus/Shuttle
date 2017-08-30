@@ -1,10 +1,10 @@
 package com.simplecity.amp_library.model;
 
-import android.database.Cursor;
-import android.provider.MediaStore;
-
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
+
+import android.database.Cursor;
+import android.provider.MediaStore;
 
 import java.io.Serializable;
 import java.util.List;
@@ -57,10 +57,7 @@ public class Genre implements Serializable {
 
         Genre genre = (Genre) o;
 
-        if (id != genre.id) return false;
-        if (numSongs != genre.numSongs) return false;
-        return name != null ? name.equals(genre.name) : genre.name == null;
-
+        return id == genre.id && numSongs == genre.numSongs && (name != null ? name.equals(genre.name) : genre.name == null);
     }
 
     @Override

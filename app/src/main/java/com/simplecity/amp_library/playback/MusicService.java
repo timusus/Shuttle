@@ -1,5 +1,44 @@
 package com.simplecity.amp_library.playback;
 
+import com.google.android.gms.cast.ApplicationMetadata;
+import com.google.android.gms.cast.MediaInfo;
+import com.google.android.gms.cast.MediaMetadata;
+import com.google.android.gms.cast.MediaStatus;
+import com.google.android.gms.common.images.WebImage;
+import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
+import com.google.android.libraries.cast.companionlibrary.cast.callbacks.VideoCastConsumerImpl;
+import com.google.android.libraries.cast.companionlibrary.cast.exceptions.CastException;
+import com.google.android.libraries.cast.companionlibrary.cast.exceptions.NoConnectionException;
+import com.google.android.libraries.cast.companionlibrary.cast.exceptions.TransientNetworkDisconnectionException;
+
+import com.annimon.stream.function.Predicate;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
+import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.glide.utils.GlideUtils;
+import com.simplecity.amp_library.http.HttpServer;
+import com.simplecity.amp_library.model.Album;
+import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.notifications.MusicNotificationHelper;
+import com.simplecity.amp_library.rx.UnsafeAction;
+import com.simplecity.amp_library.rx.UnsafeConsumer;
+import com.simplecity.amp_library.services.EqualizerService;
+import com.simplecity.amp_library.ui.widgets.WidgetProviderExtraLarge;
+import com.simplecity.amp_library.ui.widgets.WidgetProviderLarge;
+import com.simplecity.amp_library.ui.widgets.WidgetProviderMedium;
+import com.simplecity.amp_library.ui.widgets.WidgetProviderSmall;
+import com.simplecity.amp_library.utils.DataManager;
+import com.simplecity.amp_library.utils.LogUtils;
+import com.simplecity.amp_library.utils.MediaButtonIntentReceiver;
+import com.simplecity.amp_library.utils.PlaceholderProvider;
+import com.simplecity.amp_library.utils.PlaylistUtils;
+import com.simplecity.amp_library.utils.SettingsManager;
+import com.simplecity.amp_library.utils.ShuttleUtils;
+import com.simplecity.amp_library.utils.SleepTimer;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
@@ -21,6 +60,8 @@ import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.media.AudioAttributes;
+import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.media.RemoteControlClient;
@@ -43,44 +84,6 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
-
-import com.annimon.stream.function.Predicate;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.core.CrashlyticsCore;
-import com.google.android.gms.cast.ApplicationMetadata;
-import com.google.android.gms.cast.MediaInfo;
-import com.google.android.gms.cast.MediaMetadata;
-import com.google.android.gms.cast.MediaStatus;
-import com.google.android.gms.common.images.WebImage;
-import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
-import com.google.android.libraries.cast.companionlibrary.cast.callbacks.VideoCastConsumerImpl;
-import com.google.android.libraries.cast.companionlibrary.cast.exceptions.CastException;
-import com.google.android.libraries.cast.companionlibrary.cast.exceptions.NoConnectionException;
-import com.google.android.libraries.cast.companionlibrary.cast.exceptions.TransientNetworkDisconnectionException;
-import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.glide.utils.GlideUtils;
-import com.simplecity.amp_library.http.HttpServer;
-import com.simplecity.amp_library.model.Album;
-import com.simplecity.amp_library.model.Song;
-import com.simplecity.amp_library.notifications.MusicNotificationHelper;
-import com.simplecity.amp_library.rx.UnsafeAction;
-import com.simplecity.amp_library.rx.UnsafeConsumer;
-import com.simplecity.amp_library.services.EqualizerService;
-import com.simplecity.amp_library.ui.widgets.WidgetProviderExtraLarge;
-import com.simplecity.amp_library.ui.widgets.WidgetProviderLarge;
-import com.simplecity.amp_library.ui.widgets.WidgetProviderMedium;
-import com.simplecity.amp_library.ui.widgets.WidgetProviderSmall;
-import com.simplecity.amp_library.utils.DataManager;
-import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MediaButtonIntentReceiver;
-import com.simplecity.amp_library.utils.PlaceholderProvider;
-import com.simplecity.amp_library.utils.PlaylistUtils;
-import com.simplecity.amp_library.utils.SettingsManager;
-import com.simplecity.amp_library.utils.ShuttleUtils;
-import com.simplecity.amp_library.utils.SleepTimer;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -304,6 +307,8 @@ public class MusicService extends Service {
             playerHandler.obtainMessage(PlayerHandler.FOCUS_CHANGE, focusChange, 0).sendToTarget();
         }
     };
+
+    private AudioFocusRequest audioFocusRequest;
 
     private AlarmManager alarmManager;
 
@@ -854,7 +859,8 @@ public class MusicService extends Service {
         player = null;
 
         // Remove the audio focus listener and lock screen controls
-        audioManager.abandonAudioFocus(audioFocusListener);
+        if (ShuttleUtils.hasOreo()) audioManager.abandonAudioFocusRequest(audioFocusRequest);
+        else audioManager.abandonAudioFocus(audioFocusListener);
         mediaSession.release();
 
         unregisterHeadsetPlugReceiver();
@@ -959,7 +965,8 @@ public class MusicService extends Service {
         }
 
         cancelNotification();
-        audioManager.abandonAudioFocus(audioFocusListener);
+        if (ShuttleUtils.hasOreo()) audioManager.abandonAudioFocusRequest(audioFocusRequest);
+        else audioManager.abandonAudioFocus(audioFocusListener);
 
         mediaSession.setActive(false);
 
@@ -1528,8 +1535,8 @@ public class MusicService extends Service {
     /**
      * Moves the item at index1 to index2.
      *
-     * @param from
-     * @param to
+     * @param from index1
+     * @param to index2
      */
     public void moveQueueItem(int from, int to) {
         synchronized (this) {
@@ -1753,7 +1760,17 @@ public class MusicService extends Service {
      */
     public void play() {
 
-        int status = audioManager.requestAudioFocus(audioFocusListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+        int status;
+        if (ShuttleUtils.hasOreo()) {
+            AudioFocusRequest.Builder audioFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN);
+            audioFocusRequest.setOnAudioFocusChangeListener(audioFocusListener);
+            AudioAttributes.Builder attributes = new AudioAttributes.Builder();
+            attributes.setUsage(AudioAttributes.USAGE_MEDIA);
+            attributes.setContentType(AudioAttributes.CONTENT_TYPE_MUSIC);
+            audioFocusRequest.setAudioAttributes(attributes.build());
+            this.audioFocusRequest = audioFocusRequest.build();
+            status = audioManager.requestAudioFocus(this.audioFocusRequest);
+        } else status = audioManager.requestAudioFocus(audioFocusListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
 
         if (status != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             return;

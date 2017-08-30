@@ -6,8 +6,6 @@ public final class Config {
     private Config() {
     }
 
-    public static final String ID = "id";
-
     public static final String NAME = "name";
 
     public static final String PACKAGE_NAME_FREE = "another.music.player";

@@ -1,5 +1,11 @@
 package com.simplecity.amp_library.ui.activities;
 
+import com.afollestad.aesthetic.AestheticActivity;
+import com.greysonparrelli.permiso.Permiso;
+import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
+import com.simplecity.amp_library.utils.SettingsManager;
+
 import android.Manifest;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -13,12 +19,6 @@ import android.support.annotation.NonNull;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.widget.Toast;
-
-import com.afollestad.aesthetic.AestheticActivity;
-import com.greysonparrelli.permiso.Permiso;
-import com.simplecity.amp_library.playback.MusicService;
-import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
-import com.simplecity.amp_library.utils.SettingsManager;
 
 import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
 
@@ -102,10 +102,7 @@ public abstract class BaseActivity extends AestheticActivity implements ServiceC
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         //Fix for issue on LG devices
-        if (keyCode == KeyEvent.KEYCODE_MENU && "LGE".equalsIgnoreCase(Build.BRAND)) {
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
+        return (keyCode == KeyEvent.KEYCODE_MENU && "LGE".equalsIgnoreCase(Build.BRAND)) || super.onKeyDown(keyCode, event);
     }
 
     @Override

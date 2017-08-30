@@ -1,5 +1,11 @@
 package com.simplecity.amp_library.lyrics;
 
+import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.utils.ShuttleUtils;
+import com.simplecity.amp_library.utils.TypefaceManager;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -8,12 +14,6 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.TypefaceSpan;
-
-import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.ShuttleApplication;
-import com.simplecity.amp_library.model.Song;
-import com.simplecity.amp_library.utils.ShuttleUtils;
-import com.simplecity.amp_library.utils.TypefaceManager;
 
 /**
  * QuickLyric helpers
@@ -49,8 +49,7 @@ public class QuickLyricUtils {
      * @return true if the Play Store is available, and this QuickLyric can be downloaded.
      */
     static boolean canDownloadQuickLyric() {
-        if (ShuttleUtils.isAmazonBuild()) return false;
-        return getQuickLyricIntent().resolveActivity(ShuttleApplication.getInstance().getPackageManager()) != null;
+        return !ShuttleUtils.isAmazonBuild() && getQuickLyricIntent().resolveActivity(ShuttleApplication.getInstance().getPackageManager()) != null;
     }
 
     /**
