@@ -258,7 +258,7 @@ public class SongFragment extends BaseFragment implements
 
         if (sortOrderChanged) {
             refreshAdapterItems();
-            getActivity().supportInvalidateOptionsMenu();
+            getActivity().invalidateOptionsMenu();
         }
 
         return super.onOptionsItemSelected(item);
