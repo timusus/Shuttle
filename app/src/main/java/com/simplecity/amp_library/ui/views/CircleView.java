@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -30,7 +31,7 @@ public class CircleView extends View {
             paint.setColor(Color.RED);
         }
 
-        tickDrawable = getResources().getDrawable(R.drawable.ic_check_24dp);
+        tickDrawable = ContextCompat.getDrawable(context, R.drawable.ic_check_24dp);
     }
 
     public void setColor(int color) {

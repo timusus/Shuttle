@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.text.TextPaint;
 import android.text.TextUtils;
 
@@ -70,7 +71,7 @@ public class PlaceholderProvider {
         if (!TextUtils.isEmpty(displayName) && SettingsManager.getInstance().useGmailPlaceholders()) {
             drawable = PlaceholderProvider.getInstance().getLetterTile(displayName);
         } else {
-            drawable = ShuttleApplication.getInstance().getResources().getDrawable(large ? getLargePlaceHolderResId() : getMediumPlaceHolderResId());
+            drawable = ContextCompat.getDrawable(ShuttleApplication.getInstance(), large ? getLargePlaceHolderResId() : getMediumPlaceHolderResId());
         }
         return drawable;
     }

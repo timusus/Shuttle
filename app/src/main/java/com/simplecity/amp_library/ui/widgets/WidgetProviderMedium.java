@@ -3,6 +3,7 @@ package com.simplecity.amp_library.ui.widgets;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Environment;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -55,13 +56,13 @@ public class WidgetProviderMedium extends BaseWidgetProvider {
         views.setViewVisibility(R.id.text1, View.GONE);
         views.setTextViewText(R.id.text2, res.getText(R.string.widget_initial_text));
 
-        int textColor = mPrefs.getInt(ARG_WIDGET_TEXT_COLOR + appWidgetId, context.getResources().getColor(R.color.white));
+        int textColor = mPrefs.getInt(ARG_WIDGET_TEXT_COLOR + appWidgetId, ContextCompat.getColor(context, R.color.white));
         views.setImageViewResource(R.id.next_button, R.drawable.ic_skip_next_24dp);
         views.setImageViewResource(R.id.prev_button, R.drawable.ic_skip_previous_24dp);
         views.setTextColor(R.id.text2, textColor);
         views.setTextColor(R.id.text1, textColor);
 
-        int backgroundColor = mPrefs.getInt(ARG_WIDGET_BACKGROUND_COLOR + appWidgetId, ColorUtils.adjustAlpha(context.getResources().getColor(R.color.white), 35 / 255f));
+        int backgroundColor = mPrefs.getInt(ARG_WIDGET_BACKGROUND_COLOR + appWidgetId, ColorUtils.adjustAlpha(ContextCompat.getColor(context, R.color.white), 35 / 255f));
         views.setInt(R.id.widget_layout_medium, "setBackgroundColor", backgroundColor);
         boolean showAlbumArt = mPrefs.getBoolean(ARG_WIDGET_SHOW_ARTWORK + appWidgetId, true);
         if (!showAlbumArt) {
@@ -148,7 +149,7 @@ public class WidgetProviderMedium extends BaseWidgetProvider {
 
             setupRepeatView(service, views, invertIcons);
 
-            int textColor = mPrefs.getInt(ARG_WIDGET_TEXT_COLOR + appWidgetId, service.getResources().getColor(R.color.white));
+            int textColor = mPrefs.getInt(ARG_WIDGET_TEXT_COLOR + appWidgetId, ContextCompat.getColor(service, R.color.white));
             if (invertIcons) {
                 views.setImageViewBitmap(R.id.next_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_skip_next_24dp));
                 views.setImageViewBitmap(R.id.prev_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_skip_previous_24dp));
@@ -160,7 +161,7 @@ public class WidgetProviderMedium extends BaseWidgetProvider {
             views.setTextColor(R.id.text2, textColor);
             views.setTextColor(R.id.text1, textColor);
 
-            int backgroundColor = mPrefs.getInt(ARG_WIDGET_BACKGROUND_COLOR + appWidgetId, ColorUtils.adjustAlpha(service.getResources().getColor(R.color.white), 35 / 255f));
+            int backgroundColor = mPrefs.getInt(ARG_WIDGET_BACKGROUND_COLOR + appWidgetId, ColorUtils.adjustAlpha(ContextCompat.getColor(service, R.color.white), 35 / 255f));
             views.setInt(R.id.widget_layout_medium, "setBackgroundColor", backgroundColor);
 
             setupButtons(service, views, appWidgetId, getRootViewId());
