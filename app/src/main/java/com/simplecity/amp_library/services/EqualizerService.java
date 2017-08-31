@@ -15,6 +15,7 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.annimon.stream.Stream;
 import com.crashlytics.android.Crashlytics;
 import com.simplecity.amp_library.utils.SettingsManager;
 
@@ -246,11 +247,9 @@ public class EqualizerService extends Service {
 
         unregisterReceiver(mAudioSessionReceiver);
 
-        for (EffectSet gone : mAudioSessions.values()) {
-            if (gone != null) {
-                gone.release();
-            }
-        }
+        Stream.of(mAudioSessions.values())
+                .filter(effectSet -> effectSet != null)
+                .forEach(EffectSet::release);
 
         super.onDestroy();
     }
