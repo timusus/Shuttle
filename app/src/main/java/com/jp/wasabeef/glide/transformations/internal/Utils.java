@@ -2,7 +2,7 @@ package com.jp.wasabeef.glide.transformations.internal;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
+import android.support.v4.content.ContextCompat;
 
 /**
  * Copyright (C) 2015 Wasabeef
@@ -27,12 +27,7 @@ public final class Utils {
     }
 
     public static Drawable getMaskDrawable(Context context, int maskId) {
-        Drawable drawable;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            drawable = context.getDrawable(maskId);
-        } else {
-            drawable = context.getResources().getDrawable(maskId);
-        }
+        Drawable drawable = ContextCompat.getDrawable(context, maskId);
 
         if (drawable == null) {
             throw new IllegalArgumentException("maskId is invalid");

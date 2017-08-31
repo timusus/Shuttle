@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -217,9 +218,9 @@ public class FolderView extends BaseSelectableViewModel<FolderView.ViewHolder, B
 
             int colorPrimary = Aesthetic.get(itemView.getContext()).colorPrimary().blockingFirst();
 
-            folderDrawable = itemView.getContext().getResources().getDrawable(R.drawable.ic_folder_24dp);
-            parentFolderDrawable = itemView.getContext().getResources().getDrawable(R.drawable.ic_folder_open_24dp);
-            fileDrawable = itemView.getContext().getResources().getDrawable(R.drawable.ic_headphones_white);
+            folderDrawable = ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_folder_24dp);
+            parentFolderDrawable = ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_folder_open_24dp);
+            fileDrawable = ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_headphones_white);
 
             imageView.setColorFilter(colorPrimary);
         }
