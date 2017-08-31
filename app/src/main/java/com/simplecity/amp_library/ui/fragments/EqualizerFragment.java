@@ -622,9 +622,7 @@ public class EqualizerFragment extends BaseFragment implements
         eqPresetNames = new String[numPresets + 1];
 
         String[] presetNames = prefs.getString("equalizer.preset_names", "").split("\\|");
-        for (short i = 0; i < numPresets; i++) {
-            eqPresetNames[i] = presetNames[i];
-        }
+        System.arraycopy(presetNames, 0, eqPresetNames, 0, numPresets + 1);
         eqPresetNames[numPresets] = getString(R.string.custom);
         eqCustomPresetPosition = numPresets;
 
