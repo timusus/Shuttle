@@ -137,10 +137,10 @@ public class SearchFragment extends BaseFragment implements
         });
 
         MenuItem searchItem = toolbar.getMenu().findItem(R.id.search);
-        MenuItemCompat.expandActionView(searchItem);
-        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchItem.expandActionView();
+        searchView = (SearchView) searchItem.getActionView();
 
-        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 return false;
