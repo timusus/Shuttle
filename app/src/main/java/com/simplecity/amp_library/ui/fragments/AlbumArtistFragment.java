@@ -349,7 +349,7 @@ public class AlbumArtistFragment extends BaseFragment implements
             }
         }
 
-        getActivity().supportInvalidateOptionsMenu();
+        getActivity().invalidateOptionsMenu();
 
         return super.onOptionsItemSelected(item);
     }
