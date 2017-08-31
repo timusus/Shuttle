@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.playback;
 
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -9,6 +10,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.crashlytics.android.core.CrashlyticsCore;
+import com.simplecity.amp_library.utils.ShuttleUtils;
 
 import java.lang.ref.WeakReference;
 
@@ -53,7 +55,14 @@ class MultiPlayer implements
             } else {
                 mediaPlayer.setDataSource(path);
             }
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            if (ShuttleUtils.hasOreo()) {
+                mediaPlayer.setAudioAttributes(new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .build());
+            } else {
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            }
             mediaPlayer.prepare();
         } catch (final Exception e) {
             Log.e(TAG, "setDataSource failed: " + e.getLocalizedMessage());
