@@ -573,7 +573,7 @@ public class FolderFragment extends BaseFragment implements
             case R.id.folders_ascending:
                 SettingsManager.getInstance().setFolderBrowserFoldersAscending(!menuItem.isChecked());
                 reload();
-                getActivity().supportInvalidateOptionsMenu();
+                getActivity().invalidateOptionsMenu();
                 return true;
             case R.id.whitelist:
                 contextualToolbarHelper.start();

@@ -58,7 +58,7 @@ public class PlaylistsModel {
                                             return Observable.just(Optional.empty());
                                         }
                                 )
-                                .filter(playlistOptional -> playlistOptional.isPresent())
+                                .filter(Optional::isPresent)
                                 .map(playlistOptional -> (Playlist) playlistOptional.get())
                         )
                         .toList()
