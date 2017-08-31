@@ -262,6 +262,13 @@ public final class ShuttleUtils {
         return Build.VERSION.SDK_INT >= 24;
     }
 
+    /**
+     * @return true if device is running API >= 26
+     */
+    public static boolean hasOreo() {
+        return Build.VERSION.SDK_INT >= 26;
+    }
+
     public static boolean isLandscape() {
         final int orientation = ShuttleApplication.getInstance().getResources().getConfiguration().orientation;
         return orientation == Configuration.ORIENTATION_LANDSCAPE;
