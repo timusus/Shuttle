@@ -336,7 +336,6 @@ public class Song implements
         Song song = (Song) o;
 
         return id == song.id && artistId == song.artistId && albumId == song.albumId;
-
     }
 
     @Override

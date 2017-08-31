@@ -246,11 +246,7 @@ public class EqualizerService extends Service {
 
         unregisterReceiver(mAudioSessionReceiver);
 
-        for (EffectSet gone : mAudioSessions.values()) {
-            if (gone != null) {
-                gone.release();
-            }
-        }
+        mAudioSessions.values().stream().filter(effectSet -> effectSet != null).forEach(EffectSet::release);
 
         super.onDestroy();
     }

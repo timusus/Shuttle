@@ -18,7 +18,6 @@ public class Header implements Serializable {
         Header header = (Header) o;
 
         return title != null ? title.equals(header.title) : header.title == null;
-
     }
 
     @Override

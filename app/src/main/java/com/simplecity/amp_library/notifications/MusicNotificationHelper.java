@@ -63,7 +63,7 @@ public class MusicNotificationHelper extends NotificationHelper {
                 .setSmallIcon(R.drawable.ic_stat_notification)
                 .setContentIntent(contentIntent)
                 .setChannelId(NOTIFICATION_CHANNEL_ID)
-                .setPriority(Notification.PRIORITY_MAX)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setContentTitle(song.name)
                 .setContentText(song.artistName + " - " + song.albumName)
                 .setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle()

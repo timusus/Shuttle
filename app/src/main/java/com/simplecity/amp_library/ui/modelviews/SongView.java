@@ -1,7 +1,6 @@
 package com.simplecity.amp_library.ui.modelviews;
 
 import android.support.annotation.Nullable;
-import android.support.v4.view.MotionEventCompat;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -362,7 +361,7 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder, Song>
 
             if (dragHandle != null) {
                 dragHandle.setOnTouchListener((v, event) -> {
-                    if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
+                    if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
                         viewModel.onStartDrag(this);
                     }
                     return true;
