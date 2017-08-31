@@ -16,6 +16,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -114,7 +115,7 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         layoutId = prefs.getInt(getLayoutIdString() + appWidgetId, getWidgetLayouts()[0]);
-        backgroundColor = prefs.getInt(BaseWidgetProvider.ARG_WIDGET_BACKGROUND_COLOR + appWidgetId, getResources().getColor(R.color.white));
+        backgroundColor = prefs.getInt(BaseWidgetProvider.ARG_WIDGET_BACKGROUND_COLOR + appWidgetId, ContextCompat.getColor(this, R.color.white));
         textColor = prefs.getInt(BaseWidgetProvider.ARG_WIDGET_TEXT_COLOR + appWidgetId, Color.WHITE);
         showAlbumArt = prefs.getBoolean(BaseWidgetProvider.ARG_WIDGET_SHOW_ARTWORK + appWidgetId, true);
 
@@ -306,14 +307,14 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
 
     public void updateWidgetUI() {
 
-        backgroundColor = prefs.getInt(BaseWidgetProvider.ARG_WIDGET_BACKGROUND_COLOR + appWidgetId, getResources().getColor(R.color.white));
-        textColor = prefs.getInt(BaseWidgetProvider.ARG_WIDGET_TEXT_COLOR + appWidgetId, getResources().getColor(R.color.white));
+        backgroundColor = prefs.getInt(BaseWidgetProvider.ARG_WIDGET_BACKGROUND_COLOR + appWidgetId, ContextCompat.getColor(this, R.color.white));
+        textColor = prefs.getInt(BaseWidgetProvider.ARG_WIDGET_TEXT_COLOR + appWidgetId, ContextCompat.getColor(this, R.color.white));
 
-        Drawable backgroundButtonDrawable = DrawableCompat.wrap(getResources().getDrawable(R.drawable.bg_rounded));
+        Drawable backgroundButtonDrawable = DrawableCompat.wrap(ContextCompat.getDrawable(this, R.drawable.bg_rounded));
         backgroundButtonDrawable.setBounds(0, 0, 60, 60);
         backgroundColorButton.setCompoundDrawables(backgroundButtonDrawable, null, null, null);
 
-        Drawable textButtonDrawable = getResources().getDrawable(R.drawable.bg_rounded);
+        Drawable textButtonDrawable = ContextCompat.getDrawable(this, R.drawable.bg_rounded);
         textButtonDrawable.setBounds(0, 0, 60, 60);
         textColorButton.setCompoundDrawables(textButtonDrawable, null, null, null);
 
@@ -358,7 +359,7 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
                     } else {
                         albumArt.setVisibility(View.VISIBLE);
                         if (pager.getCurrentItem() == 1) {
-                            int colorFilterColor = getResources().getColor(R.color.color_filter);
+                            int colorFilterColor = ContextCompat.getColor(this, R.color.color_filter);
                             albumArt.setColorFilter(colorFilterColor);
                             prefs.edit().putInt(BaseWidgetProvider.ARG_WIDGET_COLOR_FILTER + appWidgetId, colorFilterColor).apply();
                         } else {

@@ -4,6 +4,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -118,7 +119,7 @@ public class DrawerFragment extends BaseFragment implements
 
         requestManager = Glide.with(this);
 
-        backgroundPlaceholder = getResources().getDrawable(R.drawable.ic_drawer_header_placeholder);
+        backgroundPlaceholder = ContextCompat.getDrawable(getContext(), R.drawable.ic_drawer_header_placeholder);
     }
 
     @Override

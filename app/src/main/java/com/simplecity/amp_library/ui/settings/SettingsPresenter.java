@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.support.v4.content.IntentCompat;
+import android.support.v4.content.ContextCompat;
 
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -92,8 +92,8 @@ public class SettingsPresenter extends Presenter<SettingsView> {
                                     .positiveText(R.string.restart_button)
                                     .onPositive((materialDialog, dialogAction) -> {
                                         Intent intent = new Intent(activity, MainActivity.class);
-                                        ComponentName componentNAme = intent.getComponent();
-                                        Intent mainIntent = IntentCompat.makeRestartActivityTask(componentNAme);
+                                        ComponentName componentName = intent.getComponent();
+                                        Intent mainIntent = Intent.makeRestartActivityTask(componentName);
                                         activity.startActivity(mainIntent);
                                     })
                                     .build());
@@ -248,7 +248,7 @@ public class SettingsPresenter extends Presenter<SettingsView> {
             int storedColor = SettingsManager.getInstance().getPrimaryColor();
 
             Aesthetic.get(context)
-                    .colorPrimary(storedColor == -1 ? context.getResources().getColor(R.color.blue_500) : storedColor)
+                    .colorPrimary(storedColor == -1 ? ContextCompat.getColor(context, R.color.blue_500) : storedColor)
                     .colorStatusBarAuto()
                     .colorNavigationBarAuto(SettingsManager.getInstance().getTintNavBar())
                     .apply();
@@ -261,7 +261,7 @@ public class SettingsPresenter extends Presenter<SettingsView> {
             int storedColor = SettingsManager.getInstance().getPrimaryColor();
 
             Aesthetic.get(context)
-                    .colorPrimary(storedColor == -1 ? context.getResources().getColor(R.color.blue_500) : storedColor)
+                    .colorPrimary(storedColor == -1 ? ContextCompat.getColor(context, R.color.blue_500) : storedColor)
                     .colorStatusBarAuto()
                     .colorNavigationBarAuto(SettingsManager.getInstance().getTintNavBar())
                     .apply();

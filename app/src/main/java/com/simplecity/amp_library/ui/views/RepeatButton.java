@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
 
@@ -38,9 +39,9 @@ public class RepeatButton extends android.support.v7.widget.AppCompatImageButton
     public RepeatButton(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        offDrawable = getResources().getDrawable(R.drawable.ic_repeat_24dp_scaled);
-        oneDrawable = DrawableCompat.wrap(getResources().getDrawable(R.drawable.ic_repeat_one_24dp_scaled));
-        allDrawable = DrawableCompat.wrap(getResources().getDrawable(R.drawable.ic_repeat_24dp_scaled)).mutate();
+        offDrawable = ContextCompat.getDrawable(context, R.drawable.ic_repeat_24dp_scaled);
+        oneDrawable = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.ic_repeat_one_24dp_scaled));
+        allDrawable = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.ic_repeat_24dp_scaled)).mutate();
 
         setRepeatMode(MusicService.RepeatMode.OFF);
     }
