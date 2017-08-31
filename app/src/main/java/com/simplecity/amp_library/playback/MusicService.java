@@ -21,6 +21,8 @@ import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.media.AudioAttributes;
+import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.media.RemoteControlClient;
@@ -308,6 +310,8 @@ public class MusicService extends Service {
     private AlarmManager alarmManager;
 
     private PendingIntent shutdownIntent;
+
+    private AudioFocusRequest audioFocusRequest;
 
     private boolean shutdownScheduled;
 
@@ -854,7 +858,11 @@ public class MusicService extends Service {
         player = null;
 
         // Remove the audio focus listener and lock screen controls
-        audioManager.abandonAudioFocus(audioFocusListener);
+        if (ShuttleUtils.hasOreo()) {
+            audioManager.abandonAudioFocusRequest(audioFocusRequest);
+        } else {
+            audioManager.abandonAudioFocus(audioFocusListener);
+        }
         mediaSession.release();
 
         unregisterHeadsetPlugReceiver();
@@ -959,7 +967,11 @@ public class MusicService extends Service {
         }
 
         cancelNotification();
-        audioManager.abandonAudioFocus(audioFocusListener);
+        if (ShuttleUtils.hasOreo()) {
+            audioManager.abandonAudioFocusRequest(audioFocusRequest);
+        } else {
+            audioManager.abandonAudioFocus(audioFocusListener);
+        }
 
         mediaSession.setActive(false);
 
@@ -1753,7 +1765,21 @@ public class MusicService extends Service {
      */
     public void play() {
 
-        int status = audioManager.requestAudioFocus(audioFocusListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+        int status;
+
+        if (ShuttleUtils.hasOreo()) {
+            AudioFocusRequest audioFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                    .setOnAudioFocusChangeListener(audioFocusListener)
+                    .setAudioAttributes(new AudioAttributes.Builder()
+                            .setUsage(AudioAttributes.USAGE_MEDIA)
+                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                            .build())
+                    .build();
+            this.audioFocusRequest = audioFocusRequest;
+            status = audioManager.requestAudioFocus(audioFocusRequest);
+        } else {
+            status = audioManager.requestAudioFocus(audioFocusListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+        }
 
         if (status != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             return;
