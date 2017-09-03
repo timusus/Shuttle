@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.ui.fragments;
 
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -23,6 +24,7 @@ import android.view.ViewGroup;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.ViewBackgroundAction;
 import com.annimon.stream.Stream;
+import com.cantrowitz.rxbroadcast.RxBroadcast;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Album;
@@ -56,6 +58,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import test.com.androidnavigation.fragment.FragmentInfo;
 
 import static com.afollestad.aesthetic.Rx.distinctToMainThread;
@@ -72,7 +75,7 @@ public class LibraryController extends BaseFragment implements
 
     private static final String TAG = "LibraryController";
 
-    private PagerAdapter adapter;
+    public static final String EVENT_TABS_CHANGED = "tabs_changed";
 
     @BindView(R.id.tabs)
     TabLayout slidingTabLayout;
@@ -91,11 +94,15 @@ public class LibraryController extends BaseFragment implements
 
     @Inject NavigationEventRelay navigationEventRelay;
 
-    private int currentPage = 0;
-
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
+    private Disposable tabChangedDisposable;
+
     private Unbinder unbinder;
+
+    private boolean refreshPagerAdapter = false;
+
+    private PagerAdapter pagerAdapter;
 
     public static FragmentInfo fragmentInfo() {
         return new FragmentInfo(LibraryController.class, null, "LibraryController");
@@ -110,28 +117,9 @@ public class LibraryController extends BaseFragment implements
 
         ShuttleApplication.getInstance().getAppComponent().inject(this);
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        CategoryItem.getCategoryItems(sharedPreferences);
-
-        adapter = new PagerAdapter(getChildFragmentManager());
-
-        List<CategoryItem> categoryItems = Stream.of(CategoryItem.getCategoryItems(sharedPreferences))
-                .filter(categoryItem -> categoryItem.isEnabled)
-                .toList();
-
-        int defaultPageType = SettingsManager.getInstance().getDefaultPageType();
-        int defaultPage = 1;
-        for (int i = 0; i < categoryItems.size(); i++) {
-            CategoryItem categoryItem = categoryItems.get(i);
-            adapter.addFragment(categoryItem.getFragment(getContext()));
-            if (categoryItem.type == defaultPageType) {
-                defaultPage = i;
-            }
-        }
-
-        currentPage = Math.min(defaultPage, adapter.getCount());
-
         setHasOptionsMenu(true);
+
+        tabChangedDisposable = RxBroadcast.fromLocalBroadcast(getContext(), new IntentFilter(EVENT_TABS_CHANGED)).subscribe(onNext -> refreshPagerAdapter = true);
     }
 
     @Nullable
@@ -143,17 +131,7 @@ public class LibraryController extends BaseFragment implements
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
-        pager.setAdapter(adapter);
-        pager.setOffscreenPageLimit(adapter.getCount() - 1);
-        pager.setCurrentItem(currentPage);
-
-        slidingTabLayout.setupWithViewPager(pager);
-
-        pager.postDelayed(() -> {
-            if (pager != null) {
-                DialogUtils.showRateSnackbar(getActivity(), pager);
-            }
-        }, 1000);
+        setupViewPager();
 
         Aesthetic.get(getContext())
                 .colorPrimary()
@@ -198,6 +176,12 @@ public class LibraryController extends BaseFragment implements
     }
 
     @Override
+    public void onDestroy() {
+        tabChangedDisposable.dispose();
+        super.onDestroy();
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
@@ -213,6 +197,48 @@ public class LibraryController extends BaseFragment implements
                 return true;
         }
         return false;
+    }
+
+    private void setupViewPager() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        CategoryItem.getCategoryItems(sharedPreferences);
+
+        if (pagerAdapter != null && refreshPagerAdapter) {
+            pagerAdapter.removeAllChildFragments();
+            refreshPagerAdapter = false;
+            pagerAdapter = null;
+        }
+
+        int defaultPage = 1;
+
+        if (pagerAdapter == null) {
+            pagerAdapter = new PagerAdapter(getChildFragmentManager());
+            List<CategoryItem> categoryItems = Stream.of(CategoryItem.getCategoryItems(sharedPreferences))
+                    .filter(categoryItem -> categoryItem.isEnabled)
+                    .toList();
+
+            int defaultPageType = SettingsManager.getInstance().getDefaultPageType();
+            for (int i = 0; i < categoryItems.size(); i++) {
+                CategoryItem categoryItem = categoryItems.get(i);
+                pagerAdapter.addFragment(categoryItem.getFragment(getContext()));
+                if (categoryItem.type == defaultPageType) {
+                    defaultPage = i;
+                }
+            }
+        }
+
+        int currentPage = Math.min(defaultPage, pagerAdapter.getCount());
+        pager.setAdapter(pagerAdapter);
+        pager.setOffscreenPageLimit(pagerAdapter.getCount() - 1);
+        pager.setCurrentItem(currentPage);
+
+        slidingTabLayout.setupWithViewPager(pager);
+
+        pager.postDelayed(() -> {
+            if (pager != null) {
+                DialogUtils.showRateSnackbar(getActivity(), pager);
+            }
+        }, 1000);
     }
 
     private void openSearch() {
@@ -250,7 +276,7 @@ public class LibraryController extends BaseFragment implements
         if (transitionView != null) {
             String transitionName = ViewCompat.getTransitionName(transitionView);
             transitions.add(new Pair<>(transitionView, transitionName));
-//            transitions.add(new Pair<>(toolbar, "toolbar"));
+            //            transitions.add(new Pair<>(toolbar, "toolbar"));
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                 Transition moveTransition = TransitionInflater.from(getContext()).inflateTransition(R.transition.image_transition);

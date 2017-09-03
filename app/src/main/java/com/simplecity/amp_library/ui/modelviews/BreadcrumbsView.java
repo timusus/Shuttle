@@ -1,19 +1,19 @@
 package com.simplecity.amp_library.ui.modelviews;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.interfaces.BreadcrumbListener;
+import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.ui.views.BreadcrumbItem;
 import com.simplecity.amp_library.ui.views.BreadcrumbView;
 import com.simplecityapps.recycler_adapter.model.BaseViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 
-import static android.text.TextUtils.isEmpty;
-import static com.simplecity.amp_library.R.id.breadcrumbs;
-import static com.simplecity.amp_library.R.layout.list_item_breadcrumbs;
-import static com.simplecity.amp_library.ui.adapters.ViewType.BREADCRUMBS;
+import java.util.List;
 
 public class BreadcrumbsView extends BaseViewModel<BreadcrumbsView.ViewHolder> {
 
@@ -36,22 +36,26 @@ public class BreadcrumbsView extends BaseViewModel<BreadcrumbsView.ViewHolder> {
 
     @Override
     public int getViewType() {
-        return BREADCRUMBS;
+        return ViewType.BREADCRUMBS;
     }
 
     @Override
     public int getLayoutResId() {
-        return list_item_breadcrumbs;
+        return R.layout.list_item_breadcrumbs;
     }
 
     @Override
     public void bindView(ViewHolder holder) {
-
         super.bindView(holder);
 
-        if (!isEmpty(breadcrumbPath)) {
+        if (!TextUtils.isEmpty(breadcrumbPath)) {
             holder.breadcrumbView.changeBreadcrumbPath(breadcrumbPath);
         }
+    }
+
+    @Override
+    public void bindView(ViewHolder holder, int position, List payloads) {
+        bindView(holder);
     }
 
     @Override
@@ -72,7 +76,7 @@ public class BreadcrumbsView extends BaseViewModel<BreadcrumbsView.ViewHolder> {
         public ViewHolder(View itemView) {
             super(itemView);
 
-            breadcrumbView = itemView.findViewById(breadcrumbs);
+            breadcrumbView = itemView.findViewById(R.id.breadcrumbs);
             breadcrumbView.addBreadcrumbListener(item -> viewModel.onBreadcrumbClick(item));
         }
 
@@ -80,21 +84,5 @@ public class BreadcrumbsView extends BaseViewModel<BreadcrumbsView.ViewHolder> {
         public String toString() {
             return "BreadcrumbsView.ViewHolder";
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        BreadcrumbsView that = (BreadcrumbsView) o;
-
-        return breadcrumbPath != null ? breadcrumbPath.equals(that.breadcrumbPath) : that.breadcrumbPath == null;
-
-    }
-
-    @Override
-    public int hashCode() {
-        return breadcrumbPath != null ? breadcrumbPath.hashCode() : 0;
     }
 }

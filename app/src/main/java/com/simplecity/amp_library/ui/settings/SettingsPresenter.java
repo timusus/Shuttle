@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.support.v4.content.IntentCompat;
+import android.support.v4.content.ContextCompat;
 
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -92,8 +92,8 @@ public class SettingsPresenter extends Presenter<SettingsView> {
                                     .positiveText(R.string.restart_button)
                                     .onPositive((materialDialog, dialogAction) -> {
                                         Intent intent = new Intent(activity, MainActivity.class);
-                                        ComponentName componentNAme = intent.getComponent();
-                                        Intent mainIntent = IntentCompat.makeRestartActivityTask(componentNAme);
+                                        ComponentName componentName = intent.getComponent();
+                                        Intent mainIntent = Intent.makeRestartActivityTask(componentName);
                                         activity.startActivity(mainIntent);
                                     })
                                     .build());
@@ -198,7 +198,8 @@ public class SettingsPresenter extends Presenter<SettingsView> {
             settingsView.showPrimaryColorDialog(
                     new ColorChooserDialog.Builder(context, R.string.pref_title_theme_pick_color)
                             .allowUserColorInput(true)
-                            .dynamicButtonColor(true)
+                            .allowUserColorInputAlpha(false)
+                            .dynamicButtonColor(false)
                             .preselect(Aesthetic.get(context).colorPrimary().blockingFirst())
                             .build());
         }
@@ -209,6 +210,8 @@ public class SettingsPresenter extends Presenter<SettingsView> {
                 .colorPrimary(color)
                 .colorStatusBarAuto()
                 .apply();
+
+        SettingsManager.getInstance().storePrimaryColor(color);
     }
 
     public void accentColorClicked(Context context) {
@@ -218,7 +221,8 @@ public class SettingsPresenter extends Presenter<SettingsView> {
                     new ColorChooserDialog.Builder(context, R.string.pref_title_theme_pick_color)
                             .accentMode(true)
                             .allowUserColorInput(true)
-                            .dynamicButtonColor(true)
+                            .allowUserColorInputAlpha(false)
+                            .dynamicButtonColor(false)
                             .preselect(Aesthetic.get(context).colorAccent().blockingFirst())
                             .build());
         }
@@ -228,6 +232,8 @@ public class SettingsPresenter extends Presenter<SettingsView> {
         Aesthetic.get(context)
                 .colorAccent(color)
                 .apply();
+
+        SettingsManager.getInstance().storeAccentColor(color);
     }
 
     public void tintNavBarClicked(Context context, boolean tintNavBar) {
@@ -239,9 +245,12 @@ public class SettingsPresenter extends Presenter<SettingsView> {
     public void usePaletteClicked(Context context, boolean usePalette) {
         // If we're not using palette any more, set the primary color back to default
         if (!usePalette) {
+            int storedColor = SettingsManager.getInstance().getPrimaryColor();
+
             Aesthetic.get(context)
-                    .colorPrimaryRes(R.color.blue_500)
+                    .colorPrimary(storedColor == -1 ? ContextCompat.getColor(context, R.color.blue_500) : storedColor)
                     .colorStatusBarAuto()
+                    .colorNavigationBarAuto(SettingsManager.getInstance().getTintNavBar())
                     .apply();
         }
     }
@@ -249,9 +258,12 @@ public class SettingsPresenter extends Presenter<SettingsView> {
     public void usePaletteNowPlayingOnlyClicked(Context context, boolean usePaletteNowPlayingOnly) {
         // If we're only using palette for 'now playing', set the primary color back to default
         if (usePaletteNowPlayingOnly) {
+            int storedColor = SettingsManager.getInstance().getPrimaryColor();
+
             Aesthetic.get(context)
-                    .colorPrimaryRes(R.color.blue_500)
+                    .colorPrimary(storedColor == -1 ? ContextCompat.getColor(context, R.color.blue_500) : storedColor)
                     .colorStatusBarAuto()
+                    .colorNavigationBarAuto(SettingsManager.getInstance().getTintNavBar())
                     .apply();
         }
     }
@@ -293,11 +305,11 @@ public class SettingsPresenter extends Presenter<SettingsView> {
     }
 
     private void deleteArtwork() {
-        Completable.fromAction(() -> {
-            //Clear Glide' mem & disk cache
-            Glide.get(ShuttleApplication.getInstance()).clearMemory();
-            Glide.get(ShuttleApplication.getInstance()).clearDiskCache();
-        })
+        //Clear Glide' mem & disk cache
+
+        Glide.get(ShuttleApplication.getInstance()).clearMemory();
+
+        Completable.fromAction(() -> Glide.get(ShuttleApplication.getInstance()).clearDiskCache())
                 .subscribeOn(Schedulers.io())
                 .subscribe();
     }

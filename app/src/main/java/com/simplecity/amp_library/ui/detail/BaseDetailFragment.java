@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -60,6 +61,7 @@ import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.SortManager;
 import com.simplecity.amp_library.utils.StringUtils;
 import com.simplecity.amp_library.utils.TypefaceManager;
+import com.simplecityapps.recycler_adapter.adapter.CompletionListUpdateCallbackAdapter;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
@@ -130,6 +132,8 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
     @Nullable Album currentSlideShowAlbum;
 
+    private boolean isFirstLoad = true;
+
     public BaseDetailFragment() {
     }
 
@@ -150,6 +154,8 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         if (requestManager == null) {
             requestManager = Glide.with(this);
         }
+
+        isFirstLoad = true;
     }
 
     @Override
@@ -172,6 +178,10 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         recyclerView.setRecyclerListener(new RecyclerListener());
         recyclerView.setAdapter(adapter);
 
+        if (isFirstLoad) {
+            recyclerView.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_from_bottom));
+        }
+
         toolbarLayout.setTitle(getToolbarTitle());
         toolbarLayout.setSubtitle(getToolbarSubtitle());
         toolbarLayout.setExpandedTitleTypeface(TypefaceManager.getInstance().getTypeface(TypefaceManager.SANS_SERIF_LIGHT));
@@ -180,7 +190,9 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         String transitionName = getArguments().getString(ARG_TRANSITION_NAME);
         ViewCompat.setTransitionName(headerImageView, transitionName);
 
-        fab.setVisibility(View.GONE);
+        if (isFirstLoad) {
+            fab.setVisibility(View.GONE);
+        }
 
         if (transitionName == null) {
             fadeInUi();
@@ -238,6 +250,8 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         detailPresenter.unbindView(this);
 
         unbinder.unbind();
+
+        isFirstLoad = false;
 
         super.onDestroyView();
     }
@@ -310,21 +324,28 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         return null;
     }
 
-    @NonNull
-    @Override
-    public List<ViewModel> getSongViewModels(List<Song> songs) {
-        List<ViewModel> items = new ArrayList<>();
+    boolean showSongOverflowRemoveButton() {
+        return false;
+    }
 
+    void songRemoved(int position, Song song) {
+    }
+
+    protected void sortSongs(List<Song> songs) {
         @SortManager.SongSort int songSort = getSongSortOrder();
 
         boolean songsAscending = getSongsAscending();
 
-        if (songSort != SortManager.SongSort.DETAIL_DEFAULT) {
-            SortManager.getInstance().sortSongs(songs, songSort);
-            if (!songsAscending) {
-                Collections.reverse(songs);
-            }
+        SortManager.getInstance().sortSongs(songs, songSort);
+        if (!songsAscending) {
+            Collections.reverse(songs);
         }
+    }
+
+    @NonNull
+    @Override
+    public List<ViewModel> getSongViewModels(List<Song> songs) {
+        List<ViewModel> items = new ArrayList<>();
 
         items.add(new SubheaderView(StringUtils.makeSongsLabel(getContext(), songs.size())));
 
@@ -336,6 +357,17 @@ public abstract class BaseDetailFragment extends BaseFragment implements
                 }).toList());
 
         return items;
+    }
+
+    protected void sortAlbums(List<Album> albums) {
+        @SortManager.AlbumSort int albumSort = getAlbumSort();
+
+        boolean albumsAscending = getAlbumsAscending();
+
+        SortManager.getInstance().sortAlbums(albums, albumSort);
+        if (!albumsAscending) {
+            Collections.reverse(albums);
+        }
     }
 
     @NonNull
@@ -353,14 +385,6 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         }
 
         List<ViewModel> items = new ArrayList<>();
-
-        boolean albumsAscending = getAlbumsAscending();
-        @SortManager.AlbumSort int albumSort = getAlbumSort();
-
-        SortManager.getInstance().sortAlbums(albums, albumSort);
-        if (!albumsAscending) {
-            Collections.reverse(albums);
-        }
 
         horizontalRecyclerView.setItems(Stream.of(albums)
                 .map(album -> {
@@ -453,7 +477,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
         // Create playlist menu
         final SubMenu sub = toolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-        PlaylistUtils.makePlaylistMenu(getActivity(), sub);
+        PlaylistUtils.makePlaylistMenu(sub);
 
         // Inflate sorting menus
         MenuItem item = toolbar.getMenu().findItem(R.id.sorting);
@@ -680,7 +704,13 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
     @Override
     public void itemsLoaded(List<ViewModel> items) {
-        adapter.setItems(items);
+
+        adapter.setItems(items, new CompletionListUpdateCallbackAdapter() {
+            @Override
+            public void onComplete() {
+                recyclerView.scheduleLayoutAnimation();
+            }
+        });
     }
 
     @Override
@@ -738,10 +768,10 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     @Override
     public void onSongOverflowClick(int position, View v, Song song) {
         PopupMenu popupMenu = new PopupMenu(getContext(), v);
-        MenuUtils.setupSongMenu(getContext(), popupMenu, false);
+        MenuUtils.setupSongMenu(popupMenu, showSongOverflowRemoveButton());
         popupMenu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), song,
                 taggerDialog -> taggerDialog.show(getFragmentManager()),
-                null));
+                () -> songRemoved(position, song)));
         popupMenu.show();
     }
 

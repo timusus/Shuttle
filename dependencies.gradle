@@ -4,7 +4,7 @@ ext.versions = [
         // App versions
         // /////////////////////////////////////////////////////////////////////////
 
-        name                          : "2.0.0-beta3",
+        name                          : "2.0.0-beta10",
 
         // //////////////////////////////////////////////////////////////////////////
         // Compile versions
@@ -19,21 +19,20 @@ ext.versions = [
         // Plugin versions
         // /////////////////////////////////////////////////////////////////////////
 
-        androidGradlePlugin           : "2.3.3",
-        dexcountGradlePlugin          : "0.7.1",
+        androidGradlePlugin           : "3.0.0-beta2",
+        dexcountGradlePlugin          : "0.7.3",
         fabricGradlePlugin            : "1.+",
-        googleServicesPlugin          : "3.0.0",
         playPublisher                 : "1.2.0",
         gradleVersions                : "0.15.0",
-        retroLambda                   : "3.6.1",
+        retroLambda                   : "3.7.0",
 
         // //////////////////////////////////////////////////////////////////////////
         // Google lib versions
         // /////////////////////////////////////////////////////////////////////////
 
         supportLib                    : "26.0.1",
-        firebaseCore                  : "11.0.0",
-        chromecast                    : "11.0.0",
+        firebaseCore                  : "11.2.0",
+        chromecast                    : "11.2.0",
         constraintLayout              : "1.0.2",
 
         // //////////////////////////////////////////////////////////////////////////
@@ -42,10 +41,10 @@ ext.versions = [
 
         haha                          : "2.0.3",
         leakCanary                    : "1.5.1",
-        okio                          : "1.12.0",
-        okhttp                        : "3.7.0",
-        retrofit                      : "2.2.0",
-        retrofitGson                  : "2.2.0",
+        okio                          : "1.13.0",
+        okhttp                        : "3.8.1",
+        retrofit                      : "2.3.0",
+        retrofitGson                  : "2.3.0",
         sqlBrite                      : "2.0.0-SNAPSHOT",
 
         // //////////////////////////////////////////////////////////////////////////
@@ -53,16 +52,16 @@ ext.versions = [
         // /////////////////////////////////////////////////////////////////////////
 
         nanoHttp                      : "2.3.1",
-        crashlytics                   : "2.6.4@aar",
+        crashlytics                   : "2.6.8",
         dashClockApi                  : "2.0.0",
         fastScroll                    : "1.0.15",
         glide                         : "3.8.0-SNAPSHOT",
         glideOkhttp                   : "1.4.0@aar",
-        materialDialogs               : "0.9.4.5",
+        materialDialogs               : "0.9.4.7",
         permiso                       : "0.3.0",
-        streams                       : "1.1.7",
-        butterknife                   : "8.6.0",
-        butterknifeAnnotationProcessor: "8.6.0",
+        streams                       : "1.1.8",
+        butterknife                   : "8.8.1",
+        butterknifeAnnotationProcessor: "8.8.1",
         dagger                        : "2.11",
         daggerAnnotationProcessor     : "2.11",
         expandableRecyclerView        : "3.0.0-RC1",
@@ -73,8 +72,8 @@ ext.versions = [
         rxAndroid                     : "2.0.1",
         rxBinding                     : "2.0.0",
         rxBindingAppCompat            : "2.0.0",
-        rxImagePicker                 : "2.0.0",
-        rxJava                        : "2.1.0",
+        rxImagePicker                 : "2.0.1",
+        rxJava                        : "2.1.3",
         rxRelay                       : "2.0.0",
         rxBroadcast                   : "2.0.0",
 
@@ -88,24 +87,23 @@ ext.versions = [
         // /////////////////////////////////////////////////////////////////////////
 
         junit                         : "4.12",
-        espressoCore                  : "2.2.2",
-        assertj                       : "3.6.1",
+        espressoCore                  : "3.0.0",
+        assertj                       : "3.8.0",
 
         // Mockito version restriction -- PowerMock does not fully support Mockito2 yet.
         // https://github.com/powermock/powermock/wiki/Mockito2_maven
-        mockito                       : "1.10.19",
-        powermock                     : "1.6.6",
+        mockito                       : "2.8.47",
+        powermock                     : "1.7.1",
 
         // Future note: PowerMock and Robolectric can't work together until Robolectric 3.3 is released
         // https://github.com/robolectric/robolectric/wiki/Using-PowerMock
-        robolectric                   : "3.2.2"
+        robolectric                   : "3.4.2"
 ]
 
 ext.gradlePlugins = [
         android       : "com.android.tools.build:gradle:$versions.androidGradlePlugin",
         dexcount      : "com.getkeepsafe.dexcount:dexcount-gradle-plugin:$versions.dexcountGradlePlugin",
         fabric        : "io.fabric.tools:gradle:$versions.fabricGradlePlugin",
-        googleServices: "com.google.gms:google-services:$versions.googleServicesPlugin",
         playPublisher : "com.github.triplet.gradle:play-publisher:$versions.playPublisher",
         gradleVersions: "com.github.ben-manes:gradle-versions-plugin:$versions.gradleVersions",
         retroLambda   : "me.tatarka:gradle-retrolambda:$versions.retroLambda"
@@ -168,10 +166,8 @@ ext.libs = [
         // Glide - OkHttp  integration - https://git.io/vihvW (Bump)
         glideOkhttp                   : "com.github.bumptech.glide:okhttp3-integration:$versions.glideOkhttp",
         // Material Dialogs - https://git.io/vixHf (Aidan Follestad)
-//        materialDialogs               : "com.afollestad.material-dialogs:core:$versions.materialDialogs",
-//        materialDialogCommons         : "com.afollestad.material-dialogs:commons:$versions.materialDialogs",
-        materialDialogs               : project(':libraries/material-dialogs/:core'),
-        materialDialogCommons         : project(':libraries/material-dialogs/:commons'),
+        materialDialogs               : "com.afollestad.material-dialogs:core:$versions.materialDialogs",
+        materialDialogCommons         : "com.afollestad.material-dialogs:commons:$versions.materialDialogs",
 
         // Permiso - https://git.io/vixQ4 (Greyson Parrelli)
         permiso                       : "com.greysonparrelli.permiso:permiso:$versions.permiso",
@@ -189,8 +185,6 @@ ext.libs = [
         expandableRecyclerView        : "com.bignerdranch.android:expandablerecyclerview:$versions.expandableRecyclerView",
         // Aesthetic - Theming Engine
         aesthetic                     : project(":libraries/:aesthetic"),
-        // Better pickers - https://github.com/code-troopers/android-betterpickers
-        betterPickers                 : "com.code-troopers.betterpickers:library:$versions.betterPickers",
 
         // RX
 
@@ -203,7 +197,8 @@ ext.libs = [
         // RxJava - https://git.io/rxjava (ReactiveX)
         rxJava                        : "io.reactivex.rxjava2:rxjava:$versions.rxJava",
         // RX Image Picker - https://git.io/vix5H (MLSDev )
-        rxImagePicker                 : "com.mlsdev.rximagepicker:library:$versions.rxImagePicker",
+//        rxImagePicker                 : "com.mlsdev.rximagepicker:library:$versions.rxImagePicker",
+        rxImagePicker                 : "com.github.timusus:RxImagePicker:permission-check-fix-SNAPSHOT",
         // RX Relay - https://github.com/JakeWharton/RxRelay
         rxRelay                       : "com.jakewharton.rxrelay2:rxrelay:$versions.rxRelay",
         // Rx Receivers - https://github.com/f2prateek/rx-receivers
@@ -225,7 +220,7 @@ ext.libs = [
         // Mockito - https://github.com/mockito/mockito
         mockito                       : "org.mockito:mockito-core:$versions.mockito",
         // Powermock - https://github.com/powermock/powermock
-        powermock                     : "org.powermock:powermock-api-mockito:$versions.powermock",
+        powermock                     : "org.powermock:powermock-api-mockito2:$versions.powermock",
         powermockjunit                : "org.powermock:powermock-module-junit4:$versions.powermock",
         // Robolectric - https://github.com/robolectric/robolectric
         robolectric                   : "org.robolectric:robolectric:$versions.robolectric",

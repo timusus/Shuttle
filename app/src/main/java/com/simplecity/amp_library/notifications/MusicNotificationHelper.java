@@ -63,10 +63,11 @@ public class MusicNotificationHelper extends NotificationHelper {
                 .setSmallIcon(R.drawable.ic_stat_notification)
                 .setContentIntent(contentIntent)
                 .setChannelId(NOTIFICATION_CHANNEL_ID)
-                .setPriority(Notification.PRIORITY_MAX)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setContentTitle(song.name)
-                .setContentText(song.albumArtistName + " - " + song.albumName)
+                .setContentText(song.artistName + " - " + song.albumName)
                 .setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle()
+                        .setShowActionsInCompactView(0, 1, 2)
                         .setMediaSession(mediaSessionCompat.getSessionToken()))
                 .addAction(
                         R.drawable.ic_skip_previous_24dp,
@@ -83,14 +84,11 @@ public class MusicNotificationHelper extends NotificationHelper {
                         context.getString(R.string.btn_skip),
                         MusicService.retrievePlaybackAction(context, MusicService.ServiceCommand.NEXT_ACTION)
                 )
-                //Todo:
-                // Adding to favorites works, but the wrap-around call to update the notification seems to happen
-                // before isPlaylist() returns true.. A bug for another day.
-//                .addAction(
-//                        isFavorite ? R.drawable.ic_favorite_24dp_scaled : R.drawable.ic_favorite_border_24dp_scaled,
-//                        context.getString(R.string.fav_add),
-//                        MusicService.retrievePlaybackAction(context, MusicService.ServiceCommand.TOGGLE_FAVORITE)
-//                )
+                .addAction(
+                        isFavorite ? R.drawable.ic_favorite_24dp_scaled : R.drawable.ic_favorite_border_24dp_scaled,
+                        context.getString(R.string.fav_add),
+                        MusicService.retrievePlaybackAction(context, MusicService.ServiceCommand.TOGGLE_FAVORITE)
+                )
                 .setShowWhen(false)
                 .setVisibility(android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC);
 

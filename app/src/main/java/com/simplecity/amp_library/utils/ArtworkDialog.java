@@ -115,7 +115,7 @@ public class ArtworkDialog {
 
         Observable.fromCallable(artworkProvider::getFolderArtworkFiles)
                 .subscribeOn(Schedulers.io())
-                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(files -> {
                     adapter.removeItem(adapter.items.indexOf(folderView));
                     if (files != null) {

@@ -15,6 +15,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 
@@ -278,9 +279,9 @@ public class CircleImageView extends AppCompatImageView {
             aestheticDisposable = Aesthetic.get(getContext()).isDark()
                     .subscribe(isDark -> {
                         if (isDark) {
-                            setBorderColor(getResources().getColor(R.color.grey_900));
+                            setBorderColor(ContextCompat.getColor(getContext(), R.color.grey_900));
                         } else {
-                            setBorderColor(getResources().getColor(R.color.grey_250));
+                            setBorderColor(ContextCompat.getColor(getContext(), R.color.grey_250));
                         }
                     });
         }

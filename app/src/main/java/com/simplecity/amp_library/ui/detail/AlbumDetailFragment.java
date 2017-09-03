@@ -77,7 +77,10 @@ public class AlbumDetailFragment extends BaseDetailFragment {
     @NonNull
     @Override
     public Single<List<Song>> getSongs() {
-        return album.getSongsSingle();
+        return album.getSongsSingle().map(songs -> {
+            sortSongs(songs);
+            return songs;
+        });
     }
 
     @NonNull

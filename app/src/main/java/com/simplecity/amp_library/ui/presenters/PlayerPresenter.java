@@ -3,7 +3,6 @@ package com.simplecity.amp_library.ui.presenters;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.support.annotation.NonNull;
-import android.widget.Toast;
 
 import com.cantrowitz.rxbroadcast.RxBroadcast;
 import com.simplecity.amp_library.ShuttleApplication;
@@ -80,6 +79,7 @@ public class PlayerPresenter extends Presenter<PlayerView> {
         filter.addAction(MusicService.InternalIntents.SHUFFLE_CHANGED);
         filter.addAction(MusicService.InternalIntents.REPEAT_CHANGED);
         filter.addAction(MusicService.InternalIntents.SERVICE_CONNECTED);
+        filter.addAction(MusicService.InternalIntents.FAVORITE_CHANGED);
 
         addDisposable(RxBroadcast.fromBroadcast(ShuttleApplication.getInstance(), filter)
                 .toFlowable(BackpressureStrategy.LATEST)
@@ -111,6 +111,12 @@ public class PlayerPresenter extends Presenter<PlayerView> {
                                 updateShuffleMode();
                                 updateRepeatMode();
                                 break;
+                            case MusicService.InternalIntents.FAVORITE_CHANGED:
+                                PlaylistUtils.isFavorite(MusicUtils.getSong())
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(this::updateFavorite);
+                                break;
                         }
                     }
                 }, error -> LogUtils.logException(TAG, "PlayerPresenter: Error sending broadcast", error)));
@@ -137,14 +143,10 @@ public class PlayerPresenter extends Presenter<PlayerView> {
         currentPlaybackTimeVisible = visible;
     }
 
-    private void updateFavorite() {
+    private void updateFavorite(boolean isFavorite) {
         PlayerView view = getView();
         if (view != null) {
-            addDisposable(PlaylistUtils.isFavorite(MusicUtils.getSong())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(view::favoriteChanged,
-                            error -> LogUtils.logException(TAG, "Update favorite failed", error)));
+            view.favoriteChanged(isFavorite);
         }
     }
 
@@ -155,7 +157,10 @@ public class PlayerPresenter extends Presenter<PlayerView> {
             view.currentTimeChanged(MusicUtils.getPosition() / 1000);
             view.queueChanged(MusicUtils.getQueuePosition() + 1, MusicUtils.getQueue().size());
 
-            updateFavorite();
+            addDisposable(PlaylistUtils.isFavorite(MusicUtils.getSong())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(isFavorite -> updateFavorite((isFavorite))));
         }
     }
 
@@ -187,13 +192,7 @@ public class PlayerPresenter extends Presenter<PlayerView> {
     }
 
     public void toggleFavorite() {
-        PlaylistUtils.toggleFavorite(message -> {
-            updateFavorite();
-            PlayerView playerView = getView();
-            if (playerView != null) {
-                playerView.showToast(message, Toast.LENGTH_SHORT);
-            }
-        });
+        MusicUtils.toggleFavorite();
     }
 
     public void skip() {
@@ -292,6 +291,16 @@ public class PlayerPresenter extends Presenter<PlayerView> {
             Song song = MusicUtils.getSong();
             if (song != null) {
                 playerView.showSongInfoDialog(BiographyDialog.getSongInfoDialog(context, song));
+            }
+        }
+    }
+
+    public void shareClicked(Context context) {
+        PlayerView playerView = getView();
+        if (playerView != null) {
+            Song song = MusicUtils.getSong();
+            if (song != null) {
+                song.share(context);
             }
         }
     }

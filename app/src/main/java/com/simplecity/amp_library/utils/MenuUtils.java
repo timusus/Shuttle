@@ -101,12 +101,8 @@ public class MenuUtils implements MusicUtils.Defs {
                 .build()
                 .show();
     }
-
-    public static void remove(Song song) {
-        MusicUtils.removeFromQueue(song, true);
-    }
-
-    public static void setupSongMenu(Context context, PopupMenu menu, boolean showRemoveButton) {
+    
+    public static void setupSongMenu(PopupMenu menu, boolean showRemoveButton) {
         menu.inflate(R.menu.menu_song);
 
         if (!showRemoveButton) {
@@ -115,7 +111,7 @@ public class MenuUtils implements MusicUtils.Defs {
 
         // Add playlist menu
         SubMenu sub = menu.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-        PlaylistUtils.makePlaylistMenu(context, sub);
+        PlaylistUtils.makePlaylistMenu(sub);
     }
 
     public static Toolbar.OnMenuItemClickListener getSongMenuClickListener(Context context, UnsafeCallable<List<Song>> callable) {
@@ -179,7 +175,6 @@ public class MenuUtils implements MusicUtils.Defs {
                     if (songRemoved != null) {
                         songRemoved.run();
                     }
-                    remove(song);
                     return true;
             }
             return false;
@@ -434,7 +429,7 @@ public class MenuUtils implements MusicUtils.Defs {
     }
 
     public static void edit(Context context, Playlist playlist) {
-        if (playlist.id == MusicUtils.PlaylistIds.RECENTLY_ADDED_PLAYLIST) {
+        if (playlist.id == PlaylistUtils.PlaylistIds.RECENTLY_ADDED_PLAYLIST) {
             DialogUtils.showWeekSelectorDialog(context);
         }
     }
@@ -462,7 +457,7 @@ public class MenuUtils implements MusicUtils.Defs {
             menu.getMenu().findItem(R.id.clearPlaylist).setVisible(false);
         }
 
-        if (playlist.id != MusicUtils.PlaylistIds.RECENTLY_ADDED_PLAYLIST) {
+        if (playlist.id != PlaylistUtils.PlaylistIds.RECENTLY_ADDED_PLAYLIST) {
             menu.getMenu().findItem(R.id.editPlaylist).setVisible(false);
         }
 
@@ -470,35 +465,61 @@ public class MenuUtils implements MusicUtils.Defs {
             menu.getMenu().findItem(R.id.renamePlaylist).setVisible(false);
         }
 
-        if (playlist.id == MusicUtils.PlaylistIds.MOST_PLAYED_PLAYLIST) {
+        if (playlist.id == PlaylistUtils.PlaylistIds.MOST_PLAYED_PLAYLIST) {
             menu.getMenu().findItem(R.id.exportPlaylist).setVisible(false);
         }
     }
 
-    public static PopupMenu.OnMenuItemClickListener getPlaylistClickListener(final Context context, final Playlist playlist) {
-        return item -> {
-            switch (item.getItemId()) {
-                case R.id.playPlaylist:
-                    play(context, playlist.getSongsObservable().first(Collections.emptyList()));
-                    return true;
-                case R.id.deletePlaylist:
-                    delete(context, playlist);
-                    return true;
-                case R.id.editPlaylist:
-                    edit(context, playlist);
-                    return true;
-                case R.id.renamePlaylist:
-                    rename(context, playlist);
-                    return true;
-                case R.id.exportPlaylist:
-                    export(context, playlist);
-                    return true;
-                case R.id.clearPlaylist:
-                    clear(playlist);
-                    return true;
-            }
-            return false;
-        };
+    public static void setupPlaylistMenu(Toolbar toolbar, Playlist playlist) {
+        toolbar.inflateMenu(R.menu.menu_playlist);
+
+        if (!playlist.canDelete) {
+            toolbar.getMenu().findItem(R.id.deletePlaylist).setVisible(false);
+        }
+
+        if (!playlist.canClear) {
+            toolbar.getMenu().findItem(R.id.clearPlaylist).setVisible(false);
+        }
+
+        if (playlist.id != PlaylistUtils.PlaylistIds.RECENTLY_ADDED_PLAYLIST) {
+            toolbar.getMenu().findItem(R.id.editPlaylist).setVisible(false);
+        }
+
+        if (!playlist.canRename) {
+            toolbar.getMenu().findItem(R.id.renamePlaylist).setVisible(false);
+        }
+
+        if (playlist.id == PlaylistUtils.PlaylistIds.MOST_PLAYED_PLAYLIST) {
+            toolbar.getMenu().findItem(R.id.exportPlaylist).setVisible(false);
+        }
+    }
+
+    public static PopupMenu.OnMenuItemClickListener getPlaylistPopupMenuClickListener(final Context context, final Playlist playlist) {
+        return item -> handleMenuItemClicks(context, item, playlist);
+    }
+
+    public static boolean handleMenuItemClicks(Context context, MenuItem menuItem, Playlist playlist) {
+        switch (menuItem.getItemId()) {
+            case R.id.playPlaylist:
+                play(context, playlist.getSongsObservable().first(Collections.emptyList()));
+                return true;
+            case R.id.deletePlaylist:
+                delete(context, playlist);
+                return true;
+            case R.id.editPlaylist:
+                edit(context, playlist);
+                return true;
+            case R.id.renamePlaylist:
+                rename(context, playlist);
+                return true;
+            case R.id.exportPlaylist:
+                export(context, playlist);
+                return true;
+            case R.id.clearPlaylist:
+                clear(playlist);
+                return true;
+        }
+        return false;
     }
 
     // Genres
@@ -547,17 +568,16 @@ public class MenuUtils implements MusicUtils.Defs {
         return FileHelper.getSongList(new File(folderObject.path), true, false);
     }
 
-    public static void setupFolderMenu(Context context, PopupMenu menu, BaseFileObject fileObject) {
+    public static void setupFolderMenu(PopupMenu menu, BaseFileObject fileObject) {
 
         menu.inflate(R.menu.menu_file);
 
         // Add playlist menu
         SubMenu sub = menu.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-        PlaylistUtils.makePlaylistMenu(context, sub);
+        PlaylistUtils.makePlaylistMenu(sub);
 
         if (!fileObject.canReadWrite()) {
             menu.getMenu().findItem(R.id.rename).setVisible(false);
-            menu.getMenu().findItem(R.id.remove).setVisible(false);
         }
 
         switch (fileObject.fileType) {

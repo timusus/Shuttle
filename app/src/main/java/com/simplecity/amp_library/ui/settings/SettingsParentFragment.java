@@ -28,6 +28,7 @@ import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.ui.activities.MainActivity;
 import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
+import com.simplecity.amp_library.ui.drawer.MiniPlayerLockManager;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 
@@ -43,7 +44,9 @@ import test.com.androidnavigation.fragment.BaseController;
 import test.com.androidnavigation.fragment.BaseNavigationController;
 import test.com.androidnavigation.fragment.FragmentInfo;
 
-public class SettingsParentFragment extends BaseNavigationController implements DrawerLockManager.DrawerLock {
+public class SettingsParentFragment extends BaseNavigationController implements
+        DrawerLockManager.DrawerLock,
+        MiniPlayerLockManager.MiniPlayerLock {
 
     public static String ARG_PREFERENCE_RESOURCE = "preference_resource";
     public static String ARG_TITLE = "title";
@@ -97,11 +100,13 @@ public class SettingsParentFragment extends BaseNavigationController implements 
     public void onResume() {
         super.onResume();
         DrawerLockManager.getInstance().addDrawerLock(this);
+        MiniPlayerLockManager.getInstance().addMiniPlayerLock(this);
     }
 
     @Override
     public void onPause() {
         DrawerLockManager.getInstance().removeDrawerLock(this);
+        MiniPlayerLockManager.getInstance().removeMiniPlayerLock(this);
         super.onPause();
     }
 

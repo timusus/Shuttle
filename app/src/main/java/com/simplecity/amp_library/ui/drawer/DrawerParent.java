@@ -7,6 +7,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
@@ -115,7 +116,7 @@ public class DrawerParent implements Parent<DrawerChild> {
     }
 
     Drawable getDrawable(Context context) {
-        Drawable drawable = DrawableCompat.wrap(context.getResources().getDrawable(iconResId));
+        Drawable drawable = DrawableCompat.wrap(ContextCompat.getDrawable(context, iconResId));
         DrawableCompat.setTint(drawable, isSelected ? Aesthetic.get(context).colorPrimary().blockingFirst() : Aesthetic.get(context).textColorPrimary().blockingFirst());
         return drawable;
     }
@@ -124,7 +125,7 @@ public class DrawerParent implements Parent<DrawerChild> {
 
         holder.bind(this);
 
-        Drawable arrowDrawable = DrawableCompat.wrap(holder.itemView.getResources().getDrawable(holder.isExpanded() ? R.drawable.ic_arrow_up_24dp : R.drawable.ic_arrow_down_24dp));
+        Drawable arrowDrawable = DrawableCompat.wrap(ContextCompat.getDrawable(holder.itemView.getContext(), holder.isExpanded() ? R.drawable.ic_arrow_up_24dp : R.drawable.ic_arrow_down_24dp));
         DrawableCompat.setTint(arrowDrawable, Aesthetic.get(holder.itemView.getContext()).textColorSecondary().blockingFirst());
         holder.expandableIcon.setImageDrawable(arrowDrawable);
 

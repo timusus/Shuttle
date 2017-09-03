@@ -16,7 +16,7 @@
         <!--<intent-->
             <!--android:action="com.simplecity.amp_library.shortcuts.PLAYLIST"-->
             <!--android:targetClass="com.simplecity.amp_library.ui.activities.ShortcutTrampolineActivity"-->
-            <!--android:targetPackage="{applicationId}"/>-->
+            <!--android:targetPackage="another.music.player"/>-->
     <!--</shortcut>-->
 
     <shortcut
@@ -33,7 +33,7 @@
         <intent
             android:action="com.simplecity.amp_library.shortcuts.SHUFFLE"
             android:targetClass="com.simplecity.amp_library.ui.activities.ShortcutTrampolineActivity"
-            android:targetPackage="{applicationId}"/>
+            android:targetPackage="another.music.player"/>
     </shortcut>
 
     <shortcut
@@ -50,6 +50,6 @@
         <intent
             android:action="com.simplecity.amp_library.shortcuts.PLAY"
             android:targetClass="com.simplecity.amp_library.ui.activities.ShortcutTrampolineActivity"
-            android:targetPackage="{applicationId}"/>
+            android:targetPackage="another.music.player"/>
     </shortcut>
 </shortcuts>

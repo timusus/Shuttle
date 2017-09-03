@@ -1,8 +1,10 @@
 package com.simplecity.amp_library.ui.dialog;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -12,6 +14,7 @@ import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.CategoryItem;
+import com.simplecity.amp_library.ui.fragments.LibraryController;
 import com.simplecity.amp_library.ui.modelviews.TabViewModel;
 import com.simplecity.amp_library.ui.recyclerview.ItemTouchHelperCallback;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
@@ -26,6 +29,7 @@ public class TabChooserDialog {
     }
 
     public static MaterialDialog getDialog(Context context) {
+
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         ViewModelAdapter adapter = new ViewModelAdapter();
@@ -68,6 +72,7 @@ public class TabChooserDialog {
                                 ((TabViewModel) viewModelIntPair.getSecond()).categoryItem.sortOrder = viewModelIntPair.getFirst();
                                 ((TabViewModel) viewModelIntPair.getSecond()).categoryItem.savePrefs(editor);
                             });
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(LibraryController.EVENT_TABS_CHANGED));
                 })
                 .negativeText(R.string.close)
                 .build();

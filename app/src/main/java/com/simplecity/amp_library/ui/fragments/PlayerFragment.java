@@ -35,8 +35,10 @@ import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.glide.palette.PaletteBitmap;
 import com.simplecity.amp_library.glide.palette.PaletteBitmapTranscoder;
+import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.rx.UnsafeConsumer;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.drawer.NavigationEventRelay;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
@@ -47,6 +49,7 @@ import com.simplecity.amp_library.ui.views.RepeatButton;
 import com.simplecity.amp_library.ui.views.RepeatingImageButton;
 import com.simplecity.amp_library.ui.views.ShuffleButton;
 import com.simplecity.amp_library.ui.views.SizableSeekBar;
+import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
@@ -54,6 +57,7 @@ import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.StringUtils;
 
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -63,8 +67,10 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class PlayerFragment extends BaseFragment implements
         PlayerView,
@@ -118,7 +124,10 @@ public class PlayerFragment extends BaseFragment implements
     @Inject PlayerPresenter presenter;
 
     @Inject NavigationEventRelay navigationEventRelay;
+
     private Unbinder unbinder;
+
+    private int currentColor = Color.TRANSPARENT;
 
     public PlayerFragment() {
     }
@@ -379,27 +388,33 @@ public class PlayerFragment extends BaseFragment implements
                         public void onResourceReady(PaletteBitmap resource, GlideAnimation<? super PaletteBitmap> glideAnimation) {
                             Palette.Swatch swatch = resource.palette.getDarkMutedSwatch();
                             if (swatch != null) {
-                                if (!SettingsManager.getInstance().getUsePaletteNowPlayingOnly()) {
-                                    // Set Aesthetic colors globally, based on the current Palette swatch
-                                    Aesthetic.get(getContext())
-                                            .colorPrimary()
-                                            .take(1)
-                                            .subscribe(integer -> {
-                                                ValueAnimator valueAnimator = ValueAnimator.ofInt(integer, swatch.getRgb());
-                                                valueAnimator.setEvaluator(new ArgbEvaluator());
-                                                valueAnimator.setDuration(450);
-                                                valueAnimator.addUpdateListener(animator -> Aesthetic.get(getContext())
-                                                        .colorPrimary((Integer) animator.getAnimatedValue())
-                                                        .colorStatusBarAuto()
-                                                        .apply());
-                                                valueAnimator.start();
-                                            });
+                                if (SettingsManager.getInstance().getUsePalette()) {
+                                    if (SettingsManager.getInstance().getUsePaletteNowPlayingOnly()) {
+                                        animateColors(currentColor, swatch.getRgb(), color -> invalidateColors(color));
+                                    } else {
+                                        // Set Aesthetic colors globally, based on the current Palette swatch
+                                        Aesthetic.get(getContext())
+                                                .colorPrimary()
+                                                .take(1)
+                                                .subscribe(integer -> animateColors(integer, swatch.getRgb(), color -> {
+                                                    Aesthetic aesthetic = Aesthetic.get(getContext())
+                                                            .colorPrimary(color)
+                                                            .colorStatusBarAuto();
+
+                                                    if (SettingsManager.getInstance().getTintNavBar()) {
+                                                        aesthetic = aesthetic.colorNavigationBar(color);
+                                                    }
+
+                                                    aesthetic.apply();
+                                                }));
+                                    }
                                 }
                             } else {
+                                // Failed to generate the dark muted swatch, fall back to the primary theme colour.
                                 Aesthetic.get(getContext())
                                         .colorPrimary()
                                         .take(1)
-                                        .subscribe(color -> invalidateColors(color));
+                                        .subscribe(primaryColor -> animateColors(currentColor, primaryColor, color -> invalidateColors(color)));
                             }
                         }
 
@@ -409,17 +424,20 @@ public class PlayerFragment extends BaseFragment implements
                             Aesthetic.get(getContext())
                                     .colorPrimary()
                                     .take(1)
-                                    .subscribe(color -> invalidateColors(color));
+                                    .subscribe(primaryColor -> animateColors(currentColor, primaryColor, color -> invalidateColors(color)));
                         }
                     });
         }
     }
 
     private void invalidateColors(int color) {
+
+        currentColor = color;
+
         boolean isColorLight = Util.isColorLight(color);
         int textColor = isColorLight ? Color.BLACK : Color.WHITE;
 
-        if (!ShuttleUtils.isLandscape()) {
+        if (!ShuttleUtils.isLandscape() && backgroundView != null) {
             backgroundView.setBackgroundColor(color);
         }
 
@@ -471,7 +489,16 @@ public class PlayerFragment extends BaseFragment implements
                 presenter.showLyrics(getContext());
                 return true;
             case R.id.goToArtist:
-                navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_ARTIST, MusicUtils.getAlbumArtist(), true));
+                AlbumArtist currentAlbumArtist = MusicUtils.getAlbumArtist();
+                // MusicUtils.getAlbumArtist() is only populate with the album the current Song belongs to.
+                // Let's find the matching AlbumArtist in the DataManager.albumArtistRelay
+                DataManager.getInstance().getAlbumArtistsRelay()
+                        .first(Collections.emptyList())
+                        .flatMapObservable(Observable::fromIterable)
+                        .filter(albumArtist -> currentAlbumArtist != null && albumArtist.name.equals(currentAlbumArtist.name) && albumArtist.albums.containsAll(currentAlbumArtist.albums))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(albumArtist -> navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_ARTIST, albumArtist, true)));
                 return true;
             case R.id.goToAlbum:
                 navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_ALBUM, MusicUtils.getAlbum(), true));
@@ -482,7 +509,18 @@ public class PlayerFragment extends BaseFragment implements
             case R.id.songInfo:
                 presenter.songInfoClicked(getContext());
                 return true;
+            case R.id.share:
+                presenter.shareClicked(getContext());
+                return true;
         }
         return false;
+    }
+
+    private void animateColors(int from, int to, UnsafeConsumer<Integer> consumer) {
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(from, to);
+        valueAnimator.setEvaluator(new ArgbEvaluator());
+        valueAnimator.setDuration(450);
+        valueAnimator.addUpdateListener(animator -> consumer.accept((Integer) animator.getAnimatedValue()));
+        valueAnimator.start();
     }
 }

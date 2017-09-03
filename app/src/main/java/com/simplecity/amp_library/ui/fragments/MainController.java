@@ -24,6 +24,7 @@ import com.simplecity.amp_library.ui.detail.PlaylistDetailFragment;
 import com.simplecity.amp_library.ui.drawer.DrawerLockController;
 import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
 import com.simplecity.amp_library.ui.drawer.DrawerProvider;
+import com.simplecity.amp_library.ui.drawer.MiniPlayerLockManager;
 import com.simplecity.amp_library.ui.drawer.NavigationEventRelay;
 import com.simplecity.amp_library.ui.settings.SettingsParentFragment;
 import com.simplecity.amp_library.ui.views.UpNextView;
@@ -118,13 +119,13 @@ public class MainController extends BaseNavigationController implements BackPres
                             popToRootViewController();
                             break;
                         case NavigationEventRelay.NavigationEvent.Type.FOLDERS_SELECTED:
-                            delayHandler.postDelayed(() -> pushViewController(FolderFragment.newInstance("PageTitle"), "FolderFragment"), 250);
+                            delayHandler.postDelayed(() -> pushViewController(FolderFragment.newInstance(getString(R.string.folders_title), false), "FolderFragment"), 250);
                             break;
                         case NavigationEventRelay.NavigationEvent.Type.SLEEP_TIMER_SELECTED:
                             UnsafeAction showToast = () -> Toast.makeText(getContext(), R.string.sleep_timer_started, Toast.LENGTH_SHORT).show();
                             SleepTimer.getInstance().getDialog(
                                     getContext(),
-                                    () -> SleepTimer.getInstance().showHmsPicker(getContext(), getFragmentManager(), showToast),
+                                    () -> SleepTimer.getInstance().showMinutesDialog(getContext(), showToast),
                                     showToast
                             ).show();
                             break;
@@ -194,7 +195,7 @@ public class MainController extends BaseNavigationController implements BackPres
     private void toggleBottomSheetVisibility(boolean collapse, boolean animate) {
         if (MusicUtils.getQueue().isEmpty()) {
             multiSheetView.hide(collapse, false);
-        } else {
+        } else if (MiniPlayerLockManager.getInstance().canShowMiniPlayer()) {
             multiSheetView.unhide(animate);
         }
     }

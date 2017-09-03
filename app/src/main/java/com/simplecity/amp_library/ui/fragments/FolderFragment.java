@@ -33,6 +33,7 @@ import com.simplecity.amp_library.ui.modelviews.BreadcrumbsView;
 import com.simplecity.amp_library.ui.modelviews.FolderView;
 import com.simplecity.amp_library.ui.views.BreadcrumbItem;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
+import com.simplecity.amp_library.ui.views.StatusBarView;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.FileBrowser;
 import com.simplecity.amp_library.utils.FileHelper;
@@ -54,6 +55,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.Nullable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import test.com.androidnavigation.fragment.BackPressListener;
@@ -74,6 +76,8 @@ public class FolderFragment extends BaseFragment implements
 
     private static final String ARG_CURRENT_DIR = "current_dir";
 
+    private static final String ARG_DISPLAYED_IN_TABS = "displayed_in_tabs";
+
     private ViewModelAdapter adapter;
 
     @BindView(R.id.recyclerView)
@@ -91,11 +95,16 @@ public class FolderFragment extends BaseFragment implements
     @BindView(R.id.app_bar)
     AppBarLayout appBarLayout;
 
+    @BindView(R.id.statusBarView)
+    StatusBarView statusBarView;
+
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     boolean isInActionMode = false;
 
     String currentDir;
+
+    boolean displayedInTabs = false;
 
     FileBrowser fileBrowser;
 
@@ -109,15 +118,19 @@ public class FolderFragment extends BaseFragment implements
 
     private ContextualToolbarHelper<BaseFileObject> contextualToolbarHelper;
 
+    @Nullable
+    private BreadcrumbsView breadcrumbsView;
+
     private Unbinder unbinder;
 
     public FolderFragment() {
     }
 
-    public static FolderFragment newInstance(String pageTitle) {
+    public static FolderFragment newInstance(String pageTitle, boolean isDisplayedInTabs) {
         FolderFragment fragment = new FolderFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PAGE_TITLE, pageTitle);
+        args.putBoolean(ARG_DISPLAYED_IN_TABS, isDisplayedInTabs);
         fragment.setArguments(args);
         return fragment;
     }
@@ -135,6 +148,12 @@ public class FolderFragment extends BaseFragment implements
         if (savedInstanceState != null) {
             currentDir = savedInstanceState.getString(ARG_CURRENT_DIR);
         }
+
+        displayedInTabs = getArguments().getBoolean(ARG_DISPLAYED_IN_TABS);
+
+        if (displayedInTabs) {
+            setHasOptionsMenu(true);
+        }
     }
 
     @Override
@@ -144,22 +163,26 @@ public class FolderFragment extends BaseFragment implements
 
         unbinder = ButterKnife.bind(this, rootView);
 
-//        if (getParentFragment() == null) {
-        showBreadcrumbsInList = false;
-        breadcrumb.addBreadcrumbListener(this);
-        if (!TextUtils.isEmpty(currentDir)) {
-            breadcrumb.changeBreadcrumbPath(currentDir);
+        if (displayedInTabs) {
+            breadcrumbsView = new BreadcrumbsView(currentDir);
+            showBreadcrumbsInList = true;
+            changeBreadcrumbPath();
+            appBarLayout.setVisibility(View.GONE);
+            statusBarView.setVisibility(View.GONE);
+        } else {
+            showBreadcrumbsInList = false;
+            breadcrumb.addBreadcrumbListener(this);
+            if (!TextUtils.isEmpty(currentDir)) {
+                breadcrumb.changeBreadcrumbPath(currentDir);
+            }
         }
-//        } else {
-//            showBreadcrumbsInList = true;
-//            changeBreadcrumbPath();
-//            toolbar.setVisibility(View.GONE);
-//        }
 
-        toolbar.inflateMenu(R.menu.menu_sort_folders);
-        toolbar.setNavigationOnClickListener(v -> getNavigationController().popViewController());
-        toolbar.setOnMenuItemClickListener(this);
-        updateMenuItems(toolbar.getMenu());
+        if (!displayedInTabs) {
+            toolbar.inflateMenu(R.menu.menu_folders);
+            toolbar.setNavigationOnClickListener(v -> getNavigationController().popViewController());
+            toolbar.setOnMenuItemClickListener(this);
+            updateMenuItems(toolbar.getMenu());
+        }
 
         recyclerView.setRecyclerListener(new RecyclerListener());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -199,7 +222,9 @@ public class FolderFragment extends BaseFragment implements
 
         getNavigationController().addBackPressListener(this);
 
-        DrawerLockManager.getInstance().addDrawerLock(this);
+        if (!displayedInTabs) {
+            DrawerLockManager.getInstance().addDrawerLock(this);
+        }
 
         if (isVisible()) {
             setupContextualToolbar();
@@ -212,7 +237,9 @@ public class FolderFragment extends BaseFragment implements
 
         getNavigationController().removeBackPressListener(this);
 
-        DrawerLockManager.getInstance().removeDrawerLock(this);
+        if (!displayedInTabs) {
+            DrawerLockManager.getInstance().removeDrawerLock(this);
+        }
 
         super.onPause();
     }
@@ -232,8 +259,28 @@ public class FolderFragment extends BaseFragment implements
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_sort_folders, menu);
+        inflater.inflate(R.menu.menu_folders, menu);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        updateMenuItems(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return this.onMenuItemClick(item);
+    }
+
+    private void updateMenuItems() {
+        if (displayedInTabs) {
+            getActivity().invalidateOptionsMenu();
+        } else {
+            updateMenuItems(toolbar.getMenu());
+        }
     }
 
     private void updateMenuItems(Menu menu) {
@@ -310,8 +357,7 @@ public class FolderFragment extends BaseFragment implements
                     })
                     .collect(Collectors.toList());
 
-            if (showBreadcrumbsInList) {
-                BreadcrumbsView breadcrumbsView = new BreadcrumbsView(currentDir);
+            if (showBreadcrumbsInList && breadcrumbsView != null) {
                 breadcrumbsView.setBreadcrumbsPath(currentDir);
                 breadcrumbsView.setListener(this);
                 items.add(0, breadcrumbsView);
@@ -380,7 +426,7 @@ public class FolderFragment extends BaseFragment implements
     @Override
     public void onFileObjectOverflowClick(View v, FolderView folderView) {
         PopupMenu menu = new PopupMenu(getActivity(), v);
-        MenuUtils.setupFolderMenu(getContext(), menu, folderView.baseFileObject);
+        MenuUtils.setupFolderMenu(menu, folderView.baseFileObject);
         menu.setOnMenuItemClickListener(MenuUtils.getFolderMenuClickListener(
                 getContext(),
                 folderView.baseFileObject, taggerDialog -> taggerDialog.show(getFragmentManager()),
@@ -401,14 +447,9 @@ public class FolderFragment extends BaseFragment implements
     }
 
     public void changeBreadcrumbPath() {
-
-        List<ViewModel> breadcrumbViews = Stream.of(adapter.items)
-                .filter(adaptableItem -> adaptableItem instanceof BreadcrumbsView)
-                .toList();
-
-        for (ViewModel viewModel : breadcrumbViews) {
-            ((BreadcrumbsView) viewModel).setBreadcrumbsPath(currentDir);
-            adapter.notifyItemChanged(adapter.items.indexOf(viewModel));
+        if (breadcrumbsView != null) {
+            breadcrumbsView.setBreadcrumbsPath(currentDir);
+            adapter.notifyItemChanged(adapter.items.indexOf(breadcrumbsView), 0);
         }
     }
 
@@ -464,11 +505,11 @@ public class FolderFragment extends BaseFragment implements
             contextualToolbar.setOnMenuItemClickListener(menuItem -> {
                 switch (menuItem.getItemId()) {
                     case R.id.menu_save:
-//                            WhitelistHelper.deleteAllFolders();
-//                            WhitelistHelper.addToWhitelist(paths);
-//                            showCheckboxes(false);
-//                            adapter.notifyDataSetChanged();
-//                            mode.finish();
+                        //                            WhitelistHelper.deleteAllFolders();
+                        //                            WhitelistHelper.addToWhitelist(paths);
+                        //                            showCheckboxes(false);
+                        //                            adapter.notifyDataSetChanged();
+                        //                            mode.finish();
                         return true;
                 }
                 return false;
@@ -487,52 +528,52 @@ public class FolderFragment extends BaseFragment implements
             case R.id.sort_files_default:
                 SettingsManager.getInstance().setFolderBrowserFilesSortOrder(SortManager.SortFiles.DEFAULT);
                 reload();
-                updateMenuItems(toolbar.getMenu());
+                updateMenuItems();
                 return true;
             case R.id.sort_files_filename:
                 SettingsManager.getInstance().setFolderBrowserFilesSortOrder(SortManager.SortFiles.FILE_NAME);
                 reload();
-                updateMenuItems(toolbar.getMenu());
+                updateMenuItems();
                 return true;
             case R.id.sort_files_size:
                 SettingsManager.getInstance().setFolderBrowserFilesSortOrder(SortManager.SortFiles.SIZE);
                 reload();
-                updateMenuItems(toolbar.getMenu());
+                updateMenuItems();
                 return true;
             case R.id.sort_files_artist_name:
                 SettingsManager.getInstance().setFolderBrowserFilesSortOrder(SortManager.SortFiles.ARTIST_NAME);
                 reload();
-                updateMenuItems(toolbar.getMenu());
+                updateMenuItems();
                 return true;
             case R.id.sort_files_album_name:
                 SettingsManager.getInstance().setFolderBrowserFilesSortOrder(SortManager.SortFiles.ALBUM_NAME);
                 reload();
-                updateMenuItems(toolbar.getMenu());
+                updateMenuItems();
                 return true;
             case R.id.sort_files_track_name:
                 SettingsManager.getInstance().setFolderBrowserFilesSortOrder(SortManager.SortFiles.TRACK_NAME);
                 reload();
-                updateMenuItems(toolbar.getMenu());
+                updateMenuItems();
                 return true;
             case R.id.files_ascending:
                 SettingsManager.getInstance().setFolderBrowserFilesAscending(!menuItem.isChecked());
                 reload();
-                updateMenuItems(toolbar.getMenu());
+                updateMenuItems();
                 return true;
             case R.id.sort_folder_count:
                 SettingsManager.getInstance().setFolderBrowserFoldersSortOrder(SortManager.SortFolders.COUNT);
                 reload();
-                updateMenuItems(toolbar.getMenu());
+                updateMenuItems();
                 return true;
             case R.id.sort_folder_default:
                 SettingsManager.getInstance().setFolderBrowserFoldersSortOrder(SortManager.SortFolders.DEFAULT);
                 reload();
-                updateMenuItems(toolbar.getMenu());
+                updateMenuItems();
                 return true;
             case R.id.folders_ascending:
                 SettingsManager.getInstance().setFolderBrowserFoldersAscending(!menuItem.isChecked());
                 reload();
-                getActivity().supportInvalidateOptionsMenu();
+                getActivity().invalidateOptionsMenu();
                 return true;
             case R.id.whitelist:
                 contextualToolbarHelper.start();
@@ -559,7 +600,7 @@ public class FolderFragment extends BaseFragment implements
             case R.id.show_filenames:
                 SettingsManager.getInstance().setFolderBrowserShowFileNames(!menuItem.isChecked());
                 adapter.notifyItemRangeChanged(0, adapter.getItemCount(), 0);
-                updateMenuItems(toolbar.getMenu());
+                updateMenuItems();
                 return true;
 
         }

@@ -258,7 +258,7 @@ public class SongFragment extends BaseFragment implements
 
         if (sortOrderChanged) {
             refreshAdapterItems();
-            getActivity().supportInvalidateOptionsMenu();
+            getActivity().invalidateOptionsMenu();
         }
 
         return super.onOptionsItemSelected(item);
@@ -280,7 +280,7 @@ public class SongFragment extends BaseFragment implements
     @Override
     public void onSongOverflowClick(int position, View v, Song song) {
         PopupMenu menu = new PopupMenu(SongFragment.this.getActivity(), v);
-        MenuUtils.setupSongMenu(getContext(), menu, false);
+        MenuUtils.setupSongMenu(menu, false);
         menu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), song,
                 taggerDialog -> taggerDialog.show(getFragmentManager()),
                 null));
@@ -320,7 +320,7 @@ public class SongFragment extends BaseFragment implements
             contextualToolbar.getMenu().clear();
             contextualToolbar.inflateMenu(R.menu.context_menu_songs);
             SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-            PlaylistUtils.makePlaylistMenu(getActivity(), sub);
+            PlaylistUtils.makePlaylistMenu(sub);
 
             contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), () -> Stream.of(contextualToolbarHelper.getItems())
                     .map(SelectableViewModel::getItem)

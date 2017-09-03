@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
 
@@ -37,8 +38,8 @@ public class ShuffleButton extends android.support.v7.widget.AppCompatImageButto
     public ShuffleButton(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        shuffleOff = getResources().getDrawable(R.drawable.ic_shuffle_24dp_scaled);
-        shuffleOn = DrawableCompat.wrap(getResources().getDrawable(R.drawable.ic_shuffle_24dp_scaled).mutate());
+        shuffleOff = ContextCompat.getDrawable(context, R.drawable.ic_shuffle_24dp_scaled);
+        shuffleOn = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.ic_shuffle_24dp_scaled).mutate());
 
         setShuffleMode(MusicService.ShuffleMode.OFF);
     }

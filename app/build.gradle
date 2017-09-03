@@ -29,9 +29,6 @@ repositories {
     }
 }
 
-//For some reason this needs to be placed below the dependencies in order for gms services to work..
-apply plugin: 'com.google.gms.google-services'
-
 @Nullable
 def getProperties(String fileName) {
     final Properties properties = new Properties()
@@ -47,7 +44,6 @@ static def getProperty(@Nullable Properties properties, String name) {
 }
 
 android {
-
     dexOptions {
         jumboMode = true
     }
@@ -63,7 +59,7 @@ android {
         versionCode gitCommitCount() + 3200
         // Add 3200 to account for moving to github and resetting commit count.
 
-        resConfigs "en", "zh-rCN", "fr", "de", "ko", "it", "nl", "tr", "pl", "hu", "uk", "bg-rBG", "en-rGB", "vi", "pt-rBR", "es", "en-rNZ", "zh-rTW", "es-rES", "hr", "en-rAU", "eu-rES"
+        resConfigs "en", "zh-rCN", "fr", "de", "ko", "it", "ru", "nl", "tr", "pl", "hu", "uk", "bg-rBG", "en-rGB", "vi", "pt-rBR", "es", "en-rNZ", "zh-rTW", "es-rES", "hr", "en-rAU", "eu-rES"
 
         renderscriptTargetApi 23
 
@@ -299,7 +295,6 @@ dependencies {
     annotationProcessor libs.daggerAnnotationProcessor
     compile libs.expandableRecyclerView
     compile libs.aesthetic
-    compile libs.betterPickers
 
     // //////////////////////////////////////////////////////////////////////////
     // Multidex (Only used in non-proguard pre-21 builds)
@@ -350,33 +345,9 @@ def gitCommitCount() {
     return commitCount
 }
 
-/* Todo: Possibly no longer required..
-
-    //Fix an issue where launcher shortcuts don't use the correct package name based on the build flavours.
-    def replaceInShortcuts(variant, fromString, toString) {
-        def flavor = variant.productFlavors.get(0)
-        def buildtype = variant.buildType
-        def shortcutsFile = "$buildDir/intermediates/res/merged/${flavor.name}/${buildtype.name}/xml/shortcuts.xml"
-        def file = new File(shortcutsFile)
-        def updatedContent = file.getText('UTF-8').replaceAll(fromString, toString)
-        file.write(updatedContent, 'UTF-8')
-    }
-
-    afterEvaluate {
-        android.applicationVariants.all { variant ->
-            variant.outputs.each { output ->
-                output.processResources.doFirst {
-                    replaceInShortcuts(variant, '\\{applicationId\\}', variant.applicationId)
-
-                }
-            }
-        }
-    }
-*/
-
 play {
     track = 'beta'
-    // untrackOld = true
+    untrackOld = true
     serviceAccountEmail = 'app-deployment@api-5801704373554614142-812229.iam.gserviceaccount.com'
     jsonFile = file('../deployment_keys.json')
 }

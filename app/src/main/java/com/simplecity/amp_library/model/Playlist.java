@@ -7,10 +7,10 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Pair;
 
-import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.rx.UnsafeConsumer;
 import com.simplecity.amp_library.sql.SqlUtils;
 import com.simplecity.amp_library.sql.providers.PlayCountTable;
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
@@ -28,6 +28,7 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.annotations.Nullable;
 
 public class Playlist implements Serializable {
 
@@ -115,14 +116,14 @@ public class Playlist implements Serializable {
                 .build();
 
         return SqlUtils.createSingleQuery(ShuttleApplication.getInstance(), cursor -> new Playlist(
-                        Type.PODCAST, MusicUtils.PlaylistIds.PODCASTS_PLAYLIST,
+                        Type.PODCAST, PlaylistUtils.PlaylistIds.PODCASTS_PLAYLIST,
                         ShuttleApplication.getInstance().getString(R.string.podcasts_title),
                         false, false, false, false, false),
                 query);
     }
 
     public static Playlist recentlyAddedPlaylist = new Playlist(
-            Type.RECENTLY_ADDED, MusicUtils.PlaylistIds.RECENTLY_ADDED_PLAYLIST,
+            Type.RECENTLY_ADDED, PlaylistUtils.PlaylistIds.RECENTLY_ADDED_PLAYLIST,
             ShuttleApplication.getInstance().getString(R.string.recentlyadded),
             false,
             false,
@@ -133,7 +134,7 @@ public class Playlist implements Serializable {
 
     public static Playlist mostPlayedPlaylist = new Playlist(
             Type.MOST_PLAYED,
-            MusicUtils.PlaylistIds.MOST_PLAYED_PLAYLIST,
+            PlaylistUtils.PlaylistIds.MOST_PLAYED_PLAYLIST,
             ShuttleApplication.getInstance().getString(R.string.mostplayed),
             false,
             true,
@@ -144,7 +145,7 @@ public class Playlist implements Serializable {
 
     public static Playlist recentlyPlayedPlaylist = new Playlist(
             Type.RECENTLY_PLAYED,
-            MusicUtils.PlaylistIds.RECENTLY_PLAYED_PLAYLIST,
+            PlaylistUtils.PlaylistIds.RECENTLY_PLAYED_PLAYLIST,
             ShuttleApplication.getInstance().getString(R.string.suggested_recent_title),
             false,
             false,
@@ -155,22 +156,12 @@ public class Playlist implements Serializable {
 
     @NonNull
     public static Single<Playlist> favoritesPlaylist() {
-        Query query = Playlist.getQuery();
-        query.selection = MediaStore.Audio.PlaylistsColumns.NAME + "='" + ShuttleApplication.getInstance().getResources().getString(R.string.fav_title) + "'";
-        return SqlBriteUtils.createSingle(ShuttleApplication.getInstance(), cursor ->
-                Optional.of(new Playlist(cursor)), query, Optional.<Playlist>ofNullable(null))
-                .map(playlistOptional -> {
-                    if (!playlistOptional.isPresent()) {
-                        Playlist playlist = PlaylistUtils.createPlaylist(ShuttleApplication.getInstance(), ShuttleApplication.getInstance().getString(R.string.fav_title));
-                        if (playlist != null) {
-                            playlist.canDelete = false;
-                            playlist.canRename = false;
-                        }
-                        return playlist;
-                    } else {
-                        return playlistOptional.get();
-                    }
-                });
+        return DataManager.getInstance().getPlaylistsRelay()
+                .first(Collections.emptyList())
+                .flatMapObservable(Observable::fromIterable)
+                .filter(playlist -> playlist.name.equals(ShuttleApplication.getInstance().getResources().getString(R.string.fav_title)))
+                .switchIfEmpty(Observable.fromCallable(PlaylistUtils::createFavoritePlaylist))
+                .firstOrError();
     }
 
     public void delete(Context context) {
@@ -180,8 +171,17 @@ public class Playlist implements Serializable {
         }
     }
 
+    public void removeSong(@NonNull Song song, @Nullable UnsafeConsumer<Boolean> success) {
+        PlaylistUtils.removeFromPlaylist(this, song, success);
+    }
+
+    public boolean moveSong(int from, int to) {
+        return MediaStore.Audio.Playlists.Members.moveItem(ShuttleApplication.getInstance().getContentResolver(), id, from, to);
+    }
+
     public Observable<List<Song>> getSongsObservable() {
-        if (id == MusicUtils.PlaylistIds.RECENTLY_ADDED_PLAYLIST) {
+
+        if (id == PlaylistUtils.PlaylistIds.RECENTLY_ADDED_PLAYLIST) {
             int numWeeks = MusicUtils.getIntPref(ShuttleApplication.getInstance(), "numweeks", 2) * (3600 * 24 * 7);
             return DataManager.getInstance().getSongsObservable(song -> song.dateAdded > (System.currentTimeMillis() / 1000 - numWeeks))
                     .map(songs -> {
@@ -194,13 +194,13 @@ public class Playlist implements Serializable {
                         return songs;
                     });
 
-        } else if (id == MusicUtils.PlaylistIds.PODCASTS_PLAYLIST) {
+        } else if (id == PlaylistUtils.PlaylistIds.PODCASTS_PLAYLIST) {
             return DataManager.getInstance().getSongsObservable(song -> song.isPodcast)
                     .map(songs -> {
                         Collections.sort(songs, (a, b) -> ComparisonUtils.compareLong(a.playlistSongPlayOrder, b.playlistSongPlayOrder));
                         return songs;
                     });
-        } else if (id == MusicUtils.PlaylistIds.MOST_PLAYED_PLAYLIST) {
+        } else if (id == PlaylistUtils.PlaylistIds.MOST_PLAYED_PLAYLIST) {
             Query query = new Query.Builder()
                     .uri(PlayCountTable.URI)
                     .projection(new String[]{PlayCountTable.COLUMN_ID, PlayCountTable.COLUMN_PLAY_COUNT})
@@ -226,7 +226,7 @@ public class Playlist implements Serializable {
                             }));
 
 
-        } else if (id == MusicUtils.PlaylistIds.RECENTLY_PLAYED_PLAYLIST) {
+        } else if (id == PlaylistUtils.PlaylistIds.RECENTLY_PLAYED_PLAYLIST) {
             Query query = new Query.Builder()
                     .uri(PlayCountTable.URI)
                     .projection(new String[]{PlayCountTable.COLUMN_ID, PlayCountTable.COLUMN_TIME_PLAYED})
@@ -258,10 +258,12 @@ public class Playlist implements Serializable {
             projection.add(MediaStore.Audio.Playlists.Members.AUDIO_ID);
             projection.add(MediaStore.Audio.Playlists.Members.PLAY_ORDER);
             query.projection = projection.toArray(new String[projection.size()]);
-            return SqlBriteUtils.createObservableList(ShuttleApplication.getInstance(), Playlist::createSongFromPlaylistCursor, query).map(songs -> {
-                Collections.sort(songs, (a, b) -> ComparisonUtils.compareLong(a.playlistSongPlayOrder, b.playlistSongPlayOrder));
-                return songs;
-            });
+
+            return SqlBriteUtils.createObservableList(ShuttleApplication.getInstance(), Playlist::createSongFromPlaylistCursor, query)
+                    .map(songs -> {
+                        Collections.sort(songs, (a, b) -> ComparisonUtils.compareLong(a.playlistSongPlayOrder, b.playlistSongPlayOrder));
+                        return songs;
+                    });
         }
     }
 
