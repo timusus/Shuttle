@@ -311,6 +311,7 @@ public class MusicService extends Service {
 
     private PendingIntent shutdownIntent;
 
+    @Nullable
     private AudioFocusRequest audioFocusRequest;
 
     private boolean shutdownScheduled;
@@ -859,7 +860,9 @@ public class MusicService extends Service {
 
         // Remove the audio focus listener and lock screen controls
         if (ShuttleUtils.hasOreo()) {
-            audioManager.abandonAudioFocusRequest(audioFocusRequest);
+            if (audioFocusRequest != null) {
+                audioManager.abandonAudioFocusRequest(audioFocusRequest);
+            }
         } else {
             audioManager.abandonAudioFocus(audioFocusListener);
         }
