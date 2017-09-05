@@ -97,6 +97,10 @@ public class DrawerParent implements Parent<DrawerChild> {
         return false;
     }
 
+    public boolean isSelected() {
+        return isSelected;
+    }
+
     public void setSelected(boolean selected) {
         isSelected = selected;
     }

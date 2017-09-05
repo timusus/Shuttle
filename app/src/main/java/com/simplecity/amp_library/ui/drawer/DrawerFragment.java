@@ -254,11 +254,21 @@ public class DrawerFragment extends BaseFragment implements
     @Override
     public void setDrawerItemSelected(@DrawerParent.Type int type) {
         Stream.of(adapter.getParentList())
-                .filter(parent -> parent instanceof DrawerParent)
-                .map(parent -> ((DrawerParent) parent))
-                .forEach(drawerParent -> drawerParent.setSelected(drawerParent.type == type));
-
-        adapter.notifyParentRangeChanged(0, adapter.getParentList().size());
+                .forEachIndexed((i, drawerParent) -> {
+                    if (drawerParent instanceof DrawerParent) {
+                        if (((DrawerParent) drawerParent).type == type) {
+                            if (!((DrawerParent) drawerParent).isSelected()) {
+                                ((DrawerParent) drawerParent).setSelected(true);
+                                adapter.notifyParentChanged(i);
+                            }
+                        } else {
+                            if (((DrawerParent) drawerParent).isSelected()) {
+                                ((DrawerParent) drawerParent).setSelected(false);
+                                adapter.notifyParentChanged(i);
+                            }
+                        }
+                    }
+                });
     }
 
     PlayerViewAdapter playerViewAdapter = new PlayerViewAdapter() {
