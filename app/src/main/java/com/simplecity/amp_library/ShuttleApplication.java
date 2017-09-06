@@ -115,8 +115,14 @@ public class ShuttleApplication extends Application {
         refWatcher = LeakCanary.install(this);
 
         //Crashlytics
-        CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build();
-        Fabric.with(this, new Crashlytics.Builder().core(core).answers(new Answers()).build(), new Crashlytics());
+        Fabric.with(this,
+                new Crashlytics.Builder()
+                        .core(new CrashlyticsCore.Builder()
+                                .disabled(BuildConfig.DEBUG)
+                                .build())
+                        .answers(new Answers())
+                        .build(),
+                new Crashlytics());
 
         //Firebase Analytics
         FirebaseAnalytics.getInstance(this);
