@@ -182,13 +182,13 @@ public class ShuttleApplication extends Application {
                 .subscribeOn(Schedulers.io())
                 .subscribe();
 
-        cleanMostPlayedPlaylist()
-                .delay(7500, TimeUnit.MILLISECONDS)
+        Completable.timer(7500, TimeUnit.MILLISECONDS)
+                .andThen(cleanMostPlayedPlaylist())
                 .subscribeOn(Schedulers.io())
                 .subscribe();
 
-        deleteOldResources()
-                .delay(10000, TimeUnit.MILLISECONDS)
+        Completable.timer(10000, TimeUnit.MILLISECONDS)
+                .andThen(deleteOldResources())
                 .subscribeOn(Schedulers.io())
                 .subscribe();
     }
