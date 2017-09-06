@@ -12,6 +12,8 @@ import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -100,6 +102,8 @@ public class DrawerPresenter extends Presenter<DrawerView> {
                                 })
                                 .toList())
                         .observeOn(AndroidSchedulers.mainThread())
+                        // Delay the subscription so we're not querying data while the app is launching
+                        .delaySubscription(1500, TimeUnit.MILLISECONDS)
                         .subscribe(
                                 drawerChildren -> {
                                     DrawerView drawerView = getView();
