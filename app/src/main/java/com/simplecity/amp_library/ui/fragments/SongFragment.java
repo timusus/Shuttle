@@ -89,10 +89,14 @@ public class SongFragment extends BaseFragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        recyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setRecyclerListener(new RecyclerListener());
-        recyclerView.setAdapter(adapter);
+        if (recyclerView == null) {
+            recyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            recyclerView.setRecyclerListener(new RecyclerListener());
+        }
+        if (recyclerView.getAdapter() != adapter) {
+            recyclerView.setAdapter(adapter);
+        }
         return recyclerView;
     }
 

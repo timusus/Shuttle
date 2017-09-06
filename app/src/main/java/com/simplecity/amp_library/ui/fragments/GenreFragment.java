@@ -45,6 +45,8 @@ public class GenreFragment extends BaseFragment implements
     @Nullable
     private GenreClickListener genreClickListener;
 
+    private FastScrollRecyclerView recyclerView;
+
     private SectionedAdapter adapter;
 
     private Disposable disposable;
@@ -79,11 +81,15 @@ public class GenreFragment extends BaseFragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        FastScrollRecyclerView recyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.addItemDecoration(new GridDividerDecoration(getResources(), 4, true));
-        recyclerView.setRecyclerListener(new RecyclerListener());
-        recyclerView.setAdapter(adapter);
+        if (recyclerView == null) {
+            recyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            recyclerView.addItemDecoration(new GridDividerDecoration(getResources(), 4, true));
+            recyclerView.setRecyclerListener(new RecyclerListener());
+        }
+        if (recyclerView.getAdapter() != adapter) {
+            recyclerView.setAdapter(adapter);
+        }
 
         return recyclerView;
     }

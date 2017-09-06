@@ -42,7 +42,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -97,8 +96,6 @@ public class DrawerFragment extends BaseFragment implements
 
     private CompositeDisposable disposables = new CompositeDisposable();
 
-    private Unbinder unbinder;
-
     private List<Parent<DrawerChild>> drawerParents;
 
     public DrawerFragment() {
@@ -120,14 +117,6 @@ public class DrawerFragment extends BaseFragment implements
         requestManager = Glide.with(this);
 
         backgroundPlaceholder = ContextCompat.getDrawable(getContext(), R.drawable.ic_drawer_header_placeholder);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        rootView = inflater.inflate(R.layout.fragment_drawer, container, false);
-
-        unbinder = ButterKnife.bind(this, rootView);
 
         playlistDrawerParent = DrawerParent.playlistsParent;
 
@@ -146,8 +135,21 @@ public class DrawerFragment extends BaseFragment implements
                 .forEach(parent -> ((DrawerParent) parent).setListener(this));
 
         adapter = new DrawerAdapter(drawerParents);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.fragment_drawer, container, false);
+
+            ButterKnife.bind(this, rootView);
+
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        }
+        if (recyclerView.getAdapter() != adapter) {
+            recyclerView.setAdapter(adapter);
+        }
 
         setDrawerItemSelected(selectedDrawerParent);
 
@@ -207,7 +209,6 @@ public class DrawerFragment extends BaseFragment implements
     public void onDestroyView() {
         drawerPresenter.unbindView(this);
         playerPresenter.unbindView(playerViewAdapter);
-        unbinder.unbind();
 
         Stream.of(drawerParents)
                 .filter(parent -> parent instanceof DrawerParent)
