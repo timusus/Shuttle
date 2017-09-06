@@ -170,7 +170,6 @@ public class AlbumFragment extends BaseFragment implements
     }
 
     void refreshAdapterItems() {
-
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {
 
@@ -179,6 +178,7 @@ public class AlbumFragment extends BaseFragment implements
                 boolean ascending = SortManager.getInstance().getAlbumsAscending();
 
                 subscription = DataManager.getInstance().getAlbumsRelay()
+                        .skip(adapter.items.isEmpty() ? 0 : 1)
                         .flatMapSingle(albums -> {
                             //Sort
                             SortManager.getInstance().sortAlbums(albums);

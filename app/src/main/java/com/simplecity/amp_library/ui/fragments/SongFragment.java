@@ -118,6 +118,7 @@ public class SongFragment extends BaseFragment implements
                         boolean ascending = SortManager.getInstance().getSongsAscending();
 
                         disposable = DataManager.getInstance().getSongsRelay()
+                                .skip(adapter.items.isEmpty() ? 0 : 1)
                                 .flatMapSingle(songs -> {
                                     //Sort
                                     SortManager.getInstance().sortSongs(songs);
@@ -127,7 +128,6 @@ public class SongFragment extends BaseFragment implements
                                     }
                                     return Observable.fromIterable(songs)
                                             .map(song -> {
-
                                                 // Look for an existing SongView wrapping the song, we'll reuse it if it exists.
                                                 SongView songView = (SongView) Stream.of(adapter.items)
                                                         .filter(viewModel -> viewModel instanceof SongView && (((SongView) viewModel).song.equals(song)))

@@ -165,7 +165,6 @@ public class AlbumArtistFragment extends BaseFragment implements
     }
 
     void refreshAdapterItems() {
-
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {
 
@@ -174,6 +173,7 @@ public class AlbumArtistFragment extends BaseFragment implements
                 boolean ascending = SortManager.getInstance().getArtistsAscending();
 
                 disposable = DataManager.getInstance().getAlbumArtistsRelay()
+                        .skip(adapter.items.isEmpty() ? 0 : 1)
                         .flatMapSingle(albumArtists -> {
                             //Sort
                             SortManager.getInstance().sortAlbumArtists(albumArtists);
@@ -189,7 +189,6 @@ public class AlbumArtistFragment extends BaseFragment implements
                                                 .filter(viewModel -> viewModel instanceof AlbumArtistView && (((AlbumArtistView) viewModel).albumArtist.equals(albumArtist)))
                                                 .findFirst()
                                                 .orElse(null);
-
 
                                         if (albumArtistView == null) {
                                             albumArtistView = new AlbumArtistView(albumArtist, artistDisplayType, requestManager);

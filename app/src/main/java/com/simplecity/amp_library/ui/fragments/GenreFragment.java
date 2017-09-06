@@ -115,6 +115,7 @@ public class GenreFragment extends BaseFragment implements
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {
                 disposable = DataManager.getInstance().getGenresRelay()
+                        .skip(adapter.items.isEmpty() ? 0 : 1)
                         .map(genres -> Stream.of(genres)
                                 .sorted((a, b) -> ComparisonUtils.compare(a.name, b.name))
                                 .map(genre -> {
