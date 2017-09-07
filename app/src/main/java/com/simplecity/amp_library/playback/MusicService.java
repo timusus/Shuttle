@@ -1935,31 +1935,35 @@ public class MusicService extends Service {
                 metaData.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, (long) (getQueue().size()));
             }
 
-            //Glide has to be called from the main thread.
-            doOnMainThread(() -> Glide.with(MusicService.this)
-                    .load(getAlbum())
-                    .asBitmap()
-                    .override(1024, 1024)
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-                            if (bitmap != null) {
-                                metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap);
+            if (SettingsManager.getInstance().showLockscreenArtwork()) {
+                //Glide has to be called from the main thread.
+                doOnMainThread(() -> Glide.with(MusicService.this)
+                        .load(getAlbum())
+                        .asBitmap()
+                        .override(1024, 1024)
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+                                if (bitmap != null) {
+                                    metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap);
+                                }
+                                try {
+                                    mediaSession.setMetadata(metaData.build());
+                                } catch (NullPointerException e) {
+                                    metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, null);
+                                    mediaSession.setMetadata(metaData.build());
+                                }
                             }
-                            try {
-                                mediaSession.setMetadata(metaData.build());
-                            } catch (NullPointerException e) {
-                                metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, null);
-                                mediaSession.setMetadata(metaData.build());
-                            }
-                        }
 
-                        @Override
-                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                            super.onLoadFailed(e, errorDrawable);
-                            mediaSession.setMetadata(metaData.build());
-                        }
-                    }));
+                            @Override
+                            public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                                super.onLoadFailed(e, errorDrawable);
+                                mediaSession.setMetadata(metaData.build());
+                            }
+                        }));
+            } else {
+                mediaSession.setMetadata(metaData.build());
+            }
 
             mediaSession.setPlaybackState(new PlaybackStateCompat.Builder()
                     .setActions(playbackActions)

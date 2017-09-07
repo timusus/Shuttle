@@ -32,6 +32,12 @@
             android:title="@string/pref_title_screen_on"/>
 
         <android.support.v7.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="pref_show_lockscreen_artwork"
+            android:summary="@string/pref_summary_lockscreen"
+            android:title="@string/pref_title_lockscreen"/>
+
+        <android.support.v7.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="pref_ignore_duplicates"
             android:summary="@string/pref_summary_ignore_duplicates"

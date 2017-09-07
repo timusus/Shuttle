@@ -343,6 +343,10 @@
     <!-- Settings summary for gmail style placeholders checkbox-->
     <string name="pref_summary_placeholders">Displays \'Gmail\' style placeholders by default.
         If unchecked, the Shuttle icon will be used as a placeholder instead</string>
+    <!-- Settings title for the enable lockscreen controls checkbox -->
+    <string name="pref_title_lockscreen">Enable Lockscreen Artwork</string>
+    <!-- Settings summary for the enable lockscreen controls checkbox -->
+    <string name="pref_summary_lockscreen">Enables/disables the artwork on the lockscreen</string>
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">Display</string>
     <!-- Settings title for the keep screen on checkbox -->

@@ -105,6 +105,12 @@ public class SettingsManager {
         editor.apply();
     }
 
+    public static final String KEY_SHOW_LOCKSCREEN_ARTWORK = "pref_show_lockscreen_artwork";
+
+    public boolean showLockscreenArtwork() {
+        return getBool(KEY_SHOW_LOCKSCREEN_ARTWORK, true);
+    }
+
     private static final String KEY_KEEP_SCREEN_ON = "pref_screen_on";
 
     public boolean keepScreenOn() {
