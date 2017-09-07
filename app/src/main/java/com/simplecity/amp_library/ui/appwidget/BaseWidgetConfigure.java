@@ -131,6 +131,7 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
 
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(pager);
+        pager.addOnPageChangeListener(this);
 
         Button doneButton = findViewById(R.id.btn_done);
         doneButton.setOnClickListener(this);
@@ -268,13 +269,14 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
     }
 
     private class WidgetPagerAdapter extends FragmentStatePagerAdapter {
+
         public WidgetPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
         public Fragment getItem(int position) {
-            return new WidgetFragment().newInstance(layouts[position]);
+            return WidgetFragment.newInstance(layouts[position]);
         }
 
         @Override

@@ -34,7 +34,7 @@ public class WidgetFragment extends BaseFragment {
      * @param widgetLayoutResId the id of the layout to use for the widget
      * @return a new instance of {@link com.simplecity.amp_library.ui.fragments.WidgetFragment}
      */
-    public WidgetFragment newInstance(int widgetLayoutResId) {
+    public static WidgetFragment newInstance(int widgetLayoutResId) {
         WidgetFragment fragment = new WidgetFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_WIDGET_LAYOUT_ID, widgetLayoutResId);
