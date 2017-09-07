@@ -2,8 +2,10 @@ package com.simplecity.amp_library.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -142,5 +144,10 @@ public final class SleepTimer {
                     timerStarted.run();
                 })
                 .show();
+
+        new Handler().post(() -> {
+            InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+        });
     }
 }
