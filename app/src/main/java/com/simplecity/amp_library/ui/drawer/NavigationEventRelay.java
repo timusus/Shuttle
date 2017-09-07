@@ -46,6 +46,7 @@ public class NavigationEventRelay {
             int PLAYLIST_SELECTED = 6;
             int GO_TO_ARTIST = 7;
             int GO_TO_ALBUM = 8;
+            int GO_TO_GENRE = 9;
         }
 
         @Type public int type;

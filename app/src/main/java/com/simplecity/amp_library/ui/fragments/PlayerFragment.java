@@ -36,6 +36,7 @@ import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.glide.palette.PaletteBitmap;
 import com.simplecity.amp_library.glide.palette.PaletteBitmapTranscoder;
 import com.simplecity.amp_library.model.AlbumArtist;
+import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.rx.UnsafeConsumer;
@@ -489,19 +490,13 @@ public class PlayerFragment extends BaseFragment implements
                 presenter.showLyrics(getContext());
                 return true;
             case R.id.goToArtist:
-                AlbumArtist currentAlbumArtist = MusicUtils.getAlbumArtist();
-                // MusicUtils.getAlbumArtist() is only populate with the album the current Song belongs to.
-                // Let's find the matching AlbumArtist in the DataManager.albumArtistRelay
-                DataManager.getInstance().getAlbumArtistsRelay()
-                        .first(Collections.emptyList())
-                        .flatMapObservable(Observable::fromIterable)
-                        .filter(albumArtist -> currentAlbumArtist != null && albumArtist.name.equals(currentAlbumArtist.name) && albumArtist.albums.containsAll(currentAlbumArtist.albums))
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(albumArtist -> navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_ARTIST, albumArtist, true)));
+                goToArtist();
                 return true;
             case R.id.goToAlbum:
-                navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_ALBUM, MusicUtils.getAlbum(), true));
+                goToAlbum();
+                return true;
+            case R.id.goToGenre:
+                goToGenre();
                 return true;
             case R.id.editTags:
                 presenter.editTagsClicked();
@@ -514,6 +509,32 @@ public class PlayerFragment extends BaseFragment implements
                 return true;
         }
         return false;
+    }
+
+    private void goToArtist() {
+        AlbumArtist currentAlbumArtist = MusicUtils.getAlbumArtist();
+        // MusicUtils.getAlbumArtist() is only populate with the album the current Song belongs to.
+        // Let's find the matching AlbumArtist in the DataManager.albumArtistRelay
+        DataManager.getInstance().getAlbumArtistsRelay()
+                .first(Collections.emptyList())
+                .flatMapObservable(Observable::fromIterable)
+                .filter(albumArtist -> currentAlbumArtist != null && albumArtist.name.equals(currentAlbumArtist.name) && albumArtist.albums.containsAll(currentAlbumArtist.albums))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(albumArtist -> navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_ARTIST, albumArtist, true)));
+    }
+
+    private void goToAlbum() {
+        navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_ALBUM, MusicUtils.getAlbum(), true));
+    }
+
+    private void goToGenre() {
+        MusicUtils.getGenre()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        (UnsafeConsumer<Genre>) genre -> navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_GENRE, genre, true)),
+                        error -> LogUtils.logException(TAG, "Error retrieving genre", error));
     }
 
     private void animateColors(int from, int to, UnsafeConsumer<Integer> consumer) {

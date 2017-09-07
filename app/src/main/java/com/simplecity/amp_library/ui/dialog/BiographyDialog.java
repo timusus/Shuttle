@@ -174,7 +174,7 @@ public class BiographyDialog {
         TextView genreKey = genreView.findViewById(R.id.key);
         genreKey.setText(R.string.genre_title);
         TextView genreValue = genreView.findViewById(R.id.value);
-        Observable.fromCallable(song::getGenre)
+        song.getGenre()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(genre -> genreValue.setText(genre.name),

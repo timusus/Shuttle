@@ -15,11 +15,13 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
+import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.ui.detail.AlbumDetailFragment;
 import com.simplecity.amp_library.ui.detail.ArtistDetailFragment;
+import com.simplecity.amp_library.ui.detail.GenreDetailFragment;
 import com.simplecity.amp_library.ui.detail.PlaylistDetailFragment;
 import com.simplecity.amp_library.ui.drawer.DrawerLockController;
 import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
@@ -158,6 +160,14 @@ public class MainController extends BaseNavigationController implements BackPres
                             delayHandler.postDelayed(() -> {
                                 popToRootViewController();
                                 pushViewController(AlbumDetailFragment.newInstance(album, null), "AlbumDetailFragment");
+                            }, 250);
+                            break;
+                        case NavigationEventRelay.NavigationEvent.Type.GO_TO_GENRE:
+                            multiSheetView.goToSheet(MultiSheetView.Sheet.NONE);
+                            Genre genre = (Genre) navigationEvent.data;
+                            delayHandler.postDelayed(() -> {
+                                popToRootViewController();
+                                pushViewController(GenreDetailFragment.newInstance(genre), "GenreDetailFragment");
                             }, 250);
                             break;
 

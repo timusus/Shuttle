@@ -9,6 +9,7 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
+import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.rx.UnsafeConsumer;
@@ -336,6 +337,15 @@ public class MusicUtils {
         return null;
     }
 
+    public static Single<Genre> getGenre() {
+        if (MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null) {
+            if (getSong() != null) {
+                return getSong().getGenre();
+            }
+        }
+        return Single.error(new IllegalStateException("Genre not found"));
+    }
+
     /**
      * Method getPosition.
      *
@@ -449,7 +459,7 @@ public class MusicUtils {
         }
     }
 
-    public static void toggleFavorite(){
+    public static void toggleFavorite() {
         if (MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null) {
             MusicServiceConnectionUtils.serviceBinder.getService().toggleFavorite();
         }

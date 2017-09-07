@@ -20,6 +20,7 @@ import com.simplecity.amp_library.http.itunes.ItunesResult;
 import com.simplecity.amp_library.http.lastfm.LastFmResult;
 import com.simplecity.amp_library.sql.SqlUtils;
 import com.simplecity.amp_library.sql.providers.PlayCountTable;
+import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
 import com.simplecity.amp_library.utils.ArtworkUtils;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.FileHelper;
@@ -31,6 +32,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.List;
 
+import io.reactivex.Single;
 import retrofit2.Call;
 
 public class Song implements
@@ -153,10 +155,10 @@ public class Song implements
         setArtworkKey();
     }
 
-    public Genre getGenre() {
+    public Single<Genre> getGenre() {
         Query query = Genre.getQuery();
         query.uri = MediaStore.Audio.Genres.getContentUriForAudioId("external", (int) id);
-        return SqlUtils.createSingleQuery(ShuttleApplication.getInstance(), Genre::new, query);
+        return SqlBriteUtils.createSingle(ShuttleApplication.getInstance(), Genre::new, query, null);
     }
 
     public int getPlayCount(Context context) {
