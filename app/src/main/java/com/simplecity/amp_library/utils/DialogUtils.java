@@ -62,16 +62,6 @@ public class DialogUtils {
                 .build();
     }
 
-    public static void showDownloadWarningDialog(Context context, MaterialDialog.SingleButtonCallback listener) {
-        getBuilder(context)
-                .title(R.string.pref_title_download_artwork)
-                .content(R.string.pref_warning_download_artwork)
-                .positiveText(R.string.download)
-                .onPositive(listener)
-                .negativeText(R.string.cancel)
-                .show();
-    }
-
     public static void showWeekSelectorDialog(final Context context) {
 
         @SuppressLint("InflateParams")

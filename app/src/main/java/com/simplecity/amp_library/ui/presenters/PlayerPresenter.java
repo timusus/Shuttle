@@ -12,6 +12,7 @@ import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.playback.PlaybackMonitor;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.dialog.BiographyDialog;
+import com.simplecity.amp_library.ui.dialog.ShareDialog;
 import com.simplecity.amp_library.ui.views.PlayerView;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
@@ -300,7 +301,7 @@ public class PlayerPresenter extends Presenter<PlayerView> {
         if (playerView != null) {
             Song song = MusicUtils.getSong();
             if (song != null) {
-                song.share(context);
+                ShareDialog.getDialog(context, song).show();
             }
         }
     }
