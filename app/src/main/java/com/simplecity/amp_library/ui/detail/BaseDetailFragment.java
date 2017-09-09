@@ -788,7 +788,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     @Override
     public void onAlbumOverflowClicked(View v, Album album) {
         PopupMenu popupMenu = new PopupMenu(getContext(), v);
-        popupMenu.inflate(R.menu.menu_album);
+        MenuUtils.setupAlbumMenu(popupMenu);
         popupMenu.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(getContext(), album, taggerDialog
                 -> taggerDialog.show(getFragmentManager())));
         popupMenu.show();

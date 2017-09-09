@@ -390,7 +390,7 @@ public class SuggestedFragment extends BaseFragment implements
     @Override
     public void onAlbumOverflowClicked(View v, Album album) {
         PopupMenu menu = new PopupMenu(getContext(), v);
-        menu.inflate(R.menu.menu_album);
+        MenuUtils.setupAlbumMenu(menu);
         menu.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(getContext(), album, taggerDialog -> taggerDialog.show(getFragmentManager())));
         menu.show();
     }

@@ -209,7 +209,7 @@ public class SearchPresenter extends Presenter<SearchView> implements
     @Override
     public void onAlbumOverflowClicked(View v, Album album) {
         PopupMenu menu = new PopupMenu(v.getContext(), v);
-        menu.inflate(R.menu.menu_album);
+        MenuUtils.setupAlbumMenu(menu);
         menu.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(v.getContext(), album, taggerDialog -> {
             SearchView searchView = getView();
             if (searchView != null) {

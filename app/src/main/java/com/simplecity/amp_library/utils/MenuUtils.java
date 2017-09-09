@@ -183,6 +183,14 @@ public class MenuUtils implements MusicUtils.Defs {
 
     // Albums
 
+    public static void setupAlbumMenu(PopupMenu menu) {
+        menu.inflate(R.menu.menu_album);
+
+        // Add playlist menu
+        SubMenu sub = menu.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
+        PlaylistUtils.makePlaylistMenu(sub);
+    }
+
     private static Single<List<Song>> getSongsForAlbum(Album album) {
         return album.getSongsSingle()
                 .map(songs -> {
