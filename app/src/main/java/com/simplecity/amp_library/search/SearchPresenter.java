@@ -22,6 +22,7 @@ import com.simplecity.amp_library.ui.modelviews.AlbumView;
 import com.simplecity.amp_library.ui.modelviews.SearchHeaderView;
 import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.presenters.Presenter;
+import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
@@ -56,6 +57,8 @@ public class SearchPresenter extends Presenter<SearchView> implements
 
     private RequestManager requestManager;
 
+    private ContextualToolbarHelper<Single<List<Song>>> contextualToolbarHelper;
+
     private Disposable performSearchSubscription;
     private Disposable setItemsSubscription;
 
@@ -79,6 +82,10 @@ public class SearchPresenter extends Presenter<SearchView> implements
     @Override
     public void unbindView(@NonNull SearchView view) {
         super.unbindView(view);
+    }
+
+    public void setContextualToolbarHelper(ContextualToolbarHelper<Single<List<Song>>> contextualToolbarHelper) {
+        this.contextualToolbarHelper = contextualToolbarHelper;
     }
 
     void queryChanged(@Nullable String query) {
@@ -170,15 +177,17 @@ public class SearchPresenter extends Presenter<SearchView> implements
 
     @Override
     public void onAlbumArtistClick(int position, AlbumArtistView albumArtistView, AlbumArtistView.ViewHolder viewholder) {
-        SearchView view = getView();
-        if (view != null) {
-            view.goToArtist(albumArtistView.albumArtist, viewholder.imageOne);
+        if (!contextualToolbarHelper.handleClick(position, albumArtistView, albumArtistView.albumArtist.getSongsSingle())) {
+            SearchView view = getView();
+            if (view != null) {
+                view.goToArtist(albumArtistView.albumArtist, viewholder.imageOne);
+            }
         }
     }
 
     @Override
     public boolean onAlbumArtistLongClick(int position, AlbumArtistView albumArtistView) {
-        return false;
+        return contextualToolbarHelper.handleLongClick(position, albumArtistView, albumArtistView.albumArtist.getSongsSingle());
     }
 
     @Override
@@ -205,15 +214,17 @@ public class SearchPresenter extends Presenter<SearchView> implements
 
     @Override
     public void onAlbumClick(int position, AlbumView albumView, AlbumView.ViewHolder viewHolder) {
-        SearchView view = getView();
-        if (view != null) {
-            view.goToAlbum(albumView.album, viewHolder.imageOne);
+        if (!contextualToolbarHelper.handleClick(position, albumView, albumView.album.getSongsSingle())) {
+            SearchView view = getView();
+            if (view != null) {
+                view.goToAlbum(albumView.album, viewHolder.imageOne);
+            }
         }
     }
 
     @Override
     public boolean onAlbumLongClick(int position, AlbumView albumView) {
-        return false;
+        return contextualToolbarHelper.handleLongClick(position, albumView, albumView.album.getSongsSingle());
     }
 
     @Override
@@ -471,20 +482,23 @@ public class SearchPresenter extends Presenter<SearchView> implements
 
         @Override
         public void onSongClick(int position, SongView songView) {
-            SearchView view = getView();
+            if (!contextualToolbarHelper.handleClick(position, songView, Single.just(Collections.singletonList(songView.song)))) {
 
-            int index = songs.indexOf(songView.song);
+                SearchView view = getView();
 
-            MusicUtils.playAll(songs, index, (String message) -> {
-                if (view != null) {
-                    view.showToast(message);
-                }
-            });
+                int index = songs.indexOf(songView.song);
+
+                MusicUtils.playAll(songs, index, (String message) -> {
+                    if (view != null) {
+                        view.showToast(message);
+                    }
+                });
+            }
         }
 
         @Override
         public boolean onSongLongClick(int position, SongView songView) {
-            return false;
+            return contextualToolbarHelper.handleLongClick(position, songView, Single.just(Collections.singletonList(songView.song)));
         }
 
         @Override

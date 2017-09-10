@@ -175,7 +175,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text2"/>
 
-    <com.simplecity.amp_library.ui.views.StatusBarView
+    <com.simplecity.amp_library.ui.views.ThemedStatusBarView
         android:id="@+id/statusBarView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

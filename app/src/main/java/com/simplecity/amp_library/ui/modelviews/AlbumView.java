@@ -105,11 +105,6 @@ public class AlbumView extends MultiItemView<AlbumView.ViewHolder, Album> implem
     }
 
     @Override
-    public Album getItem() {
-        return album;
-    }
-
-    @Override
     public void bindView(final ViewHolder holder) {
 
         super.bindView(holder);

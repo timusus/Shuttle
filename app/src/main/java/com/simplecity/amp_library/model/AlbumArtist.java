@@ -101,9 +101,9 @@ public class AlbumArtist implements
 
     @Override
     public String toString() {
-        return "AlbumArtist{" +
-                "name='" + name + '\'' +
-                ", albums=" + albums +
+        return "AlbumArtist{"+
+                "name='"+name+'\''+
+                ", albums="+albums+
                 '}';
     }
 
@@ -122,7 +122,7 @@ public class AlbumArtist implements
     @Override
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (albums != null ? albums.hashCode() : 0);
+        result = 31 * result+(albums != null ? albums.hashCode() : 0);
         return result;
     }
 

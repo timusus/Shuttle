@@ -61,11 +61,6 @@ public class SuggestedSongView extends MultiItemView<SuggestedSongView.ViewHolde
     }
 
     @Override
-    public Song getItem() {
-        return song;
-    }
-
-    @Override
     public void bindView(final ViewHolder holder) {
         super.bindView(holder);
 

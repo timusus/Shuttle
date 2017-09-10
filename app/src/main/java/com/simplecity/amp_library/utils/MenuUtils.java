@@ -122,24 +122,23 @@ public class MenuUtils implements MusicUtils.Defs {
         PlaylistUtils.createPlaylistMenu(sub);
     }
 
-    public static Toolbar.OnMenuItemClickListener getSongMenuClickListener(Context context, UnsafeCallable<List<Song>> callable) {
+    public static Toolbar.OnMenuItemClickListener getSongMenuClickListener(Context context, Single<List<Song>> songsSingle) {
         return item -> {
-            List<Song> songs = callable.call();
             switch (item.getItemId()) {
                 case NEW_PLAYLIST:
-                    newPlaylist(context, songs);
+                    newPlaylist(context, songsSingle);
                     return true;
                 case PLAYLIST_SELECTED:
-                    addToPlaylist(context, item, songs);
+                    addToPlaylist(context, item, songsSingle);
                     return true;
                 case R.id.addToQueue:
-                    addToQueue(context, songs);
+                    addToQueue(context, songsSingle);
                     return true;
                 case R.id.blacklist:
-                    blacklist(songs);
+                    blacklist(songsSingle);
                     return true;
                 case R.id.delete:
-                    delete(context, songs);
+                    delete(context, songsSingle);
                     return true;
             }
             return false;
@@ -232,7 +231,8 @@ public class MenuUtils implements MusicUtils.Defs {
 
     public static void newPlaylist(Context context, Single<List<Song>> single) {
         single.observeOn(AndroidSchedulers.mainThread())
-                .subscribe(songs -> PlaylistUtils.createPlaylistDialog(context, songs));
+                .subscribe(songs -> PlaylistUtils.createPlaylistDialog(context, songs),
+                        throwable -> LogUtils.logException(TAG, "Error adding to new playlist", throwable));
     }
 
     public static void addToPlaylist(Context context, MenuItem item, Single<List<Song>> single) {
@@ -240,12 +240,13 @@ public class MenuUtils implements MusicUtils.Defs {
                 .subscribe(songs -> {
                     Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(PlaylistUtils.ARG_PLAYLIST);
                     PlaylistUtils.addToPlaylist(context, playlist, songs);
-                });
+                }, throwable -> LogUtils.logException(TAG, "Error adding to playlist", throwable));
     }
 
     public static void addToQueue(Context context, Single<List<Song>> single) {
         single.observeOn(AndroidSchedulers.mainThread())
-                .subscribe(songs -> MusicUtils.addToQueue(songs, message -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show()));
+                .subscribe(songs -> MusicUtils.addToQueue(songs, message -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show()),
+                        throwable -> LogUtils.logException(TAG, "Error adding to queue", throwable));
     }
 
     public static TaggerDialog editTags(Album album) {
@@ -262,12 +263,21 @@ public class MenuUtils implements MusicUtils.Defs {
 
     public static void whitelist(Single<List<Song>> single) {
         single.observeOn(AndroidSchedulers.mainThread())
-                .subscribe((songs, throwable) -> whitelist(songs));
+                .subscribe(songs -> whitelist(songs),
+                        throwable -> LogUtils.logException(TAG, "whitelist failed", throwable));
     }
 
     public static void blacklist(Single<List<Song>> single) {
         single.observeOn(AndroidSchedulers.mainThread())
-                .subscribe((songs, throwable) -> blacklist(songs));
+                .subscribe(
+                        songs -> blacklist(songs),
+                        throwable -> LogUtils.logException(TAG, "blacklist failed", throwable));
+    }
+
+    public static void delete(Context context, Single<List<Song>> single) {
+        single.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(songs -> delete(context, songs),
+                        throwable -> LogUtils.logException(TAG, "delete failed", throwable));
     }
 
     public static void deleteAlbums(Context context, List<Album> albums, Single<List<Song>> songsSingle) {
@@ -703,7 +713,7 @@ public class MenuUtils implements MusicUtils.Defs {
 
     public static void setInitialDir(Context context, FolderObject folderObject) {
         SettingsManager.getInstance().setFolderBrowserInitialDir(folderObject.path);
-        Toast.makeText(context, folderObject.path + context.getResources().getString(R.string.initial_dir_set_message), Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, folderObject.path+context.getResources().getString(R.string.initial_dir_set_message), Toast.LENGTH_SHORT).show();
     }
 
     @Nullable

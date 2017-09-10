@@ -115,7 +115,8 @@ public class LibraryController extends BaseFragment implements
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ShuttleApplication.getInstance().getAppComponent().inject(this);
+        ShuttleApplication.getInstance().getAppComponent()
+                .inject(this);
 
         setHasOptionsMenu(true);
 

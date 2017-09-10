@@ -9,12 +9,14 @@ import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ContextualToolbarHelper<T> {
 
     public interface Callback {
-        void notifyItemChanged(int position);
+        void notifyItemChanged(int position, SelectableViewModel viewModel);
 
         void notifyDatasetChanged();
     }
@@ -26,7 +28,7 @@ public class ContextualToolbarHelper<T> {
 
     private boolean canChangeTitle = true;
 
-    private List<SelectableViewModel<T>> items = new ArrayList<>();
+    private Map<SelectableViewModel, T> map = new HashMap<>();
 
     @NonNull
     private Callback callback;
@@ -54,12 +56,12 @@ public class ContextualToolbarHelper<T> {
      * and sets isActive to false.
      */
     public void finish() {
-        if (!items.isEmpty()) {
-            Stream.of(items).forEach(viewModel -> viewModel.setSelected(false));
+        if (!map.isEmpty()) {
+            Stream.of(map.keySet()).forEach(viewModel -> viewModel.setSelected(false));
             callback.notifyDatasetChanged();
         }
 
-        items.clear();
+        map.clear();
 
         contextualToolbar.hide();
 
@@ -73,7 +75,7 @@ public class ContextualToolbarHelper<T> {
      */
     private void updateCount() {
         if (canChangeTitle) {
-            contextualToolbar.setTitle(ShuttleApplication.getInstance().getString(R.string.action_mode_selection_count, items.size()));
+            contextualToolbar.setTitle(ShuttleApplication.getInstance().getString(R.string.action_mode_selection_count, map.size()));
         }
     }
 
@@ -83,20 +85,20 @@ public class ContextualToolbarHelper<T> {
      * <p>
      * If removing the passed in item results in an empty list of selected items, finish() is called.
      *
-     * @param item the item to select/deselect.
+     * @param viewModel the item to select/deselect.
      */
-    private void addOrRemoveItem(SelectableViewModel<T> item) {
-        if (items.contains(item)) {
-            items.remove(item);
-            item.setSelected(false);
+    private void addOrRemoveItem(SelectableViewModel viewModel, T items) {
+        if (map.keySet().contains(viewModel)) {
+            map.remove(viewModel);
+            viewModel.setSelected(false);
         } else {
-            items.add(item);
-            item.setSelected(true);
+            map.put(viewModel, items);
+            viewModel.setSelected(true);
         }
 
         updateCount();
 
-        if (items.isEmpty()) {
+        if (map.isEmpty()) {
             finish();
         }
     }
@@ -111,10 +113,10 @@ public class ContextualToolbarHelper<T> {
      * @param selectableViewModel the selectableViewModel which was clicked
      * @return true if the click was consumed by the ContextualToolbarHelper, else false.
      */
-    public boolean handleClick(int position, SelectableViewModel<T> selectableViewModel) {
+    public boolean handleClick(int position, SelectableViewModel selectableViewModel, T items) {
         if (isActive) {
-            addOrRemoveItem(selectableViewModel);
-            callback.notifyItemChanged(position);
+            addOrRemoveItem(selectableViewModel, items);
+            callback.notifyItemChanged(position, selectableViewModel);
             return true;
         }
         return false;
@@ -129,11 +131,11 @@ public class ContextualToolbarHelper<T> {
      * @param selectableViewModel the selectableViewModel which was clicked
      * @return true if the long press was consumed by the ContextualToolbarHelper, else false.
      */
-    public boolean handleLongClick(int position, SelectableViewModel<T> selectableViewModel) {
+    public boolean handleLongClick(int position, SelectableViewModel selectableViewModel, T items) {
         if (!isActive) {
             start();
-            addOrRemoveItem(selectableViewModel);
-            callback.notifyItemChanged(position);
+            addOrRemoveItem(selectableViewModel, items);
+            callback.notifyItemChanged(position, selectableViewModel);
             return true;
         }
         return false;
@@ -142,7 +144,7 @@ public class ContextualToolbarHelper<T> {
     /**
      * @return a List of the currently selected SelectableViewModels
      */
-    public List<SelectableViewModel<T>> getItems() {
-        return items;
+    public List<T> getItems() {
+        return new ArrayList<>(map.values());
     }
 }

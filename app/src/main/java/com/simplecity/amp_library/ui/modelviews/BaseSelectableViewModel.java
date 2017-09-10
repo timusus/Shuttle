@@ -7,7 +7,7 @@ import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 
 import java.util.List;
 
-public abstract class BaseSelectableViewModel<VH extends BaseViewHolder, T> extends BaseViewModel<VH> implements SelectableViewModel<T> {
+public abstract class BaseSelectableViewModel<VH extends BaseViewHolder> extends BaseViewModel<VH> implements SelectableViewModel {
 
     private boolean isSelected = false;
 

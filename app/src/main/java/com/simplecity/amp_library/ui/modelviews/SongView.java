@@ -29,9 +29,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SongView extends BaseSelectableViewModel<SongView.ViewHolder, Song> implements
+public class SongView extends BaseSelectableViewModel<SongView.ViewHolder> implements
         SectionedView,
-        SelectableViewModel<Song> {
+        SelectableViewModel {
 
     public interface ClickListener {
 
@@ -286,11 +286,6 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder, Song>
                     && Arrays.equals(prefix, ((SongView) other).prefix);
         }
         return false;
-    }
-
-    @Override
-    public Song getItem() {
-        return song;
     }
 
     @Override

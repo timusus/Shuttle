@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Song;
@@ -41,6 +40,7 @@ import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
@@ -280,7 +280,7 @@ public class SongFragment extends BaseFragment implements
 
     @Override
     public void onSongClick(int position, SongView songView) {
-        if (!contextualToolbarHelper.handleClick(position, songView)) {
+        if (!contextualToolbarHelper.handleClick(position, songView, songView.song)) {
             List<Song> songs = Stream.of(adapter.items)
                     .filter(adaptableItem -> adaptableItem instanceof SongView)
                     .map(adaptableItem -> ((SongView) adaptableItem).song)
@@ -312,7 +312,7 @@ public class SongFragment extends BaseFragment implements
 
     @Override
     public boolean onSongLongClick(int position, SongView songView) {
-        return contextualToolbarHelper.handleLongClick(position, songView);
+        return contextualToolbarHelper.handleLongClick(position, songView, songView.song);
     }
 
     @Override
@@ -341,7 +341,7 @@ public class SongFragment extends BaseFragment implements
         ContextualToolbar contextualToolbar = ContextualToolbar.findContextualToolbar(this);
         if (contextualToolbar != null) {
             contextualToolbar.getMenu().clear();
-            contextualToolbar.inflateMenu(R.menu.context_menu_songs);
+            contextualToolbar.inflateMenu(R.menu.context_menu_general);
             SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
 
             if (playlistMenuDisposable != null) {
@@ -349,12 +349,9 @@ public class SongFragment extends BaseFragment implements
             }
             playlistMenuDisposable = PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe();
 
-            contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), () -> Stream.of(contextualToolbarHelper.getItems())
-                    .map(SelectableViewModel::getItem)
-                    .collect(Collectors.toList())));
             contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
                 @Override
-                public void notifyItemChanged(int position) {
+                public void notifyItemChanged(int position, SelectableViewModel viewModel) {
                     adapter.notifyItemChanged(position, 0);
                 }
 
@@ -363,6 +360,8 @@ public class SongFragment extends BaseFragment implements
                     adapter.notifyItemRangeChanged(0, adapter.items.size(), 0);
                 }
             });
+
+            contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), Single.fromCallable(() -> contextualToolbarHelper.getItems())));
         }
     }
 
