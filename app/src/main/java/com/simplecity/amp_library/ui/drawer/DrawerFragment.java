@@ -32,6 +32,7 @@ import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.ui.views.CircleImageView;
 import com.simplecity.amp_library.ui.views.PlayerViewAdapter;
 import com.simplecity.amp_library.utils.LogUtils;
+import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.SleepTimer;
 
@@ -171,7 +172,12 @@ public class DrawerFragment extends BaseFragment implements
         disposables.add(Aesthetic.get(getContext())
                 .colorPrimary()
                 .compose(Rx.distinctToMainThread())
-                .subscribe(color -> backgroundPlaceholder.setColorFilter(color, PorterDuff.Mode.MULTIPLY)));
+                .subscribe(color -> {
+                    backgroundPlaceholder.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+                    if (MusicUtils.getSong() == null) {
+                        backgroundImage.setImageDrawable(backgroundPlaceholder);
+                    }
+                }));
 
         playerPresenter.updateTrackInfo();
 
@@ -286,6 +292,7 @@ public class DrawerFragment extends BaseFragment implements
 
             requestManager.load(song)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .centerCrop()
                     .error(backgroundPlaceholder)
                     .into(backgroundImage);
 
