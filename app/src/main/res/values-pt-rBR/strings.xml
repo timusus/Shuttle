@@ -320,6 +320,10 @@ músicas adicionadas à fila.</item>
     <!-- Settings summary for gmail style placeholders checkbox-->
     <string name="pref_summary_placeholders">Exibir capas ausentes estilo \'Gmail\' por padrão.
 Se estiver desmarcado, o ícone do Shuttle será usado como uma capa</string>
+    <!-- Settings title for the enable lockscreen controls checkbox -->
+    <string name="pref_title_lockscreen">Mostrar capa na tela de bloqueio</string>
+    <!-- Settings summary for the enable lockscreen controls checkbox -->
+    <string name="pref_summary_lockscreen">Ativar/desativar capa do álbum na tela de bloqueio</string>
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">Exibir</string>
     <!-- Settings title for the keep screen on checkbox -->
@@ -548,6 +552,7 @@ pastas</item>
     <!-- Toast when sleep timer is set -->
     <string name="sleep_timer_started">Temporizador iniciado</string>
     <!-- Sleep timer "Set minutes..." -->
+    <string name="sleep_timer_set_minutes">Definir minutos...</string>
     <!-- Sleep timer "5 minutes" -->
     <string name="sleep_timer_5_mins">5 minutos</string>
     <!-- Sleep timer "15 minutes" -->
@@ -723,66 +728,4 @@ pastas</item>
     <string name="shortcut_playlist_long_label">Abrir Lista de Repr. de Favoritos</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">Lista de reprodução não disponível</string>
-    <!-- Displayed when an M3U playlist is being saved, but it already exists -->
-    <string name="playlist_save_exists">Playlist já existente</string>
-    <plurals name="NNNtracksdeleted">
-        <item quantity="one">1 música foi apagada.</item>
-        <item quantity="other"><xliff:g id="songs_to_delete">%d</xliff:g> músicas foram apagadas.</item>
-    </plurals>
-    <plurals name="NNNtrackstofavourites">
-        <item quantity="one">1 música adicionada aos favoritos.</item>
-        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> músicas adicionadas ao favoritos.</item>
-    </plurals>
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_tite">Reinício necessário</string>
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_message">Essas alterações não farão efeito até que você reinicie o Shuttle</string>
-    <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
-    <string name="dialog_custom">Customizada</string>
-    <!-- Context menu item -->
-    <string name="add_to_playlist">Playlist</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
-    <string name="remove_from_playlist">Remover da lista de reprodução</string>
-    <!-- -->
-    <string name="share_title">Compartilhar</string>
-    <!-- Playlist context menu item to delete the selected playlist. -->
-    <string name="delete_playlist_menu">Apagar</string>
-    <!--Settings title for white accent color) -->
-    <string name="pref_title_theme_white_accent">Usar destaque branco</string>
-    <!--Settings summary for white accent color-->
-    <string name="pref_summary_theme_white_accent">Usa o branco para todas as cores de destaque, exceto aquelas que precisam mostrar estado (modos aleatório e repetir precisam de outra cor além de branco para mostrar que estão ligados).</string>
-    <!--Settings category for 'notification' items -->
-    <string name="pref_category_notif_drawer">Gaveta de Notificações</string>
-    <!-- Settings title for inverting the notification drawer text & icons -->
-    <string name="pref_title_invert_notif_icons">Inverter Ícones/Texto da Notificação</string>
-    <!--Settings summary for the downloading more themes -->
-    <string name="pref_summary_get_pro_themes">Mais temas estão disponíveis no Shuttle+</string>
-    <!--Settings title for clearing whitelist-->
-    <string name="pref_title_update_whitelist">Atualizar</string>
-    <!-- Settings title for the enable lockscreen controls checkbox -->
-    <string name="pref_title_lockscreen">Mostrar capa na tela de bloqueio</string>
-    <!-- Settings summary for the enable lockscreen controls checkbox -->
-    <string name="pref_summary_lockscreen">Ativar/desativar capa do álbum na tela de bloqueio</string>
-    <!-- Settings title for the About heading -->
-    <string name="pref_title_about">Mudanças</string>
-    <!-- Sleep timer "set" -->
-    <string name="sleep_timer_set">Definir</string>
-    <!-- Sleep timer "Set time..." -->
-    <string name="sleep_timer_set_time">Definir tempo...</string>
-    <!-- Default name of artist that doesn't have a name in the metadata -->
-    <string name="unknown_artist_name">Artista desconhecido</string>
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_name">Álbum desconhecido</string>
-    <!-- Default name of genre that doesn't have a name in the metadata -->
-    <string name="unknown_genre_name">Gênero desconhecido</string>
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_artist_name">Artista do álbum desconhecido</string>
-    <!-- Accessibility button description -->
-    <string name="btn_queue">Ver fila de reprodução</string>
-    <!-- Accessibility button description -->
-    <string name="btn_show_queue">Mostrar fila</string>
-    <!-- Accessibility 'show lyrics' -->
-    <string name="btn_show_lyrics">Mostrar letras</string>
-    <string name="toast_purchase_failed">Algo deu errado. Tente novamente mais tarde.</string>
-    <string name="search_title_only">Apenas título</string>
 </resources>

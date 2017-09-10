@@ -299,6 +299,10 @@
     <!-- Settings summary for gmail style placeholders checkbox-->
     <string name="pref_summary_placeholders">Utilise des espaces réservés de style Gmail.
  Si décoché, l\'icône de Shuttle sera affichée dans les espaces réservés.</string>
+    <!-- Settings title for the enable lockscreen controls checkbox -->
+    <string name="pref_title_lockscreen">Afficher les boutons sur l\'écran de verrouillage</string>
+    <!-- Settings summary for the enable lockscreen controls checkbox -->
+    <string name="pref_summary_lockscreen">Afficher/masquer les boutons de contrôle, les infos et l\'illustration de l\'album lorsque l\'appareil est verrouillé. (ICS+)</string>
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">Affichage</string>
     <!-- Settings title for the keep screen on checkbox -->
@@ -659,57 +663,4 @@
     <string name="shortcut_playlist_short_label">Playlist</string>
     <!-- "Playlist" Shortcut long label. Max 25 characters.-->
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
-    <!-- Displayed when an M3U playlist is being saved, but it already exists -->
-    <string name="playlist_save_exists">Cette playlist existe déjà</string>
-    <plurals name="NNNtracksdeleted">
-        <item quantity="one">1 titre a été supprimé.</item>
-        <item quantity="other"><xliff:g id="SONGS_TO_DELETE">%d</xliff:g> titres ont été supprimés.</item>
-    </plurals>
-    <plurals name="NNNtrackstofavourites">
-        <item quantity="one">1 titre a été ajouté aux favoris.</item>
-        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> titres ont été ajoutés aux favoris.</item>
-    </plurals>
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_tite">Redémarrage requis</string>
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_message">Ces modifications ne prendront effet qu\'après le redémarrage de Shuttle</string>
-    <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
-    <string name="dialog_custom">Personnalisé</string>
-    <!-- Context menu item -->
-    <string name="add_to_playlist">Ajouter à la playlist</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
-    <string name="remove_from_playlist">Supprimer de la playlist</string>
-    <!-- -->
-    <string name="share_title">Partager</string>
-    <!-- Playlist context menu item to delete the selected playlist. -->
-    <string name="delete_playlist_menu">Supprimer</string>
-    <!--Settings title for white accent color) -->
-    <string name="pref_title_theme_white_accent">Utiliser l\'accent blanc</string>
-    <!--Settings summary for white accent color-->
-    <string name="pref_summary_theme_white_accent">Utiliser l’accent blanc pour toutes les couleurs d’accent, excepté celle qui nécessite d’afficher un état (Lecture aléatoire et Répétition ont besoin d’une autre couleur que le blanc pour montrer qu’elles sont activées).</string>
-    <!--Settings category for 'notification' items -->
-    <string name="pref_category_notif_drawer">Notification</string>
-    <!--Settings summary for the downloading more themes -->
-    <string name="pref_summary_get_pro_themes">D\'autres thèmes sont disponibles avec Shuttle+</string>
-    <!--Settings title for clearing whitelist-->
-    <string name="pref_title_update_whitelist">M. à jour</string>
-    <!-- Settings title for the enable lockscreen controls checkbox -->
-    <string name="pref_title_lockscreen">Afficher les boutons sur l\'écran de verrouillage</string>
-    <!-- Settings summary for the enable lockscreen controls checkbox -->
-    <string name="pref_summary_lockscreen">Afficher/masquer les boutons de contrôle, les infos et l\'illustration de l\'album lorsque l\'appareil est verrouillé. (ICS+)</string>
-    <!-- Settings title for the About heading -->
-    <string name="pref_title_about">À propos</string>
-    <!-- Default name of artist that doesn't have a name in the metadata -->
-    <string name="unknown_artist_name">Artiste inconnu</string>
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_name">Album inconnu</string>
-    <!-- Default name of genre that doesn't have a name in the metadata -->
-    <string name="unknown_genre_name">Genre inconnu</string>
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_artist_name">Artiste de l\'album inconnu</string>
-    <!-- Accessibility button description -->
-    <string name="btn_queue">Voir la liste d\'attente</string>
-    <!-- Accessibility 'show lyrics' -->
-    <string name="btn_show_lyrics">Afficher les paroles</string>
-    <string name="toast_purchase_failed">Un problème est apparu. Veuillez réessayer plus tard.</string>
 </resources>

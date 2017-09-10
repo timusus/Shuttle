@@ -315,6 +315,10 @@
     <!-- Settings summary for gmail style placeholders checkbox-->
     <string name="pref_summary_placeholders">Використовувати іконки в стилі \'Gmail\' за замовчуванням.
 Якщо не вибрано, - використовуватиметься іконка Shuttle</string>
+    <!-- Settings title for the enable lockscreen controls checkbox -->
+    <string name="pref_title_lockscreen">Увімкнути обкладинку на екрані блокуванні</string>
+    <!-- Settings summary for the enable lockscreen controls checkbox -->
+    <string name="pref_summary_lockscreen">Вмикає/вимикає обкладинку на екрані блокування</string>
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">Екран</string>
     <!-- Settings title for the keep screen on checkbox -->
@@ -705,62 +709,4 @@
     <string name="shortcut_playlist_long_label">Відкрити Вибраний плейлист</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">Плейлист недоступний</string>
-    <!-- Displayed when an M3U playlist is being saved, but it already exists -->
-    <string name="playlist_save_exists">Плейлист вже існує</string>
-    <plurals name="NNNtracksdeleted">
-        <item quantity="one">1 композицію було видалено.</item>
-        <item quantity="other"><xliff:g id="songs_to_delete">%d</xliff:g> композиції було видалено.</item>
-        <item quantity="few"><xliff:g id="songs_to_delete">%d</xliff:g> композицій було видалено.</item>
-        <item quantity="many"><xliff:g id="songs_to_delete">%d</xliff:g> композицій було видалено.</item>
-    </plurals>
-    <plurals name="NNNtrackstofavourites">
-        <item quantity="one">1 композицію додано у вибрані.</item>
-        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> композиції додано у вибрані.</item>
-        <item quantity="few"><xliff:g example="27" id="number">%d</xliff:g> композицій додано у вибрані.</item>
-        <item quantity="many"><xliff:g example="27" id="number">%d</xliff:g> композицій додано у вибрані.</item>
-    </plurals>
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_tite">Необхідно перезавантаження</string>
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_message">Для того щоб зміни вступили в силу потрібно перезавантажити Shuttle</string>
-    <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
-    <string name="dialog_custom">Свій</string>
-    <!-- Context menu item -->
-    <string name="add_to_playlist">Додати в плейлист</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
-    <string name="remove_from_playlist">Видалити з плейлисту</string>
-    <!-- -->
-    <string name="share_title">Поділитися</string>
-    <!-- Playlist context menu item to delete the selected playlist. -->
-    <string name="delete_playlist_menu">Видалити</string>
-    <!--Settings title for white accent color) -->
-    <string name="pref_title_theme_white_accent">Використовувати білий акцент</string>
-    <!--Settings summary for white accent color-->
-    <string name="pref_summary_theme_white_accent">Використовує білий для всіх кольорових акцентів, виключаючи ті, які повинні відображати стан (тасування та повтор потребують кольору відмінного від білого щоб показати, що вони увімкнені)</string>
-    <!--Settings summary for the downloading more themes -->
-    <string name="pref_summary_get_pro_themes">Більше тем доступно в Shuttle+</string>
-    <!--Settings title for clearing whitelist-->
-    <string name="pref_title_update_whitelist">Оновлення</string>
-    <!-- Settings title for the enable lockscreen controls checkbox -->
-    <string name="pref_title_lockscreen">Увімкнути обкладинку на екрані блокуванні</string>
-    <!-- Settings summary for the enable lockscreen controls checkbox -->
-    <string name="pref_summary_lockscreen">Вмикає/вимикає обкладинку на екрані блокування</string>
-    <!-- Settings title for the About heading -->
-    <string name="pref_title_about">Звітування змін</string>
-    <!-- Default name of artist that doesn't have a name in the metadata -->
-    <string name="unknown_artist_name">Невідомий виконавець</string>
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_name">Невідомий альбом</string>
-    <!-- Default name of genre that doesn't have a name in the metadata -->
-    <string name="unknown_genre_name">Невідомий жанр</string>
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_artist_name">Невідомий виконавець альбому</string>
-    <!-- Accessibility button description -->
-    <string name="btn_queue">Переглянути чергу відтворення</string>
-    <!-- Accessibility button description -->
-    <string name="btn_show_queue">Показати чергу</string>
-    <!-- Accessibility 'show lyrics' -->
-    <string name="btn_show_lyrics">Показати слова</string>
-    <string name="toast_purchase_failed">Щось пішло не так. Будь ласка, спробуйте ще раз пізніше..</string>
-    <string name="search_title_only">Тільки назва</string>
 </resources>

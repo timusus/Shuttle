@@ -313,6 +313,10 @@
     <string name="pref_title_placeholders">使用 Gmail 樣式</string>
     <!-- Settings summary for gmail style placeholders checkbox-->
     <string name="pref_summary_placeholders">顯示 Gmail 樣式的預設專輯封面。若取消勾選則會以 Shuttle 圖示替代</string>
+    <!-- Settings title for the enable lockscreen controls checkbox -->
+    <string name="pref_title_lockscreen">啟用鎖定螢幕播放控制</string>
+    <!-- Settings summary for the enable lockscreen controls checkbox -->
+    <string name="pref_summary_lockscreen">啟用 / 停用鎖定螢幕顯示音樂資訊、專輯封面及播放控制面板</string>
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">顯示</string>
     <!-- Settings title for the keep screen on checkbox -->
@@ -712,64 +716,4 @@
     <string name="shortcut_playlist_long_label">開啟最愛的播放清單</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">播放清單無法使用</string>
-    <!-- Displayed when an M3U playlist is being saved, but it already exists -->
-    <string name="playlist_save_exists">播放清單已存在</string>
-    <plurals name="NNNtracksdeleted">
-        <item quantity="other">已刪除 <xliff:g id="songs_to_delete">%d</xliff:g> 首曲目</item>
-    </plurals>
-    <plurals name="NNNtrackstofavourites">
-        <item quantity="other">已將 <xliff:g example="27" id="number">%d</xliff:g> 首曲目加入至最愛</item>
-    </plurals>
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_tite">需要重新啟動</string>
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_message">您的變更將在重新啟動 Shuttle 後生效</string>
-    <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
-    <string name="dialog_custom">自訂</string>
-    <!-- Context menu item -->
-    <string name="add_to_playlist">播放清單</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
-    <string name="remove_from_playlist">從播放清單中移除</string>
-    <!-- -->
-    <string name="share_title">分享</string>
-    <!-- Playlist context menu item to delete the selected playlist. -->
-    <string name="delete_playlist_menu">刪除</string>
-    <!--Settings title for white accent color) -->
-    <string name="pref_title_theme_white_accent">使用白色輔助色</string>
-    <!--Settings summary for white accent color-->
-    <string name="pref_summary_theme_white_accent">以白色作為狀態顯示外的輔助色 (隨機播放或重複模式按鍵需要白色以外的色彩來辨別為啟用)</string>
-    <!--Settings category for 'notification' items -->
-    <string name="pref_category_notif_drawer">通知介面</string>
-    <!-- Settings title for inverting the notification drawer text & icons -->
-    <string name="pref_title_invert_notif_icons">反轉通知圖示與文字的色彩</string>
-    <!--Settings summary for the downloading more themes -->
-    <string name="pref_summary_get_pro_themes">升級至 Shuttle+ 以取得更多主題</string>
-    <!--Settings title for clearing whitelist-->
-    <string name="pref_title_update_whitelist">更新</string>
-    <!-- Settings title for the enable lockscreen controls checkbox -->
-    <string name="pref_title_lockscreen">啟用鎖定螢幕播放控制</string>
-    <!-- Settings summary for the enable lockscreen controls checkbox -->
-    <string name="pref_summary_lockscreen">啟用 / 停用鎖定螢幕顯示音樂資訊、專輯封面及播放控制面板</string>
-    <!-- Settings title for the About heading -->
-    <string name="pref_title_about">更新紀錄</string>
-    <!-- Sleep timer "set" -->
-    <string name="sleep_timer_set">設定</string>
-    <!-- Sleep timer "Set time..." -->
-    <string name="sleep_timer_set_time">設定時間…</string>
-    <!-- Default name of artist that doesn't have a name in the metadata -->
-    <string name="unknown_artist_name">未知的演出者</string>
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_name">未知的專輯</string>
-    <!-- Default name of genre that doesn't have a name in the metadata -->
-    <string name="unknown_genre_name">未知的類型</string>
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_artist_name">未知的專輯演出者</string>
-    <!-- Accessibility button description -->
-    <string name="btn_queue">顯示播放佇列</string>
-    <!-- Accessibility button description -->
-    <string name="btn_show_queue">顯示佇列</string>
-    <!-- Accessibility 'show lyrics' -->
-    <string name="btn_show_lyrics">顯示歌詞</string>
-    <string name="toast_purchase_failed">發生一些問題，請稍後再試..</string>
-    <string name="search_title_only">僅標題</string>
 </resources>

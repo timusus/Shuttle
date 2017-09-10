@@ -305,6 +305,10 @@
     <string name="pref_title_placeholders">Gmail stílusű helykitöltők</string>
     <!-- Settings summary for gmail style placeholders checkbox-->
     <string name="pref_summary_placeholders">\'Gmail\' stílusű helykitöltők használata. Ha ki van kapcsolva, egy Shuttle ikon jelenik meg helykitöltőként.</string>
+    <!-- Settings title for the enable lockscreen controls checkbox -->
+    <string name="pref_title_lockscreen">Képernyőzári borítókép engedélyezése</string>
+    <!-- Settings summary for the enable lockscreen controls checkbox -->
+    <string name="pref_summary_lockscreen">Be/Kikapcsolja a borítókép megjelenítését a záróképernyőn</string>
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">Megjelenítés</string>
     <!-- Settings title for the keep screen on checkbox -->
@@ -694,56 +698,4 @@ segítségével
     <!-- "Playlist" Shortcut long label. Max 25 characters.-->
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">Lejátszási lista nem érhető el</string>
-    <!-- Displayed when an M3U playlist is being saved, but it already exists -->
-    <string name="playlist_save_exists">A lejátszási lista már létezik.</string>
-    <plurals name="NNNtracksdeleted">
-        <item quantity="one">1 dal törölve.</item>
-        <item quantity="other"><xliff:g id="SONGS_TO_DELETE">%d</xliff:g> dal törlésre került.</item>
-    </plurals>
-    <plurals name="NNNtrackstofavourites">
-        <item quantity="one">dal hozzáadva a kedvencekhez</item>
-        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> dal hozzáadva a kedvencekhez</item>
-    </plurals>
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_tite">Újraindítás szükséges</string>
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_message">Ezek a változások nem lépnek életbe, amíg nem indítod újra a lejátszót</string>
-    <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
-    <string name="dialog_custom">Egyedi</string>
-    <!-- Context menu item -->
-    <string name="add_to_playlist">Lejátszási lista</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
-    <string name="remove_from_playlist">Eltávolítás a lejátszási listából</string>
-    <!-- -->
-    <string name="share_title">Megosztás</string>
-    <!-- Playlist context menu item to delete the selected playlist. -->
-    <string name="delete_playlist_menu">Törlés</string>
-    <!--Settings title for white accent color) -->
-    <string name="pref_title_theme_white_accent">Fehér színséma</string>
-    <!--Settings summary for white accent color-->
-    <string name="pref_summary_theme_white_accent">Mindenhol a fehér színséma lesz alkalmazva, kivéve azokat a helyeket ahol állapotokat is jelezni kell (pl.: véletlenszerű lejátszás kapcsolója más színű lesz, ha be van kapcsolva)</string>
-    <!--Settings category for 'notification' items -->
-    <string name="pref_category_notif_drawer">Értesítési sáv</string>
-    <!-- Settings title for inverting the notification drawer text & icons -->
-    <string name="pref_title_invert_notif_icons">Értesítési ikonok/szövegek invertálása</string>
-    <!--Settings summary for the downloading more themes -->
-    <string name="pref_summary_get_pro_themes">A Shuttle+ megvásárlásával további témák érhetők el</string>
-    <!--Settings title for clearing whitelist-->
-    <string name="pref_title_update_whitelist">Frissítés</string>
-    <!-- Settings title for the enable lockscreen controls checkbox -->
-    <string name="pref_title_lockscreen">Képernyőzári borítókép engedélyezése</string>
-    <!-- Settings summary for the enable lockscreen controls checkbox -->
-    <string name="pref_summary_lockscreen">Be/Kikapcsolja a borítókép megjelenítését a záróképernyőn</string>
-    <!-- Settings title for the About heading -->
-    <string name="pref_title_about">Változások listája</string>
-    <!-- Default name of artist that doesn't have a name in the metadata -->
-    <string name="unknown_artist_name">Ismeretlen előadó</string>
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_name">Ismeretlen album</string>
-    <!-- Default name of genre that doesn't have a name in the metadata -->
-    <string name="unknown_genre_name">Ismeretlen műfaj</string>
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_artist_name">Ismeretlen album előadó</string>
-    <!-- Accessibility button description -->
-    <string name="btn_queue">Lejátszási sor nézet</string>
 </resources>

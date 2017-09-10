@@ -305,6 +305,11 @@
     <!-- Settings summary for gmail style placeholders checkbox-->
     <string name="pref_summary_placeholders">Използване на стила \"Gmail\" по подразбиране
  Ако опцията не е активна, иконата на Shuttle ще се показва като placeholder</string>
+    <!-- Settings title for the enable lockscreen controls checkbox -->
+    <string name="pref_title_lockscreen">Активирай контроли когато екранът е заключен</string>
+    <!-- Settings summary for the enable lockscreen controls checkbox -->
+    <string name="pref_summary_lockscreen">"Активира/Деактивира контроли, информация и обложки на албуми, когато екранът е заключен. (ICS +)
+	"</string>
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">Дисплей</string>
     <!-- Settings title for the keep screen on checkbox -->
@@ -688,58 +693,4 @@
     <string name="shortcut_playlist_long_label">Отвори плейлиста \"Любими\"</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">Плейлистът не е достъпен</string>
-    <!-- Displayed when an M3U playlist is being saved, but it already exists -->
-    <string name="playlist_save_exists">Плейлистът вече съществува</string>
-    <plurals name="NNNtracksdeleted">
-        <item quantity="one">1 изтрита песен</item>
-        <item quantity="other"><xliff:g id="SONGS_TO_DELETE">%d</xliff:g> песни бяха изтрити.</item>
-    </plurals>
-    <plurals name="NNNtrackstofavourites">
-        <item quantity="one">1 песен е добавена към любими.</item>
-        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> песни са добавени към любими.</item>
-    </plurals>
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_tite">Необходим е рестарт</string>
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_message">Тези промени ще влязат в сила след рестарт на Shuttle</string>
-    <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
-    <string name="dialog_custom">Избери сам</string>
-    <!-- Context menu item -->
-    <string name="add_to_playlist">Добавяне към плейлиста</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
-    <string name="remove_from_playlist">Премахване от плейлиста</string>
-    <!-- -->
-    <string name="share_title">Споделяне</string>
-    <!-- Playlist context menu item to delete the selected playlist. -->
-    <string name="delete_playlist_menu">Изтриване</string>
-    <!--Settings title for white accent color) -->
-    <string name="pref_title_theme_white_accent">Използвай бял акцент</string>
-    <!--Settings summary for white accent color-->
-    <string name="pref_summary_theme_white_accent">Използва бяло за всички цветови акценти с изкл. на тези, които показват състояние (разбъркване и повторение ползват различен цвят, когато са активни).</string>
-    <!--Settings summary for the downloading more themes -->
-    <string name="pref_summary_get_pro_themes">Shuttle+ поддържа повече теми</string>
-    <!--Settings title for clearing whitelist-->
-    <string name="pref_title_update_whitelist">Обнови</string>
-    <!-- Settings title for the enable lockscreen controls checkbox -->
-    <string name="pref_title_lockscreen">Активирай контроли когато екранът е заключен</string>
-    <!-- Settings summary for the enable lockscreen controls checkbox -->
-    <string name="pref_summary_lockscreen">"Активира/Деактивира контроли, информация и обложки на албуми, когато екранът е заключен. (ICS +)
-	"</string>
-    <!-- Settings title for the About heading -->
-    <string name="pref_title_about">Информация за апликацията</string>
-    <!-- Default name of artist that doesn't have a name in the metadata -->
-    <string name="unknown_artist_name">Неизвестен изпълнител</string>
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_name">Неизвестен албум</string>
-    <!-- Default name of genre that doesn't have a name in the metadata -->
-    <string name="unknown_genre_name">Неизвестен жанр</string>
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_artist_name">Незивестен изпълнител на албума</string>
-    <!-- Accessibility button description -->
-    <string name="btn_queue">Виж списъка текущо изпълнявани</string>
-    <!-- Accessibility button description -->
-    <string name="btn_show_queue">Покажи опашката</string>
-    <!-- Accessibility 'show lyrics' -->
-    <string name="btn_show_lyrics">Покажи текста</string>
-    <string name="toast_purchase_failed">Нещо се обърка. Моля, опитвайте отново по-късно...</string>
 </resources>

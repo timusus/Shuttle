@@ -315,6 +315,10 @@
     <!-- Settings summary for gmail style placeholders checkbox-->
     <string name="pref_summary_placeholders">Standaard Gmail-stijl plaatshouders weergeven.
 Indien uitgeschakeld wordt het Shuttle-icoon als plaatshouder gebruikt</string>
+    <!-- Settings title for the enable lockscreen controls checkbox -->
+    <string name="pref_title_lockscreen">Illustraties op vergrendelscherm</string>
+    <!-- Settings summary for the enable lockscreen controls checkbox -->
+    <string name="pref_summary_lockscreen">Schakelt weergave van albumillustraties aan/uit wanneer het scherm vergrendeld is.</string>
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">Weergave</string>
     <!-- Settings title for the keep screen on checkbox -->
@@ -718,66 +722,4 @@ map "</item>
     <string name="shortcut_playlist_long_label">Favorieten-afspeellijst openen</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">Afspeellijst niet beschikbaar</string>
-    <!-- Displayed when an M3U playlist is being saved, but it already exists -->
-    <string name="playlist_save_exists">Afspeellijst bestaat al</string>
-    <plurals name="NNNtracksdeleted">
-        <item quantity="one">1 nummer verwijderd.</item>
-        <item quantity="other"><xliff:g id="songs_to_delete">%d</xliff:g> nummers verwijderd.</item>
-    </plurals>
-    <plurals name="NNNtrackstofavourites">
-        <item quantity="one">1 nummer toegevoegd aan favorieten.</item>
-        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> nummers toegevoegd aan favorieten.</item>
-    </plurals>
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_tite">Herstart nodig</string>
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_message">De wijzigingen worden toegepast na een herstart van Shuttle</string>
-    <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
-    <string name="dialog_custom">Aangepast</string>
-    <!-- Context menu item -->
-    <string name="add_to_playlist">Afspeellijst</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
-    <string name="remove_from_playlist">Verwijderen uit afspeellijst</string>
-    <!-- -->
-    <string name="share_title">Delen</string>
-    <!-- Playlist context menu item to delete the selected playlist. -->
-    <string name="delete_playlist_menu">Verwijderen</string>
-    <!--Settings title for white accent color) -->
-    <string name="pref_title_theme_white_accent">Witte accenten gebruiken</string>
-    <!--Settings summary for white accent color-->
-    <string name="pref_summary_theme_white_accent">Gebruik wit voor alle kleuraccenten, behalve degene die status tonen (shuffle en herhalen hebben een andere kleur nodig wanneer ze zijn ingeschakeld).</string>
-    <!--Settings category for 'notification' items -->
-    <string name="pref_category_notif_drawer">Notificatiepaneel</string>
-    <!-- Settings title for inverting the notification drawer text & icons -->
-    <string name="pref_title_invert_notif_icons">Notificatie-iconen/tekst  omkeren</string>
-    <!--Settings summary for the downloading more themes -->
-    <string name="pref_summary_get_pro_themes">Meer thema\'s zijn beschikbaar in Shuttle+</string>
-    <!--Settings title for clearing whitelist-->
-    <string name="pref_title_update_whitelist">Werk bij</string>
-    <!-- Settings title for the enable lockscreen controls checkbox -->
-    <string name="pref_title_lockscreen">Illustraties op vergrendelscherm</string>
-    <!-- Settings summary for the enable lockscreen controls checkbox -->
-    <string name="pref_summary_lockscreen">Schakelt weergave van albumillustraties aan/uit wanneer het scherm vergrendeld is.</string>
-    <!-- Settings title for the About heading -->
-    <string name="pref_title_about">Wijzigingen</string>
-    <!-- Sleep timer "set" -->
-    <string name="sleep_timer_set">Instellen</string>
-    <!-- Sleep timer "Set time..." -->
-    <string name="sleep_timer_set_time">Tijd kiezen...</string>
-    <!-- Default name of artist that doesn't have a name in the metadata -->
-    <string name="unknown_artist_name">Onbekende artiest</string>
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_name">Onbekend album</string>
-    <!-- Default name of genre that doesn't have a name in the metadata -->
-    <string name="unknown_genre_name">Onbekende genre</string>
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_artist_name">Onbekende album artiest</string>
-    <!-- Accessibility button description -->
-    <string name="btn_queue">Afspeelwachtrij zien</string>
-    <!-- Accessibility button description -->
-    <string name="btn_show_queue">Wachtrij tonen</string>
-    <!-- Accessibility 'show lyrics' -->
-    <string name="btn_show_lyrics">Songteksten tonen</string>
-    <string name="toast_purchase_failed">Er ging iets fout. Probeer later opnieuw..</string>
-    <string name="search_title_only">Alleen titel</string>
 </resources>

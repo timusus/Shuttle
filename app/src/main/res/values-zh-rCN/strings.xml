@@ -322,6 +322,10 @@
     <!-- Settings summary for gmail style placeholders checkbox-->
     <string name="pref_summary_placeholders">如果歌曲没有封面将显示\'Gmail\'的占位符风格
 取消选中Shuttle图标将被用作封面代替</string>
+    <!-- Settings title for the enable lockscreen controls checkbox -->
+    <string name="pref_title_lockscreen">启用锁屏控制</string>
+    <!-- Settings summary for the enable lockscreen controls checkbox -->
+    <string name="pref_summary_lockscreen">当屏幕锁定时启用/禁用控制、信息和专辑封面</string>
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">显示</string>
     <!-- Settings title for the keep screen on checkbox -->
@@ -725,64 +729,4 @@ www.shuttlemusicplayer.com</string>
     <string name="shortcut_playlist_long_label">打开收藏列表</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">播放列表不可用</string>
-    <!-- Displayed when an M3U playlist is being saved, but it already exists -->
-    <string name="playlist_save_exists">播放列表已存在</string>
-    <plurals name="NNNtracksdeleted">
-        <item quantity="other">已删除<xliff:g id="songs_to_delete">%d</xliff:g>首歌曲</item>
-    </plurals>
-    <plurals name="NNNtrackstofavourites">
-        <item quantity="other">已添加<xliff:g example="27" id="number">%d</xliff:g>首歌到我的最爱</item>
-    </plurals>
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_tite">需要重新启动</string>
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_message">在重启本应用之前这些更改不会生效</string>
-    <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
-    <string name="dialog_custom">自定义</string>
-    <!-- Context menu item -->
-    <string name="add_to_playlist">播放列表</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
-    <string name="remove_from_playlist">从播放列表中删除</string>
-    <!-- -->
-    <string name="share_title">分享</string>
-    <!-- Playlist context menu item to delete the selected playlist. -->
-    <string name="delete_playlist_menu">删除</string>
-    <!--Settings title for white accent color) -->
-    <string name="pref_title_theme_white_accent">白色主题</string>
-    <!--Settings summary for white accent color-->
-    <string name="pref_summary_theme_white_accent">为所有除需要显示状态的地方以外使用白色（随机或重复需要一个除白色以外的颜色来标示出启用）</string>
-    <!--Settings category for 'notification' items -->
-    <string name="pref_category_notif_drawer">通知抽屉</string>
-    <!-- Settings title for inverting the notification drawer text & icons -->
-    <string name="pref_title_invert_notif_icons">反转通知图标/文本</string>
-    <!--Settings summary for the downloading more themes -->
-    <string name="pref_summary_get_pro_themes">升级到Shuttle+以获取更多主题</string>
-    <!--Settings title for clearing whitelist-->
-    <string name="pref_title_update_whitelist">更新</string>
-    <!-- Settings title for the enable lockscreen controls checkbox -->
-    <string name="pref_title_lockscreen">启用锁屏控制</string>
-    <!-- Settings summary for the enable lockscreen controls checkbox -->
-    <string name="pref_summary_lockscreen">当屏幕锁定时启用/禁用控制、信息和专辑封面</string>
-    <!-- Settings title for the About heading -->
-    <string name="pref_title_about">更新日志</string>
-    <!-- Sleep timer "set" -->
-    <string name="sleep_timer_set">设定</string>
-    <!-- Sleep timer "Set time..." -->
-    <string name="sleep_timer_set_time">设置时间...</string>
-    <!-- Default name of artist that doesn't have a name in the metadata -->
-    <string name="unknown_artist_name">未知艺术家</string>
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_name">未知专辑</string>
-    <!-- Default name of genre that doesn't have a name in the metadata -->
-    <string name="unknown_genre_name">未知流派</string>
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_artist_name">未知专辑艺术家</string>
-    <!-- Accessibility button description -->
-    <string name="btn_queue">查看播放队列</string>
-    <!-- Accessibility button description -->
-    <string name="btn_show_queue">显示队列</string>
-    <!-- Accessibility 'show lyrics' -->
-    <string name="btn_show_lyrics">显示歌词</string>
-    <string name="toast_purchase_failed">出了些问题,请稍后再试...</string>
-    <string name="search_title_only">仅标题</string>
 </resources>

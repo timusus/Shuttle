@@ -154,6 +154,8 @@
     <!-- Settings summary for the download via Wi-Fi checkbox -->
     <!-- Settings title for gmail style placeholders checkbox-->
     <!-- Settings summary for gmail style placeholders checkbox-->
+    <!-- Settings title for the enable lockscreen controls checkbox -->
+    <!-- Settings summary for the enable lockscreen controls checkbox -->
     <!-- Settings title for the Display heading -->
     <!-- Settings title for the keep screen on checkbox -->
     <!-- Settings summary for the keep screen on checkbox -->
@@ -327,6 +329,4 @@
     <!-- "Playlist" Shortcut label. Max 10 characters.-->
     <!-- "Playlist" Shortcut long label. Max 25 characters.-->
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
-    <!--Settings summary for white accent color-->
-    <string name="pref_summary_theme_white_accent">Uses white for all colour accents, except those which need to show state (shuffle and repeat need a colour other than white to show they are turned on).</string>
 </resources>

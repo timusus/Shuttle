@@ -325,6 +325,10 @@
     <string name="pref_title_placeholders">Использовать иконки в стиле Gmail</string>
     <!-- Settings summary for gmail style placeholders checkbox-->
     <string name="pref_summary_placeholders">Использовать иконки в стиле \'Gmail\' по умолчанию. Если отключено, будет использоваться иконка Shuttle</string>
+    <!-- Settings title for the enable lockscreen controls checkbox -->
+    <string name="pref_title_lockscreen">Включить показ обложки на экране блокировки</string>
+    <!-- Settings summary for the enable lockscreen controls checkbox -->
+    <string name="pref_summary_lockscreen">Включает/отключает управление, информацию и обложку альбома, когда экран заблокирован.</string>
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">Экран</string>
     <!-- Settings title for the keep screen on checkbox -->
@@ -737,70 +741,4 @@
     <string name="shortcut_playlist_long_label">Открыть избранный плейлист</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">Плейлист недоступен</string>
-    <!-- Displayed when an M3U playlist is being saved, but it already exists -->
-    <string name="playlist_save_exists">Плейлист уже существует</string>
-    <plurals name="NNNtracksdeleted">
-        <item quantity="one">1 песня удалена.</item>
-        <item quantity="other">Удалено композиций: <xliff:g id="SONGS_TO_DELETE">%d</xliff:g>.</item>
-        <item quantity="few"><xliff:g id="songs_to_delete">%d</xliff:g> песни удалены.</item>
-        <item quantity="many"><xliff:g id="songs_to_delete">%d</xliff:g> песен удалено.</item>
-    </plurals>
-    <plurals name="NNNtrackstofavourites">
-        <item quantity="one">1 песня добавлена в избранное.</item>
-        <item quantity="other"><xliff:g example="18" id="number">%d</xliff:g>  песен добавлено в плейлист.</item>
-        <item quantity="few"><xliff:g example="27" id="number">%d</xliff:g> песни добавлены в избранное.</item>
-        <item quantity="many"><xliff:g example="27" id="number">%d</xliff:g> песен добавлены в избранное.</item>
-    </plurals>
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_tite">Необходим перезапуск</string>
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_message">Изменения не встутят в силу до перезапуска</string>
-    <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
-    <string name="dialog_custom">Свой</string>
-    <!-- Context menu item -->
-    <string name="add_to_playlist">Плейлист</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
-    <string name="remove_from_playlist">Удалить из плейлиста</string>
-    <!-- -->
-    <string name="share_title">Поделиться</string>
-    <!-- Playlist context menu item to delete the selected playlist. -->
-    <string name="delete_playlist_menu">Удалить с диска</string>
-    <!--Settings title for white accent color) -->
-    <string name="pref_title_theme_white_accent">Использовать белый акцент</string>
-    <!--Settings summary for white accent color-->
-    <string name="pref_summary_theme_white_accent">Использование белого цвета во всех акцентах, кроме задействованных в отображении состояния (перемешивание и повтор нуждаются в цвете, отличном от белого, для индикации активации)</string>
-    <!--Settings category for 'notification' items -->
-    <string name="pref_category_notif_drawer">Панель уведомления</string>
-    <!-- Settings title for inverting the notification drawer text & icons -->
-    <string name="pref_title_invert_notif_icons">Инвертировать иконки/текст на панели уведомлений</string>
-    <!--Settings summary for the downloading more themes -->
-    <string name="pref_summary_get_pro_themes">Больше тем доступно в Shuttle+</string>
-    <!--Settings title for clearing whitelist-->
-    <string name="pref_title_update_whitelist">Обновить</string>
-    <!-- Settings title for the enable lockscreen controls checkbox -->
-    <string name="pref_title_lockscreen">Включить показ обложки на экране блокировки</string>
-    <!-- Settings summary for the enable lockscreen controls checkbox -->
-    <string name="pref_summary_lockscreen">Включает/отключает управление, информацию и обложку альбома, когда экран заблокирован.</string>
-    <!-- Settings title for the About heading -->
-    <string name="pref_title_about">Список изменений</string>
-    <!-- Sleep timer "set" -->
-    <string name="sleep_timer_set">Установить</string>
-    <!-- Sleep timer "Set time..." -->
-    <string name="sleep_timer_set_time">Установить время...</string>
-    <!-- Default name of artist that doesn't have a name in the metadata -->
-    <string name="unknown_artist_name">Неизвестный исполнитель</string>
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_name">Неизвестный альбом</string>
-    <!-- Default name of genre that doesn't have a name in the metadata -->
-    <string name="unknown_genre_name">Неизвестный жанр</string>
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_artist_name">Неизвестный исполнитель альбома</string>
-    <!-- Accessibility button description -->
-    <string name="btn_queue">Показать очередь воспроизведения</string>
-    <!-- Accessibility button description -->
-    <string name="btn_show_queue">Просмотреть очередь</string>
-    <!-- Accessibility 'show lyrics' -->
-    <string name="btn_show_lyrics">Показать тексты</string>
-    <string name="toast_purchase_failed">Что-то пошло не так. Пожалуйста, попробуйте позже...</string>
-    <string name="search_title_only">Только название</string>
 </resources>

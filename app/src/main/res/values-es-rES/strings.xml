@@ -304,6 +304,10 @@
     <!-- Settings summary for gmail style placeholders checkbox-->
     <string name="pref_summary_placeholders">Mostrar carátulas predeterminadas estilo \'Gmail\'. 
 Si no está seleccionado, se usará el icono de Shuttle en su lugar</string>
+    <!-- Settings title for the enable lockscreen controls checkbox -->
+    <string name="pref_title_lockscreen">Activar carátula en pantalla de bloqueo</string>
+    <!-- Settings summary for the enable lockscreen controls checkbox -->
+    <string name="pref_summary_lockscreen">Activa/desactiva la carátula en la pantalla de bloqueo</string>
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">Pantalla</string>
     <!-- Settings title for the keep screen on checkbox -->
@@ -698,62 +702,4 @@ carpetas</item>
     <string name="shortcut_playlist_long_label">Abrir Lista de Favoritos</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">Lista de Reproducción no disponible</string>
-    <!-- Displayed when an M3U playlist is being saved, but it already exists -->
-    <string name="playlist_save_exists">La lista de reproducción ya existe</string>
-    <plurals name="NNNtracksdeleted">
-        <item quantity="one">1 canción ha sido eliminada.</item>
-        <item quantity="other"><xliff:g id="songs_to_delete">%d</xliff:g> canciones han sido eliminadas.</item>
-    </plurals>
-    <plurals name="NNNtrackstofavourites">
-        <item quantity="one">1 canción añadida a favoritos.</item>
-        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> canciones añadidas a favoritos.</item>
-    </plurals>
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_tite">Reinicio requerido</string>
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_message">Los cambios no surtirán efecto hasta que reinicie Shuttle</string>
-    <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
-    <string name="dialog_custom">Personalizado</string>
-    <!-- Context menu item -->
-    <string name="add_to_playlist">Añadir a lista de reproducción</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
-    <string name="remove_from_playlist">Eliminar de lista de reproducción</string>
-    <!-- -->
-    <string name="share_title">Compartir</string>
-    <!-- Playlist context menu item to delete the selected playlist. -->
-    <string name="delete_playlist_menu">Eliminar</string>
-    <!--Settings title for white accent color) -->
-    <string name="pref_title_theme_white_accent">Usar Blanco como acento.</string>
-    <!--Settings summary for white accent color-->
-    <string name="pref_summary_theme_white_accent">Usa el blanco para todos los acentos de color, excepto aquellos que necesita mostrar un estado (reprod. aleatoria y repetición necesitan un color distinto para mostrar que están activados).</string>
-    <!--Settings category for 'notification' items -->
-    <string name="pref_category_notif_drawer">Panel de Notificaciones</string>
-    <!-- Settings title for inverting the notification drawer text & icons -->
-    <string name="pref_title_invert_notif_icons">Invertir iconos/Texto de Notificaciones</string>
-    <!--Settings summary for the downloading more themes -->
-    <string name="pref_summary_get_pro_themes">Hay más temas disponibles en Shuttle+</string>
-    <!--Settings title for clearing whitelist-->
-    <string name="pref_title_update_whitelist">Actualizar</string>
-    <!-- Settings title for the enable lockscreen controls checkbox -->
-    <string name="pref_title_lockscreen">Activar carátula en pantalla de bloqueo</string>
-    <!-- Settings summary for the enable lockscreen controls checkbox -->
-    <string name="pref_summary_lockscreen">Activa/desactiva la carátula en la pantalla de bloqueo</string>
-    <!-- Settings title for the About heading -->
-    <string name="pref_title_about">Lista de cambios</string>
-    <!-- Default name of artist that doesn't have a name in the metadata -->
-    <string name="unknown_artist_name">Artista desconocido</string>
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_name">Álbum desconocido</string>
-    <!-- Default name of genre that doesn't have a name in the metadata -->
-    <string name="unknown_genre_name">Género desconocido</string>
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_artist_name">Artista desconocido</string>
-    <!-- Accessibility button description -->
-    <string name="btn_queue">Ver lista de reproducción</string>
-    <!-- Accessibility button description -->
-    <string name="btn_show_queue">Mostrar cola</string>
-    <!-- Accessibility 'show lyrics' -->
-    <string name="btn_show_lyrics">Mostrar letras</string>
-    <string name="toast_purchase_failed">Algo ha ido mal. Por favor prueba más tarde..</string>
-    <string name="search_title_only">Solo Título</string>
 </resources>

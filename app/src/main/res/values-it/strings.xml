@@ -320,6 +320,10 @@
     <string name="pref_title_placeholders">Usa etichette Gmail</string>
     <!-- Settings summary for gmail style placeholders checkbox-->
     <string name="pref_summary_placeholders">Visualizza le etichette in stile Gmail per impostazione predefinita. Se non selezionato verrà utilizzata come etichetta l\'icona di Shuttle.</string>
+    <!-- Settings title for the enable lockscreen controls checkbox -->
+    <string name="pref_title_lockscreen">Copertina nella schermata di sblocco</string>
+    <!-- Settings summary for the enable lockscreen controls checkbox -->
+    <string name="pref_summary_lockscreen">Abilita/disabilita la copertina nella schermata di sblocco</string>
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">Interfaccia</string>
     <!-- Settings title for the keep screen on checkbox -->
@@ -713,77 +717,15 @@
     <!-- QuickLyric button -->
     <string name="quicklyric">QuickLyric</string>
     <!-- Button for lyrics -->
-    <string name="lyrics">Testi</string>
+    <string name="lyrics">Testo</string>
     <!-- Shown when there are no lyrics -->
     <string name="no_lyrics">Nessun testo incorporato.</string>
     <!-- QuickLyric info dialog message-->
-    <string name="quicklyric_info">QuickLyric è un\'app open-source per trovare testi presente sul Play Store,\nUna volta installata, QuickLyric verrà aperta da Shuttle ogni qualvolta si tocca il pulsante \"QuickLyric\" sul menu.</string>
+    <string name="quicklyric_info">QuickLyric è un\'app open-source per trovare testi presente sul Play Store.\n\nUna volta installata, QuickLyric verrà aperta da Shuttle ogni qualvolta si tocca il pulsante \"QuickLyric\" sul menu.</string>
     <!-- "Playlist" Shortcut label. Max 10 characters.-->
     <string name="shortcut_playlist_short_label">Playlist</string>
     <!-- "Playlist" Shortcut long label. Max 25 characters.-->
     <string name="shortcut_playlist_long_label">Apri le playlist favorite</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">Playlist non disponibile</string>
-    <!-- Displayed when an M3U playlist is being saved, but it already exists -->
-    <string name="playlist_save_exists">Playlist già esistente</string>
-    <plurals name="NNNtracksdeleted">
-        <item quantity="one">Un brano è stato eliminato.</item>
-        <item quantity="other"><xliff:g id="songs_to_delete">%d</xliff:g> brani sono stati eliminati.</item>
-    </plurals>
-    <plurals name="NNNtrackstofavourites">
-        <item quantity="one">Un brano aggiunto ai preferiti.</item>
-        <item quantity="other"><xliff:g id="number" example="27">%d</xliff:g> brani aggiunti ai preferiti.</item>
-    </plurals>
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_tite">Riavvio richiesto</string>
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <string name="restart_message">Queste modifiche avranno effetto solo dopo il riavvio di Shuttle</string>
-    <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
-    <string name="dialog_custom">Personale</string>
-    <!-- Context menu item -->
-    <string name="add_to_playlist">Playlist</string>
-    <!-- Context menu item to remove the selected item from the playlist -->
-    <string name="remove_from_playlist">Rimuovi da playlist</string>
-    <!-- -->
-    <string name="share_title">Condividi</string>
-    <!-- Playlist context menu item to delete the selected playlist. -->
-    <string name="delete_playlist_menu">Elimina</string>
-    <!--Settings title for white accent color) -->
-    <string name="pref_title_theme_white_accent">Usa bianco in risalto</string>
-    <!--Settings summary for white accent color-->
-    <string name="pref_summary_theme_white_accent">Usa il bianco come colore in risalto, eccettuato dove è necessario indicare uno stato (Casuale e Ripeti hanno bisogno di un colore diverso dal bianco per mostrare che sono attivi)</string>
-    <!--Settings category for 'notification' items -->
-    <string name="pref_category_notif_drawer">Menu delle notifiche</string>
-    <!-- Settings title for inverting the notification drawer text & icons -->
-    <string name="pref_title_invert_notif_icons">Inverti icone/testo delle notifiche</string>
-    <!--Settings summary for the downloading more themes -->
-    <string name="pref_summary_get_pro_themes">Altri temi sono disponibili in Shuttle+</string>
-    <!--Settings title for clearing whitelist-->
-    <string name="pref_title_update_whitelist">Aggiorna</string>
-    <!-- Settings title for the enable lockscreen controls checkbox -->
-    <string name="pref_title_lockscreen">Copertina nella schermata di sblocco</string>
-    <!-- Settings summary for the enable lockscreen controls checkbox -->
-    <string name="pref_summary_lockscreen">Abilita/disabilita la copertina nella schermata di sblocco</string>
-    <!-- Settings title for the About heading -->
-    <string name="pref_title_about">Note di versione</string>
-    <!-- Sleep timer "set" -->
-    <string name="sleep_timer_set">Imposta</string>
-    <!-- Sleep timer "Set time..." -->
-    <string name="sleep_timer_set_time">Imposta tempo...</string>
-    <!-- Default name of artist that doesn't have a name in the metadata -->
-    <string name="unknown_artist_name">Artista sconosciuto</string>
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_name">Album sconosciuto</string>
-    <!-- Default name of genre that doesn't have a name in the metadata -->
-    <string name="unknown_genre_name">Genere sconosciuto</string>
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <string name="unknown_album_artist_name">Artista dell\'album sconosciuto</string>
-    <!-- Accessibility button description -->
-    <string name="btn_queue">Visualizza coda riproduzione</string>
-    <!-- Accessibility button description -->
-    <string name="btn_show_queue">Riproduzione casuale coda</string>
-    <!-- Accessibility 'show lyrics' -->
-    <string name="btn_show_lyrics">Mostra testo</string>
-    <string name="toast_purchase_failed">Qualcosa è andato storto. Riprova dopo per favore...</string>
-    <string name="search_title_only">Solo titolo</string>
 </resources>
