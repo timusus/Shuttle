@@ -50,6 +50,7 @@ import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -276,6 +277,8 @@ public class PlaylistUtils {
             return;
         }
 
+        final ArrayList<Song> mutableSongList = new ArrayList<>(songs);
+
         playlist.getSongsObservable().first(Collections.emptyList())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(existingSongs -> {
@@ -283,7 +286,7 @@ public class PlaylistUtils {
                     if (!SettingsManager.getInstance().ignoreDuplicates()) {
 
                         List<Song> duplicates = Stream.of(existingSongs)
-                                .filter(songs::contains)
+                                .filter(mutableSongList::contains)
                                 .distinct()
                                 .toList();
 
@@ -317,7 +320,7 @@ public class PlaylistUtils {
                                             applyToAll.setText(getApplyCheckboxString(context, duplicates.size()));
                                         } else {
                                             //Add all songs to the playlist
-                                            insertPlaylistItems(context, playlist, songs, existingSongs.size());
+                                            insertPlaylistItems(context, playlist, mutableSongList, existingSongs.size());
                                             SettingsManager.getInstance().setIgnoreDuplicates(alwaysAdd.isChecked());
                                             dialog.dismiss();
                                         }
@@ -328,25 +331,25 @@ public class PlaylistUtils {
                                         if (duplicates.size() != 1 && !applyToAll.isChecked()) {
                                             //If we're 'skipping' this song, we remove it from the 'duplicates' list,
                                             // and from the ids to be added
-                                            songs.remove(duplicates.remove(0));
+                                            mutableSongList.remove(duplicates.remove(0));
                                             messageText.setText(getPlaylistRemoveString(context, duplicates.get(0)));
                                             applyToAll.setText(getApplyCheckboxString(context, duplicates.size()));
                                         } else {
                                             //Remove duplicates from our set of ids
                                             Stream.of(duplicates)
-                                                    .filter(songs::contains)
-                                                    .forEach(songs::remove);
-                                            insertPlaylistItems(context, playlist, songs, existingSongs.size());
+                                                    .filter(mutableSongList::contains)
+                                                    .forEach(mutableSongList::remove);
+                                            insertPlaylistItems(context, playlist, mutableSongList, existingSongs.size());
                                             SettingsManager.getInstance().setIgnoreDuplicates(alwaysAdd.isChecked());
                                             dialog.dismiss();
                                         }
                                     })
                                     .show();
                         } else {
-                            insertPlaylistItems(context, playlist, songs, existingSongs.size());
+                            insertPlaylistItems(context, playlist, mutableSongList, existingSongs.size());
                         }
                     } else {
-                        insertPlaylistItems(context, playlist, songs, existingSongs.size());
+                        insertPlaylistItems(context, playlist, mutableSongList, existingSongs.size());
                     }
                 }, error -> LogUtils.logException(TAG, "PlaylistUtils: Error determining existing songs", error));
     }
