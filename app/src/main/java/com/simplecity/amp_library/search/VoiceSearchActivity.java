@@ -128,7 +128,10 @@ public class VoiceSearchActivity extends BaseActivity {
                                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show());
                     }
                     finish();
-                }, error -> LogUtils.logException(TAG, "Error attempting to playAll()", error));
+                }, error -> {
+                    LogUtils.logException(TAG, "Error attempting to playAll()", error);
+                    finish();
+                });
     }
 
     @Override
