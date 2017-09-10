@@ -30,7 +30,7 @@ public class VoiceSearchActivity extends BaseActivity {
 
     private String filterString;
 
-    private Intent mIntent;
+    private Intent intent;
 
     private int position = -1;
 
@@ -38,15 +38,15 @@ public class VoiceSearchActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mIntent = getIntent();
+        intent = getIntent();
 
-        filterString = mIntent.getStringExtra(SearchManager.QUERY);
+        filterString = intent.getStringExtra(SearchManager.QUERY);
     }
 
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
         super.onServiceConnected(name, service);
-        if (mIntent != null && mIntent.getAction() != null && mIntent.getAction().equals("android.media.action.MEDIA_PLAY_FROM_SEARCH")) {
+        if (intent != null && intent.getAction() != null && intent.getAction().equals("android.media.action.MEDIA_PLAY_FROM_SEARCH")) {
             searchAndPlaySongs();
         }
     }
