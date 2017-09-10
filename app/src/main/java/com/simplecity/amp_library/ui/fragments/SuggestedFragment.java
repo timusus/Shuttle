@@ -189,7 +189,7 @@ public class SuggestedFragment extends BaseFragment implements
     public void onResume() {
         super.onResume();
 
-        refreshAdapterItems();
+        refreshAdapterItems(false);
     }
 
     Observable<List<ViewModel>> getMostPlayedViewModels() {
@@ -331,12 +331,12 @@ public class SuggestedFragment extends BaseFragment implements
                 });
     }
 
-    void refreshAdapterItems() {
+    void refreshAdapterItems(boolean force) {
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {
                 disposables.add(
                         Observable.zip(
-                                Observable.just(true).skip(adapter.items.isEmpty() ? 0 : 1),
+                                Observable.just(true).skip(adapter.items.isEmpty() || force ? 0 : 1),
                                 Observable.combineLatest(
                                         getMostPlayedViewModels(),
                                         getRecentlyPlayedViewModels(),

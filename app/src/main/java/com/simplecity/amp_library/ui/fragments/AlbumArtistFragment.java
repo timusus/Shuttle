@@ -157,14 +157,14 @@ public class AlbumArtistFragment extends BaseFragment implements
     public void onResume() {
         super.onResume();
 
-        refreshAdapterItems();
+        refreshAdapterItems(false);
 
         if (getUserVisibleHint()) {
             setupContextualToolbar();
         }
     }
 
-    void refreshAdapterItems() {
+    void refreshAdapterItems(boolean force) {
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {
 
@@ -173,7 +173,7 @@ public class AlbumArtistFragment extends BaseFragment implements
                 boolean ascending = SortManager.getInstance().getArtistsAscending();
 
                 disposable = DataManager.getInstance().getAlbumArtistsRelay()
-                        .skip(adapter.items.isEmpty() ? 0 : 1)
+                        .skip(adapter.items.isEmpty() || force ? 0 : 1)
                         .flatMapSingle(albumArtists -> {
                             //Sort
                             SortManager.getInstance().sortAlbumArtists(albumArtists);
@@ -307,17 +307,17 @@ public class AlbumArtistFragment extends BaseFragment implements
             case R.id.sort_default:
                 SortManager.getInstance().setArtistsSortOrder(SortManager.ArtistSort.DEFAULT);
                 sortOrderChanged = true;
-                refreshAdapterItems();
+                refreshAdapterItems(true);
                 break;
             case R.id.sort_artist_name:
                 SortManager.getInstance().setArtistsSortOrder(SortManager.ArtistSort.NAME);
                 sortOrderChanged = true;
-                refreshAdapterItems();
+                refreshAdapterItems(true);
                 break;
             case R.id.sort_ascending:
                 SortManager.getInstance().setArtistsAscending(!item.isChecked());
                 sortOrderChanged = true;
-                refreshAdapterItems();
+                refreshAdapterItems(true);
                 break;
             case R.id.view_as_list:
                 int viewType = ViewType.ARTIST_LIST;

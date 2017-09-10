@@ -104,21 +104,21 @@ public class SongFragment extends BaseFragment implements
     public void onResume() {
         super.onResume();
 
-        refreshAdapterItems();
+        refreshAdapterItems(false);
 
         if (getUserVisibleHint()) {
             setupContextualToolbar();
         }
     }
 
-    void refreshAdapterItems() {
+    void refreshAdapterItems(boolean force) {
         PermissionUtils.RequestStoragePermissions(() -> {
                     if (getActivity() != null && isAdded()) {
 
                         boolean ascending = SortManager.getInstance().getSongsAscending();
 
                         disposable = DataManager.getInstance().getSongsRelay()
-                                .skip(adapter.items.isEmpty() ? 0 : 1)
+                                .skip(adapter.items.isEmpty() || force ? 0 : 1)
                                 .flatMapSingle(songs -> {
                                     //Sort
                                     SortManager.getInstance().sortSongs(songs);
@@ -261,7 +261,7 @@ public class SongFragment extends BaseFragment implements
         }
 
         if (sortOrderChanged) {
-            refreshAdapterItems();
+            refreshAdapterItems(true);
             getActivity().invalidateOptionsMenu();
         }
 

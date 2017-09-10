@@ -162,14 +162,14 @@ public class AlbumFragment extends BaseFragment implements
     public void onResume() {
         super.onResume();
 
-        refreshAdapterItems();
+        refreshAdapterItems(false);
 
         if (getUserVisibleHint()) {
             setupContextualToolbar();
         }
     }
 
-    void refreshAdapterItems() {
+    void refreshAdapterItems(boolean force) {
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {
 
@@ -178,7 +178,7 @@ public class AlbumFragment extends BaseFragment implements
                 boolean ascending = SortManager.getInstance().getAlbumsAscending();
 
                 subscription = DataManager.getInstance().getAlbumsRelay()
-                        .skip(adapter.items.isEmpty() ? 0 : 1)
+                        .skip(adapter.items.isEmpty() || force ? 0 : 1)
                         .flatMapSingle(albums -> {
                             //Sort
                             SortManager.getInstance().sortAlbums(albums);
@@ -297,27 +297,27 @@ public class AlbumFragment extends BaseFragment implements
             case R.id.sort_default:
                 SortManager.getInstance().setAlbumsSortOrder(SortManager.AlbumSort.DEFAULT);
                 sortOrderChanged = true;
-                refreshAdapterItems();
+                refreshAdapterItems(true);
                 break;
             case R.id.sort_album_name:
                 SortManager.getInstance().setAlbumsSortOrder(SortManager.AlbumSort.NAME);
                 sortOrderChanged = true;
-                refreshAdapterItems();
+                refreshAdapterItems(true);
                 break;
             case R.id.sort_album_year:
                 SortManager.getInstance().setAlbumsSortOrder(SortManager.AlbumSort.YEAR);
                 sortOrderChanged = true;
-                refreshAdapterItems();
+                refreshAdapterItems(true);
                 break;
             case R.id.sort_album_artist_name:
                 SortManager.getInstance().setAlbumsSortOrder(SortManager.AlbumSort.ARTIST_NAME);
                 sortOrderChanged = true;
-                refreshAdapterItems();
+                refreshAdapterItems(true);
                 break;
             case R.id.sort_ascending:
                 SortManager.getInstance().setAlbumsAscending(!item.isChecked());
                 sortOrderChanged = true;
-                refreshAdapterItems();
+                refreshAdapterItems(true);
                 break;
             case R.id.view_as_list:
                 int viewType = ViewType.ALBUM_LIST;

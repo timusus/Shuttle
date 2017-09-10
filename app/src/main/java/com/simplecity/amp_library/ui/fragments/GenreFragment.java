@@ -108,14 +108,14 @@ public class GenreFragment extends BaseFragment implements
     public void onResume() {
         super.onResume();
 
-        refreshAdapterItems();
+        refreshAdapterItems(false);
     }
 
-    private void refreshAdapterItems() {
+    private void refreshAdapterItems(boolean force) {
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {
                 disposable = DataManager.getInstance().getGenresRelay()
-                        .skip(adapter.items.isEmpty() ? 0 : 1)
+                        .skip(adapter.items.isEmpty() || force ? 0 : 1)
                         .map(genres -> Stream.of(genres)
                                 .sorted((a, b) -> ComparisonUtils.compare(a.name, b.name))
                                 .map(genre -> {
