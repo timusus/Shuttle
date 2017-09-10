@@ -135,7 +135,7 @@
             android:name=".search.VoiceSearchActivity"
             android:excludeFromRecents="true"
             android:exported="true"
-            android:theme="@style/Theme.Transparent">
+            android:theme="@style/TranslucentTheme">
             <intent-filter>
                 <action android:name="android.media.action.MEDIA_PLAY_FROM_SEARCH"/>
                 <category android:name="android.intent.category.DEFAULT"/>

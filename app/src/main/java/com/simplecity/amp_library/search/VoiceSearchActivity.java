@@ -11,6 +11,7 @@ import com.annimon.stream.Stream;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.ui.activities.BaseActivity;
+import com.simplecity.amp_library.ui.activities.MainActivity;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
@@ -126,10 +127,12 @@ public class VoiceSearchActivity extends BaseActivity {
                     if (songs != null) {
                         MusicUtils.playAll(songs, position, (String message) ->
                                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show());
+                        startActivity(new Intent(this, MainActivity.class));
                     }
                     finish();
                 }, error -> {
                     LogUtils.logException(TAG, "Error attempting to playAll()", error);
+                    startActivity(new Intent(this, MainActivity.class));
                     finish();
                 });
     }
