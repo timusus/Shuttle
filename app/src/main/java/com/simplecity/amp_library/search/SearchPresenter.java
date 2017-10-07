@@ -470,7 +470,7 @@ public class SearchPresenter extends Presenter<SearchView> implements
         @Override
         public void onSongOverflowClick(int position, View v, Song song) {
             PopupMenu menu = new PopupMenu(v.getContext(), v);
-            menu.inflate(R.menu.menu_search);
+            MenuUtils.setupSongMenu(menu, false);
             menu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(v.getContext(), song,
                     taggerDialog -> {
                         SearchView searchView = getView();
