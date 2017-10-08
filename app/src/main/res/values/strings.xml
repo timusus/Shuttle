@@ -23,7 +23,8 @@
     <!-- Displayed when a file couldn't be renamed-->
     <string name="rename_file_failed">Error renaming file.\n\nThis file might be write protected, or a file with the same name already exists.</string>
     <!-- Toast after turning shuffle on -->
-    <string name="shuffle_on_notif">Shuffle on</string>
+    <string name="shuffle_tracks_notif">Shuffle tracks</string>
+    <string name="shuffle_albums_notif">Shuffle albums</string>
     <!-- Toast after turning shuffle off -->
     <string name="shuffle_off_notif">Shuffle off</string>
     <!-- Toast after turning repeat off -->
@@ -707,7 +708,8 @@
     <!-- Accessibility button description -->
     <string name="btn_repeat_all">Repeat all</string>
     <!-- Accessibility button description -->
-    <string name="btn_shuffle_on">Shuffle on</string>
+    <string name="btn_shuffle_tracks">Shuffle tracks</string>
+    <string name="btn_shuffle_albums">Shuffle albums</string>
     <!-- Accessibility button description -->
     <string name="btn_shuffle_off">Shuffle off</string>
     <!-- Accessibility button description -->

@@ -21,7 +21,7 @@
     <!-- Displayed when a file couldn't be renamed-->
     <string name="rename_file_failed">Fehler beim Umbenennen der Datei.\n\nDie Datei ist möglicherweise schreibgeschützt oder eine  Datei mit dem gleichen Namen existiert bereits.</string>
     <!-- Toast after turning shuffle on -->
-    <string name="shuffle_on_notif">Zufallswiedergabe ist aktiviert.</string>
+    <string name="shuffle_tracks_notif">Zufallswiedergabe ist aktiviert.</string>
     <!-- Toast after turning shuffle off -->
     <string name="shuffle_off_notif">Zufallswiedergabe ist deaktiviert.</string>
     <!-- Toast after turning repeat off -->
@@ -654,7 +654,7 @@
     <!-- Accessibility button description -->
     <string name="btn_repeat_all">Alles wiederholen</string>
     <!-- Accessibility button description -->
-    <string name="btn_shuffle_on">Shuffle ein</string>
+    <string name="btn_shuffle_tracks">Shuffle ein</string>
     <!-- Accessibility button description -->
     <string name="btn_shuffle_off">Shuffle aus</string>
     <!-- Accessibility button description -->

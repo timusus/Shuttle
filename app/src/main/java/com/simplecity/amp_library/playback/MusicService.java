@@ -88,6 +88,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -107,7 +108,8 @@ public class MusicService extends Service {
 
     public @interface ShuffleMode {
         int OFF = 0;
-        int ON = 1;
+        int TRACKS = 1;
+        int ALBUMS = 2;
     }
 
     public @interface RepeatMode {
@@ -237,7 +239,8 @@ public class MusicService extends Service {
     int repeatMode = RepeatMode.OFF;
 
     List<Song> playlist = new ArrayList<>();
-    List<Song> shuffleList = new ArrayList<>();
+    List<Song> trackShuffleList = new ArrayList<>();
+    List<Song> albumShuffleList = new ArrayList<>();
 
     @Nullable
     Song currentSong;
@@ -644,8 +647,10 @@ public class MusicService extends Service {
     List<Song> getCurrentPlaylist() {
         if (shuffleMode == ShuffleMode.OFF) {
             return playlist;
+        } else if (shuffleMode == ShuffleMode.ALBUMS) {
+            return albumShuffleList;
         } else {
-            return shuffleList;
+            return trackShuffleList;
         }
     }
 
@@ -943,7 +948,7 @@ public class MusicService extends Service {
                         play();
                         break;
                     case ShortcutCommands.SHUFFLE_ALL:
-                        makeShuffleList();
+                        makeTrackShuffleList();
                         playAutoShuffleList();
                         break;
                 }
@@ -1030,10 +1035,10 @@ public class MusicService extends Service {
 
             //Now save shuffle queue
             if (shuffleMode != ShuffleMode.OFF) {
-                len = shuffleList.size();
+                len = trackShuffleList.size();
                 q.setLength(0);
                 for (int i = 0; i < len; i++) {
-                    long n = shuffleList.get(i).id;
+                    long n = trackShuffleList.get(i).id;
                     if (n >= 0) {
                         if (n == 0) {
                             q.append("0;");
@@ -1047,7 +1052,7 @@ public class MusicService extends Service {
                         }
                     }
                 }
-                editor.putString("shuffleList", q.toString());
+                editor.putString("trackShuffleList", q.toString());
             }
         }
         editor.putInt("curpos", playPos);
@@ -1130,11 +1135,11 @@ public class MusicService extends Service {
                             if (repeatMode != RepeatMode.ALL && repeatMode != RepeatMode.ONE) {
                                 repeatMode = RepeatMode.OFF;
                             }
-                            if (shuffleMode != ShuffleMode.ON) {
+                            if (shuffleMode != ShuffleMode.TRACKS) {
                                 shuffleMode = ShuffleMode.OFF;
                             }
-                            if (shuffleMode == ShuffleMode.ON) {
-                                q = servicePrefs.getString("shuffleList", "");
+                            if (shuffleMode == ShuffleMode.TRACKS) {
+                                q = servicePrefs.getString("trackShuffleList", "");
                                 len = q.length();
                                 if (len > 1) {
                                     n = 0;
@@ -1167,11 +1172,11 @@ public class MusicService extends Service {
                                         }
                                     }
 
-                                    shuffleList = new ArrayList<>(map.values());
+                                    trackShuffleList = new ArrayList<>(map.values());
 
-                                    if (pos < 0 || pos >= shuffleList.size()) {
+                                    if (pos < 0 || pos >= trackShuffleList.size()) {
                                         // The saved playlist is bogus, discard it
-                                        shuffleList.clear();
+                                        trackShuffleList.clear();
                                         queueReloadComplete();
                                         return;
                                     }
@@ -1244,7 +1249,7 @@ public class MusicService extends Service {
             // before stopping the service, so that pause/resume isn't slow.
             // Also delay stopping the service if we're transitioning between
             // tracks.
-        } else if (playlist.size() > 0 || shuffleList.size() > 0 || playerHandler.hasMessages(PlayerHandler.TRACK_ENDED)) {
+        } else if (playlist.size() > 0 || trackShuffleList.size() > 0 || playerHandler.hasMessages(PlayerHandler.TRACK_ENDED)) {
             scheduleDelayedShutdown();
             return true;
         }
@@ -1452,22 +1457,22 @@ public class MusicService extends Service {
     public void enqueue(List<Song> songs, final int action) {
         synchronized (this) {
             if (action == EnqueueAction.NEXT && playPos + 1 < getCurrentPlaylist().size()) {
-                if (shuffleMode == ShuffleMode.ON) {
+                if (shuffleMode == ShuffleMode.TRACKS) {
                     // Insert the songs at our playPos, into the current list
-                    shuffleList.addAll(playPos + 1, songs);
+                    trackShuffleList.addAll(playPos + 1, songs);
                     // Now insert them at the end of the other list
                     playlist.addAll(songs);
                 } else {
                     // Insert the songs at our playPos, into the current list
                     playlist.addAll(playPos + 1, songs);
                     // Now insert them at the end of the other list
-                    shuffleList.addAll(songs);
+                    trackShuffleList.addAll(songs);
                 }
                 setNextTrack();
                 notifyChange(InternalIntents.QUEUE_CHANGED);
             } else {
                 playlist.addAll(songs);
-                shuffleList.addAll(songs);
+                trackShuffleList.addAll(songs);
                 notifyChange(InternalIntents.QUEUE_CHANGED);
                 if (action == EnqueueAction.NOW) {
                     playPos = getCurrentPlaylist().size() - songs.size();
@@ -1508,7 +1513,7 @@ public class MusicService extends Service {
 
             if (newList) {
                 playlist.clear();
-                shuffleList.clear();
+                trackShuffleList.clear();
                 playlist.addAll(songs);
                 notifyQueueChange = true;
             }
@@ -1519,8 +1524,8 @@ public class MusicService extends Service {
                 playPos = shuffler.nextInt(playlist.size());
             }
 
-            if (shuffleMode == ShuffleMode.ON) {
-                makeShuffleList();
+            if (shuffleMode == ShuffleMode.TRACKS) {
+                makeTrackShuffleList();
                 notifyQueueChange = true;
                 notifyMetaChange = true;
             }
@@ -1581,24 +1586,67 @@ public class MusicService extends Service {
         }
     }
 
-    public void makeShuffleList() {
+    public void makeTrackShuffleList() {
         synchronized (this) {
 
             if (playlist == null || playlist.isEmpty()) {
                 return;
             }
 
-            shuffleList = new ArrayList<>(playlist);
+            trackShuffleList = new ArrayList<>(playlist);
             Song currentSong = null;
-            if (playPos >= 0 && playPos < shuffleList.size()) {
-                currentSong = shuffleList.remove(playPos);
+            if (playPos >= 0 && playPos < trackShuffleList.size()) {
+                currentSong = trackShuffleList.remove(playPos);
             }
 
-            Collections.shuffle(shuffleList);
+            Collections.shuffle(trackShuffleList);
 
             if (currentSong != null) {
-                shuffleList.add(0, currentSong);
+                trackShuffleList.add(0, currentSong);
             }
+            playPos = 0;
+        }
+    }
+
+    public void makeAlbumShuffleList() {
+        synchronized (this) {
+            if (albumShuffleList.size() > 0) {
+                albumShuffleList = new ArrayList<>();
+            }
+
+            if (playlist == null || playlist.isEmpty()) {
+                return;
+            }
+
+            Map<Album, List<Song>> trackShuffleListAlbumMap = new HashMap<>();
+
+            for (Song song : trackShuffleList) {
+                Album containingAlbum = song.getAlbum();
+                if (!trackShuffleListAlbumMap.containsKey(containingAlbum)) {
+                    trackShuffleListAlbumMap.put(containingAlbum, new ArrayList<>());
+                }
+                trackShuffleListAlbumMap.get(containingAlbum).add(song);
+            }
+
+            Song currentSong = null;
+            if (playPos >= 0 && playPos < playlist.size()) {
+                currentSong = trackShuffleList.get(playPos);
+            }
+
+            if (currentSong != null) {
+                trackShuffleListAlbumMap.get(currentSong.getAlbum()).remove(currentSong);
+                albumShuffleList.add(currentSong);
+                albumShuffleList.addAll(trackShuffleListAlbumMap.get(currentSong.getAlbum()));
+                trackShuffleListAlbumMap.remove(currentSong.getAlbum());
+            }
+
+            List<Album> trackShuffleListAlbums = new ArrayList<>(trackShuffleListAlbumMap.keySet());
+            Collections.shuffle(trackShuffleListAlbums);
+
+            for (Album album : trackShuffleListAlbums) {
+                albumShuffleList.addAll(trackShuffleListAlbumMap.get(album));
+            }
+
             playPos = 0;
         }
     }
@@ -2287,8 +2335,8 @@ public class MusicService extends Service {
                     .subscribe(songs -> {
                         playlist = songs;
                         playPos = -1;
-                        makeShuffleList();
-                        setShuffleMode(ShuffleMode.ON);
+                        makeTrackShuffleList();
+                        setShuffleMode(ShuffleMode.TRACKS);
                         notifyChange(InternalIntents.QUEUE_CHANGED);
                         playPos = 0;
                         openCurrentAndNext();
@@ -2305,7 +2353,8 @@ public class MusicService extends Service {
 
     public void clearQueue() {
         playlist.clear();
-        shuffleList.clear();
+        trackShuffleList.clear();
+        albumShuffleList.clear();
         setShuffleMode(ShuffleMode.OFF);
         stop(true);
         playPos = -1;
@@ -2344,7 +2393,8 @@ public class MusicService extends Service {
             int first = Collections.indexOfSubList(getCurrentPlaylist(), songs);
 
             playlist.removeAll(songs);
-            shuffleList.removeAll(songs);
+            trackShuffleList.removeAll(songs);
+            albumShuffleList.removeAll(songs);
 
             boolean gotoNext = false;
 
@@ -2660,19 +2710,29 @@ public class MusicService extends Service {
     public void toggleShuffleMode() {
         int shuffle = getShuffleMode();
         if (shuffle == ShuffleMode.OFF) {
-            setShuffleMode(ShuffleMode.ON);
+            setShuffleMode(ShuffleMode.TRACKS);
             notifyChange(InternalIntents.SHUFFLE_CHANGED);
-            makeShuffleList();
+            makeTrackShuffleList();
             notifyChange(InternalIntents.QUEUE_CHANGED);
             if (getRepeatMode() == RepeatMode.ONE) {
                 setRepeatMode(RepeatMode.ALL);
             }
-            showToast(R.string.shuffle_on_notif);
-        } else if (shuffle == ShuffleMode.ON) {
+            showToast(R.string.shuffle_tracks_notif);
+        } else if (shuffle == ShuffleMode.TRACKS) {
+            setShuffleMode(ShuffleMode.ALBUMS);
+            notifyChange(InternalIntents.SHUFFLE_CHANGED);
+            makeAlbumShuffleList();
+            notifyChange(InternalIntents.QUEUE_CHANGED);
+            if (getRepeatMode() == RepeatMode.ONE) {
+                setRepeatMode(RepeatMode.ALL);
+            }
+            showToast(R.string.shuffle_albums_notif);
+        } else if (shuffle == ShuffleMode.ALBUMS) {
             setShuffleMode(ShuffleMode.OFF);
             notifyChange(InternalIntents.SHUFFLE_CHANGED);
-            if (this.playPos >= 0 && this.playPos < shuffleList.size()) {
-                int playPos = playlist.indexOf(shuffleList.get(this.playPos));
+            if (this.playPos >= 0 && this.playPos < trackShuffleList.size()) {
+                // TODO: ensure this fixed issue of playPos being messed up after switching from album shuffle mode
+                int playPos = playlist.indexOf(albumShuffleList.get(this.playPos));
                 if (playPos != -1) {
                     this.playPos = playPos;
                 }

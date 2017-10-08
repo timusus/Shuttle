@@ -64,7 +64,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
-                    android:contentDescription="@string/btn_shuffle_on"
+                    android:contentDescription="@string/btn_shuffle_tracks"
                     android:src="@drawable/ic_shuffle_24dp_scaled"/>
 
                 <ImageButton

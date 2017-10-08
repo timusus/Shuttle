@@ -21,7 +21,7 @@
     <!-- Displayed when a file couldn't be renamed-->
     <string name="rename_file_failed">Dosyayı yeniden adlandırma hatası.\n\nBu dosya yazmaya karşı korumalı olabilir veya aynı isimde başka bir dosya mevcut.</string>
     <!-- Toast after turning shuffle on -->
-    <string name="shuffle_on_notif">Karıştırma açık</string>
+    <string name="shuffle_tracks_notif">Karıştırma açık</string>
     <!-- Toast after turning shuffle off -->
     <string name="shuffle_off_notif">Karıştırma kapalı</string>
     <!-- Toast after turning repeat off -->
@@ -648,7 +648,7 @@ dosyalar</item>
     <!-- Accessibility button description -->
     <string name="btn_repeat_all">Tümünü tekrarla</string>
     <!-- Accessibility button description -->
-    <string name="btn_shuffle_on">Karıştırma açık</string>
+    <string name="btn_shuffle_tracks">Karıştırma açık</string>
     <!-- Accessibility button description -->
     <string name="btn_shuffle_off">Karıştırma kapalı</string>
     <!-- Accessibility button description -->

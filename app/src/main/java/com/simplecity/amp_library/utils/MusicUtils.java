@@ -81,7 +81,7 @@ public class MusicUtils {
     public static void shuffleAll(Single<List<Song>> songsSingle, UnsafeConsumer<String> onEmpty) {
         songsSingle.observeOn(AndroidSchedulers.mainThread())
                 .subscribe(songs -> {
-                    setShuffleMode(MusicService.ShuffleMode.ON);
+                    setShuffleMode(MusicService.ShuffleMode.TRACKS);
                     playAll(songs, 0, true, onEmpty);
                 }, e -> LogUtils.logException(TAG, "Shuffle all threw error", e));
     }

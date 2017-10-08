@@ -22,7 +22,7 @@
     <!-- Displayed when a file couldn't be renamed-->
     <string name="rename_file_failed">Error al renombrar archivo.\n\nEste archivo podría estar protegido contra escritura, o ya existe otro archivo con el mismo nombre.</string>
     <!-- Toast after turning shuffle on -->
-    <string name="shuffle_on_notif">Reproducción aleatoria activada.</string>
+    <string name="shuffle_tracks_notif">Reproducción aleatoria activada.</string>
     <!-- Toast after turning shuffle off -->
     <string name="shuffle_off_notif">Reproducción aleatoria desactivada</string>
     <!-- Toast after turning repeat off -->
@@ -638,7 +638,7 @@
     <!-- Accessibility button description -->
     <string name="btn_repeat_all">Repetir todo</string>
     <!-- Accessibility button description -->
-    <string name="btn_shuffle_on">Aleatorio activado</string>
+    <string name="btn_shuffle_tracks">Aleatorio activado</string>
     <!-- Accessibility button description -->
     <string name="btn_shuffle_off">Aleatorio desactivado</string>
     <!-- Accessibility button description -->

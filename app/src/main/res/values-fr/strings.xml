@@ -21,7 +21,7 @@
     <!-- Displayed when a file couldn't be renamed-->
     <string name="rename_file_failed">Erreur lors du renommage du fichier.\n\nLe fichier est peut-être protégé en écriture, ou un fichier portant le même nom existe déjà.</string>
     <!-- Toast after turning shuffle on -->
-    <string name="shuffle_on_notif">Lecture aléatoire activée</string>
+    <string name="shuffle_tracks_notif">Lecture aléatoire activée</string>
     <!-- Toast after turning shuffle off -->
     <string name="shuffle_off_notif">Lecture aléatoire désactivée</string>
     <!-- Toast after turning repeat off -->

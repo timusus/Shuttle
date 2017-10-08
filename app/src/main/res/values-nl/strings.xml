@@ -21,7 +21,7 @@
     <!-- Displayed when a file couldn't be renamed-->
     <string name="rename_file_failed">Fout bij hernoemen bestand.\n\nMogelijk is dit bestand schrijfbeveiligd, of is er al een bestand met dezelfde naam.</string>
     <!-- Toast after turning shuffle on -->
-    <string name="shuffle_on_notif">Shuffle aan</string>
+    <string name="shuffle_tracks_notif">Shuffle aan</string>
     <!-- Toast after turning shuffle off -->
     <string name="shuffle_off_notif">Shuffle uitgeschakeld</string>
     <!-- Toast after turning repeat off -->
@@ -643,7 +643,7 @@ map "</item>
     <!-- Accessibility button description -->
     <string name="btn_repeat_all">Alles herhalen</string>
     <!-- Accessibility button description -->
-    <string name="btn_shuffle_on">Shuffle aan</string>
+    <string name="btn_shuffle_tracks">Shuffle aan</string>
     <!-- Accessibility button description -->
     <string name="btn_shuffle_off">Shuffle uit</string>
     <!-- Accessibility button description -->

@@ -21,7 +21,7 @@
     <!-- Displayed when a file couldn't be renamed-->
     <string name="rename_file_failed">Błąd zmiany nazwy pliku.\n\nTen plik może być zabezpieczony przed zapisywaniem lub plik o takiej samej nazwie już istnieje.</string>
     <!-- Toast after turning shuffle on -->
-    <string name="shuffle_on_notif">Włączono losowanie utworów</string>
+    <string name="shuffle_tracks_notif">Włączono losowanie utworów</string>
     <!-- Toast after turning shuffle off -->
     <string name="shuffle_off_notif">Wyłączono losowanie utworów</string>
     <!-- Toast after turning repeat off -->
@@ -666,7 +666,7 @@ Po wyłączeniu, jako obraz zastępczy będzie używana ikona programu.</string>
     <!-- Accessibility button description -->
     <string name="btn_repeat_all">Powtarzanie wszystkich</string>
     <!-- Accessibility button description -->
-    <string name="btn_shuffle_on">Losowanie włączone</string>
+    <string name="btn_shuffle_tracks">Losowanie włączone</string>
     <!-- Accessibility button description -->
     <string name="btn_shuffle_off">Losowanie wyłączone</string>
     <!-- Accessibility button description -->

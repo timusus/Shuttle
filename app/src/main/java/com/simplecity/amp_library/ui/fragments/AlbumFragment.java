@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.annimon.stream.Stream;
 import com.bumptech.glide.RequestManager;
@@ -389,6 +390,11 @@ public class AlbumFragment extends BaseFragment implements
         PlaylistUtils.makePlaylistMenu(sub);
         menu.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(getContext(), album, taggerDialog -> taggerDialog.show(getFragmentManager())));
         menu.show();
+    }
+
+    public void onShuffleItemClick() {
+        // TODO: implement this action
+        Toast.makeText(getContext(), "Shuffle albums", Toast.LENGTH_SHORT);
     }
 
     @Override
