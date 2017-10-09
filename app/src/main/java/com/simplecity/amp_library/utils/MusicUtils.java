@@ -237,42 +237,6 @@ public class MusicUtils {
         }
     }
 
-    /**
-     * Method getArtistId.
-     *
-     * @return long
-     */
-    public static long getArtistId() {
-        if (MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null) {
-            return MusicServiceConnectionUtils.serviceBinder.getService().getArtistId();
-        }
-        return -1;
-    }
-
-    /**
-     * Method getAlbumId.
-     *
-     * @return long
-     */
-    public static long getAlbumId() {
-        if (MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null) {
-            return MusicServiceConnectionUtils.serviceBinder.getService().getAlbumId();
-        }
-        return -1;
-    }
-
-    /**
-     * Method getSong.
-     *
-     * @return long
-     */
-    public static long getSongId() {
-        if (MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null) {
-            return MusicServiceConnectionUtils.serviceBinder.getService().getSongId();
-        }
-        return -1;
-    }
-
     public static int getAudioSessionId() {
         if (MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null) {
             return MusicServiceConnectionUtils.serviceBinder.getService().getAudioSessionId();
