@@ -13,13 +13,13 @@ ext.versions = [
         minSdk                        : 16,
         targetSdk                     : 26,
         compileSdk                    : 26,
-        buildTools                    : "26.0.0",
+        buildTools                    : "26.0.2",
 
         // //////////////////////////////////////////////////////////////////////////
         // Plugin versions
         // /////////////////////////////////////////////////////////////////////////
 
-        androidGradlePlugin           : "3.0.0-beta6",
+        androidGradlePlugin           : "3.0.0-beta7",
         dexcountGradlePlugin          : "0.7.3",
         fabricGradlePlugin            : "1.+",
         playPublisher                 : "1.2.0",
@@ -30,7 +30,7 @@ ext.versions = [
         // Google lib versions
         // /////////////////////////////////////////////////////////////////////////
 
-        supportLib                    : "26.0.1",
+        supportLib                    : "26.1.0",
         firebaseCore                  : "11.2.0",
         chromecast                    : "11.2.0",
         constraintLayout              : "1.0.2",

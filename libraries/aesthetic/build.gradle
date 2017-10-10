@@ -29,6 +29,7 @@ android {
                 'src/main/res-public'
         ]
     }
+    buildToolsVersion '26.0.2'
 }
 
 dependencies {
