@@ -28,6 +28,8 @@ import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.ui.modelviews.AlbumView;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
+import com.simplecity.amp_library.ui.modelviews.ShuffleAlbumsView;
+import com.simplecity.amp_library.ui.modelviews.ShuffleView;
 import com.simplecity.amp_library.ui.recyclerview.GridDividerDecoration;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
@@ -53,7 +55,8 @@ import io.reactivex.disposables.Disposable;
 
 public class AlbumFragment extends BaseFragment implements
         MusicUtils.Defs,
-        AlbumView.ClickListener {
+        AlbumView.ClickListener,
+        ShuffleView.ShuffleClickListener {
 
     interface AlbumClickListener {
 
@@ -77,6 +80,8 @@ public class AlbumFragment extends BaseFragment implements
     private SectionedAdapter adapter;
 
     private boolean sortOrderChanged = false;
+
+    private ShuffleAlbumsView shuffleView;
 
     private Disposable subscription;
 
@@ -130,7 +135,8 @@ public class AlbumFragment extends BaseFragment implements
             layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
-                    if (adapter.items.get(position) instanceof EmptyView) {
+                    if (adapter.items.get(position) instanceof EmptyView
+                            || adapter.items.get(position) instanceof ShuffleAlbumsView) {
                         return spanCount;
                     }
                     return 1;
@@ -145,6 +151,9 @@ public class AlbumFragment extends BaseFragment implements
         if (recyclerView.getAdapter() != adapter) {
             recyclerView.setAdapter(adapter);
         }
+
+        shuffleView = new ShuffleAlbumsView();
+        shuffleView.setClickListener(this);
 
         return recyclerView;
     }
@@ -211,6 +220,7 @@ public class AlbumFragment extends BaseFragment implements
                             if (items.isEmpty()) {
                                 adapter.setItems(Collections.singletonList(new EmptyView(R.string.empty_albums)));
                             } else {
+                                items.add(0, shuffleView);
                                 adapter.setItems(items);
                             }
 
@@ -392,9 +402,9 @@ public class AlbumFragment extends BaseFragment implements
         menu.show();
     }
 
+    @Override
     public void onShuffleItemClick() {
-        // TODO: implement this action
-        Toast.makeText(getContext(), "Shuffle albums", Toast.LENGTH_SHORT);
+        MusicUtils.shuffleAll(message -> Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show(), true);
     }
 
     @Override

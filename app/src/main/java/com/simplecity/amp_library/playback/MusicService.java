@@ -1495,10 +1495,11 @@ public class MusicService extends Service {
     /**
      * Opens a list for playback
      *
-     * @param songs    The list of tracks to open
-     * @param position The position to start playback at
+     * @param songs         The list of tracks to open
+     * @param shuffleMode   The shuffle mode
+     * @param position      The position to start playback at
      */
-    public void open(List<Song> songs, final int position) {
+    public void open(List<Song> songs, final int position, final int shuffleMode) {
         synchronized (this) {
 
             boolean notifyQueueChange = false;
@@ -1518,7 +1519,7 @@ public class MusicService extends Service {
                 notifyQueueChange = true;
             }
 
-            if (position >= 0) {
+            if (shuffleMode == ShuffleMode.OFF) {
                 playPos = position;
             } else {
                 playPos = shuffler.nextInt(playlist.size());
@@ -1528,7 +1529,15 @@ public class MusicService extends Service {
                 makeTrackShuffleList();
                 notifyQueueChange = true;
                 notifyMetaChange = true;
+            } else if (shuffleMode == ShuffleMode.ALBUMS) {
+                if (trackShuffleList.isEmpty()) {
+                    makeTrackShuffleList();
+                }
+                makeAlbumShuffleList();
+                notifyQueueChange = true;
+                notifyMetaChange = true;
             }
+
 
             openCurrentAndNext();
             if (oldId != getSongId()) {
@@ -1543,6 +1552,17 @@ public class MusicService extends Service {
                 notifyChange(InternalIntents.QUEUE_CHANGED);
             }
         }
+    }
+
+    /**
+     * Opens a list for playback
+     *
+     * @param songs    The list of tracks to open
+     * @param position The position to start playback at
+     */
+    public void open(List<Song> songs, final int position) {
+        // position less than one previously has indicated track shuffle mode
+        open(songs, position < 0 ? ShuffleMode.TRACKS : ShuffleMode.OFF, position);
     }
 
     /**
@@ -2731,7 +2751,6 @@ public class MusicService extends Service {
             setShuffleMode(ShuffleMode.OFF);
             notifyChange(InternalIntents.SHUFFLE_CHANGED);
             if (this.playPos >= 0 && this.playPos < trackShuffleList.size()) {
-                // TODO: ensure this fixed issue of playPos being messed up after switching from album shuffle mode
                 int playPos = playlist.indexOf(albumShuffleList.get(this.playPos));
                 if (playPos != -1) {
                     this.playPos = playPos;

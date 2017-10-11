@@ -54,4 +54,6 @@ public @interface ViewType {
     int QUEUE_PAGER_ITEM = 32;
 
     int SUBHEADER = 33;
+
+    int SHUFFLE_ALBUMS = 34;
 }

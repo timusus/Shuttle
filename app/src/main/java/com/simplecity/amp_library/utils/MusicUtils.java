@@ -58,6 +58,10 @@ public class MusicUtils {
      * @param forceShuffle boolean
      */
     public static void playAll(List<Song> songs, int position, boolean forceShuffle, UnsafeConsumer<String> onEmpty) {
+        playAll(songs, position, forceShuffle ? MusicService.ShuffleMode.TRACKS : MusicService.ShuffleMode.OFF, onEmpty);
+    }
+
+    public static void playAll(List<Song> songs, int position, int shuffleMode, UnsafeConsumer<String> onEmpty) {
 
         if (songs.size() == 0
                 || MusicServiceConnectionUtils.serviceBinder == null
@@ -71,26 +75,32 @@ public class MusicUtils {
             position = 0;
         }
 
-        MusicServiceConnectionUtils.serviceBinder.getService().open(songs, forceShuffle ? -1 : position);
+        //MusicServiceConnectionUtils.serviceBinder.getService().open(songs, forceShuffle ? -1 : position);
+        MusicServiceConnectionUtils.serviceBinder.getService().open(songs, position, shuffleMode);
         MusicServiceConnectionUtils.serviceBinder.getService().play();
     }
 
     /**
      * Shuffles the passed in song list
      */
-    public static void shuffleAll(Single<List<Song>> songsSingle, UnsafeConsumer<String> onEmpty) {
+    public static void shuffleAll(Single<List<Song>> songsSingle, UnsafeConsumer<String> onEmpty, boolean shuffleAlbums) {
         songsSingle.observeOn(AndroidSchedulers.mainThread())
                 .subscribe(songs -> {
-                    setShuffleMode(MusicService.ShuffleMode.TRACKS);
-                    playAll(songs, 0, true, onEmpty);
+                    setShuffleMode(shuffleAlbums ? MusicService.ShuffleMode.ALBUMS : MusicService.ShuffleMode.TRACKS);
+                    playAll(songs, 0, getShuffleMode(), onEmpty);
                 }, e -> LogUtils.logException(TAG, "Shuffle all threw error", e));
     }
 
+    public static void shuffleAll(Single<List<Song>> songsSingle, UnsafeConsumer<String> onEmpty) {
+        shuffleAll(songsSingle, onEmpty, false);
+    }
+
     /**
-     * Shuffles all songs on the device
+     * Shuffles all songs on the device.
+     * Used by SongFragment and AlbumFragment shuffle all buttons
      */
-    public static void shuffleAll(UnsafeConsumer<String> onEmpty) {
-        shuffleAll(DataManager.getInstance().getSongsRelay().firstOrError(), onEmpty);
+    public static void shuffleAll(UnsafeConsumer<String> onEmpty, boolean shuffleAlbums) {
+        shuffleAll(DataManager.getInstance().getSongsRelay().firstOrError(), onEmpty, shuffleAlbums);
     }
 
     /**
