@@ -278,7 +278,7 @@ public class DataManager {
             blacklistSubscription = getBlacklistDatabase()
                     .createQuery(BlacklistDbOpenHelper.TABLE_SONGS, "SELECT * FROM " + BlacklistDbOpenHelper.TABLE_SONGS)
                     .mapToList(BlacklistedSong::new)
-                    .subscribe(blacklistRelay, error -> LogUtils.logException(TAG, "getBlacklistRelay threw rror", error));
+                    .subscribe(blacklistRelay, error -> LogUtils.logException(TAG, "getBlacklistRelay threw error", error));
         }
         return blacklistRelay.subscribeOn(Schedulers.io()).map(ArrayList::new);
     }
