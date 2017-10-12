@@ -117,7 +117,7 @@ public class SongFragment extends BaseFragment implements
                         boolean ascending = SortManager.getInstance().getSongsAscending();
 
                         disposable = DataManager.getInstance().getSongsRelay()
-                                .skip(adapter.items.isEmpty() || force ? 0 : 1)
+                                .skipWhile(songs -> !force && Stream.of(adapter.items).filter(viewModel -> viewModel instanceof SongView).count() == songs.size())
                                 .flatMapSingle(songs -> {
                                     //Sort
                                     SortManager.getInstance().sortSongs(songs);

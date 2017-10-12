@@ -182,7 +182,7 @@ public class AlbumFragment extends BaseFragment implements
                 boolean ascending = SortManager.getInstance().getAlbumsAscending();
 
                 subscription = DataManager.getInstance().getAlbumsRelay()
-                        .skip(adapter.items.isEmpty() || force ? 0 : 1)
+                        .skipWhile(albums -> !force && Stream.of(adapter.items).filter(viewModel -> viewModel instanceof AlbumView).count() == albums.size())
                         .flatMapSingle(albums -> {
                             //Sort
                             SortManager.getInstance().sortAlbums(albums);

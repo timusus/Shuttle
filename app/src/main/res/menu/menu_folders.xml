@@ -73,6 +73,10 @@
         android:title="@string/whitelist_title"/>
 
     <item
+        android:id="@+id/blacklist"
+        android:title="@string/blacklist_title"/>
+
+    <item
         android:id="@+id/show_filenames"
         android:checkable="true"
         android:title="@string/show_filenames"/>

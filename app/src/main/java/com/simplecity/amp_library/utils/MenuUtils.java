@@ -23,12 +23,13 @@ import com.simplecity.amp_library.model.BaseFileObject;
 import com.simplecity.amp_library.model.FileObject;
 import com.simplecity.amp_library.model.FolderObject;
 import com.simplecity.amp_library.model.Genre;
+import com.simplecity.amp_library.model.InclExclItem;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.rx.UnsafeCallable;
 import com.simplecity.amp_library.rx.UnsafeConsumer;
-import com.simplecity.amp_library.sql.databases.BlacklistHelper;
+import com.simplecity.amp_library.sql.databases.InclExclHelper;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.dialog.BiographyDialog;
 import com.simplecity.amp_library.ui.dialog.DeleteDialog;
@@ -81,12 +82,20 @@ public class MenuUtils implements MusicUtils.Defs {
         MusicUtils.addToQueue(songs, message -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show());
     }
 
+    public static void whitelist(Song song) {
+        InclExclHelper.addToInclExcl(song, InclExclItem.Type.INCLUDE);
+    }
+
+    public static void whitelist(List<Song> songs) {
+        InclExclHelper.addToInclExcl(songs, InclExclItem.Type.INCLUDE);
+    }
+
     public static void blacklist(Song song) {
-        BlacklistHelper.addToBlacklist(song);
+        InclExclHelper.addToInclExcl(song, InclExclItem.Type.EXCLUDE);
     }
 
     public static void blacklist(List<Song> songs) {
-        BlacklistHelper.addToBlacklist(songs);
+        InclExclHelper.addToInclExcl(songs, InclExclItem.Type.EXCLUDE);
     }
 
     public static void delete(Context context, List<Song> songs) {
@@ -250,6 +259,11 @@ public class MenuUtils implements MusicUtils.Defs {
 
     public static void showArtworkChooserDialog(Context context, Album album) {
         ArtworkDialog.build(context, album).show();
+    }
+
+    public static void whitelist(Single<List<Song>> single) {
+        single.observeOn(AndroidSchedulers.mainThread())
+                .subscribe((songs, throwable) -> whitelist(songs));
     }
 
     public static void blacklist(Single<List<Song>> single) {
@@ -726,6 +740,8 @@ public class MenuUtils implements MusicUtils.Defs {
                     return true;
                 case R.id.blacklist:
                     getSongForFile(fileObject).subscribe(song -> blacklist(song));
+                case R.id.whitelist:
+                    getSongForFile(fileObject).subscribe(song -> whitelist(song));
                     return true;
                 case R.id.rename:
                     renameFile(context, fileObject, filenameChanged);
@@ -759,6 +775,8 @@ public class MenuUtils implements MusicUtils.Defs {
                 case R.id.scan:
                     scanFolder(context, folderObject);
                     return true;
+                case R.id.whitelist:
+                    whitelist(getSongsForFolderObject(folderObject));
                 case R.id.blacklist:
                     blacklist(getSongsForFolderObject(folderObject));
                     return true;

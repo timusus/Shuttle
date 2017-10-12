@@ -18,12 +18,12 @@ import com.simplecity.amp_library.IabManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.CategoryItem;
+import com.simplecity.amp_library.model.InclExclItem;
 import com.simplecity.amp_library.services.ArtworkDownloadService;
 import com.simplecity.amp_library.ui.activities.MainActivity;
-import com.simplecity.amp_library.ui.dialog.BlacklistDialog;
 import com.simplecity.amp_library.ui.dialog.ChangelogDialog;
+import com.simplecity.amp_library.ui.dialog.InclExclDialog;
 import com.simplecity.amp_library.ui.dialog.TabChooserDialog;
-import com.simplecity.amp_library.ui.dialog.WhitelistDialog;
 import com.simplecity.amp_library.ui.presenters.Presenter;
 import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.SettingsManager;
@@ -342,14 +342,14 @@ public class SettingsPresenter extends Presenter<SettingsView> {
     public void viewBlacklistClicked(Context context) {
         SettingsView settingsView = getView();
         if (settingsView != null) {
-            settingsView.showBlacklistDialog(BlacklistDialog.getDialog(context));
+            settingsView.showBlacklistDialog(InclExclDialog.getDialog(context, InclExclItem.Type.EXCLUDE));
         }
     }
 
     public void viewWhitelistClicked(Context context) {
         SettingsView settingsView = getView();
         if (settingsView != null) {
-            settingsView.showWhitelistDialog(WhitelistDialog.getDialog(context));
+            settingsView.showWhitelistDialog(InclExclDialog.getDialog(context, InclExclItem.Type.INCLUDE));
         }
     }
 }
