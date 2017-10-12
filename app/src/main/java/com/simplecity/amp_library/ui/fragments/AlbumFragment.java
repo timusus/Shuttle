@@ -404,7 +404,7 @@ public class AlbumFragment extends BaseFragment implements
 
     @Override
     public void onShuffleItemClick() {
-        MusicUtils.shuffleAll(message -> Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show(), true);
+        MusicUtils.shuffleAllAlbums(message -> Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show());
     }
 
     @Override
