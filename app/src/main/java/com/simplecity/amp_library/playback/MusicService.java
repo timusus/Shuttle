@@ -1008,71 +1008,15 @@ public class MusicService extends Service {
         final SharedPreferences.Editor editor = servicePrefs.edit();
 
         if (full) {
-            final StringBuilder q = new StringBuilder();
 
-            // The current playlist is saved as a list of "reverse hexadecimal"
-            // numbers, which we can generate faster than normal decimal or
-            // hexadecimal numbers, which in turn allows us to save the playlist
-            // more often without worrying too much about performance.
-            int len = playlist.size();
-            for (int i = 0; i < len; i++) {
-                long n = playlist.get(i).id;
-                if (n >= 0) {
-                    if (n == 0) {
-                        q.append("0;");
-                    } else {
-                        while (n != 0) {
-                            final int digit = (int) (n & 0xf);
-                            n >>>= 4;
-                            q.append(hexDigits[digit]);
-                        }
-                        q.append(";");
-                    }
-                }
-            }
-
-            editor.putString("queue", q.toString());
+            editor.putString("queue", serializePlaylist(playlist));
 
             //Now save shuffle queue
             if (shuffleMode == ShuffleMode.TRACKS) {
-                len = trackShuffleList.size();
-                q.setLength(0);
-                for (int i = 0; i < len; i++) {
-                    long n = trackShuffleList.get(i).id;
-                    if (n >= 0) {
-                        if (n == 0) {
-                            q.append("0;");
-                        } else {
-                            while (n != 0) {
-                                final int digit = (int) (n & 0xf);
-                                n >>>= 4;
-                                q.append(hexDigits[digit]);
-                            }
-                            q.append(";");
-                        }
-                    }
-                }
-                editor.putString("trackShuffleList", q.toString());
+                editor.putString("trackShuffleList", serializePlaylist(trackShuffleList));
 
             } else if (shuffleMode == ShuffleMode.ALBUMS) {
-                len = albumShuffleList.size();
-                q.setLength(0);
-                for (int i = 0; i < len; i++) {
-                    long n = albumShuffleList.get(i).id;
-                    if (n >= 0) {
-                        if (n == 0) {
-                            q.append("0;");
-                        } else {
-                            while (n != 0) {
-                                final int digit = (int) (n & 0xf);
-                                n >>>= 4;
-                                q.append(hexDigits[digit]);
-                            }
-                            q.append(";");
-                        }
-                    }
-                }
-                editor.putString("albumShuffleList", q.toString());
+                editor.putString("albumShuffleList", serializePlaylist(albumShuffleList));
             }
         }
         editor.putInt("curpos", playPos);
@@ -1083,6 +1027,72 @@ public class MusicService extends Service {
         editor.putInt("shufflemode", shuffleMode);
 
         editor.apply();
+    }
+
+    /** Converts a playlist to a String which can be saved to SharedPrefs */
+    private String serializePlaylist(List<Song> list) {
+
+        // The current playlist is saved as a list of "reverse hexadecimal"
+        // numbers, which we can generate faster than normal decimal or
+        // hexadecimal numbers, which in turn allows us to save the playlist
+        // more often without worrying too much about performance.
+
+        StringBuilder q = new StringBuilder();
+
+        int len = list.size();
+        for (int i = 0; i < len; i++) {
+            long n = list.get(i).id;
+            if (n >= 0) {
+                if (n == 0) {
+                    q.append("0;");
+                } else {
+                    while (n != 0) {
+                        final int digit = (int) (n & 0xf);
+                        n >>>= 4;
+                        q.append(hexDigits[digit]);
+                    }
+                    q.append(";");
+                }
+            }
+        }
+
+        return q.toString();
+    }
+
+    /** Converts a string representation of a playlist from SharedPrefs into a list of songs. */
+    private List<Song> deserializePlaylist(String listString, List<Song> allSongs) {
+        List<Long> ids = new ArrayList<>();
+        int n = 0;
+        int shift = 0;
+        for (int i = 0; i < listString.length(); i++) {
+            char c = listString.charAt(i);
+            if (c == ';') {
+                ids.add((long) n);
+                n = 0;
+                shift = 0;
+            } else {
+                if (c >= '0' && c <= '9') {
+                    n += ((c - '0') << shift);
+                } else if (c >= 'a' && c <= 'f') {
+                    n += ((10 + c - 'a') << shift);
+                } else {
+                    // bogus playlist data
+                    playlist.clear();
+                    break;
+                }
+                shift += 4;
+            }
+        }
+
+        Map<Integer, Song> map = new TreeMap<>();
+
+        for (Song song : allSongs) {
+            int index = ids.indexOf(song.id);
+            if (index != -1) {
+                map.put(index, song);
+            }
+        }
+        return new ArrayList<>(map.values());
     }
 
     synchronized void reloadQueue() {
@@ -1103,42 +1113,10 @@ public class MusicService extends Service {
                     public void accept(List<Song> songs) {
                         String q = servicePrefs.getString("queue", "");
 
-                        List<Long> ids = new ArrayList<>();
-
                         int len = q.length();
                         if (len > 1) {
-                            int n = 0;
-                            int shift = 0;
-                            for (int i = 0; i < len; i++) {
-                                char c = q.charAt(i);
-                                if (c == ';') {
-                                    ids.add((long) n);
-                                    n = 0;
-                                    shift = 0;
-                                } else {
-                                    if (c >= '0' && c <= '9') {
-                                        n += ((c - '0') << shift);
-                                    } else if (c >= 'a' && c <= 'f') {
-                                        n += ((10 + c - 'a') << shift);
-                                    } else {
-                                        // bogus playlist data
-                                        playlist.clear();
-                                        break;
-                                    }
-                                    shift += 4;
-                                }
-                            }
 
-                            Map<Integer, Song> map = new TreeMap<>();
-
-                            for (Song song : songs) {
-                                int index = ids.indexOf(song.id);
-                                if (index != -1) {
-                                    map.put(index, song);
-                                }
-                            }
-
-                            playlist = new ArrayList<>(map.values());
+                            playlist = deserializePlaylist(q, songs);
 
                             final int pos = servicePrefs.getInt("curpos", 0);
                             if (pos < 0 || pos >= playlist.size()) {
@@ -1147,8 +1125,6 @@ public class MusicService extends Service {
                                 queueReloadComplete();
                                 return;
                             }
-
-                            ids.clear();
 
                             playPos = pos;
 
@@ -1162,37 +1138,7 @@ public class MusicService extends Service {
                                 q = servicePrefs.getString("trackShuffleList", "");
                                 len = q.length();
                                 if (len > 1) {
-                                    n = 0;
-                                    shift = 0;
-                                    for (int i = 0; i < len; i++) {
-                                        char c = q.charAt(i);
-                                        if (c == ';') {
-                                            ids.add((long) n);
-                                            n = 0;
-                                            shift = 0;
-                                        } else {
-                                            if (c >= '0' && c <= '9') {
-                                                n += ((c - '0') << shift);
-                                            } else if (c >= 'a' && c <= 'f') {
-                                                n += ((10 + c - 'a') << shift);
-                                            } else {
-                                                // bogus playlist data
-                                                break;
-                                            }
-                                            shift += 4;
-                                        }
-                                    }
-
-                                    map.clear();
-
-                                    for (Song song : songs) {
-                                        int index = ids.indexOf(song.id);
-                                        if (index != -1) {
-                                            map.put(index, song);
-                                        }
-                                    }
-
-                                    trackShuffleList = new ArrayList<>(map.values());
+                                    trackShuffleList = deserializePlaylist(q, songs);
 
                                     if (pos < 0 || pos >= trackShuffleList.size()) {
                                         // The saved playlist is bogus, discard it
@@ -1206,37 +1152,7 @@ public class MusicService extends Service {
                                 q = servicePrefs.getString("albumShuffleList", "");
                                 len = q.length();
                                 if (len > 1) {
-                                    n = 0;
-                                    shift = 0;
-                                    for (int i = 0; i < len; i++) {
-                                        char c = q.charAt(i);
-                                        if (c == ';') {
-                                            ids.add((long) n);
-                                            n = 0;
-                                            shift = 0;
-                                        } else {
-                                            if (c >= '0' && c <= '9') {
-                                                n += ((c - '0') << shift);
-                                            } else if (c >= 'a' && c <= 'f') {
-                                                n += ((10 + c - 'a') << shift);
-                                            } else {
-                                                // bogus playlist data
-                                                break;
-                                            }
-                                            shift += 4;
-                                        }
-                                    }
-
-                                    map.clear();
-
-                                    for (Song song : songs) {
-                                        int index = ids.indexOf(song.id);
-                                        if (index != -1) {
-                                            map.put(index, song);
-                                        }
-                                    }
-
-                                    albumShuffleList = new ArrayList<>(map.values());
+                                    albumShuffleList = deserializePlaylist(q, songs);
 
                                     if (pos < 0 || pos >= albumShuffleList.size()) {
                                         // The saved playlist is bogus, discard it
@@ -1527,7 +1443,7 @@ public class MusicService extends Service {
                     // Now insert them at the end of the other list
                     playlist.addAll(songs);
                 } else if (shuffleMode == ShuffleMode.ALBUMS) {
-                    albumShuffleList.addAll(playPos + 1, albumShuffleify(songs));
+                    albumShuffleList.addAll(playPos + 1, albumShuffleSongs(songs, true, true));
                     playlist.addAll(songs);
                 } else {
                     // Insert the songs at our playPos, into the current list
@@ -1540,7 +1456,7 @@ public class MusicService extends Service {
             } else {
                 playlist.addAll(songs);
                 trackShuffleList.addAll(songs);
-                albumShuffleList.addAll(albumShuffleify(songs));
+                albumShuffleList.addAll(albumShuffleSongs(songs, true, true));
                 notifyChange(InternalIntents.QUEUE_CHANGED);
                 if (action == EnqueueAction.NOW) {
                     playPos = getCurrentPlaylist().size() - songs.size();
@@ -1583,6 +1499,7 @@ public class MusicService extends Service {
             if (newList) {
                 playlist.clear();
                 trackShuffleList.clear();
+                albumShuffleList.clear();
                 playlist.addAll(songs);
                 notifyQueueChange = true;
             }
@@ -1601,7 +1518,7 @@ public class MusicService extends Service {
                 if (trackShuffleList.isEmpty()) {
                     makeTrackShuffleList();
                 }
-                makeAlbumShuffleList();
+                makeAlbumShuffleList(true);
                 notifyQueueChange = true;
                 notifyMetaChange = true;
             }
@@ -1696,56 +1613,47 @@ public class MusicService extends Service {
         }
     }
 
-    public void makeAlbumShuffleList() {
+    public void makeAlbumShuffleList(boolean startAtFront) {
         synchronized (this) {
-            if (albumShuffleList.size() > 0) {
-                albumShuffleList = new ArrayList<>();
-            }
-
             if (playlist == null || playlist.isEmpty()) {
                 return;
             }
 
-            Map<Album, List<Song>> trackShuffleListAlbumMap = new HashMap<>();
-
-            for (Song song : trackShuffleList) {
-                Album containingAlbum = song.getAlbum();
-                if (!trackShuffleListAlbumMap.containsKey(containingAlbum)) {
-                    trackShuffleListAlbumMap.put(containingAlbum, new ArrayList<>());
-                }
-                trackShuffleListAlbumMap.get(containingAlbum).add(song);
+            if (albumShuffleList.size() > 0) {
+                albumShuffleList = new ArrayList<>();
             }
 
-            Song currentSong = null;
-            if (playPos >= 0 && playPos < playlist.size()) {
-                currentSong = trackShuffleList.get(playPos);
+            // We are shuffling the current queue, so current song is within the list.
+            // trackShuffleList is already shuffled, so we don't need to preshuffle.
+            albumShuffleList.addAll(albumShuffleSongs(
+                    trackShuffleList.isEmpty() ? playlist : trackShuffleList,
+                    false, false));
+
+            if (startAtFront) {
+                playPos = 0;
+            } else  {
+                playPos = currentSong.getAlbum().getSongsSingle().blockingGet().indexOf(currentSong);
             }
-
-            if (currentSong != null) {
-                trackShuffleListAlbumMap.get(currentSong.getAlbum()).remove(currentSong);
-                albumShuffleList.add(currentSong);
-                albumShuffleList.addAll(trackShuffleListAlbumMap.get(currentSong.getAlbum()));
-                trackShuffleListAlbumMap.remove(currentSong.getAlbum());
-            }
-
-            List<Album> trackShuffleListAlbums = new ArrayList<>(trackShuffleListAlbumMap.keySet());
-            Collections.shuffle(trackShuffleListAlbums);
-
-            for (Album album : trackShuffleListAlbums) {
-                albumShuffleList.addAll(trackShuffleListAlbumMap.get(album));
-            }
-
-            playPos = 0;
         }
     }
 
-    private static List<Song> albumShuffleify(List<Song> songs) {
+    private List<Song> albumQueueIntersect(Album album, List<Song> albumSongsInQueue) {
+        List<Song> albumSongsInOrder = new ArrayList<>(album.getSongsSingle().blockingGet());
+
+        if (album.numSongs == albumSongsInOrder.size()) {
+            return albumSongsInOrder;
+        }
+
+        albumSongsInOrder.retainAll(albumSongsInQueue);
+        return albumSongsInOrder;
+    }
+
+    /** Shuffles a list of songs, grouping by album and arranging songs in that album in order. */
+    private List<Song> albumShuffleSongs(List<Song> songs, boolean isAddingToQueue, boolean doPreShuffle) {
 
         if (songs == null || songs.isEmpty()) {
             return songs;
         }
-
-        Collections.shuffle(songs);
 
         Map<Album, List<Song>> trackShuffleListAlbumMap = new HashMap<>();
 
@@ -1757,15 +1665,69 @@ public class MusicService extends Service {
             trackShuffleListAlbumMap.get(containingAlbum).add(song);
         }
 
+        List<Song> newShuffleList = new ArrayList<>();
+
+        if (!isAddingToQueue) {
+            Song currentSong = null;
+            if (playPos >= 0 && playPos < songs.size()) {
+                currentSong = songs.get(playPos);
+            }
+
+            if (currentSong != null) {
+                Album currentAlbum = currentSong.getAlbum();
+                List<Song> albumSongsInQueue = trackShuffleListAlbumMap.get(currentAlbum);
+                List<Song> intersection = albumQueueIntersect(currentAlbum, albumSongsInQueue);
+                newShuffleList.addAll(intersection);
+                trackShuffleListAlbumMap.remove(currentSong.getAlbum());
+            }
+        }
+
         List<Album> trackShuffleListAlbums = new ArrayList<>(trackShuffleListAlbumMap.keySet());
         Collections.shuffle(trackShuffleListAlbums);
 
-        List<Song> shuffled = new ArrayList<>();
         for (Album album : trackShuffleListAlbums) {
-            shuffled.addAll(trackShuffleListAlbumMap.get(album));
+            List<Song> albumSongsInQueue = trackShuffleListAlbumMap.get(album);
+            List<Song> intersection = albumQueueIntersect(album, albumSongsInQueue);
+            newShuffleList.addAll(intersection);
         }
 
-        return shuffled;
+        return newShuffleList;
+
+//        if (doPreShuffle) Collections.shuffle(songs);
+//
+//        Map<Album, List<Song>> trackShuffleListAlbumMap = new HashMap<>();
+//
+//        for (Song song : songs) {
+//            Album containingAlbum = song.getAlbum();
+//            if (!trackShuffleListAlbumMap.containsKey(containingAlbum)) {
+//                trackShuffleListAlbumMap.put(containingAlbum, new ArrayList<>());
+//            }
+//            trackShuffleListAlbumMap.get(containingAlbum).add(song);
+//        }
+//
+//        if (!isAddingToQueue) {
+//            Song currentSong = null;
+//            if (playPos >= 0 && playPos < songs.size()) {
+//                currentSong = songs.get(playPos);
+//            }
+//
+//            if (currentSong != null) {
+//                trackShuffleListAlbumMap.get(currentSong.getAlbum()).remove(currentSong);
+//                albumShuffleList.add(currentSong);
+//                albumShuffleList.addAll(trackShuffleListAlbumMap.get(currentSong.getAlbum()));
+//                trackShuffleListAlbumMap.remove(currentSong.getAlbum());
+//            }
+//        }
+//
+//        List<Album> trackShuffleListAlbums = new ArrayList<>(trackShuffleListAlbumMap.keySet());
+//        Collections.shuffle(trackShuffleListAlbums);
+//
+//        List<Song> shuffled = new ArrayList<>();
+//        for (Album album : trackShuffleListAlbums) {
+//            shuffled.addAll(trackShuffleListAlbumMap.get(album));
+//        }
+//
+//        return shuffled;
     }
 
     private void openCurrent() {
@@ -2838,7 +2800,7 @@ public class MusicService extends Service {
         } else if (shuffle == ShuffleMode.TRACKS) {
             setShuffleMode(ShuffleMode.ALBUMS);
             notifyChange(InternalIntents.SHUFFLE_CHANGED);
-            makeAlbumShuffleList();
+            makeAlbumShuffleList(false);
             notifyChange(InternalIntents.QUEUE_CHANGED);
             if (getRepeatMode() == RepeatMode.ONE) {
                 setRepeatMode(RepeatMode.ALL);
