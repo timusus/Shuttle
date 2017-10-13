@@ -45,6 +45,7 @@ public class MusicUtils {
      * Play a list of songs starting at a given position.
      */
     public static void playAll(List<Song> songs, int position, UnsafeConsumer<String> onEmpty) {
+        setShuffleMode(MusicService.ShuffleMode.OFF);
         playAll(songs, position, MusicService.ShuffleMode.OFF, onEmpty);
     }
 
