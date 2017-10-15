@@ -419,7 +419,7 @@ public class TaggerDialog extends DialogFragment {
                     if (ShuttleUtils.hasLollipop()) {
                         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
                         if (intent.resolveActivity(ShuttleApplication.getInstance().getPackageManager()) != null) {
-                            getActivity().startActivityForResult(intent, DOCUMENT_TREE_REQUEST_CODE);
+                            this.startActivityForResult(intent, DOCUMENT_TREE_REQUEST_CODE);
                         } else {
                             Toast.makeText(getContext(), R.string.R_string_toast_no_document_provider, Toast.LENGTH_LONG).show();
                         }
