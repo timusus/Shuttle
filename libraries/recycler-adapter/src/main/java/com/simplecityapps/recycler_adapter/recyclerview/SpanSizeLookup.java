@@ -10,10 +10,15 @@ import java.util.List;
 public class SpanSizeLookup extends GridLayoutManager.SpanSizeLookup {
 
     private ViewModelAdapter viewModelAdapter;
+
     private int spanCount;
 
     public SpanSizeLookup(ViewModelAdapter viewModelAdapter, int spanCount) {
         this.viewModelAdapter = viewModelAdapter;
+        this.spanCount = spanCount;
+    }
+
+    public void setSpanCount(int spanCount) {
         this.spanCount = spanCount;
     }
 

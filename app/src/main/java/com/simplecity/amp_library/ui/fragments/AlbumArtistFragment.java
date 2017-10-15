@@ -37,6 +37,7 @@ import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.SortManager;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
+import com.simplecityapps.recycler_adapter.recyclerview.SpanSizeLookup;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.Collections;
@@ -70,7 +71,9 @@ public class AlbumArtistFragment extends BaseFragment implements
 
     private GridLayoutManager layoutManager;
 
-    SectionedAdapter adapter;
+    private SectionedAdapter adapter;
+
+    private SpanSizeLookup spanSizeLookup;
 
     private boolean sortOrderChanged = false;
 
@@ -120,15 +123,8 @@ public class AlbumArtistFragment extends BaseFragment implements
         if (recyclerView == null) {
             int spanCount = SettingsManager.getInstance().getArtistColumnCount(getResources());
             layoutManager = new GridLayoutManager(getContext(), spanCount);
-            layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                @Override
-                public int getSpanSize(int position) {
-                    if (adapter.items.get(position) instanceof EmptyView) {
-                        return spanCount;
-                    }
-                    return 1;
-                }
-            });
+            spanSizeLookup = new SpanSizeLookup(adapter, spanCount);
+            layoutManager.setSpanSizeLookup(spanSizeLookup);
 
             recyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
             recyclerView.setLayoutManager(layoutManager);
@@ -322,25 +318,25 @@ public class AlbumArtistFragment extends BaseFragment implements
             case R.id.view_as_list:
                 int viewType = ViewType.ARTIST_LIST;
                 SettingsManager.getInstance().setArtistDisplayType(viewType);
-                layoutManager.setSpanCount(getResources().getInteger(R.integer.list_num_columns));
+                setupListSpan();
                 updateViewType(viewType);
                 break;
             case R.id.view_as_grid:
                 viewType = ViewType.ARTIST_GRID;
                 SettingsManager.getInstance().setArtistDisplayType(viewType);
-                layoutManager.setSpanCount(SettingsManager.getInstance().getArtistColumnCount(getResources()));
+                setupGridSpan();
                 updateViewType(viewType);
                 break;
             case R.id.view_as_grid_card:
                 viewType = ViewType.ARTIST_CARD;
                 SettingsManager.getInstance().setArtistDisplayType(viewType);
-                layoutManager.setSpanCount(SettingsManager.getInstance().getArtistColumnCount(getResources()));
+                setupGridSpan();
                 updateViewType(viewType);
                 break;
             case R.id.view_as_grid_palette:
                 viewType = ViewType.ARTIST_PALETTE;
                 SettingsManager.getInstance().setArtistDisplayType(viewType);
-                layoutManager.setSpanCount(SettingsManager.getInstance().getArtistColumnCount(getResources()));
+                setupGridSpan();
                 updateViewType(viewType);
                 break;
         }
@@ -357,6 +353,18 @@ public class AlbumArtistFragment extends BaseFragment implements
         getActivity().invalidateOptionsMenu();
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setupGridSpan() {
+        int spanCount = SettingsManager.getInstance().getArtistColumnCount(getResources());
+        spanSizeLookup.setSpanCount(spanCount);
+        layoutManager.setSpanCount(spanCount);
+    }
+
+    private void setupListSpan() {
+        int spanCount = getResources().getInteger(R.integer.list_num_columns);
+        spanSizeLookup.setSpanCount(spanCount);
+        layoutManager.setSpanCount(spanCount);
     }
 
     void updateViewType(@ViewType int viewType) {
