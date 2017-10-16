@@ -89,9 +89,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.TreeMap;
 
 import io.reactivex.Completable;
@@ -1655,12 +1657,12 @@ public class MusicService extends Service {
             return songs;
         }
 
-        Map<Album, List<Song>> trackShuffleListAlbumMap = new HashMap<>();
+        Map<Album, Set<Song>> trackShuffleListAlbumMap = new HashMap<>();
 
         for (Song song : songs) {
             Album containingAlbum = song.getAlbum();
             if (!trackShuffleListAlbumMap.containsKey(containingAlbum)) {
-                trackShuffleListAlbumMap.put(containingAlbum, new ArrayList<>());
+                trackShuffleListAlbumMap.put(containingAlbum, new HashSet<>());
             }
             trackShuffleListAlbumMap.get(containingAlbum).add(song);
         }
@@ -1675,7 +1677,8 @@ public class MusicService extends Service {
 
             if (currentSong != null) {
                 Album currentAlbum = currentSong.getAlbum();
-                List<Song> albumSongsInQueue = trackShuffleListAlbumMap.get(currentAlbum);
+                List<Song> albumSongsInQueue =
+                        new ArrayList<>(trackShuffleListAlbumMap.get(currentAlbum));
                 List<Song> intersection = albumQueueIntersect(currentAlbum, albumSongsInQueue);
                 newShuffleList.addAll(intersection);
                 trackShuffleListAlbumMap.remove(currentSong.getAlbum());
@@ -1686,7 +1689,8 @@ public class MusicService extends Service {
         Collections.shuffle(trackShuffleListAlbums);
 
         for (Album album : trackShuffleListAlbums) {
-            List<Song> albumSongsInQueue = trackShuffleListAlbumMap.get(album);
+            List<Song> albumSongsInQueue =
+                   new ArrayList<>(trackShuffleListAlbumMap.get(album));
             List<Song> intersection = albumQueueIntersect(album, albumSongsInQueue);
             newShuffleList.addAll(intersection);
         }
