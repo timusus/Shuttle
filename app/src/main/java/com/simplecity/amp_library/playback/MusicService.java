@@ -1445,7 +1445,7 @@ public class MusicService extends Service {
                     // Now insert them at the end of the other list
                     playlist.addAll(songs);
                 } else if (shuffleMode == ShuffleMode.ALBUMS) {
-                    albumShuffleList.addAll(playPos + 1, albumShuffleSongs(songs, true, true));
+                    albumShuffleList.addAll(playPos + 1, albumShuffleSongs(songs, true));
                     playlist.addAll(songs);
                 } else {
                     // Insert the songs at our playPos, into the current list
@@ -1458,7 +1458,7 @@ public class MusicService extends Service {
             } else {
                 playlist.addAll(songs);
                 trackShuffleList.addAll(songs);
-                albumShuffleList.addAll(albumShuffleSongs(songs, true, true));
+                albumShuffleList.addAll(albumShuffleSongs(songs, true));
                 notifyChange(InternalIntents.QUEUE_CHANGED);
                 if (action == EnqueueAction.NOW) {
                     playPos = getCurrentPlaylist().size() - songs.size();
@@ -1615,6 +1615,12 @@ public class MusicService extends Service {
         }
     }
 
+    /**
+     * @param startAtFront Indicates whether to we are shuffling in place or creating a shuffle list
+     *                     from a fresh playlist. We need to know whether we are shuffling in place
+     *                     so that <code>playPos</code> can be set to the position of the current
+     *                     track in the album it belongs to.
+     */
     public void makeAlbumShuffleList(boolean startAtFront) {
         synchronized (this) {
             if (playlist == null || playlist.isEmpty()) {
@@ -1629,12 +1635,13 @@ public class MusicService extends Service {
             // trackShuffleList is already shuffled, so we don't need to preshuffle.
             albumShuffleList.addAll(albumShuffleSongs(
                     trackShuffleList.isEmpty() ? playlist : trackShuffleList,
-                    false, false));
+                    false));
 
-            if (startAtFront) {
-                playPos = 0;
-            } else  {
+            // Todo: refactor to avoid blockingGet
+            if (!startAtFront && currentSong != null) {
                 playPos = currentSong.getAlbum().getSongsSingle().blockingGet().indexOf(currentSong);
+            } else {
+                playPos = 0;
             }
         }
     }
@@ -1651,7 +1658,7 @@ public class MusicService extends Service {
     }
 
     /** Shuffles a list of songs, grouping by album and arranging songs in that album in order. */
-    private List<Song> albumShuffleSongs(List<Song> songs, boolean isAddingToQueue, boolean doPreShuffle) {
+    private List<Song> albumShuffleSongs(List<Song> songs, boolean isAddingToQueue) {
 
         if (songs == null || songs.isEmpty()) {
             return songs;
@@ -1696,42 +1703,6 @@ public class MusicService extends Service {
         }
 
         return newShuffleList;
-
-//        if (doPreShuffle) Collections.shuffle(songs);
-//
-//        Map<Album, List<Song>> trackShuffleListAlbumMap = new HashMap<>();
-//
-//        for (Song song : songs) {
-//            Album containingAlbum = song.getAlbum();
-//            if (!trackShuffleListAlbumMap.containsKey(containingAlbum)) {
-//                trackShuffleListAlbumMap.put(containingAlbum, new ArrayList<>());
-//            }
-//            trackShuffleListAlbumMap.get(containingAlbum).add(song);
-//        }
-//
-//        if (!isAddingToQueue) {
-//            Song currentSong = null;
-//            if (playPos >= 0 && playPos < songs.size()) {
-//                currentSong = songs.get(playPos);
-//            }
-//
-//            if (currentSong != null) {
-//                trackShuffleListAlbumMap.get(currentSong.getAlbum()).remove(currentSong);
-//                albumShuffleList.add(currentSong);
-//                albumShuffleList.addAll(trackShuffleListAlbumMap.get(currentSong.getAlbum()));
-//                trackShuffleListAlbumMap.remove(currentSong.getAlbum());
-//            }
-//        }
-//
-//        List<Album> trackShuffleListAlbums = new ArrayList<>(trackShuffleListAlbumMap.keySet());
-//        Collections.shuffle(trackShuffleListAlbums);
-//
-//        List<Song> shuffled = new ArrayList<>();
-//        for (Album album : trackShuffleListAlbums) {
-//            shuffled.addAll(trackShuffleListAlbumMap.get(album));
-//        }
-//
-//        return shuffled;
     }
 
     private void openCurrent() {
