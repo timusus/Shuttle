@@ -455,7 +455,7 @@ public class SearchPresenter extends Presenter<SearchView> implements
 
             int index = songs.indexOf(songView.song);
 
-            MusicUtils.playAll(songs, index, false, (String message) -> {
+            MusicUtils.playAll(songs, index, (String message) -> {
                 if (view != null) {
                     view.showToast(message);
                 }

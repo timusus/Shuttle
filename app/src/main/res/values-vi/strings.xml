@@ -21,7 +21,7 @@
     <!-- Displayed when a file couldn't be renamed-->
     <string name="rename_file_failed">Lỗi khi đổi tên tập tin.\n\nTập tin này có thể được bảo vệ chống ghi, hoặc đã có thư mục với tên tương tự.</string>
     <!-- Toast after turning shuffle on -->
-    <string name="shuffle_on_notif">Phát ngẫu nhiên đã bật</string>
+    <string name="shuffle_tracks_notif">Phát ngẫu nhiên đã bật</string>
     <!-- Toast after turning shuffle off -->
     <string name="shuffle_off_notif">Tắt phát ngẫu nhiên</string>
     <!-- Toast after turning repeat off -->
@@ -630,7 +630,7 @@
     <!-- Accessibility button description -->
     <string name="btn_repeat_all">Lặp lại tất cả</string>
     <!-- Accessibility button description -->
-    <string name="btn_shuffle_on">Bật ngẫu nhiên</string>
+    <string name="btn_shuffle_tracks">Bật ngẫu nhiên</string>
     <!-- Accessibility button description -->
     <string name="btn_shuffle_off">Tắt ngẫu nhiên</string>
     <!-- Accessibility button description -->

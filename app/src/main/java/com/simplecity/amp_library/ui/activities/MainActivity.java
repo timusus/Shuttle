@@ -184,8 +184,8 @@ public class MainActivity extends BaseCastActivity implements
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(playlist -> {
-                            MusicUtils.playAll(playlist.getSongsObservable()
-                                    .first(new ArrayList<>()), message -> Toast.makeText(this, message, Toast.LENGTH_SHORT).show());
+                            MusicUtils.playAll(playlist.getSongsObservable().first(new ArrayList<>()),
+                                    message -> Toast.makeText(this, message, Toast.LENGTH_SHORT).show());
                             // Make sure to process intent only once
                             setIntent(new Intent());
                         });

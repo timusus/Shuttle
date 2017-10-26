@@ -179,7 +179,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                 } else {
                     views.setImageViewResource(R.id.shuffle_button, R.drawable.ic_shuffle_24dp_scaled);
                 }
-                views.setContentDescription(R.id.shuffle_button, service.getString(R.string.btn_shuffle_on));
+                views.setContentDescription(R.id.shuffle_button, service.getString(R.string.btn_shuffle_tracks));
                 break;
             default:
                 views.setImageViewBitmap(R.id.shuffle_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_shuffle_24dp_scaled));

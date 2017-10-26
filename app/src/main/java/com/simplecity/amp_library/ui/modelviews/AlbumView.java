@@ -174,6 +174,11 @@ public class AlbumView extends MultiItemView<AlbumView.ViewHolder, Album> implem
     }
 
     @Override
+    public int getSpanSize(int spanCount) {
+        return 1;
+    }
+
+    @Override
     public String getSectionName() {
 
         int sortOrder = getInstance().getAlbumsSortOrder();

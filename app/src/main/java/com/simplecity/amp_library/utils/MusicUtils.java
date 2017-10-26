@@ -30,35 +30,36 @@ public class MusicUtils {
         int NEW_PLAYLIST = 2;
     }
 
+    /**
+     * Passes along a list of songs, wrapped in a Single obj, to be played, starting at position 0.
+     */
     public static void playAll(Single<List<Song>> songsSingle, UnsafeConsumer<String> onEmpty) {
         songsSingle.observeOn(AndroidSchedulers.mainThread())
-                .subscribe(songs -> playAll(songs, onEmpty));
+                .subscribe(songs -> {
+                    setShuffleMode(MusicService.ShuffleMode.OFF);
+                    playAll(songs, onEmpty);
+                });
     }
 
     /**
-     * @param songs list of songs to play
-     */
-    public static void playAll(List<Song> songs, UnsafeConsumer<String> onEmpty) {
-        playAll(songs, 0, false, onEmpty);
-    }
-
-    /**
-     * @param songs    list of songs to play
-     * @param position position of the pressed song
+     * Play a list of songs starting at a given position.
      */
     public static void playAll(List<Song> songs, int position, UnsafeConsumer<String> onEmpty) {
-        playAll(songs, position, false, onEmpty);
+        setShuffleMode(MusicService.ShuffleMode.OFF);
+        playAll(songs, position, MusicService.ShuffleMode.OFF, onEmpty);
     }
 
     /**
-     * Method playAll.
-     *
-     * @param songs        List<Song>
-     * @param position     int
-     * @param forceShuffle boolean
+     * Passes along a list of songs to be played, starting at position 0.
      */
-    public static void playAll(List<Song> songs, int position, boolean forceShuffle, UnsafeConsumer<String> onEmpty) {
+    private static void playAll(List<Song> songs, UnsafeConsumer<String> onEmpty) {
+        playAll(songs, 0, MusicService.ShuffleMode.OFF, onEmpty);
+    }
 
+    /**
+     * Sends a list of songs to the MusicService for playback.
+     */
+    private static void playAll(List<Song> songs, int position, int shuffleMode, UnsafeConsumer<String> onEmpty) {
         if (songs.size() == 0
                 || MusicServiceConnectionUtils.serviceBinder == null
                 || MusicServiceConnectionUtils.serviceBinder.getService() == null) {
@@ -71,26 +72,40 @@ public class MusicUtils {
             position = 0;
         }
 
-        MusicServiceConnectionUtils.serviceBinder.getService().open(songs, forceShuffle ? -1 : position);
+        MusicServiceConnectionUtils.serviceBinder.getService().open(songs, position, shuffleMode);
         MusicServiceConnectionUtils.serviceBinder.getService().play();
     }
 
     /**
-     * Shuffles the passed in song list
+     * Shuffles all songs in a given song list
      */
     public static void shuffleAll(Single<List<Song>> songsSingle, UnsafeConsumer<String> onEmpty) {
-        songsSingle.observeOn(AndroidSchedulers.mainThread())
-                .subscribe(songs -> {
-                    setShuffleMode(MusicService.ShuffleMode.ON);
-                    playAll(songs, 0, true, onEmpty);
-                }, e -> LogUtils.logException(TAG, "Shuffle all threw error", e));
+        shuffleAll(songsSingle, onEmpty, false);
     }
 
     /**
-     * Shuffles all songs on the device
+     * Shuffles all songs on device in album shuffle mode
      */
     public static void shuffleAll(UnsafeConsumer<String> onEmpty) {
-        shuffleAll(DataManager.getInstance().getSongsRelay().firstOrError(), onEmpty);
+        shuffleAll(DataManager.getInstance().getSongsRelay().firstOrError(), onEmpty, false);
+    }
+
+    /**
+     * Shuffles all songs on device in normal/track shuffle mode.
+     */
+    public static void shuffleAllAlbums(UnsafeConsumer<String> onEmpty) {
+        shuffleAll(DataManager.getInstance().getSongsRelay().firstOrError(), onEmpty, true);
+    }
+
+    /**
+     * Unpacks song list to pass along and sets the shuffle mode. What the public shuffle methods call upon.
+     */
+    private static void shuffleAll(Single<List<Song>> songsSingle, UnsafeConsumer<String> onEmpty, boolean shuffleAlbums) {
+        songsSingle.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(songs -> {
+                    setShuffleMode(shuffleAlbums ? MusicService.ShuffleMode.ALBUMS : MusicService.ShuffleMode.TRACKS);
+                    playAll(songs, 0, getShuffleMode(), onEmpty);
+                }, e -> LogUtils.logException(TAG, "Shuffle all threw error", e));
     }
 
     /**

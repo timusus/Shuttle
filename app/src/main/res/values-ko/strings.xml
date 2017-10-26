@@ -21,7 +21,7 @@
     <!-- Displayed when a file couldn't be renamed-->
     <string name="rename_file_failed">파일의 이름을 변경할 수 없습니다.\n\n파일 쓰기 보호되어 있거나 이미 같은 이름의 파일이 존재할 수 있습니다.</string>
     <!-- Toast after turning shuffle on -->
-    <string name="shuffle_on_notif">랜덤 재생 켜짐</string>
+    <string name="shuffle_tracks_notif">랜덤 재생 켜짐</string>
     <!-- Toast after turning shuffle off -->
     <string name="shuffle_off_notif">랜덤 재생 꺼짐</string>
     <!-- Toast after turning repeat off -->
@@ -644,7 +644,7 @@
     <!-- Accessibility button description -->
     <string name="btn_repeat_all">모든 노래 반복</string>
     <!-- Accessibility button description -->
-    <string name="btn_shuffle_on">랜덤 재생 켜기</string>
+    <string name="btn_shuffle_tracks">랜덤 재생 켜기</string>
     <!-- Accessibility button description -->
     <string name="btn_shuffle_off">랜덤 재생 끄기</string>
     <!-- Accessibility button description -->

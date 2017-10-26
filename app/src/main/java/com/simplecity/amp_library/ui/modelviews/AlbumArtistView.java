@@ -154,6 +154,11 @@ public class AlbumArtistView extends MultiItemView<AlbumArtistView.ViewHolder, A
     }
 
     @Override
+    public int getSpanSize(int spanCount) {
+        return 1;
+    }
+
+    @Override
     public String getSectionName() {
         int sortOrder = SortManager.getInstance().getArtistsSortOrder();
 
