@@ -105,8 +105,7 @@ ext.gradlePlugins = [
         dexcount      : "com.getkeepsafe.dexcount:dexcount-gradle-plugin:$versions.dexcountGradlePlugin",
         fabric        : "io.fabric.tools:gradle:$versions.fabricGradlePlugin",
         playPublisher : "com.github.triplet.gradle:play-publisher:$versions.playPublisher",
-        gradleVersions: "com.github.ben-manes:gradle-versions-plugin:$versions.gradleVersions",
-        retroLambda   : "me.tatarka:gradle-retrolambda:$versions.retroLambda"
+        gradleVersions: "com.github.ben-manes:gradle-versions-plugin:$versions.gradleVersions"
 ]
 
 ext.libs = [
