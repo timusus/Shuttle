@@ -202,7 +202,6 @@ public class EqualizerService extends Service {
             String action = intent.getAction();
             int sessionId = intent.getIntExtra(AudioEffect.EXTRA_AUDIO_SESSION, 0);
             if (action.equals(ACTION_OPEN_EQUALIZER_SESSION)) {
-//                Log.i(TAG, "Open session called. Session: " + sessionId);
                 if (!mAudioSessions.containsKey(sessionId)) {
                     try {
                         EffectSet effectSet = new EffectSet(sessionId);
@@ -214,7 +213,6 @@ public class EqualizerService extends Service {
                 }
             }
             if (action.equals(ACTION_CLOSE_EQUALIZER_SESSION)) {
-//                Log.i(TAG, "Close session called");
                 EffectSet gone = mAudioSessions.remove(sessionId);
                 if (gone != null) {
                     gone.release();

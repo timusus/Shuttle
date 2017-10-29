@@ -7,7 +7,6 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -443,7 +442,7 @@ public class FolderFragment extends BaseFragment implements
 
     @Override
     public void onFileObjectCheckboxClick(View v, FolderView folderView) {
-        Log.i(TAG, "Clicked.. Selected: " + folderView.isSelected());
+
     }
 
     public void changeBreadcrumbPath() {
