@@ -28,6 +28,8 @@ public class ViewModelAdapter extends RecyclerView.Adapter {
 
     private static final String TAG = "ViewModelAdapter";
 
+    private boolean enableLogging = false;
+
     /**
      * The dataset for this RecyclerView Adapter
      */
@@ -114,22 +116,30 @@ public class ViewModelAdapter extends RecyclerView.Adapter {
         diffResult.dispatchUpdatesTo(new ListUpdateCallback() {
             @Override
             public void onInserted(int position, int count) {
-                Log.i(TAG, String.format("onInserted: position: %d, count: %d", position, count));
+                if (enableLogging && BuildConfig.DEBUG) {
+                    Log.i(TAG, String.format("onInserted: position: %d, count: %d", position, count));
+                }
             }
 
             @Override
             public void onRemoved(int position, int count) {
-                Log.i(TAG, String.format("onRemoved:position: %d, count: %d", position, count));
+                if (enableLogging && BuildConfig.DEBUG) {
+                    Log.i(TAG, String.format("onRemoved:position: %d, count: %d", position, count));
+                }
             }
 
             @Override
             public void onMoved(int fromPosition, int toPosition) {
-                Log.i(TAG, String.format("onMoved: from: %d, to: %d", fromPosition, fromPosition));
+                if (enableLogging && BuildConfig.DEBUG) {
+                    Log.i(TAG, String.format("onMoved: from: %d, to: %d", fromPosition, fromPosition));
+                }
             }
 
             @Override
             public void onChanged(int position, int count, Object payload) {
-                Log.i(TAG, String.format("onChanged: position: %d, count: %d", position, count));
+                if (enableLogging && BuildConfig.DEBUG) {
+                    Log.i(TAG, String.format("onChanged: position: %d, count: %d", position, count));
+                }
             }
         });
     }
