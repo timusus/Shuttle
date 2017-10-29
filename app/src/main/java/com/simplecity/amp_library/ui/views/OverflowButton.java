@@ -19,7 +19,7 @@ public class OverflowButton extends NonScrollImageButton {
 
     private Disposable aestheticDisposable;
 
-    private final Drawable drawable;
+    public Drawable drawable;
 
     private boolean dark = false;
 

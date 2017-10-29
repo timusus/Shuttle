@@ -1,33 +1,32 @@
 package com.simplecity.amp_library.ui.modelviews;
 
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.simplecity.amp_library.model.WhitelistFolder;
+import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.model.InclExclItem;
+import com.simplecity.amp_library.ui.adapters.ViewType;
+import com.simplecity.amp_library.ui.views.OverflowButton;
 import com.simplecityapps.recycler_adapter.model.BaseViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.simplecity.amp_library.R.id.btn_overflow;
-import static com.simplecity.amp_library.R.id.line_one;
-import static com.simplecity.amp_library.R.layout.list_item_one_line;
-import static com.simplecity.amp_library.ui.adapters.ViewType.BLACKLIST;
-
-public class WhitelistView extends BaseViewModel<WhitelistView.ViewHolder> {
+public class InclExclView extends BaseViewModel<InclExclView.ViewHolder> {
 
     public interface ClickListener {
-        void onRemove(WhitelistView WhitelistView);
+        void onRemove(InclExclView InclExclView);
     }
 
-    public WhitelistFolder whitelistFolder;
+    public InclExclItem inclExclItem;
 
-    public WhitelistView(WhitelistFolder whitelistFolder) {
-        this.whitelistFolder = whitelistFolder;
+    public InclExclView(InclExclItem inclExclItem) {
+        this.inclExclItem = inclExclItem;
     }
 
     @Nullable ClickListener listener;
@@ -44,19 +43,19 @@ public class WhitelistView extends BaseViewModel<WhitelistView.ViewHolder> {
 
     @Override
     public int getViewType() {
-        return BLACKLIST;
+        return ViewType.INCL_EXCL;
     }
 
     @Override
     public int getLayoutResId() {
-        return list_item_one_line;
+        return R.layout.list_item_one_line;
     }
 
     @Override
     public void bindView(ViewHolder holder) {
         super.bindView(holder);
 
-        holder.lineOne.setText(whitelistFolder.folder);
+        holder.lineOne.setText(inclExclItem.path);
     }
 
     @Override
@@ -64,13 +63,13 @@ public class WhitelistView extends BaseViewModel<WhitelistView.ViewHolder> {
         return new ViewHolder(createView(parent));
     }
 
-    public static class ViewHolder extends BaseViewHolder<WhitelistView> {
+    public static class ViewHolder extends BaseViewHolder<InclExclView> {
 
-        @BindView(line_one)
+        @BindView(R.id.line_one)
         public TextView lineOne;
 
-        @BindView(btn_overflow)
-        public ImageButton overflow;
+        @BindView(R.id.btn_overflow)
+        public OverflowButton overflow;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -78,12 +77,15 @@ public class WhitelistView extends BaseViewModel<WhitelistView.ViewHolder> {
             ButterKnife.bind(this, itemView);
 
             lineOne.setSingleLine(false);
+
+            overflow.drawable = DrawableCompat.wrap(ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_close_24dp)).mutate();
+
             overflow.setOnClickListener(v -> viewModel.onRemove());
         }
 
         @Override
         public String toString() {
-            return "WhitelistView.ViewHolder";
+            return "InclExclView.ViewHolder";
         }
     }
 
@@ -92,14 +94,14 @@ public class WhitelistView extends BaseViewModel<WhitelistView.ViewHolder> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        WhitelistView that = (WhitelistView) o;
+        InclExclView that = (InclExclView) o;
 
-        return whitelistFolder != null ? whitelistFolder.equals(that.whitelistFolder) : that.whitelistFolder == null;
+        return inclExclItem != null ? inclExclItem.equals(that.inclExclItem) : that.inclExclItem == null;
     }
 
     @Override
     public int hashCode() {
-        return whitelistFolder != null ? whitelistFolder.hashCode() : 0;
+        return inclExclItem != null ? inclExclItem.hashCode() : 0;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.simplecity.amp_library.model;
+package com.simplecity.amp_library.sql.legacy;
 
 import android.database.Cursor;
 

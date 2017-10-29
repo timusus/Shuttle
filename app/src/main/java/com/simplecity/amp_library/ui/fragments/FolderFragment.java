@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.Toast;
 
 import com.afollestad.aesthetic.Aesthetic;
@@ -25,8 +26,8 @@ import com.simplecity.amp_library.interfaces.Breadcrumb;
 import com.simplecity.amp_library.interfaces.BreadcrumbListener;
 import com.simplecity.amp_library.interfaces.FileType;
 import com.simplecity.amp_library.model.BaseFileObject;
+import com.simplecity.amp_library.model.InclExclItem;
 import com.simplecity.amp_library.model.Song;
-import com.simplecity.amp_library.sql.databases.WhitelistHelper;
 import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
 import com.simplecity.amp_library.ui.modelviews.BreadcrumbsView;
 import com.simplecity.amp_library.ui.modelviews.FolderView;
@@ -34,6 +35,7 @@ import com.simplecity.amp_library.ui.views.BreadcrumbItem;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.ui.views.StatusBarView;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
+import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.FileBrowser;
 import com.simplecity.amp_library.utils.FileHelper;
 import com.simplecity.amp_library.utils.LogUtils;
@@ -47,15 +49,18 @@ import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.Nullable;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
 import test.com.androidnavigation.fragment.BackPressListener;
 
@@ -99,19 +104,16 @@ public class FolderFragment extends BaseFragment implements
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    boolean isInActionMode = false;
-
     String currentDir;
 
     boolean displayedInTabs = false;
 
     FileBrowser fileBrowser;
 
-    boolean showCheckboxes;
-
-    List<String> paths = new ArrayList<>();
-
     boolean showBreadcrumbsInList;
+
+    private boolean isShowingWhitelist;
+    private boolean isShowingBlacklist;
 
     private CompositeDisposable disposables;
 
@@ -325,44 +327,47 @@ public class FolderFragment extends BaseFragment implements
     }
 
     public void changeDir(File newDir) {
+        Single.zip(
+                DataManager.getInstance().getIncludeItems().first(Collections.emptyList()),
+                DataManager.getInstance().getExcludeItems().first(Collections.emptyList()),
+                Single.fromCallable(() -> {
+                    final String path = FileHelper.getPath(newDir);
+                    if (TextUtils.isEmpty(path)) {
+                        return new ArrayList<>();
+                    }
+                    currentDir = path;
+                    return fileBrowser.loadDir(new File(path));
+                }),
+                (Function3<List<InclExclItem>, List<InclExclItem>, List<BaseFileObject>, List<ViewModel>>) (whitelist, blacklist, baseFileObjects) -> {
+                    List<ViewModel> items = Stream.of(baseFileObjects)
+                            .map(baseFileObject -> {
 
-        disposables.add(Observable.fromCallable(() -> {
+                                // Look for an existing FolderView wrapping the BaseFileObject, we'll reuse it if it exists.
+                                FolderView folderView = (FolderView) Stream.of(adapter.items)
+                                        .filter(viewModel -> viewModel instanceof FolderView && (((FolderView) viewModel).baseFileObject.equals(baseFileObject)))
+                                        .findFirst()
+                                        .orElse(null);
 
-            final String path = FileHelper.getPath(newDir);
+                                if (folderView == null) {
+                                    folderView = new FolderView(baseFileObject,
+                                            Stream.of(whitelist).anyMatch(inclExclItem -> inclExclItem.path.equals(baseFileObject.path)),
+                                            Stream.of(blacklist).anyMatch(inclExclItem -> inclExclItem.path.equals(baseFileObject.path)));
+                                    folderView.setShowWhitelist(isShowingWhitelist);
+                                    folderView.setShowBlacklist(isShowingBlacklist);
+                                    folderView.setClickListener(FolderFragment.this);
+                                }
 
-            if (TextUtils.isEmpty(path)) {
-                return new ArrayList<BaseFileObject>();
-            }
+                                return folderView;
+                            })
+                            .collect(Collectors.toList());
 
-            currentDir = path;
-
-            return fileBrowser.loadDir(new File(path));
-        }).map(baseFileObjects -> {
-            List<ViewModel> items = Stream.of(baseFileObjects)
-                    .map(baseFileObject -> {
-
-                        // Look for an existing FolderView wrapping the BAseFileObject, we'll reuse it if it exists.
-                        FolderView folderView = (FolderView) Stream.of(adapter.items)
-                                .filter(viewModel -> viewModel instanceof FolderView && (((FolderView) viewModel).baseFileObject.equals(baseFileObject)))
-                                .findFirst()
-                                .orElse(null);
-
-                        if (folderView == null) {
-                            folderView = new FolderView(baseFileObject);
-                            folderView.setClickListener(this);
-                        }
-
-                        return folderView;
-                    })
-                    .collect(Collectors.toList());
-
-            if (showBreadcrumbsInList && breadcrumbsView != null) {
-                breadcrumbsView.setBreadcrumbsPath(currentDir);
-                breadcrumbsView.setListener(this);
-                items.add(0, breadcrumbsView);
-            }
-            return items;
-        }).subscribeOn(Schedulers.io())
+                    if (showBreadcrumbsInList && breadcrumbsView != null) {
+                        breadcrumbsView.setBreadcrumbsPath(currentDir);
+                        breadcrumbsView.setListener(FolderFragment.this);
+                        items.add(0, breadcrumbsView);
+                    }
+                    return items;
+                }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(adaptableItems -> {
                     if (adapter != null) {
@@ -374,7 +379,7 @@ public class FolderFragment extends BaseFragment implements
                     if (adapter != null) {
                         changeBreadcrumbPath();
                     }
-                }, error -> LogUtils.logException(TAG, "Error changing dir", error)));
+                }, error -> LogUtils.logException(TAG, "Error changing dir", error));
     }
 
     public void reload() {
@@ -395,7 +400,7 @@ public class FolderFragment extends BaseFragment implements
 
     @Override
     public void onFileObjectClick(int position, FolderView folderView) {
-        if (!isInActionMode) {
+        if (!contextualToolbarHelper.handleClick(position, folderView)) {
             if (folderView.baseFileObject.fileType == FileType.FILE) {
                 FileHelper.getSongList(new File(folderView.baseFileObject.path), false, true)
                         .observeOn(AndroidSchedulers.mainThread())
@@ -441,7 +446,7 @@ public class FolderFragment extends BaseFragment implements
     }
 
     @Override
-    public void onFileObjectCheckboxClick(View v, FolderView folderView) {
+    public void onFileObjectCheckboxClick(CheckBox checkBox, FolderView folderView) {
 
     }
 
@@ -450,25 +455,6 @@ public class FolderFragment extends BaseFragment implements
             breadcrumbsView.setBreadcrumbsPath(currentDir);
             adapter.notifyItemChanged(adapter.items.indexOf(breadcrumbsView), 0);
         }
-    }
-
-    /**
-     * Retrieves all folders from the whitelist, and adds them to our 'pathlist'
-     * so the appropriate checkboxes can be checked.
-     */
-    public void updateWhitelist() {
-        WhitelistHelper.getWhitelistFolders()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(whitelistFolders -> {
-                    paths.clear();
-                    paths.addAll(Stream.of(whitelistFolders)
-                            .map(whitelistFolder -> whitelistFolder.folder)
-                            .toList());
-
-                    if (showCheckboxes) {
-                        adapter.notifyItemRangeChanged(0, adapter.getItemCount());
-                    }
-                }, error -> LogUtils.logException(TAG, "Error updating whitelist", error));
     }
 
     @Override
@@ -499,21 +485,47 @@ public class FolderFragment extends BaseFragment implements
                 public void notifyDatasetChanged() {
                     adapter.notifyItemRangeChanged(0, adapter.items.size(), 0);
                 }
+
             });
+
+            contextualToolbarHelper.setCanChangeTitle(false);
 
             contextualToolbar.setOnMenuItemClickListener(menuItem -> {
                 switch (menuItem.getItemId()) {
-                    case R.id.menu_save:
-                        //                            WhitelistHelper.deleteAllFolders();
-                        //                            WhitelistHelper.addToWhitelist(paths);
-                        //                            showCheckboxes(false);
-                        //                            adapter.notifyDataSetChanged();
-                        //                            mode.finish();
+                    case R.id.done:
+                        contextualToolbarHelper.finish();
+                        showWhitelist(false);
+                        showBlacklist(false);
+                        adapter.notifyItemRangeChanged(0, adapter.getItemCount());
                         return true;
                 }
                 return false;
             });
         }
+    }
+
+    private void showWhitelist(boolean show) {
+        isShowingWhitelist = show;
+        if (isShowingWhitelist) {
+            isShowingBlacklist = false;
+        }
+        Stream.of(adapter.items)
+                .filter(viewModel -> viewModel instanceof FolderView)
+                .forEach(viewModel -> ((FolderView) viewModel).setShowWhitelist(show));
+        adapter.notifyItemRangeChanged(0, adapter.getItemCount(), 0);
+        contextualToolbar.setTitle(R.string.whitelist_title);
+    }
+
+    private void showBlacklist(boolean show) {
+        isShowingBlacklist = show;
+        if (isShowingBlacklist) {
+            isShowingWhitelist = false;
+        }
+        Stream.of(adapter.items)
+                .filter(viewModel -> viewModel instanceof FolderView)
+                .forEach(viewModel -> ((FolderView) viewModel).setShowBlacklist(show));
+        adapter.notifyItemRangeChanged(0, adapter.getItemCount(), 0);
+        contextualToolbar.setTitle(R.string.blacklist_title);
     }
 
     @Override
@@ -576,25 +588,11 @@ public class FolderFragment extends BaseFragment implements
                 return true;
             case R.id.whitelist:
                 contextualToolbarHelper.start();
-
-                Stream.of(adapter.items)
-                        .filter(viewModel -> viewModel instanceof FolderView)
-                        .forEach(viewModel -> ((FolderView) viewModel).setShowCheckboxes(true));
-
-                adapter.notifyItemRangeChanged(0, adapter.getItemCount(), 0);
-
-                WhitelistHelper.getWhitelistFolders()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(whitelistFolders -> {
-                                    Stream.of(adapter.items)
-                                            .filter(viewModel -> viewModel instanceof FolderView)
-                                            .filter(viewModel -> whitelistFolders.contains(((FolderView) viewModel).baseFileObject.path))
-                                            .forEach(viewModel -> ((FolderView) viewModel).setSelected(true));
-
-                                    adapter.notifyItemRangeChanged(0, adapter.getItemCount(), 0);
-                                }
-                        );
+                showWhitelist(true);
+                return true;
+            case R.id.blacklist:
+                contextualToolbarHelper.start();
+                showBlacklist(true);
                 return true;
             case R.id.show_filenames:
                 SettingsManager.getInstance().setFolderBrowserShowFileNames(!menuItem.isChecked());

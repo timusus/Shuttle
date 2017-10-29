@@ -24,6 +24,8 @@ public class ContextualToolbarHelper<T> {
 
     private boolean isActive = false;
 
+    private boolean canChangeTitle = true;
+
     private List<SelectableViewModel<T>> items = new ArrayList<>();
 
     @NonNull
@@ -32,6 +34,10 @@ public class ContextualToolbarHelper<T> {
     public ContextualToolbarHelper(@NonNull ContextualToolbar contextualToolbar, @NonNull Callback callback) {
         this.contextualToolbar = contextualToolbar;
         this.callback = callback;
+    }
+
+    public void setCanChangeTitle(boolean canChangeTitle) {
+        this.canChangeTitle = canChangeTitle;
     }
 
     /**
@@ -66,7 +72,9 @@ public class ContextualToolbarHelper<T> {
      * Called ot update the toolbar's title to reflect the number of selected items.
      */
     private void updateCount() {
-        contextualToolbar.setTitle(ShuttleApplication.getInstance().getString(R.string.action_mode_selection_count, items.size()));
+        if (canChangeTitle) {
+            contextualToolbar.setTitle(ShuttleApplication.getInstance().getString(R.string.action_mode_selection_count, items.size()));
+        }
     }
 
     /**

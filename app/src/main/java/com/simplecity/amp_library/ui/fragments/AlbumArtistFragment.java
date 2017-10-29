@@ -169,7 +169,7 @@ public class AlbumArtistFragment extends BaseFragment implements
                 boolean ascending = SortManager.getInstance().getArtistsAscending();
 
                 disposable = DataManager.getInstance().getAlbumArtistsRelay()
-                        .skip(adapter.items.isEmpty() || force ? 0 : 1)
+                        .skipWhile(albumArtists -> !force && adapter.items.size() == albumArtists.size())
                         .flatMapSingle(albumArtists -> {
                             //Sort
                             SortManager.getInstance().sortAlbumArtists(albumArtists);

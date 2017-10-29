@@ -336,7 +336,8 @@ public class SuggestedFragment extends BaseFragment implements
             if (getActivity() != null && isAdded()) {
                 disposables.add(
                         Observable.zip(
-                                Observable.just(true).skip(adapter.items.isEmpty() || force ? 0 : 1),
+                                Observable.just(true)
+                                        .skipWhile(value -> !force && adapter.items.isEmpty()),
                                 Observable.combineLatest(
                                         getMostPlayedViewModels(),
                                         getRecentlyPlayedViewModels(),
@@ -352,7 +353,7 @@ public class SuggestedFragment extends BaseFragment implements
                                         }), (aBoolean, viewModels) -> viewModels)
 
                                 .switchIfEmpty(Observable.just(Collections.emptyList()))
-                                .skip(adapter.items.isEmpty() ? 0 : 1)
+                                .skipWhile(viewModels -> !force && adapter.items.size() == viewModels.size())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(adaptableItems -> {
                                     if (adaptableItems.isEmpty()) {
