@@ -477,7 +477,7 @@ public class SearchPresenter extends Presenter<SearchView> implements
                         if (searchView != null) {
                             searchView.showTaggerDialog(taggerDialog);
                         }
-                    }, null));
+                    }, null, null));
             menu.show();
         }
 

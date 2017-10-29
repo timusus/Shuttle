@@ -82,7 +82,7 @@ public class SuggestedFragment extends BaseFragment implements
         public void onSongOverflowClicked(View v, Song song) {
             PopupMenu popupMenu = new PopupMenu(getContext(), v);
             MenuUtils.setupSongMenu(popupMenu, false);
-            popupMenu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), song, taggerDialog -> taggerDialog.show(getFragmentManager()), null));
+            popupMenu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), song, taggerDialog -> taggerDialog.show(getFragmentManager()), null, null));
             popupMenu.show();
         }
     }
