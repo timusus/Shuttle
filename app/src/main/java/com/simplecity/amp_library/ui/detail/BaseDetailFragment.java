@@ -771,7 +771,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         MenuUtils.setupSongMenu(popupMenu, showSongOverflowRemoveButton());
         popupMenu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), song,
                 taggerDialog -> taggerDialog.show(getFragmentManager()),
-                () -> songRemoved(position, song)));
+                () -> songRemoved(position, song), null));
         popupMenu.show();
     }
 

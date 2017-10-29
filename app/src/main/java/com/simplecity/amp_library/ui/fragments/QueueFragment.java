@@ -299,6 +299,11 @@ public class QueueFragment extends BaseFragment implements
         adapter.removeItem(position);
     }
 
+    @Override
+    public void moveQueueItem(int from, int to) {
+        adapter.moveItem(from, to);
+    }
+
     private PlayerViewAdapter playerViewAdapter = new PlayerViewAdapter() {
         @Override
         public void trackInfoChanged(@Nullable Song song) {

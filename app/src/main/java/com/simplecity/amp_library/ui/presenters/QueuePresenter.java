@@ -110,11 +110,21 @@ public class QueuePresenter extends Presenter<QueueView> {
         MusicUtils.removeFromQueue(song, true);
     }
 
+    private void playNext(int position){
+        int newPosition = MusicUtils.getQueuePosition() + 1;
+
+        QueueView queueView = getView();
+        if (queueView != null) {
+            queueView.moveQueueItem(position, newPosition);
+        }
+
+        MusicUtils.moveQueueItem(position, newPosition);
+    }
+
     private void loadData() {
         QueueView queueView = getView();
         data = Stream.of(MusicUtils.getQueue())
                 .map(song -> {
-
                     // Look for an existing SongView wrapping the song, we'll reuse it if it exists.
                     SongView songView = (SongView) Stream.of(data)
                             .filter(viewModel -> viewModel instanceof SongView && (((SongView) viewModel).song.equals(song)))
@@ -164,7 +174,8 @@ public class QueuePresenter extends Presenter<QueueView> {
                             queueView.showTaggerDialog(taggerDialog);
                         }
                     },
-                    () -> removeFromQueue(position, song)));
+                    () -> removeFromQueue(position, song),
+                    () -> playNext(position)));
             menu.show();
         }
 

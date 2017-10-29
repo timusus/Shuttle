@@ -21,4 +21,6 @@ public interface QueueView {
     void showTaggerDialog(TaggerDialog taggerDialog);
 
     void removeFromQueue(int position);
+
+    void moveQueueItem(int from, int to);
 }

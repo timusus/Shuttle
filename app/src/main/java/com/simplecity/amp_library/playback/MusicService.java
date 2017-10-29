@@ -1031,7 +1031,9 @@ public class MusicService extends Service {
         editor.apply();
     }
 
-    /** Converts a playlist to a String which can be saved to SharedPrefs */
+    /**
+     * Converts a playlist to a String which can be saved to SharedPrefs
+     */
     private String serializePlaylist(List<Song> list) {
 
         // The current playlist is saved as a list of "reverse hexadecimal"
@@ -1061,7 +1063,9 @@ public class MusicService extends Service {
         return q.toString();
     }
 
-    /** Converts a string representation of a playlist from SharedPrefs into a list of songs. */
+    /**
+     * Converts a string representation of a playlist from SharedPrefs into a list of songs.
+     */
     private List<Song> deserializePlaylist(String listString, List<Song> allSongs) {
         List<Long> ids = new ArrayList<>();
         int n = 0;
@@ -1481,9 +1485,9 @@ public class MusicService extends Service {
     /**
      * Opens a list for playback
      *
-     * @param songs         The list of tracks to open
-     * @param shuffleMode   The shuffle mode
-     * @param position      The position to start playback at
+     * @param songs       The list of tracks to open
+     * @param shuffleMode The shuffle mode
+     * @param position    The position to start playback at
      */
     public void open(List<Song> songs, final int position, final int shuffleMode) {
         synchronized (this) {
@@ -1657,7 +1661,9 @@ public class MusicService extends Service {
         return albumSongsInOrder;
     }
 
-    /** Shuffles a list of songs, grouping by album and arranging songs in that album in order. */
+    /**
+     * Shuffles a list of songs, grouping by album and arranging songs in that album in order.
+     */
     private List<Song> albumShuffleSongs(List<Song> songs, boolean isAddingToQueue) {
 
         if (songs == null || songs.isEmpty()) {
@@ -1697,7 +1703,7 @@ public class MusicService extends Service {
 
         for (Album album : trackShuffleListAlbums) {
             List<Song> albumSongsInQueue =
-                   new ArrayList<>(trackShuffleListAlbumMap.get(album));
+                    new ArrayList<>(trackShuffleListAlbumMap.get(album));
             List<Song> intersection = albumQueueIntersect(album, albumSongsInQueue);
             newShuffleList.addAll(intersection);
         }

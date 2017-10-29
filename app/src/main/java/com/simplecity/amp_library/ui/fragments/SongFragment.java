@@ -287,7 +287,7 @@ public class SongFragment extends BaseFragment implements
         MenuUtils.setupSongMenu(menu, false);
         menu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), song,
                 taggerDialog -> taggerDialog.show(getFragmentManager()),
-                null));
+                null, null));
         menu.show();
     }
 
