@@ -19,6 +19,7 @@ import com.annimon.stream.Stream;
 import com.crashlytics.android.Crashlytics;
 import com.simplecity.amp_library.utils.SettingsManager;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -190,7 +191,7 @@ public class EqualizerService extends Service {
     /**
      * Known audio sessions and their associated audioeffect suites.
      */
-    protected final ConcurrentHashMap<Integer, EffectSet> mAudioSessions = new ConcurrentHashMap<>();
+    protected final Map<Integer, EffectSet> mAudioSessions = new ConcurrentHashMap<>();
 
     /**
      * Receive new broadcast intents for adding DSP to session
