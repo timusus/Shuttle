@@ -26,7 +26,6 @@ public class ShuffleButton extends android.support.v7.widget.AppCompatImageButto
 
     @NonNull Drawable shuffleOff;
     @NonNull Drawable shuffleTracks;
-    @NonNull Drawable shuffleAlbums;
 
     public ShuffleButton(Context context) {
         this(context, null);
@@ -41,7 +40,6 @@ public class ShuffleButton extends android.support.v7.widget.AppCompatImageButto
 
         shuffleOff = ContextCompat.getDrawable(context, R.drawable.ic_shuffle_24dp_scaled);
         shuffleTracks = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.ic_shuffle_24dp_scaled).mutate());
-        shuffleAlbums = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.ic_shuffle_albums_scaled_24dp).mutate());
 
         setShuffleMode(MusicService.ShuffleMode.OFF);
     }
@@ -57,13 +55,9 @@ public class ShuffleButton extends android.support.v7.widget.AppCompatImageButto
                     setContentDescription(getResources().getString(R.string.btn_shuffle_off));
                     setImageDrawable(shuffleOff);
                     break;
-                case MusicService.ShuffleMode.TRACKS:
-                    setContentDescription(getResources().getString(R.string.btn_shuffle_tracks));
+                case MusicService.ShuffleMode.ON:
+                    setContentDescription(getResources().getString(R.string.btn_shuffle_on));
                     setImageDrawable(shuffleTracks);
-                    break;
-                case MusicService.ShuffleMode.ALBUMS:
-                    setContentDescription(getResources().getString(R.string.btn_shuffle_albums));
-                    setImageDrawable(shuffleAlbums);
                     break;
             }
         }
@@ -92,6 +86,5 @@ public class ShuffleButton extends android.support.v7.widget.AppCompatImageButto
 
     private void invalidateColors(int selectedColor) {
         DrawableCompat.setTint(shuffleTracks, selectedColor);
-        DrawableCompat.setTint(shuffleAlbums, selectedColor);
     }
 }

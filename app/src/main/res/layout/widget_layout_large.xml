@@ -81,7 +81,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:contentDescription="@string/btn_shuffle_tracks"
+                android:contentDescription="@string/btn_shuffle_on"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_shuffle_24dp_scaled"/>
 

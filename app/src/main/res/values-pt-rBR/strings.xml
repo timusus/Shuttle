@@ -21,7 +21,7 @@
     <!-- Displayed when a file couldn't be renamed-->
     <string name="rename_file_failed">Erro ao renomear arquivo.\n\nEsse arquivo pode estar protegido contra gravação, ou algum arquivo com o mesmo nome já existe.</string>
     <!-- Toast after turning shuffle on -->
-    <string name="shuffle_tracks_notif">Aleatório ligado</string>
+    <string name="shuffle_on_notif">Aleatório ligado</string>
     <!-- Toast after turning shuffle off -->
     <string name="shuffle_off_notif">Aleatório desligado</string>
     <!-- Toast after turning repeat off -->
@@ -649,7 +649,7 @@ pastas</item>
     <!-- Accessibility button description -->
     <string name="btn_repeat_all">Repetir todas</string>
     <!-- Accessibility button description -->
-    <string name="btn_shuffle_tracks">Aleatório ligado</string>
+    <string name="btn_shuffle_on">Aleatório ligado</string>
     <!-- Accessibility button description -->
     <string name="btn_shuffle_off">Aleatório desligado</string>
     <!-- Accessibility button description -->

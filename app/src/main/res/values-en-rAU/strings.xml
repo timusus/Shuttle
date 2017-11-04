@@ -15,7 +15,7 @@
     <!-- Displayed when a folder couldn't be renamed-->
     <!-- Displayed when a file couldn't be renamed-->
     <!-- Toast after turning shuffle on -->
-    <string name="shuffle_tracks_notif">Shuffle is on.</string>
+    <string name="shuffle_on_notif">Shuffle is on.</string>
     <!-- Toast after turning shuffle off -->
     <string name="shuffle_off_notif">Shuffle is off.</string>
     <!-- Toast after turning repeat off -->

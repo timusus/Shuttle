@@ -23,8 +23,7 @@
     <!-- Displayed when a file couldn't be renamed-->
     <string name="rename_file_failed">Error renaming file.\n\nThis file might be write protected, or a file with the same name already exists.</string>
     <!-- Toast after turning shuffle on -->
-    <string name="shuffle_tracks_notif">Shuffle tracks</string>
-    <string name="shuffle_albums_notif">Shuffle albums</string>
+    <string name="shuffle_on_notif">Shuffle on</string>
     <!-- Toast after turning shuffle off -->
     <string name="shuffle_off_notif">Shuffle off</string>
     <!-- Toast after turning repeat off -->
@@ -188,13 +187,14 @@
     <string name="fav_add">Favorite</string>
     <!-- Context menu item -->
     <string name="play_selection">Play</string>
-    <!-- Multi select menu item-->
+    <!-- Menu item-->
     <string name="menu_add_to">Add to…</string>
     <!-- Multi select menu item-->
     <string name="menu_playlist">Playlist</string>
     <!-- Multi select menu item-->
     <string name="menu_queue">Queue</string>
-    <!-- Context menu item -->
+    <!-- Artist overflow menu item-->
+    <string name="menu_album_shuffle">Album shuffle</string>
     <!-- Context menu item -->
     <string name="new_playlist">New</string>
     <!-- menu item to save the current list as a new playlist -->
@@ -227,6 +227,7 @@
     <string name="delete_item">Delete</string>
     <!-- Menu item to play back all the songs in the currently showing list in shuffle mode -->
     <string name="shuffle_all">Shuffle All</string>
+
     <!-- title of the "current playlist" screen when not in party shuffle mode -->
     <string name="nowplaying_title">Now Playing</string>
     <!-- -->
@@ -708,8 +709,7 @@
     <!-- Accessibility button description -->
     <string name="btn_repeat_all">Repeat all</string>
     <!-- Accessibility button description -->
-    <string name="btn_shuffle_tracks">Shuffle tracks</string>
-    <string name="btn_shuffle_albums">Shuffle albums</string>
+    <string name="btn_shuffle_on">Shuffle on</string>
     <!-- Accessibility button description -->
     <string name="btn_shuffle_off">Shuffle off</string>
     <!-- Accessibility button description -->
@@ -800,5 +800,9 @@
     <string name="shortcut_playlist_long_label">Open Favorites Playlist</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">Playlist not available</string>
+
+
+    <!-- Displayed at the top of the album list, album shuffle mode-->
+    <string name="shuffle_albums">Album Shuffle</string>
 
 </resources>

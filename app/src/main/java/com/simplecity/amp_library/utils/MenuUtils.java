@@ -418,6 +418,9 @@ public class MenuUtils implements MusicUtils.Defs {
                 case R.id.play:
                     play(context, getSongsForAlbumArtist(albumArtist));
                     return true;
+                case R.id.albumShuffle:
+                    play(context, getSongsForAlbumArtist(albumArtist).map(Operators::albumShuffleSongs));
+                    return true;
                 case NEW_PLAYLIST:
                     newPlaylist(context, getSongsForAlbumArtist(albumArtist));
                     return true;

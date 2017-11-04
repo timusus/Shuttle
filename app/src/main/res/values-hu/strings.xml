@@ -21,7 +21,7 @@
     <!-- Displayed when a file couldn't be renamed-->
     <string name="rename_file_failed">Fájl átnevezése nem sikerült.\n\nLehetséges, hogy írásvédett, vagy már létezik ilyen nevű fájl</string>
     <!-- Toast after turning shuffle on -->
-    <string name="shuffle_tracks_notif">Keverés bekapcsolva</string>
+    <string name="shuffle_on_notif">Keverés bekapcsolva</string>
     <!-- Toast after turning shuffle off -->
     <string name="shuffle_off_notif">Keverés kikapcsolva</string>
     <!-- Toast after turning repeat off -->
@@ -628,7 +628,7 @@ segítségével
     <!-- Accessibility button description -->
     <string name="btn_repeat_all">Mindegyik ismétlése</string>
     <!-- Accessibility button description -->
-    <string name="btn_shuffle_tracks">Keverés bekapcsolva</string>
+    <string name="btn_shuffle_on">Keverés bekapcsolva</string>
     <!-- Accessibility button description -->
     <!-- Accessibility button description -->
     <!-- Accessibility button description -->

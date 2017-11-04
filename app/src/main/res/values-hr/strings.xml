@@ -21,7 +21,7 @@
     <!-- Displayed when a file couldn't be renamed-->
     <string name="rename_file_failed">Pogreška pri preimenovanju datoteke.\n\nOva datoteka je možda zaštićena, ili datoteka s istim nazivom već postoji.</string>
     <!-- Toast after turning shuffle on -->
-    <string name="shuffle_tracks_notif">Nasumični odabir je uklj.</string>
+    <string name="shuffle_on_notif">Nasumični odabir je uklj.</string>
     <!-- Toast after turning shuffle off -->
     <string name="shuffle_off_notif">Nasumični odabir je isklj.</string>
     <!-- Toast after turning repeat off -->
@@ -653,7 +653,7 @@ mapa</item>
     <!-- Accessibility button description -->
     <string name="btn_repeat_all">Ponavljanje svega</string>
     <!-- Accessibility button description -->
-    <string name="btn_shuffle_tracks">Nasumično rep. sve</string>
+    <string name="btn_shuffle_on">Nasumično rep. sve</string>
     <!-- Accessibility button description -->
     <string name="btn_shuffle_off">Nasumično rep. isklj.</string>
     <!-- Accessibility button description -->

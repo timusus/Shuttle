@@ -21,7 +21,7 @@
     <!-- Displayed when a file couldn't be renamed-->
     <string name="rename_file_failed">Грешка при преименуването на файла.\n\nФайлът е защитен от запис или вече съществува друг със същото име.</string>
     <!-- Toast after turning shuffle on -->
-    <string name="shuffle_tracks_notif">Разбъркването е вкл.</string>
+    <string name="shuffle_on_notif">Разбъркването е вкл.</string>
     <!-- Toast after turning shuffle off -->
     <string name="shuffle_off_notif">Разбъркването е изкл.</string>
     <!-- Toast after turning repeat off -->
@@ -619,7 +619,7 @@
     <!-- Accessibility button description -->
     <string name="btn_repeat_all">Повтори всички</string>
     <!-- Accessibility button description -->
-    <string name="btn_shuffle_tracks">Разбъркването е вкл.</string>
+    <string name="btn_shuffle_on">Разбъркването е вкл.</string>
     <!-- Accessibility button description -->
     <string name="btn_shuffle_off">Разбъркването е изкл.</string>
     <!-- Accessibility button description -->

@@ -27,7 +27,6 @@ import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.ui.modelviews.AlbumView;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
-import com.simplecity.amp_library.ui.modelviews.ShuffleAlbumsView;
 import com.simplecity.amp_library.ui.modelviews.ShuffleView;
 import com.simplecity.amp_library.ui.recyclerview.GridDividerDecoration;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
@@ -36,6 +35,7 @@ import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
+import com.simplecity.amp_library.utils.Operators;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
@@ -83,7 +83,7 @@ public class AlbumFragment extends BaseFragment implements
 
     private boolean sortOrderChanged = false;
 
-    private ShuffleAlbumsView shuffleView;
+    private ShuffleView shuffleView;
 
     private Disposable subscription;
 
@@ -146,7 +146,8 @@ public class AlbumFragment extends BaseFragment implements
             recyclerView.setAdapter(adapter);
         }
 
-        shuffleView = new ShuffleAlbumsView();
+        shuffleView = new ShuffleView();
+        shuffleView.setTitleResId(R.string.shuffle_albums);
         shuffleView.setClickListener(this);
 
         return recyclerView;
@@ -410,7 +411,13 @@ public class AlbumFragment extends BaseFragment implements
 
     @Override
     public void onShuffleItemClick() {
-        MusicUtils.shuffleAllAlbums(message -> Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show());
+        // Note: We don't call 'shuffleAll()', because for album-shuffle mode, we don't actually turn
+        // 'shuffle' on.
+        MusicUtils.playAll(DataManager.getInstance()
+                        .getSongsRelay()
+                        .firstOrError()
+                        .map(Operators::albumShuffleSongs),
+                message -> Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show());
     }
 
     @Override

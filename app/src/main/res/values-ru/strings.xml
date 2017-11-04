@@ -21,7 +21,7 @@
     <!-- Displayed when a file couldn't be renamed-->
     <string name="rename_file_failed">Ошибка переименования файла.\n\nВозможно, для файла установлена защита от записи или файл с таким именем уже существует.</string>
     <!-- Toast after turning shuffle on -->
-    <string name="shuffle_tracks_notif">Режим перемешивания включен</string>
+    <string name="shuffle_on_notif">Режим перемешивания включен</string>
     <!-- Toast after turning shuffle off -->
     <string name="shuffle_off_notif">Режим перемешивания отключен</string>
     <!-- Toast after turning repeat off -->
@@ -662,7 +662,7 @@
     <!-- Accessibility button description -->
     <string name="btn_repeat_all">Повторить все</string>
     <!-- Accessibility button description -->
-    <string name="btn_shuffle_tracks">Перемешивание включено</string>
+    <string name="btn_shuffle_on">Перемешивание включено</string>
     <!-- Accessibility button description -->
     <string name="btn_shuffle_off">Перемешивание выключено</string>
     <!-- Accessibility button description -->

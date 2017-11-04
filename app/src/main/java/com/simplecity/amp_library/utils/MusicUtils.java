@@ -77,35 +77,21 @@ public class MusicUtils {
     }
 
     /**
-     * Shuffles all songs in a given song list
-     */
-    public static void shuffleAll(Single<List<Song>> songsSingle, UnsafeConsumer<String> onEmpty) {
-        shuffleAll(songsSingle, onEmpty, false);
-    }
-
-    /**
      * Shuffles all songs on device in album shuffle mode
      */
     public static void shuffleAll(UnsafeConsumer<String> onEmpty) {
-        shuffleAll(DataManager.getInstance().getSongsRelay().firstOrError(), onEmpty, false);
+        shuffleAll(DataManager.getInstance().getSongsRelay().firstOrError(), onEmpty);
     }
 
     /**
-     * Shuffles all songs on device in normal/track shuffle mode.
+     * Shuffles all songs in a given song list
      */
-    public static void shuffleAllAlbums(UnsafeConsumer<String> onEmpty) {
-        shuffleAll(DataManager.getInstance().getSongsRelay().firstOrError(), onEmpty, true);
-    }
-
-    /**
-     * Unpacks song list to pass along and sets the shuffle mode. What the public shuffle methods call upon.
-     */
-    private static void shuffleAll(Single<List<Song>> songsSingle, UnsafeConsumer<String> onEmpty, boolean shuffleAlbums) {
+    public static void shuffleAll(Single<List<Song>> songsSingle, UnsafeConsumer<String> onEmpty) {
         songsSingle.observeOn(AndroidSchedulers.mainThread())
                 .subscribe(songs -> {
-                    setShuffleMode(shuffleAlbums ? MusicService.ShuffleMode.ALBUMS : MusicService.ShuffleMode.TRACKS);
+                    setShuffleMode(MusicService.ShuffleMode.ON);
                     playAll(songs, 0, getShuffleMode(), onEmpty);
-                }, e -> LogUtils.logException(TAG, "Shuffle all threw error", e));
+                }, e -> LogUtils.logException(TAG, "Shuffle all error", e));
     }
 
     /**

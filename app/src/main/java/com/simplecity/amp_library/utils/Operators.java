@@ -1,13 +1,16 @@
 package com.simplecity.amp_library.utils;
 
+import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Song;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Operators {
 
@@ -78,5 +81,21 @@ public class Operators {
         }
 
         return new ArrayList<>(albumArtistMap.values());
+    }
+
+    public static List<Song> albumShuffleSongs(List<Song> songs) {
+
+        SortManager.getInstance().sortSongs(songs, SortManager.SongSort.ALBUM_NAME);
+
+        List<Map.Entry<Long, List<Song>>> albumSongMap = Stream.of(songs)
+                .groupBy(song -> song.albumId)
+                .collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
+                    Collections.shuffle(list);
+                    return list;
+                }));
+
+        return Stream.of(albumSongMap)
+                .flatMap(stringListEntry -> Stream.of(stringListEntry.getValue()))
+                .toList();
     }
 }

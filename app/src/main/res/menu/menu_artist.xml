@@ -7,6 +7,10 @@
         android:title="@string/play_selection"/>
 
     <item
+        android:id="@+id/albumShuffle"
+        android:title="@string/menu_album_shuffle"/>
+
+    <item
         android:title="@string/menu_add_to">
         <menu>
             <item
