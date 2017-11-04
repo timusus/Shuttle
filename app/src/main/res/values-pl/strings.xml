@@ -179,13 +179,13 @@
     <string name="fav_add">Ulubiona</string>
     <!-- Context menu item -->
     <string name="play_selection">Odtwarzaj</string>
-    <!-- Multi select menu item-->
+    <!-- Menu item-->
     <string name="menu_add_to">Dodaj do…</string>
     <!-- Multi select menu item-->
     <string name="menu_playlist">Lista odtwarzania</string>
     <!-- Multi select menu item-->
     <string name="menu_queue">Kolejka</string>
-    <!-- Context menu item -->
+    <!-- Artist overflow menu item-->
     <!-- Context menu item -->
     <string name="new_playlist">Nowa</string>
     <!-- menu item to save the current list as a new playlist -->
@@ -745,4 +745,5 @@ Po wyłączeniu, jako obraz zastępczy będzie używana ikona programu.</string>
     <string name="shortcut_playlist_long_label">Otwiera listę odtwarzania ulubionych utworów</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">Lista odtwarzania nie dostępna</string>
+    <!-- Displayed at the top of the album list, album shuffle mode-->
 </resources>

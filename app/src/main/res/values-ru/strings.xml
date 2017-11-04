@@ -177,13 +177,13 @@
     <string name="fav_add">Избранное</string>
     <!-- Context menu item -->
     <string name="play_selection">Воспроизвести</string>
-    <!-- Multi select menu item-->
+    <!-- Menu item-->
     <string name="menu_add_to">Добавить в...</string>
     <!-- Multi select menu item-->
     <string name="menu_playlist">Плейлист</string>
     <!-- Multi select menu item-->
     <string name="menu_queue">Очередь</string>
-    <!-- Context menu item -->
+    <!-- Artist overflow menu item-->
     <!-- Context menu item -->
     <string name="new_playlist">Создать</string>
     <!-- menu item to save the current list as a new playlist -->
@@ -741,4 +741,5 @@
     <string name="shortcut_playlist_long_label">Открыть избранный плейлист</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">Плейлист недоступен</string>
+    <!-- Displayed at the top of the album list, album shuffle mode-->
 </resources>

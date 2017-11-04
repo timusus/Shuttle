@@ -174,10 +174,10 @@
     <string name="fav_add">Додати в вибрані</string>
     <!-- Context menu item -->
     <string name="play_selection">Відтворити</string>
+    <!-- Menu item-->
     <!-- Multi select menu item-->
     <!-- Multi select menu item-->
-    <!-- Multi select menu item-->
-    <!-- Context menu item -->
+    <!-- Artist overflow menu item-->
     <!-- Context menu item -->
     <string name="new_playlist">Новий</string>
     <!-- menu item to save the current list as a new playlist -->
@@ -709,4 +709,5 @@
     <string name="shortcut_playlist_long_label">Відкрити Вибраний плейлист</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">Плейлист недоступний</string>
+    <!-- Displayed at the top of the album list, album shuffle mode-->
 </resources>

@@ -169,13 +169,13 @@
     <string name="fav_add">즐겨찾기</string>
     <!-- Context menu item -->
     <string name="play_selection">재생</string>
-    <!-- Multi select menu item-->
+    <!-- Menu item-->
     <string name="menu_add_to">다음으로 추가...</string>
     <!-- Multi select menu item-->
     <string name="menu_playlist">재생 목록</string>
     <!-- Multi select menu item-->
     <string name="menu_queue">대기열</string>
-    <!-- Context menu item -->
+    <!-- Artist overflow menu item-->
     <!-- Context menu item -->
     <string name="new_playlist">새로 만들기</string>
     <!-- menu item to save the current list as a new playlist -->
@@ -723,4 +723,5 @@
     <string name="shortcut_playlist_long_label">즐겨찾는 재생 목록 열기</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">재생 목록 사용 불가</string>
+    <!-- Displayed at the top of the album list, album shuffle mode-->
 </resources>

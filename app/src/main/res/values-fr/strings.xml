@@ -158,10 +158,12 @@
     <string name="fav_add">Ajouter aux favoris</string>
     <!-- Context menu item -->
     <string name="play_selection">Écouter</string>
+    <!-- Menu item-->
+    <string name="menu_add_to">Ajouter à...</string>
     <!-- Multi select menu item-->
     <!-- Multi select menu item-->
-    <!-- Multi select menu item-->
-    <!-- Context menu item -->
+    <string name="menu_queue">Queue</string>
+    <!-- Artist overflow menu item-->
     <!-- Context menu item -->
     <string name="new_playlist">Nouvelle</string>
     <!-- menu item to save the current list as a new playlist -->
@@ -180,6 +182,7 @@
     <!-- -->
     <!-- Library screen, menu item -->
     <string name="search_title">Rechercher</string>
+    <string name="search_filter">Filtre</string>
     <!-- Playlist context menu item to clear the selected playlist. -->
     <string name="clear_playlist_menu">Effacer</string>
     <!-- Playlist context menu item to edit the selected playlist -->
@@ -234,6 +237,7 @@
     <string name="pref_title_theme_dark">Thème foncé</string>
     <string name="pref_title_theme_light">Thème clair</string>
     <string name="pref_title_theme_black">Noir</string>
+    <string name="pref_group_palette">Palette</string>
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">Liste blanche/noire</string>
     <!--Settings title for viewing blacklist-->
@@ -373,6 +377,7 @@
     <!-- Grid with cards ('view as' option) -->
     <string name="view_options_grid_card">Grille: Cartes</string>
     <!-- Grid size (number of columns in grid view) -->
+    <string name="menu_grid_size">Grille: taille</string>
     <!-- -->
     <string name="whitelist_title">Liste blanche</string>
     <!-- -->
@@ -412,6 +417,7 @@
     <!-- -->
     <string name="rename_file">Renommer le fichier</string>
     <!-- -->
+    <string name="rename">Renommer</string>
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">Définir comme dossier par défaut</string>
     <!-- Label in folder view - number of folders within the current folder -->
@@ -663,4 +669,5 @@
     <string name="shortcut_playlist_short_label">Playlist</string>
     <!-- "Playlist" Shortcut long label. Max 25 characters.-->
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
+    <!-- Displayed at the top of the album list, album shuffle mode-->
 </resources>

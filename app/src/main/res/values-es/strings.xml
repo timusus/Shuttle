@@ -159,13 +159,13 @@
     <string name="fav_add">Agregar a Favoritos</string>
     <!-- Context menu item -->
     <string name="play_selection">Reproducir</string>
-    <!-- Multi select menu item-->
+    <!-- Menu item-->
     <string name="menu_add_to">Añadir a</string>
     <!-- Multi select menu item-->
     <string name="menu_playlist">Lista de reproducción</string>
     <!-- Multi select menu item-->
     <string name="menu_queue">Cola</string>
-    <!-- Context menu item -->
+    <!-- Artist overflow menu item-->
     <!-- Context menu item -->
     <string name="new_playlist">Nuevo</string>
     <!-- menu item to save the current list as a new playlist -->
@@ -717,4 +717,5 @@
     <string name="shortcut_playlist_long_label">Abrir lista de favoritos</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">"Lista de reproducción no disponible "</string>
+    <!-- Displayed at the top of the album list, album shuffle mode-->
 </resources>

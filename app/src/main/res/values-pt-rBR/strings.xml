@@ -171,13 +171,13 @@ músicas adicionadas à fila.</item>
     <string name="fav_add">Favoritar</string>
     <!-- Context menu item -->
     <string name="play_selection">Reproduzir</string>
-    <!-- Multi select menu item-->
+    <!-- Menu item-->
     <string name="menu_add_to">Adicionar para...</string>
     <!-- Multi select menu item-->
     <string name="menu_playlist">Playlist</string>
     <!-- Multi select menu item-->
     <string name="menu_queue">Lista de Reprodução</string>
-    <!-- Context menu item -->
+    <!-- Artist overflow menu item-->
     <!-- Context menu item -->
     <string name="new_playlist">Novo</string>
     <!-- menu item to save the current list as a new playlist -->
@@ -728,4 +728,5 @@ pastas</item>
     <string name="shortcut_playlist_long_label">Abrir Lista de Repr. de Favoritos</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">Lista de reprodução não disponível</string>
+    <!-- Displayed at the top of the album list, album shuffle mode-->
 </resources>

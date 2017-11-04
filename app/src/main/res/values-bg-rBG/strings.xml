@@ -165,10 +165,10 @@
     <string name="fav_add">Добави в \"Любими\"</string>
     <!-- Context menu item -->
     <string name="play_selection">Старт</string>
+    <!-- Menu item-->
     <!-- Multi select menu item-->
     <!-- Multi select menu item-->
-    <!-- Multi select menu item-->
-    <!-- Context menu item -->
+    <!-- Artist overflow menu item-->
     <!-- Context menu item -->
     <string name="new_playlist">Ново</string>
     <!-- menu item to save the current list as a new playlist -->
@@ -693,4 +693,5 @@
     <string name="shortcut_playlist_long_label">Отвори плейлиста \"Любими\"</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">Плейлистът не е достъпен</string>
+    <!-- Displayed at the top of the album list, album shuffle mode-->
 </resources>

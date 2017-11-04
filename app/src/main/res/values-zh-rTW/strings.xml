@@ -168,13 +168,13 @@
     <string name="fav_add">最愛</string>
     <!-- Context menu item -->
     <string name="play_selection">播放</string>
-    <!-- Multi select menu item-->
+    <!-- Menu item-->
     <string name="menu_add_to">加入至…</string>
     <!-- Multi select menu item-->
     <string name="menu_playlist">播放清單</string>
     <!-- Multi select menu item-->
     <string name="menu_queue">佇列</string>
-    <!-- Context menu item -->
+    <!-- Artist overflow menu item-->
     <!-- Context menu item -->
     <string name="new_playlist">新增</string>
     <!-- menu item to save the current list as a new playlist -->
@@ -716,4 +716,5 @@
     <string name="shortcut_playlist_long_label">開啟最愛的播放清單</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">播放清單無法使用</string>
+    <!-- Displayed at the top of the album list, album shuffle mode-->
 </resources>

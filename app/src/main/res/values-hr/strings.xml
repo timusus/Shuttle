@@ -172,13 +172,13 @@
     <string name="fav_add">Favorit</string>
     <!-- Context menu item -->
     <string name="play_selection">Reproduciraj</string>
-    <!-- Multi select menu item-->
+    <!-- Menu item-->
     <string name="menu_add_to">Dodaj u...</string>
     <!-- Multi select menu item-->
     <string name="menu_playlist">Popis naslova</string>
     <!-- Multi select menu item-->
     <string name="menu_queue">Red čekanja</string>
-    <!-- Context menu item -->
+    <!-- Artist overflow menu item-->
     <!-- Context menu item -->
     <string name="new_playlist">Novo</string>
     <!-- menu item to save the current list as a new playlist -->
@@ -732,4 +732,5 @@ mapa</item>
     <string name="shortcut_playlist_long_label">Otvori Favorite</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">Popis naslova nije dostupan</string>
+    <!-- Displayed at the top of the album list, album shuffle mode-->
 </resources>

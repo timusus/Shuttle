@@ -166,10 +166,10 @@
     <string name="fav_add">Kedvenc</string>
     <!-- Context menu item -->
     <string name="play_selection">Lejátszás</string>
+    <!-- Menu item-->
     <!-- Multi select menu item-->
     <!-- Multi select menu item-->
-    <!-- Multi select menu item-->
-    <!-- Context menu item -->
+    <!-- Artist overflow menu item-->
     <!-- Context menu item -->
     <string name="new_playlist">Új</string>
     <!-- menu item to save the current list as a new playlist -->
@@ -698,4 +698,5 @@ segítségével
     <!-- "Playlist" Shortcut long label. Max 25 characters.-->
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">Lejátszási lista nem érhető el</string>
+    <!-- Displayed at the top of the album list, album shuffle mode-->
 </resources>

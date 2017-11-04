@@ -77,10 +77,10 @@
     <!-- -->
     <string name="fav_add">Add to Favourites</string>
     <!-- Context menu item -->
+    <!-- Menu item-->
     <!-- Multi select menu item-->
     <!-- Multi select menu item-->
-    <!-- Multi select menu item-->
-    <!-- Context menu item -->
+    <!-- Artist overflow menu item-->
     <!-- Context menu item -->
     <!-- menu item to save the current list as a new playlist -->
     <!-- Context menu item to remove the selected item from the playlist -->
@@ -329,4 +329,5 @@
     <!-- "Playlist" Shortcut label. Max 10 characters.-->
     <!-- "Playlist" Shortcut long label. Max 25 characters.-->
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
+    <!-- Displayed at the top of the album list, album shuffle mode-->
 </resources>

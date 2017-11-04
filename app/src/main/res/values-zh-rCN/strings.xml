@@ -169,13 +169,13 @@
     <string name="fav_add">收藏</string>
     <!-- Context menu item -->
     <string name="play_selection">播放</string>
-    <!-- Multi select menu item-->
+    <!-- Menu item-->
     <string name="menu_add_to">添加到...</string>
     <!-- Multi select menu item-->
     <string name="menu_playlist">播放列表</string>
     <!-- Multi select menu item-->
     <string name="menu_queue">队列</string>
-    <!-- Context menu item -->
+    <!-- Artist overflow menu item-->
     <!-- Context menu item -->
     <string name="new_playlist">新建播放列表</string>
     <!-- menu item to save the current list as a new playlist -->
@@ -272,7 +272,7 @@
     <!-- Settings title for embedded artwork checkbox (whether the app can use local artwork for the album art -->
     <string name="pref_title_prefer_embedded_art">优先使用嵌入式封面</string>
     <!-- Settings summary for the ignore embedded artwork checkbox-->
-    <string name="pref_summary_prefer_embedded_art">选中此复选框,如果您喜欢在搜索您的音乐目录之前,Shuttle寻找到的艺术家图片将嵌入到您的音乐文件中</string>
+    <string name="pref_summary_prefer_embedded_art">Shuttle 会优先在音乐所在的文件夹内查找嵌入式封面，然后再搜索音乐目录</string>
     <!-- Settings title for ignore embedded artwork checkbox (whether the app can use local artwork for the album art -->
     <string name="pref_title_ignore_embedded_art">忽略内置专辑封面</string>
     <!-- Settings summary for the ignore folder artwork checkbox-->
@@ -615,10 +615,10 @@ www.shuttlemusicplayer.com</string>
     <!-- Displayed under the 'Most Played' section of the 'suggested' tab.. Artist, Album, Song -->
     <string name="suggested_most_played_songs_subtitle">前20首歌曲</string>
     <!-- Displayed under the 'Recent' section of the 'suggested' tab.. Artist, Album, Song  -->
-    <string name="suggested_recent_title">最近添加</string>
+    <string name="suggested_recent_title">最近播放</string>
     <string name="suggested_recent_subtitle">最近播放的专辑</string>
     <string name="suggested_favorite_subtitle">喜欢的歌曲</string>
-    <string name="suggested_recently_added_subtitle">最近添加专辑</string>
+    <string name="suggested_recently_added_subtitle">最近添加的专辑</string>
     <!-- Shows when multiple items are selected after-long pressing-->
     <string name="action_mode_selection_count">已选择<xliff:g id="number">%d</xliff:g>首</string>
     <!-- ## Unknown artist/album metadata ##-->
@@ -729,4 +729,5 @@ www.shuttlemusicplayer.com</string>
     <string name="shortcut_playlist_long_label">打开收藏列表</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">播放列表不可用</string>
+    <!-- Displayed at the top of the album list, album shuffle mode-->
 </resources>

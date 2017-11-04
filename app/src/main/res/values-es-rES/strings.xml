@@ -158,13 +158,13 @@
     <string name="fav_add">Añadir a favoritos</string>
     <!-- Context menu item -->
     <string name="play_selection">Reproducir</string>
-    <!-- Multi select menu item-->
+    <!-- Menu item-->
     <string name="menu_add_to">Añadir a...</string>
     <!-- Multi select menu item-->
     <string name="menu_playlist">Lista de reproducción</string>
     <!-- Multi select menu item-->
     <string name="menu_queue">Cola</string>
-    <!-- Context menu item -->
+    <!-- Artist overflow menu item-->
     <!-- Context menu item -->
     <string name="new_playlist">Nuevo</string>
     <!-- menu item to save the current list as a new playlist -->
@@ -238,6 +238,10 @@
     <string name="pref_title_theme_dark">Oscuro</string>
     <string name="pref_title_theme_light">Claro</string>
     <string name="pref_title_theme_black">Negro</string>
+    <string name="pref_group_palette">Paleta</string>
+    <string name="pref_title_palette">Usar colores del artwork</string>
+    <string name="pref_summary_palette">Si habilitado, Shuttle detectará el color mas prominente en el material gráfico y lo usará como el color primario de la aplicación.</string>
+    <string name="pref_title_palette_now_playing">Solo en la pantalla \'Reproduciendo\'</string>
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">Lista blanca/negra</string>
     <!--Settings title for viewing blacklist-->
@@ -351,6 +355,7 @@ Si no está seleccionado, se usará el icono de Shuttle en su lugar</string>
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <string name="pref_summary_simple_download">Descargar Simple Last.FM Scrobbler desde la Play Store</string>
     <!-- Settings title for the About heading -->
+    <string name="pref_title_changelog">Changelog</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Soporte</string>
     <string name="pref_title_version">Versión</string>
@@ -423,6 +428,7 @@ Si no está seleccionado, se usará el icono de Shuttle en su lugar</string>
     <!-- -->
     <string name="rename_file">Renombrar archivo</string>
     <!-- -->
+    <string name="rename">Renombrar</string>
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">Establecer como carpeta inicial</string>
     <!-- Label in folder view - number of folders within the current folder -->
@@ -526,17 +532,27 @@ carpetas</item>
     <string name="sort_files_track_name">Nombre de canción</string>
     <!-- ## Sleep Timer ## -->
     <!-- Sleep timer title -->
+    <string name="sleep_timer">Temporizador</string>
     <!--Sleep timer "Play last song to end" -->
     <string name="sleep_timer_play_to_end">Reproducir última canción completa</string>
     <!-- Sleep timer "Stop" -->
+    <string name="sleep_timer_stop_button">Parar</string>
     <!-- Sleep timer stop message "Stop sleep timer?" -->
+    <string name="sleep_timer_stop_title">¿Detener temporizador?</string>
     <!-- Toast when sleep timer is set -->
+    <string name="sleep_timer_started">Temporizador iniciado</string>
     <!-- Sleep timer "Set minutes..." -->
+    <string name="sleep_timer_set_minutes">Ajustar minutos...</string>
     <!-- Sleep timer "5 minutes" -->
+    <string name="sleep_timer_5_mins">5 minutos</string>
     <!-- Sleep timer "15 minutes" -->
+    <string name="sleep_timer_15_mins">15 minutos</string>
     <!-- Sleep timer "30 minutes" -->
+    <string name="sleep_timer_30_mins">30 minutos</string>
     <!-- Sleep timer "1 hour" -->
+    <string name="sleep_timer_1_hour">1 hora</string>
     <!-- Sleep timer label "Minutes" (limited space here) -->
+    <string name="sleep_timer_label_minutes">Min</string>
     <!-- Button name in time span picker -->
     <string name="button_done">Hecho</string>
     <!-- Title of time span picker -->
@@ -702,4 +718,5 @@ carpetas</item>
     <string name="shortcut_playlist_long_label">Abrir Lista de Favoritos</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">Lista de Reproducción no disponible</string>
+    <!-- Displayed at the top of the album list, album shuffle mode-->
 </resources>
