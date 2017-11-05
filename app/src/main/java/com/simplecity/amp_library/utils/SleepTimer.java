@@ -3,6 +3,7 @@ package com.simplecity.amp_library.utils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -139,9 +140,16 @@ public final class SleepTimer {
                 .customView(customView, false)
                 .positiveText(R.string.button_ok)
                 .negativeText(R.string.cancel)
+                .autoDismiss(false)
                 .onPositive((materialDialog, dialogAction) -> {
-                    start(Integer.parseInt(editText.getText().toString()) * 60, playToEnd);
-                    timerStarted.run();
+                    if (!TextUtils.isEmpty(editText.getText())) {
+                        start(Integer.parseInt(editText.getText().toString()) * 60, playToEnd);
+                        timerStarted.run();
+                        materialDialog.dismiss();
+                    }
+                })
+                .onNegative((materialDialog, dialogAction) -> {
+                    materialDialog.dismiss();
                 })
                 .show();
 
