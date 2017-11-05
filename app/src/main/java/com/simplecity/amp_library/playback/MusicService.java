@@ -1746,7 +1746,6 @@ public class MusicService extends Service {
      * Starts playback of a previously opened file.
      */
     public void play() {
-
         int status;
 
         if (ShuttleUtils.hasOreo()) {
@@ -1806,12 +1805,10 @@ public class MusicService extends Service {
 
                     cancelShutdown();
                     updateNotification();
-
                 } else if (getCurrentPlaylist().size() == 0) {
                     // This is mostly so that if you press 'play' on a bluetooth headset
                     // without ever having played anything before, it will still play
                     // something.
-
                     if (queueReloading) {
                         playOnQueueLoad = true;
                     } else {
@@ -1820,7 +1817,6 @@ public class MusicService extends Service {
                 }
                 break;
             }
-
             case REMOTE: {
                 // if we are at the end of the song, go to the next song first
                 final long duration = player.getDuration();
@@ -1953,6 +1949,8 @@ public class MusicService extends Service {
 
     void updateNotification() {
 
+        Log.i(TAG, "updateNotification called");
+
         final int notifyMode;
 
         if (isPlaying()) {
@@ -1969,7 +1967,7 @@ public class MusicService extends Service {
                 break;
             case NOTIFY_MODE_BACKGROUND:
                 try {
-                    notificationHelper.notify(this, currentSong, mediaSession);
+                    notificationHelper.notify(this, currentSong, isPlaying(), mediaSession);
                 } catch (ConcurrentModificationException e) {
                     LogUtils.logException(TAG, "Exception while attempting to show notification", e);
                 }
@@ -2769,7 +2767,7 @@ public class MusicService extends Service {
     private void startForegroundImpl() {
         try {
             notificationStateHandler.sendEmptyMessage(NotificationStateHandler.START_FOREGROUND);
-            notificationHelper.startForeground(this, currentSong, mediaSession);
+            notificationHelper.startForeground(this, currentSong, isPlaying(), mediaSession);
         } catch (NullPointerException | ConcurrentModificationException e) {
             Crashlytics.log("startForegroundImpl error: " + e.getMessage());
         }
