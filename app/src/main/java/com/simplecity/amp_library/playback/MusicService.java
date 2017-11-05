@@ -2294,14 +2294,15 @@ public class MusicService extends Service {
     /**
      * Removes the first instance of the Song the playlist & shuffleList.
      *
-     * @param songToRemove The Song to be removed
+     *
      */
-    public void removeSong(@NonNull final Song songToRemove) {
+    public void removeSong(int position) {
         synchronized (this) {
-            playlist.remove(songToRemove);
-            shuffleList.remove(songToRemove);
+            List<Song> otherPlaylist = getCurrentPlaylist().equals(playlist) ? shuffleList : playlist;
+            Song song = getCurrentPlaylist().remove(position);
+            otherPlaylist.remove(song);
 
-            if (currentSong == songToRemove) {
+            if (getQueuePosition() == position) {
                 removedCurrentSong();
             } else {
                 playPos = getCurrentPlaylist().indexOf(currentSong);
