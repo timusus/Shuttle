@@ -412,9 +412,9 @@ public class MusicUtils {
         return 0;
     }
 
-    public static void removeFromQueue(final Song song) {
+    public static void removeFromQueue(int position) {
         if (MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null) {
-            MusicServiceConnectionUtils.serviceBinder.getService().removeSong(song);
+            MusicServiceConnectionUtils.serviceBinder.getService().removeSong(position);
         }
     }
 
