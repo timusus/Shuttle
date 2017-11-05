@@ -37,6 +37,7 @@ import android.os.PowerManager.WakeLock;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.media.MediaMetadataCompat;
@@ -2291,72 +2292,86 @@ public class MusicService extends Service {
     }
 
     /**
-     * Removes all instances of the track with the given id from the playlist.
+     * Removes the first instance of the Song the playlist & shuffleList.
      *
-     * @param song   The Song to be removed
-     * @param notify true to broadcast a QUEUE_CHANGE event
+     * @param songToRemove The Song to be removed
      */
-    public void removeTrack(final Song song, boolean notify) {
+    public void removeSong(@NonNull final Song songToRemove) {
         synchronized (this) {
-            List<Song> songs = new ArrayList<>();
-            songs.add(song);
-            removeTracks(songs, notify);
-        }
-    }
+            playlist.remove(songToRemove);
+            shuffleList.remove(songToRemove);
 
-    /**
-     * Removes the range of tracks specified from the play list. If a file
-     * within the range is the file currently being played, playback will move
-     * to the next file after the range.
-     *
-     * @param songs  the Songs to remove
-     * @param notify true to broadcast a QUEUE_CHANGE event
-     */
-    public void removeTracks(List<Song> songs, boolean notify) {
-        synchronized (this) {
-
-            if (songs.isEmpty()) {
-                return;
-            }
-
-            int first = Collections.indexOfSubList(getCurrentPlaylist(), songs);
-
-            playlist.removeAll(songs);
-            shuffleList.removeAll(songs);
-
-            boolean gotoNext = false;
-
-            //If we're removing the current song from the queue, we need to adjust the playback position
-            //accordingly.
-            if (songs.contains(currentSong)) {
-                playPos = first;
-                gotoNext = true;
+            if (currentSong == songToRemove) {
+                removedCurrentSong();
             } else {
                 playPos = getCurrentPlaylist().indexOf(currentSong);
             }
 
-            if (gotoNext) {
-                if (getCurrentPlaylist().isEmpty()) {
-                    stop(true);
-                    playPos = -1;
-                } else {
-                    if (playPos >= getCurrentPlaylist().size()) {
-                        playPos = 0;
-                    }
-                    final boolean wasPlaying = isPlaying();
-                    stop(false);
-                    openCurrentAndNext();
-                    if (wasPlaying) {
-                        play();
-                    }
-                }
-                notifyChange(InternalIntents.META_CHANGED);
+            notifyChange(InternalIntents.QUEUE_CHANGED);
+        }
+    }
+
+    /**
+     * Removes the range of Songs specified from the playlist & shuffleList. If a Song
+     * within the range is the file currently being played, playback will move
+     * to the next Song after the range.
+     *
+     * @param songsToRemove the Songs to remove
+     */
+    public void removeSongs(@NonNull List<Song> songsToRemove) {
+        synchronized (this) {
+
+            playlist.removeAll(songsToRemove);
+            shuffleList.removeAll(songsToRemove);
+
+            if (songsToRemove.contains(currentSong)) {
+                /*
+                * If we remove a list of songs from the current queue, and that list contains our currently
+                * playing song, we need to figure out which song should play next. We'll play the first song
+                * that comes after the list of songs to be removed.
+                *
+                * In this example, let's say Song 7 is currently playing
+                *
+                * Playlist:                    [Song 3,    Song 4,     Song 5,     Song 6,     Song 7,     Song 8]
+                * Indices:                     [0,         1,          2,          3,          4,          5]
+                *
+                * Remove;                                              [Song 5,     Song 6,     Song 7]
+                *
+                * First removed song:                                  Song 5
+                * Index of first removed song:                         2
+                *
+                * Playlist after removal:      [Song 3,    Song 4,     Song 8]
+                * Indices:                     [0,         1,          2]
+                *
+                *
+                * So after the removal, we'll play index 2, which is Song 8.
+                */
+                playPos = Collections.indexOfSubList(getCurrentPlaylist(), songsToRemove);
+                removedCurrentSong();
+            } else {
+                playPos = getCurrentPlaylist().indexOf(currentSong);
             }
 
-            if (notify) {
-                notifyChange(InternalIntents.QUEUE_CHANGED);
+            notifyChange(InternalIntents.QUEUE_CHANGED);
+        }
+    }
+
+    private void removedCurrentSong() {
+        if (getCurrentPlaylist().isEmpty()) {
+            stop(true);
+            playPos = -1;
+        } else {
+            if (playPos >= getCurrentPlaylist().size()) {
+                playPos = 0;
+            }
+            final boolean wasPlaying = isPlaying();
+            stop(false);
+            openCurrentAndNext();
+            if (wasPlaying) {
+                play();
             }
         }
+        notifyChange(InternalIntents.META_CHANGED);
     }
 
     public void toggleFavorite() {

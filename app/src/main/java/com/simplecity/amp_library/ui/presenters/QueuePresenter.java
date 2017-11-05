@@ -107,7 +107,7 @@ public class QueuePresenter extends Presenter<QueueView> {
         if (queueView != null) {
             queueView.removeFromQueue(position);
         }
-        MusicUtils.removeFromQueue(song, true);
+        MusicUtils.removeFromQueue(song);
     }
 
     private void playNext(int position){

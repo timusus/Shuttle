@@ -412,15 +412,15 @@ public class MusicUtils {
         return 0;
     }
 
-    public static void removeFromQueue(final Song song, boolean notify) {
+    public static void removeFromQueue(final Song song) {
         if (MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null) {
-            MusicServiceConnectionUtils.serviceBinder.getService().removeTrack(song, notify);
+            MusicServiceConnectionUtils.serviceBinder.getService().removeSong(song);
         }
     }
 
-    public static void removeFromQueue(final List<Song> songs, boolean notify) {
+    public static void removeFromQueue(final List<Song> songs) {
         if (MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null) {
-            MusicServiceConnectionUtils.serviceBinder.getService().removeTracks(songs, notify);
+            MusicServiceConnectionUtils.serviceBinder.getService().removeSongs(songs);
         }
     }
 
