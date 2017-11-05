@@ -25,7 +25,6 @@ import com.simplecity.amp_library.glide.utils.GlideUtils;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 
@@ -99,9 +98,8 @@ public class MusicNotificationHelper extends NotificationHelper {
         return builder;
     }
 
-    public void notify(Context context, @NonNull Song song, @NonNull MediaSessionCompat mediaSessionCompat) {
-
-        notification = getBuilder(context, song, mediaSessionCompat, bitmap, MusicUtils.isPlaying(), isFavorite).build();
+    public void notify(Context context, @NonNull Song song, boolean isPlaying, @NonNull MediaSessionCompat mediaSessionCompat) {
+        notification = getBuilder(context, song, mediaSessionCompat, bitmap, isPlaying, isFavorite).build();
         notify(NOTIFICATION_ID, notification);
 
         PlaylistUtils.isFavorite(song)
@@ -109,7 +107,7 @@ public class MusicNotificationHelper extends NotificationHelper {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(isFavorite -> {
                     this.isFavorite = isFavorite;
-                    notification = getBuilder(context, song, mediaSessionCompat, MusicNotificationHelper.this.bitmap, MusicUtils.isPlaying(), isFavorite).build();
+                    notification = getBuilder(context, song, mediaSessionCompat, MusicNotificationHelper.this.bitmap, isPlaying, isFavorite).build();
                     notify(notification);
                 });
 
@@ -125,7 +123,7 @@ public class MusicNotificationHelper extends NotificationHelper {
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                         MusicNotificationHelper.this.bitmap = resource;
                         try {
-                            notification = getBuilder(context, song, mediaSessionCompat, bitmap, MusicUtils.isPlaying(), isFavorite).build();
+                            notification = getBuilder(context, song, mediaSessionCompat, bitmap, isPlaying, isFavorite).build();
                             MusicNotificationHelper.this.notify(notification);
                         } catch (NullPointerException | ConcurrentModificationException e) {
                             LogUtils.logException(TAG, "Exception while attempting to update notification with glide image.", e);
@@ -136,14 +134,14 @@ public class MusicNotificationHelper extends NotificationHelper {
                     public void onLoadFailed(Exception e, Drawable errorDrawable) {
                         MusicNotificationHelper.this.bitmap = GlideUtils.drawableToBitmap(errorDrawable);
                         super.onLoadFailed(e, errorDrawable);
-                        notification = getBuilder(context, song, mediaSessionCompat, bitmap, MusicUtils.isPlaying(), isFavorite).build();
+                        notification = getBuilder(context, song, mediaSessionCompat, bitmap, isPlaying, isFavorite).build();
                         MusicNotificationHelper.this.notify(NOTIFICATION_ID, notification);
                     }
                 }));
     }
 
-    public void startForeground(Service service, @NonNull Song song, @NonNull MediaSessionCompat mediaSessionCompat) {
-        notify(service, song, mediaSessionCompat);
+    public void startForeground(Service service, @NonNull Song song, boolean isPlaying, @NonNull MediaSessionCompat mediaSessionCompat) {
+        notify(service, song, isPlaying, mediaSessionCompat);
         service.startForeground(NOTIFICATION_ID, notification);
     }
 
