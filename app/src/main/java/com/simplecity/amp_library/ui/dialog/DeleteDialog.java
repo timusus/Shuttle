@@ -78,7 +78,7 @@ public class DeleteDialog {
                             .toList())
                     .doOnSuccess(songs -> {
                         //Current play queue
-                        MusicUtils.removeFromQueue(songs, true);
+                        MusicUtils.removeFromQueue(songs);
 
                         //Play Count Table
                         ArrayList<ContentProviderOperation> operations = Stream.of(songs).map(song -> ContentProviderOperation
