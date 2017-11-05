@@ -708,7 +708,9 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         adapter.setItems(items, new CompletionListUpdateCallbackAdapter() {
             @Override
             public void onComplete() {
-                recyclerView.scheduleLayoutAnimation();
+                if (recyclerView != null) {
+                    recyclerView.scheduleLayoutAnimation();
+                }
             }
         });
     }
