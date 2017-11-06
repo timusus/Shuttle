@@ -2168,7 +2168,6 @@ public class MusicService extends Service {
             openCurrent();
             play();
             notifyChange(InternalIntents.META_CHANGED);
-            notifyChange(InternalIntents.QUEUE_CHANGED);
         }
     }
 
@@ -2225,7 +2224,6 @@ public class MusicService extends Service {
             openCurrentAndNext();
             play();
             notifyChange(InternalIntents.META_CHANGED);
-            notifyChange(InternalIntents.QUEUE_CHANGED);
         }
     }
 

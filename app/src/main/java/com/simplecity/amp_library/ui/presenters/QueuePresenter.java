@@ -72,6 +72,7 @@ public class QueuePresenter extends Presenter<QueueView> {
                         switch (action) {
                             case MusicService.InternalIntents.META_CHANGED:
                                 queueView.updateQueuePosition(MusicUtils.getQueuePosition());
+                                queueView.setCurrentQueueItem(MusicUtils.getQueuePosition());
                                 break;
 
                             case MusicService.InternalIntents.QUEUE_CHANGED:
