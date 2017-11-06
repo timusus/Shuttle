@@ -241,17 +241,12 @@ public class QueueFragment extends BaseFragment implements
                 loadDataDisposable = adapter.setItems(items, new CompletionListUpdateCallbackAdapter() {
                     @Override
                     public void onComplete() {
-                        setCurrentQueueItem(position);
+                        updateQueuePosition(position, false);
                         recyclerView.scrollToPosition(position);
                     }
                 });
             }
         });
-    }
-
-    @Override
-    public void updateQueuePosition(int position) {
-        recyclerView.scrollToPosition(position);
     }
 
     @Override
@@ -264,8 +259,13 @@ public class QueueFragment extends BaseFragment implements
         itemTouchHelper.startDrag(holder);
     }
 
+
     @Override
-    public void setCurrentQueueItem(int position) {
+    public void updateQueuePosition(int position, boolean fromUser) {
+
+        if (!fromUser) {
+            recyclerView.scrollToPosition(position);
+        }
 
         if (adapter.items.isEmpty()) {
             return;

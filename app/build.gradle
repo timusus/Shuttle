@@ -255,7 +255,7 @@ dependencies {
     compile libs.retrofitGson
     compile libs.sqlBrite
     debugCompile libs.haha
-    debugCompile libs.leakCanaryDebug
+    debugCompile libs.leakCanaryRel
     releaseCompile libs.leakCanaryRel
 
     // //////////////////////////////////////////////////////////////////////////
