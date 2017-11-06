@@ -71,7 +71,7 @@ public class QueuePresenter extends Presenter<QueueView> {
                     if (action != null) {
                         switch (action) {
                             case MusicService.InternalIntents.META_CHANGED:
-                                queueView.updateQueuePosition(MusicUtils.getQueuePosition());
+                                queueView.updateQueuePosition(MusicUtils.getQueuePosition(), false);
                                 break;
 
                             case MusicService.InternalIntents.QUEUE_CHANGED:
@@ -110,7 +110,7 @@ public class QueuePresenter extends Presenter<QueueView> {
         MusicUtils.removeFromQueue(position);
     }
 
-    private void playNext(int position){
+    private void playNext(int position) {
         int newPosition = MusicUtils.getQueuePosition() + 1;
 
         QueueView queueView = getView();
@@ -153,7 +153,7 @@ public class QueuePresenter extends Presenter<QueueView> {
                 MusicUtils.setQueuePosition(position);
                 QueueView queueView = getView();
                 if (queueView != null) {
-                    queueView.setCurrentQueueItem(position);
+                    queueView.updateQueuePosition(position, true);
                 }
             }
         }
