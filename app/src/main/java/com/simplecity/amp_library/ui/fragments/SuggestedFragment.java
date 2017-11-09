@@ -189,7 +189,7 @@ public class SuggestedFragment extends BaseFragment implements
     public void onResume() {
         super.onResume();
 
-        refreshAdapterItems(false);
+        refreshAdapterItems();
     }
 
     Observable<List<ViewModel>> getMostPlayedViewModels() {
@@ -331,37 +331,31 @@ public class SuggestedFragment extends BaseFragment implements
                 });
     }
 
-    void refreshAdapterItems(boolean force) {
+    void refreshAdapterItems() {
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {
-                disposables.add(
-                        Observable.zip(
-                                Observable.just(true)
-                                        .skipWhile(value -> !force && adapter.items.isEmpty()),
-                                Observable.combineLatest(
-                                        getMostPlayedViewModels(),
-                                        getRecentlyPlayedViewModels(),
-                                        getFavoriteSongViewModels(),
-                                        getRecentlyAddedViewModels(),
-                                        (mostPlayedSongs1, recentlyPlayedAlbums1, favoriteSongs1, recentlyAddedAlbums1) -> {
-                                            List<ViewModel> items = new ArrayList<>();
-                                            items.addAll(mostPlayedSongs1);
-                                            items.addAll(recentlyPlayedAlbums1);
-                                            items.addAll(favoriteSongs1);
-                                            items.addAll(recentlyAddedAlbums1);
-                                            return items;
-                                        }), (aBoolean, viewModels) -> viewModels)
-
-                                .switchIfEmpty(Observable.just(Collections.emptyList()))
-                                .skipWhile(viewModels -> !force && adapter.items.size() == viewModels.size())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(adaptableItems -> {
-                                    if (adaptableItems.isEmpty()) {
-                                        adapter.setItems(Collections.singletonList((new EmptyView(R.string.empty_suggested))));
-                                    } else {
-                                        adapter.setItems(adaptableItems);
-                                    }
-                                }, error -> LogUtils.logException(TAG, "Error setting items", error)));
+                disposables.add(Observable.combineLatest(
+                        getMostPlayedViewModels(),
+                        getRecentlyPlayedViewModels(),
+                        getFavoriteSongViewModels(),
+                        getRecentlyAddedViewModels(),
+                        (mostPlayedSongs1, recentlyPlayedAlbums1, favoriteSongs1, recentlyAddedAlbums1) -> {
+                            List<ViewModel> items = new ArrayList<>();
+                            items.addAll(mostPlayedSongs1);
+                            items.addAll(recentlyPlayedAlbums1);
+                            items.addAll(favoriteSongs1);
+                            items.addAll(recentlyAddedAlbums1);
+                            return items;
+                        })
+                        .switchIfEmpty(Observable.just(Collections.emptyList()))
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(adaptableItems -> {
+                            if (adaptableItems.isEmpty()) {
+                                adapter.setItems(Collections.singletonList((new EmptyView(R.string.empty_suggested))));
+                            } else {
+                                adapter.setItems(adaptableItems);
+                            }
+                        }, error -> LogUtils.logException(TAG, "Error setting items", error)));
             }
         });
     }
