@@ -229,88 +229,89 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: '*.jar', dir: 'libs')
+    implementation fileTree(include: '*.jar', dir: 'libs')
 
     // //////////////////////////////////////////////////////////////////////////
     // Google libs
     // /////////////////////////////////////////////////////////////////////////
 
-    compile libs.cardView
-    compile libs.design
-    compile libs.palette
-    compile libs.prefCompat
-    compile libs.prefCompatv14
-    compile libs.recyclerView
-    compile libs.supportv4
-    compile libs.firebaseCore
-    compile libs.constraintLayout
+    implementation libs.cardView
+    implementation libs.design
+    implementation libs.palette
+    implementation libs.prefCompat
+    implementation libs.prefCompatv14
+    implementation libs.recyclerView
+    implementation libs.supportv4
+    implementation libs.firebaseCore
+    implementation libs.constraintLayout
+    implementation libs.chromecast
 
     // //////////////////////////////////////////////////////////////////////////
     // Square libs
     // /////////////////////////////////////////////////////////////////////////
 
-    compile libs.okio
-    compile libs.okhttp
-    compile libs.retrofit
-    compile libs.retrofitGson
-    compile libs.sqlBrite
-    debugCompile libs.haha
-    debugCompile libs.leakCanaryDebug
-    releaseCompile libs.leakCanaryRel
+    implementation libs.okio
+    implementation libs.okhttp
+    implementation libs.retrofit
+    implementation libs.retrofitGson
+    implementation libs.sqlBrite
+    debugImplementation libs.haha
+    debugImplementation libs.leakCanaryDebug
+    releaseImplementation libs.leakCanaryRel
 
     // //////////////////////////////////////////////////////////////////////////
     // External libs
     // /////////////////////////////////////////////////////////////////////////
 
-    compile libs.navigation
-    compile libs.recyclerAdapter
-    compile libs.multiSheetView
-    compile libs.ccl
-    compile libs.nanoHttp
-    compile libs.dashClockApi
-    compile libs.fastScroll
-    compile libs.glide
-    compile libs.glideOkhttp
-    compile libs.glidePalette
-    compile libs.permiso
+    implementation libs.navigation
+    implementation libs.recyclerAdapter
+    implementation libs.multiSheetView
+    implementation libs.ccl
+    implementation libs.nanoHttp
+    implementation libs.dashClockApi
+    implementation libs.fastScroll
+    implementation libs.glide
+    implementation libs.glideOkhttp
+    implementation libs.glidePalette
+    implementation libs.permiso
 
-    compile libs.rxAndroid
-    compile libs.rxBinding
-    compile libs.rxBindingAppCompat
-    compile libs.rxImagePicker
-    compile libs.rxJava
-    compile libs.rxRelay
-    compile libs.rxBroadcast
-    compile 'com.tspoon.traceur:traceur:1.0.1'
+    implementation libs.rxAndroid
+    implementation libs.rxBinding
+    implementation libs.rxBindingAppCompat
+    implementation libs.rxImagePicker
+    implementation libs.rxJava
+    implementation libs.rxRelay
+    implementation libs.rxBroadcast
+    implementation 'com.tspoon.traceur:traceur:1.0.1'
 
-    compile libs.streams
-    compile(libs.crashlytics) {
+    implementation libs.streams
+    implementation(libs.crashlytics) {
         transitive = true
     }
-    compile libs.materialDialogs
-    compile libs.materialDialogCommons
-    compile libs.butterknife
+    implementation libs.materialDialogs
+    implementation libs.materialDialogCommons
+    implementation libs.butterknife
     annotationProcessor libs.butterknifeAnnotationProcessor
-    compile libs.dagger
+    implementation libs.dagger
     annotationProcessor libs.daggerAnnotationProcessor
-    compile libs.expandableRecyclerView
-    compile libs.aesthetic
+    implementation libs.expandableRecyclerView
+    implementation libs.aesthetic
 
     // //////////////////////////////////////////////////////////////////////////
     // Multidex (Only used in non-proguard pre-21 builds)
     // /////////////////////////////////////////////////////////////////////////
-    compile libs.multiDex
+    implementation libs.multiDex
 
     // //////////////////////////////////////////////////////////////////////////
     // Testing
     // /////////////////////////////////////////////////////////////////////////
 
-    testCompile libs.junit
-    testCompile libs.mockito
-    testCompile libs.powermock
-    testCompile libs.powermockjunit
-    testCompile libs.robolectric
-    testCompile libs.assertj
+    testImplementation libs.junit
+    testImplementation libs.mockito
+    testImplementation libs.powermock
+    testImplementation libs.powermockjunit
+    testImplementation libs.robolectric
+    testImplementation libs.assertj
     androidTestCompile(libs.espresso) {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
