@@ -11,6 +11,7 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.CategoryItem;
 import com.simplecity.amp_library.ui.adapters.ViewType;
+import com.simplecity.amp_library.ui.views.PlayerView;
 
 public class SettingsManager {
 
@@ -203,6 +204,7 @@ public class SettingsManager {
         return getBool("audiofx.global.enable", false);
     }
 
+
     private static final String DOCUMENT_TREE_URI = "document_tree_uri";
 
     public void setDocumentTreeUri(String documentTreeUri) {
@@ -355,10 +357,14 @@ public class SettingsManager {
     public static final String KEY_IGNORE_EMBEDDED_ARTWORK = "pref_ignore_embedded_artwork";
     public static final String KEY_IGNORE_FOLDER_ARTWORK = "pref_ignore_folder_artwork";
     public static final String KEY_PREFER_EMBEDDED_ARTWORK = "pref_prefer_embedded";
+    public static final String KEY_PREFER_REMAINING_TIME = "pref_show_remaining_time";
+
 
     public boolean canDownloadArtworkAutomatically() {
         return getBool(KEY_DOWNLOAD_AUTOMATICALLY, false);
     }
+
+    public boolean preferRemainingTime() { return getBool(KEY_PREFER_REMAINING_TIME,true); }
 
     public boolean preferLastFM() {
         return getBool(KEY_PREFER_LAST_FM, true);

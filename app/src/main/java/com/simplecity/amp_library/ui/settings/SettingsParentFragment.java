@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -232,6 +233,7 @@ public class SettingsParentFragment extends BaseNavigationController implements
                     return true;
                 });
             }
+
 
             // Themes
 

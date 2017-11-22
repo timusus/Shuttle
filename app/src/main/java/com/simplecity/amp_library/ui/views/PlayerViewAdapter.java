@@ -25,6 +25,11 @@ public abstract class PlayerViewAdapter implements PlayerView {
     }
 
     @Override
+    public void totalTimeChanged(long seconds){
+
+    }
+
+    @Override
     public void queueChanged(int queuePosition, int queueLength) {
 
     }

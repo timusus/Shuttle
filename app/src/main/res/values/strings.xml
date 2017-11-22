@@ -393,6 +393,10 @@
     <string name="pref_title_changelog">Changelog</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Support</string>
+    <!-- Settings title for toggling between remaining time and total time -->
+    <string name="pref_title_show_remaining_time">Show remaining time</string>
+    <!-- Settings summary for toggling between remaining time and total time -->
+    <string name="pref_summary_show_remaining_time">Enable to show remaining time in Player instead of duration of the song.</string>
 
     <string name="pref_title_version">Version</string>
     <string name="pref_title_faq">FAQ</string>

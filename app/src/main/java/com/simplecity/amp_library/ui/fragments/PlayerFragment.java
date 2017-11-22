@@ -294,6 +294,13 @@ public class PlayerFragment extends BaseFragment implements
     }
 
     @Override
+    public void totalTimeChanged(long seconds){
+        if (totalTime != null){
+            totalTime.setText(StringUtils.makeTimeString(this.getActivity(), seconds));
+        }
+    }
+
+    @Override
     public void queueChanged(int queuePosition, int queueLength) {
 
     }
@@ -445,6 +452,7 @@ public class PlayerFragment extends BaseFragment implements
         if (currentTime != null) {
             currentTime.setTextColor(textColor);
         }
+
         if (totalTime != null) {
             totalTime.setTextColor(textColor);
         }
