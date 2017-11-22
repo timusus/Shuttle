@@ -263,12 +263,12 @@ public class QueueFragment extends BaseFragment implements
     @Override
     public void updateQueuePosition(int position, boolean fromUser) {
 
-        if (!fromUser) {
-            recyclerView.scrollToPosition(position);
+        if (adapter.items.isEmpty() || position >= adapter.items.size()) {
+            return;
         }
 
-        if (adapter.items.isEmpty()) {
-            return;
+        if (!fromUser) {
+            recyclerView.scrollToPosition(position);
         }
 
         int prevPosition = -1;
