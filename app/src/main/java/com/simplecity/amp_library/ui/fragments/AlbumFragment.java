@@ -240,9 +240,9 @@ public class AlbumFragment extends BaseFragment implements
         menu.addSubMenu(0, MENU_GRID_SIZE, 0, R.string.menu_grid_size);
         SubMenu subMenu = menu.findItem(MENU_GRID_SIZE).getSubMenu();
 
-        int[] columnRange = getResources().getIntArray(R.array.column_range);
-        for (int i = 0; i < columnRange.length; i++) {
-            subMenu.add(MENU_GROUP_GRID, columnRange[i] + 1000, i, String.valueOf(columnRange[i]));
+        int[] spanCountArray = getResources().getIntArray(R.array.span_count);
+        for (int i = 0; i < spanCountArray.length; i++) {
+            subMenu.add(MENU_GROUP_GRID, spanCountArray[i], i, String.valueOf(spanCountArray[i]));
         }
         subMenu.setGroupCheckable(MENU_GROUP_GRID, true, true);
     }
@@ -291,8 +291,9 @@ public class AlbumFragment extends BaseFragment implements
             gridMenuItem.setVisible(false);
         } else {
             gridMenuItem.setVisible(true);
-            int columnCount = SettingsManager.getInstance().getAlbumColumnCount(getResources());
-            gridMenuItem.getSubMenu().findItem(columnCount + 1000).setChecked(true);
+            gridMenuItem.getSubMenu()
+                    .findItem(SettingsManager.getInstance().getAlbumColumnCount(getResources()))
+                    .setChecked(true);
         }
     }
 
@@ -352,14 +353,10 @@ public class AlbumFragment extends BaseFragment implements
         }
 
         if (item.getGroupId() == MENU_GROUP_GRID) {
-
-            SettingsManager.getInstance().setAlbumColumnCount(item.getItemId() - 1000);
-
-            if (SettingsManager.getInstance().getAlbumDisplayType() != ViewType.ALBUM_LIST) {
-                spanSizeLookup.setSpanCount(item.getItemId() - 1000);
-                ((GridLayoutManager) recyclerView.getLayoutManager()).setSpanCount(SettingsManager.getInstance().getAlbumColumnCount(getResources()));
-                adapter.notifyItemRangeChanged(0, adapter.getItemCount());
-            }
+            SettingsManager.getInstance().setAlbumColumnCount(item.getItemId());
+            spanSizeLookup.setSpanCount(item.getItemId());
+            ((GridLayoutManager) recyclerView.getLayoutManager()).setSpanCount(SettingsManager.getInstance().getAlbumColumnCount(getResources()));
+            adapter.notifyItemRangeChanged(0, adapter.getItemCount());
         }
 
         getActivity().invalidateOptionsMenu();
