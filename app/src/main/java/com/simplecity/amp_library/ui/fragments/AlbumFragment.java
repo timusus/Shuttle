@@ -356,6 +356,7 @@ public class AlbumFragment extends BaseFragment implements
             SettingsManager.getInstance().setAlbumColumnCount(item.getItemId() - 1000);
 
             if (SettingsManager.getInstance().getAlbumDisplayType() != ViewType.ALBUM_LIST) {
+                spanSizeLookup.setSpanCount(item.getItemId() - 1000);
                 ((GridLayoutManager) recyclerView.getLayoutManager()).setSpanCount(SettingsManager.getInstance().getAlbumColumnCount(getResources()));
                 adapter.notifyItemRangeChanged(0, adapter.getItemCount());
             }
