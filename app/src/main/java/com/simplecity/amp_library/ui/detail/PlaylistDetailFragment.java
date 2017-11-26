@@ -82,8 +82,6 @@ public class PlaylistDetailFragment extends BaseDetailFragment {
 
                     if (adjustedFrom != -1 && adjustedTo != -1) {
                         playlist.moveSong(adjustedFrom, adjustedTo);
-                    } else {
-                        throw new IllegalStateException("Fuck you");
                     }
                 },
                 () -> {
