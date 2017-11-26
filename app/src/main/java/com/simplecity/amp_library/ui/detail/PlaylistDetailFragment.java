@@ -119,42 +119,42 @@ public class PlaylistDetailFragment extends BaseDetailFragment {
 
     @Override
     void setSongSortOrder(int sortOrder) {
-        SortManager.getInstance().setPlaylistDetailSongsSortOrder(sortOrder);
+        SortManager.getInstance().setPlaylistDetailSongsSortOrder(playlist, sortOrder);
     }
 
     @Override
     int getSongSortOrder() {
-        return SortManager.getInstance().getPlaylistDetailSongsSortOrder();
+        return SortManager.getInstance().getPlaylistDetailSongsSortOrder(playlist);
     }
 
     @Override
     void setSongsAscending(boolean ascending) {
-        SortManager.getInstance().setPlaylistDetailSongsAscending(ascending);
+        SortManager.getInstance().setPlaylistDetailSongsAscending(playlist, ascending);
     }
 
     @Override
     boolean getSongsAscending() {
-        return SortManager.getInstance().getPlaylistDetailSongsAscending();
+        return SortManager.getInstance().getPlaylistDetailSongsAscending(playlist);
     }
 
     @Override
     void setAlbumSortOrder(int sortOrder) {
-        SortManager.getInstance().setPlaylistDetailAlbumsSortOrder(sortOrder);
+        SortManager.getInstance().setPlaylistDetailAlbumsSortOrder(playlist, sortOrder);
     }
 
     @Override
     int getAlbumSort() {
-        return SortManager.getInstance().getPlaylistDetailAlbumsSortOrder();
+        return SortManager.getInstance().getPlaylistDetailAlbumsSortOrder(playlist);
     }
 
     @Override
     void setAlbumsAscending(boolean ascending) {
-        SortManager.getInstance().setPlaylistDetailAlbumsAscending(ascending);
+        SortManager.getInstance().setPlaylistDetailAlbumsAscending(playlist, ascending);
     }
 
     @Override
     boolean getAlbumsAscending() {
-        return SortManager.getInstance().getPlaylistDetailAlbumsAscending();
+        return SortManager.getInstance().getPlaylistDetailAlbumsAscending(playlist);
     }
 
     @NonNull
