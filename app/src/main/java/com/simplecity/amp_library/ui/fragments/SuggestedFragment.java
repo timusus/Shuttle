@@ -95,7 +95,7 @@ public class SuggestedFragment extends BaseFragment implements
 
     private ViewModelAdapter adapter;
 
-    private CompositeDisposable disposables = new CompositeDisposable();
+    private CompositeDisposable refreshDisposables = new CompositeDisposable();
 
     @Inject
     RequestManager requestManager;
@@ -332,9 +332,12 @@ public class SuggestedFragment extends BaseFragment implements
     }
 
     void refreshAdapterItems() {
+
+       refreshDisposables.clear();
+
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {
-                disposables.add(Observable.combineLatest(
+                refreshDisposables.add(Observable.combineLatest(
                         getMostPlayedViewModels(),
                         getRecentlyPlayedViewModels(),
                         getFavoriteSongViewModels(),
@@ -351,9 +354,9 @@ public class SuggestedFragment extends BaseFragment implements
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(adaptableItems -> {
                             if (adaptableItems.isEmpty()) {
-                                adapter.setItems(Collections.singletonList((new EmptyView(R.string.empty_suggested))));
+                                refreshDisposables.add(adapter.setItems(Collections.singletonList((new EmptyView(R.string.empty_suggested)))));
                             } else {
-                                adapter.setItems(adaptableItems);
+                                refreshDisposables.add(adapter.setItems(adaptableItems));
                             }
                         }, error -> LogUtils.logException(TAG, "Error setting items", error)));
             }
@@ -363,8 +366,8 @@ public class SuggestedFragment extends BaseFragment implements
     @Override
     public void onPause() {
 
-        if (disposables != null) {
-            disposables.clear();
+        if (refreshDisposables != null) {
+            refreshDisposables.clear();
         }
 
         super.onPause();
