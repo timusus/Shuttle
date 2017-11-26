@@ -18,6 +18,7 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.recyclerview.ItemTouchHelperCallback;
 import com.simplecity.amp_library.utils.ComparisonUtils;
@@ -211,7 +212,7 @@ public class PlaylistDetailFragment extends BaseDetailFragment {
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        if (MenuUtils.handleMenuItemClicks(getContext(), item, playlist)) {
+        if (MenuUtils.handleMenuItemClicks(getContext(), item, playlist, () -> getNavigationController().popViewController())) {
             return true;
         }
         return super.onMenuItemClick(item);
