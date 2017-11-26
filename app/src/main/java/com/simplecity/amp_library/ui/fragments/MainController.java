@@ -53,9 +53,11 @@ public class MainController extends BaseNavigationController implements BackPres
 
     public static final String STATE_CURRENT_SHEET = "current_sheet";
 
-    @Inject NavigationEventRelay navigationEventRelay;
+    @Inject
+    NavigationEventRelay navigationEventRelay;
 
-    @Inject MultiSheetEventRelay multiSheetEventRelay;
+    @Inject
+    MultiSheetEventRelay multiSheetEventRelay;
 
     private Handler delayHandler;
 
@@ -114,7 +116,7 @@ public class MainController extends BaseNavigationController implements BackPres
 
         disposables.add(navigationEventRelay.getEvents()
                 .observeOn(AndroidSchedulers.mainThread())
-                .filter(drawerEvent -> drawerEvent.isActionable)
+                .filter(NavigationEventRelay.NavigationEvent::isActionable)
                 .subscribe(navigationEvent -> {
                     switch (navigationEvent.type) {
                         case NavigationEventRelay.NavigationEvent.Type.LIBRARY_SELECTED:

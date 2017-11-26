@@ -37,10 +37,6 @@ public interface FragmentComponent {
 
     void inject(QueueFragment target);
 
-    void inject(DrawerFragment target);
-
-    void inject(SettingsParentFragment.SettingsFragment target);
-
     void inject(AlbumArtistFragment target);
 
     void inject(AlbumFragment target);

@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.afollestad.aesthetic.AestheticActivity;
 import com.greysonparrelli.permiso.Permiso;
+import com.simplecity.amp_library.IabManager;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
@@ -25,6 +26,16 @@ import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
 public abstract class BaseActivity extends AestheticActivity implements ServiceConnection {
 
     private MusicServiceConnectionUtils.ServiceToken token;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (IabManager.getInstance().iabHelper != null
+                && IabManager.getInstance().iabHelper.handleActivityResult(requestCode, resultCode, data)) {
+            return;
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     @CallSuper
     protected void onCreate(final Bundle savedInstanceState) {

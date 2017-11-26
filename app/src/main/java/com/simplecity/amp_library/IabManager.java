@@ -42,7 +42,7 @@ public class IabManager {
         setup(null);
     }
 
-    public void setup(@Nullable UnsafeConsumer<Integer> messageCallback) {
+    private void setup(@Nullable UnsafeConsumer<Integer> messageCallback) {
         iabHelper.startSetup(result -> {
 
             if (!result.isSuccess()) {
@@ -59,10 +59,6 @@ public class IabManager {
     }
 
     public void purchaseUpgrade(Activity activity, UnsafeConsumer<Boolean> successHandler) {
-        if (!(activity instanceof MainActivity)) {
-            throw new IllegalStateException("purchaseUpgrade must be called from MainActivity, it's the only Activity handling the activity result.");
-        }
-
         AnalyticsManager.logUpgrade(AnalyticsManager.UpgradeType.UPGRADE);
 
         try {

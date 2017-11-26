@@ -1,6 +1,6 @@
 package com.simplecity.amp_library.ui.settings;
 
-import android.content.ComponentName;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,10 +24,9 @@ import com.simplecity.amp_library.ui.activities.MainActivity;
 import com.simplecity.amp_library.ui.dialog.ChangelogDialog;
 import com.simplecity.amp_library.ui.dialog.InclExclDialog;
 import com.simplecity.amp_library.ui.dialog.TabChooserDialog;
-import com.simplecity.amp_library.ui.presenters.Presenter;
+import com.simplecity.amp_library.ui.presenters.PurchasePresenter;
 import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.SettingsManager;
-import com.simplecity.amp_library.utils.ShuttleUtils;
 
 import java.util.List;
 
@@ -36,10 +35,11 @@ import javax.inject.Inject;
 import io.reactivex.Completable;
 import io.reactivex.schedulers.Schedulers;
 
-public class SettingsPresenter extends Presenter<SettingsView> {
+public class SettingsPresenter extends PurchasePresenter<SettingsView> {
 
     @Inject
-    public SettingsPresenter() {
+    public SettingsPresenter(Activity activity) {
+        super(activity);
     }
 
     // Support Preferences
@@ -51,57 +51,6 @@ public class SettingsPresenter extends Presenter<SettingsView> {
         if (settingsView != null) {
             settingsView.showChangelog(ChangelogDialog.getChangelogDialog(context));
         }
-    }
-
-    void upgradeClicked(MainActivity activity) {
-        SettingsView settingsView = getView();
-        if (settingsView != null) {
-            settingsView.showUpgradeDialog(new MaterialDialog.Builder(activity)
-                    .title(activity.getResources().getString(R.string.get_pro_title))
-                    .content(activity.getResources().getString(R.string.upgrade_dialog_message))
-                    .positiveText(R.string.btn_upgrade)
-                    .onPositive((dialog, which) -> {
-                        if (ShuttleUtils.isAmazonBuild()) {
-                            openPaidStoreLink();
-                        } else {
-                            purchaseUpgrade(activity);
-                        }
-                    })
-                    .negativeText(R.string.get_pro_button_no)
-                    .build());
-        }
-    }
-
-    public void openPaidStoreLink() {
-        SettingsView settingsView = getView();
-        if (settingsView != null) {
-            Intent intent = ShuttleUtils.getShuttleStoreIntent("com.simplecity.amp_pro");
-            settingsView.openStoreLink(intent);
-        }
-    }
-
-    public void purchaseUpgrade(MainActivity activity) {
-        IabManager.getInstance().purchaseUpgrade(activity, success -> {
-            SettingsView settingsView = getView();
-            if (settingsView != null) {
-                if (success) {
-                    settingsView.showUpgradeSuccessDialog(
-                            new MaterialDialog.Builder(activity)
-                                    .title(activity.getResources().getString(R.string.upgraded_title))
-                                    .content(activity.getResources().getString(R.string.upgraded_message))
-                                    .positiveText(R.string.restart_button)
-                                    .onPositive((materialDialog, dialogAction) -> {
-                                        Intent intent = new Intent(activity, MainActivity.class);
-                                        ComponentName componentName = intent.getComponent();
-                                        Intent mainIntent = Intent.makeRestartActivityTask(componentName);
-                                        activity.startActivity(mainIntent);
-                                    })
-                                    .build());
-                } else {
-                    settingsView.showUpgradeFailedToast(R.string.iab_purchase_failed);
-                }
-            }
-        });
     }
 
     public void restorePurchasesClicked() {
