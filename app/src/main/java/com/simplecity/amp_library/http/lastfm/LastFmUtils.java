@@ -15,6 +15,13 @@ public class LastFmUtils {
         for (String size : sizes) {
             LastFmImage image = findSize(images, size);
             if (image != null) {
+                if (image.url != null) {
+                    // Last.fm are now returning 300x300 images for most image sizes. Thanks for documenting
+                    // your API changes \s
+                    // It looks like they've also implemented an image resizer. Replace any '123x456', or '123s'
+                    // with 1080s
+                    image.url = image.url.replaceFirst("/\\d*s(/|$)|/\\d*x\\d*(/|$)", "/1080s/");
+                }
                 return image.url;
             }
         }

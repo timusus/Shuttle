@@ -31,11 +31,11 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile libs.appcompat
-    compile libs.recyclerView
+    implementation libs.appcompat
+    implementation libs.recyclerView
 
-    compile libs.rxJava
-    compile libs.rxAndroid
+    implementation libs.rxJava
+    implementation libs.rxAndroid
 }

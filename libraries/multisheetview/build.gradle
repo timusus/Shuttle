@@ -29,7 +29,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile libs.appcompat
-    compile libs.design
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation libs.appcompat
+    implementation libs.design
 }

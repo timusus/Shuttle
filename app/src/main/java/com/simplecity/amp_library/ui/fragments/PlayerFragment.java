@@ -394,6 +394,11 @@ public class PlayerFragment extends BaseFragment implements
                     .into(new SimpleTarget<PaletteBitmap>() {
                         @Override
                         public void onResourceReady(PaletteBitmap resource, GlideAnimation<? super PaletteBitmap> glideAnimation) {
+
+                            if (!isAdded()) {
+                                return;
+                            }
+
                             Palette.Swatch swatch = resource.palette.getDarkMutedSwatch();
                             if (swatch != null) {
                                 if (SettingsManager.getInstance().getUsePalette()) {
@@ -401,20 +406,21 @@ public class PlayerFragment extends BaseFragment implements
                                         animateColors(currentColor, swatch.getRgb(), color -> invalidateColors(color));
                                     } else {
                                         // Set Aesthetic colors globally, based on the current Palette swatch
-                                        Aesthetic.get(getContext())
-                                                .colorPrimary()
-                                                .take(1)
-                                                .subscribe(integer -> animateColors(integer, swatch.getRgb(), color -> {
-                                                    Aesthetic aesthetic = Aesthetic.get(getContext())
-                                                            .colorPrimary(color)
-                                                            .colorStatusBarAuto();
+                                        disposables.add(
+                                                Aesthetic.get(getContext())
+                                                        .colorPrimary()
+                                                        .take(1)
+                                                        .subscribe(integer -> animateColors(integer, swatch.getRgb(), color -> {
+                                                            Aesthetic aesthetic = Aesthetic.get(getContext())
+                                                                    .colorPrimary(color)
+                                                                    .colorStatusBarAuto();
 
-                                                    if (SettingsManager.getInstance().getTintNavBar()) {
-                                                        aesthetic = aesthetic.colorNavigationBar(color);
-                                                    }
+                                                            if (SettingsManager.getInstance().getTintNavBar()) {
+                                                                aesthetic = aesthetic.colorNavigationBar(color);
+                                                            }
 
-                                                    aesthetic.apply();
-                                                }));
+                                                            aesthetic.apply();
+                                                        })));
                                     }
                                 }
                             } else {

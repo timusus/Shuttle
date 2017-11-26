@@ -28,7 +28,7 @@ android {
 }
 
 dependencies {
-    compile libs.appcompat
-    compile libs.mediarouter
-    compile libs.chromecast
+    implementation libs.appcompat
+    implementation libs.mediarouter
+    implementation libs.chromecast
 }
