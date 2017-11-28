@@ -123,6 +123,7 @@ public class AlbumArtistFragment extends BaseFragment implements
             int spanCount = SettingsManager.getInstance().getArtistColumnCount(getResources());
             layoutManager = new GridLayoutManager(getContext(), spanCount);
             spanSizeLookup = new SpanSizeLookup(adapter, spanCount);
+            spanSizeLookup.setSpanIndexCacheEnabled(true);
             layoutManager.setSpanSizeLookup(spanSizeLookup);
 
             recyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);

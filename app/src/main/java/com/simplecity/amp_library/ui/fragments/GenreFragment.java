@@ -84,7 +84,6 @@ public class GenreFragment extends BaseFragment implements
         if (recyclerView == null) {
             recyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            recyclerView.addItemDecoration(new GridDividerDecoration(getResources(), 4, true));
             recyclerView.setRecyclerListener(new RecyclerListener());
         }
         if (recyclerView.getAdapter() != adapter) {
