@@ -283,6 +283,12 @@ public class QueueFragment extends BaseFragment implements
             }
         }
 
+        // We do this check again, because the adapter size seems to be changing between
+        // the previous check and here, in some cases.
+        if (adapter.items.isEmpty() || position >= adapter.items.size()) {
+            return;
+        }
+
         ((SongView) adapter.items.get(position)).setCurrentTrack(true);
 
         adapter.notifyItemChanged(prevPosition, 1);
