@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.ui.fragments;
 
+import android.arch.lifecycle.Lifecycle;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +14,8 @@ import com.google.android.libraries.cast.companionlibrary.cast.BaseCastManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
+import com.simplecity.amp_library.lifecycle.LifecycleProvider;
+import com.simplecity.amp_library.lifecycle.LifecycleProviderHelper;
 import com.simplecity.amp_library.ui.activities.BaseCastActivity;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
 import com.simplecity.amp_library.utils.AnalyticsManager;
@@ -22,9 +25,10 @@ import java.lang.reflect.Field;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
 import test.com.androidnavigation.fragment.BaseController;
 
-public abstract class BaseFragment extends BaseController {
+public abstract class BaseFragment extends BaseController implements LifecycleProvider {
 
     private static final String TAG = "BaseFragment";
 
@@ -32,6 +36,8 @@ public abstract class BaseFragment extends BaseController {
     private static final int DEFAULT_CHILD_ANIMATION_DURATION = 250;
 
     @Inject MultiSheetEventRelay multiSheetEventRelay;
+
+    private LifecycleProviderHelper lifecycleProviderHelper = new LifecycleProviderHelper(this);
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -117,4 +123,39 @@ public abstract class BaseFragment extends BaseController {
     }
 
     protected abstract String screenName();
+
+    @Override
+    public Observable<Lifecycle.Event> lifecycle() {
+        return lifecycleProviderHelper.lifecycle();
+    }
+
+    @Override
+    public Observable<Long> onCreated() {
+        return lifecycleProviderHelper.onCreated();
+    }
+
+    @Override
+    public Observable<Long> onStarted() {
+        return lifecycleProviderHelper.onStarted();
+    }
+
+    @Override
+    public Observable<Long> onResumed() {
+        return lifecycleProviderHelper.onResumed();
+    }
+
+    @Override
+    public Observable<Long> onPaused() {
+        return lifecycleProviderHelper.onPaused();
+    }
+
+    @Override
+    public Observable<Long> onStopped() {
+        return lifecycleProviderHelper.onStopped();
+    }
+
+    @Override
+    public Observable<Long> onDestroyed() {
+        return lifecycleProviderHelper.onDestroyed();
+    }
 }
