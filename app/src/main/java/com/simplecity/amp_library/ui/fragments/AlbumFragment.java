@@ -403,7 +403,7 @@ public class AlbumFragment extends BaseFragment implements
         PopupMenu menu = new PopupMenu(getContext(), v);
         menu.inflate(R.menu.menu_album);
         SubMenu sub = menu.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-        PlaylistUtils.makePlaylistMenu(sub);
+        PlaylistUtils.makePlaylistMenu(sub, onPaused(), false);
         menu.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(getContext(), album, taggerDialog -> taggerDialog.show(getFragmentManager())));
         menu.show();
     }
@@ -437,7 +437,7 @@ public class AlbumFragment extends BaseFragment implements
             contextualToolbar.getMenu().clear();
             contextualToolbar.inflateMenu(R.menu.context_menu_songs);
             SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-            PlaylistUtils.makePlaylistMenu(sub);
+            PlaylistUtils.makePlaylistMenu(sub, onDestroyed(), true);
 
             contextualToolbar.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(
                     getContext(),

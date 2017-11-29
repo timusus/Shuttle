@@ -216,8 +216,13 @@ public class PlaylistUtils {
         void onSave(Playlist playlist);
     }
 
-    public static void makePlaylistMenu(SubMenu sub) {
-        DataManager.getInstance().getPlaylistsRelay()
+    public static void makePlaylistMenu(SubMenu sub, Observable<Long> stopEventTrigger, boolean autoUpdate) {
+        Observable<List<Playlist>> playlistListObservable = DataManager.getInstance()
+                .getPlaylistsRelay().takeUntil(stopEventTrigger);
+        if (!autoUpdate) {
+            playlistListObservable = playlistListObservable.take(1);
+        }
+        playlistListObservable
                 .subscribe(playlists -> {
                     sub.clear();
                     sub.add(0, MusicUtils.Defs.NEW_PLAYLIST, 0, R.string.new_playlist);

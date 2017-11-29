@@ -323,7 +323,7 @@ public class SongFragment extends BaseFragment implements
             contextualToolbar.getMenu().clear();
             contextualToolbar.inflateMenu(R.menu.context_menu_songs);
             SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-            PlaylistUtils.makePlaylistMenu(sub);
+            PlaylistUtils.makePlaylistMenu(sub, onDestroyed(), true);
 
             contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), () -> Stream.of(contextualToolbarHelper.getItems())
                     .map(SelectableViewModel::getItem)

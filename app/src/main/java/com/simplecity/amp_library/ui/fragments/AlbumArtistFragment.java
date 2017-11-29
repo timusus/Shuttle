@@ -392,7 +392,7 @@ public class AlbumArtistFragment extends BaseFragment implements
         PopupMenu menu = new PopupMenu(AlbumArtistFragment.this.getActivity(), v);
         menu.inflate(R.menu.menu_artist);
         SubMenu sub = menu.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-        PlaylistUtils.makePlaylistMenu(sub);
+        PlaylistUtils.makePlaylistMenu(sub, onPaused(), false);
         menu.setOnMenuItemClickListener(MenuUtils.getAlbumArtistClickListener(getContext(), albumArtist, taggerDialog -> taggerDialog.show(getFragmentManager())));
         menu.show();
     }
@@ -415,7 +415,7 @@ public class AlbumArtistFragment extends BaseFragment implements
             contextualToolbar.getMenu().clear();
             contextualToolbar.inflateMenu(R.menu.context_menu_songs);
             SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-            PlaylistUtils.makePlaylistMenu(sub);
+            PlaylistUtils.makePlaylistMenu(sub, onDestroyed(), true);
             contextualToolbar.setOnMenuItemClickListener(MenuUtils.getAlbumArtistMenuClickListener(
                     getContext(),
                     () -> Stream.of(contextualToolbarHelper.getItems())
