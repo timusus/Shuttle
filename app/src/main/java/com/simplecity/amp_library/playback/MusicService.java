@@ -639,7 +639,7 @@ public class MusicService extends Service {
                             playerHandler.sendEmptyMessage(MusicService.PlayerHandler.FADE_DOWN_STOP);
                         }
                     }
-                }, throwable -> LogUtils.logException(TAG, "rror consuming SleepTimer observable", throwable)));
+                }, throwable -> LogUtils.logException(TAG, "Error consuming SleepTimer observable", throwable)));
     }
 
     List<Song> getCurrentPlaylist() {

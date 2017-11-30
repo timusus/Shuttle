@@ -61,16 +61,16 @@
         android:id="@+id/total_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
         android:gravity="center_vertical|right"
         android:singleLine="true"
         android:tag=":aesthetic_ignore"
         android:text="--:--"
         android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/text1"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_container"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_container" />
 
     <TextView
         android:id="@+id/text1"
