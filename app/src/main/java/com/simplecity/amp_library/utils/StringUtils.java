@@ -88,14 +88,14 @@ public class StringUtils {
     }
 
     private static String makeTimeString(String formatString, long secs) {
-        long absoluteSeconds = Math.abs(secs);
+        long absSeconds = Math.abs(secs);
         return sFormatter.format(formatString,
-                absoluteSeconds / 3600,
-                absoluteSeconds / 60,
-                absoluteSeconds / 60 % 60,
-                absoluteSeconds,
-                absoluteSeconds % 60,
-                secs < 0 ? "- " : "")
+                secs < 0 ? "- " : "",
+                absSeconds / 3600,
+                absSeconds / 60,
+                absSeconds / 60 % 60,
+                absSeconds,
+                absSeconds % 60)
                 .toString();
     }
 
