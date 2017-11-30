@@ -2,9 +2,11 @@ package com.simplecity.amp_library.ui.fragments;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
@@ -255,12 +257,14 @@ public class PlayerFragment extends BaseFragment implements
                     .subscribe(seekBarChangeEvent -> presenter.seekTo(seekBarChangeEvent.progress()),
                             error -> LogUtils.logException(TAG, "Error receiving seekbar progress", error)));
         }
+        PreferenceManager.getDefaultSharedPreferences(getContext()).registerOnSharedPreferenceChangeListener(remainingTimeChangeListener);
     }
 
     @Override
     public void onPause() {
         disposables.clear();
         super.onPause();
+        PreferenceManager.getDefaultSharedPreferences(getContext()).unregisterOnSharedPreferenceChangeListener(remainingTimeChangeListener);
     }
 
     @Override
@@ -558,4 +562,13 @@ public class PlayerFragment extends BaseFragment implements
         valueAnimator.addUpdateListener(animator -> consumer.accept((Integer) animator.getAnimatedValue()));
         valueAnimator.start();
     }
+
+    SharedPreferences.OnSharedPreferenceChangeListener remainingTimeChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if (key.equals(SettingsManager.KEY_DISPLAY_REMAINING_TIME)) {
+                presenter.updateRemainingTime();
+            }
+        }
+    };
 }
