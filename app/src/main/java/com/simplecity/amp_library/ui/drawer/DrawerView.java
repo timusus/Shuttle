@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface DrawerView extends PurchaseView {
 
-    void setItems(List<DrawerChild> drawerChildren);
+    void setPlaylistItems(List<DrawerChild> drawerChildren);
 
     void closeDrawer();
 

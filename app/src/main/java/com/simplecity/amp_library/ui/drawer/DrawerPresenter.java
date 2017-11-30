@@ -14,10 +14,12 @@ import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class DrawerPresenter extends PurchasePresenter<DrawerView> {
@@ -39,7 +41,7 @@ public class DrawerPresenter extends PurchasePresenter<DrawerView> {
     public void bindView(@NonNull DrawerView view) {
         super.bindView(view);
 
-        loadData();
+        loadData(view);
 
         addDisposable(navigationEventRelay.getEvents().subscribe(drawerEvent -> {
             DrawerView drawerView = getView();
@@ -87,7 +89,7 @@ public class DrawerPresenter extends PurchasePresenter<DrawerView> {
         }
     }
 
-    private void loadData() {
+    private void loadData(@NonNull DrawerView drawerView) {
         PermissionUtils.RequestStoragePermissions(() ->
                 addDisposable(playlistsModel.getPlaylistsObservable()
                         .map(playlists -> Stream.of(playlists)
@@ -111,15 +113,15 @@ public class DrawerPresenter extends PurchasePresenter<DrawerView> {
                                 })
                                 .toList())
                         .observeOn(AndroidSchedulers.mainThread())
+                        .takeUntil(lifecycleProvider.onDestroyed())
                         // Delay the subscription so we're not querying data while the app is launching
-                        .delaySubscription(1500, TimeUnit.MILLISECONDS)
+                        .delaySubscription(Observable.timer(1500, TimeUnit.MILLISECONDS)
+                                .takeUntil(lifecycleProvider.onDestroyed()))
+                        // after all, clear all playlist item
+                        // to avoid memory leak in static var DrawerParent.playlistsParent
+                        .doFinally(() -> drawerView.setPlaylistItems(Collections.emptyList()))
                         .subscribe(
-                                drawerChildren -> {
-                                    DrawerView drawerView = getView();
-                                    if (drawerView != null) {
-                                        drawerView.setItems(drawerChildren);
-                                    }
-                                },
+                                drawerView::setPlaylistItems,
                                 error -> LogUtils.logException(TAG, "Error refreshing DrawerFragment adapter items", error)
                         )));
     }
