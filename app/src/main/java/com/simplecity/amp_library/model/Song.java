@@ -323,10 +323,10 @@ public class Song implements
         } catch (IllegalArgumentException e) {
             LogUtils.logException(TAG, "Failed to share track", e);
 
-            // Todo: Once this issue is resolved, remove toast message.
+            /*// Todo: Once this issue is resolved, remove toast message.
             if (BuildConfig.VERSION_NAME.contains("beta")) {
                 Toast.makeText(context, "Something went wrong sharing the song. Bad developer. This issue has been logged.", Toast.LENGTH_LONG).show();
-            }
+            }*/
         }
     }
 

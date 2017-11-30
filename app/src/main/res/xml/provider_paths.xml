@@ -3,8 +3,4 @@
     <external-path
         name="external_files"
         path="."/>
-
-    <files-path
-        name="external_files"
-        path="."/>
 </paths>
