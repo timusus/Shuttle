@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.MessageQueue;
@@ -146,7 +147,7 @@ public class InputMethodManagerLeaks {
     public static void fixFocusedViewLeak(Application application) {
 
         // Still not fixed until android 23
-        if (SDK_INT < KITKAT || SDK_INT > 23) {
+        if (SDK_INT < KITKAT || SDK_INT > Build.VERSION_CODES.N_MR1) {
             return;
         }
 
