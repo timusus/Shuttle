@@ -2,7 +2,6 @@ package com.simplecity.amp_library.ui.presenters;
 
 import android.content.Context;
 import android.content.IntentFilter;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 
 import com.cantrowitz.rxbroadcast.RxBroadcast;
@@ -19,7 +18,6 @@ import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
-import com.simplecity.amp_library.utils.ShuttleUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -40,8 +38,6 @@ public class PlayerPresenter extends Presenter<PlayerView> {
     private long currentPlaybackTime;
     private boolean currentPlaybackTimeVisible;
 
-    private long totalTime;
-
     @Inject
     public PlayerPresenter() {
     }
@@ -54,7 +50,6 @@ public class PlayerPresenter extends Presenter<PlayerView> {
     @Override
     public void bindView(@NonNull PlayerView view) {
         super.bindView(view);
-
         updateTrackInfo();
         updateShuffleMode();
         updatePlaystate();
@@ -72,7 +67,7 @@ public class PlayerPresenter extends Presenter<PlayerView> {
                 .subscribe(pos -> refreshTimeText(pos / 1000),
                         error -> LogUtils.logException(TAG, "PlayerPresenter: Error refreshing time text", error)));
 
-               addDisposable(Flowable.interval(500, TimeUnit.MILLISECONDS)
+        addDisposable(Flowable.interval(500, TimeUnit.MILLISECONDS)
                 .onBackpressureDrop()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> setCurrentTimeVisibility(MusicUtils.isPlaying() || !currentPlaybackTimeVisible),
@@ -134,10 +129,9 @@ public class PlayerPresenter extends Presenter<PlayerView> {
             PlayerView view = getView();
             if (view != null) {
                 view.currentTimeChanged(playbackTime);
-                if(SettingsManager.getInstance().preferRemainingTime())
-                    view.totalTimeChanged(totalTime/1000 - playbackTime);
-                else
-                    view.totalTimeChanged(totalTime/1000);
+                if (SettingsManager.getInstance().displayRemainingTime()) {
+                    view.totalTimeChanged(-(MusicUtils.getDuration() / 1000 - playbackTime));
+                }
             }
         }
         currentPlaybackTime = playbackTime;
@@ -153,7 +147,7 @@ public class PlayerPresenter extends Presenter<PlayerView> {
         currentPlaybackTimeVisible = visible;
     }
 
-       private void updateFavorite(boolean isFavorite) {
+    private void updateFavorite(boolean isFavorite) {
         PlayerView view = getView();
         if (view != null) {
             view.favoriteChanged(isFavorite);
@@ -163,13 +157,9 @@ public class PlayerPresenter extends Presenter<PlayerView> {
     public void updateTrackInfo() {
         PlayerView view = getView();
         if (view != null) {
-            totalTime = MusicUtils.getDuration();
             view.trackInfoChanged(MusicUtils.getSong());
             view.currentTimeChanged(MusicUtils.getPosition() / 1000);
-            if(SettingsManager.getInstance().preferRemainingTime())             //can be refactored into another function
-                view.totalTimeChanged(MusicUtils.getDuration()/1000 - MusicUtils.getPosition()/1000);
-            else
-                view.totalTimeChanged(MusicUtils.getDuration()/1000);
+            updateRemainingTime();
             view.queueChanged(MusicUtils.getQueuePosition() + 1, MusicUtils.getQueue().size());
 
             addDisposable(PlaylistUtils.isFavorite(MusicUtils.getSong())
@@ -306,6 +296,17 @@ public class PlayerPresenter extends Presenter<PlayerView> {
             Song song = MusicUtils.getSong();
             if (song != null) {
                 playerView.showSongInfoDialog(BiographyDialog.getSongInfoDialog(context, song));
+            }
+        }
+    }
+
+    public void updateRemainingTime(){
+        PlayerView playerView = getView();
+        if (playerView != null) {
+            if (SettingsManager.getInstance().displayRemainingTime()) {
+                playerView.totalTimeChanged(-((MusicUtils.getDuration() - MusicUtils.getPosition()) / 1000));
+            } else {
+                playerView.totalTimeChanged(MusicUtils.getDuration() / 1000);
             }
         }
     }

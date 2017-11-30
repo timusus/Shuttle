@@ -11,7 +11,6 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.CategoryItem;
 import com.simplecity.amp_library.ui.adapters.ViewType;
-import com.simplecity.amp_library.ui.views.PlayerView;
 
 public class SettingsManager {
 
@@ -27,6 +26,7 @@ public class SettingsManager {
     // Display
     public static String KEY_PREF_TAB_CHOOSER = "pref_tab_chooser";
     public static String KEY_PREF_DEFAULT_PAGE = "pref_default_page";
+    public static String KEY_DISPLAY_REMAINING_TIME = "pref_display_remaining_time";
 
     // Themes
     public static String KEY_PREF_THEME_BASE = "pref_theme_base";
@@ -117,6 +117,8 @@ public class SettingsManager {
     public boolean keepScreenOn() {
         return getBool(KEY_KEEP_SCREEN_ON, false);
     }
+
+    public boolean displayRemainingTime() { return getBool(KEY_DISPLAY_REMAINING_TIME,true); }
 
     private static final String KEY_ALBUM_DISPLAY_TYPE = "album_display_type_new";
 
@@ -357,14 +359,10 @@ public class SettingsManager {
     public static final String KEY_IGNORE_EMBEDDED_ARTWORK = "pref_ignore_embedded_artwork";
     public static final String KEY_IGNORE_FOLDER_ARTWORK = "pref_ignore_folder_artwork";
     public static final String KEY_PREFER_EMBEDDED_ARTWORK = "pref_prefer_embedded";
-    public static final String KEY_PREFER_REMAINING_TIME = "pref_show_remaining_time";
-
 
     public boolean canDownloadArtworkAutomatically() {
         return getBool(KEY_DOWNLOAD_AUTOMATICALLY, false);
     }
-
-    public boolean preferRemainingTime() { return getBool(KEY_PREFER_REMAINING_TIME,true); }
 
     public boolean preferLastFM() {
         return getBool(KEY_PREFER_LAST_FM, true);
