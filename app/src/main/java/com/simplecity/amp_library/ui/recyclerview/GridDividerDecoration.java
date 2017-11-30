@@ -29,6 +29,10 @@ public class GridDividerDecoration extends RecyclerView.ItemDecoration {
         int spanCount = ((GridLayoutManager) parent.getLayoutManager()).getSpanCount();
 
         int position = parent.getChildAdapterPosition(view);
+        if (position < 0) {
+            return;
+        }
+
         int spanIndex = ((GridLayoutManager) parent.getLayoutManager()).getSpanSizeLookup().getSpanIndex(position, spanCount);
         int groupIndex = ((GridLayoutManager) parent.getLayoutManager()).getSpanSizeLookup().getSpanGroupIndex(position, spanCount);
 
