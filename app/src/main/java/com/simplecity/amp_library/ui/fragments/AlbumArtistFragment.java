@@ -119,11 +119,11 @@ public class AlbumArtistFragment extends BaseFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-
         if (recyclerView == null) {
             int spanCount = SettingsManager.getInstance().getArtistColumnCount(getResources());
             layoutManager = new GridLayoutManager(getContext(), spanCount);
             spanSizeLookup = new SpanSizeLookup(adapter, spanCount);
+            spanSizeLookup.setSpanIndexCacheEnabled(true);
             layoutManager.setSpanSizeLookup(spanSizeLookup);
 
             recyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
@@ -134,7 +134,6 @@ public class AlbumArtistFragment extends BaseFragment implements
         if (recyclerView.getAdapter() != adapter) {
             recyclerView.setAdapter(adapter);
         }
-
 
         return recyclerView;
     }
@@ -224,9 +223,10 @@ public class AlbumArtistFragment extends BaseFragment implements
 
         menu.addSubMenu(0, MENU_GRID_SIZE, 0, R.string.menu_grid_size);
         SubMenu subMenu = menu.findItem(MENU_GRID_SIZE).getSubMenu();
-        int[] columnRange = getResources().getIntArray(R.array.column_range);
-        for (int i = 0; i < columnRange.length; i++) {
-            subMenu.add(MENU_GROUP_GRID, columnRange[i] + 1000, i, String.valueOf(columnRange[i]));
+
+        int[] spanCountArray = getResources().getIntArray(R.array.span_count);
+        for (int i = 0; i < spanCountArray.length; i++) {
+            subMenu.add(MENU_GROUP_GRID, spanCountArray[i], i, String.valueOf(spanCountArray[i]));
         }
         subMenu.setGroupCheckable(MENU_GROUP_GRID, true, true);
     }
@@ -291,8 +291,9 @@ public class AlbumArtistFragment extends BaseFragment implements
             gridMenuItem.setVisible(false);
         } else {
             gridMenuItem.setVisible(true);
-            int columnCount = SettingsManager.getInstance().getArtistColumnCount(getResources());
-            gridMenuItem.getSubMenu().findItem(columnCount + 1000).setChecked(true);
+            gridMenuItem.getSubMenu()
+                    .findItem(SettingsManager.getInstance().getArtistColumnCount(getResources()))
+                    .setChecked(true);
         }
     }
 
@@ -342,12 +343,10 @@ public class AlbumArtistFragment extends BaseFragment implements
         }
 
         if (item.getGroupId() == MENU_GROUP_GRID) {
-            SettingsManager.getInstance().setArtistColumnCount(item.getItemId() - 1000);
-
-            if (SettingsManager.getInstance().getArtistDisplayType() != ViewType.ARTIST_LIST) {
-                ((GridLayoutManager) recyclerView.getLayoutManager()).setSpanCount(SettingsManager.getInstance().getArtistColumnCount(getResources()));
-                adapter.notifyItemRangeChanged(0, adapter.getItemCount());
-            }
+            SettingsManager.getInstance().setArtistColumnCount(item.getItemId());
+            spanSizeLookup.setSpanCount(item.getItemId());
+            ((GridLayoutManager) recyclerView.getLayoutManager()).setSpanCount(SettingsManager.getInstance().getArtistColumnCount(getResources()));
+            adapter.notifyItemRangeChanged(0, adapter.getItemCount());
         }
 
         getActivity().invalidateOptionsMenu();

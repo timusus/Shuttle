@@ -25,7 +25,7 @@
         <item>@color/deep_orange_300</item>
     </array>
 
-    <array name="column_range">
+    <array name="span_count">
         <item>2</item>
         <item>3</item>
         <item>4</item>

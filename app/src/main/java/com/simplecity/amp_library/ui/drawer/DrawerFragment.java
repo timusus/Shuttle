@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.Rx;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.annimon.stream.Stream;
 import com.bignerdranch.expandablerecyclerview.model.Parent;
 import com.bumptech.glide.Glide;
@@ -24,7 +25,7 @@ import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
-import com.simplecity.amp_library.dagger.module.FragmentModule;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.ui.fragments.BaseFragment;
@@ -89,7 +90,8 @@ public class DrawerFragment extends BaseFragment implements
     @Inject
     PlayerPresenter playerPresenter;
 
-    @Inject DrawerPresenter drawerPresenter;
+    @Inject
+    DrawerPresenter drawerPresenter;
 
     private RequestManager requestManager;
 
@@ -107,7 +109,7 @@ public class DrawerFragment extends BaseFragment implements
         super.onCreate(savedInstanceState);
 
         ShuttleApplication.getInstance().getAppComponent()
-                .plus(new FragmentModule(this))
+                .plus(new ActivityModule(getActivity()))
                 .inject(this);
 
         if (savedInstanceState != null) {
@@ -276,6 +278,11 @@ public class DrawerFragment extends BaseFragment implements
                         }
                     }
                 });
+    }
+
+    @Override
+    public void showUpgradeDialog(MaterialDialog dialog) {
+        dialog.show();
     }
 
     PlayerViewAdapter playerViewAdapter = new PlayerViewAdapter() {

@@ -25,8 +25,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
-import com.simplecity.amp_library.dagger.module.FragmentModule;
-import com.simplecity.amp_library.ui.activities.MainActivity;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
 import com.simplecity.amp_library.ui.drawer.MiniPlayerLockManager;
 import com.simplecity.amp_library.utils.SettingsManager;
@@ -51,10 +50,13 @@ public class SettingsParentFragment extends BaseNavigationController implements
     public static String ARG_PREFERENCE_RESOURCE = "preference_resource";
     public static String ARG_TITLE = "title";
 
-    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
-    @XmlRes int preferenceResource;
-    @StringRes int titleResId;
+    @XmlRes
+    int preferenceResource;
+    @StringRes
+    int titleResId;
 
     private Unbinder unbinder;
 
@@ -122,10 +124,13 @@ public class SettingsParentFragment extends BaseNavigationController implements
             SettingsView,
             ColorChooserDialog.ColorCallback {
 
-        @XmlRes int preferenceResource;
+        @XmlRes
+        int preferenceResource;
 
-        @Inject SupportPresenter supportPresenter;
-        @Inject SettingsPresenter settingsPresenter;
+        @Inject
+        SupportPresenter supportPresenter;
+        @Inject
+        SettingsPresenter settingsPresenter;
 
         private ColorChooserDialog primaryColorDialog;
         private ColorChooserDialog accentColorDialog;
@@ -166,7 +171,7 @@ public class SettingsParentFragment extends BaseNavigationController implements
             super.onCreate(savedInstanceState);
 
             ShuttleApplication.getInstance().getAppComponent()
-                    .plus(new FragmentModule(this))
+                    .plus(new ActivityModule(getActivity()))
                     .inject(this);
 
             // Support Preferences
@@ -428,7 +433,7 @@ public class SettingsParentFragment extends BaseNavigationController implements
                         getNavigationController().pushViewController(SettingsFragment.newInstance(R.xml.settings_blacklist), "BlacklistSettings");
                         break;
                     case "pref_upgrade":
-                        settingsPresenter.upgradeClicked((MainActivity) getActivity());
+                        settingsPresenter.upgradeClicked();
                         break;
                 }
             }
@@ -508,23 +513,8 @@ public class SettingsParentFragment extends BaseNavigationController implements
         }
 
         @Override
-        public void openStoreLink(Intent intent) {
-            startActivity(intent);
-        }
-
-        @Override
         public void showUpgradeDialog(MaterialDialog dialog) {
             dialog.show();
-        }
-
-        @Override
-        public void showUpgradeSuccessDialog(MaterialDialog dialog) {
-            dialog.show();
-        }
-
-        @Override
-        public void showUpgradeFailedToast(int messageResId) {
-            Toast.makeText(getContext(), messageResId, Toast.LENGTH_LONG).show();
         }
 
         @Override

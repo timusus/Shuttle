@@ -523,17 +523,20 @@ public class MenuUtils implements MusicUtils.Defs {
         }
     }
 
-    public static PopupMenu.OnMenuItemClickListener getPlaylistPopupMenuClickListener(final Context context, final Playlist playlist) {
-        return item -> handleMenuItemClicks(context, item, playlist);
+    public static PopupMenu.OnMenuItemClickListener getPlaylistPopupMenuClickListener(final Context context, final Playlist playlist, @Nullable UnsafeAction playlistDeleted) {
+        return item -> handleMenuItemClicks(context, item, playlist, playlistDeleted);
     }
 
-    public static boolean handleMenuItemClicks(Context context, MenuItem menuItem, Playlist playlist) {
+    public static boolean handleMenuItemClicks(Context context, MenuItem menuItem, Playlist playlist, @Nullable UnsafeAction playlistDeleted) {
         switch (menuItem.getItemId()) {
             case R.id.playPlaylist:
                 play(context, playlist.getSongsObservable().first(Collections.emptyList()));
                 return true;
             case R.id.deletePlaylist:
                 delete(context, playlist);
+                if (playlistDeleted != null) {
+                    playlistDeleted.run();
+                }
                 return true;
             case R.id.editPlaylist:
                 edit(context, playlist);

@@ -18,6 +18,7 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.recyclerview.ItemTouchHelperCallback;
 import com.simplecity.amp_library.utils.ComparisonUtils;
@@ -82,8 +83,6 @@ public class PlaylistDetailFragment extends BaseDetailFragment {
 
                     if (adjustedFrom != -1 && adjustedTo != -1) {
                         playlist.moveSong(adjustedFrom, adjustedTo);
-                    } else {
-                        throw new IllegalStateException("Fuck you");
                     }
                 },
                 () -> {
@@ -121,42 +120,42 @@ public class PlaylistDetailFragment extends BaseDetailFragment {
 
     @Override
     void setSongSortOrder(int sortOrder) {
-        SortManager.getInstance().setPlaylistDetailSongsSortOrder(sortOrder);
+        SortManager.getInstance().setPlaylistDetailSongsSortOrder(playlist, sortOrder);
     }
 
     @Override
     int getSongSortOrder() {
-        return SortManager.getInstance().getPlaylistDetailSongsSortOrder();
+        return SortManager.getInstance().getPlaylistDetailSongsSortOrder(playlist);
     }
 
     @Override
     void setSongsAscending(boolean ascending) {
-        SortManager.getInstance().setPlaylistDetailSongsAscending(ascending);
+        SortManager.getInstance().setPlaylistDetailSongsAscending(playlist, ascending);
     }
 
     @Override
     boolean getSongsAscending() {
-        return SortManager.getInstance().getPlaylistDetailSongsAscending();
+        return SortManager.getInstance().getPlaylistDetailSongsAscending(playlist);
     }
 
     @Override
     void setAlbumSortOrder(int sortOrder) {
-        SortManager.getInstance().setPlaylistDetailAlbumsSortOrder(sortOrder);
+        SortManager.getInstance().setPlaylistDetailAlbumsSortOrder(playlist, sortOrder);
     }
 
     @Override
     int getAlbumSort() {
-        return SortManager.getInstance().getPlaylistDetailAlbumsSortOrder();
+        return SortManager.getInstance().getPlaylistDetailAlbumsSortOrder(playlist);
     }
 
     @Override
     void setAlbumsAscending(boolean ascending) {
-        SortManager.getInstance().setPlaylistDetailAlbumsAscending(ascending);
+        SortManager.getInstance().setPlaylistDetailAlbumsAscending(playlist, ascending);
     }
 
     @Override
     boolean getAlbumsAscending() {
-        return SortManager.getInstance().getPlaylistDetailAlbumsAscending();
+        return SortManager.getInstance().getPlaylistDetailAlbumsAscending(playlist);
     }
 
     @NonNull
@@ -213,7 +212,7 @@ public class PlaylistDetailFragment extends BaseDetailFragment {
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        if (MenuUtils.handleMenuItemClicks(getContext(), item, playlist)) {
+        if (MenuUtils.handleMenuItemClicks(getContext(), item, playlist, () -> getNavigationController().popViewController())) {
             return true;
         }
         return super.onMenuItemClick(item);

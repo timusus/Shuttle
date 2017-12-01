@@ -263,7 +263,7 @@ public class QueueFragment extends BaseFragment implements
     @Override
     public void updateQueuePosition(int position, boolean fromUser) {
 
-        if (adapter.items.isEmpty() || position >= adapter.items.size()) {
+        if (adapter.items.isEmpty() || position >= adapter.items.size() || position < 0) {
             return;
         }
 

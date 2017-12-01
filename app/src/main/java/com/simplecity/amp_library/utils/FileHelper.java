@@ -211,18 +211,18 @@ public class FileHelper {
     }
 
     /**
-     * Recursively collects all the song id's for the given directory and
+     * Recursively collects all the songs for the given directory and
      * all of its sub-directories. Must be called Asynchronously.
      *
      * @param file      the File to retrieve the song Id's from
      * @param recursive whether to recursively check the sub-directories for song Id's
-     * @return long[] a list of the songId's for the given fileObject's directory & sub-directories
+     * @return List<Song> a list of the songs for the given fileObject's directory & sub-directories
      */
     public static Single<List<Song>> getSongList(final File file, final boolean recursive, final boolean inSameDir) {
         return Single.fromCallable(
                 () -> walk(file, new ArrayList<>(), recursive, inSameDir))
                 .flatMap(filePaths -> DataManager.getInstance()
-                        .getSongsObservable(song -> song.path.contains(FileHelper.getPath(file)))
+                        .getSongsObservable(song -> song.path.contains(FileHelper.getPath(inSameDir ? file.getParentFile() : file)))
                         .first(Collections.emptyList()))
                 .subscribeOn(Schedulers.io());
     }

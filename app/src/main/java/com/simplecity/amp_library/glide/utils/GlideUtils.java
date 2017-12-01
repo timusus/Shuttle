@@ -22,7 +22,7 @@ public class GlideUtils {
         }
 
         if (drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
-            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
+            bitmap = Bitmap.createBitmap(4, 4, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 4x4 pixel
         } else {
             bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         }

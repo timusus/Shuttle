@@ -972,7 +972,9 @@ public class MusicService extends Service {
 
         cancelNotification();
         if (ShuttleUtils.hasOreo()) {
-            audioManager.abandonAudioFocusRequest(audioFocusRequest);
+            if (audioFocusRequest != null) {
+                audioManager.abandonAudioFocusRequest(audioFocusRequest);
+            }
         } else {
             audioManager.abandonAudioFocus(audioFocusListener);
         }

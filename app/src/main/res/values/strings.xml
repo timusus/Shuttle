@@ -111,6 +111,8 @@
         \n• ChromeCast Support
         \n\nIt also helps to promote further development.\n\nYou do not need to upgrade if you already have Shuttle+</string>
 
+    <string name="upgrade_required_folders">Upgrade to Shuttle+</string>
+
     <string name="btn_upgrade">Upgrade</string>
     <!-- -->
     <string name="get_pro_button_no">No thanks</string>

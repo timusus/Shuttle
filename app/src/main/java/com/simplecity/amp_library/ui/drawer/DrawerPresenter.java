@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.ui.drawer;
 
+import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.PopupMenu;
 import android.view.View;
@@ -7,10 +8,11 @@ import android.view.View;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.PlaylistsModel;
-import com.simplecity.amp_library.ui.presenters.Presenter;
+import com.simplecity.amp_library.ui.presenters.PurchasePresenter;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
+import com.simplecity.amp_library.utils.ShuttleUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -18,16 +20,19 @@ import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
-public class DrawerPresenter extends Presenter<DrawerView> {
+public class DrawerPresenter extends PurchasePresenter<DrawerView> {
 
     private static final String TAG = "DrawerPresenter";
 
-    @Inject NavigationEventRelay navigationEventRelay;
-
-    @Inject PlaylistsModel playlistsModel;
+    @Inject
+    NavigationEventRelay navigationEventRelay;
 
     @Inject
-    public DrawerPresenter() {
+    PlaylistsModel playlistsModel;
+
+    @Inject
+    public DrawerPresenter(Activity activity) {
+        super(activity);
     }
 
     @Override
@@ -46,7 +51,11 @@ public class DrawerPresenter extends Presenter<DrawerView> {
                     break;
                 case NavigationEventRelay.NavigationEvent.Type.FOLDERS_SELECTED:
                     if (drawerView != null) {
-                        drawerView.setDrawerItemSelected(DrawerParent.Type.FOLDERS);
+                        if (ShuttleUtils.isUpgraded()) {
+                            drawerView.setDrawerItemSelected(DrawerParent.Type.FOLDERS);
+                        } else {
+                            upgradeClicked();
+                        }
                     }
                     break;
             }
@@ -55,7 +64,7 @@ public class DrawerPresenter extends Presenter<DrawerView> {
 
     void onDrawerItemClicked(DrawerParent drawerParent) {
         DrawerView drawerView = getView();
-        if (drawerView != null && drawerParent.selectable) {
+        if (drawerView != null && drawerParent.isSelectable()) {
             drawerView.setDrawerItemSelected(drawerParent.type);
         }
 
@@ -94,7 +103,7 @@ public class DrawerPresenter extends Presenter<DrawerView> {
                                         public void onOverflowClick(View v, Playlist playlist) {
                                             PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
                                             MenuUtils.setupPlaylistMenu(popupMenu, playlist);
-                                            popupMenu.setOnMenuItemClickListener(MenuUtils.getPlaylistPopupMenuClickListener(v.getContext(), playlist));
+                                            popupMenu.setOnMenuItemClickListener(MenuUtils.getPlaylistPopupMenuClickListener(v.getContext(), playlist, null));
                                             popupMenu.show();
                                         }
                                     });

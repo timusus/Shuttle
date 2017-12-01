@@ -49,19 +49,6 @@ public class DialogUtils {
         }
     }
 
-    /**
-     * Displayed when the user chooses to upgrade
-     */
-    public static MaterialDialog getUpgradeDialog(final Context context, MaterialDialog.SingleButtonCallback listener) {
-        return getBuilder(context)
-                .title(context.getResources().getString(R.string.get_pro_title))
-                .content(context.getResources().getString(R.string.upgrade_dialog_message))
-                .positiveText(R.string.btn_upgrade)
-                .onPositive(listener)
-                .negativeText(R.string.get_pro_button_no)
-                .build();
-    }
-
     public static void showWeekSelectorDialog(final Context context) {
 
         @SuppressLint("InflateParams")

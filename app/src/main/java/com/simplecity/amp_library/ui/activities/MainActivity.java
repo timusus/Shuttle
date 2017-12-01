@@ -63,7 +63,8 @@ public class MainActivity extends BaseCastActivity implements
 
     private boolean hasPendingPlaybackRequest;
 
-    @Inject NavigationEventRelay navigationEventRelay;
+    @Inject
+    NavigationEventRelay navigationEventRelay;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -105,6 +106,9 @@ public class MainActivity extends BaseCastActivity implements
         }
 
         handleIntent(getIntent());
+
+        // Calls through to IabManager.setup()
+        IabManager.getInstance();
     }
 
     @Override
@@ -222,16 +226,6 @@ public class MainActivity extends BaseCastActivity implements
             }
         }
         SettingsManager.getInstance().setVersionCode();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (IabManager.getInstance().iabHelper != null
-                && IabManager.getInstance().iabHelper.handleActivityResult(requestCode, resultCode, data)) {
-            return;
-        }
-
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
