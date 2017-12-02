@@ -175,17 +175,17 @@ public class InputMethodManagerLeaks {
         application.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {
                 ReferenceCleaner cleaner =
                         new ReferenceCleaner(inputMethodManager, mHField, mServedViewField,
                                 finishInputLockedMethod);
                 View rootView = activity.getWindow().getDecorView().getRootView();
                 ViewTreeObserver viewTreeObserver = rootView.getViewTreeObserver();
                 viewTreeObserver.addOnGlobalFocusChangeListener(cleaner);
-            }
-
-            @Override
-            public void onActivityStarted(Activity activity) {
-
             }
 
             @Override

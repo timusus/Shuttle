@@ -32,60 +32,46 @@ public class LifecycleProviderHelper implements LifecycleProvider, LifecycleObse
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public Observable<Lifecycle.Event> lifecycle() {
         return subject;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public Observable<Long> onCreated() {
         return subject.filter(event -> event == Lifecycle.Event.ON_CREATE).to(eventNotification());
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public Observable<Long> onStarted() {
         return subject.filter(event -> event == Lifecycle.Event.ON_START).to(eventNotification());
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public Observable<Long> onResumed() {
         return subject.filter(event -> event == Lifecycle.Event.ON_RESUME).to(eventNotification());
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public Observable<Long> onPaused() {
         return subject.filter(event -> event == Lifecycle.Event.ON_PAUSE).to(eventNotification());
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Observable<Long> onStopped() {
-        return subject.filter(event -> event == Lifecycle.Event.ON_STOP).to(eventNotification());
-    }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Observable<Long> onDestroyed() {
         return subject.filter(event -> event == Lifecycle.Event.ON_DESTROY).to(eventNotification());
+    }
+
+
+    @Override
+    public Observable<Long> onStopped() {
+        return subject.filter(event -> event == Lifecycle.Event.ON_STOP).to(eventNotification());
     }
 
     private Function<Observable<Lifecycle.Event>, Observable<Long>> eventNotification() {
