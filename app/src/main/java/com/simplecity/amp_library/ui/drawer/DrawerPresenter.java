@@ -113,7 +113,6 @@ public class DrawerPresenter extends PurchasePresenter<DrawerView> {
                                 })
                                 .toList())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .takeUntil(lifecycleProvider.onDestroyed())
                         // Delay the subscription so we're not querying data while the app is launching
                         .delaySubscription(Observable.timer(1500, TimeUnit.MILLISECONDS)
                                 .takeUntil(lifecycleProvider.onDestroyed()))

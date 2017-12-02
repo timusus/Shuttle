@@ -11,29 +11,24 @@ import io.reactivex.subjects.BehaviorSubject;
 
 import static android.arch.lifecycle.Lifecycle.Event.ON_ANY;
 
-/**
- * Created by Khang NT on 11/29/17.
- * Email: khang.neon.1997@gmail.com
- */
-
 public class LifecycleProviderHelper implements LifecycleProvider, LifecycleObserver {
 
-    private Lifecycle mHostLifecycle;
-    private BehaviorSubject<Lifecycle.Event> mSubject;
+    private Lifecycle hostLifecycle;
+    private BehaviorSubject<Lifecycle.Event> subject;
 
     public LifecycleProviderHelper(LifecycleOwner lifecycleOwner) {
-        this.mHostLifecycle = lifecycleOwner.getLifecycle();
-        this.mSubject = BehaviorSubject.create();
+        this.hostLifecycle = lifecycleOwner.getLifecycle();
+        this.subject = BehaviorSubject.create();
 
-        mHostLifecycle.addObserver(this);
+        hostLifecycle.addObserver(this);
     }
 
     @SuppressWarnings("unused")
     @OnLifecycleEvent(ON_ANY)
     void onAny(LifecycleOwner source, Lifecycle.Event event) {
-        mSubject.onNext(event);
+        subject.onNext(event);
         if (event == Lifecycle.Event.ON_DESTROY) {
-            mHostLifecycle.removeObserver(this);
+            hostLifecycle.removeObserver(this);
         }
     }
 
@@ -42,7 +37,7 @@ public class LifecycleProviderHelper implements LifecycleProvider, LifecycleObse
      */
     @Override
     public Observable<Lifecycle.Event> lifecycle() {
-        return mSubject;
+        return subject;
     }
 
     /**
@@ -50,7 +45,7 @@ public class LifecycleProviderHelper implements LifecycleProvider, LifecycleObse
      */
     @Override
     public Observable<Long> onCreated() {
-        return mSubject.filter(event -> event == Lifecycle.Event.ON_CREATE).to(eventNotification());
+        return subject.filter(event -> event == Lifecycle.Event.ON_CREATE).to(eventNotification());
     }
 
     /**
@@ -58,7 +53,7 @@ public class LifecycleProviderHelper implements LifecycleProvider, LifecycleObse
      */
     @Override
     public Observable<Long> onStarted() {
-        return mSubject.filter(event -> event == Lifecycle.Event.ON_START).to(eventNotification());
+        return subject.filter(event -> event == Lifecycle.Event.ON_START).to(eventNotification());
     }
 
     /**
@@ -66,7 +61,7 @@ public class LifecycleProviderHelper implements LifecycleProvider, LifecycleObse
      */
     @Override
     public Observable<Long> onResumed() {
-        return mSubject.filter(event -> event == Lifecycle.Event.ON_RESUME).to(eventNotification());
+        return subject.filter(event -> event == Lifecycle.Event.ON_RESUME).to(eventNotification());
     }
 
     /**
@@ -74,7 +69,7 @@ public class LifecycleProviderHelper implements LifecycleProvider, LifecycleObse
      */
     @Override
     public Observable<Long> onPaused() {
-        return mSubject.filter(event -> event == Lifecycle.Event.ON_PAUSE).to(eventNotification());
+        return subject.filter(event -> event == Lifecycle.Event.ON_PAUSE).to(eventNotification());
     }
 
     /**
@@ -82,7 +77,7 @@ public class LifecycleProviderHelper implements LifecycleProvider, LifecycleObse
      */
     @Override
     public Observable<Long> onStopped() {
-        return mSubject.filter(event -> event == Lifecycle.Event.ON_STOP).to(eventNotification());
+        return subject.filter(event -> event == Lifecycle.Event.ON_STOP).to(eventNotification());
     }
 
     /**
@@ -90,7 +85,7 @@ public class LifecycleProviderHelper implements LifecycleProvider, LifecycleObse
      */
     @Override
     public Observable<Long> onDestroyed() {
-        return mSubject.filter(event -> event == Lifecycle.Event.ON_DESTROY).to(eventNotification());
+        return subject.filter(event -> event == Lifecycle.Event.ON_DESTROY).to(eventNotification());
     }
 
     private Function<Observable<Lifecycle.Event>, Observable<Long>> eventNotification() {
