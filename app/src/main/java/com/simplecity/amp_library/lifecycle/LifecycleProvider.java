@@ -4,11 +4,6 @@ import android.arch.lifecycle.Lifecycle;
 
 import io.reactivex.Observable;
 
-/**
- * Created by Khang NT on 11/29/17.
- * Email: khang.neon.1997@gmail.com
- */
-
 public interface LifecycleProvider {
 
     /**
@@ -45,6 +40,5 @@ public interface LifecycleProvider {
      * @return An observable stream emits 0L when component destroyed.
      */
     Observable<Long> onDestroyed();
-
-
+    
 }
