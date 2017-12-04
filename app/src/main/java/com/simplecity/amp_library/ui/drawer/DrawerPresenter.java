@@ -114,8 +114,7 @@ public class DrawerPresenter extends PurchasePresenter<DrawerView> {
                                 .toList())
                         .observeOn(AndroidSchedulers.mainThread())
                         // Delay the subscription so we're not querying data while the app is launching
-                        .delaySubscription(Observable.timer(1500, TimeUnit.MILLISECONDS)
-                                .takeUntil(lifecycleProvider.onDestroyed()))
+                        .delaySubscription(Observable.timer(1500, TimeUnit.MILLISECONDS))
                         // after all, clear all playlist item
                         // to avoid memory leak in static var DrawerParent.playlistsParent
                         .doFinally(() -> drawerView.setPlaylistItems(Collections.emptyList()))

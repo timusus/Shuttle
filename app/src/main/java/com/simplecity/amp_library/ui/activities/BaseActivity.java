@@ -1,7 +1,6 @@
 package com.simplecity.amp_library.ui.activities;
 
 import android.Manifest;
-import android.arch.lifecycle.Lifecycle;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -18,20 +17,15 @@ import android.widget.Toast;
 import com.afollestad.aesthetic.AestheticActivity;
 import com.greysonparrelli.permiso.Permiso;
 import com.simplecity.amp_library.IabManager;
-import com.simplecity.amp_library.lifecycle.LifecycleProvider;
-import com.simplecity.amp_library.lifecycle.LifecycleProviderHelper;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 
-import io.reactivex.Observable;
-
 import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
 
-public abstract class BaseActivity extends AestheticActivity implements ServiceConnection, LifecycleProvider {
+public abstract class BaseActivity extends AestheticActivity implements ServiceConnection {
 
     private MusicServiceConnectionUtils.ServiceToken token;
-    private LifecycleProviderHelper lifecycleProviderHelper = new LifecycleProviderHelper(this);;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -146,38 +140,4 @@ public abstract class BaseActivity extends AestheticActivity implements ServiceC
 
     protected abstract String screenName();
 
-    @Override
-    public Observable<Lifecycle.Event> lifecycle() {
-        return lifecycleProviderHelper.lifecycle();
-    }
-
-    @Override
-    public Observable<Long> onCreated() {
-        return lifecycleProviderHelper.onCreated();
-    }
-
-    @Override
-    public Observable<Long> onStarted() {
-        return lifecycleProviderHelper.onStarted();
-    }
-
-    @Override
-    public Observable<Long> onResumed() {
-        return lifecycleProviderHelper.onResumed();
-    }
-
-    @Override
-    public Observable<Long> onPaused() {
-        return lifecycleProviderHelper.onPaused();
-    }
-
-    @Override
-    public Observable<Long> onStopped() {
-        return lifecycleProviderHelper.onStopped();
-    }
-
-    @Override
-    public Observable<Long> onDestroyed() {
-        return lifecycleProviderHelper.onDestroyed();
-    }
 }
