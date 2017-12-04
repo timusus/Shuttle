@@ -14,12 +14,10 @@ import static android.arch.lifecycle.Lifecycle.Event.ON_ANY;
 public class LifecycleProviderHelper implements LifecycleProvider, LifecycleObserver {
 
     private Lifecycle hostLifecycle;
-    private BehaviorSubject<Lifecycle.Event> subject;
+    private BehaviorSubject<Lifecycle.Event> subject = BehaviorSubject.create();
 
     public LifecycleProviderHelper(LifecycleOwner lifecycleOwner) {
-        this.hostLifecycle = lifecycleOwner.getLifecycle();
-        this.subject = BehaviorSubject.create();
-
+        hostLifecycle = lifecycleOwner.getLifecycle();
         hostLifecycle.addObserver(this);
     }
 
