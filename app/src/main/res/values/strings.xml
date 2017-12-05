@@ -395,6 +395,10 @@
     <string name="pref_title_changelog">Changelog</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Support</string>
+    <!-- Settings title for toggling between remaining time and total time -->
+    <string name="pref_title_display_remaining_time">Show remaining time</string>
+    <!-- Settings summary for toggling between remaining time and total time -->
+    <string name="pref_summary_display_remaining_time">Show remaining time instead of duration on the \'now playing\' screen</string>
 
     <string name="pref_title_version">Version</string>
     <string name="pref_title_faq">FAQ</string>

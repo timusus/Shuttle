@@ -55,6 +55,7 @@ public class SettingsParentFragment extends BaseNavigationController implements
 
     @XmlRes
     int preferenceResource;
+
     @StringRes
     int titleResId;
 
