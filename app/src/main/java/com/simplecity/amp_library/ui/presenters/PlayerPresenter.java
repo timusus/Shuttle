@@ -158,9 +158,9 @@ public class PlayerPresenter extends Presenter<PlayerView> {
         PlayerView view = getView();
         if (view != null) {
             view.trackInfoChanged(MusicUtils.getSong());
+            view.queueChanged(MusicUtils.getQueuePosition() + 1, MusicUtils.getQueue().size());
             view.currentTimeChanged(MusicUtils.getPosition() / 1000);
             updateRemainingTime();
-            view.queueChanged(MusicUtils.getQueuePosition() + 1, MusicUtils.getQueue().size());
 
             addDisposable(PlaylistUtils.isFavorite(MusicUtils.getSong())
                     .subscribeOn(Schedulers.io())
@@ -300,7 +300,7 @@ public class PlayerPresenter extends Presenter<PlayerView> {
         }
     }
 
-    public void updateRemainingTime(){
+    public void updateRemainingTime() {
         PlayerView playerView = getView();
         if (playerView != null) {
             if (SettingsManager.getInstance().displayRemainingTime()) {

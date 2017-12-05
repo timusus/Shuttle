@@ -2,7 +2,6 @@ package com.simplecity.amp_library.ui.fragments;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -26,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.f2prateek.rx.preferences2.RxSharedPreferences;
 import com.jakewharton.rxbinding2.widget.RxSeekBar;
 import com.jakewharton.rxbinding2.widget.SeekBarChangeEvent;
 import com.jakewharton.rxbinding2.widget.SeekBarProgressChangeEvent;
@@ -257,14 +257,17 @@ public class PlayerFragment extends BaseFragment implements
                     .subscribe(seekBarChangeEvent -> presenter.seekTo(seekBarChangeEvent.progress()),
                             error -> LogUtils.logException(TAG, "Error receiving seekbar progress", error)));
         }
-        PreferenceManager.getDefaultSharedPreferences(getContext()).registerOnSharedPreferenceChangeListener(remainingTimeChangeListener);
+
+        disposables.add(RxSharedPreferences.create(PreferenceManager.getDefaultSharedPreferences(getContext()))
+                .getBoolean(SettingsManager.KEY_DISPLAY_REMAINING_TIME)
+                .asObservable()
+                .subscribe(aBoolean -> presenter.updateRemainingTime()));
     }
 
     @Override
     public void onPause() {
         disposables.clear();
         super.onPause();
-        PreferenceManager.getDefaultSharedPreferences(getContext()).unregisterOnSharedPreferenceChangeListener(remainingTimeChangeListener);
     }
 
     @Override
@@ -298,8 +301,8 @@ public class PlayerFragment extends BaseFragment implements
     }
 
     @Override
-    public void totalTimeChanged(long seconds){
-        if (totalTime != null){
+    public void totalTimeChanged(long seconds) {
+        if (totalTime != null) {
             totalTime.setText(StringUtils.makeTimeString(this.getActivity(), seconds));
         }
     }
@@ -563,12 +566,4 @@ public class PlayerFragment extends BaseFragment implements
         valueAnimator.start();
     }
 
-    SharedPreferences.OnSharedPreferenceChangeListener remainingTimeChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (key.equals(SettingsManager.KEY_DISPLAY_REMAINING_TIME)) {
-                presenter.updateRemainingTime();
-            }
-        }
-    };
 }
