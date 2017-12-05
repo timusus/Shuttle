@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
@@ -24,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.f2prateek.rx.preferences2.RxSharedPreferences;
 import com.jakewharton.rxbinding2.widget.RxSeekBar;
 import com.jakewharton.rxbinding2.widget.SeekBarChangeEvent;
 import com.jakewharton.rxbinding2.widget.SeekBarProgressChangeEvent;
@@ -255,6 +257,11 @@ public class PlayerFragment extends BaseFragment implements
                     .subscribe(seekBarChangeEvent -> presenter.seekTo(seekBarChangeEvent.progress()),
                             error -> LogUtils.logException(TAG, "Error receiving seekbar progress", error)));
         }
+
+        disposables.add(RxSharedPreferences.create(PreferenceManager.getDefaultSharedPreferences(getContext()))
+                .getBoolean(SettingsManager.KEY_DISPLAY_REMAINING_TIME)
+                .asObservable()
+                .subscribe(aBoolean -> presenter.updateRemainingTime()));
     }
 
     @Override
@@ -290,6 +297,13 @@ public class PlayerFragment extends BaseFragment implements
     public void currentTimeChanged(long seconds) {
         if (currentTime != null) {
             currentTime.setText(StringUtils.makeTimeString(this.getActivity(), seconds));
+        }
+    }
+
+    @Override
+    public void totalTimeChanged(long seconds) {
+        if (totalTime != null) {
+            totalTime.setText(StringUtils.makeTimeString(this.getActivity(), seconds));
         }
     }
 
@@ -451,6 +465,7 @@ public class PlayerFragment extends BaseFragment implements
         if (currentTime != null) {
             currentTime.setTextColor(textColor);
         }
+
         if (totalTime != null) {
             totalTime.setTextColor(textColor);
         }
@@ -550,4 +565,5 @@ public class PlayerFragment extends BaseFragment implements
         valueAnimator.addUpdateListener(animator -> consumer.accept((Integer) animator.getAnimatedValue()));
         valueAnimator.start();
     }
+
 }

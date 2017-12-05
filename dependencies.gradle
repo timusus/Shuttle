@@ -76,6 +76,7 @@ ext.versions = [
         rxJava                        : "2.1.3",
         rxRelay                       : "2.0.0",
         rxBroadcast                   : "2.0.0",
+        rxPrefs                       : "2.0.0-RC2",
 
         // //////////////////////////////////////////////////////////////////////////
         // MultiDex
@@ -202,6 +203,8 @@ ext.libs = [
         rxRelay                       : "com.jakewharton.rxrelay2:rxrelay:$versions.rxRelay",
         // Rx Receivers - https://github.com/f2prateek/rx-receivers
         rxBroadcast                   : "com.cantrowitz:rxbroadcast:$versions.rxBroadcast",
+        // Rx Prefs - https://github.com/f2prateek/rx-preferences
+        rxPrefs                       : "com.f2prateek.rx.preferences2:rx-preferences:$versions.rxPrefs",
 
         // //////////////////////////////////////////////////////////////////////////
         // MultiDex

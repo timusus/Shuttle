@@ -258,7 +258,7 @@ dependencies {
     debugImplementation libs.haha
     debugImplementation libs.leakCanaryDebug
     releaseImplementation libs.leakCanaryRel
-
+    
     // //////////////////////////////////////////////////////////////////////////
     // External libs
     // /////////////////////////////////////////////////////////////////////////
@@ -282,6 +282,7 @@ dependencies {
     implementation libs.rxJava
     implementation libs.rxRelay
     implementation libs.rxBroadcast
+    implementation libs.rxPrefs
     implementation 'com.tspoon.traceur:traceur:1.0.1'
 
     implementation libs.streams
