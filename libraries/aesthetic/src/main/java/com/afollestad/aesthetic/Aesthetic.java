@@ -78,7 +78,7 @@ public class Aesthetic {
 
   @SuppressLint("CommitPrefEdits")
   private Aesthetic(Context context) {
-    this.context = context.getApplicationContext();
+    this.context = context;
     prefs = context.getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
     editor = prefs.edit();
     rxPrefs = RxSharedPreferences.create(prefs);
