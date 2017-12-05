@@ -72,7 +72,7 @@ public class SettingsManager {
 
     @Nullable
     private String getString(@NonNull String key) {
-        return getSharedPreferences().getString(key, null);
+        return getString(key, null);
     }
 
     @NonNull
