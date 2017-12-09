@@ -139,4 +139,5 @@ public abstract class BaseActivity extends AestheticActivity implements ServiceC
     }
 
     protected abstract String screenName();
+
 }

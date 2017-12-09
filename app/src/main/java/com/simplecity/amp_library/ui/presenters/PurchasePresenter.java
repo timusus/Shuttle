@@ -1,6 +1,7 @@
 package com.simplecity.amp_library.ui.presenters;
 
 import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 
 import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.ui.views.PurchaseView;

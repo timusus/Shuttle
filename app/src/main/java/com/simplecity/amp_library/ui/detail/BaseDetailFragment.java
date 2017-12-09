@@ -477,7 +477,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
         // Create playlist menu
         final SubMenu sub = toolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-        PlaylistUtils.makePlaylistMenu(sub);
+        disposables.add(PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe());
 
         // Inflate sorting menus
         MenuItem item = toolbar.getMenu().findItem(R.id.sorting);

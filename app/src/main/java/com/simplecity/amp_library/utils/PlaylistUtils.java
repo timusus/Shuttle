@@ -216,17 +216,31 @@ public class PlaylistUtils {
         void onSave(Playlist playlist);
     }
 
-    public static void makePlaylistMenu(SubMenu sub) {
-        DataManager.getInstance().getPlaylistsRelay()
-                .subscribe(playlists -> {
-                    sub.clear();
-                    sub.add(0, MusicUtils.Defs.NEW_PLAYLIST, 0, R.string.new_playlist);
+    public static void createPlaylistMenu(SubMenu subMenu) {
+        createPlaylistMenu(subMenu, false).subscribe();
+    }
+
+    public static Completable createUpdatingPlaylistMenu(SubMenu subMenu) {
+        return createPlaylistMenu(subMenu, true);
+    }
+
+    private static Completable createPlaylistMenu(SubMenu subMenu, boolean autoUpdate) {
+        return DataManager.getInstance()
+                .getPlaylistsRelay()
+                .take(autoUpdate ? Long.MAX_VALUE : 1)
+                .doOnNext(playlists -> {
+                    subMenu.clear();
+                    subMenu.add(0, MusicUtils.Defs.NEW_PLAYLIST, 0, R.string.new_playlist);
                     for (Playlist playlist : playlists) {
                         final Intent intent = new Intent();
                         intent.putExtra(ARG_PLAYLIST, playlist);
-                        sub.add(0, MusicUtils.Defs.PLAYLIST_SELECTED, 0, playlist.name).setIntent(intent);
+                        subMenu.add(0, MusicUtils.Defs.PLAYLIST_SELECTED, 0, playlist.name).setIntent(intent);
                     }
-                }, error -> LogUtils.logException(TAG, "Error making playlist menu", error));
+                })
+                .ignoreElements()
+                .doOnError(throwable -> LogUtils.logException(TAG, "createUpdatingPlaylistMenu failed", throwable))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     /**
