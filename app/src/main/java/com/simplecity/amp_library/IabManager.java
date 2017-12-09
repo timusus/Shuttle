@@ -12,7 +12,6 @@ import com.android.vending.billing.utils.Inventory;
 import com.android.vending.billing.utils.Purchase;
 import com.simplecity.amp_library.constants.Config;
 import com.simplecity.amp_library.rx.UnsafeConsumer;
-import com.simplecity.amp_library.ui.activities.MainActivity;
 import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.LogUtils;
 
@@ -67,7 +66,7 @@ public class IabManager {
                 if (iabHelper == null) return;
 
                 if (result.isFailure()) {
-                    LogUtils.logError("IabManager", "Purchase result failure: " + result.getMessage());
+                    LogUtils.logException("IabManager", "Purchase result failure: " + result.getMessage(), null);
                     successHandler.accept(false);
                     return;
                 }
