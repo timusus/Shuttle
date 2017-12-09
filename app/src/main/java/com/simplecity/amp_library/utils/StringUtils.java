@@ -75,7 +75,8 @@ public class StringUtils {
      */
     public static String makeTimeString(@NonNull Context context, long secs) {
         sFormatBuilder.setLength(0);
-        return secs < 3600 ? makeShortTimeString(context, secs) : makeLongTimeString(context, secs);
+        //return (secs < 0 ? "- " : "") + (Math.abs(secs) < 3600 ? makeShortTimeString(context, Math.abs(secs)) : makeLongTimeString(context, Math.abs(secs)));
+        return Math.abs(secs) < 3600 ? makeShortTimeString(context, secs) : makeLongTimeString(context, secs);
     }
 
     private static String makeLongTimeString(@NonNull Context context, long secs) {
@@ -87,12 +88,14 @@ public class StringUtils {
     }
 
     private static String makeTimeString(String formatString, long secs) {
+        long absSeconds = Math.abs(secs);
         return sFormatter.format(formatString,
-                secs / 3600,
-                secs / 60,
-                (secs / 60) % 60,
-                secs,
-                secs % 60)
+                secs < 0 ? "- " : "",
+                absSeconds / 3600,
+                absSeconds / 60,
+                absSeconds / 60 % 60,
+                absSeconds,
+                absSeconds % 60)
                 .toString();
     }
 

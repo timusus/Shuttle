@@ -31,7 +31,8 @@ public abstract class BaseFragment extends BaseController {
     // Arbitrary value; set it to some reasonable default
     private static final int DEFAULT_CHILD_ANIMATION_DURATION = 250;
 
-    @Inject MultiSheetEventRelay multiSheetEventRelay;
+    @Inject
+    MultiSheetEventRelay multiSheetEventRelay;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

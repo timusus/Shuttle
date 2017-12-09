@@ -238,7 +238,7 @@ public class DrawerFragment extends BaseFragment implements
     }
 
     @Override
-    public void setItems(List<DrawerChild> drawerChildren) {
+    public void setPlaylistItems(List<DrawerChild> drawerChildren) {
 
         int parentPosition = adapter.getParentList().indexOf(playlistDrawerParent);
 

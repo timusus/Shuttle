@@ -26,6 +26,7 @@ public class SettingsManager {
     // Display
     public static String KEY_PREF_TAB_CHOOSER = "pref_tab_chooser";
     public static String KEY_PREF_DEFAULT_PAGE = "pref_default_page";
+    public static String KEY_DISPLAY_REMAINING_TIME = "pref_display_remaining_time";
 
     // Themes
     public static String KEY_PREF_THEME_BASE = "pref_theme_base";
@@ -71,7 +72,7 @@ public class SettingsManager {
 
     @Nullable
     private String getString(@NonNull String key) {
-        return getSharedPreferences().getString(key, null);
+        return getString(key, null);
     }
 
     @NonNull
@@ -116,6 +117,8 @@ public class SettingsManager {
     public boolean keepScreenOn() {
         return getBool(KEY_KEEP_SCREEN_ON, false);
     }
+
+    public boolean displayRemainingTime() { return getBool(KEY_DISPLAY_REMAINING_TIME,true); }
 
     private static final String KEY_ALBUM_DISPLAY_TYPE = "album_display_type_new";
 
@@ -202,6 +205,7 @@ public class SettingsManager {
     public boolean getEqualizerEnabled() {
         return getBool("audiofx.global.enable", false);
     }
+
 
     private static final String DOCUMENT_TREE_URI = "document_tree_uri";
 

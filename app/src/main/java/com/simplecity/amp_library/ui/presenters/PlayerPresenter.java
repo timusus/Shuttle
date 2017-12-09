@@ -17,6 +17,7 @@ import com.simplecity.amp_library.ui.views.PlayerView;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
+import com.simplecity.amp_library.utils.SettingsManager;
 
 import java.util.concurrent.TimeUnit;
 
@@ -49,7 +50,6 @@ public class PlayerPresenter extends Presenter<PlayerView> {
     @Override
     public void bindView(@NonNull PlayerView view) {
         super.bindView(view);
-
         updateTrackInfo();
         updateShuffleMode();
         updatePlaystate();
@@ -64,7 +64,7 @@ public class PlayerPresenter extends Presenter<PlayerView> {
         addDisposable(PlaybackMonitor.getInstance().getCurrentTimeObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(pos -> refreshCurrentTimeText(pos / 1000),
+                .subscribe(pos -> refreshTimeText(pos / 1000),
                         error -> LogUtils.logException(TAG, "PlayerPresenter: Error refreshing time text", error)));
 
         addDisposable(Flowable.interval(500, TimeUnit.MILLISECONDS)
@@ -124,11 +124,14 @@ public class PlayerPresenter extends Presenter<PlayerView> {
     }
 
 
-    private void refreshCurrentTimeText(long playbackTime) {
+    private void refreshTimeText(long playbackTime) {
         if (playbackTime != currentPlaybackTime) {
             PlayerView view = getView();
             if (view != null) {
                 view.currentTimeChanged(playbackTime);
+                if (SettingsManager.getInstance().displayRemainingTime()) {
+                    view.totalTimeChanged(-(MusicUtils.getDuration() / 1000 - playbackTime));
+                }
             }
         }
         currentPlaybackTime = playbackTime;
@@ -155,8 +158,9 @@ public class PlayerPresenter extends Presenter<PlayerView> {
         PlayerView view = getView();
         if (view != null) {
             view.trackInfoChanged(MusicUtils.getSong());
-            view.currentTimeChanged(MusicUtils.getPosition() / 1000);
             view.queueChanged(MusicUtils.getQueuePosition() + 1, MusicUtils.getQueue().size());
+            view.currentTimeChanged(MusicUtils.getPosition() / 1000);
+            updateRemainingTime();
 
             addDisposable(PlaylistUtils.isFavorite(MusicUtils.getSong())
                     .subscribeOn(Schedulers.io())
@@ -292,6 +296,17 @@ public class PlayerPresenter extends Presenter<PlayerView> {
             Song song = MusicUtils.getSong();
             if (song != null) {
                 playerView.showSongInfoDialog(BiographyDialog.getSongInfoDialog(context, song));
+            }
+        }
+    }
+
+    public void updateRemainingTime() {
+        PlayerView playerView = getView();
+        if (playerView != null) {
+            if (SettingsManager.getInstance().displayRemainingTime()) {
+                playerView.totalTimeChanged(-((MusicUtils.getDuration() - MusicUtils.getPosition()) / 1000));
+            } else {
+                playerView.totalTimeChanged(MusicUtils.getDuration() / 1000);
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.simplecity.amp_library.ui.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
@@ -56,11 +57,15 @@ public class SongFragment extends BaseFragment implements
 
     private boolean sortOrderChanged = false;
 
-    private Disposable disposable;
-
     private ShuffleView shuffleView;
 
     private ContextualToolbarHelper<Song> contextualToolbarHelper;
+
+    @Nullable
+    private Disposable disposable;
+
+    @Nullable
+    private Disposable playlistMenuDisposable;
 
     public SongFragment() {
 
@@ -169,6 +174,10 @@ public class SongFragment extends BaseFragment implements
 
         if (disposable != null) {
             disposable.dispose();
+        }
+
+        if (playlistMenuDisposable != null) {
+            playlistMenuDisposable.dispose();
         }
 
         super.onPause();
@@ -323,7 +332,11 @@ public class SongFragment extends BaseFragment implements
             contextualToolbar.getMenu().clear();
             contextualToolbar.inflateMenu(R.menu.context_menu_songs);
             SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-            PlaylistUtils.makePlaylistMenu(sub);
+
+            if (playlistMenuDisposable != null) {
+                playlistMenuDisposable.dispose();
+            }
+            playlistMenuDisposable = PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe();
 
             contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), () -> Stream.of(contextualToolbarHelper.getItems())
                     .map(SelectableViewModel::getItem)

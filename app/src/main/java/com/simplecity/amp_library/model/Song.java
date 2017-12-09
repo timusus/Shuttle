@@ -10,9 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
-import android.widget.Toast;
 
-import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.http.HttpClient;
@@ -322,11 +320,6 @@ public class Song implements
             context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_via)));
         } catch (IllegalArgumentException e) {
             LogUtils.logException(TAG, "Failed to share track", e);
-
-            // Todo: Once this issue is resolved, remove toast message.
-            if (BuildConfig.VERSION_NAME.contains("beta")) {
-                Toast.makeText(context, "Something went wrong sharing the song. Bad developer. This issue has been logged.", Toast.LENGTH_LONG).show();
-            }
         }
     }
 

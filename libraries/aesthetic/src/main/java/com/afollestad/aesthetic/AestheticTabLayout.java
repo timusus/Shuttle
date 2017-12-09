@@ -86,7 +86,7 @@ public class AestheticTabLayout extends TabLayout {
       when onAttachedToWindow is called.
 
       Lastly, for some reason, the 'setTabTextColors' has to be called after a delay, or else it doesn't
-      seem to take effect. Hard to tell if that's because Aesthetic isn't producing the right colors immeditately,
+      seem to take effect. Hard to tell if that's because Aesthetic isn't producing the right colors immediately,
       or if it's something to do with TabLayout.
 
       It's really not ideal to have blocking RX calls happening on the main thread, but until a proper solution
@@ -111,29 +111,29 @@ public class AestheticTabLayout extends TabLayout {
                       adjustAlpha(activeInactiveColors.inactiveColor(), UNFOCUSED_ALPHA),
                       activeInactiveColors.activeColor());
           }
-      }, 5);
+      }, 50);
       // End workaround
 
     bgModeSubscription =
-        Aesthetic.get(getContext())
-            .tabLayoutBackgroundMode()
-            .compose(Rx.<Integer>distinctToMainThread())
-            .subscribe(
-                new Consumer<Integer>() {
-                  @Override
-                  public void accept(@NonNull Integer mode) {
-                    if (bgColorSubscription != null) {
-                      bgColorSubscription.dispose();
-                    }
+            Aesthetic.get(getContext())
+                    .tabLayoutBackgroundMode()
+                    .compose(Rx.<Integer>distinctToMainThread())
+                    .subscribe(
+                            new Consumer<Integer>() {
+                              @Override
+                              public void accept(@NonNull Integer mode) {
+                                if (bgColorSubscription != null) {
+                                  bgColorSubscription.dispose();
+                                }
                     switch (mode) {
                       case TabLayoutIndicatorMode.PRIMARY:
-                        bgColorSubscription =
-                            Aesthetic.get(getContext())
-                                .colorPrimary()
-                                .compose(Rx.<Integer>distinctToMainThread())
-                                .subscribe(
-                                    ViewBackgroundAction.create(AestheticTabLayout.this),
-                                    onErrorLogAndRethrow());
+                                bgColorSubscription =
+                                        Aesthetic.get(getContext())
+                                                .colorPrimary()
+                                                .compose(Rx.<Integer>distinctToMainThread())
+                                                .subscribe(
+                                                        ViewBackgroundAction.create(AestheticTabLayout.this),
+                                                        onErrorLogAndRethrow());
                         break;
                       case TabLayoutIndicatorMode.ACCENT:
                         bgColorSubscription =
@@ -147,9 +147,9 @@ public class AestheticTabLayout extends TabLayout {
                       default:
                         throw new IllegalStateException("Unimplemented bg mode: " + mode);
                     }
-                  }
-                },
-                onErrorLogAndRethrow());
+                              }
+                            },
+                            onErrorLogAndRethrow());
 
     indicatorModeSubscription =
         Aesthetic.get(getContext())

@@ -120,7 +120,7 @@ public class MenuUtils implements MusicUtils.Defs {
 
         // Add playlist menu
         SubMenu sub = menu.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-        PlaylistUtils.makePlaylistMenu(sub);
+        PlaylistUtils.createPlaylistMenu(sub);
     }
 
     public static Toolbar.OnMenuItemClickListener getSongMenuClickListener(Context context, UnsafeCallable<List<Song>> callable) {
@@ -201,7 +201,7 @@ public class MenuUtils implements MusicUtils.Defs {
 
         // Add playlist menu
         SubMenu sub = menu.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-        PlaylistUtils.makePlaylistMenu(sub);
+        PlaylistUtils.createPlaylistMenu(sub);
     }
 
     private static Single<List<Song>> getSongsForAlbum(Album album) {
@@ -606,7 +606,7 @@ public class MenuUtils implements MusicUtils.Defs {
 
         // Add playlist menu
         SubMenu sub = menu.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-        PlaylistUtils.makePlaylistMenu(sub);
+        PlaylistUtils.createPlaylistMenu(sub);
 
         if (!fileObject.canReadWrite()) {
             menu.getMenu().findItem(R.id.rename).setVisible(false);

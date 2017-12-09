@@ -84,6 +84,9 @@ public class AlbumArtistFragment extends BaseFragment implements
     @Inject
     RequestManager requestManager;
 
+    @Nullable
+    private Disposable playlistMenuDisposable;
+
     public static AlbumArtistFragment newInstance(String pageTitle) {
         Bundle args = new Bundle();
         AlbumArtistFragment fragment = new AlbumArtistFragment();
@@ -143,6 +146,10 @@ public class AlbumArtistFragment extends BaseFragment implements
 
         if (disposable != null) {
             disposable.dispose();
+        }
+
+        if (playlistMenuDisposable != null) {
+            playlistMenuDisposable.dispose();
         }
 
         super.onPause();
@@ -392,7 +399,7 @@ public class AlbumArtistFragment extends BaseFragment implements
         PopupMenu menu = new PopupMenu(AlbumArtistFragment.this.getActivity(), v);
         menu.inflate(R.menu.menu_artist);
         SubMenu sub = menu.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-        PlaylistUtils.makePlaylistMenu(sub);
+        PlaylistUtils.createPlaylistMenu(sub);
         menu.setOnMenuItemClickListener(MenuUtils.getAlbumArtistClickListener(getContext(), albumArtist, taggerDialog -> taggerDialog.show(getFragmentManager())));
         menu.show();
     }
@@ -415,7 +422,10 @@ public class AlbumArtistFragment extends BaseFragment implements
             contextualToolbar.getMenu().clear();
             contextualToolbar.inflateMenu(R.menu.context_menu_songs);
             SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-            PlaylistUtils.makePlaylistMenu(sub);
+            if (playlistMenuDisposable != null) {
+                playlistMenuDisposable.dispose();
+            }
+            playlistMenuDisposable = PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe();
             contextualToolbar.setOnMenuItemClickListener(MenuUtils.getAlbumArtistMenuClickListener(
                     getContext(),
                     () -> Stream.of(contextualToolbarHelper.getItems())
