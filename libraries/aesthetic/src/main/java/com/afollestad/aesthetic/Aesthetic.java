@@ -103,7 +103,7 @@ public class Aesthetic {
   public void attach(@NonNull AppCompatActivity activity) {
 
     LayoutInflater li = activity.getLayoutInflater();
-    Util.setInflaterFactory(li, activity);
+    Util.setInflaterFactory(li);
 
     String activityThemeKey = String.format(KEY_ACTIVITY_THEME, key(activity));
     int latestActivityTheme = instance.prefs.getInt(activityThemeKey, 0);
