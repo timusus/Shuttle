@@ -116,7 +116,7 @@ public class AlbumArtistFragment extends BaseFragment implements
 
         setHasOptionsMenu(true);
 
-        adapter = new SectionedAdapter();
+        adapter = new SectionedAdapter("AlbumArtistFragment");
     }
 
     @Nullable

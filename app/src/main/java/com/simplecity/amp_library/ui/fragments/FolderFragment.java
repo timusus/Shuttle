@@ -28,6 +28,7 @@ import com.simplecity.amp_library.interfaces.FileType;
 import com.simplecity.amp_library.model.BaseFileObject;
 import com.simplecity.amp_library.model.InclExclItem;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.ui.adapters.LoggingViewModelAdapter;
 import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
 import com.simplecity.amp_library.ui.modelviews.BreadcrumbsView;
@@ -144,7 +145,7 @@ public class FolderFragment extends BaseFragment implements
 
         disposables = new CompositeDisposable();
 
-        adapter = new ViewModelAdapter();
+        adapter = new LoggingViewModelAdapter("FolderFragment");
 
         fileBrowser = new FileBrowser();
 

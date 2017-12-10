@@ -27,6 +27,7 @@ import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.tagger.TaggerDialog;
+import com.simplecity.amp_library.ui.adapters.LoggingViewModelAdapter;
 import com.simplecity.amp_library.ui.detail.AlbumDetailFragment;
 import com.simplecity.amp_library.ui.detail.ArtistDetailFragment;
 import com.simplecity.amp_library.ui.detail.BaseDetailFragment;
@@ -106,7 +107,7 @@ public class SearchFragment extends BaseFragment implements
         emptyView = new EmptyView(R.string.empty_search);
         emptyView.setHeight(ResourceUtils.toPixels(96));
 
-        adapter = new ViewModelAdapter();
+        adapter = new LoggingViewModelAdapter("SearchFragment");
     }
 
     @Nullable

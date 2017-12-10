@@ -14,6 +14,7 @@ import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.CategoryItem;
+import com.simplecity.amp_library.ui.adapters.LoggingViewModelAdapter;
 import com.simplecity.amp_library.ui.fragments.LibraryController;
 import com.simplecity.amp_library.ui.modelviews.TabViewModel;
 import com.simplecity.amp_library.ui.recyclerview.ItemTouchHelperCallback;
@@ -33,7 +34,7 @@ public class TabChooserDialog {
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
 
-        ViewModelAdapter adapter = new ViewModelAdapter();
+        ViewModelAdapter adapter = new LoggingViewModelAdapter("TabChooserDialog");
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
                 new ItemTouchHelperCallback(

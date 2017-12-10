@@ -41,6 +41,7 @@ import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.ArtworkProvider;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.tagger.TaggerDialog;
+import com.simplecity.amp_library.ui.adapters.LoggingViewModelAdapter;
 import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
 import com.simplecity.amp_library.ui.fragments.BaseFragment;
@@ -143,9 +144,9 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     public void onCreate(final Bundle icicle) {
         super.onCreate(icicle);
 
-        adapter = new ViewModelAdapter();
+        adapter = new LoggingViewModelAdapter("BaseDetailFragment");
 
-        horizontalRecyclerView = new HorizontalRecyclerView();
+        horizontalRecyclerView = new HorizontalRecyclerView("BaseDetail - horizontal");
 
         detailPresenter = new DetailPresenter(this, this);
 
