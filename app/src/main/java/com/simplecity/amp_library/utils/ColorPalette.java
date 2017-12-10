@@ -1,5 +1,7 @@
 package com.simplecity.amp_library.utils;
 
+import android.graphics.Color;
+
 public class ColorPalette {
 
     public static int[] getPrimaryColors() {
@@ -10,753 +12,353 @@ public class ColorPalette {
         return ShuttleUtils.isUpgraded() ? PRIMARY_COLORS_SUB : PRIMARY_COLORS_SUB_FREE;
     }
 
-    public static int[] getAccentColors() {
-        return ShuttleUtils.isUpgraded() ? ACCENT_COLORS : ACCENT_COLORS_FREE;
-    }
-
-    public static int[][] getAccentColorsSub() {
-        return ShuttleUtils.isUpgraded() ? ACCENT_COLORS_SUB : ACCENT_COLORS_SUB_FREE;
-    }
-
     private final static int[] PRIMARY_COLORS = new int[]{
-            0xFFF44336,
-            0xFFE91E63,
-            0xFF9C27B0,
-            0xFF673AB7,
-            0xFF3F51B5,
-            0xFF2196F3,
-            0xFF03A9F4,
-            0xFF00BCD4,
-            0xFF009688,
-            0xFF4CAF50,
-            0xFF8BC34A,
-            0xFFCDDC39,
-            0xFFFFEB3B,
-            0xFFFFC107,
-            0xFFFF9800,
-            0xFFFF5722,
-            0xFF795548,
-            0xFF9E9E9E,
-            0xFF607D8B
+            Color.parseColor("#F44336"),
+            Color.parseColor("#E91E63"),
+            Color.parseColor("#9C27B0"),
+            Color.parseColor("#673AB7"),
+            Color.parseColor("#3F51B5"),
+            Color.parseColor("#2196F3"),
+            Color.parseColor("#03A9F4"),
+            Color.parseColor("#00BCD4"),
+            Color.parseColor("#009688"),
+            Color.parseColor("#4CAF50"),
+            Color.parseColor("#8BC34A"),
+            Color.parseColor("#CDDC39"),
+            Color.parseColor("#FFEB3B"),
+            Color.parseColor("#FFC107"),
+            Color.parseColor("#FF9800"),
+            Color.parseColor("#FF5722"),
+            Color.parseColor("#795548"),
+            Color.parseColor("#9E9E9E"),
+            Color.parseColor("#607D8B")
     };
 
     private final static int[][] PRIMARY_COLORS_SUB = new int[][]{
             new int[]{
-                    0xFFFFEBEE,
-                    0xFFFFCDD2,
-                    0xFFEF9A9A,
-                    0xFFE57373,
-                    0xFFEF5350,
-                    0xFFF44336,
-                    0xFFE53935,
-                    0xFFD32F2F,
-                    0xFFC62828,
-                    0xFFB71C1C
+                    Color.parseColor("#FFEBEE"),
+                    Color.parseColor("#FFCDD2"),
+                    Color.parseColor("#EF9A9A"),
+                    Color.parseColor("#E57373"),
+                    Color.parseColor("#EF5350"),
+                    Color.parseColor("#F44336"),
+                    Color.parseColor("#E53935"),
+                    Color.parseColor("#D32F2F"),
+                    Color.parseColor("#C62828"),
+                    Color.parseColor("#B71C1C")
             },
             new int[]{
-                    0xFFFCE4EC,
-                    0xFFF8BBD0,
-                    0xFFF48FB1,
-                    0xFFF06292,
-                    0xFFEC407A,
-                    0xFFE91E63,
-                    0xFFD81B60,
-                    0xFFC2185B,
-                    0xFFAD1457,
-                    0xFF880E4F
+                    Color.parseColor("#FCE4EC"),
+                    Color.parseColor("#F8BBD0"),
+                    Color.parseColor("#F48FB1"),
+                    Color.parseColor("#F06292"),
+                    Color.parseColor("#EC407A"),
+                    Color.parseColor("#E91E63"),
+                    Color.parseColor("#D81B60"),
+                    Color.parseColor("#C2185B"),
+                    Color.parseColor("#AD1457"),
+                    Color.parseColor("#880E4F")
             },
             new int[]{
-                    0xFFF3E5F5,
-                    0xFFE1BEE7,
-                    0xFFCE93D8,
-                    0xFFBA68C8,
-                    0xFFAB47BC,
-                    0xFF9C27B0,
-                    0xFF8E24AA,
-                    0xFF7B1FA2,
-                    0xFF6A1B9A,
-                    0xFF4A148C
+                    Color.parseColor("#F3E5F5"),
+                    Color.parseColor("#E1BEE7"),
+                    Color.parseColor("#CE93D8"),
+                    Color.parseColor("#BA68C8"),
+                    Color.parseColor("#AB47BC"),
+                    Color.parseColor("#9C27B0"),
+                    Color.parseColor("#8E24AA"),
+                    Color.parseColor("#7B1FA2"),
+                    Color.parseColor("#6A1B9A"),
+                    Color.parseColor("#4A148C")
             },
             new int[]{
-                    0xFFEDE7F6,
-                    0xFFD1C4E9,
-                    0xFFB39DDB,
-                    0xFF9575CD,
-                    0xFF7E57C2,
-                    0xFF673AB7,
-                    0xFF5E35B1,
-                    0xFF512DA8,
-                    0xFF4527A0,
-                    0xFF311B92
+                    Color.parseColor("#EDE7F6"),
+                    Color.parseColor("#D1C4E9"),
+                    Color.parseColor("#B39DDB"),
+                    Color.parseColor("#9575CD"),
+                    Color.parseColor("#7E57C2"),
+                    Color.parseColor("#673AB7"),
+                    Color.parseColor("#5E35B1"),
+                    Color.parseColor("#512DA8"),
+                    Color.parseColor("#4527A0"),
+                    Color.parseColor("#311B92")
             },
             new int[]{
-                    0xFFE8EAF6,
-                    0xFFC5CAE9,
-                    0xFF9FA8DA,
-                    0xFF7986CB,
-                    0xFF5C6BC0,
-                    0xFF3F51B5,
-                    0xFF3949AB,
-                    0xFF303F9F,
-                    0xFF283593,
-                    0xFF1A237E
+                    Color.parseColor("#E8EAF6"),
+                    Color.parseColor("#C5CAE9"),
+                    Color.parseColor("#9FA8DA"),
+                    Color.parseColor("#7986CB"),
+                    Color.parseColor("#5C6BC0"),
+                    Color.parseColor("#3F51B5"),
+                    Color.parseColor("#3949AB"),
+                    Color.parseColor("#303F9F"),
+                    Color.parseColor("#283593"),
+                    Color.parseColor("#1A237E")
             },
             new int[]{
-                    0xFFE3F2FD,
-                    0xFFBBDEFB,
-                    0xFF90CAF9,
-                    0xFF64B5F6,
-                    0xFF42A5F5,
-                    0xFF2196F3,
-                    0xFF1E88E5,
-                    0xFF1976D2,
-                    0xFF1565C0,
-                    0xFF0D47A1
+                    Color.parseColor("#E3F2FD"),
+                    Color.parseColor("#BBDEFB"),
+                    Color.parseColor("#90CAF9"),
+                    Color.parseColor("#64B5F6"),
+                    Color.parseColor("#42A5F5"),
+                    Color.parseColor("#2196F3"),
+                    Color.parseColor("#1E88E5"),
+                    Color.parseColor("#1976D2"),
+                    Color.parseColor("#1565C0"),
+                    Color.parseColor("#0D47A1")
             },
             new int[]{
-                    0xFFE1F5FE,
-                    0xFFB3E5FC,
-                    0xFF81D4FA,
-                    0xFF4FC3F7,
-                    0xFF29B6F6,
-                    0xFF03A9F4,
-                    0xFF039BE5,
-                    0xFF0288D1,
-                    0xFF0277BD,
-                    0xFF01579B
+                    Color.parseColor("#E1F5FE"),
+                    Color.parseColor("#B3E5FC"),
+                    Color.parseColor("#81D4FA"),
+                    Color.parseColor("#4FC3F7"),
+                    Color.parseColor("#29B6F6"),
+                    Color.parseColor("#03A9F4"),
+                    Color.parseColor("#039BE5"),
+                    Color.parseColor("#0288D1"),
+                    Color.parseColor("#0277BD"),
+                    Color.parseColor("#01579B")
             },
             new int[]{
-                    0xFFE0F7FA,
-                    0xFFB2EBF2,
-                    0xFF80DEEA,
-                    0xFF4DD0E1,
-                    0xFF26C6DA,
-                    0xFF00BCD4,
-                    0xFF00ACC1,
-                    0xFF0097A7,
-                    0xFF00838F,
-                    0xFF006064
+                    Color.parseColor("#E0F7FA"),
+                    Color.parseColor("#B2EBF2"),
+                    Color.parseColor("#80DEEA"),
+                    Color.parseColor("#4DD0E1"),
+                    Color.parseColor("#26C6DA"),
+                    Color.parseColor("#00BCD4"),
+                    Color.parseColor("#00ACC1"),
+                    Color.parseColor("#0097A7"),
+                    Color.parseColor("#00838F"),
+                    Color.parseColor("#006064")
             },
             new int[]{
-                    0xFFE0F2F1,
-                    0xFFB2DFDB,
-                    0xFF80CBC4,
-                    0xFF4DB6AC,
-                    0xFF26A69A,
-                    0xFF009688,
-                    0xFF00897B,
-                    0xFF00796B,
-                    0xFF00695C,
-                    0xFF004D40
+                    Color.parseColor("#E0F2F1"),
+                    Color.parseColor("#B2DFDB"),
+                    Color.parseColor("#80CBC4"),
+                    Color.parseColor("#4DB6AC"),
+                    Color.parseColor("#26A69A"),
+                    Color.parseColor("#009688"),
+                    Color.parseColor("#00897B"),
+                    Color.parseColor("#00796B"),
+                    Color.parseColor("#00695C"),
+                    Color.parseColor("#004D40")
             },
             new int[]{
-                    0xFFE8F5E9,
-                    0xFFC8E6C9,
-                    0xFFA5D6A7,
-                    0xFF81C784,
-                    0xFF66BB6A,
-                    0xFF4CAF50,
-                    0xFF43A047,
-                    0xFF388E3C,
-                    0xFF2E7D32,
-                    0xFF1B5E20
+                    Color.parseColor("#E8F5E9"),
+                    Color.parseColor("#C8E6C9"),
+                    Color.parseColor("#A5D6A7"),
+                    Color.parseColor("#81C784"),
+                    Color.parseColor("#66BB6A"),
+                    Color.parseColor("#4CAF50"),
+                    Color.parseColor("#43A047"),
+                    Color.parseColor("#388E3C"),
+                    Color.parseColor("#2E7D32"),
+                    Color.parseColor("#1B5E20")
             },
             new int[]{
-                    0xFFF1F8E9,
-                    0xFFDCEDC8,
-                    0xFFC5E1A5,
-                    0xFFAED581,
-                    0xFF9CCC65,
-                    0xFF8BC34A,
-                    0xFF7CB342,
-                    0xFF689F38,
-                    0xFF558B2F,
-                    0xFF33691E
+                    Color.parseColor("#F1F8E9"),
+                    Color.parseColor("#DCEDC8"),
+                    Color.parseColor("#C5E1A5"),
+                    Color.parseColor("#AED581"),
+                    Color.parseColor("#9CCC65"),
+                    Color.parseColor("#8BC34A"),
+                    Color.parseColor("#7CB342"),
+                    Color.parseColor("#689F38"),
+                    Color.parseColor("#558B2F"),
+                    Color.parseColor("#33691E")
             },
             new int[]{
-                    0xFFF9FBE7,
-                    0xFFF0F4C3,
-                    0xFFE6EE9C,
-                    0xFFDCE775,
-                    0xFFD4E157,
-                    0xFFCDDC39,
-                    0xFFC0CA33,
-                    0xFFAFB42B,
-                    0xFF9E9D24,
-                    0xFF827717
+                    Color.parseColor("#F9FBE7"),
+                    Color.parseColor("#F0F4C3"),
+                    Color.parseColor("#E6EE9C"),
+                    Color.parseColor("#DCE775"),
+                    Color.parseColor("#D4E157"),
+                    Color.parseColor("#CDDC39"),
+                    Color.parseColor("#C0CA33"),
+                    Color.parseColor("#AFB42B"),
+                    Color.parseColor("#9E9D24"),
+                    Color.parseColor("#827717")
             },
             new int[]{
-                    0xFFFFFDE7,
-                    0xFFFFF9C4,
-                    0xFFFFF59D,
-                    0xFFFFF176,
-                    0xFFFFEE58,
-                    0xFFFFEB3B,
-                    0xFFFDD835,
-                    0xFFFBC02D,
-                    0xFFF9A825,
-                    0xFFF57F17
+                    Color.parseColor("#FFFDE7"),
+                    Color.parseColor("#FFF9C4"),
+                    Color.parseColor("#FFF59D"),
+                    Color.parseColor("#FFF176"),
+                    Color.parseColor("#FFEE58"),
+                    Color.parseColor("#FFEB3B"),
+                    Color.parseColor("#FDD835"),
+                    Color.parseColor("#FBC02D"),
+                    Color.parseColor("#F9A825"),
+                    Color.parseColor("#F57F17")
             },
             new int[]{
-                    0xFFFFF8E1,
-                    0xFFFFECB3,
-                    0xFFFFE082,
-                    0xFFFFD54F,
-                    0xFFFFCA28,
-                    0xFFFFC107,
-                    0xFFFFB300,
-                    0xFFFFA000,
-                    0xFFFF8F00,
-                    0xFFFF6F00
+                    Color.parseColor("#FFF8E1"),
+                    Color.parseColor("#FFECB3"),
+                    Color.parseColor("#FFE082"),
+                    Color.parseColor("#FFD54F"),
+                    Color.parseColor("#FFCA28"),
+                    Color.parseColor("#FFC107"),
+                    Color.parseColor("#FFB300"),
+                    Color.parseColor("#FFA000"),
+                    Color.parseColor("#FF8F00"),
+                    Color.parseColor("#FF6F00")
             },
             new int[]{
-                    0xFFFFF3E0,
-                    0xFFFFE0B2,
-                    0xFFFFCC80,
-                    0xFFFFB74D,
-                    0xFFFFA726,
-                    0xFFFF9800,
-                    0xFFFB8C00,
-                    0xFFF57C00,
-                    0xFFEF6C00,
-                    0xFFE65100
+                    Color.parseColor("#FFF3E0"),
+                    Color.parseColor("#FFE0B2"),
+                    Color.parseColor("#FFCC80"),
+                    Color.parseColor("#FFB74D"),
+                    Color.parseColor("#FFA726"),
+                    Color.parseColor("#FF9800"),
+                    Color.parseColor("#FB8C00"),
+                    Color.parseColor("#F57C00"),
+                    Color.parseColor("#EF6C00"),
+                    Color.parseColor("#E65100")
             },
             new int[]{
-                    0xFFFBE9E7,
-                    0xFFFFCCBC,
-                    0xFFFFAB91,
-                    0xFFFF8A65,
-                    0xFFFF7043,
-                    0xFFFF5722,
-                    0xFFF4511E,
-                    0xFFE64A19,
-                    0xFFD84315,
-                    0xFFBF360C
+                    Color.parseColor("#FBE9E7"),
+                    Color.parseColor("#FFCCBC"),
+                    Color.parseColor("#FFAB91"),
+                    Color.parseColor("#FF8A65"),
+                    Color.parseColor("#FF7043"),
+                    Color.parseColor("#FF5722"),
+                    Color.parseColor("#F4511E"),
+                    Color.parseColor("#E64A19"),
+                    Color.parseColor("#D84315"),
+                    Color.parseColor("#BF360C")
             },
             new int[]{
-                    0xFFEFEBE9,
-                    0xFFD7CCC8,
-                    0xFFBCAAA4,
-                    0xFFA1887F,
-                    0xFF8D6E63,
-                    0xFF795548,
-                    0xFF6D4C41,
-                    0xFF5D4037,
-                    0xFF4E342E,
-                    0xFF3E2723
+                    Color.parseColor("#EFEBE9"),
+                    Color.parseColor("#D7CCC8"),
+                    Color.parseColor("#BCAAA4"),
+                    Color.parseColor("#A1887F"),
+                    Color.parseColor("#8D6E63"),
+                    Color.parseColor("#795548"),
+                    Color.parseColor("#6D4C41"),
+                    Color.parseColor("#5D4037"),
+                    Color.parseColor("#4E342E"),
+                    Color.parseColor("#3E2723")
             },
             new int[]{
-                    0xFFFAFAFA,
-                    0xFFF5F5F5,
-                    0xFFEEEEEE,
-                    0xFFE0E0E0,
-                    0xFFBDBDBD,
-                    0xFF9E9E9E,
-                    0xFF757575,
-                    0xFF616161,
-                    0xFF424242,
-                    0xFF212121
+                    Color.parseColor("#FAFAFA"),
+                    Color.parseColor("#F5F5F5"),
+                    Color.parseColor("#EEEEEE"),
+                    Color.parseColor("#E0E0E0"),
+                    Color.parseColor("#BDBDBD"),
+                    Color.parseColor("#9E9E9E"),
+                    Color.parseColor("#757575"),
+                    Color.parseColor("#616161"),
+                    Color.parseColor("#424242"),
+                    Color.parseColor("#212121")
             },
             new int[]{
-                    0xFFECEFF1,
-                    0xFFCFD8DC,
-                    0xFFB0BEC5,
-                    0xFF90A4AE,
-                    0xFF78909C,
-                    0xFF607D8B,
-                    0xFF546E7A,
-                    0xFF455A64,
-                    0xFF37474F,
-                    0xFF263238
+                    Color.parseColor("#ECEFF1"),
+                    Color.parseColor("#CFD8DC"),
+                    Color.parseColor("#B0BEC5"),
+                    Color.parseColor("#90A4AE"),
+                    Color.parseColor("#78909C"),
+                    Color.parseColor("#607D8B"),
+                    Color.parseColor("#546E7A"),
+                    Color.parseColor("#455A64"),
+                    Color.parseColor("#37474F"),
+                    Color.parseColor("#263238")
             }
     };
 
     private final static int[] PRIMARY_COLORS_FREE = new int[]{
-            0xFFF44336,
-//            0xFFE91E63,
-            0xFF9C27B0,
-//            0xFF673AB7,
-//            0xFF3F51B5,
-//            0xFF2196F3,
-            0xFF03A9F4,
-//            0xFF00BCD4,
-            0xFF009688,
-            0xFF4CAF50,
-//            0xFF8BC34A,
-//            0xFFCDDC39,
-//            0xFFFFEB3B,
-            0xFFFFC107,
-//            0xFFFF9800,
-//            0xFFFF5722,
-//            0xFF795548,
-            0xFF9E9E9E,
-//            0xFF607D8B
+            Color.parseColor("#F44336"),
+            Color.parseColor("#9C27B0"),
+            Color.parseColor("#03A9F4"),
+            Color.parseColor("#009688"),
+            Color.parseColor("#4CAF50"),
+            Color.parseColor("#FFC107"),
+            Color.parseColor("#9E9E9E")
     };
 
     private final static int[][] PRIMARY_COLORS_SUB_FREE = new int[][]{
             new int[]{
-                    0xFFFFEBEE,
-                    0xFFFFCDD2,
-                    0xFFEF9A9A,
-                    0xFFE57373,
-                    0xFFEF5350,
-                    0xFFF44336,
-                    0xFFE53935,
-                    0xFFD32F2F,
-                    0xFFC62828,
-                    0xFFB71C1C
-            },
-//            new int[]{
-//                    0xFFFCE4EC,
-//                    0xFFF8BBD0,
-//                    0xFFF48FB1,
-//                    0xFFF06292,
-//                    0xFFEC407A,
-//                    0xFFE91E63,
-//                    0xFFD81B60,
-//                    0xFFC2185B,
-//                    0xFFAD1457,
-//                    0xFF880E4F
-//            },
-            new int[]{
-                    0xFFF3E5F5,
-                    0xFFE1BEE7,
-                    0xFFCE93D8,
-                    0xFFBA68C8,
-                    0xFFAB47BC,
-                    0xFF9C27B0,
-                    0xFF8E24AA,
-                    0xFF7B1FA2,
-                    0xFF6A1B9A,
-                    0xFF4A148C
-            },
-//            new int[]{
-//                    0xFFEDE7F6,
-//                    0xFFD1C4E9,
-//                    0xFFB39DDB,
-//                    0xFF9575CD,
-//                    0xFF7E57C2,
-//                    0xFF673AB7,
-//                    0xFF5E35B1,
-//                    0xFF512DA8,
-//                    0xFF4527A0,
-//                    0xFF311B92
-//            },
-//            new int[]{
-//                    0xFFE8EAF6,
-//                    0xFFC5CAE9,
-//                    0xFF9FA8DA,
-//                    0xFF7986CB,
-//                    0xFF5C6BC0,
-//                    0xFF3F51B5,
-//                    0xFF3949AB,
-//                    0xFF303F9F,
-//                    0xFF283593,
-//                    0xFF1A237E
-//            },
-//            new int[]{
-//                    0xFFE3F2FD,
-//                    0xFFBBDEFB,
-//                    0xFF90CAF9,
-//                    0xFF64B5F6,
-//                    0xFF42A5F5,
-//                    0xFF2196F3,
-//                    0xFF1E88E5,
-//                    0xFF1976D2,
-//                    0xFF1565C0,
-//                    0xFF0D47A1
-//            },
-            new int[]{
-                    0xFFE1F5FE,
-                    0xFFB3E5FC,
-                    0xFF81D4FA,
-                    0xFF4FC3F7,
-                    0xFF29B6F6,
-                    0xFF03A9F4,
-                    0xFF039BE5,
-                    0xFF0288D1,
-                    0xFF0277BD,
-                    0xFF01579B
-            },
-//            new int[]{
-//                    0xFFE0F7FA,
-//                    0xFFB2EBF2,
-//                    0xFF80DEEA,
-//                    0xFF4DD0E1,
-//                    0xFF26C6DA,
-//                    0xFF00BCD4,
-//                    0xFF00ACC1,
-//                    0xFF0097A7,
-//                    0xFF00838F,
-//                    0xFF006064
-//            },
-            new int[]{
-                    0xFFE0F2F1,
-                    0xFFB2DFDB,
-                    0xFF80CBC4,
-                    0xFF4DB6AC,
-                    0xFF26A69A,
-                    0xFF009688,
-                    0xFF00897B,
-                    0xFF00796B,
-                    0xFF00695C,
-                    0xFF004D40
+                    Color.parseColor("#FFEBEE"),
+                    Color.parseColor("#FFCDD2"),
+                    Color.parseColor("#EF9A9A"),
+                    Color.parseColor("#E57373"),
+                    Color.parseColor("#EF5350"),
+                    Color.parseColor("#F44336"),
+                    Color.parseColor("#E53935"),
+                    Color.parseColor("#D32F2F"),
+                    Color.parseColor("#C62828"),
+                    Color.parseColor("#B71C1C")
             },
             new int[]{
-                    0xFFE8F5E9,
-                    0xFFC8E6C9,
-                    0xFFA5D6A7,
-                    0xFF81C784,
-                    0xFF66BB6A,
-                    0xFF4CAF50,
-                    0xFF43A047,
-                    0xFF388E3C,
-                    0xFF2E7D32,
-                    0xFF1B5E20
-            },
-//            new int[]{
-//                    0xFFF1F8E9,
-//                    0xFFDCEDC8,
-//                    0xFFC5E1A5,
-//                    0xFFAED581,
-//                    0xFF9CCC65,
-//                    0xFF8BC34A,
-//                    0xFF7CB342,
-//                    0xFF689F38,
-//                    0xFF558B2F,
-//                    0xFF33691E
-//            },
-//            new int[]{
-//                    0xFFF9FBE7,
-//                    0xFFF0F4C3,
-//                    0xFFE6EE9C,
-//                    0xFFDCE775,
-//                    0xFFD4E157,
-//                    0xFFCDDC39,
-//                    0xFFC0CA33,
-//                    0xFFAFB42B,
-//                    0xFF9E9D24,
-//                    0xFF827717
-//            },
-//            new int[]{
-//                    0xFFFFFDE7,
-//                    0xFFFFF9C4,
-//                    0xFFFFF59D,
-//                    0xFFFFF176,
-//                    0xFFFFEE58,
-//                    0xFFFFEB3B,
-//                    0xFFFDD835,
-//                    0xFFFBC02D,
-//                    0xFFF9A825,
-//                    0xFFF57F17
-//            },
-            new int[]{
-                    0xFFFFF8E1,
-                    0xFFFFECB3,
-                    0xFFFFE082,
-                    0xFFFFD54F,
-                    0xFFFFCA28,
-                    0xFFFFC107,
-                    0xFFFFB300,
-                    0xFFFFA000,
-                    0xFFFF8F00,
-                    0xFFFF6F00
-            },
-//            new int[]{
-//                    0xFFFFF3E0,
-//                    0xFFFFE0B2,
-//                    0xFFFFCC80,
-//                    0xFFFFB74D,
-//                    0xFFFFA726,
-//                    0xFFFF9800,
-//                    0xFFFB8C00,
-//                    0xFFF57C00,
-//                    0xFFEF6C00,
-//                    0xFFE65100
-//            },
-//            new int[]{
-//                    0xFFFBE9E7,
-//                    0xFFFFCCBC,
-//                    0xFFFFAB91,
-//                    0xFFFF8A65,
-//                    0xFFFF7043,
-//                    0xFFFF5722,
-//                    0xFFF4511E,
-//                    0xFFE64A19,
-//                    0xFFD84315,
-//                    0xFFBF360C
-//            },
-//            new int[]{
-//                    0xFFEFEBE9,
-//                    0xFFD7CCC8,
-//                    0xFFBCAAA4,
-//                    0xFFA1887F,
-//                    0xFF8D6E63,
-//                    0xFF795548,
-//                    0xFF6D4C41,
-//                    0xFF5D4037,
-//                    0xFF4E342E,
-//                    0xFF3E2723
-//            },
-            new int[]{
-                    0xFFFAFAFA,
-                    0xFFF5F5F5,
-                    0xFFEEEEEE,
-                    0xFFE0E0E0,
-                    0xFFBDBDBD,
-                    0xFF9E9E9E,
-                    0xFF757575,
-                    0xFF616161,
-                    0xFF424242,
-                    0xFF212121
-            },
-//            new int[]{
-//                    0xFFECEFF1,
-//                    0xFFCFD8DC,
-//                    0xFFB0BEC5,
-//                    0xFF90A4AE,
-//                    0xFF78909C,
-//                    0xFF607D8B,
-//                    0xFF546E7A,
-//                    0xFF455A64,
-//                    0xFF37474F,
-//                    0xFF263238
-//            }
-    };
-
-    private final static int[] ACCENT_COLORS = new int[]{
-            0xFFFF1744,
-            0xFFF50057,
-            0xFFD500F9,
-            0xFF651FFF,
-            0xFF3D5AFE,
-            0xFF2979FF,
-            0xFF00B0FF,
-            0xFF00E5FF,
-            0xFF1DE9B6,
-            0xFF00E676,
-            0xFF76FF03,
-            0xFFC6FF00,
-            0xFFFFEA00,
-            0xFFFFC400,
-            0xFFFF9100,
-            0xFFFF3D00
-    };
-
-    private final static int[][] ACCENT_COLORS_SUB = new int[][]{
-            new int[]{
-                    0xFFFF8A80,
-                    0xFFFF5252,
-                    0xFFFF1744,
-                    0xFFD50000
+                    Color.parseColor("#F3E5F5"),
+                    Color.parseColor("#E1BEE7"),
+                    Color.parseColor("#CE93D8"),
+                    Color.parseColor("#BA68C8"),
+                    Color.parseColor("#AB47BC"),
+                    Color.parseColor("#9C27B0"),
+                    Color.parseColor("#8E24AA"),
+                    Color.parseColor("#7B1FA2"),
+                    Color.parseColor("#6A1B9A"),
+                    Color.parseColor("#4A148C")
             },
             new int[]{
-                    0xFFFF80AB,
-                    0xFFFF4081,
-                    0xFFF50057,
-                    0xFFC51162
+                    Color.parseColor("#E1F5FE"),
+                    Color.parseColor("#B3E5FC"),
+                    Color.parseColor("#81D4FA"),
+                    Color.parseColor("#4FC3F7"),
+                    Color.parseColor("#29B6F6"),
+                    Color.parseColor("#03A9F4"),
+                    Color.parseColor("#039BE5"),
+                    Color.parseColor("#0288D1"),
+                    Color.parseColor("#0277BD"),
+                    Color.parseColor("#01579B")
             },
             new int[]{
-                    0xFFEA80FC,
-                    0xFFE040FB,
-                    0xFFD500F9,
-                    0xFFAA00FF
+                    Color.parseColor("#E0F2F1"),
+                    Color.parseColor("#B2DFDB"),
+                    Color.parseColor("#80CBC4"),
+                    Color.parseColor("#4DB6AC"),
+                    Color.parseColor("#26A69A"),
+                    Color.parseColor("#009688"),
+                    Color.parseColor("#00897B"),
+                    Color.parseColor("#00796B"),
+                    Color.parseColor("#00695C"),
+                    Color.parseColor("#004D40")
             },
             new int[]{
-                    0xFFB388FF,
-                    0xFF7C4DFF,
-                    0xFF651FFF,
-                    0xFF6200EA
+                    Color.parseColor("#E8F5E9"),
+                    Color.parseColor("#C8E6C9"),
+                    Color.parseColor("#A5D6A7"),
+                    Color.parseColor("#81C784"),
+                    Color.parseColor("#66BB6A"),
+                    Color.parseColor("#4CAF50"),
+                    Color.parseColor("#43A047"),
+                    Color.parseColor("#388E3C"),
+                    Color.parseColor("#2E7D32"),
+                    Color.parseColor("#1B5E20")
             },
             new int[]{
-                    0xFF8C9EFF,
-                    0xFF536DFE,
-                    0xFF3D5AFE,
-                    0xFF304FFE
+                    Color.parseColor("#FFF8E1"),
+                    Color.parseColor("#FFECB3"),
+                    Color.parseColor("#FFE082"),
+                    Color.parseColor("#FFD54F"),
+                    Color.parseColor("#FFCA28"),
+                    Color.parseColor("#FFC107"),
+                    Color.parseColor("#FFB300"),
+                    Color.parseColor("#FFA000"),
+                    Color.parseColor("#FF8F00"),
+                    Color.parseColor("#FF6F00")
             },
             new int[]{
-                    0xFF82B1FF,
-                    0xFF448AFF,
-                    0xFF2979FF,
-                    0xFF2962FF
+                    Color.parseColor("#FAFAFA"),
+                    Color.parseColor("#F5F5F5"),
+                    Color.parseColor("#EEEEEE"),
+                    Color.parseColor("#E0E0E0"),
+                    Color.parseColor("#BDBDBD"),
+                    Color.parseColor("#9E9E9E"),
+                    Color.parseColor("#757575"),
+                    Color.parseColor("#616161"),
+                    Color.parseColor("#424242"),
+                    Color.parseColor("#212121")
             },
-            new int[]{
-                    0xFF80D8FF,
-                    0xFF40C4FF,
-                    0xFF00B0FF,
-                    0xFF0091EA
-            },
-            new int[]{
-                    0xFF84FFFF,
-                    0xFF18FFFF,
-                    0xFF00E5FF,
-                    0xFF00B8D4
-            },
-            new int[]{
-                    0xFFA7FFEB,
-                    0xFF64FFDA,
-                    0xFF1DE9B6,
-                    0xFF00BFA5
-            },
-            new int[]{
-                    0xFFB9F6CA,
-                    0xFF69F0AE,
-                    0xFF00E676,
-                    0xFF00C853
-            },
-            new int[]{
-                    0xFFCCFF90,
-                    0xFFB2FF59,
-                    0xFF76FF03,
-                    0xFF64DD17
-            },
-            new int[]{
-                    0xFFF4FF81,
-                    0xFFEEFF41,
-                    0xFFC6FF00,
-                    0xFFAEEA00
-            },
-            new int[]{
-                    0xFFFFFF8D,
-                    0xFFFFFF00,
-                    0xFFFFEA00,
-                    0xFFFFD600
-            },
-            new int[]{
-                    0xFFFFE57F,
-                    0xFFFFD740,
-                    0xFFFFC400,
-                    0xFFFFAB00
-            },
-            new int[]{
-                    0xFFFFD180,
-                    0xFFFFAB40,
-                    0xFFFF9100,
-                    0xFFFF6D00
-            },
-            new int[]{
-                    0xFFFF9E80,
-                    0xFFFF6E40,
-                    0xFFFF3D00,
-                    0xFFDD2C00
-            }
-    };
-
-    private final static int[] ACCENT_COLORS_FREE = new int[]{
-            0xFFFF1744,
-//            0xFFF50057,
-//            0xFFD500F9,
-//            0xFF651FFF,
-            0xFF3D5AFE,
-//            0xFF2979FF,
-            0xFF00B0FF,
-//            0xFF00E5FF,
-//            0xFF1DE9B6,
-            0xFF00E676,
-//            0xFF76FF03,
-//            0xFFC6FF00,
-//            0xFFFFEA00,
-            0xFFFFC400,
-//            0xFFFF9100,
-            0xFFFF3D00
-    };
-
-    private final static int[][] ACCENT_COLORS_SUB_FREE = new int[][]{
-            new int[]{
-                    0xFFFF8A80,
-                    0xFFFF5252,
-                    0xFFFF1744,
-                    0xFFD50000
-            },
-//            new int[]{
-//                    0xFFFF80AB,
-//                    0xFFFF4081,
-//                    0xFFF50057,
-//                    0xFFC51162
-//            },
-//            new int[]{
-//                    0xFFEA80FC,
-//                    0xFFE040FB,
-//                    0xFFD500F9,
-//                    0xFFAA00FF
-//            },
-//            new int[]{
-//                    0xFFB388FF,
-//                    0xFF7C4DFF,
-//                    0xFF651FFF,
-//                    0xFF6200EA
-//            },
-            new int[]{
-                    0xFF8C9EFF,
-                    0xFF536DFE,
-                    0xFF3D5AFE,
-                    0xFF304FFE
-            },
-//            new int[]{
-//                    0xFF82B1FF,
-//                    0xFF448AFF,
-//                    0xFF2979FF,
-//                    0xFF2962FF
-//            },
-            new int[]{
-                    0xFF80D8FF,
-                    0xFF40C4FF,
-                    0xFF00B0FF,
-                    0xFF0091EA
-            },
-//            new int[]{
-//                    0xFF84FFFF,
-//                    0xFF18FFFF,
-//                    0xFF00E5FF,
-//                    0xFF00B8D4
-//            },
-//            new int[]{
-//                    0xFFA7FFEB,
-//                    0xFF64FFDA,
-//                    0xFF1DE9B6,
-//                    0xFF00BFA5
-//            },
-            new int[]{
-                    0xFFB9F6CA,
-                    0xFF69F0AE,
-                    0xFF00E676,
-                    0xFF00C853
-            },
-//            new int[]{
-//                    0xFFCCFF90,
-//                    0xFFB2FF59,
-//                    0xFF76FF03,
-//                    0xFF64DD17
-//            },
-//            new int[]{
-//                    0xFFF4FF81,
-//                    0xFFEEFF41,
-//                    0xFFC6FF00,
-//                    0xFFAEEA00
-//            },
-//            new int[]{
-//                    0xFFFFFF8D,
-//                    0xFFFFFF00,
-//                    0xFFFFEA00,
-//                    0xFFFFD600
-//            },
-            new int[]{
-                    0xFFFFE57F,
-                    0xFFFFD740,
-                    0xFFFFC400,
-                    0xFFFFAB00
-            },
-//            new int[]{
-//                    0xFFFFD180,
-//                    0xFFFFAB40,
-//                    0xFFFF9100,
-//                    0xFFFF6D00
-//            },
-            new int[]{
-                    0xFFFF9E80,
-                    0xFFFF6E40,
-                    0xFFFF3D00,
-                    0xFFDD2C00
-            }
     };
 }

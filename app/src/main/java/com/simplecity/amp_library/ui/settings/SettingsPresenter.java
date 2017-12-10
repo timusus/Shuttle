@@ -25,7 +25,9 @@ import com.simplecity.amp_library.ui.dialog.InclExclDialog;
 import com.simplecity.amp_library.ui.dialog.TabChooserDialog;
 import com.simplecity.amp_library.ui.presenters.PurchasePresenter;
 import com.simplecity.amp_library.utils.AnalyticsManager;
+import com.simplecity.amp_library.utils.ColorPalette;
 import com.simplecity.amp_library.utils.SettingsManager;
+import com.simplecity.amp_library.utils.ShuttleUtils;
 
 import java.util.List;
 
@@ -145,7 +147,8 @@ public class SettingsPresenter extends PurchasePresenter<SettingsView> {
         if (settingsView != null) {
             settingsView.showPrimaryColorDialog(
                     new ColorChooserDialog.Builder(context, R.string.pref_title_theme_pick_color)
-                            .allowUserColorInput(true)
+                            .customColors(ColorPalette.getPrimaryColors(), ColorPalette.getPrimaryColorsSub())
+                            .allowUserColorInput(ShuttleUtils.isUpgraded())
                             .allowUserColorInputAlpha(false)
                             .dynamicButtonColor(false)
                             .preselect(Aesthetic.get(context).colorPrimary().blockingFirst())
