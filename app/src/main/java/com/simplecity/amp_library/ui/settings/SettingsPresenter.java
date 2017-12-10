@@ -20,7 +20,6 @@ import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.CategoryItem;
 import com.simplecity.amp_library.model.InclExclItem;
 import com.simplecity.amp_library.services.ArtworkDownloadService;
-import com.simplecity.amp_library.ui.activities.MainActivity;
 import com.simplecity.amp_library.ui.dialog.ChangelogDialog;
 import com.simplecity.amp_library.ui.dialog.InclExclDialog;
 import com.simplecity.amp_library.ui.dialog.TabChooserDialog;
@@ -64,10 +63,10 @@ public class SettingsPresenter extends PurchasePresenter<SettingsView> {
 
     // Display
 
-    public void chooseTabsClicked(Context context) {
+    public void chooseTabsClicked(Activity activity) {
         SettingsView settingsView = getView();
         if (settingsView != null) {
-            settingsView.showTabChooserDialog(TabChooserDialog.getDialog(context));
+            settingsView.showTabChooserDialog(TabChooserDialog.getDialog(activity));
         }
     }
 
@@ -76,7 +75,7 @@ public class SettingsPresenter extends PurchasePresenter<SettingsView> {
         if (settingsView != null) {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
             List<CategoryItem> categoryItems = Stream.of(CategoryItem.getCategoryItems(sharedPreferences))
-                    .filter(categoryItem -> categoryItem.isEnabled)
+                    .filter(categoryItem -> categoryItem.isChecked)
                     .toList();
 
             int defaultPageType = SettingsManager.getInstance().getDefaultPageType();

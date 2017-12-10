@@ -35,11 +35,11 @@ public class CategoryItem {
 
     public int sortOrder;
 
-    public boolean isEnabled;
+    public boolean isChecked;
 
     private CategoryItem(@Type int type, SharedPreferences sharedPreferences) {
         this.type = type;
-        isEnabled = sharedPreferences.getBoolean(getEnabledKey(), isEnabledByDefault());
+        isChecked = sharedPreferences.getBoolean(getEnabledKey(), isEnabledByDefault());
         sortOrder = sharedPreferences.getInt(getSortKey(), 0);
     }
 
@@ -57,7 +57,7 @@ public class CategoryItem {
     }
 
     public void savePrefs(SharedPreferences.Editor editor) {
-        editor.putBoolean(getEnabledKey(), isEnabled);
+        editor.putBoolean(getEnabledKey(), isChecked);
         editor.putInt(getSortKey(), sortOrder);
         editor.apply();
     }
