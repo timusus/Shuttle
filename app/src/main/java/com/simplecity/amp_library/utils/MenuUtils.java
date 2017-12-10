@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.interfaces.FileType;
@@ -592,7 +591,6 @@ public class MenuUtils implements MusicUtils.Defs {
 
     static Single<Song> getSongForFile(FileObject fileObject) {
         return FileHelper.getSong(new File(fileObject.path))
-                .map(Optional::get)
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
