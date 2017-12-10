@@ -225,7 +225,7 @@ public class SettingsParentFragment extends BaseNavigationController implements
             Preference chooseTabsPreference = findPreference(SettingsManager.KEY_PREF_TAB_CHOOSER);
             if (chooseTabsPreference != null) {
                 chooseTabsPreference.setOnPreferenceClickListener(preference -> {
-                    settingsPresenter.chooseTabsClicked(getContext());
+                    settingsPresenter.chooseTabsClicked(getActivity());
                     return true;
                 });
             }

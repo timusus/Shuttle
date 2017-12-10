@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Playlist;
+import com.simplecity.amp_library.ui.adapters.LoggingViewModelAdapter;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.PlaylistView;
 import com.simplecity.amp_library.utils.ComparisonUtils;
@@ -82,7 +83,7 @@ public class PlaylistFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        adapter = new ViewModelAdapter();
+        adapter = new LoggingViewModelAdapter("PlaylistFragment");
     }
 
     @Override

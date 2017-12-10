@@ -8,7 +8,6 @@ import android.os.Environment;
 import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 
-import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.model.BaseFileObject;
 import com.simplecity.amp_library.model.FileObject;
@@ -21,6 +20,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -230,11 +230,17 @@ public class FileHelper {
     /**
      * Gets the song for a given file
      */
-    public static Single<Optional<Song>> getSong(File file) {
+    public static Single<Song> getSong(File file) {
         return DataManager.getInstance()
                 .getSongsObservable(song -> song.path.contains(FileHelper.getPath(file)))
-                .first(Collections.emptyList())
-                .map(songs -> Stream.of(songs).findFirst())
+                .firstOrError()
+                .flatMap(songs -> {
+                    try {
+                        return Single.just(Stream.of(songs).findFirst().get());
+                    } catch (NoSuchElementException e) {
+                        return Single.error(e);
+                    }
+                })
                 .subscribeOn(Schedulers.io());
     }
 

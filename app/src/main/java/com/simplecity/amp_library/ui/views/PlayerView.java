@@ -37,4 +37,6 @@ public interface PlayerView {
     void showTaggerDialog(TaggerDialog taggerDialog);
 
     void showSongInfoDialog(MaterialDialog dialog);
+
+    void showUpgradeDialog(MaterialDialog dialog);
 }

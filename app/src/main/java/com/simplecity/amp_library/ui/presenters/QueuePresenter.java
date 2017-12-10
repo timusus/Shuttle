@@ -22,6 +22,7 @@ import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
+import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 
 import java.util.ArrayList;
@@ -170,7 +171,11 @@ public class QueuePresenter extends Presenter<QueueView> {
                     taggerDialog -> {
                         QueueView queueView = getView();
                         if (queueView != null) {
-                            queueView.showTaggerDialog(taggerDialog);
+                            if (!ShuttleUtils.isUpgraded()) {
+                                queueView.showUpgradeDialog();
+                            } else {
+                                queueView.showTaggerDialog(taggerDialog);
+                            }
                         }
                     },
                     () -> removeFromQueue(position, song),

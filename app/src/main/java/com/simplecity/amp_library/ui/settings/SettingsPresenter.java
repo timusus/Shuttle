@@ -20,13 +20,14 @@ import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.CategoryItem;
 import com.simplecity.amp_library.model.InclExclItem;
 import com.simplecity.amp_library.services.ArtworkDownloadService;
-import com.simplecity.amp_library.ui.activities.MainActivity;
 import com.simplecity.amp_library.ui.dialog.ChangelogDialog;
 import com.simplecity.amp_library.ui.dialog.InclExclDialog;
 import com.simplecity.amp_library.ui.dialog.TabChooserDialog;
 import com.simplecity.amp_library.ui.presenters.PurchasePresenter;
 import com.simplecity.amp_library.utils.AnalyticsManager;
+import com.simplecity.amp_library.utils.ColorPalette;
 import com.simplecity.amp_library.utils.SettingsManager;
+import com.simplecity.amp_library.utils.ShuttleUtils;
 
 import java.util.List;
 
@@ -64,10 +65,10 @@ public class SettingsPresenter extends PurchasePresenter<SettingsView> {
 
     // Display
 
-    public void chooseTabsClicked(Context context) {
+    public void chooseTabsClicked(Activity activity) {
         SettingsView settingsView = getView();
         if (settingsView != null) {
-            settingsView.showTabChooserDialog(TabChooserDialog.getDialog(context));
+            settingsView.showTabChooserDialog(TabChooserDialog.getDialog(activity));
         }
     }
 
@@ -76,7 +77,7 @@ public class SettingsPresenter extends PurchasePresenter<SettingsView> {
         if (settingsView != null) {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
             List<CategoryItem> categoryItems = Stream.of(CategoryItem.getCategoryItems(sharedPreferences))
-                    .filter(categoryItem -> categoryItem.isEnabled)
+                    .filter(categoryItem -> categoryItem.isChecked)
                     .toList();
 
             int defaultPageType = SettingsManager.getInstance().getDefaultPageType();
@@ -146,7 +147,8 @@ public class SettingsPresenter extends PurchasePresenter<SettingsView> {
         if (settingsView != null) {
             settingsView.showPrimaryColorDialog(
                     new ColorChooserDialog.Builder(context, R.string.pref_title_theme_pick_color)
-                            .allowUserColorInput(true)
+                            .customColors(ColorPalette.getPrimaryColors(), ColorPalette.getPrimaryColorsSub())
+                            .allowUserColorInput(ShuttleUtils.isUpgraded())
                             .allowUserColorInputAlpha(false)
                             .dynamicButtonColor(false)
                             .preselect(Aesthetic.get(context).colorPrimary().blockingFirst())

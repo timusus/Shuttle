@@ -27,9 +27,11 @@ import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.tagger.TaggerDialog;
+import com.simplecity.amp_library.ui.adapters.LoggingViewModelAdapter;
 import com.simplecity.amp_library.ui.detail.AlbumDetailFragment;
 import com.simplecity.amp_library.ui.detail.ArtistDetailFragment;
 import com.simplecity.amp_library.ui.detail.BaseDetailFragment;
+import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.ui.fragments.BaseFragment;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.LoadingView;
@@ -105,7 +107,7 @@ public class SearchFragment extends BaseFragment implements
         emptyView = new EmptyView(R.string.empty_search);
         emptyView.setHeight(ResourceUtils.toPixels(96));
 
-        adapter = new ViewModelAdapter();
+        adapter = new LoggingViewModelAdapter("SearchFragment");
     }
 
     @Nullable
@@ -252,6 +254,11 @@ public class SearchFragment extends BaseFragment implements
         inputMethodManager.hideSoftInputFromWindow(rootView.getWindowToken(), 0);
         String transitionName = ViewCompat.getTransitionName(transitionView);
         searchView.getHandler().postDelayed(() -> pushDetailFragment(AlbumDetailFragment.newInstance(album, transitionName), transitionView), 50);
+    }
+
+    @Override
+    public void showUpgradeDialog() {
+        UpgradeDialog.getUpgradeDialog(getActivity()).show();
     }
 
     void pushDetailFragment(BaseDetailFragment detailFragment, @Nullable View transitionView) {

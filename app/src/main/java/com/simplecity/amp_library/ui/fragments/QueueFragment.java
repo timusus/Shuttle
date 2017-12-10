@@ -16,12 +16,15 @@ import android.widget.Toast;
 
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.Util;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.tagger.TaggerDialog;
+import com.simplecity.amp_library.ui.adapters.LoggingViewModelAdapter;
+import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.ui.presenters.QueuePresenter;
@@ -85,11 +88,13 @@ public class QueueFragment extends BaseFragment implements
     @Inject
     RequestManager requestManager;
 
-    @Inject MultiSheetSlideEventRelay multiSheetSlideEventRelay;
+    @Inject
+    MultiSheetSlideEventRelay multiSheetSlideEventRelay;
 
     QueuePresenter queuePresenter;
 
-    @Inject PlayerPresenter playerPresenter;
+    @Inject
+    PlayerPresenter playerPresenter;
 
     private CompositeDisposable disposables = new CompositeDisposable();
 
@@ -120,7 +125,7 @@ public class QueueFragment extends BaseFragment implements
 
         setHasOptionsMenu(true);
 
-        adapter = new ViewModelAdapter();
+        adapter = new LoggingViewModelAdapter("QueueFragment");
     }
 
     @Override
@@ -305,6 +310,11 @@ public class QueueFragment extends BaseFragment implements
         adapter.moveItem(from, to);
     }
 
+    @Override
+    public void showUpgradeDialog() {
+        UpgradeDialog.getUpgradeDialog(getActivity()).show();
+    }
+
     private PlayerViewAdapter playerViewAdapter = new PlayerViewAdapter() {
         @Override
         public void trackInfoChanged(@Nullable Song song) {
@@ -314,6 +324,11 @@ public class QueueFragment extends BaseFragment implements
                     lineTwo.setText(String.format("%s | %s", song.albumArtistName, song.albumName));
                 }
             }
+        }
+
+        @Override
+        public void showUpgradeDialog(MaterialDialog dialog) {
+            dialog.show();
         }
     };
 

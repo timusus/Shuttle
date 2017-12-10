@@ -214,7 +214,7 @@ public class LibraryController extends BaseFragment implements
         if (pagerAdapter == null) {
             pagerAdapter = new PagerAdapter(getChildFragmentManager());
             List<CategoryItem> categoryItems = Stream.of(CategoryItem.getCategoryItems(sharedPreferences))
-                    .filter(categoryItem -> categoryItem.isEnabled)
+                    .filter(categoryItem -> categoryItem.isChecked)
                     .toList();
 
             int defaultPageType = SettingsManager.getInstance().getDefaultPageType();

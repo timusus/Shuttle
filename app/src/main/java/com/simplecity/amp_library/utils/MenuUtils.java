@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.interfaces.FileType;
@@ -305,7 +304,7 @@ public class MenuUtils implements MusicUtils.Defs {
         };
     }
 
-    public static PopupMenu.OnMenuItemClickListener getAlbumMenuClickListener(Context context, Album album, UnsafeConsumer<TaggerDialog> tagEditorCallback) {
+    public static PopupMenu.OnMenuItemClickListener getAlbumMenuClickListener(Context context, Album album, UnsafeConsumer<TaggerDialog> tagEditorCallback, UnsafeAction showUpgradeDialog) {
         return item -> {
             switch (item.getItemId()) {
                 case R.id.play:
@@ -321,7 +320,11 @@ public class MenuUtils implements MusicUtils.Defs {
                     addToQueue(context, getSongsForAlbum(album));
                     return true;
                 case R.id.editTags:
-                    tagEditorCallback.accept(editTags(album));
+                    if (!ShuttleUtils.isUpgraded()) {
+                        showUpgradeDialog.run();
+                    } else {
+                        tagEditorCallback.accept(editTags(album));
+                    }
                     return true;
                 case R.id.info:
                     showAlbumInfo(context, album);
@@ -412,7 +415,7 @@ public class MenuUtils implements MusicUtils.Defs {
         };
     }
 
-    public static PopupMenu.OnMenuItemClickListener getAlbumArtistClickListener(Context context, AlbumArtist albumArtist, UnsafeConsumer<TaggerDialog> tagEditorCallback) {
+    public static PopupMenu.OnMenuItemClickListener getAlbumArtistClickListener(Context context, AlbumArtist albumArtist, UnsafeConsumer<TaggerDialog> tagEditorCallback, UnsafeAction showUpgradeDialog) {
         return item -> {
             switch (item.getItemId()) {
                 case R.id.play:
@@ -431,7 +434,11 @@ public class MenuUtils implements MusicUtils.Defs {
                     addToQueue(context, getSongsForAlbumArtist(albumArtist));
                     return true;
                 case R.id.editTags:
-                    tagEditorCallback.accept(editTags(albumArtist));
+                    if (!ShuttleUtils.isUpgraded()) {
+                        showUpgradeDialog.run();
+                    } else {
+                        tagEditorCallback.accept(editTags(albumArtist));
+                    }
                     return true;
                 case R.id.info:
                     showArtistInfo(context, albumArtist);
@@ -592,7 +599,6 @@ public class MenuUtils implements MusicUtils.Defs {
 
     static Single<Song> getSongForFile(FileObject fileObject) {
         return FileHelper.getSong(new File(fileObject.path))
-                .map(Optional::get)
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
@@ -733,7 +739,9 @@ public class MenuUtils implements MusicUtils.Defs {
                     scanFile(context, fileObject);
                     return true;
                 case R.id.editTags:
-                    getSongForFile(fileObject).subscribe(song -> tagEditorCallback.accept(editTags(song)), errorHandler);
+                    getSongForFile(fileObject).subscribe(song -> {
+                        tagEditorCallback.accept(editTags(song));
+                    }, errorHandler);
                     return true;
                 case R.id.share:
                     getSongForFile(fileObject).subscribe(song -> song.share(context), errorHandler);

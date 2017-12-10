@@ -104,12 +104,12 @@
     <string name="upgraded_message">You have successfully upgraded to Shuttle+. I appreciate the support.
         \n\nPlease restart the app to ensure all features are enabled</string>
 
-    <string name="upgrade_dialog_message">Upgrading will unlock additional features in Shuttle, including:
-        \n\n• Tons of extra themes
+    <string name="upgrade_dialog_message">
+        • ChromeCast support
+        \n• Extra themes
         \n• Tag editing
         \n• Folder browsing
-        \n• ChromeCast Support
-        \n\nIt also helps to promote further development.\n\nYou do not need to upgrade if you already have Shuttle+</string>
+        \n• Support development ❤️</string>
 
     <string name="upgrade_required_folders">Upgrade to Shuttle+</string>
 

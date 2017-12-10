@@ -318,6 +318,11 @@ public class DrawerFragment extends BaseFragment implements
                 artistNameView.setVisibility(View.VISIBLE);
             }
         }
+
+        @Override
+        public void showUpgradeDialog(MaterialDialog dialog) {
+            dialog.show();
+        }
     };
 
     @Nullable

@@ -18,6 +18,7 @@ import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.ui.adapters.SectionedAdapter;
+import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
 import com.simplecity.amp_library.ui.modelviews.ShuffleView;
@@ -30,6 +31,7 @@ import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
+import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.SortManager;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
@@ -85,7 +87,7 @@ public class SongFragment extends BaseFragment implements
 
         setHasOptionsMenu(true);
 
-        adapter = new SectionedAdapter();
+        adapter = new SectionedAdapter("SongFragment");
 
         shuffleView = new ShuffleView();
         shuffleView.setClickListener(this);
@@ -293,9 +295,18 @@ public class SongFragment extends BaseFragment implements
     public void onSongOverflowClick(int position, View v, Song song) {
         PopupMenu menu = new PopupMenu(SongFragment.this.getActivity(), v);
         MenuUtils.setupSongMenu(menu, false);
-        menu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), song,
-                taggerDialog -> taggerDialog.show(getFragmentManager()),
-                null, null));
+        menu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(
+                getContext(),
+                song,
+                taggerDialog -> {
+                    if (!ShuttleUtils.isUpgraded()) {
+                        UpgradeDialog.getUpgradeDialog(getActivity()).show();
+                    } else {
+                        taggerDialog.show(getFragmentManager());
+                    }
+                },
+                null,
+                null));
         menu.show();
     }
 

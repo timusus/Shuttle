@@ -1,6 +1,6 @@
 package com.simplecity.amp_library.ui.dialog;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -14,9 +14,11 @@ import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.CategoryItem;
+import com.simplecity.amp_library.ui.adapters.LoggingViewModelAdapter;
 import com.simplecity.amp_library.ui.fragments.LibraryController;
 import com.simplecity.amp_library.ui.modelviews.TabViewModel;
 import com.simplecity.amp_library.ui.recyclerview.ItemTouchHelperCallback;
+import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 
@@ -28,11 +30,11 @@ public class TabChooserDialog {
         //no instance
     }
 
-    public static MaterialDialog getDialog(Context context) {
+    public static MaterialDialog getDialog(Activity activity) {
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
 
-        ViewModelAdapter adapter = new ViewModelAdapter();
+        ViewModelAdapter adapter = new LoggingViewModelAdapter("TabChooserDialog");
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
                 new ItemTouchHelperCallback(
@@ -43,7 +45,21 @@ public class TabChooserDialog {
                         }
                 ));
 
-        TabViewModel.Listener listener = itemTouchHelper::startDrag;
+        TabViewModel.Listener listener = new TabViewModel.Listener() {
+            @Override
+            public void onStartDrag(TabViewModel.ViewHolder holder) {
+                itemTouchHelper.startDrag(holder);
+            }
+
+            @Override
+            public void onFolderChecked(TabViewModel tabViewModel, TabViewModel.ViewHolder viewHolder) {
+                if (!ShuttleUtils.isUpgraded()) {
+                    viewHolder.checkBox.setChecked(false);
+                    tabViewModel.categoryItem.isChecked = false;
+                    UpgradeDialog.getUpgradeDialog(activity).show();
+                }
+            }
+        };
 
         List<ViewModel> items = Stream.of(CategoryItem.getCategoryItems(sharedPreferences))
                 .map(categoryItem -> {
@@ -54,13 +70,13 @@ public class TabChooserDialog {
                 .collect(Collectors.toList());
         adapter.setItems(items);
 
-        RecyclerView recyclerView = new RecyclerView(context);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        RecyclerView recyclerView = new RecyclerView(activity);
+        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
         recyclerView.setAdapter(adapter);
 
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
-        return new MaterialDialog.Builder(context)
+        return new MaterialDialog.Builder(activity)
                 .title(R.string.pref_title_choose_tabs)
                 .customView(recyclerView, false)
                 .positiveText(R.string.button_done)
@@ -72,7 +88,7 @@ public class TabChooserDialog {
                                 ((TabViewModel) viewModelIntPair.getSecond()).categoryItem.sortOrder = viewModelIntPair.getFirst();
                                 ((TabViewModel) viewModelIntPair.getSecond()).categoryItem.savePrefs(editor);
                             });
-                    LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(LibraryController.EVENT_TABS_CHANGED));
+                    LocalBroadcastManager.getInstance(activity).sendBroadcast(new Intent(LibraryController.EVENT_TABS_CHANGED));
                 })
                 .negativeText(R.string.close)
                 .build();

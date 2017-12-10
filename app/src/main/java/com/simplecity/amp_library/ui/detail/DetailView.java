@@ -19,4 +19,6 @@ interface DetailView {
     void showArtworkDialog(MaterialDialog artworkDialog);
 
     void showInfoDialog(MaterialDialog infoDialog);
+
+    void showUpgradeDialog(MaterialDialog upgradeDialog);
 }

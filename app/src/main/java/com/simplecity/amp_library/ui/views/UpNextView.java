@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.LightDarkColorState;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.jakewharton.rxbinding2.widget.RxSeekBar;
 import com.jakewharton.rxbinding2.widget.SeekBarChangeEvent;
 import com.jakewharton.rxbinding2.widget.SeekBarProgressChangeEvent;
@@ -51,28 +52,36 @@ public class UpNextView extends LinearLayout {
     @BindView(R.id.queuePosition)
     TextView queuePositionTextView;
 
-    @Nullable @BindView(R.id.play)
+    @Nullable
+    @BindView(R.id.play)
     PlayPauseView playPauseView;
 
-    @Nullable @BindView(R.id.shuffle)
+    @Nullable
+    @BindView(R.id.shuffle)
     ShuffleButton shuffleButton;
 
-    @Nullable @BindView(R.id.repeat)
+    @Nullable
+    @BindView(R.id.repeat)
     RepeatButton repeatButton;
 
-    @Nullable @BindView(R.id.next)
+    @Nullable
+    @BindView(R.id.next)
     RepeatingImageButton nextButton;
 
-    @Nullable @BindView(R.id.prev)
+    @Nullable
+    @BindView(R.id.prev)
     RepeatingImageButton prevButton;
 
-    @Nullable @BindView(R.id.seekbar)
+    @Nullable
+    @BindView(R.id.seekbar)
     SizableSeekBar seekBar;
 
-    @Nullable @BindView(R.id.buttonContainer)
+    @Nullable
+    @BindView(R.id.buttonContainer)
     View buttonContainer;
 
-    @Nullable @BindView(R.id.textContainer)
+    @Nullable
+    @BindView(R.id.textContainer)
     View textcontainer;
 
     private boolean isSeeking;
@@ -230,6 +239,11 @@ public class UpNextView extends LinearLayout {
             if (repeatButton != null) {
                 repeatButton.setRepeatMode(repeatMode);
             }
+        }
+
+        @Override
+        public void showUpgradeDialog(MaterialDialog dialog) {
+            dialog.show();
         }
 
         @Override

@@ -22,6 +22,7 @@ import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.ui.adapters.SectionedAdapter;
 import com.simplecity.amp_library.ui.adapters.ViewType;
+import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.ui.modelviews.AlbumArtistView;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
@@ -115,7 +116,7 @@ public class AlbumArtistFragment extends BaseFragment implements
 
         setHasOptionsMenu(true);
 
-        adapter = new SectionedAdapter();
+        adapter = new SectionedAdapter("AlbumArtistFragment");
     }
 
     @Nullable
@@ -400,7 +401,11 @@ public class AlbumArtistFragment extends BaseFragment implements
         menu.inflate(R.menu.menu_artist);
         SubMenu sub = menu.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
         PlaylistUtils.createPlaylistMenu(sub);
-        menu.setOnMenuItemClickListener(MenuUtils.getAlbumArtistClickListener(getContext(), albumArtist, taggerDialog -> taggerDialog.show(getFragmentManager())));
+        menu.setOnMenuItemClickListener(MenuUtils.getAlbumArtistClickListener(
+                getContext(),
+                albumArtist,
+                taggerDialog -> taggerDialog.show(getFragmentManager()),
+                () -> UpgradeDialog.getUpgradeDialog(getActivity()).show()));
         menu.show();
     }
 
