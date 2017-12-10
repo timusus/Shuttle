@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.Util;
 import com.afollestad.aesthetic.ViewBackgroundAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -253,6 +254,11 @@ public class MiniPlayerFragment extends BaseFragment {
 
             rootView.setContentDescription(getString(R.string.btn_now_playing, song.name, song.artistName));
 
+        }
+
+        @Override
+        public void showUpgradeDialog(MaterialDialog dialog) {
+            dialog.show();
         }
     };
 }

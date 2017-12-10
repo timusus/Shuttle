@@ -28,6 +28,7 @@ import com.simplecity.amp_library.interfaces.FileType;
 import com.simplecity.amp_library.model.BaseFileObject;
 import com.simplecity.amp_library.model.InclExclItem;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
 import com.simplecity.amp_library.ui.modelviews.BreadcrumbsView;
 import com.simplecity.amp_library.ui.modelviews.FolderView;
@@ -42,6 +43,7 @@ import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
+import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.SortManager;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
@@ -433,7 +435,13 @@ public class FolderFragment extends BaseFragment implements
         MenuUtils.setupFolderMenu(menu, folderView.baseFileObject);
         menu.setOnMenuItemClickListener(MenuUtils.getFolderMenuClickListener(
                 getContext(),
-                folderView.baseFileObject, taggerDialog -> taggerDialog.show(getFragmentManager()),
+                folderView.baseFileObject, taggerDialog -> {
+                    if (!ShuttleUtils.isUpgraded()) {
+                        UpgradeDialog.getUpgradeDialog(getActivity()).show();
+                    } else {
+                        taggerDialog.show(getFragmentManager());
+                    }
+                },
                 () -> IntStream.range(0, adapter.getItemCount())
                         .filter(i -> adapter.items.get(i) == folderView)
                         .findFirst()

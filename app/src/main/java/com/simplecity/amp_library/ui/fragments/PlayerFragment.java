@@ -86,47 +86,60 @@ public class PlayerFragment extends BaseFragment implements
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    @Nullable @BindView(R.id.play)
+    @Nullable
+    @BindView(R.id.play)
     PlayPauseView playPauseView;
 
-    @Nullable @BindView(R.id.shuffle)
+    @Nullable
+    @BindView(R.id.shuffle)
     ShuffleButton shuffleButton;
 
-    @Nullable @BindView(R.id.repeat)
+    @Nullable
+    @BindView(R.id.repeat)
     RepeatButton repeatButton;
 
-    @Nullable @BindView(R.id.next)
+    @Nullable
+    @BindView(R.id.next)
     RepeatingImageButton nextButton;
 
-    @Nullable @BindView(R.id.prev)
+    @Nullable
+    @BindView(R.id.prev)
     RepeatingImageButton prevButton;
 
-    @Nullable @BindView(R.id.current_time)
+    @Nullable
+    @BindView(R.id.current_time)
     TextView currentTime;
 
-    @Nullable @BindView(R.id.total_time)
+    @Nullable
+    @BindView(R.id.total_time)
     TextView totalTime;
 
-    @Nullable @BindView(R.id.text1)
+    @Nullable
+    @BindView(R.id.text1)
     TextView track;
 
-    @Nullable @BindView(R.id.text2)
+    @Nullable
+    @BindView(R.id.text2)
     TextView album;
 
-    @Nullable @BindView(R.id.text3)
+    @Nullable
+    @BindView(R.id.text3)
     TextView artist;
 
     @BindView(R.id.backgroundView)
     ImageView backgroundView;
 
-    @Nullable @BindView(R.id.seekbar)
+    @Nullable
+    @BindView(R.id.seekbar)
     SizableSeekBar seekBar;
 
     private CompositeDisposable disposables = new CompositeDisposable();
 
-    @Inject PlayerPresenter presenter;
+    @Inject
+    PlayerPresenter presenter;
 
-    @Inject NavigationEventRelay navigationEventRelay;
+    @Inject
+    NavigationEventRelay navigationEventRelay;
 
     private Unbinder unbinder;
 
@@ -501,6 +514,11 @@ public class PlayerFragment extends BaseFragment implements
     }
 
     @Override
+    public void showUpgradeDialog(MaterialDialog dialog) {
+        dialog.show();
+    }
+
+    @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.favorite:
@@ -520,7 +538,7 @@ public class PlayerFragment extends BaseFragment implements
                 goToGenre();
                 return true;
             case R.id.editTags:
-                presenter.editTagsClicked();
+                presenter.editTagsClicked(getActivity());
                 return true;
             case R.id.songInfo:
                 presenter.songInfoClicked(getContext());

@@ -165,4 +165,9 @@ public class AlbumDetailFragment extends BaseDetailFragment {
     protected String screenName() {
         return "AlbumDetailFragment";
     }
+
+    @Override
+    public void showUpgradeDialog(MaterialDialog upgradeDialog) {
+        upgradeDialog.show();
+    }
 }

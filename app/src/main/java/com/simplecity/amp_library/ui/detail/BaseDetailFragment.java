@@ -41,6 +41,7 @@ import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.ArtworkProvider;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.tagger.TaggerDialog;
+import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
 import com.simplecity.amp_library.ui.fragments.BaseFragment;
 import com.simplecity.amp_library.ui.fragments.TransitionListenerAdapter;
@@ -130,7 +131,8 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
     private HorizontalRecyclerView horizontalRecyclerView;
 
-    @Nullable Album currentSlideShowAlbum;
+    @Nullable
+    Album currentSlideShowAlbum;
 
     private boolean isFirstLoad = true;
 
@@ -567,7 +569,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
                 detailPresenter.playlistSelected(getContext(), item);
                 return true;
             case R.id.editTags:
-                detailPresenter.editTags(getTaggerDialog());
+                detailPresenter.editTags(getTaggerDialog(), UpgradeDialog.getUpgradeDialog(getActivity()));
                 return true;
             case R.id.info:
                 detailPresenter.infoClicked(getInfoDialog());
@@ -771,8 +773,16 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     public void onSongOverflowClick(int position, View v, Song song) {
         PopupMenu popupMenu = new PopupMenu(getContext(), v);
         MenuUtils.setupSongMenu(popupMenu, showSongOverflowRemoveButton());
-        popupMenu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), song,
-                taggerDialog -> taggerDialog.show(getFragmentManager()),
+        popupMenu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(
+                getContext(),
+                song,
+                taggerDialog -> {
+                    if (!ShuttleUtils.isUpgraded()) {
+                        UpgradeDialog.getUpgradeDialog(getActivity()).show();
+                    } else {
+                        taggerDialog.show(getFragmentManager());
+                    }
+                },
                 () -> songRemoved(position, song), null));
         popupMenu.show();
     }
@@ -791,8 +801,11 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     public void onAlbumOverflowClicked(View v, Album album) {
         PopupMenu popupMenu = new PopupMenu(getContext(), v);
         MenuUtils.setupAlbumMenu(popupMenu);
-        popupMenu.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(getContext(), album, taggerDialog
-                -> taggerDialog.show(getFragmentManager())));
+        popupMenu.setOnMenuItemClickListener(
+                MenuUtils.getAlbumMenuClickListener(getContext(),
+                        album,
+                        taggerDialog -> taggerDialog.show(getFragmentManager()),
+                        () -> UpgradeDialog.getUpgradeDialog(getActivity()).show()));
         popupMenu.show();
     }
 

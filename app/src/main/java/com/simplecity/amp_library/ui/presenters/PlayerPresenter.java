@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.ui.presenters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.support.annotation.NonNull;
@@ -13,11 +14,13 @@ import com.simplecity.amp_library.playback.PlaybackMonitor;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.dialog.BiographyDialog;
 import com.simplecity.amp_library.ui.dialog.ShareDialog;
+import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.ui.views.PlayerView;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
+import com.simplecity.amp_library.utils.ShuttleUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -283,10 +286,14 @@ public class PlayerPresenter extends Presenter<PlayerView> {
         }
     }
 
-    public void editTagsClicked() {
+    public void editTagsClicked(Activity activity) {
         PlayerView playerView = getView();
         if (playerView != null) {
-            playerView.showTaggerDialog(TaggerDialog.newInstance(MusicUtils.getSong()));
+            if (!ShuttleUtils.isUpgraded()) {
+                playerView.showUpgradeDialog(UpgradeDialog.getUpgradeDialog(activity));
+            } else {
+                playerView.showTaggerDialog(TaggerDialog.newInstance(MusicUtils.getSong()));
+            }
         }
     }
 

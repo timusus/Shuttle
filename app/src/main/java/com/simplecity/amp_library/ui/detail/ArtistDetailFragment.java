@@ -165,4 +165,8 @@ public class ArtistDetailFragment extends BaseDetailFragment {
         return "ArtistDetailFragment";
     }
 
+    @Override
+    public void showUpgradeDialog(MaterialDialog upgradeDialog) {
+        upgradeDialog.show();
+    }
 }

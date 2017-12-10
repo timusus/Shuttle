@@ -28,6 +28,7 @@ import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.Operators;
 import com.simplecity.amp_library.utils.SettingsManager;
+import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.StringUtils;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 
@@ -184,12 +185,21 @@ public class SearchPresenter extends Presenter<SearchView> implements
     public void onAlbumArtistOverflowClicked(View v, AlbumArtist albumArtist) {
         PopupMenu menu = new PopupMenu(v.getContext(), v);
         menu.inflate(R.menu.menu_artist);
-        menu.setOnMenuItemClickListener(MenuUtils.getAlbumArtistClickListener(v.getContext(), albumArtist, taggerDialog -> {
-            SearchView searchView = getView();
-            if (searchView != null) {
-                searchView.showTaggerDialog(taggerDialog);
-            }
-        }));
+        menu.setOnMenuItemClickListener(MenuUtils.getAlbumArtistClickListener(
+                v.getContext(),
+                albumArtist,
+                taggerDialog -> {
+                    SearchView searchView = getView();
+                    if (searchView != null) {
+                        searchView.showTaggerDialog(taggerDialog);
+                    }
+                },
+                () -> {
+                    SearchView searchView = getView();
+                    if (searchView != null) {
+                        searchView.showUpgradeDialog();
+                    }
+                }));
         menu.show();
     }
 
@@ -210,12 +220,22 @@ public class SearchPresenter extends Presenter<SearchView> implements
     public void onAlbumOverflowClicked(View v, Album album) {
         PopupMenu menu = new PopupMenu(v.getContext(), v);
         MenuUtils.setupAlbumMenu(menu);
-        menu.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(v.getContext(), album, taggerDialog -> {
-            SearchView searchView = getView();
-            if (searchView != null) {
-                searchView.showTaggerDialog(taggerDialog);
-            }
-        }));
+        menu.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(
+                v.getContext(),
+                album,
+                taggerDialog -> {
+                    SearchView searchView = getView();
+                    if (searchView != null) {
+                        searchView.showTaggerDialog(taggerDialog);
+                    }
+                },
+                () -> {
+                    SearchView searchView = getView();
+                    if (searchView != null) {
+                        searchView.showUpgradeDialog();
+                    }
+                }
+        ));
         menu.show();
     }
 
@@ -471,13 +491,20 @@ public class SearchPresenter extends Presenter<SearchView> implements
         public void onSongOverflowClick(int position, View v, Song song) {
             PopupMenu menu = new PopupMenu(v.getContext(), v);
             MenuUtils.setupSongMenu(menu, false);
-            menu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(v.getContext(), song,
+            menu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(
+                    v.getContext(),
+                    song,
                     taggerDialog -> {
                         SearchView searchView = getView();
                         if (searchView != null) {
-                            searchView.showTaggerDialog(taggerDialog);
+                            if (!ShuttleUtils.isUpgraded()) {
+                                searchView.showUpgradeDialog();
+                            } else {
+                                searchView.showTaggerDialog(taggerDialog);
+                            }
                         }
-                    }, null, null));
+                    },
+                    null, null));
             menu.show();
         }
 

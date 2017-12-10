@@ -23,6 +23,7 @@ import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.model.SuggestedHeader;
 import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.ui.detail.PlaylistDetailFragment;
+import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.ui.modelviews.AlbumView;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.HorizontalRecyclerView;
@@ -35,6 +36,7 @@ import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.Operators;
 import com.simplecity.amp_library.utils.PermissionUtils;
+import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
@@ -82,7 +84,18 @@ public class SuggestedFragment extends BaseFragment implements
         public void onSongOverflowClicked(View v, Song song) {
             PopupMenu popupMenu = new PopupMenu(getContext(), v);
             MenuUtils.setupSongMenu(popupMenu, false);
-            popupMenu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), song, taggerDialog -> taggerDialog.show(getFragmentManager()), null, null));
+            popupMenu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(
+                    getContext(),
+                    song,
+                    taggerDialog -> {
+                        if (!ShuttleUtils.isUpgraded()) {
+                            UpgradeDialog.getUpgradeDialog(getActivity()).show();
+                        } else {
+                            taggerDialog.show(getFragmentManager());
+                        }
+                    },
+                    null,
+                    null));
             popupMenu.show();
         }
     }
@@ -333,7 +346,7 @@ public class SuggestedFragment extends BaseFragment implements
 
     void refreshAdapterItems() {
 
-       refreshDisposables.clear();
+        refreshDisposables.clear();
 
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {
@@ -389,7 +402,7 @@ public class SuggestedFragment extends BaseFragment implements
     public void onAlbumOverflowClicked(View v, Album album) {
         PopupMenu menu = new PopupMenu(getContext(), v);
         MenuUtils.setupAlbumMenu(menu);
-        menu.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(getContext(), album, taggerDialog -> taggerDialog.show(getFragmentManager())));
+        menu.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(getContext(), album, taggerDialog -> taggerDialog.show(getFragmentManager()), () -> UpgradeDialog.getUpgradeDialog(getActivity()).show()));
         menu.show();
     }
 

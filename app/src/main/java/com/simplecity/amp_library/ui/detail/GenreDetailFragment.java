@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Song;
@@ -115,5 +116,10 @@ public class GenreDetailFragment extends BaseDetailFragment {
     @Override
     protected String screenName() {
         return "GenreDetailFragment";
+    }
+
+    @Override
+    public void showUpgradeDialog(MaterialDialog upgradeDialog) {
+        upgradeDialog.show();
     }
 }
