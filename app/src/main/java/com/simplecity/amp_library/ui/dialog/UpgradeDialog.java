@@ -3,6 +3,7 @@ package com.simplecity.amp_library.ui.dialog;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -17,7 +18,7 @@ public class UpgradeDialog {
         //no instance
     }
 
-    public static MaterialDialog getUpgradeDialog(Activity activity) {
+    public static MaterialDialog getUpgradeDialog(@NonNull Activity activity) {
         return new MaterialDialog.Builder(activity)
                 .title(activity.getResources().getString(R.string.get_pro_title))
                 .content(activity.getResources().getString(R.string.upgrade_dialog_message))
@@ -33,7 +34,7 @@ public class UpgradeDialog {
                 .build();
     }
 
-    private static void purchaseUpgrade(Activity activity) {
+    private static void purchaseUpgrade(@NonNull Activity activity) {
         IabManager.getInstance().purchaseUpgrade(activity, success -> {
             if (success) {
                 getUpgradeSuccessDialog(activity).show();
@@ -43,7 +44,7 @@ public class UpgradeDialog {
         });
     }
 
-    private static MaterialDialog getUpgradeSuccessDialog(Activity activity) {
+    private static MaterialDialog getUpgradeSuccessDialog(@NonNull Activity activity) {
         return new MaterialDialog.Builder(activity)
                 .title(activity.getResources().getString(R.string.upgraded_title))
                 .content(activity.getResources().getString(R.string.upgraded_message))
