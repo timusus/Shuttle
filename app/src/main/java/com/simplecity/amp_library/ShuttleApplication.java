@@ -119,14 +119,15 @@ public class ShuttleApplication extends Application {
         InputMethodManagerLeaks.fixFocusedViewLeak(this);
 
         //Crashlytics
+        CrashlyticsCore crashlyticsCore = new CrashlyticsCore.Builder()
+                .disabled(BuildConfig.DEBUG)
+                .build();
+
         Fabric.with(this,
                 new Crashlytics.Builder()
-                        .core(new CrashlyticsCore.Builder()
-                                .disabled(BuildConfig.DEBUG)
-                                .build())
+                        .core(crashlyticsCore)
                         .answers(new Answers())
-                        .build(),
-                new Crashlytics());
+                        .build());
 
         //Firebase Analytics
         FirebaseAnalytics.getInstance(this);

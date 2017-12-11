@@ -46,9 +46,6 @@
         <meta-data
             android:name="android.app.default_searchable"
             android:value="com.simplecity.amp_library.SearchActivity"/>
-        <meta-data
-            android:name="com.crashlytics.ApiKey"
-            android:value="${CRASHLYTICS_API_KEY}"/>
 
         <activity
             android:name=".ui.activities.MainActivity"
@@ -317,5 +314,8 @@
                 android:resource="@xml/provider_paths"/>
         </provider>
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="${CRASHLYTICS_API_KEY}" />
     </application>
 </manifest>
