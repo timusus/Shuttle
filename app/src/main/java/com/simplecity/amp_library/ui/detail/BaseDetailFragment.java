@@ -2,6 +2,7 @@ package com.simplecity.amp_library.ui.detail;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -50,12 +51,17 @@ import com.simplecity.amp_library.ui.modelviews.AlbumView;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.HorizontalAlbumView;
 import com.simplecity.amp_library.ui.modelviews.HorizontalRecyclerView;
+import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
 import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.modelviews.SubheaderView;
+import com.simplecity.amp_library.ui.views.ContextualToolbar;
+import com.simplecity.amp_library.ui.views.ContextualToolbarHost;
 import com.simplecity.amp_library.utils.ActionBarUtils;
+import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
+import com.simplecity.amp_library.utils.Operators;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.ResourceUtils;
@@ -93,7 +99,8 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         AlbumsProvider,
         AlbumView.ClickListener,
         SongView.ClickListener,
-        DrawerLockManager.DrawerLock {
+        DrawerLockManager.DrawerLock,
+        ContextualToolbarHost {
 
     private static final String TAG = "BaseDetailFragment";
 
@@ -122,6 +129,12 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
 
+    @BindView(R.id.contextualToolbar)
+    ContextualToolbar contextualToolbar;
+
+    private ColorStateList collapsingToolbarTextColor;
+    private ColorStateList collapsingToolbarSubTextColor;
+
     protected CompositeDisposable disposables = new CompositeDisposable();
 
     protected RequestManager requestManager;
@@ -136,6 +149,8 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     Album currentSlideShowAlbum;
 
     private boolean isFirstLoad = true;
+
+    private ContextualToolbarHelper<Single<List<Song>>> contextualToolbarHelper;
 
     public BaseDetailFragment() {
     }
@@ -171,8 +186,8 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         toolbar.setNavigationOnClickListener(v -> getNavigationController().popViewController());
 
         if (ShuttleUtils.canDrawBehindStatusBar()) {
-            toolbar.getLayoutParams().height = (int) (ActionBarUtils.getActionBarHeight(getContext()) + ActionBarUtils.getStatusBarHeight(getContext()));
-            toolbar.setPadding(toolbar.getPaddingLeft(), (int) (toolbar.getPaddingTop() + ActionBarUtils.getStatusBarHeight(getContext())), toolbar.getPaddingRight(), toolbar.getPaddingBottom());
+            toolbar.getLayoutParams().height = (int) (ActionBarUtils.getActionBarHeight(getContext())+ActionBarUtils.getStatusBarHeight(getContext()));
+            toolbar.setPadding(toolbar.getPaddingLeft(), (int) (toolbar.getPaddingTop()+ActionBarUtils.getStatusBarHeight(getContext())), toolbar.getPaddingRight(), toolbar.getPaddingBottom());
         }
 
         setupToolbarMenu(toolbar);
@@ -189,6 +204,8 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         toolbarLayout.setSubtitle(getToolbarSubtitle());
         toolbarLayout.setExpandedTitleTypeface(TypefaceManager.getInstance().getTypeface(TypefaceManager.SANS_SERIF_LIGHT));
         toolbarLayout.setCollapsedTitleTypeface(TypefaceManager.getInstance().getTypeface(TypefaceManager.SANS_SERIF));
+
+        setupContextualToolbar();
 
         String transitionName = getArguments().getString(ARG_TRANSITION_NAME);
         ViewCompat.setTransitionName(headerImageView, transitionName);
@@ -410,7 +427,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
             return;
         }
 
-        int width = ResourceUtils.getScreenSize().width + ResourceUtils.toPixels(60);
+        int width = ResourceUtils.getScreenSize().width+ResourceUtils.toPixels(60);
         int height = getResources().getDimensionPixelSize(R.dimen.header_view_height);
 
         requestManager.load(getArtworkProvider())
@@ -759,15 +776,17 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
     @Override
     public void onSongClick(int position, SongView songView) {
-        disposables.add(getSongs()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(songs -> MusicUtils.playAll(songs, songs.indexOf(songView.song), message -> Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show())));
+        if (!contextualToolbarHelper.handleClick(position, songView, Single.just(Collections.singletonList(songView.song)))) {
+            disposables.add(getSongs()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(songs -> MusicUtils.playAll(songs, songs.indexOf(songView.song), message -> Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show())));
+        }
     }
 
     @Override
     public boolean onSongLongClick(int position, SongView songView) {
-        return false;
+        return contextualToolbarHelper.handleLongClick(position, songView, Single.just(Collections.singletonList(songView.song)));
     }
 
     @Override
@@ -790,12 +809,14 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
     @Override
     public void onAlbumClick(int position, AlbumView albumView, AlbumView.ViewHolder viewHolder) {
-        pushDetailController(AlbumDetailFragment.newInstance(albumView.album, ViewCompat.getTransitionName(viewHolder.imageOne)), "AlbumDetailFragment", viewHolder.imageOne);
+        if (!contextualToolbarHelper.handleClick(position, albumView, albumView.album.getSongsSingle())) {
+            pushDetailController(AlbumDetailFragment.newInstance(albumView.album, ViewCompat.getTransitionName(viewHolder.imageOne)), "AlbumDetailFragment", viewHolder.imageOne);
+        }
     }
 
     @Override
     public boolean onAlbumLongClick(int position, AlbumView albumView) {
-        return false;
+        return contextualToolbarHelper.handleLongClick(position, albumView, albumView.album.getSongsSingle());
     }
 
     @Override
@@ -813,6 +834,67 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     @Override
     public void onStartDrag(SongView.ViewHolder holder) {
 
+    }
+
+    @Override
+    public ContextualToolbar getContextualToolbar() {
+        return contextualToolbar;
+    }
+
+    private void setupContextualToolbar() {
+
+        ContextualToolbar contextualToolbar = ContextualToolbar.findContextualToolbar(this);
+        if (contextualToolbar != null) {
+
+            contextualToolbar.setTransparentBackground(true);
+
+            contextualToolbar.getMenu().clear();
+            contextualToolbar.inflateMenu(R.menu.context_menu_general);
+            SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
+            disposables.add(PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe());
+
+            contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(
+                    getContext(), Single.defer(() -> Operators.reduceSongSingles(contextualToolbarHelper.getItems()))));
+
+            contextualToolbarHelper = new ContextualToolbarHelper<Single<List<Song>>>(contextualToolbar, new ContextualToolbarHelper.Callback() {
+
+                @Override
+                public void notifyItemChanged(int position, SelectableViewModel viewModel) {
+                    if (adapter.items.contains(viewModel)) {
+                        adapter.notifyItemChanged(position, 0);
+                    } else if (horizontalRecyclerView.viewModelAdapter.items.contains(viewModel)) {
+                        horizontalRecyclerView.viewModelAdapter.notifyItemChanged(position);
+                    }
+                }
+
+                @Override
+                public void notifyDatasetChanged() {
+                    adapter.notifyItemRangeChanged(0, adapter.items.size(), 0);
+                    horizontalRecyclerView.viewModelAdapter.notifyItemRangeChanged(0, horizontalRecyclerView.viewModelAdapter.items.size(), 0);
+                }
+            }) {
+                @Override
+                public void start() {
+                    super.start();
+                    // Need to hide the collapsed text, as it overlaps the contextual toolbar
+                    collapsingToolbarTextColor = toolbarLayout.getCollapsedTitleTextColor();
+                    collapsingToolbarSubTextColor = toolbarLayout.getCollapsedSubTextColor();
+                    toolbarLayout.setCollapsedTitleTextColor(0x01FFFFFF);
+                    toolbarLayout.setCollapsedSubTextColor(0x01FFFFFF);
+
+                    toolbar.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void finish() {
+                    super.finish();
+                    toolbarLayout.setCollapsedTitleTextColor(collapsingToolbarTextColor);
+                    toolbarLayout.setCollapsedSubTextColor(collapsingToolbarSubTextColor);
+
+                    toolbar.setVisibility(View.VISIBLE);
+                }
+            };
+        }
     }
 
     @Override

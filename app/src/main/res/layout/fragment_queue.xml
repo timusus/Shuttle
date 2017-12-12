@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.simplecity.amp_library.ui.views.StatusBarView
+    <com.simplecity.amp_library.ui.views.ThemedStatusBarView
         android:id="@+id/statusBarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

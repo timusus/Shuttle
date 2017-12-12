@@ -261,8 +261,8 @@ public class CustomCollapsingToolbarLayout extends FrameLayout {
     }
 
     @Override
-    public void draw(Canvas canvas) {
-        super.draw(canvas);
+    protected void dispatchDraw(Canvas canvas) {
+        super.dispatchDraw(canvas);
 
         // If we don't have a toolbar, the scrim will be not be drawn in drawChild() below.
         // Instead, we draw it here, before our collapsing text.
@@ -287,6 +287,13 @@ public class CustomCollapsingToolbarLayout extends FrameLayout {
                 mStatusBarScrim.draw(canvas);
             }
         }
+    }
+
+    @Override
+    public void draw(Canvas canvas) {
+        super.draw(canvas);
+
+
     }
 
     @Override
@@ -778,6 +785,32 @@ public class CustomCollapsingToolbarLayout extends FrameLayout {
      */
     public void setCollapsedTitleTextColor(@NonNull ColorStateList colors) {
         mCollapsingTextHelper.setCollapsedTextColor(colors);
+    }
+
+    public ColorStateList getCollapsedTitleTextColor() {
+        return mCollapsingTextHelper.getCollapsedTextColor();
+    }
+
+    /**
+     * Sets the text color of the collapsed title.
+     *
+     * @param color The new text color in ARGB format
+     */
+    public void setCollapsedSubTextColor(@ColorInt int color) {
+        setCollapsedSubTextColor(ColorStateList.valueOf(color));
+    }
+
+    /**
+     * Sets the text colors of the collapsed title.
+     *
+     * @param colors ColorStateList containing the new text colors
+     */
+    public void setCollapsedSubTextColor(@NonNull ColorStateList colors) {
+        mCollapsingTextHelper.setCollapsedSubColor(colors);
+    }
+
+    public ColorStateList getCollapsedSubTextColor() {
+        return mCollapsingTextHelper.getCollapsedSubColor();
     }
 
     /**

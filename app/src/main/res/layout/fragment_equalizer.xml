@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <com.simplecity.amp_library.ui.views.StatusBarView
+    <com.simplecity.amp_library.ui.views.ThemedStatusBarView
         android:background="@color/colorPrimaryDark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

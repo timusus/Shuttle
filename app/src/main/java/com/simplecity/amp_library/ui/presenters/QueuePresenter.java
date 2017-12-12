@@ -149,7 +149,7 @@ public class QueuePresenter extends Presenter<QueueView> {
     private SongView.ClickListener clickListener = new SongView.ClickListener() {
         @Override
         public void onSongClick(int position, SongView songView) {
-            if (!contextualToolbarHelper.handleClick(position, songView)) {
+            if (!contextualToolbarHelper.handleClick(position, songView, songView.song)) {
                 MusicUtils.setQueuePosition(position);
                 QueueView queueView = getView();
                 if (queueView != null) {
@@ -160,7 +160,7 @@ public class QueuePresenter extends Presenter<QueueView> {
 
         @Override
         public boolean onSongLongClick(int position, SongView songView) {
-            return contextualToolbarHelper.handleLongClick(position, songView);
+            return contextualToolbarHelper.handleLongClick(position, songView, songView.song);
         }
 
         @Override
