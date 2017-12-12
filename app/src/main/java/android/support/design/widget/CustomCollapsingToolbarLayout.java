@@ -261,8 +261,8 @@ public class CustomCollapsingToolbarLayout extends FrameLayout {
     }
 
     @Override
-    protected void dispatchDraw(Canvas canvas) {
-        super.dispatchDraw(canvas);
+    public void draw(Canvas canvas) {
+        super.draw(canvas);
 
         // If we don't have a toolbar, the scrim will be not be drawn in drawChild() below.
         // Instead, we draw it here, before our collapsing text.
@@ -287,13 +287,6 @@ public class CustomCollapsingToolbarLayout extends FrameLayout {
                 mStatusBarScrim.draw(canvas);
             }
         }
-    }
-
-    @Override
-    public void draw(Canvas canvas) {
-        super.draw(canvas);
-
-
     }
 
     @Override
