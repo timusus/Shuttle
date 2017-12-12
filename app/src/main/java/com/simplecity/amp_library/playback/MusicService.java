@@ -2011,6 +2011,7 @@ public class MusicService extends Service {
                 } else {
                     stopForegroundImpl(false, true);
                 }
+                Log.i(TAG, "stop: playPos = "+ String.valueOf(playPos));
                 break;
             }
             case REMOTE: {
@@ -2288,6 +2289,7 @@ public class MusicService extends Service {
         setShuffleMode(ShuffleMode.OFF);
         stop(true);
         playPos = -1;
+        nextPlayPos = -1;
         notifyChange(InternalIntents.QUEUE_CHANGED);
     }
 
