@@ -31,6 +31,7 @@ import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.utils.CustomMediaScanner;
 import com.simplecity.amp_library.utils.DialogUtils;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 
@@ -346,6 +347,11 @@ public class TaggerDialog extends DialogFragment {
 
             if (isResumed() && progressDialog.isShowing()) {
                 progressDialog.dismiss();
+            }
+
+            if (!isResumed() || getContext() == null) {
+                LogUtils.logException(TAG, "Save tags returning early.. Context null or dialog not resumed.", null);
+                return;
             }
 
             if (hasPermission) {
