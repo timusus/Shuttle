@@ -159,7 +159,7 @@ public class Playlist implements Serializable {
         return DataManager.getInstance().getPlaylistsRelay()
                 .first(Collections.emptyList())
                 .flatMapObservable(Observable::fromIterable)
-                .filter(playlist -> playlist.name.equals(ShuttleApplication.getInstance().getResources().getString(R.string.fav_title)))
+                .filter(playlist ->  playlist.type == Type.FAVORITES)
                 .switchIfEmpty(Observable.fromCallable(PlaylistUtils::createFavoritePlaylist))
                 .firstOrError();
     }
