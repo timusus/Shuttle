@@ -544,6 +544,11 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     }
 
     void fadeInUi() {
+
+        if (textProtectionScrim == null || textProtectionScrim2 == null || fab == null) {
+            return;
+        }
+
         //Fade in the text protection scrim
         textProtectionScrim.setAlpha(0f);
         textProtectionScrim.setVisibility(View.VISIBLE);
