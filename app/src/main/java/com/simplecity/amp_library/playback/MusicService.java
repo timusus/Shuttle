@@ -232,6 +232,7 @@ public class MusicService extends Service {
 
     private final IBinder mBinder = new LocalBinder(this);
 
+    @Nullable
     MultiPlayer player;
 
     int shuffleMode = ShuffleMode.OFF;
@@ -856,8 +857,10 @@ public class MusicService extends Service {
 
         // release all MediaPlayer resources, including the native player and
         // wakelocks
-        player.release();
-        player = null;
+        if (player != null) {
+            player.release();
+            player = null;
+        }
 
         // Remove the audio focus listener and lock screen controls
         if (ShuttleUtils.hasOreo()) {
@@ -1665,14 +1668,18 @@ public class MusicService extends Service {
                 && nextPlayPos < getCurrentPlaylist().size()) {
             final Song nextSong = getCurrentPlaylist().get(nextPlayPos);
             try {
-                player.setNextDataSource(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI + "/" + nextSong.id);
+                if (player != null) {
+                    player.setNextDataSource(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI + "/" + nextSong.id);
+                }
             } catch (Exception e) {
                 Log.e(TAG, "Error: " + e.getMessage());
                 CrashlyticsCore.getInstance().log("setNextTrack() with id failed. error: " + e.getLocalizedMessage());
             }
         } else {
             try {
-                player.setNextDataSource(null);
+                if (player != null) {
+                    player.setNextDataSource(null);
+                }
             } catch (Exception e) {
                 Log.e(TAG, "Error: " + e.getMessage());
                 CrashlyticsCore.getInstance().log("setNextTrack() failed with null id. error: " + e.getLocalizedMessage());
@@ -2054,7 +2061,9 @@ public class MusicService extends Service {
                     playerHandler.removeMessages(PlayerHandler.FADE_UP);
                     if (isSupposedToBePlaying) {
                         EqualizerService.closeEqualizerSessions(this, false, getAudioSessionId());
-                        player.pause();
+                        if (player != null) {
+                            player.pause();
+                        }
                         setIsSupposedToBePlaying(false, true);
                         notifyChange(InternalIntents.PLAY_STATE_CHANGED);
                         saveBookmarkIfNeeded();
@@ -2065,7 +2074,9 @@ public class MusicService extends Service {
                 case REMOTE: {
 
                     try {
-                        player.seekTo(castManager.getCurrentMediaPosition());
+                        if (player != null) {
+                            player.seekTo(castManager.getCurrentMediaPosition());
+                        }
                         castManager.pause();
                         playbackState = PAUSED;
                         scheduleDelayedShutdown();
@@ -2294,8 +2305,6 @@ public class MusicService extends Service {
 
     /**
      * Removes the first instance of the Song the playlist & shuffleList.
-     *
-     *
      */
     public void removeSong(int position) {
         synchronized (this) {
@@ -2611,7 +2620,7 @@ public class MusicService extends Service {
      */
     public void seekTo(long position) {
         synchronized (this) {
-            if (player.isInitialized()) {
+            if (player != null && player.isInitialized()) {
                 if (position < 0) {
                     position = 0;
                 } else if (position > player.getDuration()) {
