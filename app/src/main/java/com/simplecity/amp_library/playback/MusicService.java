@@ -2288,6 +2288,7 @@ public class MusicService extends Service {
         setShuffleMode(ShuffleMode.OFF);
         stop(true);
         playPos = -1;
+        nextPlayPos = -1;
         notifyChange(InternalIntents.QUEUE_CHANGED);
     }
 
