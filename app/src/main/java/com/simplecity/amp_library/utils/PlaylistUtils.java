@@ -412,6 +412,7 @@ public class PlaylistUtils {
         ShuttleApplication.getInstance().getContentResolver().delete(uri, null, null);
     }
 
+    @Nullable
     public static Playlist createPlaylist(Context context, String name) {
 
         Playlist playlist = null;
@@ -454,17 +455,20 @@ public class PlaylistUtils {
         if (id != -1) {
             playlist = new Playlist(Playlist.Type.USER_CREATED, id, name, true, false, true, true, true);
         } else {
-            Crashlytics.log("Failed to create playlist. Id:" + id);
+            Crashlytics.log(String.format("Failed to create playlist. Name: %s, id: %d", name, id));
+            DataManager.getInstance().getPlaylistsRelay().first(Collections.emptyList()).subscribe(playlists -> Crashlytics.log("Existing playlists: " + playlists));
         }
 
         return playlist;
     }
 
+    @Nullable
     public static Playlist createFavoritePlaylist() {
         Playlist playlist = PlaylistUtils.createPlaylist(ShuttleApplication.getInstance(), ShuttleApplication.getInstance().getString(R.string.fav_title));
         if (playlist != null) {
             playlist.canDelete = false;
             playlist.canRename = false;
+            playlist.type = Playlist.Type.FAVORITES;
         }
         return playlist;
     }

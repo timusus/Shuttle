@@ -1,6 +1,5 @@
 package com.simplecity.amp_library.services;
 
-import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,10 +7,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.audiofx.AudioEffect;
 import android.media.audiofx.BassBoost;
-import android.media.audiofx.Equalizer;
 import android.media.audiofx.Virtualizer;
 import android.os.Binder;
-import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -32,12 +29,34 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author alankila
  */
-public class EqualizerService extends Service {
+public class Equalizer {
 
-    public static final String ACTION_OPEN_EQUALIZER_SESSION = "com.simplecity.amp_library.audiofx.OPEN_SESSION";
-    public static final String ACTION_CLOSE_EQUALIZER_SESSION = "com.simplecity.amp_library.audiofx.CLOSE_SESSION";
+    private Context context;
+
+    private static final String ACTION_OPEN_EQUALIZER_SESSION = "com.simplecity.amp_library.audiofx.OPEN_SESSION";
+    private static final String ACTION_CLOSE_EQUALIZER_SESSION = "com.simplecity.amp_library.audiofx.CLOSE_SESSION";
 
     private SharedPreferences mPrefs;
+
+    public Equalizer(Context context) {
+
+        this.context = context;
+
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        IntentFilter audioFilter = new IntentFilter();
+        audioFilter.addAction(ACTION_OPEN_EQUALIZER_SESSION);
+        audioFilter.addAction(ACTION_CLOSE_EQUALIZER_SESSION);
+        context.registerReceiver(mAudioSessionReceiver, audioFilter);
+
+        saveDefaults();
+    }
+
+    public void releaseEffects() {
+        Stream.of(mAudioSessions.values())
+                .filter(effectSet -> effectSet != null)
+                .forEach(EffectSet::release);
+    }
 
     public static String getZeroedBandsString(int length) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -58,7 +77,7 @@ public class EqualizerService extends Service {
         /**
          * Session-specific equalizer
          */
-        Equalizer equalizer;
+        android.media.audiofx.Equalizer equalizer;
         /**
          * Session-specific bassboost
          */
@@ -73,8 +92,8 @@ public class EqualizerService extends Service {
         private short mEqNumPresets = -1;
         private short mEqNumBands = -1;
 
-        public EffectSet(int sessionId) {
-            equalizer = new Equalizer(1, sessionId);
+        EffectSet(int sessionId) {
+            equalizer = new android.media.audiofx.Equalizer(1, sessionId);
             bassBoost = new BassBoost(1, sessionId);
             virtualizer = new Virtualizer(1, sessionId);
 //            mPresetReverb = new PresetReverb(0, sessionId);
@@ -85,7 +104,7 @@ public class EqualizerService extends Service {
          * to be poked- this can cause audible pops.
          */
 
-        public void enableEqualizer(boolean enable) {
+        void enableEqualizer(boolean enable) {
             if (enable != equalizer.getEnabled()) {
                 if (!enable) {
                     for (short i = 0; i < getNumEqualizerBands(); i++) {
@@ -96,7 +115,7 @@ public class EqualizerService extends Service {
             }
         }
 
-        public void setEqualizerLevels(short[] levels) {
+        void setEqualizerLevels(short[] levels) {
             if (equalizer.getEnabled()) {
                 for (short i = 0; i < levels.length; i++) {
                     if (equalizer.getBandLevel(i) != levels[i]) {
@@ -106,7 +125,7 @@ public class EqualizerService extends Service {
             }
         }
 
-        public short getNumEqualizerBands() {
+        short getNumEqualizerBands() {
             if (mEqNumBands < 0) {
                 mEqNumBands = equalizer.getNumberOfBands();
             }
@@ -116,14 +135,14 @@ public class EqualizerService extends Service {
             return mEqNumBands;
         }
 
-        public short getNumEqualizerPresets() {
+        short getNumEqualizerPresets() {
             if (mEqNumPresets < 0) {
                 mEqNumPresets = equalizer.getNumberOfPresets();
             }
             return mEqNumPresets;
         }
 
-        public void enableBassBoost(boolean enable) {
+        void enableBassBoost(boolean enable) {
             if (enable != bassBoost.getEnabled()) {
                 if (!enable) {
                     bassBoost.setStrength((short) 1);
@@ -133,13 +152,13 @@ public class EqualizerService extends Service {
             }
         }
 
-        public void setBassBoostStrength(short strength) {
+        void setBassBoostStrength(short strength) {
             if (bassBoost.getEnabled() && bassBoost.getRoundedStrength() != strength) {
                 bassBoost.setStrength(strength);
             }
         }
 
-        public void enableVirtualizer(boolean enable) {
+        void enableVirtualizer(boolean enable) {
             if (enable != virtualizer.getEnabled()) {
                 if (!enable) {
                     virtualizer.setStrength((short) 1);
@@ -149,7 +168,7 @@ public class EqualizerService extends Service {
             }
         }
 
-        public void setVirtualizerStrength(short strength) {
+        void setVirtualizerStrength(short strength) {
             if (virtualizer.getEnabled() && virtualizer.getRoundedStrength() != strength) {
                 virtualizer.setStrength(strength);
             }
@@ -178,11 +197,11 @@ public class EqualizerService extends Service {
         }
     }
 
-    protected static final String TAG = EqualizerService.class.getSimpleName();
+    protected static final String TAG = Equalizer.class.getSimpleName();
 
     public class LocalBinder extends Binder {
-        public EqualizerService getService() {
-            return EqualizerService.this;
+        public Equalizer getService() {
+            return Equalizer.this;
         }
     }
 
@@ -191,7 +210,7 @@ public class EqualizerService extends Service {
     /**
      * Known audio sessions and their associated audioeffect suites.
      */
-    protected final Map<Integer, EffectSet> mAudioSessions = new ConcurrentHashMap<>();
+    private final Map<Integer, EffectSet> mAudioSessions = new ConcurrentHashMap<>();
 
     /**
      * Receive new broadcast intents for adding DSP to session
@@ -222,52 +241,12 @@ public class EqualizerService extends Service {
         }
     };
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-        IntentFilter audioFilter = new IntentFilter();
-        audioFilter.addAction(ACTION_OPEN_EQUALIZER_SESSION);
-        audioFilter.addAction(ACTION_CLOSE_EQUALIZER_SESSION);
-        registerReceiver(mAudioSessionReceiver, audioFilter);
-
-        saveDefaults();
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        return START_STICKY;
-    }
-
-    @Override
-    public void onDestroy() {
-
-        unregisterReceiver(mAudioSessionReceiver);
-
-        Stream.of(mAudioSessions.values())
-                .filter(effectSet -> effectSet != null)
-                .forEach(EffectSet::release);
-
-        super.onDestroy();
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return mBinder;
-    }
-
     private void saveDefaults() {
         EffectSet temp;
         try {
             temp = new EffectSet(0);
         } catch (Exception | ExceptionInInitializerError | UnsatisfiedLinkError e) {
-            // this is really bad- likely the media stack is broken.
-            // disable ourself if we get into this state, as the service
-            // will restart itself repeatedly!
-            Log.e(TAG, e.getMessage(), e);
-            stopSelf();
+            releaseEffects();
             return;
         }
 
@@ -398,11 +377,11 @@ public class EqualizerService extends Service {
     /**
      * Sends a broadcast to close any existing audio effect sessions
      */
-    public static void closeEqualizerSessions(Context context, boolean internal, int audioSessionId) {
+    public void closeEqualizerSessions(boolean internal, int audioSessionId) {
 
         if (internal) {
             //Close the internal audio session
-            Intent intent = new Intent(EqualizerService.ACTION_CLOSE_EQUALIZER_SESSION);
+            Intent intent = new Intent(Equalizer.ACTION_CLOSE_EQUALIZER_SESSION);
             intent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, audioSessionId);
             intent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, context.getPackageName());
             context.sendBroadcast(intent);
@@ -420,12 +399,12 @@ public class EqualizerService extends Service {
         }
     }
 
-    public static void openEqualizerSession(Context context, boolean internal, int audioSessionId) {
+    public void openEqualizerSession(boolean internal, int audioSessionId) {
 
         final Intent intent = new Intent();
         intent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, audioSessionId);
         intent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, context.getPackageName());
-        intent.setAction(internal ? EqualizerService.ACTION_OPEN_EQUALIZER_SESSION : AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION);
+        intent.setAction(internal ? Equalizer.ACTION_OPEN_EQUALIZER_SESSION : AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION);
         context.sendBroadcast(intent);
     }
 }

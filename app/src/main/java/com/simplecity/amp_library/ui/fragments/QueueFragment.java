@@ -25,6 +25,7 @@ import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.adapters.LoggingViewModelAdapter;
 import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
+import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
 import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.ui.presenters.QueuePresenter;
@@ -32,7 +33,7 @@ import com.simplecity.amp_library.ui.recyclerview.ItemTouchHelperCallback;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.ui.views.PlayerViewAdapter;
 import com.simplecity.amp_library.ui.views.QueueView;
-import com.simplecity.amp_library.ui.views.StatusBarView;
+import com.simplecity.amp_library.ui.views.ThemedStatusBarView;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetSlideEventRelay;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.MenuUtils;
@@ -55,6 +56,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
@@ -64,7 +66,7 @@ public class QueueFragment extends BaseFragment implements
     private static final String TAG = "QueueFragment";
 
     @BindView(R.id.statusBarView)
-    StatusBarView statusBarView;
+    ThemedStatusBarView statusBarView;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -170,7 +172,7 @@ public class QueueFragment extends BaseFragment implements
 
             disposables.add(multiSheetSlideEventRelay.getEvents()
                     .filter(multiSheetEvent -> multiSheetEvent.sheet == MultiSheetView.Sheet.SECOND)
-                    .subscribe(multiSheetEvent -> statusBarView.setTranslationY((1 - multiSheetEvent.slideOffset) * ResourceUtils.toPixels(16))));
+                    .subscribe(multiSheetEvent -> statusBarView.setTranslationY((1-multiSheetEvent.slideOffset) * ResourceUtils.toPixels(16))));
         }
 
         setupContextualToolbar();
@@ -216,11 +218,12 @@ public class QueueFragment extends BaseFragment implements
         contextualToolbar.inflateMenu(R.menu.context_menu_queue);
         SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
         disposables.add(PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe());
-        contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), MusicUtils::getQueue));
+        contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), Single.just(MusicUtils.getQueue())));
         contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
             @Override
-            public void notifyItemChanged(int position) {
+            public void notifyItemChanged(int position, SelectableViewModel viewModel) {
                 adapter.notifyItemChanged(position, 0);
+
             }
 
             @Override

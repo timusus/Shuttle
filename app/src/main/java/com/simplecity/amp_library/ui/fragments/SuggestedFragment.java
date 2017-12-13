@@ -45,12 +45,14 @@ import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 public class SuggestedFragment extends BaseFragment implements
         SuggestedHeaderView.ClickListener,
@@ -110,6 +112,9 @@ public class SuggestedFragment extends BaseFragment implements
     private ViewModelAdapter adapter;
 
     private CompositeDisposable refreshDisposables = new CompositeDisposable();
+
+    @Nullable
+    private Disposable setItemsDisposable;
 
     @Inject
     RequestManager requestManager;
@@ -346,9 +351,6 @@ public class SuggestedFragment extends BaseFragment implements
     }
 
     void refreshAdapterItems() {
-
-        refreshDisposables.clear();
-
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {
                 refreshDisposables.add(Observable.combineLatest(
@@ -365,12 +367,16 @@ public class SuggestedFragment extends BaseFragment implements
                             return items;
                         })
                         .switchIfEmpty(Observable.just(Collections.emptyList()))
+                        .debounce(200, TimeUnit.MILLISECONDS)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(adaptableItems -> {
+                            if (setItemsDisposable != null) {
+                                setItemsDisposable.dispose();
+                            }
                             if (adaptableItems.isEmpty()) {
-                                refreshDisposables.add(adapter.setItems(Collections.singletonList((new EmptyView(R.string.empty_suggested)))));
+                                setItemsDisposable = adapter.setItems(Collections.singletonList((new EmptyView(R.string.empty_suggested))));
                             } else {
-                                refreshDisposables.add(adapter.setItems(adaptableItems));
+                                setItemsDisposable = adapter.setItems(adaptableItems);
                             }
                         }, error -> LogUtils.logException(TAG, "Error setting items", error)));
             }

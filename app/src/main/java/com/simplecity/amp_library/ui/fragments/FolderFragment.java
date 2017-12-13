@@ -33,9 +33,10 @@ import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
 import com.simplecity.amp_library.ui.modelviews.BreadcrumbsView;
 import com.simplecity.amp_library.ui.modelviews.FolderView;
+import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
 import com.simplecity.amp_library.ui.views.BreadcrumbItem;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
-import com.simplecity.amp_library.ui.views.StatusBarView;
+import com.simplecity.amp_library.ui.views.ThemedStatusBarView;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.FileBrowser;
@@ -103,7 +104,7 @@ public class FolderFragment extends BaseFragment implements
     AppBarLayout appBarLayout;
 
     @BindView(R.id.statusBarView)
-    StatusBarView statusBarView;
+    ThemedStatusBarView statusBarView;
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -403,7 +404,7 @@ public class FolderFragment extends BaseFragment implements
 
     @Override
     public void onFileObjectClick(int position, FolderView folderView) {
-        if (!contextualToolbarHelper.handleClick(position, folderView)) {
+        if (!contextualToolbarHelper.handleClick(position, folderView, folderView.baseFileObject)) {
             if (folderView.baseFileObject.fileType == FileType.FILE) {
                 FileHelper.getSongList(new File(folderView.baseFileObject.path), false, true)
                         .observeOn(AndroidSchedulers.mainThread())
@@ -486,7 +487,7 @@ public class FolderFragment extends BaseFragment implements
 
             contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
                 @Override
-                public void notifyItemChanged(int position) {
+                public void notifyItemChanged(int position, SelectableViewModel viewModel) {
                     adapter.notifyItemChanged(position, 0);
                 }
 

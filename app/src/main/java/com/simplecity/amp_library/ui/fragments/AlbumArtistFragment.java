@@ -383,7 +383,7 @@ public class AlbumArtistFragment extends BaseFragment implements
 
     @Override
     public void onAlbumArtistClick(int position, AlbumArtistView albumArtistView, AlbumArtistView.ViewHolder viewholder) {
-        if (!contextualToolbarHelper.handleClick(position, albumArtistView)) {
+        if (!contextualToolbarHelper.handleClick(position, albumArtistView, albumArtistView.albumArtist)) {
             if (albumArtistClickListener != null) {
                 albumArtistClickListener.onAlbumArtistClicked(albumArtistView.albumArtist, viewholder.imageOne);
             }
@@ -392,7 +392,7 @@ public class AlbumArtistFragment extends BaseFragment implements
 
     @Override
     public boolean onAlbumArtistLongClick(int position, AlbumArtistView albumArtistView) {
-        return contextualToolbarHelper.handleLongClick(position, albumArtistView);
+        return contextualToolbarHelper.handleLongClick(position, albumArtistView, albumArtistView.albumArtist);
     }
 
     @Override
@@ -425,20 +425,17 @@ public class AlbumArtistFragment extends BaseFragment implements
         ContextualToolbar contextualToolbar = ContextualToolbar.findContextualToolbar(this);
         if (contextualToolbar != null) {
             contextualToolbar.getMenu().clear();
-            contextualToolbar.inflateMenu(R.menu.context_menu_songs);
+            contextualToolbar.inflateMenu(R.menu.context_menu_general);
             SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
             if (playlistMenuDisposable != null) {
                 playlistMenuDisposable.dispose();
             }
             playlistMenuDisposable = PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe();
             contextualToolbar.setOnMenuItemClickListener(MenuUtils.getAlbumArtistMenuClickListener(
-                    getContext(),
-                    () -> Stream.of(contextualToolbarHelper.getItems())
-                            .map(SelectableViewModel::getItem)
-                            .toList()));
+                    getContext(), () -> contextualToolbarHelper.getItems()));
             contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
                 @Override
-                public void notifyItemChanged(int position) {
+                public void notifyItemChanged(int position, SelectableViewModel viewModel) {
                     adapter.notifyItemChanged(position, 0);
                 }
 

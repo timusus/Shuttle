@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.Single;
+
 public class Operators {
 
     private static final String TAG = "Operators";
@@ -97,5 +99,17 @@ public class Operators {
         return Stream.of(albumSongMap)
                 .flatMap(stringListEntry -> Stream.of(stringListEntry.getValue()))
                 .toList();
+    }
+
+    public static Single<List<Song>> reduceSongSingles(List<Single<List<Song>>> singles) {
+        return Single.zip(singles,
+                lists -> Stream.of(lists)
+                        .map(o -> (List<Song>) o)
+                        .reduce((value1, value2) -> {
+                            List<Song> allSongs = new ArrayList<>();
+                            allSongs.addAll(value1);
+                            allSongs.addAll(value2);
+                            return allSongs;
+                        }).orElse(Collections.emptyList()));
     }
 }

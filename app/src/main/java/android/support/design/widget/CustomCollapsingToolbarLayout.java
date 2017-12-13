@@ -780,6 +780,32 @@ public class CustomCollapsingToolbarLayout extends FrameLayout {
         mCollapsingTextHelper.setCollapsedTextColor(colors);
     }
 
+    public ColorStateList getCollapsedTitleTextColor() {
+        return mCollapsingTextHelper.getCollapsedTextColor();
+    }
+
+    /**
+     * Sets the text color of the collapsed title.
+     *
+     * @param color The new text color in ARGB format
+     */
+    public void setCollapsedSubTextColor(@ColorInt int color) {
+        setCollapsedSubTextColor(ColorStateList.valueOf(color));
+    }
+
+    /**
+     * Sets the text colors of the collapsed title.
+     *
+     * @param colors ColorStateList containing the new text colors
+     */
+    public void setCollapsedSubTextColor(@NonNull ColorStateList colors) {
+        mCollapsingTextHelper.setCollapsedSubColor(colors);
+    }
+
+    public ColorStateList getCollapsedSubTextColor() {
+        return mCollapsingTextHelper.getCollapsedSubColor();
+    }
+
     /**
      * Returns the horizontal and vertical alignment for title when collapsed.
      *

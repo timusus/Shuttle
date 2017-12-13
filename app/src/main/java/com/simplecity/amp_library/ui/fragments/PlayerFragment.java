@@ -415,7 +415,7 @@ public class PlayerFragment extends BaseFragment implements
                         @Override
                         public void onResourceReady(PaletteBitmap resource, GlideAnimation<? super PaletteBitmap> glideAnimation) {
 
-                            if (!isAdded()) {
+                            if (!isAdded() || getContext() == null) {
                                 return;
                             }
 
@@ -431,15 +431,17 @@ public class PlayerFragment extends BaseFragment implements
                                                         .colorPrimary()
                                                         .take(1)
                                                         .subscribe(integer -> animateColors(integer, swatch.getRgb(), color -> {
-                                                            Aesthetic aesthetic = Aesthetic.get(getContext())
-                                                                    .colorPrimary(color)
-                                                                    .colorStatusBarAuto();
+                                                            if (getContext() != null && isAdded()) {
+                                                                Aesthetic aesthetic = Aesthetic.get(getContext())
+                                                                        .colorPrimary(color)
+                                                                        .colorStatusBarAuto();
 
-                                                            if (SettingsManager.getInstance().getTintNavBar()) {
-                                                                aesthetic = aesthetic.colorNavigationBar(color);
+                                                                if (SettingsManager.getInstance().getTintNavBar()) {
+                                                                    aesthetic = aesthetic.colorNavigationBar(color);
+                                                                }
+
+                                                                aesthetic.apply();
                                                             }
-
-                                                            aesthetic.apply();
                                                         })));
                                     }
                                 }

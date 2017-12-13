@@ -70,7 +70,7 @@ android {
         // This API key is provided for convenience. Please go to https://www.last.fm/api/account/create and create your own.
         buildConfigField("String", "LASTFM_API_KEY", "\"${getProperty(getProperties('../public.properties'), 'LASTFM_API_KEY')}\"")
 
-        manifestPlaceholders = [CRASHLYTICS_API_KEY: ""]
+        manifestPlaceholders = [CRASHLYTICS_API_KEY: "dummy-key"]
     }
 
     signingConfigs {

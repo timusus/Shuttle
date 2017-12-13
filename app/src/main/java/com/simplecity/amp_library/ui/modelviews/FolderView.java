@@ -31,7 +31,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class FolderView extends BaseSelectableViewModel<FolderView.ViewHolder, BaseFileObject> {
+public class FolderView extends BaseSelectableViewModel<FolderView.ViewHolder> {
 
     private static final String TAG = "FolderView";
 
@@ -78,11 +78,6 @@ public class FolderView extends BaseSelectableViewModel<FolderView.ViewHolder, B
         if (showBlacklist) {
             this.showWhitelist = false;
         }
-    }
-
-    @Override
-    public BaseFileObject getItem() {
-        return baseFileObject;
     }
 
     private void onClick(int position) {

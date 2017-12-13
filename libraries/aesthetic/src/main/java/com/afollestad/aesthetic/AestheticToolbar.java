@@ -2,6 +2,7 @@ package com.afollestad.aesthetic;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
@@ -82,6 +83,11 @@ public class AestheticToolbar extends Toolbar {
       return;
     }
     super.setNavigationIcon(createTintedDrawable(icon, color));
+  }
+
+  public void setTransparentBackground(boolean transparentBackground) {
+    this.transparentBackground = transparentBackground;
+    setBackgroundColor(Color.TRANSPARENT);
   }
 
   @SuppressWarnings("ConstantConditions")
