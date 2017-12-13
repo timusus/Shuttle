@@ -159,7 +159,7 @@ public class AlbumArtist implements
     @Nullable
     @Override
     public List<File> getFolderArtworkFiles() {
-        return null;
+        return Collections.emptyList();
     }
 
     @Override

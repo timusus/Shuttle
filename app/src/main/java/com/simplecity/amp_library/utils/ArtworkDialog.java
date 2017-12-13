@@ -120,8 +120,10 @@ public class ArtworkDialog {
                 .subscribe(files -> {
                     adapter.removeItem(adapter.items.indexOf(folderView));
                     if (files != null) {
-                        Stream.of(files).filter(file -> userSelectedArtwork == null || !file.getPath().equals(userSelectedArtwork.path)).forEach(file ->
-                                adapter.addItem(new ArtworkView(ArtworkProvider.Type.FOLDER, artworkProvider, glideListener, file, false)));
+                        Stream.of(files)
+                                .filter(file -> userSelectedArtwork == null || !file.getPath().equals(userSelectedArtwork.path))
+                                .forEach(file ->
+                                        adapter.addItem(new ArtworkView(ArtworkProvider.Type.FOLDER, artworkProvider, glideListener, file, false)));
                     }
                 }, error -> LogUtils.logException(TAG, "Error getting artwork files", error));
 
