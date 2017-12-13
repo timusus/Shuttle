@@ -58,7 +58,7 @@ final class MediaPlayerHandler extends Handler {
             case MusicService.PlayerHandler.TRACK_WENT_TO_NEXT:
                 service.notifyChange(MusicService.InternalIntents.TRACK_ENDING);
                 service.playPos = service.nextPlayPos;
-                if (service.playPos >= 0 && !service.getCurrentPlaylist().isEmpty()) {
+                if (service.playPos >= 0 && !service.getCurrentPlaylist().isEmpty() && service.playPos < service.getCurrentPlaylist().size()) {
                     service.currentSong = service.getCurrentPlaylist().get(service.playPos);
                 }
                 service.notifyChange(MusicService.InternalIntents.META_CHANGED);
