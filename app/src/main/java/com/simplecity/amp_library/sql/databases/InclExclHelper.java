@@ -43,7 +43,7 @@ public class InclExclHelper {
 
     public static void deleteInclExclItem(InclExclItem inclExclItem) {
         DataManager.getInstance().getInclExclDatabase().delete(InclExclDbOpenHelper.TABLE_NAME,
-                InclExclDbOpenHelper.COLUMN_PATH + " = '" + inclExclItem.path + "'" +
+                InclExclDbOpenHelper.COLUMN_PATH + " = '" + inclExclItem.path.replaceAll("'", "\''") + "'" +
                         " AND " + InclExclDbOpenHelper.COLUMN_TYPE + " = " + inclExclItem.type);
     }
 
