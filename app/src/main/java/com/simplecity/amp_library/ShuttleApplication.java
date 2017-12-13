@@ -3,7 +3,6 @@ package com.simplecity.amp_library;
 import android.Manifest;
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Environment;
@@ -32,7 +31,6 @@ import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Query;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.model.UserSelectedArtwork;
-import com.simplecity.amp_library.services.EqualizerService;
 import com.simplecity.amp_library.sql.SqlUtils;
 import com.simplecity.amp_library.sql.databases.CustomArtworkTable;
 import com.simplecity.amp_library.sql.providers.PlayCountTable;
@@ -40,7 +38,6 @@ import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
 import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.InputMethodManagerLeaks;
 import com.simplecity.amp_library.utils.LegacyUtils;
-import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
@@ -161,12 +158,6 @@ public class ShuttleApplication extends Application {
         TagOptionSingleton.getInstance().setPadNumbers(true);
 
         SettingsManager.getInstance().incrementLaunchCount();
-
-        try {
-            startService(new Intent(this, EqualizerService.class));
-        } catch (IllegalStateException e) {
-            LogUtils.logException(TAG, "Error starting Equalizer", e);
-        }
 
         Completable.fromAction(() -> {
             Query query = new Query.Builder()

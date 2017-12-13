@@ -429,4 +429,16 @@ public class MusicUtils {
             MusicServiceConnectionUtils.serviceBinder.getService().toggleFavorite();
         }
     }
+
+    public static void closeEqualizerSessions(boolean internal, int audioSessionId) {
+        if (MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null) {
+            MusicServiceConnectionUtils.serviceBinder.getService().closeEqualizerSessions(internal, audioSessionId);
+        }
+    }
+
+    public static void openEqualizerSession(boolean internal, int audioSessionId) {
+        if (MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null) {
+            MusicServiceConnectionUtils.serviceBinder.getService().openEqualizerSession(internal, audioSessionId);
+        }
+    }
 }

@@ -154,9 +154,6 @@
             android:name=".playback.MusicService"
             android:label="@string/app_name"/>
         <service
-            android:name=".services.EqualizerService"
-            android:label="@string/equalizer"/>
-        <service
             android:name=".services.DashClockService"
             android:icon="@drawable/ic_headphones_white"
             android:label="@string/app_name"
@@ -316,6 +313,6 @@
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="${CRASHLYTICS_API_KEY}" />
+            android:value="${CRASHLYTICS_API_KEY}"/>
     </application>
 </manifest>

@@ -71,7 +71,7 @@ import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.notifications.MusicNotificationHelper;
 import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.rx.UnsafeConsumer;
-import com.simplecity.amp_library.services.EqualizerService;
+import com.simplecity.amp_library.services.Equalizer;
 import com.simplecity.amp_library.ui.widgets.WidgetProviderExtraLarge;
 import com.simplecity.amp_library.ui.widgets.WidgetProviderLarge;
 import com.simplecity.amp_library.ui.widgets.WidgetProviderMedium;
@@ -209,6 +209,8 @@ public class MusicService extends Service {
     }
 
     private static final Random shuffler = new Random();
+
+    private Equalizer equalizer;
 
     /**
      * Idle time before stopping the foreground notification (5 minutes)
@@ -603,6 +605,8 @@ public class MusicService extends Service {
         player = new MultiPlayer(this);
         player.setHandler(playerHandler);
 
+        equalizer = new Equalizer(this);
+
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ServiceCommand.SERVICE_COMMAND);
         intentFilter.addAction(ServiceCommand.TOGGLE_PAUSE_ACTION);
@@ -836,10 +840,11 @@ public class MusicService extends Service {
             castManager.removeVideoCastConsumer(castConsumer);
         }
 
-        EqualizerService.closeEqualizerSessions(this, true, getAudioSessionId());
+        equalizer.releaseEffects();
+        equalizer.closeEqualizerSessions(true, getAudioSessionId());
 
         //Shutdown the EQ
-        Intent shutdownEqualizer = new Intent(MusicService.this, EqualizerService.class);
+        Intent shutdownEqualizer = new Intent(MusicService.this, Equalizer.class);
         stopService(shutdownEqualizer);
 
         alarmManager.cancel(shutdownIntent);
@@ -988,7 +993,7 @@ public class MusicService extends Service {
             saveQueue(true);
 
             //Shutdown the EQ
-            Intent shutdownEqualizer = new Intent(MusicService.this, EqualizerService.class);
+            Intent shutdownEqualizer = new Intent(MusicService.this, Equalizer.class);
             stopService(shutdownEqualizer);
 
             stopSelf(serviceStartId);
@@ -1223,7 +1228,7 @@ public class MusicService extends Service {
         }
         stopSelf(serviceStartId);
         //Shutdown the EQ
-        Intent shutdownEqualizer = new Intent(MusicService.this, EqualizerService.class);
+        Intent shutdownEqualizer = new Intent(MusicService.this, Equalizer.class);
         stopService(shutdownEqualizer);
         return true;
     }
@@ -1778,12 +1783,12 @@ public class MusicService extends Service {
         if (playbackLocation == LOCAL) {
             if (SettingsManager.getInstance().getEqualizerEnabled()) {
                 //Shutdown any existing external audio sessions
-                EqualizerService.closeEqualizerSessions(this, false, getAudioSessionId());
+                equalizer.closeEqualizerSessions(false, getAudioSessionId());
 
                 //Start internal equalizer session (will only turn on if enabled)
-                EqualizerService.openEqualizerSession(this, true, getAudioSessionId());
+                equalizer.openEqualizerSession(true, getAudioSessionId());
             } else {
-                EqualizerService.openEqualizerSession(this, false, getAudioSessionId());
+                equalizer.openEqualizerSession(false, getAudioSessionId());
             }
         }
 
@@ -2060,7 +2065,7 @@ public class MusicService extends Service {
                 case LOCAL: {
                     playerHandler.removeMessages(PlayerHandler.FADE_UP);
                     if (isSupposedToBePlaying) {
-                        EqualizerService.closeEqualizerSessions(this, false, getAudioSessionId());
+                        equalizer.closeEqualizerSessions(false, getAudioSessionId());
                         if (player != null) {
                             player.pause();
                         }
@@ -2699,6 +2704,14 @@ public class MusicService extends Service {
             showToast(R.string.repeat_off_notif);
         }
         notifyChange(InternalIntents.REPEAT_CHANGED);
+    }
+
+    public void closeEqualizerSessions(boolean internal, int audioSessionId) {
+        equalizer.closeEqualizerSessions(internal, audioSessionId);
+    }
+
+    public void openEqualizerSession(boolean internal, int audioSessionId) {
+        equalizer.openEqualizerSession(internal, audioSessionId);
     }
 
     private void showToast(int resId) {
