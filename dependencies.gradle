@@ -13,13 +13,13 @@ ext.versions = [
         minSdk                        : 16,
         targetSdk                     : 26,
         compileSdk                    : 26,
-        buildTools                    : "26.0.2",
+        buildTools                    : "27.0.1",
 
         // //////////////////////////////////////////////////////////////////////////
         // Plugin versions
         // /////////////////////////////////////////////////////////////////////////
 
-        androidGradlePlugin           : "3.0.0",
+        androidGradlePlugin           : "3.0.1",
         dexcountGradlePlugin          : "0.7.3",
         fabricGradlePlugin            : "1.+",
         playPublisher                 : "1.2.0",
