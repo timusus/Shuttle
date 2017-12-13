@@ -749,9 +749,7 @@ public class MenuUtils implements MusicUtils.Defs {
                     scanFile(context, fileObject);
                     return true;
                 case R.id.editTags:
-                    getSongForFile(fileObject).subscribe(song -> {
-                        tagEditorCallback.accept(editTags(song));
-                    }, errorHandler);
+                    getSongForFile(fileObject).subscribe(song -> tagEditorCallback.accept(editTags(song)), errorHandler);
                     return true;
                 case R.id.share:
                     getSongForFile(fileObject).subscribe(song -> song.share(context), errorHandler);
