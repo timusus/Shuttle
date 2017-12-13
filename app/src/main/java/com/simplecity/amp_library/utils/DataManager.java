@@ -253,7 +253,9 @@ public class DataManager {
     }
 
     public void invalidateFavoriteSongsRelay() {
-        favoriteSongsSubscription.dispose();
+        if (favoriteSongsRelay != null) {
+            favoriteSongsSubscription.dispose();
+        }
         getFavoriteSongsRelay();
     }
 
