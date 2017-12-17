@@ -65,5 +65,5 @@ deploy:
 # Slack build notifications
 notifications:
   slack: shuttlemusicplayer:g90QK9lL6Hg5jfzegqjjNqqN
-    templates:
-    - "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}: '%{commit_subject}'>) by %{author} %{result} in %{duration}."
+    template:
+      - "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}: '%{commit_subject}'>) by %{author} %{result} in %{duration}."
