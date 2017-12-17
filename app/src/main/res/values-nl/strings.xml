@@ -176,6 +176,7 @@
     <!-- Multi select menu item-->
     <string name="menu_queue">Wachtrij</string>
     <!-- Artist overflow menu item-->
+    <string name="menu_album_shuffle">Albumshuffle</string>
     <!-- Context menu item -->
     <string name="new_playlist">Nieuw</string>
     <!-- menu item to save the current list as a new playlist -->
@@ -225,6 +226,7 @@
     <string name="pref_category_navigation">Navigatie</string>
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Anders</string>
+    <!--Settings category for 'playback' items -->
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
     <string name="pref_title_choose_tabs">Tabbladen kiezen</string>
     <!--Settings summary for opening the dialog to pick which categories are shown as tab headings -->
@@ -366,6 +368,11 @@ Indien uitgeschakeld wordt het Shuttle-icoon als plaatshouder gebruikt</string>
     <string name="pref_title_changelog">Wijzigingen</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Ondersteuning</string>
+    <!-- Settings title for toggling between remaining time and total time -->
+    <!-- Settings summary for toggling between remaining time and total time -->
+    <!-- Settings title for the playback options -->
+    <!-- Settings title for toggling 'remember shuff'e-->
+    <!-- Settings summary for toggling 'remember shuff'e-->
     <string name="pref_title_version">Versie</string>
     <string name="pref_title_faq">FAQ</string>
     <string name="pref_summary_faq">Heb je een vraag of hulp nodig? Klik hier om de FAQ te zien op www.shuttlemusicplayer.com</string>
@@ -623,7 +630,7 @@ map "</item>
     <!-- Default value if album year unknown -->
     <string name="unknown_year">Jaar onbekend</string>
     <!-- Song info overflow option-->
-    <string name="song_info">Nummer info</string>
+    <string name="song_info">Nummerinfo</string>
     <!-- Artwork Download Service Label-->
     <string name="download_service">Download Service</string>
     <!-- Accessibility button description -->
@@ -728,4 +735,5 @@ map "</item>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">Afspeellijst niet beschikbaar</string>
     <!-- Displayed at the top of the album list, album shuffle mode-->
+    <string name="shuffle_albums">Albumshuffle</string>
 </resources>

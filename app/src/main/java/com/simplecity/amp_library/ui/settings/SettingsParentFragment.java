@@ -424,6 +424,9 @@ public class SettingsParentFragment extends BaseNavigationController implements
                     case "pref_artwork":
                         getNavigationController().pushViewController(SettingsFragment.newInstance(R.xml.settings_artwork), "ArtworkSettings");
                         break;
+                    case "pref_playback":
+                        getNavigationController().pushViewController(SettingsFragment.newInstance(R.xml.settings_playback), "PlaybackSettings");
+                        break;
                     case "pref_headset":
                         getNavigationController().pushViewController(SettingsFragment.newInstance(R.xml.settings_headset), "HeadsetSettings");
                         break;

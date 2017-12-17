@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -16,6 +17,7 @@ import com.simplecity.amp_library.rx.UnsafeConsumer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -31,35 +33,24 @@ public class MusicUtils {
     }
 
     /**
-     * Passes along a list of songs, wrapped in a Single obj, to be played, starting at position 0.
+     * Sends a list of songs to the MusicService for playback
      */
+    @SuppressLint("CheckResult")
     public static void playAll(Single<List<Song>> songsSingle, UnsafeConsumer<String> onEmpty) {
-        songsSingle.observeOn(AndroidSchedulers.mainThread())
-                .subscribe(songs -> {
-                    setShuffleMode(MusicService.ShuffleMode.OFF);
-                    playAll(songs, onEmpty);
-                });
+        songsSingle
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(songs -> playAll(songs, 0, onEmpty));
     }
 
     /**
-     * Play a list of songs starting at a given position.
+     * Sends a list of songs to the MusicService for playback
      */
     public static void playAll(List<Song> songs, int position, UnsafeConsumer<String> onEmpty) {
-        setShuffleMode(MusicService.ShuffleMode.OFF);
-        playAll(songs, position, MusicService.ShuffleMode.OFF, onEmpty);
-    }
 
-    /**
-     * Passes along a list of songs to be played, starting at position 0.
-     */
-    private static void playAll(List<Song> songs, UnsafeConsumer<String> onEmpty) {
-        playAll(songs, 0, MusicService.ShuffleMode.OFF, onEmpty);
-    }
+        if (!SettingsManager.getInstance().getRememberShuffle()) {
+            setShuffleMode(MusicService.ShuffleMode.OFF);
+        }
 
-    /**
-     * Sends a list of songs to the MusicService for playback.
-     */
-    private static void playAll(List<Song> songs, int position, int shuffleMode, UnsafeConsumer<String> onEmpty) {
         if (songs.size() == 0
                 || MusicServiceConnectionUtils.serviceBinder == null
                 || MusicServiceConnectionUtils.serviceBinder.getService() == null) {
@@ -72,26 +63,21 @@ public class MusicUtils {
             position = 0;
         }
 
-        MusicServiceConnectionUtils.serviceBinder.getService().open(songs, position, shuffleMode);
+        MusicServiceConnectionUtils.serviceBinder.getService().open(songs, position);
         MusicServiceConnectionUtils.serviceBinder.getService().play();
-    }
-
-    /**
-     * Shuffles all songs on device in album shuffle mode
-     */
-    public static void shuffleAll(UnsafeConsumer<String> onEmpty) {
-        shuffleAll(DataManager.getInstance().getSongsRelay().firstOrError(), onEmpty);
     }
 
     /**
      * Shuffles all songs in a given song list
      */
+    @SuppressLint("CheckResult")
     public static void shuffleAll(Single<List<Song>> songsSingle, UnsafeConsumer<String> onEmpty) {
-        songsSingle.observeOn(AndroidSchedulers.mainThread())
-                .subscribe(songs -> {
-                    setShuffleMode(MusicService.ShuffleMode.ON);
-                    playAll(songs, 0, getShuffleMode(), onEmpty);
-                }, e -> LogUtils.logException(TAG, "Shuffle all error", e));
+        setShuffleMode(MusicService.ShuffleMode.ON);
+        songsSingle
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        songs -> playAll(songs, new Random().nextInt(songs.size()), onEmpty),
+                        e -> LogUtils.logException(TAG, "Shuffle all error", e));
     }
 
     /**
@@ -439,6 +425,12 @@ public class MusicUtils {
     public static void openEqualizerSession(boolean internal, int audioSessionId) {
         if (MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null) {
             MusicServiceConnectionUtils.serviceBinder.getService().openEqualizerSession(internal, audioSessionId);
+        }
+    }
+
+    public static void updateEqualizer() {
+        if (MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null) {
+            MusicServiceConnectionUtils.serviceBinder.getService().updateEqualizer();
         }
     }
 }

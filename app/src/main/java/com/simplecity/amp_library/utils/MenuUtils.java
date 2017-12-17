@@ -98,6 +98,11 @@ public class MenuUtils implements MusicUtils.Defs {
     }
 
     public static void delete(Context context, List<Song> songs) {
+
+        if (songs.isEmpty()) {
+            return;
+        }
+
         new DeleteDialog.DeleteDialogBuilder()
                 .context(context)
                 .singleMessageId(R.string.delete_song_desc)
@@ -713,7 +718,7 @@ public class MenuUtils implements MusicUtils.Defs {
 
     public static void setInitialDir(Context context, FolderObject folderObject) {
         SettingsManager.getInstance().setFolderBrowserInitialDir(folderObject.path);
-        Toast.makeText(context, folderObject.path+context.getResources().getString(R.string.initial_dir_set_message), Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, folderObject.path + context.getResources().getString(R.string.initial_dir_set_message), Toast.LENGTH_SHORT).show();
     }
 
     @Nullable

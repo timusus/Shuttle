@@ -1467,11 +1467,10 @@ public class MusicService extends Service {
     /**
      * Opens a list for playback
      *
-     * @param songs       The list of tracks to open
-     * @param shuffleMode The shuffle mode
-     * @param position    The position to start playback at
+     * @param songs    The list of tracks to open
+     * @param position The position to start playback at
      */
-    public void open(List<Song> songs, final int position, final int shuffleMode) {
+    public void open(List<Song> songs, final int position) {
         synchronized (this) {
 
             boolean notifyQueueChange = false;
@@ -1491,11 +1490,7 @@ public class MusicService extends Service {
                 notifyQueueChange = true;
             }
 
-            if (shuffleMode == ShuffleMode.OFF) {
-                playPos = position;
-            } else {
-                playPos = shuffler.nextInt(playlist.size());
-            }
+            playPos = position;
 
             if (shuffleMode == ShuffleMode.ON) {
                 makeShuffleList();
@@ -1516,17 +1511,6 @@ public class MusicService extends Service {
                 notifyChange(InternalIntents.QUEUE_CHANGED);
             }
         }
-    }
-
-    /**
-     * Opens a list for playback
-     *
-     * @param songs    The list of tracks to open
-     * @param position The position to start playback at
-     */
-    public void open(List<Song> songs, final int position) {
-        // position less than one previously has indicated track shuffle mode
-        open(songs, position < 0 ? ShuffleMode.ON : ShuffleMode.OFF, position);
     }
 
     /**
@@ -1963,8 +1947,6 @@ public class MusicService extends Service {
 
     void updateNotification() {
 
-        Log.i(TAG, "updateNotification called");
-
         final int notifyMode;
 
         if (isPlaying()) {
@@ -2301,10 +2283,16 @@ public class MusicService extends Service {
     public void clearQueue() {
         playlist.clear();
         shuffleList.clear();
-        setShuffleMode(ShuffleMode.OFF);
+
         stop(true);
+
         playPos = -1;
         nextPlayPos = -1;
+
+        if (!SettingsManager.getInstance().getRememberShuffle()) {
+            setShuffleMode(ShuffleMode.OFF);
+        }
+
         notifyChange(InternalIntents.QUEUE_CHANGED);
     }
 
@@ -2663,7 +2651,7 @@ public class MusicService extends Service {
     }
 
     public Single<Boolean> isFavorite() {
-        return PlaylistUtils.isFavorite(currentSong);
+        return PlaylistUtils.isFavorite(currentSong).first(false);
     }
 
     public void toggleShuffleMode() {
@@ -2712,6 +2700,10 @@ public class MusicService extends Service {
 
     public void openEqualizerSession(boolean internal, int audioSessionId) {
         equalizer.openEqualizerSession(internal, audioSessionId);
+    }
+
+    public void updateEqualizer() {
+        equalizer.update();
     }
 
     private void showToast(int resId) {

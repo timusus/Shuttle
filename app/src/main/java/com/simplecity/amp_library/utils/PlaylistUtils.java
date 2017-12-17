@@ -53,6 +53,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
@@ -125,6 +126,7 @@ public class PlaylistUtils {
         return SqlBriteUtils.createSingle(context, cursor -> cursor.getInt(0), query, -1);
     }
 
+    @SuppressLint("CheckResult")
     public static void createM3uPlaylist(final Context context, final Playlist playlist) {
 
         ProgressDialog progressDialog = new ProgressDialog(context);
@@ -246,16 +248,16 @@ public class PlaylistUtils {
     /**
      * @return true if this item is a favorite
      */
-    public static Single<Boolean> isFavorite(@Nullable Song song) {
+    public static Observable<Boolean> isFavorite(@Nullable Song song) {
         if (song == null) {
-            return Single.just(false);
+            return Observable.just(false);
         }
 
         return DataManager.getInstance().getFavoriteSongsRelay()
-                .first(Collections.emptyList())
                 .map(songs -> songs.contains(song));
     }
 
+    @SuppressLint("CheckResult")
     public static void addFileObjectsToPlaylist(Context context, Playlist playlist, List<BaseFileObject> fileObjects) {
 
         ProgressDialog progressDialog = ProgressDialog.show(context, "", context.getString(R.string.gathering_songs), false);
@@ -285,6 +287,7 @@ public class PlaylistUtils {
      * @param songs    List<Song>
      * @return boolean true if the playlist addition was successful
      */
+    @SuppressLint("CheckResult")
     public static void addToPlaylist(Context context, Playlist playlist, List<Song> songs) {
 
         if (playlist == null || songs == null || songs.isEmpty()) {
@@ -385,9 +388,6 @@ public class PlaylistUtils {
         if (uri != null) {
             ShuttleApplication.getInstance().getContentResolver().bulkInsert(uri, contentValues);
             PlaylistUtils.showPlaylistToast(context, songs.size());
-            if (playlist.type == Playlist.Type.FAVORITES) {
-                DataManager.getInstance().invalidateFavoriteSongsRelay();
-            }
         }
     }
 
@@ -481,14 +481,15 @@ public class PlaylistUtils {
                 .flatMapCompletable(playlist -> Completable.fromAction(() -> {
                     final Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlist.id);
                     ShuttleApplication.getInstance().getContentResolver().delete(uri, null, null);
-                    DataManager.getInstance().invalidateFavoriteSongsRelay();
                 }))
                 .subscribeOn(Schedulers.io())
                 .subscribe();
     }
 
+    @SuppressLint("CheckResult")
     public static void toggleFavorite(@NonNull Song song, UnsafeConsumer<Boolean> isFavorite) {
         isFavorite(song)
+                .first(false)
                 .subscribeOn(Schedulers.io())
                 .subscribe(favorite -> {
                     if (!favorite) {
@@ -510,6 +511,7 @@ public class PlaylistUtils {
     /**
      * Add a song to the favourites playlist
      */
+    @SuppressLint("CheckResult")
     public static void addToFavorites(@NonNull Song song, UnsafeConsumer<Boolean> success) {
         Single.zip(
                 Playlist.favoritesPlaylist(),
@@ -524,14 +526,15 @@ public class PlaylistUtils {
                     values.put(MediaStore.Audio.Playlists.Members.PLAY_ORDER, pair.second + 1);
                     Uri newUri = ShuttleApplication.getInstance().getContentResolver().insert(uri, values);
                     ShuttleApplication.getInstance().getContentResolver().notifyChange(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, null);
-                    DataManager.getInstance().invalidateFavoriteSongsRelay();
                     return newUri != null;
                 })
+                .delay(150, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(success::accept);
+                .subscribe(success);
     }
 
+    @SuppressLint("CheckResult")
     public static void removeFromFavorites(@NonNull Song song, @Nullable UnsafeConsumer<Boolean> success) {
         Playlist.favoritesPlaylist()
                 .subscribeOn(Schedulers.io())
@@ -542,16 +545,18 @@ public class PlaylistUtils {
 
     }
 
+    @SuppressLint("CheckResult")
     public static void removeFromPlaylist(@NonNull Playlist playlist, @NonNull Song song, @Nullable UnsafeConsumer<Boolean> success) {
         Single.fromCallable(() -> {
             int numTracksRemoved = 0;
             if (playlist.id >= 0) {
                 final Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlist.id);
                 numTracksRemoved = ShuttleApplication.getInstance().getContentResolver().delete(uri, MediaStore.Audio.Playlists.Members.AUDIO_ID + "=" + song.id, null);
-                DataManager.getInstance().invalidateFavoriteSongsRelay();
             }
             return numTracksRemoved;
-        }).subscribeOn(Schedulers.io())
+        })
+                .delay(150, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         numTracksRemoved -> {
@@ -578,6 +583,7 @@ public class PlaylistUtils {
                 addFileObjectsToPlaylist(context, playlistId, fileObjects));
     }
 
+    @SuppressLint("CheckResult")
     private static void createPlaylistDialog(final Context context, final OnSavePlaylistListener listener) {
 
         @SuppressLint("InflateParams")

@@ -23,8 +23,10 @@ import com.afollestad.aesthetic.Util;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.f2prateek.rx.preferences2.RxSharedPreferences;
 import com.jakewharton.rxbinding2.widget.RxSeekBar;
 import com.jakewharton.rxbinding2.widget.SeekBarChangeEvent;
@@ -145,6 +147,11 @@ public class PlayerFragment extends BaseFragment implements
 
     private int currentColor = Color.TRANSPARENT;
 
+    @Nullable
+    private Target<GlideDrawable> target;
+
+    private boolean isLandscape;
+
     public PlayerFragment() {
     }
 
@@ -168,6 +175,8 @@ public class PlayerFragment extends BaseFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_player, container, false);
+
+        isLandscape = ShuttleUtils.isLandscape();
 
         unbinder = ButterKnife.bind(this, rootView);
 
@@ -227,6 +236,11 @@ public class PlayerFragment extends BaseFragment implements
 
     @Override
     public void onDestroyView() {
+
+        if (target != null) {
+            Glide.clear(target);
+        }
+
         presenter.unbindView(this);
 
         unbinder.unbind();
@@ -275,6 +289,8 @@ public class PlayerFragment extends BaseFragment implements
                 .getBoolean(SettingsManager.KEY_DISPLAY_REMAINING_TIME)
                 .asObservable()
                 .subscribe(aBoolean -> presenter.updateRemainingTime()));
+
+        update();
     }
 
     @Override
@@ -384,11 +400,11 @@ public class PlayerFragment extends BaseFragment implements
             album.setText(String.format("%s | %s", song.artistName, song.albumName));
         }
 
-        if (ShuttleUtils.isLandscape()) {
+        if (isLandscape) {
             toolbar.setTitle(song.name);
             toolbar.setSubtitle(String.format("%s | %s", song.artistName, song.albumName));
 
-            Glide.with(this)
+            target = Glide.with(this)
                     .load(song)
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .bitmapTransform(new BlurTransformation(getContext(), 15, 4))
@@ -401,6 +417,10 @@ public class PlayerFragment extends BaseFragment implements
                     .into(backgroundView);
 
             this.song = song;
+        } else {
+            backgroundView.setImageDrawable(null);
+            toolbar.setTitle(null);
+            toolbar.setSubtitle(null);
         }
 
         if (SettingsManager.getInstance().getUsePalette()) {
@@ -473,7 +493,7 @@ public class PlayerFragment extends BaseFragment implements
         boolean isColorLight = Util.isColorLight(color);
         int textColor = isColorLight ? Color.BLACK : Color.WHITE;
 
-        if (!ShuttleUtils.isLandscape() && backgroundView != null) {
+        if (!isLandscape && backgroundView != null) {
             backgroundView.setBackgroundColor(color);
         }
 

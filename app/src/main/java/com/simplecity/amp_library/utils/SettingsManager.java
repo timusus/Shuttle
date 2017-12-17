@@ -47,6 +47,9 @@ public class SettingsManager {
     public static String KEY_PREF_BLACKLIST = "pref_blacklist_view";
     public static String KEY_PREF_WHITELIST = "pref_whitelist_view";
 
+    // Playback
+    public static String KEY_PREF_REMEMBER_SHUFFLE = "pref_remember_shuffle";
+
     // Upgrade
     public static String KEY_PREF_UPGRADE = "pref_upgrade";
 
@@ -118,7 +121,9 @@ public class SettingsManager {
         return getBool(KEY_KEEP_SCREEN_ON, false);
     }
 
-    public boolean displayRemainingTime() { return getBool(KEY_DISPLAY_REMAINING_TIME,true); }
+    public boolean displayRemainingTime() {
+        return getBool(KEY_DISPLAY_REMAINING_TIME, true);
+    }
 
     private static final String KEY_ALBUM_DISPLAY_TYPE = "album_display_type_new";
 
@@ -459,6 +464,16 @@ public class SettingsManager {
 
     public boolean getShowChangelogOnLaunch() {
         return getBool(KEY_CHANGELOG_SHOW_ON_LAUNCH, true);
+    }
+
+    // Playback
+
+    public boolean getRememberShuffle() {
+        return getBool(KEY_PREF_REMEMBER_SHUFFLE, false);
+    }
+
+    public void setRememberShuffle(boolean rememberShuffle) {
+        setBool(KEY_PREF_REMEMBER_SHUFFLE, rememberShuffle);
     }
 
     // Library Controller

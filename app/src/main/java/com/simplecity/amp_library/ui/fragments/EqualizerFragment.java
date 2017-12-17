@@ -2,16 +2,11 @@ package com.simplecity.amp_library.ui.fragments;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.media.audiofx.AudioEffect;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.SwitchCompat;
@@ -37,7 +32,6 @@ import com.simplecity.amp_library.ui.drawer.MiniPlayerLockManager;
 import com.simplecity.amp_library.ui.views.SizableSeekBar;
 import com.simplecity.amp_library.utils.MusicUtils;
 
-import java.lang.ref.WeakReference;
 import java.util.Formatter;
 import java.util.Locale;
 import java.util.UUID;
@@ -79,10 +73,6 @@ public class EqualizerFragment extends BaseFragment implements
      * Indicates if Virtualizer effect is supported.
      */
     private boolean virtualizerSupported;
-
-    private ServiceConnection serviceConnection;
-
-    public Equalizer service;
 
     // Equalizer fields
     private int numberEqualizerBands;
@@ -159,40 +149,8 @@ public class EqualizerFragment extends BaseFragment implements
 
         // set parameter and state
         prefs.edit().putBoolean("audiofx.global.enable", isChecked).apply();
-        updateService();
+        MusicUtils.updateEqualizer();
     }
-
-    private static class UpdateHandler extends Handler {
-        private final WeakReference<EqualizerFragment> fragment;
-
-        public UpdateHandler(EqualizerFragment equalizerFragment) {
-            fragment = new WeakReference<>(equalizerFragment);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-
-            final EqualizerFragment fragment = this.fragment.get();
-            if (fragment == null) {
-                Log.w(TAG, "Active null");
-                return;
-            }
-
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case MSG_UPDATE_SERVICE:
-                    if (fragment.service != null) {
-                        fragment.service.update();
-                    } else {
-                        Log.w(TAG, "Service null");
-                    }
-                    break;
-            }
-        }
-
-    }
-
-    UpdateHandler mHandler = new UpdateHandler(this);
 
     public static EqualizerFragment newInstance() {
         Bundle args = new Bundle();
@@ -332,7 +290,7 @@ public class EqualizerFragment extends BaseFragment implements
 
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {
-                    mHandler.sendEmptyMessage(MSG_UPDATE_SERVICE);
+                    MusicUtils.updateEqualizer();
                 }
             });
         }
@@ -352,7 +310,7 @@ public class EqualizerFragment extends BaseFragment implements
                     if (fromUser) {
                         prefs.edit().putBoolean("audiofx.bass.enable", true).apply();
                         prefs.edit().putString("audiofx.bass.strength", String.valueOf(progress)).apply();
-                        mHandler.sendEmptyMessage(MSG_UPDATE_SERVICE);
+                        MusicUtils.updateEqualizer();
                     }
                 }
 
@@ -361,7 +319,7 @@ public class EqualizerFragment extends BaseFragment implements
                 public void onStartTrackingTouch(final SeekBar seekBar) {
                     if (seekBar.getProgress() == 0) {
                         prefs.edit().putBoolean("audiofx.bass.enable", true).apply();
-                        mHandler.sendEmptyMessage(MSG_UPDATE_SERVICE);
+                        MusicUtils.updateEqualizer();
                     }
                 }
 
@@ -371,7 +329,7 @@ public class EqualizerFragment extends BaseFragment implements
                     if (seekBar.getProgress() == 0) {
                         // disable
                         prefs.edit().putBoolean("audiofx.bass.enable", false).apply();
-                        mHandler.sendEmptyMessage(MSG_UPDATE_SERVICE);
+                        MusicUtils.updateEqualizer();
                     }
                 }
             });
@@ -391,7 +349,7 @@ public class EqualizerFragment extends BaseFragment implements
                     if (fromUser) {
                         prefs.edit().putBoolean("audiofx.virtualizer.enable", true).apply();
                         prefs.edit().putString("audiofx.virtualizer.strength", String.valueOf(progress)).apply();
-                        mHandler.sendEmptyMessage(MSG_UPDATE_SERVICE);
+                        MusicUtils.updateEqualizer();
                     }
                 }
 
@@ -400,7 +358,7 @@ public class EqualizerFragment extends BaseFragment implements
                 public void onStartTrackingTouch(final SeekBar seekBar) {
                     if (seekBar.getProgress() == 0) {
                         prefs.edit().putBoolean("audiofx.virtualizer.enable", true).apply();
-                        mHandler.sendEmptyMessage(MSG_UPDATE_SERVICE);
+                        MusicUtils.updateEqualizer();
                     }
                 }
 
@@ -410,7 +368,7 @@ public class EqualizerFragment extends BaseFragment implements
                     if (seekBar.getProgress() == 0) {
                         // disable
                         prefs.edit().putBoolean("audiofx.virtualizer.enable", false).apply();
-                        mHandler.sendEmptyMessage(MSG_UPDATE_SERVICE);
+                        MusicUtils.updateEqualizer();
                     }
                 }
             });
@@ -422,35 +380,14 @@ public class EqualizerFragment extends BaseFragment implements
     @Override
     public void onResume() {
         super.onResume();
-
         DrawerLockManager.getInstance().addDrawerLock(this);
         MiniPlayerLockManager.getInstance().addMiniPlayerLock(this);
-
-        if (serviceConnection == null) {
-            serviceConnection = new ServiceConnection() {
-                @Override
-                public void onServiceConnected(ComponentName name, IBinder binder) {
-                    service = ((Equalizer.LocalBinder) binder).getService();
-                    updateUI();
-                }
-
-                @Override
-                public void onServiceDisconnected(ComponentName name) {
-                    service = null;
-                }
-            };
-        }
-        Intent serviceIntent = new Intent(getContext(), Equalizer.class);
-        getActivity().bindService(serviceIntent, serviceConnection, 0);
 
         updateUI();
     }
 
     @Override
     public void onPause() {
-
-        getActivity().unbindService(serviceConnection);
-
         DrawerLockManager.getInstance().removeDrawerLock(this);
         MiniPlayerLockManager.getInstance().removeMiniPlayerLock(this);
 
@@ -483,7 +420,7 @@ public class EqualizerFragment extends BaseFragment implements
         prefs.edit().putString("audiofx.eq.bandlevels", newLevels).apply();
         updateUI();
 
-        updateService();
+        MusicUtils.updateEqualizer();
     }
 
     void updateUI() {
@@ -558,7 +495,7 @@ public class EqualizerFragment extends BaseFragment implements
         prefs.edit().putString("audiofx.eq.bandlevels", builder.toString()).apply();
         prefs.edit().putString("audiofx.eq.bandlevels.custom", builder.toString()).apply();
 
-        updateService();
+        MusicUtils.updateEqualizer();
     }
 
     /**
@@ -585,12 +522,7 @@ public class EqualizerFragment extends BaseFragment implements
         return formatBuilder.toString();
     }
 
-    private static final int MSG_UPDATE_SERVICE = 1;
-
-    void updateService() {
-        mHandler.removeMessages(MSG_UPDATE_SERVICE);
-        mHandler.sendEmptyMessageDelayed(MSG_UPDATE_SERVICE, 100);
-    }
+    private static final int MSG_UPDATE_EQUALIZER = 1;
 
     int[] getBandLevelRange() {
         String savedCenterFreqs = prefs.getString("equalizer.band_level_range", null);

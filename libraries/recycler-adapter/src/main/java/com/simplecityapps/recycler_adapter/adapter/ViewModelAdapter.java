@@ -28,7 +28,7 @@ public class ViewModelAdapter extends RecyclerView.Adapter {
 
     private static final String TAG = "ViewModelAdapter";
 
-    private boolean enableLogging = false;
+    private boolean enableLogging = true;
 
     /**
      * The dataset for this RecyclerView Adapter
