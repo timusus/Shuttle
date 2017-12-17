@@ -22,6 +22,7 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.Album;
+import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.ui.adapters.SectionedAdapter;
 import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
@@ -422,8 +423,8 @@ public class AlbumFragment extends BaseFragment implements
 
     @Override
     public void onShuffleItemClick() {
-        // Note: We don't call 'shuffleAll()', because for album-shuffle mode, we don't actually turn
-        // 'shuffle' on.
+        // Note: For album-shuffle mode, we don't actually turn shuffle on.
+        MusicUtils.setShuffleMode(MusicService.ShuffleMode.OFF);
         MusicUtils.playAll(DataManager.getInstance()
                         .getSongsRelay()
                         .firstOrError()

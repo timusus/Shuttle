@@ -1490,11 +1490,7 @@ public class MusicService extends Service {
                 notifyQueueChange = true;
             }
 
-            if (shuffleMode == ShuffleMode.OFF) {
-                playPos = position;
-            } else {
-                playPos = shuffler.nextInt(playlist.size());
-            }
+            playPos = position;
 
             if (shuffleMode == ShuffleMode.ON) {
                 makeShuffleList();

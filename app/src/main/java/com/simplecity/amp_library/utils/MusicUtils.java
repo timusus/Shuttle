@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -16,6 +17,7 @@ import com.simplecity.amp_library.rx.UnsafeConsumer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -33,24 +35,11 @@ public class MusicUtils {
     /**
      * Sends a list of songs to the MusicService for playback
      */
+    @SuppressLint("CheckResult")
     public static void playAll(Single<List<Song>> songsSingle, UnsafeConsumer<String> onEmpty) {
-        playAll(songsSingle, 0, onEmpty);
-    }
-
-    /**
-     * Sends a list of songs to the MusicService for playback.
-     */
-    public static void playAll(Single<List<Song>> songsSingle, int position, UnsafeConsumer<String> onEmpty) {
         songsSingle
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(songs -> playAll(songs, position, onEmpty));
-    }
-
-    /**
-     * Sends a list of songs to the MusicService for playback.
-     */
-    public static void playAll(List<Song> songs, UnsafeConsumer<String> onEmpty) {
-        playAll(songs, 0, onEmpty);
+                .subscribe(songs -> playAll(songs, 0, onEmpty));
     }
 
     /**
@@ -79,21 +68,15 @@ public class MusicUtils {
     }
 
     /**
-     * Shuffles all songs on device
-     */
-    public static void shuffleAll(UnsafeConsumer<String> onEmpty) {
-        shuffleAll(DataManager.getInstance().getSongsRelay().firstOrError(), onEmpty);
-    }
-
-    /**
      * Shuffles all songs in a given song list
      */
+    @SuppressLint("CheckResult")
     public static void shuffleAll(Single<List<Song>> songsSingle, UnsafeConsumer<String> onEmpty) {
         setShuffleMode(MusicService.ShuffleMode.ON);
         songsSingle
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        songs -> playAll(songs, getShuffleMode(), onEmpty),
+                        songs -> playAll(songs, new Random().nextInt(songs.size()), onEmpty),
                         e -> LogUtils.logException(TAG, "Shuffle all error", e));
     }
 
