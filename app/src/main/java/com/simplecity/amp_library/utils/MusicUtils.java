@@ -441,4 +441,10 @@ public class MusicUtils {
             MusicServiceConnectionUtils.serviceBinder.getService().openEqualizerSession(internal, audioSessionId);
         }
     }
+
+    public static void updateEqualizer(){
+        if (MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null) {
+            MusicServiceConnectionUtils.serviceBinder.getService().updateEqualizer();
+        }
+    }
 }

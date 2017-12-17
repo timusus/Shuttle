@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.media.audiofx.AudioEffect;
 import android.media.audiofx.BassBoost;
 import android.media.audiofx.Virtualizer;
-import android.os.Binder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -198,14 +197,6 @@ public class Equalizer {
     }
 
     protected static final String TAG = Equalizer.class.getSimpleName();
-
-    public class LocalBinder extends Binder {
-        public Equalizer getService() {
-            return Equalizer.this;
-        }
-    }
-
-    private final LocalBinder mBinder = new LocalBinder();
 
     /**
      * Known audio sessions and their associated audioeffect suites.

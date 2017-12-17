@@ -2714,6 +2714,10 @@ public class MusicService extends Service {
         equalizer.openEqualizerSession(internal, audioSessionId);
     }
 
+    public void updateEqualizer() {
+        equalizer.update();
+    }
+
     private void showToast(int resId) {
         Toast.makeText(getBaseContext(), resId, Toast.LENGTH_SHORT).show();
     }
