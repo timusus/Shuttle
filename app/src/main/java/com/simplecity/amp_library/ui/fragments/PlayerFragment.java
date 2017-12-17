@@ -150,6 +150,8 @@ public class PlayerFragment extends BaseFragment implements
     @Nullable
     private Target<GlideDrawable> target;
 
+    private boolean isLandscape;
+
     public PlayerFragment() {
     }
 
@@ -173,6 +175,8 @@ public class PlayerFragment extends BaseFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_player, container, false);
+
+        isLandscape = ShuttleUtils.isLandscape();
 
         unbinder = ButterKnife.bind(this, rootView);
 
@@ -400,7 +404,7 @@ public class PlayerFragment extends BaseFragment implements
             Glide.clear(target);
         }
 
-        if (ShuttleUtils.isLandscape()) {
+        if (isLandscape) {
             toolbar.setTitle(song.name);
             toolbar.setSubtitle(String.format("%s | %s", song.artistName, song.albumName));
 
@@ -493,7 +497,7 @@ public class PlayerFragment extends BaseFragment implements
         boolean isColorLight = Util.isColorLight(color);
         int textColor = isColorLight ? Color.BLACK : Color.WHITE;
 
-        if (!ShuttleUtils.isLandscape() && backgroundView != null) {
+        if (!isLandscape && backgroundView != null) {
             backgroundView.setBackgroundColor(color);
         }
 
