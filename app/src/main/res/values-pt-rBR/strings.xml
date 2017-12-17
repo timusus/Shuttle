@@ -178,6 +178,7 @@ músicas adicionadas à fila.</item>
     <!-- Multi select menu item-->
     <string name="menu_queue">Lista de Reprodução</string>
     <!-- Artist overflow menu item-->
+    <string name="menu_album_shuffle">Álbuns aleatórios</string>
     <!-- Context menu item -->
     <string name="new_playlist">Novo</string>
     <!-- menu item to save the current list as a new playlist -->
@@ -227,6 +228,7 @@ músicas adicionadas à fila.</item>
     <string name="pref_category_navigation">Navegação</string>
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Outros</string>
+    <!--Settings category for 'playback' items -->
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
     <string name="pref_title_choose_tabs">Escolher guias</string>
     <!--Settings summary for opening the dialog to pick which categories are shown as tab headings -->
@@ -368,6 +370,11 @@ Se estiver desmarcado, o ícone do Shuttle será usado como uma capa</string>
     <string name="pref_title_changelog">Mudanças</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Suporte</string>
+    <!-- Settings title for toggling between remaining time and total time -->
+    <!-- Settings summary for toggling between remaining time and total time -->
+    <!-- Settings title for the playback options -->
+    <!-- Settings title for toggling 'remember shuff'e-->
+    <!-- Settings summary for toggling 'remember shuff'e-->
     <string name="pref_title_version">Versão</string>
     <string name="pref_title_faq">Perguntas frequentes</string>
     <string name="pref_summary_faq">Tem alguma pergunta? Precisa de ajuda? Clique aqui para ver as perguntas frequentes em www.shuttlemusicplayer.com</string>
@@ -729,4 +736,5 @@ pastas</item>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">Lista de reprodução não disponível</string>
     <!-- Displayed at the top of the album list, album shuffle mode-->
+    <string name="shuffle_albums">Álbuns Aleatórios</string>
 </resources>

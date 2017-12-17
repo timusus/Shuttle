@@ -228,6 +228,7 @@
     <string name="pref_category_navigation">Navigacija</string>
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Ostalo</string>
+    <!--Settings category for 'playback' items -->
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
     <string name="pref_title_choose_tabs">Odaberi stavke kartica</string>
     <!--Settings summary for opening the dialog to pick which categories are shown as tab headings -->
@@ -370,6 +371,11 @@ Ako nije označeno, Shuttle ikona će se koristiti kao sličica</string>
     <string name="pref_title_changelog">Popis promjena</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Podrška</string>
+    <!-- Settings title for toggling between remaining time and total time -->
+    <!-- Settings summary for toggling between remaining time and total time -->
+    <!-- Settings title for the playback options -->
+    <!-- Settings title for toggling 'remember shuff'e-->
+    <!-- Settings summary for toggling 'remember shuff'e-->
     <string name="pref_title_version">Verzija</string>
     <string name="pref_title_faq">Često postavljana pitanja</string>
     <string name="pref_summary_faq">Imate pitanja? Trebate pomoč? Pritisnite ovdje kako bi pričitali FAQ @ www.shuttlemusicplayer.com</string>

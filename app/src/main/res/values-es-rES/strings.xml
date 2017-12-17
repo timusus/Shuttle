@@ -165,6 +165,7 @@
     <!-- Multi select menu item-->
     <string name="menu_queue">Cola</string>
     <!-- Artist overflow menu item-->
+    <string name="menu_album_shuffle">Álbum aleatorio</string>
     <!-- Context menu item -->
     <string name="new_playlist">Nuevo</string>
     <!-- menu item to save the current list as a new playlist -->
@@ -214,6 +215,7 @@
     <string name="pref_category_navigation">Navegación</string>
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Otro</string>
+    <!--Settings category for 'playback' items -->
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
     <string name="pref_title_choose_tabs">Escoge las pestañas</string>
     <!--Settings summary for opening the dialog to pick which categories are shown as tab headings -->
@@ -358,6 +360,11 @@ Si no está seleccionado, se usará el icono de Shuttle en su lugar</string>
     <string name="pref_title_changelog">Changelog</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Soporte</string>
+    <!-- Settings title for toggling between remaining time and total time -->
+    <!-- Settings summary for toggling between remaining time and total time -->
+    <!-- Settings title for the playback options -->
+    <!-- Settings title for toggling 'remember shuff'e-->
+    <!-- Settings summary for toggling 'remember shuff'e-->
     <string name="pref_title_version">Versión</string>
     <string name="pref_title_faq">FAQ</string>
     <string name="pref_summary_faq">¿Tienes una pregunta? ¿Necesitas ayuda? Haz click aquí para ver el FAQ en www.shuttlemusicplayer.com</string>
@@ -719,4 +726,5 @@ carpetas</item>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">Lista de Reproducción no disponible</string>
     <!-- Displayed at the top of the album list, album shuffle mode-->
+    <string name="shuffle_albums">álbum aleatorio</string>
 </resources>

@@ -218,6 +218,7 @@
     <string name="pref_category_navigation">Navigáció</string>
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">További beállítások</string>
+    <!--Settings category for 'playback' items -->
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
     <string name="pref_title_choose_tabs">Fülek elemei</string>
     <!--Settings summary for opening the dialog to pick which categories are shown as tab headings -->
@@ -356,6 +357,11 @@ segítségével
     <!-- Settings title for the About heading -->
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Támogatás</string>
+    <!-- Settings title for toggling between remaining time and total time -->
+    <!-- Settings summary for toggling between remaining time and total time -->
+    <!-- Settings title for the playback options -->
+    <!-- Settings title for toggling 'remember shuff'e-->
+    <!-- Settings summary for toggling 'remember shuff'e-->
     <string name="pref_title_version">Verzió</string>
     <string name="pref_title_faq">GYIK</string>
     <string name="pref_summary_faq">Kérdése van? Segítségre van szüksége? GYIK a www.shuttlemusicplayer.com -on</string>

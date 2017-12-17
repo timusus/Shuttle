@@ -131,9 +131,9 @@
     <!-- Delete confirmation dialog message title when deleting songs -->
     <string name="delete_song_desc_multiple">Следующие песни:<xliff:g id="song">%s</xliff:g> будут безвозвратно удалены.</string>
     <!-- Toast shown when songs are successfully deleted -->
-    <string name="delete_songs_success_toast"><xliff:g id="number">%d</xliff:g> песни (-ен) удалены</string>
+    <string name="delete_songs_success_toast">Треки удалены: <xliff:g id="number">%d</xliff:g></string>
     <!-- Toast shown when failing to delete songs-->
-    <string name="delete_songs_failure_toast">Невозможно удалить песни</string>
+    <string name="delete_songs_failure_toast">Невозможно удалить треки</string>
     <!-- Delete confirmation dialog, confirmation button text -->
     <string name="button_ok">Да</string>
     <!-- -->
@@ -192,7 +192,7 @@
     <!-- Context menu item to remove the selected item from the queue -->
     <string name="remove_from_queue">Удалить</string>
     <!-- Context menu item -->
-    <string name="play_next">Воспроизвести следующующим</string>
+    <string name="play_next">Играть следующим</string>
     <!-- Menu text for the settings item -->
     <string name="settings">Настройки</string>
     <!-- Playing screen, menu item -->
@@ -233,6 +233,7 @@
     <string name="pref_category_navigation">Навигация</string>
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Другое</string>
+    <!--Settings category for 'playback' items -->
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
     <string name="pref_title_choose_tabs">Выбрать отображаемые закладки</string>
     <!--Settings summary for opening the dialog to pick which categories are shown as tab headings -->
@@ -375,6 +376,11 @@
     <string name="pref_title_changelog">Список изменений</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Поддержка</string>
+    <!-- Settings title for toggling between remaining time and total time -->
+    <!-- Settings summary for toggling between remaining time and total time -->
+    <!-- Settings title for the playback options -->
+    <!-- Settings title for toggling 'remember shuff'e-->
+    <!-- Settings summary for toggling 'remember shuff'e-->
     <string name="pref_title_version">Версия</string>
     <string name="pref_title_faq">Часто задаваемые вопросы</string>
     <string name="pref_summary_faq">Есть вопросы? Нужна помощь? Нажмите сюда для просмотра FAQ на www.shuttlemusicplayer.com</string>
