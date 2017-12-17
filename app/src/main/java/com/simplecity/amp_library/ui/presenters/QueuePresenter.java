@@ -125,18 +125,19 @@ public class QueuePresenter extends Presenter<QueueView> {
         QueueView queueView = getView();
         data = Stream.of(MusicUtils.getQueue())
                 .map(song -> {
-                    // Look for an existing SongView wrapping the song, we'll reuse it if it exists.
-                    SongView songView = (SongView) Stream.of(data)
-                            .filter(viewModel -> viewModel instanceof SongView && (((SongView) viewModel).song.equals(song)))
-                            .findFirst()
-                            .orElse(null);
-
-                    if (songView == null) {
-                        songView = new SongView(song, requestManager);
-                        songView.setClickListener(clickListener);
-                        songView.showAlbumArt(true);
-                        songView.setEditable(true);
-                    }
+                    SongView songView = new SongView(song, requestManager) {
+                        @Override
+                        public boolean equals(Object o) {
+                            // It's possible to have multiple SongViews with the same (duplicate) songs in the queue.
+                            // When that occurs, there's not currently a way to tell the two SongViews apart - which
+                            // can result in an adapter inconsistency. This fix just ensures no two SongViews in the queue
+                            // are considered to be the same. We lose some RV optimisations here, but at least we don't crash.
+                            return false;
+                        }
+                    };
+                    songView.setClickListener(clickListener);
+                    songView.showAlbumArt(true);
+                    songView.setEditable(true);
 
                     return songView;
                 })
