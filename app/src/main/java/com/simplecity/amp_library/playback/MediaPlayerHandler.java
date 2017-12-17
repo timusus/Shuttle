@@ -6,6 +6,8 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
+import com.simplecity.amp_library.utils.SettingsManager;
+
 import java.lang.ref.WeakReference;
 
 final class MediaPlayerHandler extends Handler {
@@ -94,8 +96,10 @@ final class MediaPlayerHandler extends Handler {
                         service.pause();
                         break;
                     case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                        removeMessages(MusicService.PlayerHandler.FADE_UP);
-                        sendEmptyMessage(MusicService.PlayerHandler.FADE_DOWN);
+                        if (!SettingsManager.getInstance().getIgnoreAudioFocus()) {
+                            removeMessages(MusicService.PlayerHandler.FADE_UP);
+                            sendEmptyMessage(MusicService.PlayerHandler.FADE_DOWN);
+                        }
                         break;
                     case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                         if (service.isPlaying()) {

@@ -49,6 +49,7 @@ public class SettingsManager {
 
     // Playback
     public static String KEY_PREF_REMEMBER_SHUFFLE = "pref_remember_shuffle";
+    public static String KEY_PREF_IGNORE_AUDIO_FOCUS = "pref_ignore_audio_focus";
 
     // Upgrade
     public static String KEY_PREF_UPGRADE = "pref_upgrade";
@@ -474,6 +475,14 @@ public class SettingsManager {
 
     public void setRememberShuffle(boolean rememberShuffle) {
         setBool(KEY_PREF_REMEMBER_SHUFFLE, rememberShuffle);
+    }
+
+    public boolean getIgnoreAudioFocus() {
+        return getBool(KEY_PREF_IGNORE_AUDIO_FOCUS, false);
+    }
+
+    public void setIgnoreAudioFocus(boolean ignoreAudioFocus) {
+        setBool(KEY_PREF_IGNORE_AUDIO_FOCUS, ignoreAudioFocus);
     }
 
     // Library Controller

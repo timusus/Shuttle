@@ -408,6 +408,10 @@
     <string name="pref_title_remember_shuffle">Remember shuffle mode</string>
     <!-- Settings summary for toggling 'remember shuff'e-->
     <string name="pref_summary_remember_shuffle">Shuffle mode won\'t turn off when playing a new list of songs</string>
+    <!-- Settings title for toggling 'ignore audio focus -->
+    <string name="pref_title_ignore_audio_focus">Ignore audio focus</string>
+    <!-- Settings summary for toggling 'ignore audio focus -->
+    <string name="pref_summary_ignore_audio_focus">Volume not lowered on receiving notification</string>
 
 
     <string name="pref_title_version">Version</string>
