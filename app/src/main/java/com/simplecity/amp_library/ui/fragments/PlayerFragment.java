@@ -400,10 +400,6 @@ public class PlayerFragment extends BaseFragment implements
             album.setText(String.format("%s | %s", song.artistName, song.albumName));
         }
 
-        if (target != null) {
-            Glide.clear(target);
-        }
-
         if (isLandscape) {
             toolbar.setTitle(song.name);
             toolbar.setSubtitle(String.format("%s | %s", song.artistName, song.albumName));
