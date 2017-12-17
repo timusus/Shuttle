@@ -1947,8 +1947,6 @@ public class MusicService extends Service {
 
     void updateNotification() {
 
-        Log.i(TAG, "updateNotification called");
-
         final int notifyMode;
 
         if (isPlaying()) {
@@ -2653,7 +2651,7 @@ public class MusicService extends Service {
     }
 
     public Single<Boolean> isFavorite() {
-        return PlaylistUtils.isFavorite(currentSong);
+        return PlaylistUtils.isFavorite(currentSong).first(false);
     }
 
     public void toggleShuffleMode() {

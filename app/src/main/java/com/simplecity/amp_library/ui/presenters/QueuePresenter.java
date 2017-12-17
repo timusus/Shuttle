@@ -25,7 +25,6 @@ import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.BackpressureStrategy;
@@ -43,8 +42,6 @@ public class QueuePresenter extends Presenter<QueueView> {
         this.requestManager = requestManager;
         this.contextualToolbarHelper = contextualToolbarHelper;
     }
-
-    private List<ViewModel> data = new ArrayList<>();
 
     @Override
     public void bindView(@NonNull QueueView view) {
@@ -123,7 +120,7 @@ public class QueuePresenter extends Presenter<QueueView> {
 
     private void loadData() {
         QueueView queueView = getView();
-        data = Stream.of(MusicUtils.getQueue())
+        List<ViewModel> data = Stream.of(MusicUtils.getQueue())
                 .map(song -> {
                     SongView songView = new SongView(song, requestManager) {
                         @Override

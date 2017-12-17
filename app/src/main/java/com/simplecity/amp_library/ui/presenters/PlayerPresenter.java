@@ -29,6 +29,7 @@ import javax.inject.Inject;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class PlayerPresenter extends Presenter<PlayerView> {
@@ -40,6 +41,8 @@ public class PlayerPresenter extends Presenter<PlayerView> {
 
     private long currentPlaybackTime;
     private boolean currentPlaybackTimeVisible;
+
+    private Disposable isFavoriteDisposable;
 
     @Inject
     public PlayerPresenter() {
@@ -83,7 +86,6 @@ public class PlayerPresenter extends Presenter<PlayerView> {
         filter.addAction(MusicService.InternalIntents.SHUFFLE_CHANGED);
         filter.addAction(MusicService.InternalIntents.REPEAT_CHANGED);
         filter.addAction(MusicService.InternalIntents.SERVICE_CONNECTED);
-        filter.addAction(MusicService.InternalIntents.FAVORITE_CHANGED);
 
         addDisposable(RxBroadcast.fromBroadcast(ShuttleApplication.getInstance(), filter)
                 .toFlowable(BackpressureStrategy.LATEST)
@@ -114,12 +116,6 @@ public class PlayerPresenter extends Presenter<PlayerView> {
                                 updatePlaystate();
                                 updateShuffleMode();
                                 updateRepeatMode();
-                                break;
-                            case MusicService.InternalIntents.FAVORITE_CHANGED:
-                                PlaylistUtils.isFavorite(MusicUtils.getSong())
-                                        .subscribeOn(Schedulers.io())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .subscribe(this::updateFavorite);
                                 break;
                         }
                     }
@@ -165,10 +161,15 @@ public class PlayerPresenter extends Presenter<PlayerView> {
             view.currentTimeChanged(MusicUtils.getPosition() / 1000);
             updateRemainingTime();
 
-            addDisposable(PlaylistUtils.isFavorite(MusicUtils.getSong())
+            if (isFavoriteDisposable != null) {
+                isFavoriteDisposable.dispose();
+            }
+            isFavoriteDisposable = PlaylistUtils.isFavorite(MusicUtils.getSong())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(isFavorite -> updateFavorite((isFavorite))));
+                    .subscribe(isFavorite -> updateFavorite((isFavorite)));
+
+            addDisposable(isFavoriteDisposable);
         }
     }
 

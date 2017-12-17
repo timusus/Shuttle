@@ -252,13 +252,6 @@ public class DataManager {
         return favoriteSongsRelay.subscribeOn(Schedulers.io()).map(ArrayList::new);
     }
 
-    public void invalidateFavoriteSongsRelay() {
-        if (favoriteSongsRelay != null) {
-            favoriteSongsSubscription.dispose();
-        }
-        getFavoriteSongsRelay();
-    }
-
     /**
      * Returns an {@link Observable<List>} from the songs relay, filtered by the passed in predicate.
      */

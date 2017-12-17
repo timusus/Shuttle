@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.notifications;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -42,6 +43,7 @@ public class MusicNotificationHelper extends NotificationHelper {
     private Notification notification;
 
     private boolean isFavorite = false;
+
     private Bitmap bitmap;
 
     private Handler handler;
@@ -98,11 +100,13 @@ public class MusicNotificationHelper extends NotificationHelper {
         return builder;
     }
 
+    @SuppressLint("CheckResult")
     public void notify(Context context, @NonNull Song song, boolean isPlaying, @NonNull MediaSessionCompat mediaSessionCompat) {
         notification = getBuilder(context, song, mediaSessionCompat, bitmap, isPlaying, isFavorite).build();
         notify(NOTIFICATION_ID, notification);
 
         PlaylistUtils.isFavorite(song)
+                .first(false)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(isFavorite -> {
