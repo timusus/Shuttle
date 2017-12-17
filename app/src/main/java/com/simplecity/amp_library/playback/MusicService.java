@@ -1467,11 +1467,10 @@ public class MusicService extends Service {
     /**
      * Opens a list for playback
      *
-     * @param songs       The list of tracks to open
-     * @param shuffleMode The shuffle mode
-     * @param position    The position to start playback at
+     * @param songs    The list of tracks to open
+     * @param position The position to start playback at
      */
-    public void open(List<Song> songs, final int position, final int shuffleMode) {
+    public void open(List<Song> songs, final int position) {
         synchronized (this) {
 
             boolean notifyQueueChange = false;
@@ -1516,17 +1515,6 @@ public class MusicService extends Service {
                 notifyChange(InternalIntents.QUEUE_CHANGED);
             }
         }
-    }
-
-    /**
-     * Opens a list for playback
-     *
-     * @param songs    The list of tracks to open
-     * @param position The position to start playback at
-     */
-    public void open(List<Song> songs, final int position) {
-        // position less than one previously has indicated track shuffle mode
-        open(songs, position < 0 ? ShuffleMode.ON : ShuffleMode.OFF, position);
     }
 
     /**
@@ -2301,10 +2289,16 @@ public class MusicService extends Service {
     public void clearQueue() {
         playlist.clear();
         shuffleList.clear();
-        setShuffleMode(ShuffleMode.OFF);
+
         stop(true);
+
         playPos = -1;
         nextPlayPos = -1;
+
+        if (!SettingsManager.getInstance().getRememberShuffle()) {
+            setShuffleMode(ShuffleMode.OFF);
+        }
+
         notifyChange(InternalIntents.QUEUE_CHANGED);
     }
 

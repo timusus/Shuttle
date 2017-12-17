@@ -17,6 +17,11 @@
         android:title="@string/pref_string_title_artwork"/>
 
     <android.support.v7.preference.PreferenceScreen
+        android:icon="@drawable/ic_play_circle_outline_24dp"
+        android:key="pref_playback"
+        android:title="@string/pref_title_playback"/>
+
+    <android.support.v7.preference.PreferenceScreen
         android:icon="@drawable/ic_headset_24dp"
         android:key="pref_headset"
         android:title="@string/pref_title_headset_bluetooth"/>

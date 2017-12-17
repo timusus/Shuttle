@@ -31,35 +31,37 @@ public class MusicUtils {
     }
 
     /**
-     * Passes along a list of songs, wrapped in a Single obj, to be played, starting at position 0.
+     * Sends a list of songs to the MusicService for playback
      */
     public static void playAll(Single<List<Song>> songsSingle, UnsafeConsumer<String> onEmpty) {
-        songsSingle.observeOn(AndroidSchedulers.mainThread())
-                .subscribe(songs -> {
-                    setShuffleMode(MusicService.ShuffleMode.OFF);
-                    playAll(songs, onEmpty);
-                });
-    }
-
-    /**
-     * Play a list of songs starting at a given position.
-     */
-    public static void playAll(List<Song> songs, int position, UnsafeConsumer<String> onEmpty) {
-        setShuffleMode(MusicService.ShuffleMode.OFF);
-        playAll(songs, position, MusicService.ShuffleMode.OFF, onEmpty);
-    }
-
-    /**
-     * Passes along a list of songs to be played, starting at position 0.
-     */
-    private static void playAll(List<Song> songs, UnsafeConsumer<String> onEmpty) {
-        playAll(songs, 0, MusicService.ShuffleMode.OFF, onEmpty);
+        playAll(songsSingle, 0, onEmpty);
     }
 
     /**
      * Sends a list of songs to the MusicService for playback.
      */
-    private static void playAll(List<Song> songs, int position, int shuffleMode, UnsafeConsumer<String> onEmpty) {
+    public static void playAll(Single<List<Song>> songsSingle, int position, UnsafeConsumer<String> onEmpty) {
+        songsSingle
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(songs -> playAll(songs, position, onEmpty));
+    }
+
+    /**
+     * Sends a list of songs to the MusicService for playback.
+     */
+    public static void playAll(List<Song> songs, UnsafeConsumer<String> onEmpty) {
+        playAll(songs, 0, onEmpty);
+    }
+
+    /**
+     * Sends a list of songs to the MusicService for playback
+     */
+    public static void playAll(List<Song> songs, int position, UnsafeConsumer<String> onEmpty) {
+
+        if (!SettingsManager.getInstance().getRememberShuffle()) {
+            setShuffleMode(MusicService.ShuffleMode.OFF);
+        }
+
         if (songs.size() == 0
                 || MusicServiceConnectionUtils.serviceBinder == null
                 || MusicServiceConnectionUtils.serviceBinder.getService() == null) {
@@ -72,12 +74,12 @@ public class MusicUtils {
             position = 0;
         }
 
-        MusicServiceConnectionUtils.serviceBinder.getService().open(songs, position, shuffleMode);
+        MusicServiceConnectionUtils.serviceBinder.getService().open(songs, position);
         MusicServiceConnectionUtils.serviceBinder.getService().play();
     }
 
     /**
-     * Shuffles all songs on device in album shuffle mode
+     * Shuffles all songs on device
      */
     public static void shuffleAll(UnsafeConsumer<String> onEmpty) {
         shuffleAll(DataManager.getInstance().getSongsRelay().firstOrError(), onEmpty);
@@ -87,11 +89,12 @@ public class MusicUtils {
      * Shuffles all songs in a given song list
      */
     public static void shuffleAll(Single<List<Song>> songsSingle, UnsafeConsumer<String> onEmpty) {
-        songsSingle.observeOn(AndroidSchedulers.mainThread())
-                .subscribe(songs -> {
-                    setShuffleMode(MusicService.ShuffleMode.ON);
-                    playAll(songs, 0, getShuffleMode(), onEmpty);
-                }, e -> LogUtils.logException(TAG, "Shuffle all error", e));
+        setShuffleMode(MusicService.ShuffleMode.ON);
+        songsSingle
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        songs -> playAll(songs, getShuffleMode(), onEmpty),
+                        e -> LogUtils.logException(TAG, "Shuffle all error", e));
     }
 
     /**
@@ -442,7 +445,7 @@ public class MusicUtils {
         }
     }
 
-    public static void updateEqualizer(){
+    public static void updateEqualizer() {
         if (MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null) {
             MusicServiceConnectionUtils.serviceBinder.getService().updateEqualizer();
         }
