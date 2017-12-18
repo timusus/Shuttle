@@ -26,6 +26,7 @@ import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -49,41 +50,35 @@ public class QueuePresenter extends Presenter<QueueView> {
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(MusicService.InternalIntents.META_CHANGED);
+        addDisposable(RxBroadcast.fromBroadcast(ShuttleApplication.getInstance(), filter)
+                .startWith(new Intent(MusicService.InternalIntents.QUEUE_CHANGED))
+                .toFlowable(BackpressureStrategy.LATEST)
+                .debounce(150, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(intent -> {
+                    QueueView queueView = getView();
+                    if (queueView != null) {
+                        queueView.updateQueuePosition(MusicUtils.getQueuePosition(), false);
+                    }
+                }));
+
+        filter = new IntentFilter();
         filter.addAction(MusicService.InternalIntents.REPEAT_CHANGED);
         filter.addAction(MusicService.InternalIntents.SHUFFLE_CHANGED);
         filter.addAction(MusicService.InternalIntents.QUEUE_CHANGED);
         filter.addAction(MusicService.InternalIntents.SERVICE_CONNECTED);
-
         addDisposable(RxBroadcast.fromBroadcast(ShuttleApplication.getInstance(), filter)
                 .startWith(new Intent(MusicService.InternalIntents.QUEUE_CHANGED))
                 .toFlowable(BackpressureStrategy.LATEST)
+                .filter(intent -> {
+                    if (MusicService.InternalIntents.QUEUE_CHANGED.equals(intent.getAction()) && intent.getBooleanExtra(MusicService.FROM_USER, false)) {
+                        return false;
+                    }
+                    return true;
+                })
+                .debounce(150, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(intent -> {
-                    final String action = intent.getAction();
-
-                    QueueView queueView = getView();
-                    if (queueView == null) {
-                        return;
-                    }
-
-                    if (action != null) {
-                        switch (action) {
-                            case MusicService.InternalIntents.META_CHANGED:
-                                queueView.updateQueuePosition(MusicUtils.getQueuePosition(), false);
-                                break;
-                            case MusicService.InternalIntents.QUEUE_CHANGED:
-                                if (!intent.getBooleanExtra(MusicService.FROM_USER, false)) {
-                                    loadData();
-                                }
-                                break;
-                            case MusicService.InternalIntents.SERVICE_CONNECTED:
-                            case MusicService.InternalIntents.REPEAT_CHANGED:
-                            case MusicService.InternalIntents.SHUFFLE_CHANGED:
-                                loadData();
-                                break;
-                        }
-                    }
-                }));
+                .subscribe(intent -> loadData()));
     }
 
     public void saveQueue(Context context) {
@@ -120,26 +115,26 @@ public class QueuePresenter extends Presenter<QueueView> {
 
     private void loadData() {
         QueueView queueView = getView();
-        List<ViewModel> data = Stream.of(MusicUtils.getQueue())
-                .map(song -> {
-                    SongView songView = new SongView(song, requestManager) {
-                        @Override
-                        public boolean equals(Object o) {
-                            // It's possible to have multiple SongViews with the same (duplicate) songs in the queue.
-                            // When that occurs, there's not currently a way to tell the two SongViews apart - which
-                            // can result in an adapter inconsistency. This fix just ensures no two SongViews in the queue
-                            // are considered to be the same. We lose some RV optimisations here, but at least we don't crash.
-                            return false;
-                        }
-                    };
-                    songView.setClickListener(clickListener);
-                    songView.showAlbumArt(true);
-                    songView.setEditable(true);
-
-                    return songView;
-                })
-                .collect(Collectors.toList());
         if (queueView != null) {
+            List<ViewModel> data = Stream.of(MusicUtils.getQueue())
+                    .map(song -> {
+                        SongView songView = new SongView(song, requestManager) {
+                            @Override
+                            public boolean equals(Object o) {
+                                // It's possible to have multiple SongViews with the same (duplicate) songs in the queue.
+                                // When that occurs, there's not currently a way to tell the two SongViews apart - which
+                                // can result in an adapter inconsistency. This fix just ensures no two SongViews in the queue
+                                // are considered to be the same. We lose some RV optimisations here, but at least we don't crash.
+                                return false;
+                            }
+                        };
+                        songView.setClickListener(clickListener);
+                        songView.showAlbumArt(true);
+                        songView.setEditable(true);
+
+                        return songView;
+                    })
+                    .collect(Collectors.toList());
             queueView.loadData(data, MusicUtils.getQueuePosition());
         }
     }
