@@ -299,9 +299,11 @@ public class AlbumArtistFragment extends BaseFragment implements
             gridMenuItem.setVisible(false);
         } else {
             gridMenuItem.setVisible(true);
-            gridMenuItem.getSubMenu()
-                    .findItem(SettingsManager.getInstance().getArtistColumnCount(getResources()))
-                    .setChecked(true);
+            SubMenu subMenu = gridMenuItem.getSubMenu();
+            if (subMenu != null) {
+                subMenu.findItem(SettingsManager.getInstance().getArtistColumnCount(getResources()))
+                        .setChecked(true);
+            }
         }
     }
 
