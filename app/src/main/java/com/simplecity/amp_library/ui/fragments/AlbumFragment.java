@@ -301,9 +301,11 @@ public class AlbumFragment extends BaseFragment implements
             gridMenuItem.setVisible(false);
         } else {
             gridMenuItem.setVisible(true);
-            gridMenuItem.getSubMenu()
-                    .findItem(SettingsManager.getInstance().getAlbumColumnCount(getResources()))
-                    .setChecked(true);
+            SubMenu subMenu = gridMenuItem.getSubMenu();
+            if (subMenu != null) {
+                subMenu.findItem(SettingsManager.getInstance().getAlbumColumnCount(getResources()))
+                        .setChecked(true);
+            }
         }
     }
 

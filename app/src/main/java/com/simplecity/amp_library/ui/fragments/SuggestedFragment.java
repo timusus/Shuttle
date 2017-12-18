@@ -351,6 +351,11 @@ public class SuggestedFragment extends BaseFragment implements
     }
 
     void refreshAdapterItems() {
+
+        if (setItemsDisposable != null) {
+            setItemsDisposable.dispose();
+        }
+
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {
                 refreshDisposables.add(Observable.combineLatest(
@@ -370,9 +375,6 @@ public class SuggestedFragment extends BaseFragment implements
                         .debounce(200, TimeUnit.MILLISECONDS)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(adaptableItems -> {
-                            if (setItemsDisposable != null) {
-                                setItemsDisposable.dispose();
-                            }
                             if (adaptableItems.isEmpty()) {
                                 setItemsDisposable = adapter.setItems(Collections.singletonList((new EmptyView(R.string.empty_suggested))));
                             } else {

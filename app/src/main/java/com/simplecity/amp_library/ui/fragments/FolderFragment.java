@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.ui.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -64,6 +65,7 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.Nullable;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
 import test.com.androidnavigation.fragment.BackPressListener;
@@ -127,6 +129,8 @@ public class FolderFragment extends BaseFragment implements
     private BreadcrumbsView breadcrumbsView;
 
     private Unbinder unbinder;
+
+    private Disposable setItemsDisposable;
 
     public FolderFragment() {
     }
@@ -252,6 +256,7 @@ public class FolderFragment extends BaseFragment implements
     @Override
     public void onDestroyView() {
         compositeDisposable.clear();
+        setItemsDisposable.dispose();
         unbinder.unbind();
         super.onDestroyView();
     }
@@ -330,7 +335,13 @@ public class FolderFragment extends BaseFragment implements
         changeDir(new File(item.getItemPath()));
     }
 
+    @SuppressLint("CheckResult")
     public void changeDir(File newDir) {
+
+        if (setItemsDisposable != null) {
+            setItemsDisposable.dispose();
+        }
+
         Single.zip(
                 DataManager.getInstance().getIncludeItems().first(Collections.emptyList()),
                 DataManager.getInstance().getExcludeItems().first(Collections.emptyList()),
@@ -375,7 +386,7 @@ public class FolderFragment extends BaseFragment implements
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(adaptableItems -> {
                     if (adapter != null) {
-                        adapter.setItems(adaptableItems);
+                        setItemsDisposable = adapter.setItems(adaptableItems);
                     }
                     if (breadcrumb != null) {
                         breadcrumb.changeBreadcrumbPath(currentDir);
@@ -402,6 +413,7 @@ public class FolderFragment extends BaseFragment implements
         return false;
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void onFileObjectClick(int position, FolderView folderView) {
         if (!contextualToolbarHelper.handleClick(position, folderView, folderView.baseFileObject)) {
