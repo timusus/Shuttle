@@ -2,6 +2,7 @@ package com.simplecity.amp_library.ui.fragments;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -572,6 +573,7 @@ public class PlayerFragment extends BaseFragment implements
         return false;
     }
 
+    @SuppressLint("CheckResult")
     private void goToArtist() {
         AlbumArtist currentAlbumArtist = MusicUtils.getAlbumArtist();
         // MusicUtils.getAlbumArtist() is only populate with the album the current Song belongs to.
@@ -589,6 +591,7 @@ public class PlayerFragment extends BaseFragment implements
         navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_ALBUM, MusicUtils.getAlbum(), true));
     }
 
+    @SuppressLint("CheckResult")
     private void goToGenre() {
         MusicUtils.getGenre()
                 .subscribeOn(Schedulers.io())
