@@ -3,9 +3,9 @@
 
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
 
-        <item name="colorPrimaryDark">@color/grey_600</item>
-        <item name="colorPrimary">@color/grey_500</item>
-        <item name="colorAccent">@color/grey_250</item>
+        <item name="colorPrimaryDark">@color/md_grey_600</item>
+        <item name="colorPrimary">@color/md_grey_500</item>
+        <item name="colorAccent">@color/md_grey_250</item>
 
         <item name="list_selector">@drawable/list_selector_dark</item>
         <item name="listDividerColor">@color/list_divider_dark</item>
@@ -18,9 +18,9 @@
 
     <style name="AppTheme.Light" parent="Theme.AppCompat.Light.NoActionBar">
 
-        <item name="colorPrimaryDark">@color/grey_600</item>
-        <item name="colorPrimary">@color/grey_500</item>
-        <item name="colorAccent">@color/grey_250</item>
+        <item name="colorPrimaryDark">@color/md_grey_600</item>
+        <item name="colorPrimary">@color/md_grey_500</item>
+        <item name="colorAccent">@color/md_grey_250</item>
 
         <item name="list_selector">@drawable/list_selector_light</item>
         <item name="listDividerColor">@color/list_divider_light</item>
@@ -41,9 +41,9 @@
     </style>
 
     <style name="WallpaperTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorPrimaryDark">@color/grey_600</item>
-        <item name="colorPrimary">@color/grey_500</item>
-        <item name="colorAccent">@color/grey_250</item>
+        <item name="colorPrimaryDark">@color/md_grey_600</item>
+        <item name="colorPrimary">@color/md_grey_500</item>
+        <item name="colorAccent">@color/md_grey_250</item>
         <item name="android:windowShowWallpaper">true</item>
         <item name="android:windowBackground">@color/transparent</item>
     </style>

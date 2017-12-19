@@ -80,7 +80,10 @@ public class DialogUtils {
             if (SettingsManager.getInstance().getLaunchCount() == 10 || (SettingsManager.getInstance().getLaunchCount() != 0 && SettingsManager.getInstance().getLaunchCount() % 50 == 0)) {
                 Snackbar snackbar = Snackbar.make(view, R.string.snackbar_rate_text, Snackbar.LENGTH_INDEFINITE)
                         .setDuration(15000)
-                        .setAction(R.string.snackbar_rate_action, v -> ShuttleUtils.openShuttleLink(activity, ShuttleApplication.getInstance().getPackageName(), activity.getPackageManager()))
+                        .setAction(R.string.snackbar_rate_action, v -> {
+                            ShuttleUtils.openShuttleLink(activity, ShuttleApplication.getInstance().getPackageName(), activity.getPackageManager());
+                            AnalyticsManager.logRateClicked();
+                        })
                         .addCallback(new Snackbar.Callback() {
                             @Override
                             public void onDismissed(Snackbar transientBottomBar, int event) {

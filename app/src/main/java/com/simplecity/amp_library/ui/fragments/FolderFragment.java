@@ -130,6 +130,7 @@ public class FolderFragment extends BaseFragment implements
 
     private Unbinder unbinder;
 
+    @Nullable
     private Disposable setItemsDisposable;
 
     public FolderFragment() {
@@ -256,7 +257,9 @@ public class FolderFragment extends BaseFragment implements
     @Override
     public void onDestroyView() {
         compositeDisposable.clear();
-        setItemsDisposable.dispose();
+        if (setItemsDisposable != null) {
+            setItemsDisposable.dispose();
+        }
         unbinder.unbind();
         super.onDestroyView();
     }

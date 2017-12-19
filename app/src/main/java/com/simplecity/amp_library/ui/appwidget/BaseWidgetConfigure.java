@@ -97,8 +97,8 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
             Aesthetic.get(this)
                     .activityTheme(R.style.WallpaperTheme)
                     .isDark(false)
-                    .colorPrimaryRes(R.color.blue_500)
-                    .colorAccentRes(R.color.amber_300)
+                    .colorPrimaryRes(R.color.md_blue_500)
+                    .colorAccentRes(R.color.md_amber_300)
                     .colorStatusBarAuto()
                     .apply();
         }

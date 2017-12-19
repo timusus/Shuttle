@@ -69,4 +69,29 @@ public class AnalyticsManager {
 
         FirebaseAnalytics.getInstance(ShuttleApplication.getInstance()).setUserProperty("Upgraded", String.valueOf(ShuttleUtils.isUpgraded()));
     }
+
+    public static void logInitialTheme(ThemeUtils.Theme theme) {
+        if (!analyticsEnabled()) {
+            return;
+        }
+
+        Bundle params = new Bundle();
+        params.putString(FirebaseAnalytics.Param.ITEM_ID, String.valueOf(theme.id));
+        params.putString(FirebaseAnalytics.Param.ITEM_NAME, String.format("%s-%s-%s", theme.primaryColorName, theme.accentColorName, theme.isDark));
+        params.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, "themes");
+        FirebaseAnalytics.getInstance(ShuttleApplication.getInstance()).logEvent(FirebaseAnalytics.Event.VIEW_ITEM, params);
+    }
+
+    public static void logRateClicked() {
+        if (!analyticsEnabled()) {
+            return;
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "rate_snackbar");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "0");
+
+        FirebaseAnalytics.getInstance(ShuttleApplication.getInstance())
+                .logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+    }
 }

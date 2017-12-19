@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.ui.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -32,6 +33,7 @@ import com.simplecity.amp_library.ui.modelviews.SuggestedHeaderView;
 import com.simplecity.amp_library.ui.modelviews.SuggestedSongView;
 import com.simplecity.amp_library.ui.views.SuggestedDividerDecoration;
 import com.simplecity.amp_library.utils.ComparisonUtils;
+import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
@@ -287,21 +289,19 @@ public class SuggestedFragment extends BaseFragment implements
                 });
     }
 
+    @SuppressLint("CheckResult")
     Observable<List<ViewModel>> getFavoriteSongViewModels() {
-        Observable<Playlist> favoritesPlaylist = Playlist.favoritesPlaylist().toObservable().cache();
-        Observable<List<Song>> favoritesSongs = favoritesPlaylist
-                .flatMap(Playlist::getSongsObservable)
-                .flatMapSingle(songs -> Observable.fromIterable(songs)
-                        .take(20)
-                        .toList());
 
-        return Observable.zip(favoritesPlaylist, favoritesSongs, (playlist, songs) -> {
+        Observable<List<Song>> favoritesSongs = DataManager.getInstance().getFavoriteSongsRelay()
+                .take(20);
+
+        return Observable.combineLatest(favoritesSongs, Playlist.favoritesPlaylist().toObservable(), (songs, playlist) -> {
             if (!songs.isEmpty()) {
                 List<ViewModel> viewModels = new ArrayList<>();
 
                 SuggestedHeader favoriteHeader = new SuggestedHeader(getString(R.string.fav_title), getString(R.string.suggested_favorite_subtitle), playlist);
                 SuggestedHeaderView favoriteHeaderView = new SuggestedHeaderView(favoriteHeader);
-                favoriteHeaderView.setClickListener(this);
+                favoriteHeaderView.setClickListener(SuggestedFragment.this);
                 viewModels.add(favoriteHeaderView);
 
                 viewModels.add(favoriteRecyclerView);
@@ -371,8 +371,8 @@ public class SuggestedFragment extends BaseFragment implements
                             items.addAll(recentlyAddedAlbums1);
                             return items;
                         })
-                        .switchIfEmpty(Observable.just(Collections.emptyList()))
                         .debounce(200, TimeUnit.MILLISECONDS)
+                        .switchIfEmpty(Observable.just(Collections.emptyList()))
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(adaptableItems -> {
                             if (adaptableItems.isEmpty()) {
