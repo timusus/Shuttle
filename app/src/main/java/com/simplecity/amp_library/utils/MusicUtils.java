@@ -76,7 +76,11 @@ public class MusicUtils {
         songsSingle
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        songs -> playAll(songs, new Random().nextInt(songs.size()), onEmpty),
+                        songs -> {
+                            if (!songs.isEmpty()) {
+                                playAll(songs, new Random().nextInt(songs.size()), onEmpty);
+                            }
+                        },
                         e -> LogUtils.logException(TAG, "Shuffle all error", e));
     }
 
