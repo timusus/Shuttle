@@ -78,6 +78,7 @@ public class DialogUtils {
         if (!SettingsManager.getInstance().getHasRated() && !SettingsManager.getInstance().hasSeenRateSnackbar) {
             //If this is the tenth launch, or a multiple of 50
             if (SettingsManager.getInstance().getLaunchCount() == 10 || (SettingsManager.getInstance().getLaunchCount() != 0 && SettingsManager.getInstance().getLaunchCount() % 50 == 0)) {
+
                 Snackbar snackbar = Snackbar.make(view, R.string.snackbar_rate_text, Snackbar.LENGTH_INDEFINITE)
                         .setDuration(15000)
                         .setAction(R.string.snackbar_rate_action, v -> {
@@ -102,6 +103,8 @@ public class DialogUtils {
                 if (snackbarText != null) {
                     snackbarText.setTextColor(Color.WHITE);
                 }
+
+                AnalyticsManager.logRateShown();
             }
 
             SettingsManager.getInstance().hasSeenRateSnackbar = true;
