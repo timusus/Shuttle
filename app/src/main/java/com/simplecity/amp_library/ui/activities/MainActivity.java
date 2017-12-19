@@ -32,11 +32,13 @@ import com.simplecity.amp_library.ui.dialog.ChangelogDialog;
 import com.simplecity.amp_library.ui.drawer.DrawerProvider;
 import com.simplecity.amp_library.ui.drawer.NavigationEventRelay;
 import com.simplecity.amp_library.ui.fragments.MainController;
+import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
+import com.simplecity.amp_library.utils.ThemeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,13 +78,18 @@ public class MainActivity extends BaseCastActivity implements
 
         // If we haven't set any defaults, do that now
         if (Aesthetic.isFirstTime(this)) {
+
+            ThemeUtils.Theme theme = ThemeUtils.getRandom();
+
             Aesthetic.get(this)
-                    .activityTheme(R.style.AppTheme_Light)
-                    .isDark(false)
-                    .colorPrimaryRes(R.color.blue_500)
-                    .colorAccentRes(R.color.amber_300)
+                    .activityTheme(theme.isDark ? R.style.AppTheme : R.style.AppTheme_Light)
+                    .isDark(theme.isDark)
+                    .colorPrimaryRes(theme.primaryColor)
+                    .colorAccentRes(theme.accentColor)
                     .colorStatusBarAuto()
                     .apply();
+
+            AnalyticsManager.logInitialTheme(theme);
         }
 
         setContentView(R.layout.activity_main);

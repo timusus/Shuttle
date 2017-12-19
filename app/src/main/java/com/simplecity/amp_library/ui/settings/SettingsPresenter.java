@@ -199,7 +199,7 @@ public class SettingsPresenter extends PurchasePresenter<SettingsView> {
             int storedColor = SettingsManager.getInstance().getPrimaryColor();
 
             Aesthetic.get(context)
-                    .colorPrimary(storedColor == -1 ? ContextCompat.getColor(context, R.color.blue_500) : storedColor)
+                    .colorPrimary(storedColor == -1 ? ContextCompat.getColor(context, R.color.md_blue_500) : storedColor)
                     .colorStatusBarAuto()
                     .colorNavigationBarAuto(SettingsManager.getInstance().getTintNavBar())
                     .apply();
@@ -212,7 +212,7 @@ public class SettingsPresenter extends PurchasePresenter<SettingsView> {
             int storedColor = SettingsManager.getInstance().getPrimaryColor();
 
             Aesthetic.get(context)
-                    .colorPrimary(storedColor == -1 ? ContextCompat.getColor(context, R.color.blue_500) : storedColor)
+                    .colorPrimary(storedColor == -1 ? ContextCompat.getColor(context, R.color.md_blue_500) : storedColor)
                     .colorStatusBarAuto()
                     .colorNavigationBarAuto(SettingsManager.getInstance().getTintNavBar())
                     .apply();

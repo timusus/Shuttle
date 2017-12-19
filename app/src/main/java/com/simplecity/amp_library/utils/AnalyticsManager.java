@@ -69,4 +69,16 @@ public class AnalyticsManager {
 
         FirebaseAnalytics.getInstance(ShuttleApplication.getInstance()).setUserProperty("Upgraded", String.valueOf(ShuttleUtils.isUpgraded()));
     }
+
+    public static void logInitialTheme(ThemeUtils.Theme theme) {
+        if (!analyticsEnabled()) {
+            return;
+        }
+
+        Bundle params = new Bundle();
+        params.putBoolean("is_dark", theme.isDark);
+        params.putString("primary_color", theme.primaryColorName);
+        params.putString("accent_color", theme.accentColorName);
+        FirebaseAnalytics.getInstance(ShuttleApplication.getInstance()).logEvent("initial_theme", params);
+    }
 }
