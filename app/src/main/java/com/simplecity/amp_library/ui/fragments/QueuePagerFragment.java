@@ -142,12 +142,15 @@ public class QueuePagerFragment extends BaseFragment implements
         recyclerView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
-                imageSize = new int[]{recyclerView.getWidth(), recyclerView.getHeight()};
-                recyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+                // This null check doesn't make sense to me, but there was an NPE here..
+                if (recyclerView != null) {
+                    imageSize = new int[]{recyclerView.getWidth(), recyclerView.getHeight()};
+                    recyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+                }
                 return false;
             }
         });
-        
+
         return rootView;
     }
 
