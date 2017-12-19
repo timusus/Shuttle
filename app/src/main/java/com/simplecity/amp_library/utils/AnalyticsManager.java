@@ -76,9 +76,22 @@ public class AnalyticsManager {
         }
 
         Bundle params = new Bundle();
-        params.putBoolean("is_dark", theme.isDark);
-        params.putString("primary_color", theme.primaryColorName);
-        params.putString("accent_color", theme.accentColorName);
-        FirebaseAnalytics.getInstance(ShuttleApplication.getInstance()).logEvent("initial_theme", params);
+        params.putString(FirebaseAnalytics.Param.ITEM_ID, String.valueOf(theme.id));
+        params.putString(FirebaseAnalytics.Param.ITEM_NAME, String.format("%s-%s-%s", theme.primaryColorName, theme.accentColorName, theme.isDark));
+        params.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, "themes");
+        FirebaseAnalytics.getInstance(ShuttleApplication.getInstance()).logEvent(FirebaseAnalytics.Event.VIEW_ITEM, params);
+    }
+
+    public static void logRateClicked() {
+        if (!analyticsEnabled()) {
+            return;
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "rate_snackbar");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "0");
+
+        FirebaseAnalytics.getInstance(ShuttleApplication.getInstance())
+                .logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
 }
