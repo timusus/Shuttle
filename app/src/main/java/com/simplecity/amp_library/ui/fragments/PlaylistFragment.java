@@ -28,6 +28,7 @@ import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -142,9 +143,9 @@ public class PlaylistFragment extends BaseFragment {
                             list.addAll(playlists);
                             return list;
                         })
+                        .debounce(150, TimeUnit.MILLISECONDS)
                         .subscribeOn(Schedulers.io())
                         .map(playlists -> {
-
                             PlaylistView.OnClickListener listener = new PlaylistView.OnClickListener() {
                                 @Override
                                 public void onPlaylistClick(int position, PlaylistView playlistView) {

@@ -48,6 +48,7 @@ import com.simplecityapps.recycler_adapter.recyclerview.SpanSizeLookup;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -194,6 +195,7 @@ public class AlbumFragment extends BaseFragment implements
 
                 subscription = DataManager.getInstance().getAlbumsRelay()
                         .skipWhile(albums -> !force && Stream.of(adapter.items).filter(viewModel -> viewModel instanceof AlbumView).count() == albums.size())
+                        .debounce(150, TimeUnit.MILLISECONDS)
                         .flatMapSingle(albums -> {
                             //Sort
                             SortManager.getInstance().sortAlbums(albums);

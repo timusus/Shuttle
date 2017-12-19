@@ -38,6 +38,7 @@ import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -125,6 +126,7 @@ public class SongFragment extends BaseFragment implements
 
                         disposable = DataManager.getInstance().getSongsRelay()
                                 .skipWhile(songs -> !force && Stream.of(adapter.items).filter(viewModel -> viewModel instanceof SongView).count() == songs.size())
+                                .debounce(150, TimeUnit.MILLISECONDS)
                                 .flatMapSingle(songs -> {
                                     //Sort
                                     SortManager.getInstance().sortSongs(songs);
