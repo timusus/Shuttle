@@ -38,7 +38,7 @@ final class InflationInterceptor implements LayoutInflaterFactory {
       case "android.support.v7.widget.AppCompatTextView":
       case "TextView":
         if (viewId == R.id.snackbar_text) {
-          view = new AestheticSnackBarTextView(context, attrs);
+          view = null;
         } else {
           view = new AestheticTextView(context, attrs);
           if (parent instanceof LinearLayout && view.getId() == android.R.id.message) {
