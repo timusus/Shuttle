@@ -468,6 +468,9 @@ public class PlaylistUtils {
 
     @Nullable
     public static Playlist createFavoritePlaylist() {
+
+        if (true) return null;
+
         Playlist playlist = PlaylistUtils.createPlaylist(ShuttleApplication.getInstance(), ShuttleApplication.getInstance().getString(R.string.fav_title));
         if (playlist != null) {
             playlist.canDelete = false;
