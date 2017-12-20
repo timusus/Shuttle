@@ -456,7 +456,11 @@ public class PlaylistUtils {
             playlist = new Playlist(Playlist.Type.USER_CREATED, id, name, true, false, true, true, true);
         } else {
             Crashlytics.log(String.format("Failed to create playlist. Name: %s, id: %d", name, id));
-            DataManager.getInstance().getPlaylistsRelay().first(Collections.emptyList()).subscribe(playlists -> Crashlytics.log("Existing playlists: " + playlists));
+            DataManager.getInstance().getPlaylistsRelay().first(Collections.emptyList())
+                    .subscribe(
+                            playlists -> Crashlytics.log("Existing playlists: " + playlists),
+                            throwable -> {
+                            });
         }
 
         return playlist;
