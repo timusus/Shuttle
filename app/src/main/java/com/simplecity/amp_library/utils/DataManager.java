@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.Single;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -244,8 +243,7 @@ public class DataManager {
 
     public Observable<List<Song>> getFavoriteSongsRelay() {
         if (favoriteSongsSubscription == null || favoriteSongsSubscription.isDisposed()) {
-            Single<Playlist> favoritesPlaylist = Playlist.favoritesPlaylist();
-            favoriteSongsSubscription = favoritesPlaylist
+            favoriteSongsSubscription = Playlist.favoritesPlaylist()
                     .flatMapObservable(Playlist::getSongsObservable)
                     .subscribe(favoriteSongsRelay, error -> LogUtils.logException(TAG, "getFavoriteSongsRelay threw error", error));
         }
