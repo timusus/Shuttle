@@ -125,7 +125,7 @@ public class VoiceSearchActivity extends BaseActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(songs -> {
                     if (songs != null) {
-                        MusicUtils.playAll(songs, position, (String message) ->
+                        MusicUtils.playAll(songs, position, true, (String message) ->
                                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show());
                         startActivity(new Intent(this, MainActivity.class));
                     }

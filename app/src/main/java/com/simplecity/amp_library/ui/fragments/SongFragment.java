@@ -288,7 +288,7 @@ public class SongFragment extends BaseFragment implements
                     .map(adaptableItem -> ((SongView) adaptableItem).song)
                     .toList();
 
-            MusicUtils.playAll(songs, songs.indexOf(songView.song), (String message) ->
+            MusicUtils.playAll(songs, songs.indexOf(songView.song), true, (String message) ->
                     Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show());
         }
     }

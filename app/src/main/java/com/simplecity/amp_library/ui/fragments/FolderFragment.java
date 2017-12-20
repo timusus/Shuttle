@@ -432,7 +432,7 @@ public class FolderFragment extends BaseFragment implements
                                     break;
                                 }
                             }
-                            MusicUtils.playAll(songs, index, (String message) -> {
+                            MusicUtils.playAll(songs, index, true, (String message) -> {
                                 if (isAdded() && getContext() != null) {
                                     Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                                 }
