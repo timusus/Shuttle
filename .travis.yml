@@ -64,7 +64,5 @@ deploy:
 #    condition: $TRAVIS_TAG =~ beta
 
 # Slack build notifications
-notifications: 
-  slack: 
-    on_pull_requests: false
-    template: "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}: '%{commit_subject}'>) by %{author} %{result} in %{duration}."
+notifications:
+  slack: shuttlemusicplayer:g90QK9lL6Hg5jfzegqjjNqqN
