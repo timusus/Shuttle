@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.utils;
 
+import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.annimon.stream.function.Predicate;
 import com.jakewharton.rxrelay2.BehaviorRelay;
@@ -16,10 +17,10 @@ import com.squareup.sqlbrite2.BriteDatabase;
 import com.squareup.sqlbrite2.SqlBrite;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.Single;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -244,9 +245,11 @@ public class DataManager {
 
     public Observable<List<Song>> getFavoriteSongsRelay() {
         if (favoriteSongsSubscription == null || favoriteSongsSubscription.isDisposed()) {
-            Single<Playlist> favoritesPlaylist = Playlist.favoritesPlaylist();
-            favoriteSongsSubscription = favoritesPlaylist
+            favoriteSongsSubscription = Playlist.favoritesPlaylist()
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
                     .flatMapObservable(Playlist::getSongsObservable)
+                    .switchIfEmpty(Observable.just(Collections.emptyList()))
                     .subscribe(favoriteSongsRelay, error -> LogUtils.logException(TAG, "getFavoriteSongsRelay threw error", error));
         }
         return favoriteSongsRelay.subscribeOn(Schedulers.io()).map(ArrayList::new);

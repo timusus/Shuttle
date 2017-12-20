@@ -82,6 +82,20 @@ public class AnalyticsManager {
         FirebaseAnalytics.getInstance(ShuttleApplication.getInstance()).logEvent(FirebaseAnalytics.Event.VIEW_ITEM, params);
     }
 
+    public static void logRateShown() {
+        if (!analyticsEnabled()) {
+            return;
+        }
+
+        Bundle params = new Bundle();
+        params.putString(FirebaseAnalytics.Param.ITEM_ID, "show_rate_snackbar");
+        params.putString(FirebaseAnalytics.Param.ITEM_NAME, "show_rate_snackbar");
+        params.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, "rate_app");
+
+        FirebaseAnalytics.getInstance(ShuttleApplication.getInstance())
+                .logEvent(FirebaseAnalytics.Event.VIEW_ITEM, params);
+    }
+
     public static void logRateClicked() {
         if (!analyticsEnabled()) {
             return;

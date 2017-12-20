@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import com.annimon.stream.Optional;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.utils.LogUtils;
@@ -40,6 +41,8 @@ public class ShortcutTrampolineActivity extends AppCompatActivity {
                 intent = new Intent(this, MainActivity.class);
                 intent.setAction(action);
                 Playlist.favoritesPlaylist()
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(playlist -> {
