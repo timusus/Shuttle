@@ -65,6 +65,9 @@ deploy:
 
 # Slack build notifications
 notifications:
-  slack: shuttlemusicplayer:g90QK9lL6Hg5jfzegqjjNqqN
+  slack:
+    rooms:
+      - shuttlemusicplayer:g90QK9lL6Hg5jfzegqjjNqqN
     on_pull_requests: false
-    template: "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}: '%{commit_subject}'>) by %{author} %{result} in %{duration}."
+    template:
+      - "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}: '%{commit_subject}'>) by %{author} %{result} in %{duration}."
