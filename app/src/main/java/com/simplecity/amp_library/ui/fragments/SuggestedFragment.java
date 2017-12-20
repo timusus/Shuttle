@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
@@ -295,29 +296,35 @@ public class SuggestedFragment extends BaseFragment implements
         Observable<List<Song>> favoritesSongs = DataManager.getInstance().getFavoriteSongsRelay()
                 .take(20);
 
-        return Observable.combineLatest(favoritesSongs, Playlist.favoritesPlaylist().toObservable(), (songs, playlist) -> {
-            if (!songs.isEmpty()) {
-                List<ViewModel> viewModels = new ArrayList<>();
+        return Observable.combineLatest(
+                favoritesSongs,
+                Playlist.favoritesPlaylist()
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .toObservable(),
+                (songs, playlist) -> {
+                    if (!songs.isEmpty()) {
+                        List<ViewModel> viewModels = new ArrayList<>();
 
-                SuggestedHeader favoriteHeader = new SuggestedHeader(getString(R.string.fav_title), getString(R.string.suggested_favorite_subtitle), playlist);
-                SuggestedHeaderView favoriteHeaderView = new SuggestedHeaderView(favoriteHeader);
-                favoriteHeaderView.setClickListener(SuggestedFragment.this);
-                viewModels.add(favoriteHeaderView);
+                        SuggestedHeader favoriteHeader = new SuggestedHeader(getString(R.string.fav_title), getString(R.string.suggested_favorite_subtitle), playlist);
+                        SuggestedHeaderView favoriteHeaderView = new SuggestedHeaderView(favoriteHeader);
+                        favoriteHeaderView.setClickListener(SuggestedFragment.this);
+                        viewModels.add(favoriteHeaderView);
 
-                viewModels.add(favoriteRecyclerView);
+                        viewModels.add(favoriteRecyclerView);
 
-                SongClickListener songClickListener = new SongClickListener(songs);
-                favoriteRecyclerView.viewModelAdapter.setItems(Stream.of(songs).map(song -> {
-                    SuggestedSongView suggestedSongView = new SuggestedSongView(song, requestManager);
-                    suggestedSongView.setClickListener(songClickListener);
-                    return (ViewModel) suggestedSongView;
-                }).toList());
+                        SongClickListener songClickListener = new SongClickListener(songs);
+                        favoriteRecyclerView.viewModelAdapter.setItems(Stream.of(songs).map(song -> {
+                            SuggestedSongView suggestedSongView = new SuggestedSongView(song, requestManager);
+                            suggestedSongView.setClickListener(songClickListener);
+                            return (ViewModel) suggestedSongView;
+                        }).toList());
 
-                return viewModels;
-            } else {
-                return Collections.emptyList();
-            }
-        });
+                        return viewModels;
+                    } else {
+                        return Collections.emptyList();
+                    }
+                });
     }
 
     Observable<List<ViewModel>> getRecentlyAddedViewModels() {
@@ -361,7 +368,7 @@ public class SuggestedFragment extends BaseFragment implements
                 refreshDisposables.add(Observable.combineLatest(
                         getMostPlayedViewModels(),
                         getRecentlyPlayedViewModels(),
-                        getFavoriteSongViewModels(),
+                        getFavoriteSongViewModels().switchIfEmpty(Observable.just(Collections.emptyList())),
                         getRecentlyAddedViewModels(),
                         (mostPlayedSongs1, recentlyPlayedAlbums1, favoriteSongs1, recentlyAddedAlbums1) -> {
                             List<ViewModel> items = new ArrayList<>();
