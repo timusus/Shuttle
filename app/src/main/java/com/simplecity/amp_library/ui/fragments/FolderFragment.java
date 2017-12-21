@@ -419,7 +419,7 @@ public class FolderFragment extends BaseFragment implements
     @SuppressLint("CheckResult")
     @Override
     public void onFileObjectClick(int position, FolderView folderView) {
-        if (!contextualToolbarHelper.handleClick(position, folderView, folderView.baseFileObject)) {
+        if (contextualToolbarHelper != null && !contextualToolbarHelper.handleClick(position, folderView, folderView.baseFileObject)) {
             if (folderView.baseFileObject.fileType == FileType.FILE) {
                 FileHelper.getSongList(new File(folderView.baseFileObject.path), false, true)
                         .observeOn(AndroidSchedulers.mainThread())
