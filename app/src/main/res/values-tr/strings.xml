@@ -92,12 +92,12 @@
     <string name="upgraded_title">Teşekkürler</string>
     <string name="upgraded_message">Başarıyla Shuttle+\'a yükselttiniz. Desteğiniz için teşekkür ederim.
 \n\nTüm özelliklerin etkinleştirilmesini sağlamak için lütfen uygulamayı yeniden başlatın</string>
-    <string name="upgrade_dialog_message">Yükseltme, Shuttle\'daki ek özelliklerin kilidini açacaktır, dahil olacaklar:
-\n\n•Fazladan tonlarca tema
-\n•Etiket düzenleme
-\n•Klasör tarama
-\n•ChromeCast Desteği
-\n\n\Üstelik uygulamanın geliştirilmesine de yardımcı olur.\n\nShuttle+ mevcutsa yükseltme gerekmez</string>
+    <string name="upgrade_dialog_message">• ChromeCast Desteği
+\n• Ekstra temalar
+\n• Etiket düzenleme
+\n• Klasörlere göz atma
+\n• Geliştirmeyi destekle ❤️</string>
+    <string name="upgrade_required_folders">Shuttle+ \'a Yükselt</string>
     <string name="btn_upgrade">Yükselt</string>
     <!-- -->
     <string name="get_pro_button_no">Hayır teşekkürler</string>
@@ -228,6 +228,7 @@
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Diğer</string>
     <!--Settings category for 'playback' items -->
+    <string name="pref_category_playback">Çalma ekranı</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
     <string name="pref_title_choose_tabs">Sekme Öğelerini Seç</string>
     <!--Settings summary for opening the dialog to pick which categories are shown as tab headings -->
@@ -283,7 +284,7 @@
     <!-- Settings title for ignore embedded artwork checkbox (whether the app can use local artwork for the album art -->
     <string name="pref_title_ignore_mediastore_art">Medya Depolama albüm kapağını yoksay</string>
     <!-- Settings summary for the ignore folder artwork checkbox-->
-    <string name="pref_summary_ignore_mediastore_art">Android Medya Depolama yerleşik olan albüm kapaklarını bulmuş ve düşük çözünürlükte depolamış görünüyor. Medya Depolamayı atlamak için bunu değiştirin (biraz daha yavaş albüm kapağı yükleme)</string>
+    <string name="pref_summary_ignore_mediastore_art">Android Medya Depolama yerleşik olan albüm kapaklarını bulmuş ve düşük çözünürlükte depolamış gibi mi görünüyor. Medya Depolamayı atlamak için bunu değiştirin (biraz daha yavaş albüm kapağı yükleme)</string>
     <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
     <string name="pref_title_ignore_folder_art">Klasör albüm kapaklarını yoksay</string>
     <!-- Settings summary for the embedded artwork checkbox-->
@@ -370,10 +371,15 @@ Bu seçenek işaretli değilse, Shuttle simgesi kullanılacaktır.</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Destek</string>
     <!-- Settings title for toggling between remaining time and total time -->
+    <string name="pref_title_display_remaining_time">Kalan süreyi göster</string>
     <!-- Settings summary for toggling between remaining time and total time -->
+    <string name="pref_summary_display_remaining_time">\'Şimdi oynatılıyor\' ekranında süre yerine kalan süreyi göster</string>
     <!-- Settings title for the playback options -->
+    <string name="pref_title_playback">Çalma ekranı</string>
     <!-- Settings title for toggling 'remember shuff'e-->
+    <string name="pref_title_remember_shuffle">Karıştırma modunu hatırla</string>
     <!-- Settings summary for toggling 'remember shuff'e-->
+    <string name="pref_summary_remember_shuffle">Yeni şarkı listesi oynatılırken karıştırma modu kapanmaz</string>
     <string name="pref_title_version">Sürüm</string>
     <string name="pref_title_faq">SSS</string>
     <string name="pref_summary_faq">Bir sorunuz mu var? Yardıma mı ihtiyacınız var? SSS leri görmek için buraya tıklayın @ www.shuttlemusicplayer.com</string>

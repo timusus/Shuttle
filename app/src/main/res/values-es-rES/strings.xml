@@ -86,6 +86,7 @@
     <string name="upgraded_title">¡Gracias!</string>
     <string name="upgraded_message">Has actualizado correctamente a Shuttle+. Agradezco mucho la ayuda.\n\nPor favor, reinicia la aplicación para asegurarte de que todas las características están activas.</string>
     <string name="upgrade_dialog_message">Actualizar desbloqueará características adicionales en Shuttle, incluyendo:\n\n\&#8226;-Muchos temas extra\n\&#8226;-Editor de etiquetas (soporte limitado en Android 4.4 KitKat)\n\&#8226;-Búsqueda por carpetas\n\&#8226;-Soporte para ChromeCast\n\nTambién ayuda a promover un mayor desarrollo\n\nNo necesitas actualizar si ya tienes Shuttle+</string>
+    <string name="upgrade_required_folders">Comprar Shuttle+</string>
     <string name="btn_upgrade">Mejorar</string>
     <!-- -->
     <string name="get_pro_button_no">No, gracias</string>
@@ -216,6 +217,7 @@
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Otro</string>
     <!--Settings category for 'playback' items -->
+    <string name="pref_category_playback">Playback</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
     <string name="pref_title_choose_tabs">Escoge las pestañas</string>
     <!--Settings summary for opening the dialog to pick which categories are shown as tab headings -->
@@ -361,8 +363,11 @@ Si no está seleccionado, se usará el icono de Shuttle en su lugar</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Soporte</string>
     <!-- Settings title for toggling between remaining time and total time -->
+    <string name="pref_title_display_remaining_time">Mostrar tiempo restante</string>
     <!-- Settings summary for toggling between remaining time and total time -->
+    <string name="pref_summary_display_remaining_time">Mostrar tiempo restante en vez de la duración en la pantalla \"Reproduciendo\"</string>
     <!-- Settings title for the playback options -->
+    <string name="pref_title_playback">Playback</string>
     <!-- Settings title for toggling 'remember shuff'e-->
     <!-- Settings summary for toggling 'remember shuff'e-->
     <string name="pref_title_version">Versión</string>
