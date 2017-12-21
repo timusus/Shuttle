@@ -103,40 +103,6 @@ android {
             buildConfigField("String", "LASTFM_API_KEY", "\"${getProperty(getProperties('../private.properties'), 'LASTFM_API_KEY')}\"")
             manifestPlaceholders = [CRASHLYTICS_API_KEY: "${getProperty(getProperties('../private.properties'), 'CRASHLYTICS_API_KEY')}"]
         }
-
-        /* Todo: Figure out how to reinstate with new Gradle version
-        applicationVariants.all { variant ->
-
-            if (variant.buildType.name.contains('release')) {
-                variant.outputs.all { output ->
-                    outputFileName = "${variant.name}-v${variant.versionName}.apk"
-                }
-
-                //Reveal in explorer/finder
-                variant.assemble.doLast {
-                    def path = null
-                    variant.outputs.each { output ->
-                        path = output.outputFile
-
-                        //Delete the unaligned apk file
-                        File unaligned = output.packageApplication.outputFile
-                        File aligned = output.outputFile
-                        if (!unaligned.getName().equalsIgnoreCase(aligned.getName())) {
-                            unaligned.delete()
-                        }
-                    }
-
-                    exec {
-                        if (System.properties['os.name'].toLowerCase().contains('mac os x')) {
-                            ['open', '-R', path].execute()
-                        } else if (System.properties['os.name'].toLowerCase().contains('windows')) {
-                            ['explorer', '/select,', path].execute()
-                        }
-                    }
-                }
-            }
-        }
-        */
     }
 
     // Ignore useless variants, such as devRelease.
@@ -331,7 +297,7 @@ configurations.all {
     }
 }
 
-static def generateVersionCode() {
+static int generateVersionCode() {
     def versionCode = 5000
     if (System.getenv("TRAVIS_BUILD_NUMBER")) {
         versionCode += System.getenv("TRAVIS_BUILD_NUMBER").toInteger()
@@ -340,8 +306,27 @@ static def generateVersionCode() {
     return versionCode
 }
 
+static String getPlayStoreTrack() {
+    def track = 'alpha'
+    if (System.getenv("TRAVIS_TAG")) {
+        String branch = System.getenv("TRAVIS_TAG").toString()
+        if (branch.contains('alpha')) {
+            track = 'alpha'
+        } else if (branch.contains('beta')) {
+            track = 'beta'
+        } else if (branch.contains('release')) {
+            track = 'production'
+        } else if (branch.contains('rollout')) {
+            track = 'rollout'
+        }
+    }
+    println "Play store track: $track"
+    return track
+}
+
 play {
-    track = 'beta'
+    track = getPlayStoreTrack()
+    userFraction = 0.1
     untrackOld = true
     serviceAccountEmail = 'app-deployment@api-5801704373554614142-812229.iam.gserviceaccount.com'
     jsonFile = file('../deployment_keys.json')
