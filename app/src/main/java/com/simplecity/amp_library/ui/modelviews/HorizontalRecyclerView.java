@@ -13,6 +13,8 @@ import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 
 import java.util.List;
 
+import io.reactivex.disposables.Disposable;
+
 import static android.support.v7.widget.LinearLayoutManager.HORIZONTAL;
 import static com.simplecity.amp_library.R.layout.recycler_header;
 import static com.simplecity.amp_library.ui.adapters.ViewType.HORIZONTAL_RECYCLERVIEW;
@@ -25,8 +27,8 @@ public class HorizontalRecyclerView extends BaseViewModel<HorizontalRecyclerView
         this.viewModelAdapter = new LoggingViewModelAdapter(tag);
     }
 
-    public void setItems(List<ViewModel> items) {
-        viewModelAdapter.setItems(items);
+    public Disposable setItems(List<ViewModel> items) {
+        return viewModelAdapter.setItems(items);
     }
 
     public int getCount() {
