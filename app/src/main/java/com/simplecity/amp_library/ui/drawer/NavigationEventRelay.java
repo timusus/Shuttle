@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.jakewharton.rxrelay2.PublishRelay;
+import com.simplecity.amp_library.utils.ShuttleUtils;
 
 import javax.inject.Inject;
 
@@ -12,11 +13,16 @@ import io.reactivex.Observable;
 public class NavigationEventRelay {
 
     static NavigationEvent librarySelectedEvent = new NavigationEvent(NavigationEvent.Type.LIBRARY_SELECTED);
-    static NavigationEvent foldersSelectedEvent = new NavigationEvent(NavigationEvent.Type.FOLDERS_SELECTED);
     static NavigationEvent sleepTimerSelectedEvent = new NavigationEvent(NavigationEvent.Type.SLEEP_TIMER_SELECTED);
     static NavigationEvent equalizerSelectedEvent = new NavigationEvent(NavigationEvent.Type.EQUALIZER_SELECTED);
     static NavigationEvent settingsSelectedEvent = new NavigationEvent(NavigationEvent.Type.SETTINGS_SELECTED);
     static NavigationEvent supportSelectedEvent = new NavigationEvent(NavigationEvent.Type.SUPPORT_SELECTED);
+    static NavigationEvent foldersSelectedEvent = new NavigationEvent(NavigationEvent.Type.FOLDERS_SELECTED) {
+        @Override
+        public boolean isActionable() {
+            return ShuttleUtils.isUpgraded();
+        }
+    };
 
     private PublishRelay<NavigationEvent> relay = PublishRelay.create();
 
@@ -46,13 +52,16 @@ public class NavigationEventRelay {
             int PLAYLIST_SELECTED = 6;
             int GO_TO_ARTIST = 7;
             int GO_TO_ALBUM = 8;
+            int GO_TO_GENRE = 9;
         }
 
-        @Type public int type;
+        @Type
+        public int type;
 
-        @Nullable public Object data;
+        @Nullable
+        public Object data;
 
-        public boolean isActionable = true;
+        private boolean isActionable = true;
 
         /**
          * @param type         the {@link Type of event}
@@ -70,7 +79,7 @@ public class NavigationEventRelay {
          * @param type the {@link Type of event}
          * @param data optional Object to be passed with this event
          */
-        NavigationEvent(int type, @Nullable Object data) {
+        public NavigationEvent(int type, @Nullable Object data) {
             this.type = type;
             this.data = data;
         }
@@ -80,6 +89,10 @@ public class NavigationEventRelay {
          */
         NavigationEvent(int type) {
             this.type = type;
+        }
+
+        public boolean isActionable() {
+            return isActionable;
         }
     }
 }

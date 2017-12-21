@@ -22,6 +22,7 @@ import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.ui.activities.MainActivity;
 import com.simplecity.amp_library.utils.DrawableUtils;
+import com.simplecity.amp_library.utils.ShuttleUtils;
 
 public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
@@ -97,39 +98,32 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
     public static void setupButtons(Context context, RemoteViews views, int appWidgetId, int rootViewId) {
 
-        Intent intent;
-        PendingIntent pendingIntent;
-
-        final ComponentName serviceName = new ComponentName(context, MusicService.class);
-
-        intent = new Intent(context, MainActivity.class);
-        pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), 0);
         views.setOnClickPendingIntent(rootViewId, pendingIntent);
 
-        intent = new Intent(MusicService.ServiceCommand.TOGGLE_PAUSE_ACTION);
-        intent.setComponent(serviceName);
-        pendingIntent = PendingIntent.getService(context, appWidgetId, intent, 0);
+        pendingIntent = getPendingIntent(context, appWidgetId, new Intent(MusicService.ServiceCommand.TOGGLE_PAUSE_ACTION));
         views.setOnClickPendingIntent(R.id.play_button, pendingIntent);
 
-        intent = new Intent(MusicService.ServiceCommand.NEXT_ACTION);
-        intent.setComponent(serviceName);
-        pendingIntent = PendingIntent.getService(context, appWidgetId, intent, 0);
+        pendingIntent = getPendingIntent(context, appWidgetId, new Intent(MusicService.ServiceCommand.NEXT_ACTION));
         views.setOnClickPendingIntent(R.id.next_button, pendingIntent);
 
-        intent = new Intent(MusicService.ServiceCommand.PREV_ACTION);
-        intent.setComponent(serviceName);
-        pendingIntent = PendingIntent.getService(context, appWidgetId, intent, 0);
+        pendingIntent = getPendingIntent(context, appWidgetId, new Intent(MusicService.ServiceCommand.PREV_ACTION));
         views.setOnClickPendingIntent(R.id.prev_button, pendingIntent);
 
-        intent = new Intent(MusicService.ServiceCommand.SHUFFLE_ACTION);
-        intent.setComponent(serviceName);
-        pendingIntent = PendingIntent.getService(context, appWidgetId, intent, 0);
+        pendingIntent = getPendingIntent(context, appWidgetId, new Intent(MusicService.ServiceCommand.SHUFFLE_ACTION));
         views.setOnClickPendingIntent(R.id.shuffle_button, pendingIntent);
 
-        intent = new Intent(MusicService.ServiceCommand.REPEAT_ACTION);
-        intent.setComponent(serviceName);
-        pendingIntent = PendingIntent.getService(context, appWidgetId, intent, 0);
+        pendingIntent = getPendingIntent(context, appWidgetId, new Intent(MusicService.ServiceCommand.REPEAT_ACTION));
         views.setOnClickPendingIntent(R.id.repeat_button, pendingIntent);
+    }
+
+    private static PendingIntent getPendingIntent(Context context, int appWidgetId, Intent intent) {
+        intent.setComponent(new ComponentName(context, MusicService.class));
+        if (ShuttleUtils.hasOreo()) {
+            return PendingIntent.getForegroundService(context, appWidgetId, intent, 0);
+        } else {
+            return PendingIntent.getService(context, appWidgetId, intent, 0);
+        }
     }
 
     void loadArtwork(MusicService service, int[] appWidgetIds, RemoteViews views, int bitmapSize) {
@@ -153,18 +147,18 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     void setupRepeatView(MusicService service, RemoteViews views, boolean invertIcons) {
         switch (service.getRepeatMode()) {
             case MusicService.RepeatMode.ALL:
-                views.setImageViewBitmap(R.id.repeat_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_repeat_24dp));
+                views.setImageViewBitmap(R.id.repeat_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_repeat_24dp_scaled));
                 views.setContentDescription(R.id.shuffle_button, service.getString(R.string.btn_repeat_current));
                 break;
             case MusicService.RepeatMode.ONE:
-                views.setImageViewBitmap(R.id.repeat_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_repeat_one_24dp));
+                views.setImageViewBitmap(R.id.repeat_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_repeat_one_24dp_scaled));
                 views.setContentDescription(R.id.shuffle_button, service.getString(R.string.btn_repeat_off));
                 break;
             default:
                 if (invertIcons) {
-                    views.setImageViewBitmap(R.id.repeat_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_repeat_24dp));
+                    views.setImageViewBitmap(R.id.repeat_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_repeat_24dp_scaled));
                 } else {
-                    views.setImageViewResource(R.id.repeat_button, R.drawable.ic_repeat_24dp);
+                    views.setImageViewResource(R.id.repeat_button, R.drawable.ic_repeat_24dp_scaled);
                 }
                 views.setContentDescription(R.id.shuffle_button, service.getString(R.string.btn_repeat_all));
                 break;
@@ -175,14 +169,14 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         switch (service.getShuffleMode()) {
             case MusicService.ShuffleMode.OFF:
                 if (invertIcons) {
-                    views.setImageViewBitmap(R.id.shuffle_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_shuffle_24dp));
+                    views.setImageViewBitmap(R.id.shuffle_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_shuffle_24dp_scaled));
                 } else {
-                    views.setImageViewResource(R.id.shuffle_button, R.drawable.ic_shuffle_24dp);
+                    views.setImageViewResource(R.id.shuffle_button, R.drawable.ic_shuffle_24dp_scaled);
                 }
                 views.setContentDescription(R.id.shuffle_button, service.getString(R.string.btn_shuffle_on));
                 break;
             default:
-                views.setImageViewBitmap(R.id.shuffle_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_shuffle_24dp));
+                views.setImageViewBitmap(R.id.shuffle_button, DrawableUtils.getColoredBitmap(service, R.drawable.ic_shuffle_24dp_scaled));
                 views.setContentDescription(R.id.shuffle_button, service.getString(R.string.btn_shuffle_off));
                 break;
         }

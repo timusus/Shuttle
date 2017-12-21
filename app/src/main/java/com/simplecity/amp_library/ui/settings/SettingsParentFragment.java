@@ -25,9 +25,9 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
-import com.simplecity.amp_library.dagger.module.FragmentModule;
-import com.simplecity.amp_library.ui.activities.MainActivity;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
+import com.simplecity.amp_library.ui.drawer.MiniPlayerLockManager;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 
@@ -43,15 +43,21 @@ import test.com.androidnavigation.fragment.BaseController;
 import test.com.androidnavigation.fragment.BaseNavigationController;
 import test.com.androidnavigation.fragment.FragmentInfo;
 
-public class SettingsParentFragment extends BaseNavigationController implements DrawerLockManager.DrawerLock {
+public class SettingsParentFragment extends BaseNavigationController implements
+        DrawerLockManager.DrawerLock,
+        MiniPlayerLockManager.MiniPlayerLock {
 
     public static String ARG_PREFERENCE_RESOURCE = "preference_resource";
     public static String ARG_TITLE = "title";
 
-    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
-    @XmlRes int preferenceResource;
-    @StringRes int titleResId;
+    @XmlRes
+    int preferenceResource;
+
+    @StringRes
+    int titleResId;
 
     private Unbinder unbinder;
 
@@ -97,11 +103,13 @@ public class SettingsParentFragment extends BaseNavigationController implements 
     public void onResume() {
         super.onResume();
         DrawerLockManager.getInstance().addDrawerLock(this);
+        MiniPlayerLockManager.getInstance().addMiniPlayerLock(this);
     }
 
     @Override
     public void onPause() {
         DrawerLockManager.getInstance().removeDrawerLock(this);
+        MiniPlayerLockManager.getInstance().removeMiniPlayerLock(this);
         super.onPause();
     }
 
@@ -117,10 +125,13 @@ public class SettingsParentFragment extends BaseNavigationController implements 
             SettingsView,
             ColorChooserDialog.ColorCallback {
 
-        @XmlRes int preferenceResource;
+        @XmlRes
+        int preferenceResource;
 
-        @Inject SupportPresenter supportPresenter;
-        @Inject SettingsPresenter settingsPresenter;
+        @Inject
+        SupportPresenter supportPresenter;
+        @Inject
+        SettingsPresenter settingsPresenter;
 
         private ColorChooserDialog primaryColorDialog;
         private ColorChooserDialog accentColorDialog;
@@ -161,11 +172,10 @@ public class SettingsParentFragment extends BaseNavigationController implements 
             super.onCreate(savedInstanceState);
 
             ShuttleApplication.getInstance().getAppComponent()
-                    .plus(new FragmentModule(this))
+                    .plus(new ActivityModule(getActivity()))
                     .inject(this);
 
             // Support Preferences
-
 
             Preference changelogPreference = findPreference(SettingsManager.KEY_PREF_CHANGELOG);
             if (changelogPreference != null) {
@@ -215,7 +225,7 @@ public class SettingsParentFragment extends BaseNavigationController implements 
             Preference chooseTabsPreference = findPreference(SettingsManager.KEY_PREF_TAB_CHOOSER);
             if (chooseTabsPreference != null) {
                 chooseTabsPreference.setOnPreferenceClickListener(preference -> {
-                    settingsPresenter.chooseTabsClicked(getContext());
+                    settingsPresenter.chooseTabsClicked(getActivity());
                     return true;
                 });
             }
@@ -226,13 +236,6 @@ public class SettingsParentFragment extends BaseNavigationController implements 
                     settingsPresenter.chooseDefaultPageClicked(getContext());
                     return true;
                 });
-            }
-
-            SwitchPreferenceCompat invertNotificationIconsPreference = (SwitchPreferenceCompat) findPreference("pref_invert_notif_icons");
-            if (invertNotificationIconsPreference != null) {
-                if (!ShuttleUtils.hasLollipop()) {
-                    invertNotificationIconsPreference.setVisible(false);
-                }
             }
 
             // Themes
@@ -421,6 +424,9 @@ public class SettingsParentFragment extends BaseNavigationController implements 
                     case "pref_artwork":
                         getNavigationController().pushViewController(SettingsFragment.newInstance(R.xml.settings_artwork), "ArtworkSettings");
                         break;
+                    case "pref_playback":
+                        getNavigationController().pushViewController(SettingsFragment.newInstance(R.xml.settings_playback), "PlaybackSettings");
+                        break;
                     case "pref_headset":
                         getNavigationController().pushViewController(SettingsFragment.newInstance(R.xml.settings_headset), "HeadsetSettings");
                         break;
@@ -431,7 +437,7 @@ public class SettingsParentFragment extends BaseNavigationController implements 
                         getNavigationController().pushViewController(SettingsFragment.newInstance(R.xml.settings_blacklist), "BlacklistSettings");
                         break;
                     case "pref_upgrade":
-                        settingsPresenter.upgradeClicked((MainActivity) getActivity());
+                        settingsPresenter.upgradeClicked();
                         break;
                 }
             }
@@ -511,23 +517,8 @@ public class SettingsParentFragment extends BaseNavigationController implements 
         }
 
         @Override
-        public void openStoreLink(Intent intent) {
-            startActivity(intent);
-        }
-
-        @Override
         public void showUpgradeDialog(MaterialDialog dialog) {
             dialog.show();
-        }
-
-        @Override
-        public void showUpgradeSuccessDialog(MaterialDialog dialog) {
-            dialog.show();
-        }
-
-        @Override
-        public void showUpgradeFailedToast(int messageResId) {
-            Toast.makeText(getContext(), messageResId, Toast.LENGTH_LONG).show();
         }
 
         @Override

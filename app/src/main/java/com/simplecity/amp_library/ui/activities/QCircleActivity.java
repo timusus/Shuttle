@@ -225,9 +225,9 @@ public class QCircleActivity extends BaseActivity {
 
     private void initButtons() {
 
-        prevBtn = (ImageButton) findViewById(R.id.btn_prev);
-        skipBtn = (ImageButton) findViewById(R.id.btn_skip);
-        pauseBtn = (ImageButton) findViewById(R.id.btn_pause);
+        prevBtn = findViewById(R.id.btn_prev);
+        skipBtn = findViewById(R.id.btn_skip);
+        pauseBtn = findViewById(R.id.btn_pause);
         setPauseButtonImage();
 
 
@@ -243,8 +243,8 @@ public class QCircleActivity extends BaseActivity {
     }
 
     public void initTextViews() {
-        textOne = (TextView) findViewById(R.id.text1);
-        textTwo = (TextView) findViewById(R.id.text2);
+        textOne = findViewById(R.id.text1);
+        textTwo = findViewById(R.id.text2);
     }
 
     public void setPauseButtonImage() {
@@ -252,7 +252,7 @@ public class QCircleActivity extends BaseActivity {
         if (pauseBtn == null) {
             return;
         }
-        if (MusicServiceConnectionUtils.sServiceBinder != null && MusicUtils.isPlaying()) {
+        if (MusicServiceConnectionUtils.serviceBinder != null && MusicUtils.isPlaying()) {
 
         } else {
 
@@ -260,7 +260,7 @@ public class QCircleActivity extends BaseActivity {
     }
 
     private void initializeBackButton() {
-        backBtn = (ImageButton) findViewById(R.id.back_btn);
+        backBtn = findViewById(R.id.back_btn);
         backBtn.setOnClickListener(v -> QCircleActivity.this.finish());
     }
 

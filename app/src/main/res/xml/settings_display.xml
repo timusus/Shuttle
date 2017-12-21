@@ -22,17 +22,6 @@
     </android.support.v7.preference.PreferenceCategory>
 
     <android.support.v7.preference.PreferenceCategory
-        android:key="pref_category_notifications"
-        android:title="@string/pref_category_notif_drawer">
-
-        <android.support.v7.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="pref_invert_notif_icons"
-            android:title="@string/pref_title_invert_notif_icons"/>
-
-    </android.support.v7.preference.PreferenceCategory>
-
-    <android.support.v7.preference.PreferenceCategory
         android:key="display_group"
         android:title="@string/pref_category_other">
 
@@ -43,10 +32,22 @@
             android:title="@string/pref_title_screen_on"/>
 
         <android.support.v7.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="pref_show_lockscreen_artwork"
+            android:summary="@string/pref_summary_lockscreen"
+            android:title="@string/pref_title_lockscreen"/>
+
+        <android.support.v7.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="pref_ignore_duplicates"
             android:summary="@string/pref_summary_ignore_duplicates"
             android:title="@string/pref_title_ignore_duplicates"/>
+
+        <android.support.v7.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="pref_display_remaining_time"
+            android:summary="@string/pref_summary_display_remaining_time"
+            android:title="@string/pref_title_display_remaining_time"/>
 
     </android.support.v7.preference.PreferenceCategory>
 

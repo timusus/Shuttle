@@ -8,6 +8,7 @@ import android.media.AsyncPlayer;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
@@ -216,7 +217,11 @@ public class MediaButtonIntentReceiver extends WakefulBroadcastReceiver {
         intent.setAction(MusicService.ServiceCommand.SERVICE_COMMAND);
         intent.putExtra(MusicService.MediaButtonCommand.CMD_NAME, command);
         intent.putExtra(MusicService.MediaButtonCommand.FROM_MEDIA_BUTTON, true);
-        startWakefulService(context, intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(intent);
+        } else {
+            startWakefulService(context, intent);
+        }
     }
 
     static void acquireWakeLockAndSendMessage(Context context, Message msg, long delay) {

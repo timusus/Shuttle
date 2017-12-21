@@ -33,6 +33,13 @@ final class AestheticActionMenuItemView extends ActionMenuItemView {
     super(context, attrs, defStyle);
   }
 
+  private void invalidateColors(@NonNull ActiveInactiveColors colors, Drawable icon) {
+    if (icon != null) {
+      setIcon(icon, colors.toEnabledSl());
+    }
+    setTextColor(colors.activeColor());
+  }
+
   @Override
   public void setIcon(final Drawable icon) {
     super.setIcon(icon);
@@ -48,7 +55,7 @@ final class AestheticActionMenuItemView extends ActionMenuItemView {
             new Consumer<ActiveInactiveColors>() {
               @Override
               public void accept(@NonNull ActiveInactiveColors colors) {
-                setIcon(icon, colors.toEnabledSl());
+                invalidateColors(colors, icon);
               }
             },
             onErrorLogAndRethrow());
@@ -70,9 +77,7 @@ final class AestheticActionMenuItemView extends ActionMenuItemView {
                 new Consumer<ActiveInactiveColors>() {
                   @Override
                   public void accept(@NonNull ActiveInactiveColors colors) {
-                    if (icon != null) {
-                      setIcon(icon, colors.toEnabledSl());
-                    }
+                    invalidateColors(colors, icon);
                   }
                 },
                 onErrorLogAndRethrow());

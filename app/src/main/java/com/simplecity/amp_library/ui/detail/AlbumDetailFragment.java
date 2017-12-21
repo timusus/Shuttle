@@ -77,7 +77,10 @@ public class AlbumDetailFragment extends BaseDetailFragment {
     @NonNull
     @Override
     public Single<List<Song>> getSongs() {
-        return album.getSongsSingle();
+        return album.getSongsSingle().map(songs -> {
+            sortSongs(songs);
+            return songs;
+        });
     }
 
     @NonNull
@@ -161,5 +164,10 @@ public class AlbumDetailFragment extends BaseDetailFragment {
     @Override
     protected String screenName() {
         return "AlbumDetailFragment";
+    }
+
+    @Override
+    public void showUpgradeDialog(MaterialDialog upgradeDialog) {
+        upgradeDialog.show();
     }
 }

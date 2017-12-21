@@ -11,6 +11,7 @@ import com.simplecity.amp_library.ui.presenters.Presenter;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
+import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 
 import java.util.ArrayList;
@@ -81,10 +82,14 @@ class DetailPresenter extends Presenter<DetailView> {
                 }));
     }
 
-    void editTags(TaggerDialog taggerDialog) {
+    void editTags(TaggerDialog taggerDialog, MaterialDialog upgradeDialog) {
         DetailView detailView = getView();
         if (detailView != null) {
-            detailView.showTaggerDialog(taggerDialog);
+            if (!ShuttleUtils.isUpgraded()) {
+                detailView.showUpgradeDialog(upgradeDialog);
+            } else {
+                detailView.showTaggerDialog(taggerDialog);
+            }
         }
     }
 

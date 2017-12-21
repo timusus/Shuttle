@@ -7,7 +7,6 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -21,6 +20,7 @@ import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.FileHelper;
 import com.simplecity.amp_library.utils.LogUtils;
+import com.simplecity.amp_library.utils.ShuttleUtils;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -66,7 +66,12 @@ public class BiographyDialog {
                 progressBar.setVisibility(View.GONE);
                 if (response != null && response.isSuccessful()) {
                     if (response.body() != null && response.body().artist != null && response.body().artist.bio != null) {
-                        message.setText(Html.fromHtml(response.body().artist.bio.summary));
+                        String summary = response.body().artist.bio.summary;
+                        if (ShuttleUtils.hasNougat()) {
+                            message.setText(Html.fromHtml(summary, Html.FROM_HTML_MODE_COMPACT));
+                        } else {
+                            message.setText(Html.fromHtml(summary));
+                        }
                     } else {
                         message.setText(R.string.no_artist_info);
                     }
@@ -93,7 +98,12 @@ public class BiographyDialog {
                 progressBar.setVisibility(View.GONE);
                 if (response != null && response.isSuccessful()) {
                     if (response.body() != null && response.body().album != null && response.body().album.wiki != null) {
-                        message.setText(Html.fromHtml(response.body().album.wiki.summary));
+                        String summary = response.body().album.wiki.summary;
+                        if (ShuttleUtils.hasNougat()) {
+                            message.setText(Html.fromHtml(summary, Html.FROM_HTML_MODE_COMPACT));
+                        } else {
+                            message.setText(Html.fromHtml(summary));
+                        }
                     } else {
                         message.setText(R.string.no_album_info);
                     }
@@ -164,7 +174,7 @@ public class BiographyDialog {
         TextView genreKey = genreView.findViewById(R.id.key);
         genreKey.setText(R.string.genre_title);
         TextView genreValue = genreView.findViewById(R.id.value);
-        Observable.fromCallable(song::getGenre)
+        song.getGenre()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(genre -> genreValue.setText(genre.name),

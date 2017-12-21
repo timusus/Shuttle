@@ -2,6 +2,7 @@ package com.simplecity.amp_library.ui.detail;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,6 +23,7 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -40,6 +42,8 @@ import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.ArtworkProvider;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.tagger.TaggerDialog;
+import com.simplecity.amp_library.ui.adapters.LoggingViewModelAdapter;
+import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
 import com.simplecity.amp_library.ui.fragments.BaseFragment;
 import com.simplecity.amp_library.ui.fragments.TransitionListenerAdapter;
@@ -47,12 +51,17 @@ import com.simplecity.amp_library.ui.modelviews.AlbumView;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.HorizontalAlbumView;
 import com.simplecity.amp_library.ui.modelviews.HorizontalRecyclerView;
+import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
 import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.modelviews.SubheaderView;
+import com.simplecity.amp_library.ui.views.ContextualToolbar;
+import com.simplecity.amp_library.ui.views.ContextualToolbarHost;
 import com.simplecity.amp_library.utils.ActionBarUtils;
+import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
+import com.simplecity.amp_library.utils.Operators;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.ResourceUtils;
@@ -60,6 +69,7 @@ import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.SortManager;
 import com.simplecity.amp_library.utils.StringUtils;
 import com.simplecity.amp_library.utils.TypefaceManager;
+import com.simplecityapps.recycler_adapter.adapter.CompletionListUpdateCallbackAdapter;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
@@ -89,7 +99,8 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         AlbumsProvider,
         AlbumView.ClickListener,
         SongView.ClickListener,
-        DrawerLockManager.DrawerLock {
+        DrawerLockManager.DrawerLock,
+        ContextualToolbarHost {
 
     private static final String TAG = "BaseDetailFragment";
 
@@ -118,6 +129,12 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
 
+    @BindView(R.id.contextualToolbar)
+    ContextualToolbar contextualToolbar;
+
+    private ColorStateList collapsingToolbarTextColor;
+    private ColorStateList collapsingToolbarSubTextColor;
+
     protected CompositeDisposable disposables = new CompositeDisposable();
 
     protected RequestManager requestManager;
@@ -128,7 +145,12 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
     private HorizontalRecyclerView horizontalRecyclerView;
 
-    @Nullable Album currentSlideShowAlbum;
+    @Nullable
+    Album currentSlideShowAlbum;
+
+    private boolean isFirstLoad = true;
+
+    private ContextualToolbarHelper<Single<List<Song>>> contextualToolbarHelper;
 
     public BaseDetailFragment() {
     }
@@ -137,9 +159,9 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     public void onCreate(final Bundle icicle) {
         super.onCreate(icicle);
 
-        adapter = new ViewModelAdapter();
+        adapter = new LoggingViewModelAdapter("BaseDetailFragment");
 
-        horizontalRecyclerView = new HorizontalRecyclerView();
+        horizontalRecyclerView = new HorizontalRecyclerView("BaseDetail - horizontal");
 
         detailPresenter = new DetailPresenter(this, this);
 
@@ -150,6 +172,8 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         if (requestManager == null) {
             requestManager = Glide.with(this);
         }
+
+        isFirstLoad = true;
     }
 
     @Override
@@ -162,8 +186,8 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         toolbar.setNavigationOnClickListener(v -> getNavigationController().popViewController());
 
         if (ShuttleUtils.canDrawBehindStatusBar()) {
-            toolbar.getLayoutParams().height = (int) (ActionBarUtils.getActionBarHeight(getContext()) + ActionBarUtils.getStatusBarHeight(getContext()));
-            toolbar.setPadding(toolbar.getPaddingLeft(), (int) (toolbar.getPaddingTop() + ActionBarUtils.getStatusBarHeight(getContext())), toolbar.getPaddingRight(), toolbar.getPaddingBottom());
+            toolbar.getLayoutParams().height = (int) (ActionBarUtils.getActionBarHeight(getContext())+ActionBarUtils.getStatusBarHeight(getContext()));
+            toolbar.setPadding(toolbar.getPaddingLeft(), (int) (toolbar.getPaddingTop()+ActionBarUtils.getStatusBarHeight(getContext())), toolbar.getPaddingRight(), toolbar.getPaddingBottom());
         }
 
         setupToolbarMenu(toolbar);
@@ -172,15 +196,23 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         recyclerView.setRecyclerListener(new RecyclerListener());
         recyclerView.setAdapter(adapter);
 
+        if (isFirstLoad) {
+            recyclerView.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_from_bottom));
+        }
+
         toolbarLayout.setTitle(getToolbarTitle());
         toolbarLayout.setSubtitle(getToolbarSubtitle());
         toolbarLayout.setExpandedTitleTypeface(TypefaceManager.getInstance().getTypeface(TypefaceManager.SANS_SERIF_LIGHT));
         toolbarLayout.setCollapsedTitleTypeface(TypefaceManager.getInstance().getTypeface(TypefaceManager.SANS_SERIF));
 
+        setupContextualToolbar();
+
         String transitionName = getArguments().getString(ARG_TRANSITION_NAME);
         ViewCompat.setTransitionName(headerImageView, transitionName);
 
-        fab.setVisibility(View.GONE);
+        if (isFirstLoad) {
+            fab.setVisibility(View.GONE);
+        }
 
         if (transitionName == null) {
             fadeInUi();
@@ -238,6 +270,8 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         detailPresenter.unbindView(this);
 
         unbinder.unbind();
+
+        isFirstLoad = false;
 
         super.onDestroyView();
     }
@@ -310,21 +344,28 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         return null;
     }
 
-    @NonNull
-    @Override
-    public List<ViewModel> getSongViewModels(List<Song> songs) {
-        List<ViewModel> items = new ArrayList<>();
+    boolean showSongOverflowRemoveButton() {
+        return false;
+    }
 
+    void songRemoved(int position, Song song) {
+    }
+
+    protected void sortSongs(List<Song> songs) {
         @SortManager.SongSort int songSort = getSongSortOrder();
 
         boolean songsAscending = getSongsAscending();
 
-        if (songSort != SortManager.SongSort.DETAIL_DEFAULT) {
-            SortManager.getInstance().sortSongs(songs, songSort);
-            if (!songsAscending) {
-                Collections.reverse(songs);
-            }
+        SortManager.getInstance().sortSongs(songs, songSort);
+        if (!songsAscending) {
+            Collections.reverse(songs);
         }
+    }
+
+    @NonNull
+    @Override
+    public List<ViewModel> getSongViewModels(List<Song> songs) {
+        List<ViewModel> items = new ArrayList<>();
 
         items.add(new SubheaderView(StringUtils.makeSongsLabel(getContext(), songs.size())));
 
@@ -336,6 +377,17 @@ public abstract class BaseDetailFragment extends BaseFragment implements
                 }).toList());
 
         return items;
+    }
+
+    protected void sortAlbums(List<Album> albums) {
+        @SortManager.AlbumSort int albumSort = getAlbumSort();
+
+        boolean albumsAscending = getAlbumsAscending();
+
+        SortManager.getInstance().sortAlbums(albums, albumSort);
+        if (!albumsAscending) {
+            Collections.reverse(albums);
+        }
     }
 
     @NonNull
@@ -353,14 +405,6 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         }
 
         List<ViewModel> items = new ArrayList<>();
-
-        boolean albumsAscending = getAlbumsAscending();
-        @SortManager.AlbumSort int albumSort = getAlbumSort();
-
-        SortManager.getInstance().sortAlbums(albums, albumSort);
-        if (!albumsAscending) {
-            Collections.reverse(albums);
-        }
 
         horizontalRecyclerView.setItems(Stream.of(albums)
                 .map(album -> {
@@ -383,7 +427,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
             return;
         }
 
-        int width = ResourceUtils.getScreenSize().width + ResourceUtils.toPixels(60);
+        int width = ResourceUtils.getScreenSize().width+ResourceUtils.toPixels(60);
         int height = getResources().getDimensionPixelSize(R.dimen.header_view_height);
 
         requestManager.load(getArtworkProvider())
@@ -453,7 +497,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
         // Create playlist menu
         final SubMenu sub = toolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-        PlaylistUtils.makePlaylistMenu(getActivity(), sub);
+        disposables.add(PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe());
 
         // Inflate sorting menus
         MenuItem item = toolbar.getMenu().findItem(R.id.sorting);
@@ -500,6 +544,11 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     }
 
     void fadeInUi() {
+
+        if (textProtectionScrim == null || textProtectionScrim2 == null || fab == null) {
+            return;
+        }
+
         //Fade in the text protection scrim
         textProtectionScrim.setAlpha(0f);
         textProtectionScrim.setVisibility(View.VISIBLE);
@@ -543,7 +592,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
                 detailPresenter.playlistSelected(getContext(), item);
                 return true;
             case R.id.editTags:
-                detailPresenter.editTags(getTaggerDialog());
+                detailPresenter.editTags(getTaggerDialog(), UpgradeDialog.getUpgradeDialog(getActivity()));
                 return true;
             case R.id.info:
                 detailPresenter.infoClicked(getInfoDialog());
@@ -680,7 +729,15 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
     @Override
     public void itemsLoaded(List<ViewModel> items) {
-        adapter.setItems(items);
+
+        adapter.setItems(items, new CompletionListUpdateCallbackAdapter() {
+            @Override
+            public void onComplete() {
+                if (recyclerView != null) {
+                    recyclerView.scheduleLayoutAnimation();
+                }
+            }
+        });
     }
 
     @Override
@@ -724,49 +781,125 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
     @Override
     public void onSongClick(int position, SongView songView) {
-        disposables.add(getSongs()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(songs -> MusicUtils.playAll(songs, songs.indexOf(songView.song), message -> Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show())));
+        if (!contextualToolbarHelper.handleClick(position, songView, Single.just(Collections.singletonList(songView.song)))) {
+            disposables.add(getSongs()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(songs -> MusicUtils.playAll(songs, songs.indexOf(songView.song), true, message -> Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show())));
+        }
     }
 
     @Override
     public boolean onSongLongClick(int position, SongView songView) {
-        return false;
+        return contextualToolbarHelper.handleLongClick(position, songView, Single.just(Collections.singletonList(songView.song)));
     }
 
     @Override
     public void onSongOverflowClick(int position, View v, Song song) {
         PopupMenu popupMenu = new PopupMenu(getContext(), v);
-        MenuUtils.setupSongMenu(getContext(), popupMenu, false);
-        popupMenu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), song,
-                taggerDialog -> taggerDialog.show(getFragmentManager()),
-                null));
+        MenuUtils.setupSongMenu(popupMenu, showSongOverflowRemoveButton());
+        popupMenu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(
+                getContext(),
+                song,
+                taggerDialog -> {
+                    if (!ShuttleUtils.isUpgraded()) {
+                        UpgradeDialog.getUpgradeDialog(getActivity()).show();
+                    } else {
+                        taggerDialog.show(getFragmentManager());
+                    }
+                },
+                () -> songRemoved(position, song), null));
         popupMenu.show();
     }
 
     @Override
     public void onAlbumClick(int position, AlbumView albumView, AlbumView.ViewHolder viewHolder) {
-        pushDetailController(AlbumDetailFragment.newInstance(albumView.album, ViewCompat.getTransitionName(viewHolder.imageOne)), "AlbumDetailFragment", viewHolder.imageOne);
+        if (!contextualToolbarHelper.handleClick(position, albumView, albumView.album.getSongsSingle())) {
+            pushDetailController(AlbumDetailFragment.newInstance(albumView.album, ViewCompat.getTransitionName(viewHolder.imageOne)), "AlbumDetailFragment", viewHolder.imageOne);
+        }
     }
 
     @Override
     public boolean onAlbumLongClick(int position, AlbumView albumView) {
-        return false;
+        return contextualToolbarHelper.handleLongClick(position, albumView, albumView.album.getSongsSingle());
     }
 
     @Override
     public void onAlbumOverflowClicked(View v, Album album) {
         PopupMenu popupMenu = new PopupMenu(getContext(), v);
-        popupMenu.inflate(R.menu.menu_album);
-        popupMenu.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(getContext(), album, taggerDialog
-                -> taggerDialog.show(getFragmentManager())));
+        MenuUtils.setupAlbumMenu(popupMenu);
+        popupMenu.setOnMenuItemClickListener(
+                MenuUtils.getAlbumMenuClickListener(getContext(),
+                        album,
+                        taggerDialog -> taggerDialog.show(getFragmentManager()),
+                        () -> UpgradeDialog.getUpgradeDialog(getActivity()).show()));
         popupMenu.show();
     }
 
     @Override
     public void onStartDrag(SongView.ViewHolder holder) {
 
+    }
+
+    @Override
+    public ContextualToolbar getContextualToolbar() {
+        return contextualToolbar;
+    }
+
+    private void setupContextualToolbar() {
+
+        ContextualToolbar contextualToolbar = ContextualToolbar.findContextualToolbar(this);
+        if (contextualToolbar != null) {
+
+            contextualToolbar.setTransparentBackground(true);
+
+            contextualToolbar.getMenu().clear();
+            contextualToolbar.inflateMenu(R.menu.context_menu_general);
+            SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
+            disposables.add(PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe());
+
+            contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(
+                    getContext(), Single.defer(() -> Operators.reduceSongSingles(contextualToolbarHelper.getItems()))));
+
+            contextualToolbarHelper = new ContextualToolbarHelper<Single<List<Song>>>(contextualToolbar, new ContextualToolbarHelper.Callback() {
+
+                @Override
+                public void notifyItemChanged(int position, SelectableViewModel viewModel) {
+                    if (adapter.items.contains(viewModel)) {
+                        adapter.notifyItemChanged(position, 0);
+                    } else if (horizontalRecyclerView.viewModelAdapter.items.contains(viewModel)) {
+                        horizontalRecyclerView.viewModelAdapter.notifyItemChanged(position);
+                    }
+                }
+
+                @Override
+                public void notifyDatasetChanged() {
+                    adapter.notifyItemRangeChanged(0, adapter.items.size(), 0);
+                    horizontalRecyclerView.viewModelAdapter.notifyItemRangeChanged(0, horizontalRecyclerView.viewModelAdapter.items.size(), 0);
+                }
+            }) {
+                @Override
+                public void start() {
+                    super.start();
+                    // Need to hide the collapsed text, as it overlaps the contextual toolbar
+                    collapsingToolbarTextColor = toolbarLayout.getCollapsedTitleTextColor();
+                    collapsingToolbarSubTextColor = toolbarLayout.getCollapsedSubTextColor();
+                    toolbarLayout.setCollapsedTitleTextColor(0x01FFFFFF);
+                    toolbarLayout.setCollapsedSubTextColor(0x01FFFFFF);
+
+                    toolbar.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void finish() {
+                    super.finish();
+                    toolbarLayout.setCollapsedTitleTextColor(collapsingToolbarTextColor);
+                    toolbarLayout.setCollapsedSubTextColor(collapsingToolbarSubTextColor);
+
+                    toolbar.setVisibility(View.VISIBLE);
+                }
+            };
+        }
     }
 
     @Override

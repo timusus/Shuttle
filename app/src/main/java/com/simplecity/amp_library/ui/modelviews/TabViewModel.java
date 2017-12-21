@@ -1,7 +1,6 @@
 package com.simplecity.amp_library.ui.modelviews;
 
 import android.support.annotation.Nullable;
-import android.support.v4.view.MotionEventCompat;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,7 @@ import android.widget.TextView;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.CategoryItem;
 import com.simplecity.amp_library.ui.adapters.ViewType;
+import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecityapps.recycler_adapter.model.BaseViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 
@@ -18,6 +18,8 @@ public class TabViewModel extends BaseViewModel<TabViewModel.ViewHolder> {
 
     public interface Listener {
         void onStartDrag(ViewHolder holder);
+
+        void onFolderChecked(TabViewModel tabViewModel, ViewHolder viewHolder);
     }
 
     public CategoryItem categoryItem;
@@ -43,8 +45,13 @@ public class TabViewModel extends BaseViewModel<TabViewModel.ViewHolder> {
         return R.layout.list_item_reorder_tabs;
     }
 
-    void onCheckboxClicked(boolean checked) {
-        categoryItem.isEnabled = checked;
+    void onCheckboxClicked(ViewHolder viewHolder, boolean checked) {
+        if (categoryItem.type == CategoryItem.Type.FOLDERS) {
+            if (listener != null) {
+                listener.onFolderChecked(this, viewHolder);
+            }
+        }
+        categoryItem.isChecked = checked;
     }
 
     void onStartDrag(ViewHolder viewHolder) {
@@ -58,7 +65,13 @@ public class TabViewModel extends BaseViewModel<TabViewModel.ViewHolder> {
         super.bindView(holder);
 
         holder.textView.setText(holder.itemView.getContext().getString(categoryItem.getTitleResId()));
-        holder.checkBox.setChecked(categoryItem.isEnabled);
+        holder.checkBox.setChecked(categoryItem.isChecked);
+
+        if (categoryItem.type == CategoryItem.Type.FOLDERS && !ShuttleUtils.isUpgraded()) {
+            holder.checkBox.setAlpha(0.4f);
+        } else {
+            holder.checkBox.setAlpha(1.0f);
+        }
     }
 
     @Override
@@ -79,10 +92,10 @@ public class TabViewModel extends BaseViewModel<TabViewModel.ViewHolder> {
             checkBox = itemView.findViewById(R.id.checkBox1);
             dragHandle = itemView.findViewById(R.id.drag_handle);
 
-            checkBox.setOnClickListener(view -> viewModel.onCheckboxClicked(((CheckBox) view).isChecked()));
+            checkBox.setOnClickListener(view -> viewModel.onCheckboxClicked(this, ((CheckBox) view).isChecked()));
 
             dragHandle.setOnTouchListener((v, event) -> {
-                if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
+                if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
                     viewModel.onStartDrag(this);
                 }
                 return true;

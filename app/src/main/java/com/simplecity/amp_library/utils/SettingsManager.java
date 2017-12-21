@@ -3,6 +3,8 @@ package com.simplecity.amp_library.utils;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.R;
@@ -24,6 +26,7 @@ public class SettingsManager {
     // Display
     public static String KEY_PREF_TAB_CHOOSER = "pref_tab_chooser";
     public static String KEY_PREF_DEFAULT_PAGE = "pref_default_page";
+    public static String KEY_DISPLAY_REMAINING_TIME = "pref_display_remaining_time";
 
     // Themes
     public static String KEY_PREF_THEME_BASE = "pref_theme_base";
@@ -43,6 +46,9 @@ public class SettingsManager {
     // Blacklist/whitelist
     public static String KEY_PREF_BLACKLIST = "pref_blacklist_view";
     public static String KEY_PREF_WHITELIST = "pref_whitelist_view";
+
+    // Playback
+    public static String KEY_PREF_REMEMBER_SHUFFLE = "pref_remember_shuffle";
 
     // Upgrade
     public static String KEY_PREF_UPGRADE = "pref_upgrade";
@@ -67,66 +73,78 @@ public class SettingsManager {
         return PreferenceManager.getDefaultSharedPreferences(ShuttleApplication.getInstance());
     }
 
-    private String getStringValue(String key) {
-        return getSharedPreferences().getString(key, null);
+    @Nullable
+    private String getString(@NonNull String key) {
+        return getString(key, null);
     }
 
-    private String getStringValue(String key, String defaultValue) {
+    @NonNull
+    private String getString(@NonNull String key, @NonNull String defaultValue) {
         return getSharedPreferences().getString(key, defaultValue);
     }
 
-    private boolean getBooleanValue(String key, boolean defaultValue) {
-        return getSharedPreferences().getBoolean(key, defaultValue);
-    }
-
-    private int getIntValue(String key, int defaultValue) {
-        return getSharedPreferences().getInt(key, defaultValue);
-    }
-
-    private void setStringValue(String key, String value) {
+    private void setString(@NonNull String key, @Nullable String value) {
         final SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putString(key, value);
         editor.apply();
     }
 
-    private void setBooleanValue(String key, boolean value) {
+    private boolean getBool(@NonNull String key, boolean defaultValue) {
+        return getSharedPreferences().getBoolean(key, defaultValue);
+    }
+
+    private void setBool(@NonNull String key, boolean value) {
         final SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putBoolean(key, value);
         editor.apply();
     }
 
-    private void setIntValue(String key, int value) {
+    private int getInt(@NonNull String key, int defaultValue) {
+        return getSharedPreferences().getInt(key, defaultValue);
+    }
+
+    private void setInt(@NonNull String key, int value) {
         final SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putInt(key, value);
         editor.apply();
     }
 
+    public static final String KEY_SHOW_LOCKSCREEN_ARTWORK = "pref_show_lockscreen_artwork";
+
+    public boolean showLockscreenArtwork() {
+        return getBool(KEY_SHOW_LOCKSCREEN_ARTWORK, true);
+    }
+
     private static final String KEY_KEEP_SCREEN_ON = "pref_screen_on";
 
     public boolean keepScreenOn() {
-        return getBooleanValue(KEY_KEEP_SCREEN_ON, false);
+        return getBool(KEY_KEEP_SCREEN_ON, false);
+    }
+
+    public boolean displayRemainingTime() {
+        return getBool(KEY_DISPLAY_REMAINING_TIME, true);
     }
 
     private static final String KEY_ALBUM_DISPLAY_TYPE = "album_display_type_new";
 
     public void setAlbumDisplayType(int type) {
-        setIntValue(KEY_ALBUM_DISPLAY_TYPE, type);
+        setInt(KEY_ALBUM_DISPLAY_TYPE, type);
     }
 
     @ViewType
     public int getAlbumDisplayType() {
-        return getIntValue(KEY_ALBUM_DISPLAY_TYPE, ViewType.ALBUM_LIST);
+        return getInt(KEY_ALBUM_DISPLAY_TYPE, ViewType.ALBUM_LIST);
     }
 
     private static final String KEY_ARTIST_DISPLAY_TYPE = "artist_display_type_new";
 
     public void setArtistDisplayType(int type) {
-        setIntValue(KEY_ARTIST_DISPLAY_TYPE, type);
+        setInt(KEY_ARTIST_DISPLAY_TYPE, type);
     }
 
     @ViewType
     public int getArtistDisplayType() {
-        return getIntValue(KEY_ARTIST_DISPLAY_TYPE, ViewType.ARTIST_PALETTE);
+        return getInt(KEY_ARTIST_DISPLAY_TYPE, ViewType.ARTIST_PALETTE);
     }
 
     private static final String KEY_ARTIST_COLUMN_COUNT = "artist_column_count";
@@ -147,7 +165,7 @@ public class SettingsManager {
     }
 
     public void setArtistColumnCount(int count) {
-        setIntValue(getArtistColumnCountKey(), count);
+        setInt(getArtistColumnCountKey(), count);
     }
 
     public int getArtistColumnCount(Resources res) {
@@ -156,7 +174,7 @@ public class SettingsManager {
         if (artistDisplayType == ViewType.ARTIST_LIST && defaultSpanCount == 1) {
             return 1;
         }
-        return getIntValue(getArtistColumnCountKey(), defaultSpanCount);
+        return getInt(getArtistColumnCountKey(), defaultSpanCount);
     }
 
     private static final String KEY_ALBUM_COLUMN_COUNT = "album_column_count";
@@ -177,7 +195,7 @@ public class SettingsManager {
     }
 
     public void setAlbumColumnCount(int count) {
-        setIntValue(getAlbumColumnCountKey(), count);
+        setInt(getAlbumColumnCountKey(), count);
     }
 
     public int getAlbumColumnCount(Resources res) {
@@ -186,132 +204,153 @@ public class SettingsManager {
         if (albumDisplayType == ViewType.ALBUM_LIST && defaultSpanCount == 1) {
             return 1;
         }
-        return getIntValue(getAlbumColumnCountKey(), defaultSpanCount);
+        return getInt(getAlbumColumnCountKey(), defaultSpanCount);
     }
 
     public boolean getEqualizerEnabled() {
-        return getBooleanValue("audiofx.global.enable", false);
+        return getBool("audiofx.global.enable", false);
     }
+
 
     private static final String DOCUMENT_TREE_URI = "document_tree_uri";
 
     public void setDocumentTreeUri(String documentTreeUri) {
-        setStringValue(DOCUMENT_TREE_URI, documentTreeUri);
+        setString(DOCUMENT_TREE_URI, documentTreeUri);
     }
 
     public String getDocumentTreeUri() {
-        return getStringValue(DOCUMENT_TREE_URI);
+        return getString(DOCUMENT_TREE_URI);
     }
 
     private static final String KEY_FOLDER_BROWSER_INITIAL_DIR = "folder_browser_initial_dir";
 
     public void setFolderBrowserInitialDir(String dir) {
-        setStringValue(KEY_FOLDER_BROWSER_INITIAL_DIR, dir);
+        setString(KEY_FOLDER_BROWSER_INITIAL_DIR, dir);
     }
 
     public String getFolderBrowserInitialDir() {
-        return getStringValue(KEY_FOLDER_BROWSER_INITIAL_DIR);
+        return getString(KEY_FOLDER_BROWSER_INITIAL_DIR);
     }
 
     private static final String KEY_FOLDER_BROWSER_FILES_SORT_ORDER = "folder_browser_files_sort_order";
 
     public void setFolderBrowserFilesSortOrder(String sortOrder) {
-        setStringValue(KEY_FOLDER_BROWSER_FILES_SORT_ORDER, sortOrder);
+        setString(KEY_FOLDER_BROWSER_FILES_SORT_ORDER, sortOrder);
     }
 
     public String getFolderBrowserFilesSortOrder() {
-        return getStringValue(KEY_FOLDER_BROWSER_FILES_SORT_ORDER, SortManager.SortFiles.DEFAULT);
+        return getString(KEY_FOLDER_BROWSER_FILES_SORT_ORDER, SortManager.SortFiles.DEFAULT);
     }
 
     private static final String KEY_FOLDER_BROWSER_FILES_ASCENDING = "folder_browser_files_ascending";
 
     public void setFolderBrowserFilesAscending(boolean ascending) {
-        setBooleanValue(KEY_FOLDER_BROWSER_FILES_ASCENDING, ascending);
+        setBool(KEY_FOLDER_BROWSER_FILES_ASCENDING, ascending);
     }
 
     public boolean getFolderBrowserFilesAscending() {
-        return getBooleanValue(KEY_FOLDER_BROWSER_FILES_ASCENDING, true);
+        return getBool(KEY_FOLDER_BROWSER_FILES_ASCENDING, true);
     }
 
     private static final String KEY_FOLDER_BROWSER_FOLDERS_SORT_ORDER = "folder_browser_folders_sort_order";
 
     public void setFolderBrowserFoldersSortOrder(String sortOrder) {
-        setStringValue(KEY_FOLDER_BROWSER_FOLDERS_SORT_ORDER, sortOrder);
+        setString(KEY_FOLDER_BROWSER_FOLDERS_SORT_ORDER, sortOrder);
     }
 
     public String getFolderBrowserFoldersSortOrder() {
-        return getStringValue(KEY_FOLDER_BROWSER_FOLDERS_SORT_ORDER, SortManager.SortFolders.DEFAULT);
+        return getString(KEY_FOLDER_BROWSER_FOLDERS_SORT_ORDER, SortManager.SortFolders.DEFAULT);
     }
 
     private static final String KEY_FOLDER_BROWSER_FOLDERS_ASCENDING = "folder_browser_folders_ascending";
 
     public void setFolderBrowserFoldersAscending(boolean ascending) {
-        setBooleanValue(KEY_FOLDER_BROWSER_FOLDERS_ASCENDING, ascending);
+        setBool(KEY_FOLDER_BROWSER_FOLDERS_ASCENDING, ascending);
     }
 
     public boolean getFolderBrowserFoldersAscending() {
-        return getBooleanValue(KEY_FOLDER_BROWSER_FOLDERS_ASCENDING, true);
+        return getBool(KEY_FOLDER_BROWSER_FOLDERS_ASCENDING, true);
     }
 
     private static final String KEY_FOLDER_BROWSER_SHOW_FILENAMES = "folder_browser_show_file_names";
 
     public void setFolderBrowserShowFileNames(boolean showFileNames) {
-        setBooleanValue(KEY_FOLDER_BROWSER_SHOW_FILENAMES, showFileNames);
+        setBool(KEY_FOLDER_BROWSER_SHOW_FILENAMES, showFileNames);
     }
 
     public boolean getFolderBrowserShowFileNames() {
-        return getBooleanValue(KEY_FOLDER_BROWSER_SHOW_FILENAMES, false);
+        return getBool(KEY_FOLDER_BROWSER_SHOW_FILENAMES, false);
     }
 
     private static final String KEY_LAUNCH_COUNT = "launch_count";
 
     public void incrementLaunchCount() {
-        setIntValue(KEY_LAUNCH_COUNT, getLaunchCount() + 1);
+        setInt(KEY_LAUNCH_COUNT, getLaunchCount() + 1);
     }
 
     public int getLaunchCount() {
-        return getIntValue(KEY_LAUNCH_COUNT, 0);
+        return getInt(KEY_LAUNCH_COUNT, 0);
     }
 
     private static final String KEY_NAG_MESSAGE_READ = "nag_message_read";
 
     public void setNagMessageRead() {
-        setBooleanValue(KEY_NAG_MESSAGE_READ, true);
+        setBool(KEY_NAG_MESSAGE_READ, true);
     }
 
     public boolean getNagMessageRead() {
-        return getBooleanValue(KEY_NAG_MESSAGE_READ, false);
+        return getBool(KEY_NAG_MESSAGE_READ, false);
     }
 
     private static final String KEY_HAS_RATED = "has_rated";
 
     public void setHasRated() {
-        setBooleanValue(KEY_HAS_RATED, true);
+        setBool(KEY_HAS_RATED, true);
     }
 
     public boolean getHasRated() {
-        return getBooleanValue(KEY_HAS_RATED, false);
+        return getBool(KEY_HAS_RATED, false);
     }
 
     private static final String KEY_BLUETOOTH_PAUSE_DISCONNECT = "pref_bluetooth_disconnect";
     private static final String KEY_BLUETOOTH_RESUME_CONNECT = "pref_bluetooth_connect";
 
     public boolean getBluetoothPauseDisconnect() {
-        return getBooleanValue(KEY_BLUETOOTH_PAUSE_DISCONNECT, true);
+        return getBool(KEY_BLUETOOTH_PAUSE_DISCONNECT, true);
     }
 
     public boolean getBluetoothResumeConnect() {
-        return getBooleanValue(KEY_BLUETOOTH_RESUME_CONNECT, false);
+        return getBool(KEY_BLUETOOTH_RESUME_CONNECT, false);
     }
 
     // Themes
 
     public boolean getUsePalette() {
-        return getBooleanValue(KEY_PREF_PALETTE, true);
+        return getBool(KEY_PREF_PALETTE, true);
     }
 
     public boolean getUsePaletteNowPlayingOnly() {
-        return getBooleanValue(KEY_PREF_PALETTE_NOW_PLAYING_ONLY, false);
+        return getBool(KEY_PREF_PALETTE_NOW_PLAYING_ONLY, false);
+    }
+
+    public boolean getTintNavBar() {
+        return getBool(KEY_PREF_NAV_BAR, false);
+    }
+
+    public void storePrimaryColor(int color) {
+        setInt(KEY_PREF_PRIMARY_COLOR, color);
+    }
+
+    public int getPrimaryColor() {
+        return getInt(KEY_PREF_PRIMARY_COLOR, -1);
+    }
+
+    public void storeAccentColor(int color) {
+        setInt(KEY_PREF_ACCENT_COLOR, color);
+    }
+
+    public int getAccentColor() {
+        return getInt(KEY_PREF_ACCENT_COLOR, -1);
     }
 
     // Artwork
@@ -327,55 +366,49 @@ public class SettingsManager {
     public static final String KEY_PREFER_EMBEDDED_ARTWORK = "pref_prefer_embedded";
 
     public boolean canDownloadArtworkAutomatically() {
-        return getBooleanValue(KEY_DOWNLOAD_AUTOMATICALLY, false);
+        return getBool(KEY_DOWNLOAD_AUTOMATICALLY, false);
     }
 
     public boolean preferLastFM() {
-        return getBooleanValue(KEY_PREFER_LAST_FM, true);
+        return getBool(KEY_PREFER_LAST_FM, true);
     }
 
     public boolean preferEmbeddedArtwork() {
-        return getBooleanValue(KEY_PREFER_EMBEDDED_ARTWORK, false);
+        return getBool(KEY_PREFER_EMBEDDED_ARTWORK, false);
     }
 
     public boolean useGmailPlaceholders() {
-        return getBooleanValue(KEY_USE_GMAIL_PLACEHOLDERS, false);
+        return getBool(KEY_USE_GMAIL_PLACEHOLDERS, false);
     }
 
     public boolean showArtworkInQueue() {
-        return getBooleanValue(KEY_QUEUE_ARTWORK, true);
+        return getBool(KEY_QUEUE_ARTWORK, true);
     }
 
     public boolean cropArtwork() {
-        return getBooleanValue(KEY_CROP_ARTWORK, false);
+        return getBool(KEY_CROP_ARTWORK, false);
     }
 
     public boolean ignoreMediaStoreArtwork() {
-        return getBooleanValue(KEY_IGNORE_MEDIASTORE_ART, false);
+        return getBool(KEY_IGNORE_MEDIASTORE_ART, false);
     }
 
     public boolean ignoreFolderArtwork() {
-        return getBooleanValue(KEY_IGNORE_FOLDER_ARTWORK, false);
+        return getBool(KEY_IGNORE_FOLDER_ARTWORK, false);
     }
 
     public boolean ignoreEmbeddedArtwork() {
-        return getBooleanValue(KEY_IGNORE_EMBEDDED_ARTWORK, false);
+        return getBool(KEY_IGNORE_EMBEDDED_ARTWORK, false);
     }
 
     private static final String KEY_PLAYLIST_IGNORE_DUPLICATES = "pref_ignore_duplicates";
 
     public boolean ignoreDuplicates() {
-        return getBooleanValue(KEY_PLAYLIST_IGNORE_DUPLICATES, false);
+        return getBool(KEY_PLAYLIST_IGNORE_DUPLICATES, false);
     }
 
     public void setIgnoreDuplicates(boolean ignoreDuplicates) {
-        setBooleanValue(KEY_PLAYLIST_IGNORE_DUPLICATES, ignoreDuplicates);
-    }
-
-    private static final String KEY_INVERT_NOTIFICATION_ICONS = "pref_invert_notif_icons";
-
-    public boolean invertNotificationIcons() {
-        return getBooleanValue(KEY_INVERT_NOTIFICATION_ICONS, false);
+        setBool(KEY_PLAYLIST_IGNORE_DUPLICATES, ignoreDuplicates);
     }
 
     // Search settings
@@ -383,31 +416,31 @@ public class SettingsManager {
     private static final String KEY_SEARCH_FUZZY = "search_fuzzy";
 
     public void setSearchFuzzy(boolean fuzzy) {
-        setBooleanValue(KEY_SEARCH_FUZZY, fuzzy);
+        setBool(KEY_SEARCH_FUZZY, fuzzy);
     }
 
     public boolean getSearchFuzzy() {
-        return getBooleanValue(KEY_SEARCH_FUZZY, true);
+        return getBool(KEY_SEARCH_FUZZY, true);
     }
 
     private static final String KEY_SEARCH_ARTISTS = "search_artists";
 
     public void setSearchArtists(boolean searchArtists) {
-        setBooleanValue(KEY_SEARCH_ARTISTS, searchArtists);
+        setBool(KEY_SEARCH_ARTISTS, searchArtists);
     }
 
     public boolean getSearchArtists() {
-        return getBooleanValue(KEY_SEARCH_ARTISTS, true);
+        return getBool(KEY_SEARCH_ARTISTS, true);
     }
 
     private static final String KEY_SEARCH_ALBUMS = "search_albums";
 
     public void setSearchAlbums(boolean searchAlbums) {
-        setBooleanValue(KEY_SEARCH_ALBUMS, searchAlbums);
+        setBool(KEY_SEARCH_ALBUMS, searchAlbums);
     }
 
     public boolean getSearchAlbums() {
-        return getBooleanValue(KEY_SEARCH_ALBUMS, true);
+        return getBool(KEY_SEARCH_ALBUMS, true);
     }
 
 
@@ -416,21 +449,31 @@ public class SettingsManager {
     private static final String KEY_VERSION_CODE = "version_code";
 
     public void setVersionCode() {
-        setIntValue(KEY_VERSION_CODE, BuildConfig.VERSION_CODE);
+        setInt(KEY_VERSION_CODE, BuildConfig.VERSION_CODE);
     }
 
     public int getStoredVersionCode() {
-        return getIntValue(KEY_VERSION_CODE, -1);
+        return getInt(KEY_VERSION_CODE, -1);
     }
 
     private static final String KEY_CHANGELOG_SHOW_ON_LAUNCH = "show_on_launch";
 
     public void setShowChangelogOnLaunch(boolean showOnLaunch) {
-        setBooleanValue(KEY_CHANGELOG_SHOW_ON_LAUNCH, showOnLaunch);
+        setBool(KEY_CHANGELOG_SHOW_ON_LAUNCH, showOnLaunch);
     }
 
     public boolean getShowChangelogOnLaunch() {
-        return getBooleanValue(KEY_CHANGELOG_SHOW_ON_LAUNCH, true);
+        return getBool(KEY_CHANGELOG_SHOW_ON_LAUNCH, true);
+    }
+
+    // Playback
+
+    public boolean getRememberShuffle() {
+        return getBool(KEY_PREF_REMEMBER_SHUFFLE, false);
+    }
+
+    public void setRememberShuffle(boolean rememberShuffle) {
+        setBool(KEY_PREF_REMEMBER_SHUFFLE, rememberShuffle);
     }
 
     // Library Controller
@@ -439,10 +482,10 @@ public class SettingsManager {
 
     @CategoryItem.Type
     public int getDefaultPageType() {
-        return getIntValue(KEY_DEFAULT_PAGE, CategoryItem.Type.ARTISTS);
+        return getInt(KEY_DEFAULT_PAGE, CategoryItem.Type.ARTISTS);
     }
 
     public void setDefaultPageType(@CategoryItem.Type int type) {
-        setIntValue(KEY_DEFAULT_PAGE, type);
+        setInt(KEY_DEFAULT_PAGE, type);
     }
 }

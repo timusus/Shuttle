@@ -50,6 +50,10 @@
         android:title="@string/song_info"/>
 
     <item
+        android:id="@+id/whitelist"
+        android:title="@string/whitelist_title"/>
+
+    <item
         android:id="@+id/blacklist"
         android:title="@string/blacklist_title"/>
 

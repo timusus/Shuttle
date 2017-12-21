@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.utils;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -11,16 +12,15 @@ public class LogUtils {
         //no instance
     }
 
-    public static void logException(String tag, String message, Throwable throwable) {
+    public static void logException(String tag, String message, @Nullable Throwable throwable) {
         if (BuildConfig.DEBUG) {
-            Log.e(tag, message + "\nThrowable: " + throwable.getMessage());
-            throwable.printStackTrace();
+            Log.e(tag, message + "\nThrowable: " + (throwable != null ? throwable.getMessage() : null));
+            if (throwable != null) {
+                throwable.printStackTrace();
+            }
         } else {
-            Crashlytics.log(Log.ERROR, tag, message + "\nThrowable: " + throwable.getMessage());
+            Crashlytics.log(Log.ERROR, tag, message + "\nThrowable: " + (throwable != null ? throwable.getMessage() : null));
+            Crashlytics.logException(throwable);
         }
-    }
-
-    public static void logError(String tag, String message) {
-        Crashlytics.log(Log.ERROR, tag, message);
     }
 }

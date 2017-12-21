@@ -33,9 +33,8 @@ import android.view.ViewGroup;
 @SuppressWarnings("WeakerAccess")
 public final class Util {
 
-  static void setInflaterFactory(@NonNull LayoutInflater li, @NonNull AppCompatActivity activity) {
-    LayoutInflaterCompat.setFactory(
-        li, new InflationInterceptor(activity, li, activity.getDelegate()));
+  static void setInflaterFactory(@NonNull LayoutInflater li) {
+    LayoutInflaterCompat.setFactory(li, new InflationInterceptor());
   }
 
   /** Taken from CollapsingToolbarLayout's CollapsingTextHelper class. */

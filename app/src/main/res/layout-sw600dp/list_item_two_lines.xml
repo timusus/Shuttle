@@ -33,16 +33,15 @@
         android:textColor="?android:textColorSecondary"
         android:textSize="14sp"/>
 
-    <TextView
+    <com.simplecity.amp_library.ui.views.PlayCountView
         android:id="@+id/play_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:background="@drawable/bg_rounded"
         android:gravity="center"
         android:minHeight="28dp"
         android:minWidth="28dp"
-        android:textColor="@color/default_text_color_holo_dark"
+        android:tag=":aesthetic_ignore"
         android:textSize="14sp"
         android:visibility="visible"/>
 

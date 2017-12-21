@@ -103,7 +103,7 @@ public class Aesthetic {
   public void attach(@NonNull AppCompatActivity activity) {
 
     LayoutInflater li = activity.getLayoutInflater();
-    Util.setInflaterFactory(li, activity);
+    Util.setInflaterFactory(li);
 
     String activityThemeKey = String.format(KEY_ACTIVITY_THEME, key(activity));
     int latestActivityTheme = instance.prefs.getInt(activityThemeKey, 0);
@@ -137,18 +137,28 @@ public class Aesthetic {
 
   /** Should be called in onPause() of each Activity. */
   public void pause(@NonNull AppCompatActivity activity) {
-    if (instance.subs != null) {
-      instance.subs.clear();
+    if (instance == null) {
+        return;
     }
+    if (instance.subs != null) {
+        instance.subs.clear();
+    }
+
     if (activity.isFinishing()) {
-      if (context == activity) {
-        context = null;
+      if (instance.context != null
+            && instance.context.getClass().getName().equals(activity.getClass().getName())) {
+        instance.context = null;
       }
     }
   }
 
   /** Should be called in onResume() of each Activity. */
   public void resume(@NonNull final AppCompatActivity activity) {
+    if (instance == null) {
+      return;
+    }
+    instance.context = activity;
+    
     if (instance.subs != null) {
       instance.subs.clear();
     }

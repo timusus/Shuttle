@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Song;
@@ -85,13 +86,19 @@ public class GenreDetailFragment extends BaseDetailFragment {
     @NonNull
     @Override
     public Single<List<Song>> getSongs() {
-        return genre.getSongsObservable();
+        return genre.getSongsObservable().map(songs -> {
+            sortSongs(songs);
+            return songs;
+        });
     }
 
     @NonNull
     @Override
     public Single<List<Album>> getAlbums() {
-        return getSongs().map(Operators::songsToAlbums);
+        return getSongs().map(Operators::songsToAlbums).map(albums -> {
+            sortAlbums(albums);
+            return albums;
+        });
     }
 
     @NonNull
@@ -109,5 +116,10 @@ public class GenreDetailFragment extends BaseDetailFragment {
     @Override
     protected String screenName() {
         return "GenreDetailFragment";
+    }
+
+    @Override
+    public void showUpgradeDialog(MaterialDialog upgradeDialog) {
+        upgradeDialog.show();
     }
 }

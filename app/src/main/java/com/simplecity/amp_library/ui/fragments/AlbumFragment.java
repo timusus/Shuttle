@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,6 +14,7 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.annimon.stream.Stream;
 import com.bumptech.glide.RequestManager;
@@ -22,11 +22,14 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.Album;
+import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.ui.adapters.SectionedAdapter;
 import com.simplecity.amp_library.ui.adapters.ViewType;
+import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.ui.modelviews.AlbumView;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
+import com.simplecity.amp_library.ui.modelviews.ShuffleView;
 import com.simplecity.amp_library.ui.recyclerview.GridDividerDecoration;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
@@ -34,15 +37,18 @@ import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
+import com.simplecity.amp_library.utils.Operators;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.SortManager;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
+import com.simplecityapps.recycler_adapter.recyclerview.SpanSizeLookup;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -52,7 +58,8 @@ import io.reactivex.disposables.Disposable;
 
 public class AlbumFragment extends BaseFragment implements
         MusicUtils.Defs,
-        AlbumView.ClickListener {
+        AlbumView.ClickListener,
+        ShuffleView.ShuffleClickListener {
 
     interface AlbumClickListener {
 
@@ -75,7 +82,11 @@ public class AlbumFragment extends BaseFragment implements
 
     private SectionedAdapter adapter;
 
+    private SpanSizeLookup spanSizeLookup;
+
     private boolean sortOrderChanged = false;
+
+    private ShuffleView shuffleView;
 
     private Disposable subscription;
 
@@ -83,6 +94,9 @@ public class AlbumFragment extends BaseFragment implements
     RequestManager requestManager;
 
     private ContextualToolbarHelper<Album> contextualToolbarHelper;
+
+    @Nullable
+    private Disposable playlistMenuDisposable;
 
     public AlbumFragment() {
 
@@ -116,29 +130,32 @@ public class AlbumFragment extends BaseFragment implements
 
         setHasOptionsMenu(true);
 
-        adapter = new SectionedAdapter();
+        adapter = new SectionedAdapter("AlbumFragment");
     }
 
     @SuppressLint("NewApi")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        int spanCount = SettingsManager.getInstance().getAlbumColumnCount(getResources());
-        layoutManager = new GridLayoutManager(getContext(), spanCount);
-        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                if (adapter.items.get(position) instanceof EmptyView) {
-                    return spanCount;
-                }
-                return 1;
-            }
-        });
 
-        recyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new GridDividerDecoration(getResources(), 4, true));
-        recyclerView.setRecyclerListener(new RecyclerListener());
-        recyclerView.setAdapter(adapter);
+        if (recyclerView == null) {
+            int spanCount = SettingsManager.getInstance().getAlbumColumnCount(getResources());
+            layoutManager = new GridLayoutManager(getContext(), spanCount);
+            spanSizeLookup = new SpanSizeLookup(adapter, spanCount);
+            spanSizeLookup.setSpanIndexCacheEnabled(true);
+            layoutManager.setSpanSizeLookup(spanSizeLookup);
+
+            recyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.addItemDecoration(new GridDividerDecoration(getResources(), 4, true));
+            recyclerView.setRecyclerListener(new RecyclerListener());
+        }
+        if (recyclerView.getAdapter() != adapter) {
+            recyclerView.setAdapter(adapter);
+        }
+
+        shuffleView = new ShuffleView();
+        shuffleView.setTitleResId(R.string.shuffle_albums);
+        shuffleView.setClickListener(this);
 
         return recyclerView;
     }
@@ -150,6 +167,10 @@ public class AlbumFragment extends BaseFragment implements
             subscription.dispose();
         }
 
+        if (playlistMenuDisposable != null) {
+            playlistMenuDisposable.dispose();
+        }
+
         super.onPause();
     }
 
@@ -157,15 +178,14 @@ public class AlbumFragment extends BaseFragment implements
     public void onResume() {
         super.onResume();
 
-        refreshAdapterItems();
+        refreshAdapterItems(false);
 
         if (getUserVisibleHint()) {
             setupContextualToolbar();
         }
     }
 
-    void refreshAdapterItems() {
-
+    void refreshAdapterItems(boolean force) {
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {
 
@@ -174,6 +194,8 @@ public class AlbumFragment extends BaseFragment implements
                 boolean ascending = SortManager.getInstance().getAlbumsAscending();
 
                 subscription = DataManager.getInstance().getAlbumsRelay()
+                        .skipWhile(albums -> !force && Stream.of(adapter.items).filter(viewModel -> viewModel instanceof AlbumView).count() == albums.size())
+                        .debounce(150, TimeUnit.MILLISECONDS)
                         .flatMapSingle(albums -> {
                             //Sort
                             SortManager.getInstance().sortAlbums(albums);
@@ -205,6 +227,7 @@ public class AlbumFragment extends BaseFragment implements
                             if (items.isEmpty()) {
                                 adapter.setItems(Collections.singletonList(new EmptyView(R.string.empty_albums)));
                             } else {
+                                items.add(0, shuffleView);
                                 adapter.setItems(items);
                             }
 
@@ -229,9 +252,9 @@ public class AlbumFragment extends BaseFragment implements
         menu.addSubMenu(0, MENU_GRID_SIZE, 0, R.string.menu_grid_size);
         SubMenu subMenu = menu.findItem(MENU_GRID_SIZE).getSubMenu();
 
-        int[] columnRange = getResources().getIntArray(R.array.column_range);
-        for (int i = 0; i < columnRange.length; i++) {
-            subMenu.add(MENU_GROUP_GRID, columnRange[i] + 1000, i, String.valueOf(columnRange[i]));
+        int[] spanCountArray = getResources().getIntArray(R.array.span_count);
+        for (int i = 0; i < spanCountArray.length; i++) {
+            subMenu.add(MENU_GROUP_GRID, spanCountArray[i], i, String.valueOf(spanCountArray[i]));
         }
         subMenu.setGroupCheckable(MENU_GROUP_GRID, true, true);
     }
@@ -280,8 +303,11 @@ public class AlbumFragment extends BaseFragment implements
             gridMenuItem.setVisible(false);
         } else {
             gridMenuItem.setVisible(true);
-            int columnCount = SettingsManager.getInstance().getAlbumColumnCount(getResources());
-            gridMenuItem.getSubMenu().findItem(columnCount + 1000).setChecked(true);
+            SubMenu subMenu = gridMenuItem.getSubMenu();
+            if (subMenu != null) {
+                subMenu.findItem(SettingsManager.getInstance().getAlbumColumnCount(getResources()))
+                        .setChecked(true);
+            }
         }
     }
 
@@ -292,67 +318,76 @@ public class AlbumFragment extends BaseFragment implements
             case R.id.sort_default:
                 SortManager.getInstance().setAlbumsSortOrder(SortManager.AlbumSort.DEFAULT);
                 sortOrderChanged = true;
-                refreshAdapterItems();
+                refreshAdapterItems(true);
                 break;
             case R.id.sort_album_name:
                 SortManager.getInstance().setAlbumsSortOrder(SortManager.AlbumSort.NAME);
                 sortOrderChanged = true;
-                refreshAdapterItems();
+                refreshAdapterItems(true);
                 break;
             case R.id.sort_album_year:
                 SortManager.getInstance().setAlbumsSortOrder(SortManager.AlbumSort.YEAR);
                 sortOrderChanged = true;
-                refreshAdapterItems();
+                refreshAdapterItems(true);
                 break;
             case R.id.sort_album_artist_name:
                 SortManager.getInstance().setAlbumsSortOrder(SortManager.AlbumSort.ARTIST_NAME);
                 sortOrderChanged = true;
-                refreshAdapterItems();
+                refreshAdapterItems(true);
                 break;
             case R.id.sort_ascending:
                 SortManager.getInstance().setAlbumsAscending(!item.isChecked());
                 sortOrderChanged = true;
-                refreshAdapterItems();
+                refreshAdapterItems(true);
                 break;
             case R.id.view_as_list:
                 int viewType = ViewType.ALBUM_LIST;
                 SettingsManager.getInstance().setAlbumDisplayType(viewType);
-                layoutManager.setSpanCount(getResources().getInteger(R.integer.list_num_columns));
+                setupListSpan();
                 updateViewType(viewType);
                 break;
             case R.id.view_as_grid:
                 viewType = ViewType.ALBUM_GRID;
                 SettingsManager.getInstance().setAlbumDisplayType(viewType);
-                layoutManager.setSpanCount(SettingsManager.getInstance().getAlbumColumnCount(getResources()));
+                setupGridSpan();
                 updateViewType(viewType);
                 break;
             case R.id.view_as_grid_card:
                 viewType = ViewType.ALBUM_CARD;
                 SettingsManager.getInstance().setAlbumDisplayType(viewType);
-                layoutManager.setSpanCount(SettingsManager.getInstance().getAlbumColumnCount(getResources()));
+                setupGridSpan();
                 updateViewType(viewType);
                 break;
             case R.id.view_as_grid_palette:
                 viewType = ViewType.ALBUM_PALETTE;
                 SettingsManager.getInstance().setAlbumDisplayType(viewType);
-                layoutManager.setSpanCount(SettingsManager.getInstance().getAlbumColumnCount(getResources()));
+                setupGridSpan();
                 updateViewType(viewType);
                 break;
         }
 
         if (item.getGroupId() == MENU_GROUP_GRID) {
-
-            SettingsManager.getInstance().setAlbumColumnCount(item.getItemId() - 1000);
-
-            if (SettingsManager.getInstance().getAlbumDisplayType() != ViewType.ALBUM_LIST) {
-                ((GridLayoutManager) recyclerView.getLayoutManager()).setSpanCount(SettingsManager.getInstance().getAlbumColumnCount(getResources()));
-                adapter.notifyItemRangeChanged(0, adapter.getItemCount());
-            }
+            SettingsManager.getInstance().setAlbumColumnCount(item.getItemId());
+            spanSizeLookup.setSpanCount(item.getItemId());
+            ((GridLayoutManager) recyclerView.getLayoutManager()).setSpanCount(SettingsManager.getInstance().getAlbumColumnCount(getResources()));
+            adapter.notifyItemRangeChanged(0, adapter.getItemCount());
         }
 
-        getActivity().supportInvalidateOptionsMenu();
+        getActivity().invalidateOptionsMenu();
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setupGridSpan() {
+        int spanCount = SettingsManager.getInstance().getAlbumColumnCount(getResources());
+        spanSizeLookup.setSpanCount(spanCount);
+        layoutManager.setSpanCount(spanCount);
+    }
+
+    private void setupListSpan() {
+        int spanCount = getResources().getInteger(R.integer.list_num_columns);
+        spanSizeLookup.setSpanCount(spanCount);
+        layoutManager.setSpanCount(spanCount);
     }
 
     void updateViewType(@ViewType int viewType) {
@@ -364,7 +399,7 @@ public class AlbumFragment extends BaseFragment implements
 
     @Override
     public void onAlbumClick(int position, AlbumView albumView, AlbumView.ViewHolder viewHolder) {
-        if (!contextualToolbarHelper.handleClick(position, albumView)) {
+        if (!contextualToolbarHelper.handleClick(position, albumView, albumView.album)) {
             if (albumClickListener != null) {
                 albumClickListener.onAlbumClicked(albumView.album, viewHolder.imageOne);
             }
@@ -373,7 +408,7 @@ public class AlbumFragment extends BaseFragment implements
 
     @Override
     public boolean onAlbumLongClick(int position, AlbumView albumView) {
-        return contextualToolbarHelper.handleLongClick(position, albumView);
+        return contextualToolbarHelper.handleLongClick(position, albumView, albumView.album);
     }
 
     @Override
@@ -381,9 +416,24 @@ public class AlbumFragment extends BaseFragment implements
         PopupMenu menu = new PopupMenu(getContext(), v);
         menu.inflate(R.menu.menu_album);
         SubMenu sub = menu.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-        PlaylistUtils.makePlaylistMenu(getActivity(), sub);
-        menu.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(getContext(), album, taggerDialog -> taggerDialog.show(getFragmentManager())));
+        PlaylistUtils.createPlaylistMenu(sub);
+        menu.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(
+                getContext(),
+                album,
+                taggerDialog -> taggerDialog.show(getFragmentManager()),
+                () -> UpgradeDialog.getUpgradeDialog(getActivity()).show()));
         menu.show();
+    }
+
+    @Override
+    public void onShuffleItemClick() {
+        // Note: For album-shuffle mode, we don't actually turn shuffle on.
+        MusicUtils.setShuffleMode(MusicService.ShuffleMode.OFF);
+        MusicUtils.playAll(DataManager.getInstance()
+                        .getSongsRelay()
+                        .firstOrError()
+                        .map(Operators::albumShuffleSongs),
+                message -> Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show());
     }
 
     @Override
@@ -402,21 +452,20 @@ public class AlbumFragment extends BaseFragment implements
         ContextualToolbar contextualToolbar = ContextualToolbar.findContextualToolbar(this);
         if (contextualToolbar != null) {
             contextualToolbar.getMenu().clear();
-            contextualToolbar.inflateMenu(R.menu.context_menu_songs);
+            contextualToolbar.inflateMenu(R.menu.context_menu_general);
             SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-            PlaylistUtils.makePlaylistMenu(getActivity(), sub);
-
+            if (playlistMenuDisposable != null) {
+                playlistMenuDisposable.dispose();
+            }
+            playlistMenuDisposable = PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe();
             contextualToolbar.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(
-                    getContext(),
-                    () -> Stream.of(contextualToolbarHelper.getItems())
-                            .map(SelectableViewModel::getItem)
-                            .toList()
-                    )
+                    getContext(), () -> contextualToolbarHelper.getItems())
             );
 
             contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
+
                 @Override
-                public void notifyItemChanged(int position) {
+                public void notifyItemChanged(int position, SelectableViewModel viewModel) {
                     adapter.notifyItemChanged(position, 0);
                 }
 
@@ -426,7 +475,6 @@ public class AlbumFragment extends BaseFragment implements
                 }
             });
         }
-        Log.i(TAG, "setupContextualToolbar.. Visible to user: " + getUserVisibleHint());
     }
 
     @Override

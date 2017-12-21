@@ -29,6 +29,7 @@ android {
                 'src/main/res-public'
         ]
     }
+    buildToolsVersion versions.buildTools
 }
 
 dependencies {
@@ -38,17 +39,17 @@ dependencies {
         }
     }
 
-    compile 'com.android.support:appcompat-v7:' + versions.supportLib
-    compile 'com.android.support:cardview-v7:' + versions.supportLib
+    implementation 'com.android.support:appcompat-v7:' + versions.supportLib
+    implementation 'com.android.support:cardview-v7:' + versions.supportLib
 
-    compile 'com.android.support:design:' + versions.supportLib
-    compile 'com.android.support:recyclerview-v7:' + versions.supportLib
+    implementation 'com.android.support:design:' + versions.supportLib
+    implementation 'com.android.support:recyclerview-v7:' + versions.supportLib
 
-    compile 'io.reactivex.rxjava2:rxjava:' + versions.rxJava
-    compile 'io.reactivex.rxjava2:rxandroid:' + versions.rxAndroid
-    compile 'com.f2prateek.rx.preferences2:rx-preferences:' + versions.rxPrefs
+    implementation 'io.reactivex.rxjava2:rxjava:' + versions.rxJava
+    implementation 'io.reactivex.rxjava2:rxandroid:' + versions.rxAndroid
+    implementation 'com.f2prateek.rx.preferences2:rx-preferences:' + versions.rxPrefs
 
-    compile 'me.zhanghai.android.materialprogressbar:library:' + versions.mdProgressBar
+    implementation 'me.zhanghai.android.materialprogressbar:library:' + versions.mdProgressBar
 }
 
 //apply from: 'https://raw.githubusercontent.com/afollestad/aidanfollestad.com/master/android-lib-release.gradle'

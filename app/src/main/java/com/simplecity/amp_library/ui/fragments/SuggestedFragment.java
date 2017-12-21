@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.ui.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
@@ -21,8 +23,10 @@ import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.model.SuggestedHeader;
+import com.simplecity.amp_library.ui.adapters.LoggingViewModelAdapter;
 import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.ui.detail.PlaylistDetailFragment;
+import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.ui.modelviews.AlbumView;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.HorizontalRecyclerView;
@@ -30,11 +34,13 @@ import com.simplecity.amp_library.ui.modelviews.SuggestedHeaderView;
 import com.simplecity.amp_library.ui.modelviews.SuggestedSongView;
 import com.simplecity.amp_library.ui.views.SuggestedDividerDecoration;
 import com.simplecity.amp_library.utils.ComparisonUtils;
+import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.Operators;
 import com.simplecity.amp_library.utils.PermissionUtils;
+import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
@@ -42,12 +48,14 @@ import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 public class SuggestedFragment extends BaseFragment implements
         SuggestedHeaderView.ClickListener,
@@ -70,7 +78,7 @@ public class SuggestedFragment extends BaseFragment implements
 
         @Override
         public void onSongClick(Song song, SuggestedSongView.ViewHolder holder) {
-            MusicUtils.playAll(songs, songs.indexOf(song), (String message) -> Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show());
+            MusicUtils.playAll(songs, songs.indexOf(song), true, (String message) -> Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show());
         }
 
         @Override
@@ -81,8 +89,19 @@ public class SuggestedFragment extends BaseFragment implements
         @Override
         public void onSongOverflowClicked(View v, Song song) {
             PopupMenu popupMenu = new PopupMenu(getContext(), v);
-            MenuUtils.setupSongMenu(getContext(), popupMenu, false);
-            popupMenu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), song, taggerDialog -> taggerDialog.show(getFragmentManager()), null));
+            MenuUtils.setupSongMenu(popupMenu, false);
+            popupMenu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(
+                    getContext(),
+                    song,
+                    taggerDialog -> {
+                        if (!ShuttleUtils.isUpgraded()) {
+                            UpgradeDialog.getUpgradeDialog(getActivity()).show();
+                        } else {
+                            taggerDialog.show(getFragmentManager());
+                        }
+                    },
+                    null,
+                    null));
             popupMenu.show();
         }
     }
@@ -93,9 +112,12 @@ public class SuggestedFragment extends BaseFragment implements
 
     private RecyclerView recyclerView;
 
-    private ViewModelAdapter viewModelAdapter;
+    private ViewModelAdapter adapter;
 
-    private CompositeDisposable disposables = new CompositeDisposable();
+    private CompositeDisposable refreshDisposables = new CompositeDisposable();
+
+    @Nullable
+    private Disposable setItemsDisposable;
 
     @Inject
     RequestManager requestManager;
@@ -141,27 +163,25 @@ public class SuggestedFragment extends BaseFragment implements
                 .plus(new FragmentModule(this))
                 .inject(this);
 
-        viewModelAdapter = new ViewModelAdapter();
-        mostPlayedRecyclerView = new HorizontalRecyclerView();
-        favoriteRecyclerView = new HorizontalRecyclerView();
+        adapter = new LoggingViewModelAdapter("SuggestedFragment");
+        mostPlayedRecyclerView = new HorizontalRecyclerView("SuggestedFragment - mostPlayed");
+        favoriteRecyclerView = new HorizontalRecyclerView("SuggestedFragment - favorite");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         if (recyclerView == null) {
-
             recyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_suggested, container, false);
             recyclerView.addItemDecoration(new SuggestedDividerDecoration(getResources()));
-            recyclerView.setAdapter(viewModelAdapter);
             recyclerView.setRecyclerListener(new RecyclerListener());
 
             GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 6);
             gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
-                    if (!viewModelAdapter.items.isEmpty() && position >= 0) {
-                        ViewModel item = viewModelAdapter.items.get(position);
+                    if (!adapter.items.isEmpty() && position >= 0) {
+                        ViewModel item = adapter.items.get(position);
                         if (item instanceof HorizontalRecyclerView
                                 || item instanceof SuggestedHeaderView
                                 || (item instanceof AlbumView && item.getViewType() == ViewType.ALBUM_LIST)
@@ -179,6 +199,9 @@ public class SuggestedFragment extends BaseFragment implements
             });
 
             recyclerView.setLayoutManager(gridLayoutManager);
+        }
+        if (recyclerView.getAdapter() != adapter) {
+            recyclerView.setAdapter(adapter);
         }
 
         return recyclerView;
@@ -240,6 +263,7 @@ public class SuggestedFragment extends BaseFragment implements
                                         .filter(a -> a.numSongs > 0)
                                         .toSingle()
                         )
+                        .sorted((a, b) -> ComparisonUtils.compareLong(b.lastPlayed, a.lastPlayed))
                         .take(6)
                         .toList()
                 )
@@ -266,58 +290,31 @@ public class SuggestedFragment extends BaseFragment implements
                 });
     }
 
+    @SuppressLint("CheckResult")
     Observable<List<ViewModel>> getFavoriteSongViewModels() {
-        Observable<Playlist> favoritesPlaylist = Playlist.favoritesPlaylist().toObservable().cache();
-        Observable<List<Song>> favoritesSongs = favoritesPlaylist
-                .flatMap(Playlist::getSongsObservable)
-                .flatMapSingle(songs -> Observable.fromIterable(songs)
-                        .take(20)
-                        .toList());
 
-        return Observable.zip(favoritesPlaylist, favoritesSongs, (playlist, songs) -> {
-            if (!songs.isEmpty()) {
-                List<ViewModel> viewModels = new ArrayList<>();
+        Observable<List<Song>> favoritesSongs = DataManager.getInstance().getFavoriteSongsRelay()
+                .take(20);
 
-                SuggestedHeader favoriteHeader = new SuggestedHeader(getString(R.string.fav_title), getString(R.string.suggested_favorite_subtitle), playlist);
-                SuggestedHeaderView favoriteHeaderView = new SuggestedHeaderView(favoriteHeader);
-                favoriteHeaderView.setClickListener(this);
-                viewModels.add(favoriteHeaderView);
-
-                viewModels.add(favoriteRecyclerView);
-
-                SongClickListener songClickListener = new SongClickListener(songs);
-                favoriteRecyclerView.viewModelAdapter.setItems(Stream.of(songs).map(song -> {
-                    SuggestedSongView suggestedSongView = new SuggestedSongView(song, requestManager);
-                    suggestedSongView.setClickListener(songClickListener);
-                    return (ViewModel) suggestedSongView;
-                }).toList());
-
-                return viewModels;
-            } else {
-                return Collections.emptyList();
-            }
-        });
-    }
-
-    Observable<List<ViewModel>> getRecentlyAddedViewModels() {
-        return Playlist.recentlyAddedPlaylist
-                .getSongsObservable()
-                .flatMapSingle(source -> Observable.fromIterable(source)
-                        .sorted((a, b) -> ComparisonUtils.compareLong(b.playCount, a.playCount))
-                        .take(20)
-                        .toList())
-                .map(songs -> {
+        return Observable.combineLatest(
+                favoritesSongs,
+                Playlist.favoritesPlaylist()
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .toObservable(),
+                (songs, playlist) -> {
                     if (!songs.isEmpty()) {
                         List<ViewModel> viewModels = new ArrayList<>();
 
-                        SuggestedHeader recentlyAddedHeader = new SuggestedHeader(getString(R.string.recentlyadded), getString(R.string.suggested_recently_added_subtitle), Playlist.recentlyAddedPlaylist);
-                        SuggestedHeaderView recentlyAddedHeaderView = new SuggestedHeaderView(recentlyAddedHeader);
-                        recentlyAddedHeaderView.setClickListener(this);
-                        viewModels.add(recentlyAddedHeaderView);
+                        SuggestedHeader favoriteHeader = new SuggestedHeader(getString(R.string.fav_title), getString(R.string.suggested_favorite_subtitle), playlist);
+                        SuggestedHeaderView favoriteHeaderView = new SuggestedHeaderView(favoriteHeader);
+                        favoriteHeaderView.setClickListener(SuggestedFragment.this);
+                        viewModels.add(favoriteHeaderView);
+
+                        viewModels.add(favoriteRecyclerView);
 
                         SongClickListener songClickListener = new SongClickListener(songs);
-
-                        viewModels.addAll(Stream.of(songs).map(song -> {
+                        favoriteRecyclerView.viewModelAdapter.setItems(Stream.of(songs).map(song -> {
                             SuggestedSongView suggestedSongView = new SuggestedSongView(song, requestManager);
                             suggestedSongView.setClickListener(songClickListener);
                             return (ViewModel) suggestedSongView;
@@ -330,28 +327,67 @@ public class SuggestedFragment extends BaseFragment implements
                 });
     }
 
+    Observable<List<ViewModel>> getRecentlyAddedViewModels() {
+        return Playlist.recentlyAddedPlaylist
+                .getSongsObservable()
+                .flatMap(songs -> Observable.just(Operators.songsToAlbums(songs)))
+                .flatMapSingle(source -> Observable.fromIterable(source)
+                        .sorted((a, b) -> ComparisonUtils.compareLong(b.songPlayCount, a.songPlayCount))
+                        .take(20)
+                        .toList())
+                .map(albums -> {
+                    if (!albums.isEmpty()) {
+                        List<ViewModel> viewModels = new ArrayList<>();
+
+                        SuggestedHeader recentlyAddedHeader = new SuggestedHeader(getString(R.string.recentlyadded), getString(R.string.suggested_recently_added_subtitle), Playlist.recentlyAddedPlaylist);
+                        SuggestedHeaderView recentlyAddedHeaderView = new SuggestedHeaderView(recentlyAddedHeader);
+                        recentlyAddedHeaderView.setClickListener(this);
+                        viewModels.add(recentlyAddedHeaderView);
+
+                        viewModels.addAll(Stream.of(albums).map(album -> {
+                            AlbumView albumView = new AlbumView(album, ViewType.ALBUM_CARD, requestManager);
+                            albumView.setClickListener(this);
+                            return albumView;
+                        }).toList());
+
+                        return viewModels;
+                    } else {
+                        return Collections.emptyList();
+                    }
+                });
+    }
+
     void refreshAdapterItems() {
+
+        if (setItemsDisposable != null) {
+            setItemsDisposable.dispose();
+        }
+
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {
-                disposables.add(
-                        Observable.combineLatest(getMostPlayedViewModels(), getRecentlyPlayedViewModels(), getFavoriteSongViewModels(), getRecentlyAddedViewModels(),
-                                (mostPlayedSongs1, recentlyPlayedAlbums1, favoriteSongs1, recentlyAddedAlbums1) -> {
-                                    List<ViewModel> items = new ArrayList<>();
-                                    items.addAll(mostPlayedSongs1);
-                                    items.addAll(recentlyPlayedAlbums1);
-                                    items.addAll(favoriteSongs1);
-                                    items.addAll(recentlyAddedAlbums1);
-                                    return items;
-                                })
-                                .switchIfEmpty(Observable.just(Collections.emptyList()))
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(adaptableItems -> {
-                                    if (adaptableItems.isEmpty()) {
-                                        viewModelAdapter.setItems(Collections.singletonList((new EmptyView(R.string.empty_suggested))));
-                                    } else {
-                                        viewModelAdapter.setItems(adaptableItems);
-                                    }
-                                }, error -> LogUtils.logException(TAG, "Error setting items", error)));
+                refreshDisposables.add(Observable.combineLatest(
+                        getMostPlayedViewModels(),
+                        getRecentlyPlayedViewModels(),
+                        getFavoriteSongViewModels().switchIfEmpty(Observable.just(Collections.emptyList())),
+                        getRecentlyAddedViewModels(),
+                        (mostPlayedSongs1, recentlyPlayedAlbums1, favoriteSongs1, recentlyAddedAlbums1) -> {
+                            List<ViewModel> items = new ArrayList<>();
+                            items.addAll(mostPlayedSongs1);
+                            items.addAll(recentlyPlayedAlbums1);
+                            items.addAll(favoriteSongs1);
+                            items.addAll(recentlyAddedAlbums1);
+                            return items;
+                        })
+                        .debounce(200, TimeUnit.MILLISECONDS)
+                        .switchIfEmpty(Observable.just(Collections.emptyList()))
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(adaptableItems -> {
+                            if (adaptableItems.isEmpty()) {
+                                setItemsDisposable = adapter.setItems(Collections.singletonList((new EmptyView(R.string.empty_suggested))));
+                            } else {
+                                setItemsDisposable = adapter.setItems(adaptableItems);
+                            }
+                        }, error -> LogUtils.logException(TAG, "Error setting items", error)));
             }
         });
     }
@@ -359,8 +395,8 @@ public class SuggestedFragment extends BaseFragment implements
     @Override
     public void onPause() {
 
-        if (disposables != null) {
-            disposables.clear();
+        if (refreshDisposables != null) {
+            refreshDisposables.clear();
         }
 
         super.onPause();
@@ -381,8 +417,8 @@ public class SuggestedFragment extends BaseFragment implements
     @Override
     public void onAlbumOverflowClicked(View v, Album album) {
         PopupMenu menu = new PopupMenu(getContext(), v);
-        menu.inflate(R.menu.menu_album);
-        menu.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(getContext(), album, taggerDialog -> taggerDialog.show(getFragmentManager())));
+        MenuUtils.setupAlbumMenu(menu);
+        menu.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(getContext(), album, taggerDialog -> taggerDialog.show(getFragmentManager()), () -> UpgradeDialog.getUpgradeDialog(getActivity()).show()));
         menu.show();
     }
 

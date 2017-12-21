@@ -1,12 +1,12 @@
 package com.simplecity.amp_library.ui.settings;
 
-import android.content.ComponentName;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.support.v4.content.IntentCompat;
+import android.support.v4.content.ContextCompat;
 
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -18,14 +18,14 @@ import com.simplecity.amp_library.IabManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.CategoryItem;
+import com.simplecity.amp_library.model.InclExclItem;
 import com.simplecity.amp_library.services.ArtworkDownloadService;
-import com.simplecity.amp_library.ui.activities.MainActivity;
-import com.simplecity.amp_library.ui.dialog.BlacklistDialog;
 import com.simplecity.amp_library.ui.dialog.ChangelogDialog;
+import com.simplecity.amp_library.ui.dialog.InclExclDialog;
 import com.simplecity.amp_library.ui.dialog.TabChooserDialog;
-import com.simplecity.amp_library.ui.dialog.WhitelistDialog;
-import com.simplecity.amp_library.ui.presenters.Presenter;
+import com.simplecity.amp_library.ui.presenters.PurchasePresenter;
 import com.simplecity.amp_library.utils.AnalyticsManager;
+import com.simplecity.amp_library.utils.ColorPalette;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 
@@ -36,10 +36,11 @@ import javax.inject.Inject;
 import io.reactivex.Completable;
 import io.reactivex.schedulers.Schedulers;
 
-public class SettingsPresenter extends Presenter<SettingsView> {
+public class SettingsPresenter extends PurchasePresenter<SettingsView> {
 
     @Inject
-    public SettingsPresenter() {
+    public SettingsPresenter(Activity activity) {
+        super(activity);
     }
 
     // Support Preferences
@@ -53,57 +54,6 @@ public class SettingsPresenter extends Presenter<SettingsView> {
         }
     }
 
-    void upgradeClicked(MainActivity activity) {
-        SettingsView settingsView = getView();
-        if (settingsView != null) {
-            settingsView.showUpgradeDialog(new MaterialDialog.Builder(activity)
-                    .title(activity.getResources().getString(R.string.get_pro_title))
-                    .content(activity.getResources().getString(R.string.upgrade_dialog_message))
-                    .positiveText(R.string.btn_upgrade)
-                    .onPositive((dialog, which) -> {
-                        if (ShuttleUtils.isAmazonBuild()) {
-                            openPaidStoreLink();
-                        } else {
-                            purchaseUpgrade(activity);
-                        }
-                    })
-                    .negativeText(R.string.get_pro_button_no)
-                    .build());
-        }
-    }
-
-    public void openPaidStoreLink() {
-        SettingsView settingsView = getView();
-        if (settingsView != null) {
-            Intent intent = ShuttleUtils.getShuttleStoreIntent("com.simplecity.amp_pro");
-            settingsView.openStoreLink(intent);
-        }
-    }
-
-    public void purchaseUpgrade(MainActivity activity) {
-        IabManager.getInstance().purchaseUpgrade(activity, success -> {
-            SettingsView settingsView = getView();
-            if (settingsView != null) {
-                if (success) {
-                    settingsView.showUpgradeSuccessDialog(
-                            new MaterialDialog.Builder(activity)
-                                    .title(activity.getResources().getString(R.string.upgraded_title))
-                                    .content(activity.getResources().getString(R.string.upgraded_message))
-                                    .positiveText(R.string.restart_button)
-                                    .onPositive((materialDialog, dialogAction) -> {
-                                        Intent intent = new Intent(activity, MainActivity.class);
-                                        ComponentName componentNAme = intent.getComponent();
-                                        Intent mainIntent = IntentCompat.makeRestartActivityTask(componentNAme);
-                                        activity.startActivity(mainIntent);
-                                    })
-                                    .build());
-                } else {
-                    settingsView.showUpgradeFailedToast(R.string.iab_purchase_failed);
-                }
-            }
-        });
-    }
-
     public void restorePurchasesClicked() {
         IabManager.getInstance().restorePurchases(messageResId -> {
             SettingsView settingsView = getView();
@@ -115,10 +65,10 @@ public class SettingsPresenter extends Presenter<SettingsView> {
 
     // Display
 
-    public void chooseTabsClicked(Context context) {
+    public void chooseTabsClicked(Activity activity) {
         SettingsView settingsView = getView();
         if (settingsView != null) {
-            settingsView.showTabChooserDialog(TabChooserDialog.getDialog(context));
+            settingsView.showTabChooserDialog(TabChooserDialog.getDialog(activity));
         }
     }
 
@@ -127,7 +77,7 @@ public class SettingsPresenter extends Presenter<SettingsView> {
         if (settingsView != null) {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
             List<CategoryItem> categoryItems = Stream.of(CategoryItem.getCategoryItems(sharedPreferences))
-                    .filter(categoryItem -> categoryItem.isEnabled)
+                    .filter(categoryItem -> categoryItem.isChecked)
                     .toList();
 
             int defaultPageType = SettingsManager.getInstance().getDefaultPageType();
@@ -197,8 +147,10 @@ public class SettingsPresenter extends Presenter<SettingsView> {
         if (settingsView != null) {
             settingsView.showPrimaryColorDialog(
                     new ColorChooserDialog.Builder(context, R.string.pref_title_theme_pick_color)
-                            .allowUserColorInput(true)
-                            .dynamicButtonColor(true)
+                            .customColors(ColorPalette.getPrimaryColors(), ColorPalette.getPrimaryColorsSub())
+                            .allowUserColorInput(ShuttleUtils.isUpgraded())
+                            .allowUserColorInputAlpha(false)
+                            .dynamicButtonColor(false)
                             .preselect(Aesthetic.get(context).colorPrimary().blockingFirst())
                             .build());
         }
@@ -209,6 +161,8 @@ public class SettingsPresenter extends Presenter<SettingsView> {
                 .colorPrimary(color)
                 .colorStatusBarAuto()
                 .apply();
+
+        SettingsManager.getInstance().storePrimaryColor(color);
     }
 
     public void accentColorClicked(Context context) {
@@ -218,7 +172,8 @@ public class SettingsPresenter extends Presenter<SettingsView> {
                     new ColorChooserDialog.Builder(context, R.string.pref_title_theme_pick_color)
                             .accentMode(true)
                             .allowUserColorInput(true)
-                            .dynamicButtonColor(true)
+                            .allowUserColorInputAlpha(false)
+                            .dynamicButtonColor(false)
                             .preselect(Aesthetic.get(context).colorAccent().blockingFirst())
                             .build());
         }
@@ -228,6 +183,8 @@ public class SettingsPresenter extends Presenter<SettingsView> {
         Aesthetic.get(context)
                 .colorAccent(color)
                 .apply();
+
+        SettingsManager.getInstance().storeAccentColor(color);
     }
 
     public void tintNavBarClicked(Context context, boolean tintNavBar) {
@@ -239,9 +196,12 @@ public class SettingsPresenter extends Presenter<SettingsView> {
     public void usePaletteClicked(Context context, boolean usePalette) {
         // If we're not using palette any more, set the primary color back to default
         if (!usePalette) {
+            int storedColor = SettingsManager.getInstance().getPrimaryColor();
+
             Aesthetic.get(context)
-                    .colorPrimaryRes(R.color.blue_500)
+                    .colorPrimary(storedColor == -1 ? ContextCompat.getColor(context, R.color.md_blue_500) : storedColor)
                     .colorStatusBarAuto()
+                    .colorNavigationBarAuto(SettingsManager.getInstance().getTintNavBar())
                     .apply();
         }
     }
@@ -249,9 +209,12 @@ public class SettingsPresenter extends Presenter<SettingsView> {
     public void usePaletteNowPlayingOnlyClicked(Context context, boolean usePaletteNowPlayingOnly) {
         // If we're only using palette for 'now playing', set the primary color back to default
         if (usePaletteNowPlayingOnly) {
+            int storedColor = SettingsManager.getInstance().getPrimaryColor();
+
             Aesthetic.get(context)
-                    .colorPrimaryRes(R.color.blue_500)
+                    .colorPrimary(storedColor == -1 ? ContextCompat.getColor(context, R.color.md_blue_500) : storedColor)
                     .colorStatusBarAuto()
+                    .colorNavigationBarAuto(SettingsManager.getInstance().getTintNavBar())
                     .apply();
         }
     }
@@ -293,11 +256,11 @@ public class SettingsPresenter extends Presenter<SettingsView> {
     }
 
     private void deleteArtwork() {
-        Completable.fromAction(() -> {
-            //Clear Glide' mem & disk cache
-            Glide.get(ShuttleApplication.getInstance()).clearMemory();
-            Glide.get(ShuttleApplication.getInstance()).clearDiskCache();
-        })
+        //Clear Glide' mem & disk cache
+
+        Glide.get(ShuttleApplication.getInstance()).clearMemory();
+
+        Completable.fromAction(() -> Glide.get(ShuttleApplication.getInstance()).clearDiskCache())
                 .subscribeOn(Schedulers.io())
                 .subscribe();
     }
@@ -330,14 +293,14 @@ public class SettingsPresenter extends Presenter<SettingsView> {
     public void viewBlacklistClicked(Context context) {
         SettingsView settingsView = getView();
         if (settingsView != null) {
-            settingsView.showBlacklistDialog(BlacklistDialog.getDialog(context));
+            settingsView.showBlacklistDialog(InclExclDialog.getDialog(context, InclExclItem.Type.EXCLUDE));
         }
     }
 
     public void viewWhitelistClicked(Context context) {
         SettingsView settingsView = getView();
         if (settingsView != null) {
-            settingsView.showWhitelistDialog(WhitelistDialog.getDialog(context));
+            settingsView.showWhitelistDialog(InclExclDialog.getDialog(context, InclExclItem.Type.INCLUDE));
         }
     }
 }

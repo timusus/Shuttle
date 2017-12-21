@@ -5,11 +5,10 @@ buildscript {
     apply from: 'dependencies.gradle'
     repositories {
         jcenter()
-        maven { url "https://maven.google.com" }
+        google()
     }
     dependencies {
         classpath gradlePlugins.android
-        classpath gradlePlugins.googleServices
         classpath gradlePlugins.playPublisher
         classpath gradlePlugins.gradleVersions
     }
@@ -18,7 +17,8 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        google()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        maven { url "https://maven.google.com" }
+        maven { url "https://jitpack.io" }
     }
 }

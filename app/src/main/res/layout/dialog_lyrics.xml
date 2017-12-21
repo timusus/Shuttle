@@ -75,7 +75,7 @@
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="16sp"
-                app:backgroundTint="@color/deep_orange_a200"/>
+                app:backgroundTint="@color/md_deep_orange_A200"/>
 
             <android.support.v4.widget.Space
                 android:layout_width="16dp"

@@ -28,6 +28,7 @@ import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.support.annotation.ColorInt;
+import android.support.v4.math.MathUtils;
 import android.support.v4.text.TextDirectionHeuristicsCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.TintTypedArray;
@@ -103,8 +104,8 @@ public final class CustomCollapsingTextHelper {
     private CharSequence mSub;
     private float mSubScale;
     private float mExpandedSubSize = 50;
-    private int mCollapsedSubColor;
-    private int mExpandedSubColor;
+    private ColorStateList mCollapsedSubColor;
+    private ColorStateList mExpandedSubColor;
     private TextPaint mSubPaint;
     private float mCurrentSubSize;
     private float mCollapsedSubSize = 25;
@@ -270,8 +271,7 @@ public final class CustomCollapsingTextHelper {
     public void setCollapsedSubAppearance(int resId) {
         TypedArray a = mView.getContext().obtainStyledAttributes(resId, R.styleable.TextAppearance);
         if (a.hasValue(R.styleable.TextAppearance_android_textColor)) {
-            mCollapsedSubColor = a.getColor(
-                    R.styleable.TextAppearance_android_textColor, mCollapsedSubColor);
+            mCollapsedSubColor = a.getColorStateList(R.styleable.TextAppearance_android_textColor);
         }
         if (a.hasValue(R.styleable.TextAppearance_android_textSize)) {
             mCollapsedSubSize = a.getDimensionPixelSize(
@@ -284,8 +284,8 @@ public final class CustomCollapsingTextHelper {
         TintTypedArray a = TintTypedArray.obtainStyledAttributes(mView.getContext(), resId,
                 android.support.v7.appcompat.R.styleable.TextAppearance);
         if (a.hasValue(android.support.v7.appcompat.R.styleable.TextAppearance_android_textColor)) {
-            mExpandedSubColor = a.getColor(
-                    android.support.v7.appcompat.R.styleable.TextAppearance_android_textColor, mCollapsedSubColor);
+            mExpandedSubColor = a.getColorStateList(
+                    android.support.v7.appcompat.R.styleable.TextAppearance_android_textColor);
         }
         if (a.hasValue(android.support.v7.appcompat.R.styleable.TextAppearance_android_textSize)) {
             mExpandedSubSize = a.getDimensionPixelSize(
@@ -366,7 +366,7 @@ public final class CustomCollapsingTextHelper {
      * A value of {@code 1.0} indicates that the layout is fully collapsed.
      */
     public void setExpansionFraction(float fraction) {
-        fraction = MathUtils.constrain(fraction, 0f, 1f);
+        fraction = MathUtils.clamp(fraction, 0f, 1f);
 
         if (fraction != mExpandedFraction) {
             mExpandedFraction = fraction;
@@ -432,9 +432,9 @@ public final class CustomCollapsingTextHelper {
         if (mCollapsedSubColor != mExpandedSubColor) {
             // If the collapsed and expanded text colors are different, blend them based on the
             // fraction
-            mSubPaint.setColor(blendColors(mExpandedSubColor, mCollapsedSubColor, fraction));
+            mSubPaint.setColor(blendColors(getCurrentExpandedSubColor(), getCurrentCollapsedSubColor(), fraction));
         } else {
-            mSubPaint.setColor(mCollapsedSubColor);
+            mSubPaint.setColor(getCurrentCollapsedSubColor());
         }
         //endregion
 
@@ -462,6 +462,24 @@ public final class CustomCollapsingTextHelper {
             return mCollapsedTitleColor.getColorForState(mState, 0);
         } else {
             return mCollapsedTitleColor.getDefaultColor();
+        }
+    }
+
+    @ColorInt
+    private int getCurrentExpandedSubColor() {
+        if (mState != null) {
+            return mExpandedSubColor.getColorForState(mState, 0);
+        } else {
+            return mExpandedSubColor.getDefaultColor();
+        }
+    }
+
+    @ColorInt
+    private int getCurrentCollapsedSubColor() {
+        if (mState != null) {
+            return mCollapsedSubColor.getColorForState(mState, 0);
+        } else {
+            return mCollapsedSubColor.getDefaultColor();
         }
     }
 
@@ -803,6 +821,10 @@ public final class CustomCollapsingTextHelper {
         return mExpandedTitleColor;
     }
 
+    ColorStateList getExpandedSubColor() {
+        return mExpandedSubColor;
+    }
+
     public void setExpandedTextColor(ColorStateList textColor) {
         if (mExpandedTitleColor != textColor) {
             mExpandedTitleColor = textColor;
@@ -817,6 +839,17 @@ public final class CustomCollapsingTextHelper {
     public void setCollapsedTextColor(ColorStateList textColor) {
         if (mCollapsedTitleColor != textColor) {
             mCollapsedTitleColor = textColor;
+            recalculate();
+        }
+    }
+
+    ColorStateList getCollapsedSubColor() {
+        return mCollapsedSubColor;
+    }
+
+    public void setCollapsedSubColor(ColorStateList textColor) {
+        if (mCollapsedSubColor != textColor) {
+            mCollapsedSubColor = textColor;
             recalculate();
         }
     }

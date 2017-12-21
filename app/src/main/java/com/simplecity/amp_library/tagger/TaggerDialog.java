@@ -31,6 +31,7 @@ import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.utils.CustomMediaScanner;
 import com.simplecity.amp_library.utils.DialogUtils;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 
@@ -348,6 +349,11 @@ public class TaggerDialog extends DialogFragment {
                 progressDialog.dismiss();
             }
 
+            if (!isResumed() || getContext() == null) {
+                LogUtils.logException(TAG, "Save tags returning early.. Context null or dialog not resumed.", null);
+                return;
+            }
+
             if (hasPermission) {
 
                 final ProgressDialog saveProgressDialog = new ProgressDialog(getContext());
@@ -419,7 +425,7 @@ public class TaggerDialog extends DialogFragment {
                     if (ShuttleUtils.hasLollipop()) {
                         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
                         if (intent.resolveActivity(ShuttleApplication.getInstance().getPackageManager()) != null) {
-                            getActivity().startActivityForResult(intent, DOCUMENT_TREE_REQUEST_CODE);
+                            this.startActivityForResult(intent, DOCUMENT_TREE_REQUEST_CODE);
                         } else {
                             Toast.makeText(getContext(), R.string.R_string_toast_no_document_provider, Toast.LENGTH_LONG).show();
                         }

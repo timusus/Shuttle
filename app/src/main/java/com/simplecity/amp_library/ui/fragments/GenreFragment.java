@@ -15,7 +15,6 @@ import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.ui.adapters.SectionedAdapter;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.GenreView;
-import com.simplecity.amp_library.ui.recyclerview.GridDividerDecoration;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
@@ -26,6 +25,7 @@ import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -44,6 +44,8 @@ public class GenreFragment extends BaseFragment implements
 
     @Nullable
     private GenreClickListener genreClickListener;
+
+    private FastScrollRecyclerView recyclerView;
 
     private SectionedAdapter adapter;
 
@@ -74,16 +76,19 @@ public class GenreFragment extends BaseFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        adapter = new SectionedAdapter();
+        adapter = new SectionedAdapter("GenreFragment");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        FastScrollRecyclerView recyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.addItemDecoration(new GridDividerDecoration(getResources(), 4, true));
-        recyclerView.setRecyclerListener(new RecyclerListener());
-        recyclerView.setAdapter(adapter);
+        if (recyclerView == null) {
+            recyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            recyclerView.setRecyclerListener(new RecyclerListener());
+        }
+        if (recyclerView.getAdapter() != adapter) {
+            recyclerView.setAdapter(adapter);
+        }
 
         return recyclerView;
     }
@@ -102,13 +107,15 @@ public class GenreFragment extends BaseFragment implements
     public void onResume() {
         super.onResume();
 
-        refreshAdapterItems();
+        refreshAdapterItems(false);
     }
 
-    private void refreshAdapterItems() {
+    private void refreshAdapterItems(boolean force) {
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {
                 disposable = DataManager.getInstance().getGenresRelay()
+                        .skipWhile(genres -> !force && adapter.items.size() == genres.size())
+                        .debounce(150, TimeUnit.MILLISECONDS)
                         .map(genres -> Stream.of(genres)
                                 .sorted((a, b) -> ComparisonUtils.compare(a.name, b.name))
                                 .map(genre -> {

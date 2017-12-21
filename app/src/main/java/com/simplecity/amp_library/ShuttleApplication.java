@@ -3,7 +3,6 @@ package com.simplecity.amp_library;
 import android.Manifest;
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Environment;
@@ -32,12 +31,13 @@ import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Query;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.model.UserSelectedArtwork;
-import com.simplecity.amp_library.services.EqualizerService;
 import com.simplecity.amp_library.sql.SqlUtils;
 import com.simplecity.amp_library.sql.databases.CustomArtworkTable;
 import com.simplecity.amp_library.sql.providers.PlayCountTable;
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
 import com.simplecity.amp_library.utils.AnalyticsManager;
+import com.simplecity.amp_library.utils.InputMethodManagerLeaks;
+import com.simplecity.amp_library.utils.LegacyUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
@@ -112,10 +112,19 @@ public class ShuttleApplication extends Application {
         appComponent = initDagger(this);
 
         refWatcher = LeakCanary.install(this);
+        // workaround to fix InputMethodManager leak as suggested by LeakCanary lib
+        InputMethodManagerLeaks.fixFocusedViewLeak(this);
 
         //Crashlytics
-        CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build();
-        Fabric.with(this, new Crashlytics.Builder().core(core).answers(new Answers()).build(), new Crashlytics());
+        CrashlyticsCore crashlyticsCore = new CrashlyticsCore.Builder()
+                .disabled(BuildConfig.DEBUG)
+                .build();
+
+        Fabric.with(this,
+                new Crashlytics.Builder()
+                        .core(crashlyticsCore)
+                        .answers(new Answers())
+                        .build());
 
         //Firebase Analytics
         FirebaseAnalytics.getInstance(this);
@@ -150,8 +159,6 @@ public class ShuttleApplication extends Application {
 
         SettingsManager.getInstance().incrementLaunchCount();
 
-        startService(new Intent(this, EqualizerService.class));
-
         Completable.fromAction(() -> {
             Query query = new Query.Builder()
                     .uri(CustomArtworkTable.URI)
@@ -177,13 +184,13 @@ public class ShuttleApplication extends Application {
                 .subscribeOn(Schedulers.io())
                 .subscribe();
 
-        cleanMostPlayedPlaylist()
-                .delay(7500, TimeUnit.MILLISECONDS)
+        Completable.timer(7500, TimeUnit.MILLISECONDS)
+                .andThen(cleanMostPlayedPlaylist())
                 .subscribeOn(Schedulers.io())
                 .subscribe();
 
-        deleteOldResources()
-                .delay(10000, TimeUnit.MILLISECONDS)
+        Completable.timer(10000, TimeUnit.MILLISECONDS)
+                .andThen(LegacyUtils.deleteOldResources())
                 .subscribeOn(Schedulers.io())
                 .subscribe();
     }
@@ -225,38 +232,6 @@ public class ShuttleApplication extends Application {
 
     public boolean getIsUpgraded() {
         return isUpgraded || BuildConfig.DEBUG;
-    }
-
-    @NonNull
-    private Completable deleteOldResources() {
-
-        return Completable.fromAction(() -> {
-            //Delete albumthumbs/artists directory
-            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                File file = new File(Environment.getExternalStorageDirectory() + "/albumthumbs/artists/");
-                if (file.exists() && file.isDirectory()) {
-                    File[] files = file.listFiles();
-                    if (files != null) {
-                        for (File child : files) {
-                            child.delete();
-                        }
-                    }
-                    file.delete();
-                }
-            }
-
-            //Delete old http cache
-            File oldHttpCache = getDiskCacheDir("http");
-            if (oldHttpCache != null && oldHttpCache.exists()) {
-                oldHttpCache.delete();
-            }
-
-            //Delete old thumbs cache
-            File oldThumbsCache = getDiskCacheDir("thumbs");
-            if (oldThumbsCache != null && oldThumbsCache.exists()) {
-                oldThumbsCache.delete();
-            }
-        });
     }
 
     public static File getDiskCacheDir(String uniqueName) {

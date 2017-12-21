@@ -1,16 +1,18 @@
 package com.simplecity.amp_library.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.v4.app.FragmentManager;
+import android.os.Handler;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
-import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.codetroopers.betterpickers.numberpicker.NumberPickerBuilder;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.rx.UnsafeAction;
 
-import java.math.BigDecimal;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.BackpressureStrategy;
@@ -81,7 +83,7 @@ public final class SleepTimer {
         timerActiveObservable.onNext(false);
     }
 
-    public MaterialDialog getDialog(Context context, UnsafeAction showTimePicker, UnsafeAction timerStarted) {
+    public MaterialDialog getDialog(Context context, UnsafeAction showMinutesPicker, UnsafeAction timerStarted) {
 
         if (isActive) {
             return new MaterialDialog.Builder(context)
@@ -119,26 +121,41 @@ public final class SleepTimer {
                                 break;
                             case 4:
                                 // Set time manually
-                                showTimePicker.run();
+                                showMinutesPicker.run();
                                 break;
                         }
                     }).build();
         }
     }
 
-    public void showHmsPicker(Context context, FragmentManager fragmentManager, UnsafeAction timerStarted) {
-        NumberPickerBuilder numberPickerBuilder = new NumberPickerBuilder();
-        numberPickerBuilder
-                .setFragmentManager(fragmentManager)
-                .setStyleResId(Aesthetic.get(context).isDark().blockingFirst() ? R.style.BetterPickers : R.style.BetterPickersLight)
-                .setDecimalVisibility(View.GONE)
-                .setMaxNumber(new BigDecimal(999))
-                .setPlusMinusVisibility(View.GONE)
-                .setLabelText(context.getString(R.string.sleep_timer_label_minutes))
-                .addNumberPickerDialogHandler((reference, number, decimal, isNegative, fullNumber) -> {
-                    start(number.intValue() * 60, playToEnd);
-                    timerStarted.run();
+    public void showMinutesDialog(Context context, UnsafeAction timerStarted) {
+
+        @SuppressLint("InflateParams")
+        View customView = LayoutInflater.from(context).inflate(R.layout.dialog_minutes_picker, null);
+
+        EditText editText = customView.findViewById(R.id.editText);
+
+        new MaterialDialog.Builder(context)
+                .title(R.string.sleep_timer_set_minutes)
+                .customView(customView, false)
+                .positiveText(R.string.button_ok)
+                .negativeText(R.string.cancel)
+                .autoDismiss(false)
+                .onPositive((materialDialog, dialogAction) -> {
+                    if (!TextUtils.isEmpty(editText.getText())) {
+                        start(Integer.parseInt(editText.getText().toString()) * 60, playToEnd);
+                        timerStarted.run();
+                        materialDialog.dismiss();
+                    }
+                })
+                .onNegative((materialDialog, dialogAction) -> {
+                    materialDialog.dismiss();
                 })
                 .show();
+
+        new Handler().post(() -> {
+            InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+        });
     }
 }

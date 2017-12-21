@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
 
@@ -18,7 +19,7 @@ public class OverflowButton extends NonScrollImageButton {
 
     private Disposable aestheticDisposable;
 
-    private final Drawable drawable;
+    public Drawable drawable;
 
     private boolean dark = false;
 
@@ -30,7 +31,7 @@ public class OverflowButton extends NonScrollImageButton {
             dark = typedArray.getBoolean(R.styleable.OverflowButton_isDark, false);
         }
 
-        drawable = DrawableCompat.wrap(getResources().getDrawable(R.drawable.ic_overflow_20dp)).mutate();
+        drawable = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.ic_overflow_20dp)).mutate();
     }
 
     @Override

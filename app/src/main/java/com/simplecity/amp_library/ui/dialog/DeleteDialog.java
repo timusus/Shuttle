@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.ui.dialog;
 
+import android.annotation.SuppressLint;
 import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.content.OperationApplicationException;
@@ -43,6 +44,7 @@ public class DeleteDialog {
         private int deleteMultipleMessageId;
 
         private List<String> itemNames;
+
         private Single<List<Song>> songsSingle;
 
         public DeleteDialogBuilder context(Context context) {
@@ -70,6 +72,7 @@ public class DeleteDialog {
             return this;
         }
 
+        @SuppressLint("CheckResult")
         void deleteSongs() {
             songsSingle
                     .map(lists -> Stream.of(lists)
@@ -78,7 +81,7 @@ public class DeleteDialog {
                             .toList())
                     .doOnSuccess(songs -> {
                         //Current play queue
-                        MusicUtils.removeFromQueue(songs, true);
+                        MusicUtils.removeFromQueue(songs);
 
                         //Play Count Table
                         ArrayList<ContentProviderOperation> operations = Stream.of(songs).map(song -> ContentProviderOperation

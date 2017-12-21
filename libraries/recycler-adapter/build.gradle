@@ -2,13 +2,9 @@ buildscript {
     repositories {
         mavenCentral()
     }
-    dependencies {
-        classpath gradlePlugins.retroLambda
-    }
 }
 
 apply plugin: 'com.android.library'
-apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion versions.compileSdk
@@ -35,11 +31,11 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile libs.appcompat
-    compile libs.recyclerView
+    implementation libs.appcompat
+    implementation libs.recyclerView
 
-    compile libs.rxJava
-    compile libs.rxAndroid
+    implementation libs.rxJava
+    implementation libs.rxAndroid
 }

@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
 
@@ -24,7 +25,7 @@ public class ShuffleButton extends android.support.v7.widget.AppCompatImageButto
     int selectedColor = Color.WHITE;
 
     @NonNull Drawable shuffleOff;
-    @NonNull Drawable shuffleOn;
+    @NonNull Drawable shuffleTracks;
 
     public ShuffleButton(Context context) {
         this(context, null);
@@ -37,8 +38,8 @@ public class ShuffleButton extends android.support.v7.widget.AppCompatImageButto
     public ShuffleButton(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        shuffleOff = getResources().getDrawable(R.drawable.ic_shuffle_24dp);
-        shuffleOn = DrawableCompat.wrap(getResources().getDrawable(R.drawable.ic_shuffle_24dp).mutate());
+        shuffleOff = ContextCompat.getDrawable(context, R.drawable.ic_shuffle_24dp_scaled);
+        shuffleTracks = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.ic_shuffle_24dp_scaled).mutate());
 
         setShuffleMode(MusicService.ShuffleMode.OFF);
     }
@@ -56,7 +57,7 @@ public class ShuffleButton extends android.support.v7.widget.AppCompatImageButto
                     break;
                 case MusicService.ShuffleMode.ON:
                     setContentDescription(getResources().getString(R.string.btn_shuffle_on));
-                    setImageDrawable(shuffleOn);
+                    setImageDrawable(shuffleTracks);
                     break;
             }
         }
@@ -84,6 +85,6 @@ public class ShuffleButton extends android.support.v7.widget.AppCompatImageButto
     }
 
     private void invalidateColors(int selectedColor) {
-        DrawableCompat.setTint(shuffleOn, selectedColor);
+        DrawableCompat.setTint(shuffleTracks, selectedColor);
     }
 }

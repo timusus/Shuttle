@@ -28,6 +28,9 @@
 # Custom Switch, referenced via menu action view class
 -keep class com.simplecity.amp_library.ui.views.CustomSwitch { *; }
 
+# Another Switch, referenced via menu action view class
+-keep class com.afollestad.aesthetic.AestheticSwitchCompat { *; }
+
 # Glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep public class * extends com.bumptech.glide.AppGlideModule
@@ -45,7 +48,6 @@
 # OkHttp
 -keepattributes Signature
 -keepattributes *Annotation*
--keep class com.squareup.okhttp3.** { *; }
 -keep interface com.squareup.okhttp3.** { *; }
 -dontwarn com.squareup.okhttp3.**
 
@@ -54,6 +56,7 @@
 -dontwarn java.nio.file.*
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 -dontwarn okio.**
+-dontwarn javax.annotation.**
 
 # Retrofit
 # Platform calls Class.forName on types which do not exist on Android to determine platform.

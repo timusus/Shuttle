@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Playlist;
+import com.simplecity.amp_library.ui.adapters.LoggingViewModelAdapter;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.PlaylistView;
 import com.simplecity.amp_library.utils.ComparisonUtils;
@@ -27,6 +28,7 @@ import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -82,7 +84,7 @@ public class PlaylistFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        adapter = new ViewModelAdapter();
+        adapter = new LoggingViewModelAdapter("PlaylistFragment");
     }
 
     @Override
@@ -141,9 +143,9 @@ public class PlaylistFragment extends BaseFragment {
                             list.addAll(playlists);
                             return list;
                         })
+                        .debounce(150, TimeUnit.MILLISECONDS)
                         .subscribeOn(Schedulers.io())
                         .map(playlists -> {
-
                             PlaylistView.OnClickListener listener = new PlaylistView.OnClickListener() {
                                 @Override
                                 public void onPlaylistClick(int position, PlaylistView playlistView) {
@@ -156,7 +158,7 @@ public class PlaylistFragment extends BaseFragment {
                                 public void onPlaylistOverflowClick(int position, View v, Playlist playlist) {
                                     PopupMenu menu = new PopupMenu(PlaylistFragment.this.getActivity(), v);
                                     MenuUtils.setupPlaylistMenu(menu, playlist);
-                                    menu.setOnMenuItemClickListener(MenuUtils.getPlaylistClickListener(getContext(), playlist));
+                                    menu.setOnMenuItemClickListener(MenuUtils.getPlaylistPopupMenuClickListener(getContext(), playlist, null));
                                     menu.show();
                                 }
                             };

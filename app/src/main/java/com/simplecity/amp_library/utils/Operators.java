@@ -1,13 +1,18 @@
 package com.simplecity.amp_library.utils;
 
+import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Song;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import io.reactivex.Single;
 
 public class Operators {
 
@@ -78,5 +83,33 @@ public class Operators {
         }
 
         return new ArrayList<>(albumArtistMap.values());
+    }
+
+    public static List<Song> albumShuffleSongs(List<Song> songs) {
+
+        SortManager.getInstance().sortSongs(songs, SortManager.SongSort.ALBUM_NAME);
+
+        List<Map.Entry<Long, List<Song>>> albumSongMap = Stream.of(songs)
+                .groupBy(song -> song.albumId)
+                .collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
+                    Collections.shuffle(list);
+                    return list;
+                }));
+
+        return Stream.of(albumSongMap)
+                .flatMap(stringListEntry -> Stream.of(stringListEntry.getValue()))
+                .toList();
+    }
+
+    public static Single<List<Song>> reduceSongSingles(List<Single<List<Song>>> singles) {
+        return Single.zip(singles,
+                lists -> Stream.of(lists)
+                        .map(o -> (List<Song>) o)
+                        .reduce((value1, value2) -> {
+                            List<Song> allSongs = new ArrayList<>();
+                            allSongs.addAll(value1);
+                            allSongs.addAll(value2);
+                            return allSongs;
+                        }).orElse(Collections.emptyList()));
     }
 }

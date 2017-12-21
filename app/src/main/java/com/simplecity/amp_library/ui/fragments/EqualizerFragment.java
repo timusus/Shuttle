@@ -2,16 +2,11 @@ package com.simplecity.amp_library.ui.fragments;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.media.audiofx.AudioEffect;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.SwitchCompat;
@@ -30,13 +25,13 @@ import android.widget.TextView;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.constants.OpenSLESConstants;
-import com.simplecity.amp_library.services.EqualizerService;
+import com.simplecity.amp_library.services.Equalizer;
 import com.simplecity.amp_library.ui.adapters.RobotoSpinnerAdapter;
 import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
+import com.simplecity.amp_library.ui.drawer.MiniPlayerLockManager;
 import com.simplecity.amp_library.ui.views.SizableSeekBar;
 import com.simplecity.amp_library.utils.MusicUtils;
 
-import java.lang.ref.WeakReference;
 import java.util.Formatter;
 import java.util.Locale;
 import java.util.UUID;
@@ -48,7 +43,8 @@ import butterknife.Unbinder;
 public class EqualizerFragment extends BaseFragment implements
         Toolbar.OnMenuItemClickListener,
         CompoundButton.OnCheckedChangeListener,
-        DrawerLockManager.DrawerLock {
+        DrawerLockManager.DrawerLock,
+        MiniPlayerLockManager.MiniPlayerLock {
 
     private static final String TAG = "EqualizerFragment";
 
@@ -77,10 +73,6 @@ public class EqualizerFragment extends BaseFragment implements
      * Indicates if Virtualizer effect is supported.
      */
     private boolean virtualizerSupported;
-
-    private ServiceConnection serviceConnection;
-
-    public EqualizerService service;
 
     // Equalizer fields
     private int numberEqualizerBands;
@@ -151,46 +143,14 @@ public class EqualizerFragment extends BaseFragment implements
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        EqualizerService.closeEqualizerSessions(getContext(), !isChecked, MusicUtils.getAudioSessionId());
+        MusicUtils.closeEqualizerSessions(!isChecked, MusicUtils.getAudioSessionId());
 
-        EqualizerService.openEqualizerSession(getContext(), isChecked, MusicUtils.getAudioSessionId());
+        MusicUtils.openEqualizerSession(isChecked, MusicUtils.getAudioSessionId());
 
         // set parameter and state
         prefs.edit().putBoolean("audiofx.global.enable", isChecked).apply();
-        updateService();
+        MusicUtils.updateEqualizer();
     }
-
-    private static class UpdateHandler extends Handler {
-        private final WeakReference<EqualizerFragment> fragment;
-
-        public UpdateHandler(EqualizerFragment equalizerFragment) {
-            fragment = new WeakReference<>(equalizerFragment);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-
-            final EqualizerFragment fragment = this.fragment.get();
-            if (fragment == null) {
-                Log.w(TAG, "Active null");
-                return;
-            }
-
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case MSG_UPDATE_SERVICE:
-                    if (fragment.service != null) {
-                        fragment.service.update();
-                    } else {
-                        Log.w(TAG, "Service null");
-                    }
-                    break;
-            }
-        }
-
-    }
-
-    UpdateHandler mHandler = new UpdateHandler(this);
 
     public static EqualizerFragment newInstance() {
         Bundle args = new Bundle();
@@ -330,7 +290,7 @@ public class EqualizerFragment extends BaseFragment implements
 
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {
-                    mHandler.sendEmptyMessage(MSG_UPDATE_SERVICE);
+                    MusicUtils.updateEqualizer();
                 }
             });
         }
@@ -350,7 +310,7 @@ public class EqualizerFragment extends BaseFragment implements
                     if (fromUser) {
                         prefs.edit().putBoolean("audiofx.bass.enable", true).apply();
                         prefs.edit().putString("audiofx.bass.strength", String.valueOf(progress)).apply();
-                        mHandler.sendEmptyMessage(MSG_UPDATE_SERVICE);
+                        MusicUtils.updateEqualizer();
                     }
                 }
 
@@ -359,7 +319,7 @@ public class EqualizerFragment extends BaseFragment implements
                 public void onStartTrackingTouch(final SeekBar seekBar) {
                     if (seekBar.getProgress() == 0) {
                         prefs.edit().putBoolean("audiofx.bass.enable", true).apply();
-                        mHandler.sendEmptyMessage(MSG_UPDATE_SERVICE);
+                        MusicUtils.updateEqualizer();
                     }
                 }
 
@@ -369,7 +329,7 @@ public class EqualizerFragment extends BaseFragment implements
                     if (seekBar.getProgress() == 0) {
                         // disable
                         prefs.edit().putBoolean("audiofx.bass.enable", false).apply();
-                        mHandler.sendEmptyMessage(MSG_UPDATE_SERVICE);
+                        MusicUtils.updateEqualizer();
                     }
                 }
             });
@@ -389,7 +349,7 @@ public class EqualizerFragment extends BaseFragment implements
                     if (fromUser) {
                         prefs.edit().putBoolean("audiofx.virtualizer.enable", true).apply();
                         prefs.edit().putString("audiofx.virtualizer.strength", String.valueOf(progress)).apply();
-                        mHandler.sendEmptyMessage(MSG_UPDATE_SERVICE);
+                        MusicUtils.updateEqualizer();
                     }
                 }
 
@@ -398,7 +358,7 @@ public class EqualizerFragment extends BaseFragment implements
                 public void onStartTrackingTouch(final SeekBar seekBar) {
                     if (seekBar.getProgress() == 0) {
                         prefs.edit().putBoolean("audiofx.virtualizer.enable", true).apply();
-                        mHandler.sendEmptyMessage(MSG_UPDATE_SERVICE);
+                        MusicUtils.updateEqualizer();
                     }
                 }
 
@@ -408,7 +368,7 @@ public class EqualizerFragment extends BaseFragment implements
                     if (seekBar.getProgress() == 0) {
                         // disable
                         prefs.edit().putBoolean("audiofx.virtualizer.enable", false).apply();
-                        mHandler.sendEmptyMessage(MSG_UPDATE_SERVICE);
+                        MusicUtils.updateEqualizer();
                     }
                 }
             });
@@ -420,35 +380,16 @@ public class EqualizerFragment extends BaseFragment implements
     @Override
     public void onResume() {
         super.onResume();
-
         DrawerLockManager.getInstance().addDrawerLock(this);
-
-        if (serviceConnection == null) {
-            serviceConnection = new ServiceConnection() {
-                @Override
-                public void onServiceConnected(ComponentName name, IBinder binder) {
-                    service = ((EqualizerService.LocalBinder) binder).getService();
-                    updateUI();
-                }
-
-                @Override
-                public void onServiceDisconnected(ComponentName name) {
-                    service = null;
-                }
-            };
-        }
-        Intent serviceIntent = new Intent(getContext(), EqualizerService.class);
-        getActivity().bindService(serviceIntent, serviceConnection, 0);
+        MiniPlayerLockManager.getInstance().addMiniPlayerLock(this);
 
         updateUI();
     }
 
     @Override
     public void onPause() {
-
-        getActivity().unbindService(serviceConnection);
-
         DrawerLockManager.getInstance().removeDrawerLock(this);
+        MiniPlayerLockManager.getInstance().removeMiniPlayerLock(this);
 
         super.onPause();
     }
@@ -472,14 +413,14 @@ public class EqualizerFragment extends BaseFragment implements
         String newLevels;
         if (preset == eqCustomPresetPosition) {
             // load custom if possible
-            newLevels = prefs.getString("audiofx.eq.bandlevels.custom", EqualizerService.getZeroedBandsString(numberEqualizerBands));
+            newLevels = prefs.getString("audiofx.eq.bandlevels.custom", Equalizer.getZeroedBandsString(numberEqualizerBands));
         } else {
-            newLevels = prefs.getString("equalizer.preset." + preset, EqualizerService.getZeroedBandsString(numberEqualizerBands));
+            newLevels = prefs.getString("equalizer.preset." + preset, Equalizer.getZeroedBandsString(numberEqualizerBands));
         }
         prefs.edit().putString("audiofx.eq.bandlevels", newLevels).apply();
         updateUI();
 
-        updateService();
+        MusicUtils.updateEqualizer();
     }
 
     void updateUI() {
@@ -517,7 +458,7 @@ public class EqualizerFragment extends BaseFragment implements
         if (eqPreset == eqCustomPresetPosition) {
             // load custom preset for current device
             // here mEQValues needs to be pre-populated with the user's preset values.
-            String[] customEq = prefs.getString("audiofx.eq.bandlevels.custom", EqualizerService.getZeroedBandsString(numberEqualizerBands)).split(";");
+            String[] customEq = prefs.getString("audiofx.eq.bandlevels.custom", Equalizer.getZeroedBandsString(numberEqualizerBands)).split(";");
             floats = new float[numberEqualizerBands];
             for (int band = 0; band < floats.length; band++) {
                 final float level = Float.parseFloat(customEq[band]);
@@ -526,7 +467,7 @@ public class EqualizerFragment extends BaseFragment implements
             }
         } else {
             // try to load preset
-            levelsString = prefs.getString("equalizer.preset." + eqPreset, EqualizerService.getZeroedBandsString(numberEqualizerBands));
+            levelsString = prefs.getString("equalizer.preset." + eqPreset, Equalizer.getZeroedBandsString(numberEqualizerBands));
             String[] bandLevels = levelsString.split(";");
             floats = new float[bandLevels.length];
             for (int band = 0; band < bandLevels.length; band++) {
@@ -540,7 +481,7 @@ public class EqualizerFragment extends BaseFragment implements
 
     void equalizerBandUpdate(final int band, final int level) {
 
-        String[] currentCustomLevels = prefs.getString("audiofx.eq.bandlevels.custom", EqualizerService.getZeroedBandsString(numberEqualizerBands)).split(";");
+        String[] currentCustomLevels = prefs.getString("audiofx.eq.bandlevels.custom", Equalizer.getZeroedBandsString(numberEqualizerBands)).split(";");
 
         currentCustomLevels[band] = String.valueOf(level);
 
@@ -554,7 +495,7 @@ public class EqualizerFragment extends BaseFragment implements
         prefs.edit().putString("audiofx.eq.bandlevels", builder.toString()).apply();
         prefs.edit().putString("audiofx.eq.bandlevels.custom", builder.toString()).apply();
 
-        updateService();
+        MusicUtils.updateEqualizer();
     }
 
     /**
@@ -581,12 +522,7 @@ public class EqualizerFragment extends BaseFragment implements
         return formatBuilder.toString();
     }
 
-    private static final int MSG_UPDATE_SERVICE = 1;
-
-    void updateService() {
-        mHandler.removeMessages(MSG_UPDATE_SERVICE);
-        mHandler.sendEmptyMessageDelayed(MSG_UPDATE_SERVICE, 100);
-    }
+    private static final int MSG_UPDATE_EQUALIZER = 1;
 
     int[] getBandLevelRange() {
         String savedCenterFreqs = prefs.getString("equalizer.band_level_range", null);
@@ -603,7 +539,7 @@ public class EqualizerFragment extends BaseFragment implements
     }
 
     private int[] getCenterFreqs() {
-        String savedCenterFreqs = prefs.getString("equalizer.center_freqs", EqualizerService.getZeroedBandsString(numberEqualizerBands));
+        String savedCenterFreqs = prefs.getString("equalizer.center_freqs", Equalizer.getZeroedBandsString(numberEqualizerBands));
         String[] split = savedCenterFreqs.split(";");
         int[] freqs = new int[split.length];
         for (int i = 0; i < split.length; i++) {
@@ -618,9 +554,7 @@ public class EqualizerFragment extends BaseFragment implements
         eqPresetNames = new String[numPresets + 1];
 
         String[] presetNames = prefs.getString("equalizer.preset_names", "").split("\\|");
-        for (short i = 0; i < numPresets; i++) {
-            eqPresetNames[i] = presetNames[i];
-        }
+        System.arraycopy(presetNames, 0, eqPresetNames, 0, numPresets);
         eqPresetNames[numPresets] = getString(R.string.custom);
         eqCustomPresetPosition = numPresets;
 

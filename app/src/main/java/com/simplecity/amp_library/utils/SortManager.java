@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
+import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 
 import java.util.Collections;
@@ -87,6 +88,8 @@ public class SortManager {
 
     //Detail Fragment:
 
+    //  Songs sort order
+
     public void setArtistDetailSongsSortOrder(@SongSort int sortOrder) {
         setSortOrder(Key.ARTIST_DETAIL_SONGS, sortOrder);
     }
@@ -103,12 +106,12 @@ public class SortManager {
         return mPrefs.getInt(Key.ALBUM_DETAIL_SONGS, SongSort.DETAIL_DEFAULT);
     }
 
-    public void setPlaylistDetailSongsSortOrder(@SongSort int sortOrder) {
-        setSortOrder(Key.PLAYLIST_DETAIL_SONGS, sortOrder);
+    public void setPlaylistDetailSongsSortOrder(Playlist playlist, @SongSort int sortOrder) {
+        setSortOrder(String.format("%s_%s", Key.PLAYLIST_DETAIL_SONGS, playlist.id), sortOrder);
     }
 
-    public int getPlaylistDetailSongsSortOrder() {
-        return mPrefs.getInt(Key.PLAYLIST_DETAIL_SONGS, SongSort.DETAIL_DEFAULT);
+    public int getPlaylistDetailSongsSortOrder(Playlist playlist) {
+        return mPrefs.getInt(String.format("%s_%s", Key.PLAYLIST_DETAIL_SONGS, playlist.id), SongSort.DETAIL_DEFAULT);
     }
 
     public void setGenreDetailSongsSortOrder(@SongSort int sortOrder) {
@@ -119,6 +122,7 @@ public class SortManager {
         return mPrefs.getInt(Key.GENRE_DETAIL_SONGS, SongSort.DEFAULT);
     }
 
+    // Albums sort order
 
     public void setArtistDetailAlbumsSortOrder(@AlbumSort int sortOrder) {
         setSortOrder(Key.ARTIST_DETAIL_ALBUMS, sortOrder);
@@ -128,12 +132,12 @@ public class SortManager {
         return mPrefs.getInt(Key.ARTIST_DETAIL_ALBUMS, AlbumSort.DEFAULT);
     }
 
-    public void setPlaylistDetailAlbumsSortOrder(@AlbumSort int sortOrder) {
-        setSortOrder(Key.PLAYLIST_DETAIL_ALBUMS, sortOrder);
+    public void setPlaylistDetailAlbumsSortOrder(Playlist playlist, @AlbumSort int sortOrder) {
+        setSortOrder(String.format("%s_%s", Key.PLAYLIST_DETAIL_ALBUMS, playlist.id), sortOrder);
     }
 
-    public int getPlaylistDetailAlbumsSortOrder() {
-        return mPrefs.getInt(Key.PLAYLIST_DETAIL_ALBUMS, AlbumSort.DEFAULT);
+    public int getPlaylistDetailAlbumsSortOrder(Playlist playlist) {
+        return mPrefs.getInt(String.format("%s_%s", Key.PLAYLIST_DETAIL_ALBUMS, playlist.id), AlbumSort.DEFAULT);
     }
 
     public void setGenreDetailAlbumsSortOrder(@AlbumSort int sortOrder) {
@@ -144,6 +148,7 @@ public class SortManager {
         return mPrefs.getInt(Key.GENRE_DETAIL_ALBUMS, AlbumSort.DEFAULT);
     }
 
+    // Asc/Desc songs sort order
 
     public void setArtistDetailSongsAscending(boolean ascending) {
         setAscending(Key.ARTIST_DETAIL_SONGS_ASC, ascending);
@@ -161,12 +166,12 @@ public class SortManager {
         return mPrefs.getBoolean(Key.ALBUM_DETAIL_SONGS_ASC, true);
     }
 
-    public void setPlaylistDetailSongsAscending(boolean ascending) {
-        setAscending(Key.PLAYLIST_DETAIL_SONGS_ASC, ascending);
+    public void setPlaylistDetailSongsAscending(Playlist playlist, boolean ascending) {
+        setAscending(String.format("%s_%s", Key.PLAYLIST_DETAIL_SONGS_ASC, playlist.id), ascending);
     }
 
-    public boolean getPlaylistDetailSongsAscending() {
-        return mPrefs.getBoolean(Key.PLAYLIST_DETAIL_SONGS_ASC, true);
+    public boolean getPlaylistDetailSongsAscending(Playlist playlist) {
+        return mPrefs.getBoolean(String.format("%s_%s", Key.PLAYLIST_DETAIL_SONGS_ASC, playlist.id), true);
     }
 
     public void setGenreDetailSongsAscending(boolean ascending) {
@@ -177,6 +182,7 @@ public class SortManager {
         return mPrefs.getBoolean(Key.GENRE_DETAIL_SONGS_ASC, true);
     }
 
+    // Asc/Desc albums sort order
 
     public void setArtistDetailAlbumsAscending(boolean ascending) {
         setAscending(Key.ARTIST_DETAIL_ALBUMS_ASC, ascending);
@@ -186,12 +192,12 @@ public class SortManager {
         return mPrefs.getBoolean(Key.ARTIST_DETAIL_ALBUMS_ASC, true);
     }
 
-    public void setPlaylistDetailAlbumsAscending(boolean ascending) {
-        setAscending(Key.PLAYLIST_DETAIL_ALBUMS_ASC, ascending);
+    public void setPlaylistDetailAlbumsAscending(Playlist playlist, boolean ascending) {
+        setAscending(String.format("%s_%s", Key.PLAYLIST_DETAIL_ALBUMS_ASC, playlist.id), ascending);
     }
 
-    public boolean getPlaylistDetailAlbumsAscending() {
-        return mPrefs.getBoolean(Key.PLAYLIST_DETAIL_ALBUMS_ASC, true);
+    public boolean getPlaylistDetailAlbumsAscending(Playlist playlist) {
+        return mPrefs.getBoolean(String.format("%s_%s", Key.PLAYLIST_DETAIL_ALBUMS_ASC, playlist.id), true);
     }
 
     public void setGenreDetailAlbumsAscending(boolean ascending) {
@@ -201,6 +207,7 @@ public class SortManager {
     public boolean getGenreDetailAlbumsAscending() {
         return mPrefs.getBoolean(Key.GENRE_DETAIL_ALBUMS_ASC, true);
     }
+
 
     static int PREF_VERSION = 0;
 

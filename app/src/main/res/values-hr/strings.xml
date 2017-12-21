@@ -62,8 +62,6 @@
     <string name="song_to_favourites"><xliff:g id="song_name">%s</xliff:g> je dodana u favorite.</string>
     <string name="song_removed_from_favourites"><xliff:g id="song_name">%s</xliff:g> je uklonjena iz favorita</string>
     <!-- ## Dialogs ## -->
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <!-- Displays when a restart is required due to a change (themes etc) -->
     <!-- Restart now button -->
     <string name="restart_button">Ponovno pokreni</string>
     <!-- Displays when picking a theme color -->
@@ -78,7 +76,7 @@
     <!-- Option to share audio file -->
     <string name="share_option_audio_file">Audio datoteka</string>
     <!-- Displays when you need to choose which app to share the song with -->
-    <string name="share_via">Podijeli trenutnu pjesmu preko:</string>
+    <string name="share_via">Podijeli pjesmu preko:</string>
     <!-- Displayed when an M3U playlist is being saved-->
     <string name="saving_playlist">Spremanje popisa naslova</string>
     <!-- Displayed when whitelisting a folder, as the app gathers the songs-->
@@ -118,13 +116,15 @@
     <!-- Delete confirmation dialog message when deleting artists -->
     <string name="delete_album_artist_desc_multiple">Sve pjesme od sljedećih izvođača albuma:<xliff:g id="album-artist">%s</xliff:g>će biti trajno izbrisane.</string>
     <!-- Delete confirmation dialog when deleting an entire album -->
-    <string name="delete_album_desc">Cijeli album <xliff:g id="album">%s</xliff:g> će biti trajno izbrisan.</string>
+    <string name="delete_album_desc">Sve pjesme iz albuma <xliff:g id="album">%s</xliff:g> će biti trajno izbrisane.</string>
     <!-- Delete confirmation dialog message when deleting albums -->
-    <string name="delete_album_desc_multiple">Sljedeći albumi će biti trajno izbrisani:<xliff:g id="album">%s</xliff:g></string>
+    <string name="get_pro_button_play_store">Play Trgovina</string>
+    <string name="get_pro_button_amazon">Amazon</string>
+    <string name="delete_album_desc_multiple">Sve pjesme iz sljedećih albuma:<xliff:g id="album">%s</xliff:g>će biti trajno izbrisane.</string>
     <!-- Delete confirmation dialog when deleting a single song -->
     <string name="delete_song_desc"><xliff:g id="song">%s</xliff:g> će biti trajno izbrisana.</string>
     <!-- Delete confirmation dialog message title when deleting songs -->
-    <string name="delete_song_desc_multiple">Sljedeće pjesme će biti trajno izbrisane:<xliff:g id="song">%s</xliff:g></string>
+    <string name="delete_song_desc_multiple">Sljedeće pjesme:<xliff:g id="song">%s</xliff:g>će biti trajno izbrisane.</string>
     <!-- Toast shown when songs are successfully deleted -->
     <string name="delete_songs_success_toast"><xliff:g id="number">%d</xliff:g> pjesama je izbrisano.</string>
     <!-- Toast shown when failing to delete songs-->
@@ -164,25 +164,28 @@
     <string name="widget_show_artwork">Prikaži omot albuma</string>
     <!-- ## Menu Headings ## -->
     <!-- Context menu in navigation drawer - option to save playlist as M3U -->
-    <string name="export_playlist">Izvezi popis naslova</string>
+    <string name="export_playlist">Izvezi</string>
     <!-- context menu item to remove the selected item from the playlist -->
     <!-- Menu option 'clear queue' -->
     <string name="clear_queue">Očisti red čekanja</string>
     <!-- -->
-    <string name="fav_add">Dodaj u Favorite</string>
+    <string name="fav_add">Favorit</string>
     <!-- Context menu item -->
     <string name="play_selection">Reproduciraj</string>
+    <!-- Menu item-->
+    <string name="menu_add_to">Dodaj u...</string>
     <!-- Multi select menu item-->
+    <string name="menu_playlist">Popis naslova</string>
     <!-- Multi select menu item-->
-    <!-- Multi select menu item-->
-    <!-- Context menu item -->
+    <string name="menu_queue">Red čekanja</string>
+    <!-- Artist overflow menu item-->
     <!-- Context menu item -->
     <string name="new_playlist">Novo</string>
     <!-- menu item to save the current list as a new playlist -->
     <string name="save_as_playlist">Spremi kao popis naslova</string>
     <!-- Context menu item to remove the selected item from the playlist -->
     <!-- Context menu item to remove the selected item from the queue -->
-    <string name="remove_from_queue">Ukloni iz reda čekanja</string>
+    <string name="remove_from_queue">Ukloni</string>
     <!-- Context menu item -->
     <string name="play_next">Reproduciraj sljedeće</string>
     <!-- Menu text for the settings item -->
@@ -194,7 +197,7 @@
     <!-- -->
     <!-- Library screen, menu item -->
     <string name="search_title">Pretraži</string>
-    <!-- Playlist context menu item to delete the selected playlist. -->
+    <string name="search_filter">Filter</string>
     <!-- Playlist context menu item to clear the selected playlist. -->
     <string name="clear_playlist_menu">Očisti</string>
     <!-- Playlist context menu item to edit the selected playlist -->
@@ -214,28 +217,26 @@
     <!-- 'More' button -->
     <string name="heading_more">Više</string>
     <!-- Share option-->
+    <string name="share">Podijeli</string>
     <!-- ## Navigation Drawer ## -->
     <!-- Accessibility description 'open navigation drawer'-->
     <string name="navigation_drawer_open">Otvori navigacijsku ladicu</string>
     <!-- Accessibility description 'close navigation drawer'-->
     <string name="navigation_drawer_close">Zatvori navigacijsku ladicu</string>
     <!-- ## Preference Menu ## -->
-    <!--Settings title for white accent color) -->
-    <!--Settings summary for white accent color-->
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">Navigacija</string>
-    <!--Settings category for 'notification' items -->
-    <!-- Settings title for inverting the notification drawer text & icons -->
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Ostalo</string>
+    <!--Settings category for 'playback' items -->
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
     <string name="pref_title_choose_tabs">Odaberi stavke kartica</string>
     <!--Settings summary for opening the dialog to pick which categories are shown as tab headings -->
     <string name="pref_summary_choose_tabs">Odaberite i preuredite kategorije koje su prikazane kao kartice pri vrhu zaslona</string>
     <!--Settings title for picking the primary theme color -->
-    <string name="pref_title_theme_pick_color">Boja teme</string>
+    <string name="pref_title_theme_pick_color">Primarna boja</string>
     <!--Settings summary for picking the primary theme color-->
-    <string name="pref_summary_theme_pick_color">Odaberite boju za vašu temu</string>
+    <string name="pref_summary_theme_pick_color">Odaberite primarnu boju za vašu temu</string>
     <!--Settings title for for picking the accent theme color-->
     <string name="pref_title_theme_pick_accent_color">Boja naglašavanja</string>
     <!--Settings summary for picking the accent theme color-->
@@ -252,7 +253,10 @@
     <string name="pref_title_theme_dark">Tamna</string>
     <string name="pref_title_theme_light">Svijetla</string>
     <string name="pref_title_theme_black">Crna</string>
-    <!--Settings summary for the downloading more themes -->
+    <string name="pref_group_palette">Paleta</string>
+    <string name="pref_title_palette">Koristi boju iz omota</string>
+    <string name="pref_summary_palette">Ako je omogućeno, Shuttle će prepoznati najbolju boju iz vašeg omota, te će ju koristiti kao primarnu boju aplikacije</string>
+    <string name="pref_title_palette_now_playing">Samo na zaslonu reprodukcije</string>
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">Bijela/Crna lista</string>
     <!--Settings title for viewing blacklist-->
@@ -263,7 +267,6 @@
     <string name="pref_title_view_whitelist">Prikaži/uredi bijelu listu</string>
     <!--Settings title for clearing whitelist-->
     <string name="pref_title_clear_whitelist">Očisti</string>
-    <!--Settings title for clearing whitelist-->
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">Obreži omot albuma</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -321,7 +324,9 @@
     <string name="pref_summary_placeholders">Prikazuje sličice u stilu Gmaila.
 Ako nije označeno, Shuttle ikona će se koristiti kao sličica</string>
     <!-- Settings title for the enable lockscreen controls checkbox -->
+    <string name="pref_title_lockscreen">Omogući prikaz omota na zaključanom zaslonu</string>
     <!-- Settings summary for the enable lockscreen controls checkbox -->
+    <string name="pref_summary_lockscreen">Omog./onemog. prikazivanje omota na zaključanom zaslonu</string>
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">Zaslon</string>
     <!-- Settings title for the keep screen on checkbox -->
@@ -366,6 +371,11 @@ Ako nije označeno, Shuttle ikona će se koristiti kao sličica</string>
     <string name="pref_title_changelog">Popis promjena</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Podrška</string>
+    <!-- Settings title for toggling between remaining time and total time -->
+    <!-- Settings summary for toggling between remaining time and total time -->
+    <!-- Settings title for the playback options -->
+    <!-- Settings title for toggling 'remember shuff'e-->
+    <!-- Settings summary for toggling 'remember shuff'e-->
     <string name="pref_title_version">Verzija</string>
     <string name="pref_title_faq">Često postavljana pitanja</string>
     <string name="pref_summary_faq">Imate pitanja? Trebate pomoč? Pritisnite ovdje kako bi pričitali FAQ @ www.shuttlemusicplayer.com</string>
@@ -373,6 +383,8 @@ Ako nije označeno, Shuttle ikona će se koristiti kao sličica</string>
     <string name="pref_summary_gplus">Postoji vrlo aktivna zajednica Shuttleovih korisnika na Google+. Ako imate pitanja ili trebate pomoć, to je najbolje mjesto za provjeriti.</string>
     <string name="pref_title_rate">Recite hvala</string>
     <string name="pref_summary_rate">Ako vam se sviđa Shuttle, molimo ostavite osvrt.</string>
+    <string name="pref_title_headset_beep">Zvučni signal</string>
+    <string name="pref_summary_headset_beep">Pusti zvučni signal kod prebacivanja pjesme preko kontrola slušalica.</string>
     <!-- Settings title for ignore playlist duplicates -->
     <string name="pref_title_ignore_duplicates">Ignoriraj duplikate popisa naslova</string>
     <!-- Settings summary for ignore playlist duplicates -->
@@ -390,6 +402,7 @@ Ako nije označeno, Shuttle ikona će se koristiti kao sličica</string>
     <!-- Grid with cards ('view as' option) -->
     <string name="view_options_grid_card">Rešetka: Kartice</string>
     <!-- Grid size (number of columns in grid view) -->
+    <string name="menu_grid_size">Veličina rešetke</string>
     <!-- -->
     <string name="whitelist_title">Bijela lista</string>
     <!-- -->
@@ -433,6 +446,7 @@ Ako nije označeno, Shuttle ikona će se koristiti kao sličica</string>
     <!-- -->
     <string name="rename_file">Preimenuj datoteku</string>
     <!-- -->
+    <string name="rename">Preimenuj</string>
     <!-- Menu option to save current folder as initial (starting) directory -->
     <string name="set_initial_dir">Postavi kao početni direktorij</string>
     <!-- Label in folder view - number of folders within the current folder -->
@@ -536,18 +550,27 @@ mapa</item>
     <string name="sort_files_track_name">Naziv trake</string>
     <!-- ## Sleep Timer ## -->
     <!-- Sleep timer title -->
+    <string name="sleep_timer">Tajmer za spavanje</string>
     <!--Sleep timer "Play last song to end" -->
     <string name="sleep_timer_play_to_end">Reproduciraj zadnju pjesmu do kraja</string>
-    <!-- Sleep timer "set" -->
     <!-- Sleep timer "Stop" -->
+    <string name="sleep_timer_stop_button">Zaustavi</string>
     <!-- Sleep timer stop message "Stop sleep timer?" -->
+    <string name="sleep_timer_stop_title">Zaustaviti tajmer spavanja?</string>
     <!-- Toast when sleep timer is set -->
-    <!-- Sleep timer "Set time..." -->
+    <string name="sleep_timer_started">Tajmer za spavanje je započeo</string>
+    <!-- Sleep timer "Set minutes..." -->
+    <string name="sleep_timer_set_minutes">Postavi minute...</string>
     <!-- Sleep timer "5 minutes" -->
+    <string name="sleep_timer_5_mins">5 minuta</string>
     <!-- Sleep timer "15 minutes" -->
+    <string name="sleep_timer_15_mins">15 minuta</string>
     <!-- Sleep timer "30 minutes" -->
+    <string name="sleep_timer_30_mins">30 minuta</string>
     <!-- Sleep timer "1 hour" -->
+    <string name="sleep_timer_1_hour">1 sat</string>
     <!-- Sleep timer label "Minutes" (limited space here) -->
+    <string name="sleep_timer_label_minutes">Min</string>
     <!-- Button name in time span picker -->
     <string name="button_done">Dovršeno</string>
     <!-- Title of time span picker -->
@@ -608,12 +631,9 @@ mapa</item>
     <!-- Shows when multiple items are selected after-long pressing-->
     <string name="action_mode_selection_count"><xliff:g id="number">%d</xliff:g> odabrano</string>
     <!-- ## Unknown artist/album metadata ##-->
-    <!-- Default name of artist that doesn't have a name in the metadata -->
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <!-- Default name of genre that doesn't have a name in the metadata -->
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
     <!-- Default value if album year unknown -->
-    <!-- Song Info overflow option-->
+    <string name="unknown_year">Godina nije poznata</string>
+    <!-- Song info overflow option-->
     <string name="song_info">Informacije o pjesmi</string>
     <!-- Artwork Download Service Label-->
     <string name="download_service">Servis za preuzimanje</string>
@@ -622,12 +642,14 @@ mapa</item>
     <!-- Accessibility button description -->
     <string name="btn_pause">Pauza</string>
     <!-- Accessibility button description -->
+    <string name="btn_play_pause">Reprodukcija/pauza</string>
     <!-- Accessibility button description -->
     <string name="btn_skip">Preskoči</string>
     <!-- Accessibility button description -->
     <string name="btn_prev">Prošlo</string>
     <!-- Accessibility button description -->
     <!-- Accessibility button description -->
+    <string name="btn_close">Zatvori</string>
     <!-- Accessibility overflow button. Example: "<Spice Girls> options"-->
     <string name="btn_options">%s opcije</string>
     <!-- Accessibility button description -->
@@ -667,7 +689,7 @@ mapa</item>
     <string name="snackbar_rate_action">Ocijenite ga!</string>
     <string name="dialog_create_playlist_error">Pogreška pri stvaranju popisa naslova</string>
     <!-- Artwork picker -->
-    <string name="artwork_edit">Uredi omot albuma</string>
+    <string name="artwork_edit">Odaberi omot albuma</string>
     <string name="artwork_type_media_store">Media Store</string>
     <string name="artwork_type_tag">Oznaka</string>
     <string name="artwork_type_lastfm">Last.FM</string>
@@ -693,19 +715,28 @@ mapa</item>
     <string name="shortcut_folders_long_label">Otvori Preglednik mapa</string>
     <!-- "Folders" Shortcut label disabled. (I don't think this ever happens)-->
     <string name="shortcut_folders_disabled">Mape nisu dostupne</string>
-    <!-- "Playlist" Shortcut label. Max 10 characters.-->
-    <!-- "Playlist" Shortcut long label. Max 25 characters.-->
-    <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">Disk <xliff:g id="number">%d</xliff:g></string>
     <!-- Search Filter-->
+    <string name="search_fuzzy">Fuzzy</string>
+    <string name="search_artists">Izvođači</string>
+    <string name="search_albums">Albumi</string>
     <!-- Changelog -->
+    <string name="changelog_show_on_launch">Prikaži pri pokretanju</string>
     <!-- Lyrics -->
     <!-- QuickLyric button -->
     <string name="quicklyric">QuickLyric</string>
     <!-- Button for lyrics -->
     <string name="lyrics">Tekstovi pjes.</string>
     <!-- Shown when there are no lyrics -->
-    <string name="no_lyrics">Nisu pronađeni ugrađeni tekstovi pjesama</string>
+    <string name="no_lyrics">Tekst pjesme nije pronađen.</string>
     <!-- QuickLyric info dialog message-->
+    <string name="quicklyric_info">QuickLyric je dobavljač stihova otvorenog koda sa Google Play Trgovine.\n\nKada je instaliran, QuickLyric će biti otvoren svaki put kad dodirnete \'QuickLyric\' tipku.</string>
+    <!-- "Playlist" Shortcut label. Max 10 characters.-->
+    <string name="shortcut_playlist_short_label">Popisi naslova</string>
+    <!-- "Playlist" Shortcut long label. Max 25 characters.-->
+    <string name="shortcut_playlist_long_label">Otvori Favorite</string>
+    <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
+    <string name="shortcut_playlist_disabled">Popis naslova nije dostupan</string>
+    <!-- Displayed at the top of the album list, album shuffle mode-->
 </resources>

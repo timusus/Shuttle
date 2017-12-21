@@ -10,15 +10,17 @@ public interface QueueView {
 
     void loadData(List<ViewModel> items, int position);
 
-    void updateQueuePosition(int position);
+    void updateQueuePosition(int position, boolean fromUser);
 
     void showToast(String message, int duration);
 
     void startDrag(SongView.ViewHolder holder);
 
-    void setCurrentQueueItem(int position);
-
     void showTaggerDialog(TaggerDialog taggerDialog);
 
     void removeFromQueue(int position);
+
+    void moveQueueItem(int from, int to);
+
+    void showUpgradeDialog();
 }

@@ -12,7 +12,6 @@ import com.android.vending.billing.utils.Inventory;
 import com.android.vending.billing.utils.Purchase;
 import com.simplecity.amp_library.constants.Config;
 import com.simplecity.amp_library.rx.UnsafeConsumer;
-import com.simplecity.amp_library.ui.activities.MainActivity;
 import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.LogUtils;
 
@@ -42,7 +41,7 @@ public class IabManager {
         setup(null);
     }
 
-    public void setup(@Nullable UnsafeConsumer<Integer> messageCallback) {
+    private void setup(@Nullable UnsafeConsumer<Integer> messageCallback) {
         iabHelper.startSetup(result -> {
 
             if (!result.isSuccess()) {
@@ -59,10 +58,6 @@ public class IabManager {
     }
 
     public void purchaseUpgrade(Activity activity, UnsafeConsumer<Boolean> successHandler) {
-        if (!(activity instanceof MainActivity)) {
-            throw new IllegalStateException("purchaseUpgrade must be called from MainActivity, it's the only Activity handling the activity result.");
-        }
-
         AnalyticsManager.logUpgrade(AnalyticsManager.UpgradeType.UPGRADE);
 
         try {
@@ -71,7 +66,7 @@ public class IabManager {
                 if (iabHelper == null) return;
 
                 if (result.isFailure()) {
-                    LogUtils.logError("IabManager", "Purchase result failure: " + result.getMessage());
+                    LogUtils.logException("IabManager", "Purchase result failure: " + result.getMessage(), null);
                     successHandler.accept(false);
                     return;
                 }

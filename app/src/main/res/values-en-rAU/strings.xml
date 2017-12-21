@@ -37,8 +37,6 @@
     <!-- -->
     <!-- Toasts after adding song(s) to playlists -->
     <!-- ## Dialogs ## -->
-    <!-- Displays when a restart is required due to a change (themes etc) -->
-    <!-- Displays when a restart is required due to a change (themes etc) -->
     <!-- Restart now button -->
     <string name="restart_button">Restart now</string>
     <!-- Displays when picking a theme color -->
@@ -92,10 +90,10 @@
     <!-- -->
     <string name="fav_add">Add to Favourites</string>
     <!-- Context menu item -->
+    <!-- Menu item-->
     <!-- Multi select menu item-->
     <!-- Multi select menu item-->
-    <!-- Multi select menu item-->
-    <!-- Context menu item -->
+    <!-- Artist overflow menu item-->
     <!-- Context menu item -->
     <!-- menu item to save the current list as a new playlist -->
     <!-- Context menu item to remove the selected item from the playlist -->
@@ -107,7 +105,6 @@
     <!-- -->
     <!-- -->
     <!-- Library screen, menu item -->
-    <!-- Playlist context menu item to delete the selected playlist. -->
     <!-- Playlist context menu item to clear the selected playlist. -->
     <!-- Playlist context menu item to edit the selected playlist -->
     <!-- Playlist context menu item to rename the selected playlist -->
@@ -122,12 +119,9 @@
     <!-- Accessibility description 'open navigation drawer'-->
     <!-- Accessibility description 'close navigation drawer'-->
     <!-- ## Preference Menu ## -->
-    <!--Settings title for white accent color) -->
-    <!--Settings summary for white accent color-->
     <!--Settings category for 'navigation' items -->
-    <!--Settings category for 'notification' items -->
-    <!-- Settings title for inverting the notification drawer text & icons -->
     <!--Settings category for 'other' items -->
+    <!--Settings category for 'playback' items -->
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
     <!--Settings summary for opening the dialog to pick which categories are shown as tab headings -->
     <!--Settings title for picking the primary theme color -->
@@ -142,12 +136,10 @@
     <!--Settings summary for enabling the tinted navigation bar -->
     <!-- Settings title for the themes -->
     <!--Settings titles for the themes -->
-    <!--Settings summary for the downloading more themes -->
     <!--Settings title for whitelist/blacklist-->
     <!--Settings title for viewing blacklist-->
     <!--Settings title for clearing blacklist-->
     <!--Settings title for viewing whitelist-->
-    <!--Settings title for clearing whitelist-->
     <!--Settings title for clearing whitelist-->
     <!-- Context menu item to remove the selected item from the blacklist -->
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -200,6 +192,11 @@
     <!-- Settings summary for downloading the Simple Last.fm scrobbler  -->
     <!-- Settings title for the About heading -->
     <!-- Settings title for the Support heading -->
+    <!-- Settings title for toggling between remaining time and total time -->
+    <!-- Settings summary for toggling between remaining time and total time -->
+    <!-- Settings title for the playback options -->
+    <!-- Settings title for toggling 'remember shuff'e-->
+    <!-- Settings summary for toggling 'remember shuff'e-->
     <!-- Settings title for ignore playlist duplicates -->
     <!-- Settings summary for ignore playlist duplicates -->
     <!-- Displayed on the settings page to choose the default main page -->
@@ -272,11 +269,10 @@
     <!-- ## Sleep Timer ## -->
     <!-- Sleep timer title -->
     <!--Sleep timer "Play last song to end" -->
-    <!-- Sleep timer "set" -->
     <!-- Sleep timer "Stop" -->
     <!-- Sleep timer stop message "Stop sleep timer?" -->
     <!-- Toast when sleep timer is set -->
-    <!-- Sleep timer "Set time..." -->
+    <!-- Sleep timer "Set minutes..." -->
     <!-- Sleep timer "5 minutes" -->
     <!-- Sleep timer "15 minutes" -->
     <!-- Sleep timer "30 minutes" -->
@@ -310,12 +306,8 @@
     <!-- Displayed under the 'Recent' section of the 'suggested' tab.. Artist, Album, Song  -->
     <!-- Shows when multiple items are selected after-long pressing-->
     <!-- ## Unknown artist/album metadata ##-->
-    <!-- Default name of artist that doesn't have a name in the metadata -->
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
-    <!-- Default name of genre that doesn't have a name in the metadata -->
-    <!-- Default name of album artist that doesn't have a name in the metadata -->
     <!-- Default value if album year unknown -->
-    <!-- Song Info overflow option-->
+    <!-- Song info overflow option-->
     <!-- Artwork Download Service Label-->
     <!-- Accessibility button description -->
     <!-- Accessibility button description -->
@@ -345,9 +337,6 @@
     <!-- "Folders" Shortcut label. Max 10 characters.-->
     <!-- "Folders" Shortcut long label. Max 25 characters.-->
     <!-- "Folders" Shortcut label disabled. (I don't think this ever happens)-->
-    <!-- "Playlist" Shortcut label. Max 10 characters.-->
-    <!-- "Playlist" Shortcut long label. Max 25 characters.-->
-    <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <!-- Search Filter-->
     <!-- Changelog -->
@@ -356,4 +345,8 @@
     <!-- Button for lyrics -->
     <!-- Shown when there are no lyrics -->
     <!-- QuickLyric info dialog message-->
+    <!-- "Playlist" Shortcut label. Max 10 characters.-->
+    <!-- "Playlist" Shortcut long label. Max 25 characters.-->
+    <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
+    <!-- Displayed at the top of the album list, album shuffle mode-->
 </resources>

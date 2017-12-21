@@ -25,8 +25,7 @@ public @interface ViewType {
 
     int SHUFFLE = 18;
 
-    int BLACKLIST = 19;
-    int WHITELIST = 20;
+    int INCL_EXCL = 19;
 
     int EMPTY = 21;
 
@@ -54,4 +53,6 @@ public @interface ViewType {
     int QUEUE_PAGER_ITEM = 32;
 
     int SUBHEADER = 33;
+
+    int SHUFFLE_ALBUMS = 34;
 }

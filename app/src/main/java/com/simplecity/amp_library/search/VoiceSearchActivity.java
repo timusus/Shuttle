@@ -11,6 +11,7 @@ import com.annimon.stream.Stream;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.ui.activities.BaseActivity;
+import com.simplecity.amp_library.ui.activities.MainActivity;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
@@ -30,7 +31,7 @@ public class VoiceSearchActivity extends BaseActivity {
 
     private String filterString;
 
-    private Intent mIntent;
+    private Intent intent;
 
     private int position = -1;
 
@@ -38,15 +39,15 @@ public class VoiceSearchActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mIntent = getIntent();
+        intent = getIntent();
 
-        filterString = mIntent.getStringExtra(SearchManager.QUERY);
+        filterString = intent.getStringExtra(SearchManager.QUERY);
     }
 
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
         super.onServiceConnected(name, service);
-        if (mIntent != null && mIntent.getAction() != null && mIntent.getAction().equals("android.media.action.MEDIA_PLAY_FROM_SEARCH")) {
+        if (intent != null && intent.getAction() != null && intent.getAction().equals("android.media.action.MEDIA_PLAY_FROM_SEARCH")) {
             searchAndPlaySongs();
         }
     }
@@ -124,11 +125,16 @@ public class VoiceSearchActivity extends BaseActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(songs -> {
                     if (songs != null) {
-                        MusicUtils.playAll(songs, position, (String message) ->
+                        MusicUtils.playAll(songs, position, true, (String message) ->
                                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show());
+                        startActivity(new Intent(this, MainActivity.class));
                     }
                     finish();
-                }, error -> LogUtils.logException(TAG, "Error attempting to playAll()", error));
+                }, error -> {
+                    LogUtils.logException(TAG, "Error attempting to playAll()", error);
+                    startActivity(new Intent(this, MainActivity.class));
+                    finish();
+                });
     }
 
     @Override

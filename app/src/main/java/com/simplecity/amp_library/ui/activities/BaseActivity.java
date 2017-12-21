@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.afollestad.aesthetic.AestheticActivity;
 import com.greysonparrelli.permiso.Permiso;
+import com.simplecity.amp_library.IabManager;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
@@ -25,6 +26,16 @@ import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
 public abstract class BaseActivity extends AestheticActivity implements ServiceConnection {
 
     private MusicServiceConnectionUtils.ServiceToken token;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (IabManager.getInstance().iabHelper != null
+                && IabManager.getInstance().iabHelper.handleActivityResult(requestCode, resultCode, data)) {
+            return;
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     @CallSuper
     protected void onCreate(final Bundle savedInstanceState) {
@@ -38,7 +49,7 @@ public abstract class BaseActivity extends AestheticActivity implements ServiceC
             @Override
             public void onPermissionResult(Permiso.ResultSet resultSet) {
                 if (resultSet.areAllPermissionsGranted()) {
-                    bindToService();
+                    bindService();
                 } else {
                     Toast.makeText(BaseActivity.this, "Permission check failed", Toast.LENGTH_LONG).show();
                     finish();
@@ -52,14 +63,25 @@ public abstract class BaseActivity extends AestheticActivity implements ServiceC
         }, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WAKE_LOCK);
     }
 
-    void bindToService() {
+    void bindService() {
         token = MusicServiceConnectionUtils.bindToService(this, this);
+    }
+
+    void unbindService() {
+        if (token != null) {
+            MusicServiceConnectionUtils.unbindFromService(token);
+            token = null;
+        }
     }
 
     @Override
     protected void onResume() {
         keepScreenOn(SettingsManager.getInstance().keepScreenOn());
         super.onResume();
+
+        if (token == null) {
+            bindService();
+        }
 
         Permiso.getInstance().setActivity(this);
     }
@@ -72,11 +94,7 @@ public abstract class BaseActivity extends AestheticActivity implements ServiceC
 
     @Override
     protected void onDestroy() {
-
-        if (token != null) {
-            MusicServiceConnectionUtils.unbindFromService(token);
-            token = null;
-        }
+        unbindService();
 
         super.onDestroy();
     }
@@ -89,7 +107,7 @@ public abstract class BaseActivity extends AestheticActivity implements ServiceC
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
-
+        unbindService();
     }
 
     @Override
@@ -121,4 +139,5 @@ public abstract class BaseActivity extends AestheticActivity implements ServiceC
     }
 
     protected abstract String screenName();
+
 }

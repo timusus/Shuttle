@@ -167,29 +167,13 @@ public class Album implements
         Album album = (Album) o;
 
         if (id != album.id) return false;
-        if (year != album.year) return false;
-        if (numSongs != album.numSongs) return false;
-        if (lastPlayed != album.lastPlayed) return false;
-        if (dateAdded != album.dateAdded) return false;
-        if (name != null ? !name.equals(album.name) : album.name != null) return false;
-        if (artists != null ? !artists.equals(album.artists) : album.artists != null) return false;
-        if (albumArtistName != null ? !albumArtistName.equals(album.albumArtistName) : album.albumArtistName != null)
-            return false;
-        return paths != null ? paths.equals(album.paths) : album.paths == null;
-
+        return name != null ? name.equals(album.name) : album.name == null;
     }
 
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (artists != null ? artists.hashCode() : 0);
-        result = 31 * result + (albumArtistName != null ? albumArtistName.hashCode() : 0);
-        result = 31 * result + year;
-        result = 31 * result + numSongs;
-        result = 31 * result + (int) (lastPlayed ^ (lastPlayed >>> 32));
-        result = 31 * result + (int) (dateAdded ^ (dateAdded >>> 32));
-        result = 31 * result + (paths != null ? paths.hashCode() : 0);
         return result;
     }
 

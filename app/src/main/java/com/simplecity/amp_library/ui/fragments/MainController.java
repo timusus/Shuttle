@@ -15,15 +15,18 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
+import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.ui.detail.AlbumDetailFragment;
 import com.simplecity.amp_library.ui.detail.ArtistDetailFragment;
+import com.simplecity.amp_library.ui.detail.GenreDetailFragment;
 import com.simplecity.amp_library.ui.detail.PlaylistDetailFragment;
 import com.simplecity.amp_library.ui.drawer.DrawerLockController;
 import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
 import com.simplecity.amp_library.ui.drawer.DrawerProvider;
+import com.simplecity.amp_library.ui.drawer.MiniPlayerLockManager;
 import com.simplecity.amp_library.ui.drawer.NavigationEventRelay;
 import com.simplecity.amp_library.ui.settings.SettingsParentFragment;
 import com.simplecity.amp_library.ui.views.UpNextView;
@@ -50,9 +53,11 @@ public class MainController extends BaseNavigationController implements BackPres
 
     public static final String STATE_CURRENT_SHEET = "current_sheet";
 
-    @Inject NavigationEventRelay navigationEventRelay;
+    @Inject
+    NavigationEventRelay navigationEventRelay;
 
-    @Inject MultiSheetEventRelay multiSheetEventRelay;
+    @Inject
+    MultiSheetEventRelay multiSheetEventRelay;
 
     private Handler delayHandler;
 
@@ -111,20 +116,20 @@ public class MainController extends BaseNavigationController implements BackPres
 
         disposables.add(navigationEventRelay.getEvents()
                 .observeOn(AndroidSchedulers.mainThread())
-                .filter(drawerEvent -> drawerEvent.isActionable)
+                .filter(NavigationEventRelay.NavigationEvent::isActionable)
                 .subscribe(navigationEvent -> {
                     switch (navigationEvent.type) {
                         case NavigationEventRelay.NavigationEvent.Type.LIBRARY_SELECTED:
                             popToRootViewController();
                             break;
                         case NavigationEventRelay.NavigationEvent.Type.FOLDERS_SELECTED:
-                            delayHandler.postDelayed(() -> pushViewController(FolderFragment.newInstance("PageTitle"), "FolderFragment"), 250);
+                            delayHandler.postDelayed(() -> pushViewController(FolderFragment.newInstance(getString(R.string.folders_title), false), "FolderFragment"), 250);
                             break;
                         case NavigationEventRelay.NavigationEvent.Type.SLEEP_TIMER_SELECTED:
                             UnsafeAction showToast = () -> Toast.makeText(getContext(), R.string.sleep_timer_started, Toast.LENGTH_SHORT).show();
                             SleepTimer.getInstance().getDialog(
                                     getContext(),
-                                    () -> SleepTimer.getInstance().showHmsPicker(getContext(), getFragmentManager(), showToast),
+                                    () -> SleepTimer.getInstance().showMinutesDialog(getContext(), showToast),
                                     showToast
                             ).show();
                             break;
@@ -157,6 +162,14 @@ public class MainController extends BaseNavigationController implements BackPres
                             delayHandler.postDelayed(() -> {
                                 popToRootViewController();
                                 pushViewController(AlbumDetailFragment.newInstance(album, null), "AlbumDetailFragment");
+                            }, 250);
+                            break;
+                        case NavigationEventRelay.NavigationEvent.Type.GO_TO_GENRE:
+                            multiSheetView.goToSheet(MultiSheetView.Sheet.NONE);
+                            Genre genre = (Genre) navigationEvent.data;
+                            delayHandler.postDelayed(() -> {
+                                popToRootViewController();
+                                pushViewController(GenreDetailFragment.newInstance(genre), "GenreDetailFragment");
                             }, 250);
                             break;
 
@@ -194,7 +207,7 @@ public class MainController extends BaseNavigationController implements BackPres
     private void toggleBottomSheetVisibility(boolean collapse, boolean animate) {
         if (MusicUtils.getQueue().isEmpty()) {
             multiSheetView.hide(collapse, false);
-        } else {
+        } else if (MiniPlayerLockManager.getInstance().canShowMiniPlayer()) {
             multiSheetView.unhide(animate);
         }
     }

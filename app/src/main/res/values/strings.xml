@@ -104,12 +104,14 @@
     <string name="upgraded_message">You have successfully upgraded to Shuttle+. I appreciate the support.
         \n\nPlease restart the app to ensure all features are enabled</string>
 
-    <string name="upgrade_dialog_message">Upgrading will unlock additional features in Shuttle, including:
-        \n\n• Tons of extra themes
+    <string name="upgrade_dialog_message">
+        • ChromeCast support
+        \n• Extra themes
         \n• Tag editing
         \n• Folder browsing
-        \n• ChromeCast Support
-        \n\nIt also helps to promote further development.\n\nYou do not need to upgrade if you already have Shuttle+</string>
+        \n• Support development ❤️</string>
+
+    <string name="upgrade_required_folders">Upgrade to Shuttle+</string>
 
     <string name="btn_upgrade">Upgrade</string>
     <!-- -->
@@ -187,13 +189,14 @@
     <string name="fav_add">Favorite</string>
     <!-- Context menu item -->
     <string name="play_selection">Play</string>
-    <!-- Multi select menu item-->
+    <!-- Menu item-->
     <string name="menu_add_to">Add to…</string>
     <!-- Multi select menu item-->
     <string name="menu_playlist">Playlist</string>
     <!-- Multi select menu item-->
     <string name="menu_queue">Queue</string>
-    <!-- Context menu item -->
+    <!-- Artist overflow menu item-->
+    <string name="menu_album_shuffle">Album shuffle</string>
     <!-- Context menu item -->
     <string name="new_playlist">New</string>
     <!-- menu item to save the current list as a new playlist -->
@@ -226,6 +229,7 @@
     <string name="delete_item">Delete</string>
     <!-- Menu item to play back all the songs in the currently showing list in shuffle mode -->
     <string name="shuffle_all">Shuffle All</string>
+
     <!-- title of the "current playlist" screen when not in party shuffle mode -->
     <string name="nowplaying_title">Now Playing</string>
     <!-- -->
@@ -246,12 +250,10 @@
     <!-- ## Preference Menu ## -->
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">Navigation</string>
-    <!--Settings category for 'notification' items -->
-    <string name="pref_category_notif_drawer">Notification Drawer</string>
-    <!-- Settings title for inverting the notification drawer text & icons -->
-    <string name="pref_title_invert_notif_icons">Invert Notification Icons/Text</string>
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Other</string>
+    <!--Settings category for 'playback' items -->
+    <string name="pref_category_playback">Playback</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
     <string name="pref_title_choose_tabs">Choose Tab Items</string>
     <!--Settings summary for opening the dialog to pick which categories are shown as tab headings -->
@@ -347,6 +349,10 @@
     <!-- Settings summary for gmail style placeholders checkbox-->
     <string name="pref_summary_placeholders">Displays \'Gmail\' style placeholders by default.
         If unchecked, the Shuttle icon will be used as a placeholder instead</string>
+    <!-- Settings title for the enable lockscreen controls checkbox -->
+    <string name="pref_title_lockscreen">Enable Lockscreen Artwork</string>
+    <!-- Settings summary for the enable lockscreen controls checkbox -->
+    <string name="pref_summary_lockscreen">Enables/disables the artwork on the lockscreen</string>
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">Display</string>
     <!-- Settings title for the keep screen on checkbox -->
@@ -391,6 +397,18 @@
     <string name="pref_title_changelog">Changelog</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Support</string>
+    <!-- Settings title for toggling between remaining time and total time -->
+    <string name="pref_title_display_remaining_time">Show remaining time</string>
+    <!-- Settings summary for toggling between remaining time and total time -->
+    <string name="pref_summary_display_remaining_time">Show remaining time instead of duration on the \'now playing\' screen</string>
+
+    <!-- Settings title for the playback options -->
+    <string name="pref_title_playback">Playback</string>
+    <!-- Settings title for toggling 'remember shuff'e-->
+    <string name="pref_title_remember_shuffle">Remember shuffle mode</string>
+    <!-- Settings summary for toggling 'remember shuff'e-->
+    <string name="pref_summary_remember_shuffle">Shuffle mode won\'t turn off when playing a new list of songs</string>
+
 
     <string name="pref_title_version">Version</string>
     <string name="pref_title_faq">FAQ</string>
@@ -596,8 +614,8 @@
     <string name="sleep_timer_stop_title">Stop sleep timer?</string>
     <!-- Toast when sleep timer is set -->
     <string name="sleep_timer_started">Sleep timer started</string>
-    <!-- Sleep timer "Set time..." -->
-    <string name="sleep_timer_set_time">Set time…</string>
+    <!-- Sleep timer "Set minutes..." -->
+    <string name="sleep_timer_set_minutes">Set minutes…</string>
     <!-- Sleep timer "5 minutes" -->
     <string name="sleep_timer_5_mins">5 minutes</string>
     <!-- Sleep timer "15 minutes" -->
@@ -798,5 +816,9 @@
     <string name="shortcut_playlist_long_label">Open Favorites Playlist</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">Playlist not available</string>
+
+
+    <!-- Displayed at the top of the album list, album shuffle mode-->
+    <string name="shuffle_albums">Album Shuffle</string>
 
 </resources>

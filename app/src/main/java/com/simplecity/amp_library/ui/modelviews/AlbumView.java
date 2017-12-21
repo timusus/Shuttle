@@ -105,11 +105,6 @@ public class AlbumView extends MultiItemView<AlbumView.ViewHolder, Album> implem
     }
 
     @Override
-    public Album getItem() {
-        return album;
-    }
-
-    @Override
     public void bindView(final ViewHolder holder) {
 
         super.bindView(holder);
@@ -171,6 +166,11 @@ public class AlbumView extends MultiItemView<AlbumView.ViewHolder, Album> implem
     @Override
     public ViewHolder createViewHolder(ViewGroup parent) {
         return new ViewHolder(createView(parent));
+    }
+
+    @Override
+    public int getSpanSize(int spanCount) {
+        return 1;
     }
 
     @Override

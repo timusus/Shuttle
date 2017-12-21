@@ -2,6 +2,7 @@ package com.simplecity.amp_library.tagger;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.UriPermission;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.provider.DocumentFile;
@@ -30,6 +31,16 @@ public class TaggerUtils {
     private TaggerUtils() {
 
     }
+	
+	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+	public static String getDocumentTree() {
+		String treeUri = SettingsManager.getInstance().getDocumentTreeUri();
+		List<UriPermission> perms = ShuttleApplication.getInstance().getContentResolver().getPersistedUriPermissions();
+		for (UriPermission perm : perms) {
+			if (perm.getUri().toString().equals(treeUri) && perm.isWritePermission()) return treeUri;
+		}
+		return null;
+	}
 
     /**
      * Checks the passed in paths to see whether the file at the given path is available in our
@@ -44,7 +55,7 @@ public class TaggerUtils {
 
         boolean hasDocumentTreePermission = false;
 
-        String treeUri = SettingsManager.getInstance().getDocumentTreeUri();
+        String treeUri = getDocumentTree();
         if (treeUri == null) {
             //We don't have any document tree at all - so we're not going to have permission for any files.
             return false;

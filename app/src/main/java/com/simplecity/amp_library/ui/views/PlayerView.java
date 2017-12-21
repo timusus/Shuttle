@@ -16,6 +16,8 @@ public interface PlayerView {
 
     void currentTimeChanged(long seconds);
 
+    void totalTimeChanged(long seconds);
+
     void queueChanged(int queuePosition, int queueLength);
 
     void playbackChanged(boolean isPlaying);
@@ -35,4 +37,6 @@ public interface PlayerView {
     void showTaggerDialog(TaggerDialog taggerDialog);
 
     void showSongInfoDialog(MaterialDialog dialog);
+
+    void showUpgradeDialog(MaterialDialog dialog);
 }

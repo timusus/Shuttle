@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.interfaces.FileType;
@@ -23,12 +22,13 @@ import com.simplecity.amp_library.model.BaseFileObject;
 import com.simplecity.amp_library.model.FileObject;
 import com.simplecity.amp_library.model.FolderObject;
 import com.simplecity.amp_library.model.Genre;
+import com.simplecity.amp_library.model.InclExclItem;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.rx.UnsafeCallable;
 import com.simplecity.amp_library.rx.UnsafeConsumer;
-import com.simplecity.amp_library.sql.databases.BlacklistHelper;
+import com.simplecity.amp_library.sql.databases.InclExclHelper;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.dialog.BiographyDialog;
 import com.simplecity.amp_library.ui.dialog.DeleteDialog;
@@ -81,15 +81,28 @@ public class MenuUtils implements MusicUtils.Defs {
         MusicUtils.addToQueue(songs, message -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show());
     }
 
+    public static void whitelist(Song song) {
+        InclExclHelper.addToInclExcl(song, InclExclItem.Type.INCLUDE);
+    }
+
+    public static void whitelist(List<Song> songs) {
+        InclExclHelper.addToInclExcl(songs, InclExclItem.Type.INCLUDE);
+    }
+
     public static void blacklist(Song song) {
-        BlacklistHelper.addToBlacklist(song);
+        InclExclHelper.addToInclExcl(song, InclExclItem.Type.EXCLUDE);
     }
 
     public static void blacklist(List<Song> songs) {
-        BlacklistHelper.addToBlacklist(songs);
+        InclExclHelper.addToInclExcl(songs, InclExclItem.Type.EXCLUDE);
     }
 
     public static void delete(Context context, List<Song> songs) {
+
+        if (songs.isEmpty()) {
+            return;
+        }
+
         new DeleteDialog.DeleteDialogBuilder()
                 .context(context)
                 .singleMessageId(R.string.delete_song_desc)
@@ -102,11 +115,7 @@ public class MenuUtils implements MusicUtils.Defs {
                 .show();
     }
 
-    public static void remove(Song song) {
-        MusicUtils.removeFromQueue(song, true);
-    }
-
-    public static void setupSongMenu(Context context, PopupMenu menu, boolean showRemoveButton) {
+    public static void setupSongMenu(PopupMenu menu, boolean showRemoveButton) {
         menu.inflate(R.menu.menu_song);
 
         if (!showRemoveButton) {
@@ -115,38 +124,41 @@ public class MenuUtils implements MusicUtils.Defs {
 
         // Add playlist menu
         SubMenu sub = menu.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-        PlaylistUtils.makePlaylistMenu(context, sub);
+        PlaylistUtils.createPlaylistMenu(sub);
     }
 
-    public static Toolbar.OnMenuItemClickListener getSongMenuClickListener(Context context, UnsafeCallable<List<Song>> callable) {
+    public static Toolbar.OnMenuItemClickListener getSongMenuClickListener(Context context, Single<List<Song>> songsSingle) {
         return item -> {
-            List<Song> songs = callable.call();
             switch (item.getItemId()) {
                 case NEW_PLAYLIST:
-                    newPlaylist(context, songs);
+                    newPlaylist(context, songsSingle);
                     return true;
                 case PLAYLIST_SELECTED:
-                    addToPlaylist(context, item, songs);
+                    addToPlaylist(context, item, songsSingle);
                     return true;
                 case R.id.addToQueue:
-                    addToQueue(context, songs);
+                    addToQueue(context, songsSingle);
                     return true;
                 case R.id.blacklist:
-                    blacklist(songs);
+                    blacklist(songsSingle);
                     return true;
                 case R.id.delete:
-                    delete(context, songs);
+                    delete(context, songsSingle);
                     return true;
             }
             return false;
         };
     }
 
-    public static PopupMenu.OnMenuItemClickListener getSongMenuClickListener(Context context, Song song, UnsafeConsumer<TaggerDialog> tagEditorCallback, @Nullable UnsafeAction songRemoved) {
+    public static PopupMenu.OnMenuItemClickListener getSongMenuClickListener(Context context, Song song, UnsafeConsumer<TaggerDialog> tagEditorCallback, @Nullable UnsafeAction onSongRemoved, @Nullable UnsafeAction onPlayNext) {
         return item -> {
             switch (item.getItemId()) {
                 case R.id.playNext:
-                    playNext(context, song);
+                    if (onPlayNext != null) {
+                        onPlayNext.run();
+                    } else {
+                        playNext(context, song);
+                    }
                     return true;
                 case NEW_PLAYLIST:
                     newPlaylist(context, Collections.singletonList(song));
@@ -176,10 +188,9 @@ public class MenuUtils implements MusicUtils.Defs {
                     delete(context, Collections.singletonList(song));
                     return true;
                 case R.id.remove:
-                    if (songRemoved != null) {
-                        songRemoved.run();
+                    if (onSongRemoved != null) {
+                        onSongRemoved.run();
                     }
-                    remove(song);
                     return true;
             }
             return false;
@@ -187,6 +198,14 @@ public class MenuUtils implements MusicUtils.Defs {
     }
 
     // Albums
+
+    public static void setupAlbumMenu(PopupMenu menu) {
+        menu.inflate(R.menu.menu_album);
+
+        // Add playlist menu
+        SubMenu sub = menu.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
+        PlaylistUtils.createPlaylistMenu(sub);
+    }
 
     private static Single<List<Song>> getSongsForAlbum(Album album) {
         return album.getSongsSingle()
@@ -217,7 +236,8 @@ public class MenuUtils implements MusicUtils.Defs {
 
     public static void newPlaylist(Context context, Single<List<Song>> single) {
         single.observeOn(AndroidSchedulers.mainThread())
-                .subscribe(songs -> PlaylistUtils.createPlaylistDialog(context, songs));
+                .subscribe(songs -> PlaylistUtils.createPlaylistDialog(context, songs),
+                        throwable -> LogUtils.logException(TAG, "Error adding to new playlist", throwable));
     }
 
     public static void addToPlaylist(Context context, MenuItem item, Single<List<Song>> single) {
@@ -225,12 +245,13 @@ public class MenuUtils implements MusicUtils.Defs {
                 .subscribe(songs -> {
                     Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(PlaylistUtils.ARG_PLAYLIST);
                     PlaylistUtils.addToPlaylist(context, playlist, songs);
-                });
+                }, throwable -> LogUtils.logException(TAG, "Error adding to playlist", throwable));
     }
 
     public static void addToQueue(Context context, Single<List<Song>> single) {
         single.observeOn(AndroidSchedulers.mainThread())
-                .subscribe(songs -> MusicUtils.addToQueue(songs, message -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show()));
+                .subscribe(songs -> MusicUtils.addToQueue(songs, message -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show()),
+                        throwable -> LogUtils.logException(TAG, "Error adding to queue", throwable));
     }
 
     public static TaggerDialog editTags(Album album) {
@@ -245,9 +266,23 @@ public class MenuUtils implements MusicUtils.Defs {
         ArtworkDialog.build(context, album).show();
     }
 
+    public static void whitelist(Single<List<Song>> single) {
+        single.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(songs -> whitelist(songs),
+                        throwable -> LogUtils.logException(TAG, "whitelist failed", throwable));
+    }
+
     public static void blacklist(Single<List<Song>> single) {
         single.observeOn(AndroidSchedulers.mainThread())
-                .subscribe((songs, throwable) -> blacklist(songs));
+                .subscribe(
+                        songs -> blacklist(songs),
+                        throwable -> LogUtils.logException(TAG, "blacklist failed", throwable));
+    }
+
+    public static void delete(Context context, Single<List<Song>> single) {
+        single.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(songs -> delete(context, songs),
+                        throwable -> LogUtils.logException(TAG, "delete failed", throwable));
     }
 
     public static void deleteAlbums(Context context, List<Album> albums, Single<List<Song>> songsSingle) {
@@ -284,7 +319,7 @@ public class MenuUtils implements MusicUtils.Defs {
         };
     }
 
-    public static PopupMenu.OnMenuItemClickListener getAlbumMenuClickListener(Context context, Album album, UnsafeConsumer<TaggerDialog> tagEditorCallback) {
+    public static PopupMenu.OnMenuItemClickListener getAlbumMenuClickListener(Context context, Album album, UnsafeConsumer<TaggerDialog> tagEditorCallback, UnsafeAction showUpgradeDialog) {
         return item -> {
             switch (item.getItemId()) {
                 case R.id.play:
@@ -300,7 +335,11 @@ public class MenuUtils implements MusicUtils.Defs {
                     addToQueue(context, getSongsForAlbum(album));
                     return true;
                 case R.id.editTags:
-                    tagEditorCallback.accept(editTags(album));
+                    if (!ShuttleUtils.isUpgraded()) {
+                        showUpgradeDialog.run();
+                    } else {
+                        tagEditorCallback.accept(editTags(album));
+                    }
                     return true;
                 case R.id.info:
                     showAlbumInfo(context, album);
@@ -391,11 +430,14 @@ public class MenuUtils implements MusicUtils.Defs {
         };
     }
 
-    public static PopupMenu.OnMenuItemClickListener getAlbumArtistClickListener(Context context, AlbumArtist albumArtist, UnsafeConsumer<TaggerDialog> tagEditorCallback) {
+    public static PopupMenu.OnMenuItemClickListener getAlbumArtistClickListener(Context context, AlbumArtist albumArtist, UnsafeConsumer<TaggerDialog> tagEditorCallback, UnsafeAction showUpgradeDialog) {
         return item -> {
             switch (item.getItemId()) {
                 case R.id.play:
                     play(context, getSongsForAlbumArtist(albumArtist));
+                    return true;
+                case R.id.albumShuffle:
+                    play(context, getSongsForAlbumArtist(albumArtist).map(Operators::albumShuffleSongs));
                     return true;
                 case NEW_PLAYLIST:
                     newPlaylist(context, getSongsForAlbumArtist(albumArtist));
@@ -407,7 +449,11 @@ public class MenuUtils implements MusicUtils.Defs {
                     addToQueue(context, getSongsForAlbumArtist(albumArtist));
                     return true;
                 case R.id.editTags:
-                    tagEditorCallback.accept(editTags(albumArtist));
+                    if (!ShuttleUtils.isUpgraded()) {
+                        showUpgradeDialog.run();
+                    } else {
+                        tagEditorCallback.accept(editTags(albumArtist));
+                    }
                     return true;
                 case R.id.info:
                     showArtistInfo(context, albumArtist);
@@ -434,7 +480,7 @@ public class MenuUtils implements MusicUtils.Defs {
     }
 
     public static void edit(Context context, Playlist playlist) {
-        if (playlist.id == MusicUtils.PlaylistIds.RECENTLY_ADDED_PLAYLIST) {
+        if (playlist.id == PlaylistUtils.PlaylistIds.RECENTLY_ADDED_PLAYLIST) {
             DialogUtils.showWeekSelectorDialog(context);
         }
     }
@@ -462,7 +508,7 @@ public class MenuUtils implements MusicUtils.Defs {
             menu.getMenu().findItem(R.id.clearPlaylist).setVisible(false);
         }
 
-        if (playlist.id != MusicUtils.PlaylistIds.RECENTLY_ADDED_PLAYLIST) {
+        if (playlist.id != PlaylistUtils.PlaylistIds.RECENTLY_ADDED_PLAYLIST) {
             menu.getMenu().findItem(R.id.editPlaylist).setVisible(false);
         }
 
@@ -470,35 +516,64 @@ public class MenuUtils implements MusicUtils.Defs {
             menu.getMenu().findItem(R.id.renamePlaylist).setVisible(false);
         }
 
-        if (playlist.id == MusicUtils.PlaylistIds.MOST_PLAYED_PLAYLIST) {
+        if (playlist.id == PlaylistUtils.PlaylistIds.MOST_PLAYED_PLAYLIST) {
             menu.getMenu().findItem(R.id.exportPlaylist).setVisible(false);
         }
     }
 
-    public static PopupMenu.OnMenuItemClickListener getPlaylistClickListener(final Context context, final Playlist playlist) {
-        return item -> {
-            switch (item.getItemId()) {
-                case R.id.playPlaylist:
-                    play(context, playlist.getSongsObservable().first(Collections.emptyList()));
-                    return true;
-                case R.id.deletePlaylist:
-                    delete(context, playlist);
-                    return true;
-                case R.id.editPlaylist:
-                    edit(context, playlist);
-                    return true;
-                case R.id.renamePlaylist:
-                    rename(context, playlist);
-                    return true;
-                case R.id.exportPlaylist:
-                    export(context, playlist);
-                    return true;
-                case R.id.clearPlaylist:
-                    clear(playlist);
-                    return true;
-            }
-            return false;
-        };
+    public static void setupPlaylistMenu(Toolbar toolbar, Playlist playlist) {
+        toolbar.inflateMenu(R.menu.menu_playlist);
+
+        if (!playlist.canDelete) {
+            toolbar.getMenu().findItem(R.id.deletePlaylist).setVisible(false);
+        }
+
+        if (!playlist.canClear) {
+            toolbar.getMenu().findItem(R.id.clearPlaylist).setVisible(false);
+        }
+
+        if (playlist.id != PlaylistUtils.PlaylistIds.RECENTLY_ADDED_PLAYLIST) {
+            toolbar.getMenu().findItem(R.id.editPlaylist).setVisible(false);
+        }
+
+        if (!playlist.canRename) {
+            toolbar.getMenu().findItem(R.id.renamePlaylist).setVisible(false);
+        }
+
+        if (playlist.id == PlaylistUtils.PlaylistIds.MOST_PLAYED_PLAYLIST) {
+            toolbar.getMenu().findItem(R.id.exportPlaylist).setVisible(false);
+        }
+    }
+
+    public static PopupMenu.OnMenuItemClickListener getPlaylistPopupMenuClickListener(final Context context, final Playlist playlist, @Nullable UnsafeAction playlistDeleted) {
+        return item -> handleMenuItemClicks(context, item, playlist, playlistDeleted);
+    }
+
+    public static boolean handleMenuItemClicks(Context context, MenuItem menuItem, Playlist playlist, @Nullable UnsafeAction playlistDeleted) {
+        switch (menuItem.getItemId()) {
+            case R.id.playPlaylist:
+                play(context, playlist.getSongsObservable().first(Collections.emptyList()));
+                return true;
+            case R.id.deletePlaylist:
+                delete(context, playlist);
+                if (playlistDeleted != null) {
+                    playlistDeleted.run();
+                }
+                return true;
+            case R.id.editPlaylist:
+                edit(context, playlist);
+                return true;
+            case R.id.renamePlaylist:
+                rename(context, playlist);
+                return true;
+            case R.id.exportPlaylist:
+                export(context, playlist);
+                return true;
+            case R.id.clearPlaylist:
+                clear(playlist);
+                return true;
+        }
+        return false;
     }
 
     // Genres
@@ -539,7 +614,6 @@ public class MenuUtils implements MusicUtils.Defs {
 
     static Single<Song> getSongForFile(FileObject fileObject) {
         return FileHelper.getSong(new File(fileObject.path))
-                .map(Optional::get)
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
@@ -547,17 +621,16 @@ public class MenuUtils implements MusicUtils.Defs {
         return FileHelper.getSongList(new File(folderObject.path), true, false);
     }
 
-    public static void setupFolderMenu(Context context, PopupMenu menu, BaseFileObject fileObject) {
+    public static void setupFolderMenu(PopupMenu menu, BaseFileObject fileObject) {
 
         menu.inflate(R.menu.menu_file);
 
         // Add playlist menu
         SubMenu sub = menu.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-        PlaylistUtils.makePlaylistMenu(context, sub);
+        PlaylistUtils.createPlaylistMenu(sub);
 
         if (!fileObject.canReadWrite()) {
             menu.getMenu().findItem(R.id.rename).setVisible(false);
-            menu.getMenu().findItem(R.id.remove).setVisible(false);
         }
 
         switch (fileObject.fileType) {
@@ -693,7 +766,9 @@ public class MenuUtils implements MusicUtils.Defs {
                     getSongForFile(fileObject).subscribe(song -> showSongInfo(context, song), errorHandler);
                     return true;
                 case R.id.blacklist:
-                    getSongForFile(fileObject).subscribe(song -> blacklist(song));
+                    getSongForFile(fileObject).subscribe(song -> blacklist(song), errorHandler);
+                case R.id.whitelist:
+                    getSongForFile(fileObject).subscribe(song -> whitelist(song), errorHandler);
                     return true;
                 case R.id.rename:
                     renameFile(context, fileObject, filenameChanged);
@@ -727,6 +802,8 @@ public class MenuUtils implements MusicUtils.Defs {
                 case R.id.scan:
                     scanFolder(context, folderObject);
                     return true;
+                case R.id.whitelist:
+                    whitelist(getSongsForFolderObject(folderObject));
                 case R.id.blacklist:
                     blacklist(getSongsForFolderObject(folderObject));
                     return true;

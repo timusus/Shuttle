@@ -16,12 +16,16 @@ import android.widget.Toast;
 
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.Util;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.tagger.TaggerDialog;
+import com.simplecity.amp_library.ui.adapters.LoggingViewModelAdapter;
+import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
+import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
 import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.ui.presenters.QueuePresenter;
@@ -29,7 +33,7 @@ import com.simplecity.amp_library.ui.recyclerview.ItemTouchHelperCallback;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.ui.views.PlayerViewAdapter;
 import com.simplecity.amp_library.ui.views.QueueView;
-import com.simplecity.amp_library.ui.views.StatusBarView;
+import com.simplecity.amp_library.ui.views.ThemedStatusBarView;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetSlideEventRelay;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.MenuUtils;
@@ -52,6 +56,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
@@ -61,7 +66,7 @@ public class QueueFragment extends BaseFragment implements
     private static final String TAG = "QueueFragment";
 
     @BindView(R.id.statusBarView)
-    StatusBarView statusBarView;
+    ThemedStatusBarView statusBarView;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -85,17 +90,20 @@ public class QueueFragment extends BaseFragment implements
     @Inject
     RequestManager requestManager;
 
-    @Inject MultiSheetSlideEventRelay multiSheetSlideEventRelay;
+    @Inject
+    MultiSheetSlideEventRelay multiSheetSlideEventRelay;
 
     QueuePresenter queuePresenter;
 
-    @Inject PlayerPresenter playerPresenter;
+    @Inject
+    PlayerPresenter playerPresenter;
 
     private CompositeDisposable disposables = new CompositeDisposable();
 
     private ContextualToolbarHelper<Song> contextualToolbarHelper;
 
     private Disposable loadDataDisposable;
+
     private Unbinder unbinder;
 
     public static QueueFragment newInstance() {
@@ -119,7 +127,7 @@ public class QueueFragment extends BaseFragment implements
 
         setHasOptionsMenu(true);
 
-        adapter = new ViewModelAdapter();
+        adapter = new LoggingViewModelAdapter("QueueFragment");
     }
 
     @Override
@@ -133,7 +141,7 @@ public class QueueFragment extends BaseFragment implements
         toolbar.inflateMenu(R.menu.menu_queue);
 
         SubMenu sub = toolbar.getMenu().addSubMenu(0, MusicUtils.Defs.ADD_TO_PLAYLIST, 1, R.string.save_as_playlist);
-        PlaylistUtils.makePlaylistMenu(getContext(), sub);
+        disposables.add(PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe());
 
         toolbar.setOnMenuItemClickListener(toolbarListener);
 
@@ -209,12 +217,13 @@ public class QueueFragment extends BaseFragment implements
         contextualToolbar.getMenu().clear();
         contextualToolbar.inflateMenu(R.menu.context_menu_queue);
         SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
-        PlaylistUtils.makePlaylistMenu(getActivity(), sub);
-        contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), MusicUtils::getQueue));
+        disposables.add(PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe());
+        contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), Single.just(MusicUtils.getQueue())));
         contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
             @Override
-            public void notifyItemChanged(int position) {
+            public void notifyItemChanged(int position, SelectableViewModel viewModel) {
                 adapter.notifyItemChanged(position, 0);
+
             }
 
             @Override
@@ -241,17 +250,12 @@ public class QueueFragment extends BaseFragment implements
                 loadDataDisposable = adapter.setItems(items, new CompletionListUpdateCallbackAdapter() {
                     @Override
                     public void onComplete() {
-                        setCurrentQueueItem(position);
+                        updateQueuePosition(position, false);
                         recyclerView.scrollToPosition(position);
                     }
                 });
             }
         });
-    }
-
-    @Override
-    public void updateQueuePosition(int position) {
-        recyclerView.scrollToPosition(position);
     }
 
     @Override
@@ -264,11 +268,16 @@ public class QueueFragment extends BaseFragment implements
         itemTouchHelper.startDrag(holder);
     }
 
-    @Override
-    public void setCurrentQueueItem(int position) {
 
-        if (adapter.items.isEmpty()) {
+    @Override
+    public void updateQueuePosition(int position, boolean fromUser) {
+
+        if (adapter.items.isEmpty() || position >= adapter.items.size() || position < 0) {
             return;
+        }
+
+        if (!fromUser) {
+            recyclerView.scrollToPosition(position);
         }
 
         int prevPosition = -1;
@@ -299,6 +308,16 @@ public class QueueFragment extends BaseFragment implements
         adapter.removeItem(position);
     }
 
+    @Override
+    public void moveQueueItem(int from, int to) {
+        adapter.moveItem(from, to);
+    }
+
+    @Override
+    public void showUpgradeDialog() {
+        UpgradeDialog.getUpgradeDialog(getActivity()).show();
+    }
+
     private PlayerViewAdapter playerViewAdapter = new PlayerViewAdapter() {
         @Override
         public void trackInfoChanged(@Nullable Song song) {
@@ -308,6 +327,11 @@ public class QueueFragment extends BaseFragment implements
                     lineTwo.setText(String.format("%s | %s", song.albumArtistName, song.albumName));
                 }
             }
+        }
+
+        @Override
+        public void showUpgradeDialog(MaterialDialog dialog) {
+            dialog.show();
         }
     };
 
