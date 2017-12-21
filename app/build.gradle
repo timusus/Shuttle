@@ -144,6 +144,8 @@ android {
 
             //Enable multiDex for debug builds, since they don't use proguard
             multiDexEnabled true
+
+            resConfigs "en", "xxhdpi"
         }
 
         paid {
