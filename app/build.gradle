@@ -56,7 +56,7 @@ android {
         targetSdkVersion versions.targetSdk
 
         versionName versions.name
-        versionCode generateVersionCode()
+        versionCode 5000
 
         resConfigs "en", "zh-rCN", "fr", "de", "ko", "it", "ru", "nl", "tr", "pl", "hu", "uk", "bg-rBG", "en-rGB", "vi", "pt-rBR", "es", "en-rNZ", "zh-rTW", "es-rES", "hr", "en-rAU", "eu-rES", "th"
 
@@ -118,6 +118,13 @@ android {
         def releaseIgnore = buildTypes.contains("release") && relFilters.stream().anyMatch(filter)
 
         setIgnore(debugIgnore || releaseIgnore)
+    }
+
+    // Set the version code for release builds
+    applicationVariants.all { variant ->
+        if (variant.buildType.name == "release") {
+            variant.mergedFlavor.versionCode = generateVersionCode()
+        }
     }
 
     // Used to enable Java8 features
