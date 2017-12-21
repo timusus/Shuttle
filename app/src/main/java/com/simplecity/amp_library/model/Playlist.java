@@ -161,8 +161,6 @@ public class Playlist implements Serializable {
                 .first(Collections.emptyList())
                 .flatMapObservable(Observable::fromIterable)
                 .filter(playlist ->  playlist.type == Type.FAVORITES)
-                .filter(playlist -> playlist.name.equals("non-existent"))
-                .filter(playlist -> playlist.type == Type.FAVORITES)
                 .map(Optional::of)
                 .switchIfEmpty(Observable.fromCallable(PlaylistUtils::createFavoritePlaylist))
                 .firstOrError();
