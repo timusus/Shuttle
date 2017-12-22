@@ -113,6 +113,11 @@ android {
         def debugFilters = ["paid", "free", 'amazonPaid', "amazonFree"]
         def relFilters = ["dev", "devPre21"]
 
+        if (System.getenv("TRAVIS")) {
+            relFilters << "amazonPaid"
+            relFilters << "amazonFree"
+        }
+
         def filter = { name -> names.contains(name) }
         def debugIgnore = buildTypes.contains("debug") && debugFilters.stream().anyMatch(filter)
         def releaseIgnore = buildTypes.contains("release") && relFilters.stream().anyMatch(filter)
@@ -305,15 +310,23 @@ configurations.all {
     }
 }
 
+class Globals {
+    static int versionCode = -1
+}
+
 static int generateVersionCode() {
-    def versionCode = 5000
-    if (System.getenv("TRAVIS_BUILD_NUMBER")) {
-        def travisBuildNumber = System.getenv("TRAVIS_BUILD_NUMBER").toInteger()
-        println "Travis build number: $travisBuildNumber"
-        versionCode += travisBuildNumber
+    if (Globals.versionCode == -1) {
+        def versionCode = 5000
+        if (System.getenv("TRAVIS_BUILD_NUMBER")) {
+            def travisBuildNumber = System.getenv("TRAVIS_BUILD_NUMBER").toInteger()
+            println "Travis build number: $travisBuildNumber"
+            versionCode += travisBuildNumber
+        }
+        println "Version code: $versionCode"
+        Globals.versionCode = versionCode
+        return versionCode
     }
-    println "Version code: $versionCode"
-    return versionCode
+    return Globals.versionCode
 }
 
 static String getPlayStoreTrack() {
