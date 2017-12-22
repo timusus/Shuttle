@@ -308,7 +308,9 @@ configurations.all {
 static int generateVersionCode() {
     def versionCode = 5000
     if (System.getenv("TRAVIS_BUILD_NUMBER")) {
-        versionCode += System.getenv("TRAVIS_BUILD_NUMBER").toInteger()
+        def travisBuildNumber = System.getenv("TRAVIS_BUILD_NUMBER").toInteger()
+        println "Travis build number: $travisBuildNumber"
+        versionCode += travisBuildNumber
     }
     println "Version code: $versionCode"
     return versionCode
