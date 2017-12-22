@@ -56,8 +56,7 @@ android {
         targetSdkVersion versions.targetSdk
 
         versionName versions.name
-        versionCode gitCommitCount() + 3200
-        // Add 3200 to account for moving to github and resetting commit count.
+        versionCode 5000
 
         resConfigs "en", "zh-rCN", "fr", "de", "ko", "it", "ru", "nl", "tr", "pl", "hu", "uk", "bg-rBG", "en-rGB", "vi", "pt-rBR", "es", "en-rNZ", "zh-rTW", "es-rES", "hr", "en-rAU", "eu-rES", "th"
 
@@ -103,40 +102,6 @@ android {
             buildConfigField("String", "LASTFM_API_KEY", "\"${getProperty(getProperties('../private.properties'), 'LASTFM_API_KEY')}\"")
             manifestPlaceholders = [CRASHLYTICS_API_KEY: "${getProperty(getProperties('../private.properties'), 'CRASHLYTICS_API_KEY')}"]
         }
-
-        /* Todo: Figure out how to reinstate with new Gradle version
-        applicationVariants.all { variant ->
-
-            if (variant.buildType.name.contains('release')) {
-                variant.outputs.all { output ->
-                    outputFileName = "${variant.name}-v${variant.versionName}.apk"
-                }
-
-                //Reveal in explorer/finder
-                variant.assemble.doLast {
-                    def path = null
-                    variant.outputs.each { output ->
-                        path = output.outputFile
-
-                        //Delete the unaligned apk file
-                        File unaligned = output.packageApplication.outputFile
-                        File aligned = output.outputFile
-                        if (!unaligned.getName().equalsIgnoreCase(aligned.getName())) {
-                            unaligned.delete()
-                        }
-                    }
-
-                    exec {
-                        if (System.properties['os.name'].toLowerCase().contains('mac os x')) {
-                            ['open', '-R', path].execute()
-                        } else if (System.properties['os.name'].toLowerCase().contains('windows')) {
-                            ['explorer', '/select,', path].execute()
-                        }
-                    }
-                }
-            }
-        }
-        */
     }
 
     // Ignore useless variants, such as devRelease.
@@ -153,6 +118,13 @@ android {
         def releaseIgnore = buildTypes.contains("release") && relFilters.stream().anyMatch(filter)
 
         setIgnore(debugIgnore || releaseIgnore)
+    }
+
+    // Set the version code for release builds
+    applicationVariants.all { variant ->
+        if (variant.buildType.name == "release") {
+            variant.mergedFlavor.versionCode = generateVersionCode()
+        }
     }
 
     // Used to enable Java8 features
@@ -172,6 +144,8 @@ android {
 
             //Enable multiDex for debug builds, since they don't use proguard
             multiDexEnabled true
+
+            resConfigs "en", "xxhdpi"
         }
 
         paid {
@@ -258,7 +232,7 @@ dependencies {
     debugImplementation libs.haha
     debugImplementation libs.leakCanaryDebug
     releaseImplementation libs.leakCanaryRel
-    
+
     // //////////////////////////////////////////////////////////////////////////
     // External libs
     // /////////////////////////////////////////////////////////////////////////
@@ -331,24 +305,36 @@ configurations.all {
     }
 }
 
-def gitCommitCount() {
-    def commitCount = 0
-    try {
-        def stdout = new ByteArrayOutputStream()
-        exec {
-            commandLine 'git', 'rev-list', '--all', '--count'
-            standardOutput stdout
+static int generateVersionCode() {
+    def versionCode = 5000
+    if (System.getenv("TRAVIS_BUILD_NUMBER")) {
+        versionCode += System.getenv("TRAVIS_BUILD_NUMBER").toInteger()
+    }
+    println "Version code: $versionCode"
+    return versionCode
+}
+
+static String getPlayStoreTrack() {
+    def track = 'alpha'
+    if (System.getenv("TRAVIS_TAG")) {
+        String branch = System.getenv("TRAVIS_TAG").toString()
+        if (branch.contains('alpha')) {
+            track = 'alpha'
+        } else if (branch.contains('beta')) {
+            track = 'beta'
+        } else if (branch.contains('release')) {
+            track = 'production'
+        } else if (branch.contains('rollout')) {
+            track = 'rollout'
         }
-        commitCount = stdout.toString().trim().toInteger()
     }
-    catch (error) {
-        println "Error: ${error}"
-    }
-    return commitCount
+    println "Play store track: $track"
+    return track
 }
 
 play {
-    track = 'beta'
+    track = getPlayStoreTrack()
+    userFraction = 0.1
     untrackOld = true
     serviceAccountEmail = 'app-deployment@api-5801704373554614142-812229.iam.gserviceaccount.com'
     jsonFile = file('../deployment_keys.json')

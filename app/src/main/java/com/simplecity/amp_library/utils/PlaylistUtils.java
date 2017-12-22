@@ -469,9 +469,6 @@ public class PlaylistUtils {
 
     @Nullable
     public static Optional<Playlist> createFavoritePlaylist() {
-
-        if (true) return Optional.empty();
-
         Playlist playlist = PlaylistUtils.createPlaylist(ShuttleApplication.getInstance(), ShuttleApplication.getInstance().getString(R.string.fav_title));
         if (playlist != null) {
             playlist.canDelete = false;
@@ -544,7 +541,9 @@ public class PlaylistUtils {
                 .delay(150, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(success);
+                .subscribe(
+                        success,
+                        throwable -> LogUtils.logException(TAG, "Error adding to playlist", throwable));
     }
 
     @SuppressLint("CheckResult")
