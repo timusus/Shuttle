@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.simplecity.amp_library.BuildConfig;
@@ -22,8 +23,10 @@ import java.util.Random;
 
 import static android.graphics.Paint.ANTI_ALIAS_FLAG;
 import static com.simplecity.amp_library.utils.AnimUtils.lerp;
-import static com.simplecity.amp_library.utils.ListUtils.emptyIfNull;
-import static java.lang.StrictMath.*;
+import static java.lang.StrictMath.cos;
+import static java.lang.StrictMath.round;
+import static java.lang.StrictMath.sin;
+import static java.lang.StrictMath.toRadians;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class SnowfallView extends View {
@@ -32,17 +35,24 @@ public class SnowfallView extends View {
 
     /** The Remote Config key used to determine if it snows */
     private static final String LET_IT_SNOW = "let_it_snow";
-    /** Forecast a <= 1% chance of snowing */
-    private static final float LUCKY = 0.01f;
+
+    /** Forecast a <= 10% chance of snowing */
+    private static final float LUCKY = 0.1f;
 
     /** Wait a few seconds before displaying snow */
     private static final long SNOWFALL_DELAY = SECONDS.toMillis(5);
 
-    /** The number of snowflakes to generate */
-    private static final int NUM_FLAKES = 200;
+    /** Interval between adding more snow */
+    private static final long SNOWFALL_TIME_INCREMENT = SECONDS.toMillis(2);
+
+    /** The total number of snowflakes to generate */
+    private static final int TOTAL_FLAKES = 200;
+
+    /** The increment with which to generate more snowflakes */
+    private static final int FLAKE_INCREMENT = 30;
 
     /** Default min and max snowflake alpha */
-    private static final int MIN_ALPHA = 150;
+    private static final int MIN_ALPHA = 100;
     private static final int MAX_ALPHA = 250;
 
     /** Default min and max snowflake angle */
@@ -51,7 +61,7 @@ public class SnowfallView extends View {
 
     /** Default min and max snowflake velocity */
     private static final float MIN_SPEED = 2f;
-    private static final float MAX_SPEED = 8f;
+    private static final float MAX_SPEED = 7f;
 
     /** Default min and max snowflake size */
     private static final float MIN_SIZE = 2f;
@@ -84,9 +94,14 @@ public class SnowfallView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        for (Snowflake snowflake : emptyIfNull(snowflakes)) {
+        for (int i = snowflakes.size() - 1; i >= 0; i--) {
+            Snowflake snowflake = snowflakes.get(i);
             if (round(snowflake.snowY()) > getHeight()) {
-                snowflake.reset();
+                if (snowflake.shouldRemove) {
+                    snowflakes.remove(snowflake);
+                } else {
+                    snowflake.reset();
+                }
             }
             snowPaint.setAlpha(snowflake.alpha);
             canvas.drawCircle(snowflake.snowX(), snowflake.snowY(), snowflake.snowR, snowPaint);
@@ -106,6 +121,10 @@ public class SnowfallView extends View {
                 fetchSnowConfig();
             }
         }
+    }
+
+    public boolean isSnowing() {
+        return !snowflakes.isEmpty();
     }
 
     public void clear() {
@@ -128,7 +147,18 @@ public class SnowfallView extends View {
     }
 
     void generateSnow() {
-        for (int i = 0; i < NUM_FLAKES; i++) {
+        if (snowflakes.size() <= TOTAL_FLAKES) {
+
+            int flakesToAdd = Math.min(10 + snowRng.nextInt(FLAKE_INCREMENT), TOTAL_FLAKES - snowflakes.size());
+            if (flakesToAdd > 0) {
+                addSnow(flakesToAdd);
+                snowHandler.postDelayed(this::generateSnow, SNOWFALL_TIME_INCREMENT);
+            }
+        }
+    }
+
+    void addSnow(int numFlakes) {
+        for (int i = 0; i < numFlakes; i++) {
             final double angle = toRadians(lerp(MIN_ANGLE, MAX_ANGLE, snowRng.nextDouble()));
             final float speed = lerp(MIN_SPEED, MAX_SPEED, snowRng.nextFloat());
             final float velX = (float) ((double) speed * cos(angle));
@@ -137,10 +167,19 @@ public class SnowfallView extends View {
             final float startX = lerp(0f, (float) getWidth(), snowRng.nextFloat());
             float startY = lerp(0f, (float) getHeight(), snowRng.nextFloat());
             startY -= (float) getHeight() - size;
-            final int alpha = lerp(MIN_ALPHA, MAX_ALPHA, snowRng.nextInt());
+            final int alpha = (int) lerp((float) MIN_ALPHA, (float) MAX_ALPHA, snowRng.nextFloat());
             snowflakes.add(new Snowflake(startX, startY, velX, velY, size, alpha));
         }
         invalidate();
+    }
+
+    public void removeSnow() {
+        if (snowflakes.size() > 0) {
+            snowHandler.removeCallbacksAndMessages(null);
+            for (Snowflake snowflake : snowflakes) {
+                snowflake.shouldRemove = true;
+            }
+        }
     }
 
     static final class Snowflake {
@@ -154,6 +193,7 @@ public class SnowfallView extends View {
         final float velY;
         final float snowR;
         final int alpha;
+        boolean shouldRemove;
 
         Snowflake(float startX, float startY, float velX, float velY, float snowR, int alpha) {
             snowX = startX;
@@ -178,7 +218,6 @@ public class SnowfallView extends View {
             snowX = startX;
             snowY = startY;
         }
-
     }
 
 }
