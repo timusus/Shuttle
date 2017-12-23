@@ -7,7 +7,6 @@ ext {
 android {
     compileSdkVersion versions.compileSdk
     buildToolsVersion versions.buildTools
-    publishNonDefault true
 
     defaultConfig {
         minSdkVersion versions.minSdk
