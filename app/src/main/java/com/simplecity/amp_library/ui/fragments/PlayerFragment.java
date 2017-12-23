@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -55,6 +56,8 @@ import com.simplecity.amp_library.ui.views.RepeatButton;
 import com.simplecity.amp_library.ui.views.RepeatingImageButton;
 import com.simplecity.amp_library.ui.views.ShuffleButton;
 import com.simplecity.amp_library.ui.views.SizableSeekBar;
+import com.simplecity.amp_library.ui.views.SnowfallView;
+import com.simplecity.amp_library.ui.views.multisheet.MultiSheetSlideEventRelay;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
@@ -136,6 +139,9 @@ public class PlayerFragment extends BaseFragment implements
     @BindView(R.id.seekbar)
     SizableSeekBar seekBar;
 
+    @BindView(R.id.let_it_snow)
+    SnowfallView snowfallView;
+
     private CompositeDisposable disposables = new CompositeDisposable();
 
     @Inject
@@ -143,6 +149,9 @@ public class PlayerFragment extends BaseFragment implements
 
     @Inject
     NavigationEventRelay navigationEventRelay;
+
+    @Inject
+    MultiSheetSlideEventRelay sheetEventRelay;
 
     private Unbinder unbinder;
 
@@ -152,6 +161,8 @@ public class PlayerFragment extends BaseFragment implements
     private Target<GlideDrawable> target;
 
     private boolean isLandscape;
+
+    private boolean isExpanded;
 
     public PlayerFragment() {
     }
@@ -231,21 +242,17 @@ public class PlayerFragment extends BaseFragment implements
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         presenter.bindView(this);
     }
 
     @Override
     public void onDestroyView() {
-
         if (target != null) {
             Glide.clear(target);
         }
-
+        snowfallView.clear();
         presenter.unbindView(this);
-
         unbinder.unbind();
-
         super.onDestroyView();
     }
 
@@ -290,6 +297,17 @@ public class PlayerFragment extends BaseFragment implements
                 .getBoolean(SettingsManager.KEY_DISPLAY_REMAINING_TIME)
                 .asObservable()
                 .subscribe(aBoolean -> presenter.updateRemainingTime()));
+
+        disposables.add(sheetEventRelay.getEvents()
+                .subscribe(event -> {
+                    if (event.nowPlayingExpanded()) {
+                        isExpanded = true;
+                        snowfallView.letItSnow();
+                    } else if (event.nowPlayingCollapsed()) {
+                        isExpanded = false;
+                        snowfallView.clear();
+                    }
+                }, throwable -> Log.e(TAG, "error listening for sheet slide events", throwable)));
 
         update();
     }
@@ -357,6 +375,10 @@ public class PlayerFragment extends BaseFragment implements
                 }
             }
         }
+
+        if (!isPlaying) {
+            snowfallView.removeSnow();
+        }
     }
 
     @Override
@@ -385,6 +407,12 @@ public class PlayerFragment extends BaseFragment implements
     public void trackInfoChanged(@Nullable Song song) {
 
         if (song == null) return;
+
+        if (isExpanded && !snowfallView.isSnowing()) {
+            snowfallView.letItSnow();
+        } else {
+            snowfallView.removeSnow();
+        }
 
         String totalTimeString = StringUtils.makeTimeString(this.getActivity(), song.duration / 1000);
         if (!TextUtils.isEmpty(totalTimeString)) {

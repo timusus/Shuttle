@@ -22,6 +22,7 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.android.libraries.cast.companionlibrary.cast.CastConfiguration;
 import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.simplecity.amp_library.constants.Config;
 import com.simplecity.amp_library.dagger.component.AppComponent;
@@ -126,7 +127,8 @@ public class ShuttleApplication extends Application {
                         .answers(new Answers())
                         .build());
 
-        //Firebase Analytics
+        // Firebase
+        FirebaseApp.initializeApp(this);
         FirebaseAnalytics.getInstance(this);
 
         VideoCastManager.initialize(this,

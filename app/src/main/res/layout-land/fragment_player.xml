@@ -101,4 +101,9 @@
         app:title="@string/nowplaying_title"
         app:transparentBackground="true"/>
 
+    <com.simplecity.amp_library.ui.views.SnowfallView
+        android:id="@+id/let_it_snow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </android.support.constraint.ConstraintLayout>
