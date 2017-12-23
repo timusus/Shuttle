@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
+import com.simplecity.amp_library.ui.views.multisheet.MultiSheetSlideEventRelay.SlideEvent;
 import com.simplecity.multisheetview.ui.view.MultiSheetView;
 
 import javax.inject.Inject;
@@ -56,11 +57,12 @@ public class CustomMultiSheetView extends MultiSheetView {
                             break;
                     }
                 }
+                multiSheetSlideEventRelay.sendEvent(new SlideEvent(sheet, state));
             }
 
             @Override
             public void onSlide(int sheet, float slideOffset) {
-                multiSheetSlideEventRelay.sendEvent(new MultiSheetSlideEventRelay.SlideEvent(sheet, slideOffset));
+                multiSheetSlideEventRelay.sendEvent(new SlideEvent(sheet, slideOffset));
             }
         });
     }

@@ -212,6 +212,7 @@ android {
 }
 
 dependencies {
+
     implementation fileTree(include: '*.jar', dir: 'libs')
 
     // //////////////////////////////////////////////////////////////////////////
@@ -226,6 +227,7 @@ dependencies {
     implementation libs.recyclerView
     implementation libs.supportv4
     implementation libs.firebaseCore
+    implementation libs.firebaseRemoteConfig
     implementation libs.constraintLayout
     implementation libs.chromecast
 
@@ -358,3 +360,5 @@ play {
     serviceAccountEmail = 'app-deployment@api-5801704373554614142-812229.iam.gserviceaccount.com'
     jsonFile = file('../deployment_keys.json')
 }
+
+apply plugin: 'com.google.gms.google-services'

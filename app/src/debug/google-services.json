@@ -1,55 +1,166 @@
 {
   "project_info": {
-    "project_number": "0"
+    "project_number": "1022635885638",
+    "firebase_url": "https://shuttlemusicplayer.firebaseio.com",
+    "project_id": "shuttlemusicplayer",
+    "storage_bucket": "shuttlemusicplayer.appspot.com"
   },
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:1022635885638:android:707489ffb76e80e5",
         "android_client_info": {
           "package_name": "another.music.player"
         }
       },
+      "oauth_client": [
+        {
+          "client_id": "1022635885638-43rbmcf8ee9q4p3sk1ko44768thdmskg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "another.music.player",
+            "certificate_hash": "e0d87743c42a030fe81043fff20102908d515dca"
+          }
+        },
+        {
+          "client_id": "1022635885638-ii8s3crr4ckn348c0ga2hfchvmlclnp2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "another.music.player",
+            "certificate_hash": "28fd47b7c5e05f85fd61c7d9b7404837a8c2e137"
+          }
+        },
+        {
+          "client_id": "1022635885638-nogfs4s3l002mqc6tjogn3r1qhh91269.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": ""
+          "current_key": "AIzaSyArAybbIkh45OHC-hLHIjTJucPklpa7xf8"
         }
-      ]
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1022635885638-nogfs4s3l002mqc6tjogn3r1qhh91269.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:1022635885638:android:3ba5a7d13d995fc2",
         "android_client_info": {
           "package_name": "com.simplecity.amp_pro"
         }
       },
+      "oauth_client": [
+        {
+          "client_id": "1022635885638-oav2v88b743e8io789vprh77i0rrbk82.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.simplecity.amp_pro",
+            "certificate_hash": "e0d87743c42a030fe81043fff20102908d515dca"
+          }
+        },
+        {
+          "client_id": "1022635885638-2l09tgklhs8fbinkuhlp0asat3sst0ps.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.simplecity.amp_pro",
+            "certificate_hash": "28fd47b7c5e05f85fd61c7d9b7404837a8c2e137"
+          }
+        },
+        {
+          "client_id": "1022635885638-nogfs4s3l002mqc6tjogn3r1qhh91269.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": ""
+          "current_key": "AIzaSyArAybbIkh45OHC-hLHIjTJucPklpa7xf8"
         }
-      ]
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1022635885638-nogfs4s3l002mqc6tjogn3r1qhh91269.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:1022635885638:android:b36e5cbfb3fd08a4",
         "android_client_info": {
           "package_name": "com.simplecity.amp_pro.debug"
         }
       },
+      "oauth_client": [
+        {
+          "client_id": "1022635885638-6b8864rkipui6rl9nu7cuaj664t95dl4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.simplecity.amp_pro.debug",
+            "certificate_hash": "28fd47b7c5e05f85fd61c7d9b7404837a8c2e137"
+          }
+        },
+        {
+          "client_id": "1022635885638-od6javatv24ggg3tjono6gdiv2phkse8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.simplecity.amp_pro.debug",
+            "certificate_hash": "e0d87743c42a030fe81043fff20102908d515dca"
+          }
+        },
+        {
+          "client_id": "1022635885638-nogfs4s3l002mqc6tjogn3r1qhh91269.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": ""
+          "current_key": "AIzaSyArAybbIkh45OHC-hLHIjTJucPklpa7xf8"
         }
-      ]
-    },
-    {
-      "client_info": {
-        "android_client_info": {
-          "package_name": "another.music.player.debug"
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1022635885638-nogfs4s3l002mqc6tjogn3r1qhh91269.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
         }
-      },
-      "api_key": [
-        {
-          "current_key": ""
-        }
-      ]
+      }
     }
   ],
   "configuration_version": "1"

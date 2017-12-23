@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +19,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.Util;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -29,11 +32,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.f2prateek.rx.preferences2.RxSharedPreferences;
-import com.jakewharton.rxbinding2.widget.RxSeekBar;
-import com.jakewharton.rxbinding2.widget.SeekBarChangeEvent;
-import com.jakewharton.rxbinding2.widget.SeekBarProgressChangeEvent;
-import com.jakewharton.rxbinding2.widget.SeekBarStartChangeEvent;
-import com.jakewharton.rxbinding2.widget.SeekBarStopChangeEvent;
+import com.jakewharton.rxbinding2.widget.*;
 import com.jp.wasabeef.glide.transformations.BlurTransformation;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
@@ -48,35 +47,19 @@ import com.simplecity.amp_library.rx.UnsafeConsumer;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.drawer.NavigationEventRelay;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
-import com.simplecity.amp_library.ui.views.FavoriteActionBarView;
-import com.simplecity.amp_library.ui.views.PlayPauseView;
-import com.simplecity.amp_library.ui.views.PlayerView;
-import com.simplecity.amp_library.ui.views.RepeatButton;
-import com.simplecity.amp_library.ui.views.RepeatingImageButton;
-import com.simplecity.amp_library.ui.views.ShuffleButton;
-import com.simplecity.amp_library.ui.views.SizableSeekBar;
-import com.simplecity.amp_library.utils.DataManager;
-import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
-import com.simplecity.amp_library.utils.PlaceholderProvider;
-import com.simplecity.amp_library.utils.SettingsManager;
-import com.simplecity.amp_library.utils.ShuttleUtils;
-import com.simplecity.amp_library.utils.StringUtils;
-
-import java.util.Collections;
-import java.util.concurrent.TimeUnit;
-
-import javax.inject.Inject;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
+import com.simplecity.amp_library.ui.views.*;
+import com.simplecity.amp_library.ui.views.multisheet.MultiSheetSlideEventRelay;
+import com.simplecity.amp_library.utils.*;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+
+import javax.inject.Inject;
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 public class PlayerFragment extends BaseFragment implements
         PlayerView,
@@ -136,6 +119,9 @@ public class PlayerFragment extends BaseFragment implements
     @BindView(R.id.seekbar)
     SizableSeekBar seekBar;
 
+    @BindView(R.id.let_it_snow)
+    SnowfallView snowfallView;
+
     private CompositeDisposable disposables = new CompositeDisposable();
 
     @Inject
@@ -143,6 +129,9 @@ public class PlayerFragment extends BaseFragment implements
 
     @Inject
     NavigationEventRelay navigationEventRelay;
+
+    @Inject
+    MultiSheetSlideEventRelay sheetEventRelay;
 
     private Unbinder unbinder;
 
@@ -231,21 +220,26 @@ public class PlayerFragment extends BaseFragment implements
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         presenter.bindView(this);
+
+        disposables.add(sheetEventRelay.getEvents()
+                .subscribe(event -> {
+                    if (event.nowPlayingExpanded()) {
+                        snowfallView.letItSnow();
+                    } else if (event.nowPlayingCollapsed()) {
+                        snowfallView.clear();
+                    }
+                }, throwable -> Log.e(TAG, "error listening for sheet slide events", throwable)));
     }
 
     @Override
     public void onDestroyView() {
-
         if (target != null) {
             Glide.clear(target);
         }
-
+        snowfallView.clear();
         presenter.unbindView(this);
-
         unbinder.unbind();
-
         super.onDestroyView();
     }
 
@@ -385,6 +379,7 @@ public class PlayerFragment extends BaseFragment implements
     public void trackInfoChanged(@Nullable Song song) {
 
         if (song == null) return;
+        snowfallView.letItSnow();
 
         String totalTimeString = StringUtils.makeTimeString(this.getActivity(), song.duration / 1000);
         if (!TextUtils.isEmpty(totalTimeString)) {
