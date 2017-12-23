@@ -91,12 +91,12 @@
     <string name="upgraded_title">Bedankt</string>
     <string name="upgraded_message">De upgrade naar Shuttle+ is gelukt, bedankt voor de steun.
 \n\nHerstart de app om te zorgen dat alle functies werken.</string>
-    <string name="upgrade_dialog_message">Upgraden zal aanvullende functies in Shuttle ontgrendelen, waaronder:
-\n\n\• Heel veel extra thema\'s
-\n\• Tags bewerken
-\n\• Bladeren in mappen
-\n\• ChromeCast-ondersteuning
-\n\nOok steun je zo verdere ontwikkeling.\n\nJe hoeft niet te upgraden als je Shuttle+ al hebt</string>
+    <string name="upgrade_dialog_message">• ChromeCast-ondersteuning
+\n• Extra thema\'s
+\n• Tags bewerken
+\n• Bladeren in mappen
+\n• Steun verdere ontwikkeling ❤️</string>
+    <string name="upgrade_required_folders">Upgraden naar Shuttle+</string>
     <string name="btn_upgrade">Upgraden</string>
     <!-- -->
     <string name="get_pro_button_no">Nee bedankt</string>
@@ -227,6 +227,7 @@
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Anders</string>
     <!--Settings category for 'playback' items -->
+    <string name="pref_category_playback">Afspelen</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
     <string name="pref_title_choose_tabs">Tabbladen kiezen</string>
     <!--Settings summary for opening the dialog to pick which categories are shown as tab headings -->
@@ -369,10 +370,15 @@ Indien uitgeschakeld wordt het Shuttle-icoon als plaatshouder gebruikt</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Ondersteuning</string>
     <!-- Settings title for toggling between remaining time and total time -->
+    <string name="pref_title_display_remaining_time">Resterende tijd tonen</string>
     <!-- Settings summary for toggling between remaining time and total time -->
+    <string name="pref_summary_display_remaining_time">Resterende tijd tonen in plaats van speelduur op \'Speelt nu\'-scherm</string>
     <!-- Settings title for the playback options -->
+    <string name="pref_title_playback">Afspelen</string>
     <!-- Settings title for toggling 'remember shuff'e-->
+    <string name="pref_title_remember_shuffle">Shuffle-stand onthouden</string>
     <!-- Settings summary for toggling 'remember shuff'e-->
+    <string name="pref_summary_remember_shuffle">Shuffle-stand blijft aanstaan bij afspelen van een nieuwe lijst met nummers</string>
     <string name="pref_title_version">Versie</string>
     <string name="pref_title_faq">FAQ</string>
     <string name="pref_summary_faq">Heb je een vraag of hulp nodig? Klik hier om de FAQ te zien op www.shuttlemusicplayer.com</string>

@@ -96,6 +96,7 @@
 \n\&#8226;-Navigazione a cartelle
 \n\&#8226;-Supporto a ChromeCast
 \n\nPermette inoltre di promuovere il futuro sviluppo dell\'applicazione. \n\n Non è necessario effettuare l\'upgrade se hai già acquistato Shuttle+.</string>
+    <string name="upgrade_required_folders">Aggiorna a Shuttle+</string>
     <string name="btn_upgrade">Upgrade</string>
     <!-- -->
     <string name="get_pro_button_no">No, grazie</string>
@@ -226,6 +227,7 @@
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Altro</string>
     <!--Settings category for 'playback' items -->
+    <string name="pref_category_playback">Riproduzione</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
     <string name="pref_title_choose_tabs">Scegli schede</string>
     <!--Settings summary for opening the dialog to pick which categories are shown as tab headings -->
@@ -372,10 +374,15 @@
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Supporto</string>
     <!-- Settings title for toggling between remaining time and total time -->
+    <string name="pref_title_display_remaining_time">Visualizza tempo rimanente</string>
     <!-- Settings summary for toggling between remaining time and total time -->
+    <string name="pref_summary_display_remaining_time">Visualizza il tempo rimanente invece della durata nella schermata di riproduzione</string>
     <!-- Settings title for the playback options -->
+    <string name="pref_title_playback">Riproduzione</string>
     <!-- Settings title for toggling 'remember shuff'e-->
+    <string name="pref_title_remember_shuffle">Ricorda la modalità di riproduzione casuale</string>
     <!-- Settings summary for toggling 'remember shuff'e-->
+    <string name="pref_summary_remember_shuffle">La modalità casuale non si spegne quando viene riprodotta una nuova lista di brani</string>
     <string name="pref_title_version">Versione</string>
     <string name="pref_title_faq">FAQ</string>
     <string name="pref_summary_faq">Hai una domanda da fare? Hai bisogno d\'aiuto? Clicca qui per leggere le FAQ su www.shuttlemusicplayer.com</string>

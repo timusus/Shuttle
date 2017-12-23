@@ -88,6 +88,7 @@ import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.afollestad.aesthetic.Rx.distinctToMainThread;
@@ -136,6 +137,12 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     private ColorStateList collapsingToolbarSubTextColor;
 
     protected CompositeDisposable disposables = new CompositeDisposable();
+
+    @Nullable
+    private Disposable setItemsDisposable = null;
+
+    @Nullable
+    private Disposable setHorizontalItemsDisposable = null;
 
     protected RequestManager requestManager;
 
@@ -186,8 +193,8 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         toolbar.setNavigationOnClickListener(v -> getNavigationController().popViewController());
 
         if (ShuttleUtils.canDrawBehindStatusBar()) {
-            toolbar.getLayoutParams().height = (int) (ActionBarUtils.getActionBarHeight(getContext())+ActionBarUtils.getStatusBarHeight(getContext()));
-            toolbar.setPadding(toolbar.getPaddingLeft(), (int) (toolbar.getPaddingTop()+ActionBarUtils.getStatusBarHeight(getContext())), toolbar.getPaddingRight(), toolbar.getPaddingBottom());
+            toolbar.getLayoutParams().height = (int) (ActionBarUtils.getActionBarHeight(getContext()) + ActionBarUtils.getStatusBarHeight(getContext()));
+            toolbar.setPadding(toolbar.getPaddingLeft(), (int) (toolbar.getPaddingTop() + ActionBarUtils.getStatusBarHeight(getContext())), toolbar.getPaddingRight(), toolbar.getPaddingBottom());
         }
 
         setupToolbarMenu(toolbar);
@@ -264,6 +271,13 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
     @Override
     public void onDestroyView() {
+
+        if (setHorizontalItemsDisposable != null) {
+            setHorizontalItemsDisposable.dispose();
+        }
+        if (setItemsDisposable != null) {
+            setItemsDisposable.dispose();
+        }
 
         disposables.clear();
 
@@ -406,7 +420,10 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
         List<ViewModel> items = new ArrayList<>();
 
-        horizontalRecyclerView.setItems(Stream.of(albums)
+        if (setHorizontalItemsDisposable != null) {
+            setHorizontalItemsDisposable.dispose();
+        }
+        setHorizontalItemsDisposable = horizontalRecyclerView.setItems(Stream.of(albums)
                 .map(album -> {
                     HorizontalAlbumView horizontalAlbumView = new HorizontalAlbumView(album, requestManager);
                     horizontalAlbumView.setClickListener(BaseDetailFragment.this);
@@ -427,7 +444,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
             return;
         }
 
-        int width = ResourceUtils.getScreenSize().width+ResourceUtils.toPixels(60);
+        int width = ResourceUtils.getScreenSize().width + ResourceUtils.toPixels(60);
         int height = getResources().getDimensionPixelSize(R.dimen.header_view_height);
 
         requestManager.load(getArtworkProvider())
@@ -729,8 +746,10 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
     @Override
     public void itemsLoaded(List<ViewModel> items) {
-
-        adapter.setItems(items, new CompletionListUpdateCallbackAdapter() {
+        if (setItemsDisposable != null) {
+            setItemsDisposable.dispose();
+        }
+        setItemsDisposable = adapter.setItems(items, new CompletionListUpdateCallbackAdapter() {
             @Override
             public void onComplete() {
                 if (recyclerView != null) {
@@ -742,7 +761,10 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
     @Override
     public void setEmpty(boolean empty) {
-        adapter.setItems(Collections.singletonList(new EmptyView(R.string.empty_songlist)));
+        if (setItemsDisposable != null) {
+            setItemsDisposable.dispose();
+        }
+        setItemsDisposable = adapter.setItems(Collections.singletonList(new EmptyView(R.string.empty_songlist)));
     }
 
     @Override
