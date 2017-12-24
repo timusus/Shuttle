@@ -56,8 +56,7 @@ android {
         targetSdkVersion versions.targetSdk
 
         versionName versions.name
-        versionCode gitCommitCount() + 3200
-        // Add 3200 to account for moving to github and resetting commit count.
+        versionCode 5000
 
         resConfigs "en", "zh-rCN", "fr", "de", "ko", "it", "ru", "nl", "tr", "pl", "hu", "uk", "bg-rBG", "en-rGB", "vi", "pt-rBR", "es", "en-rNZ", "zh-rTW", "es-rES", "hr", "en-rAU", "eu-rES", "th"
 
@@ -103,40 +102,6 @@ android {
             buildConfigField("String", "LASTFM_API_KEY", "\"${getProperty(getProperties('../private.properties'), 'LASTFM_API_KEY')}\"")
             manifestPlaceholders = [CRASHLYTICS_API_KEY: "${getProperty(getProperties('../private.properties'), 'CRASHLYTICS_API_KEY')}"]
         }
-
-        /* Todo: Figure out how to reinstate with new Gradle version
-        applicationVariants.all { variant ->
-
-            if (variant.buildType.name.contains('release')) {
-                variant.outputs.all { output ->
-                    outputFileName = "${variant.name}-v${variant.versionName}.apk"
-                }
-
-                //Reveal in explorer/finder
-                variant.assemble.doLast {
-                    def path = null
-                    variant.outputs.each { output ->
-                        path = output.outputFile
-
-                        //Delete the unaligned apk file
-                        File unaligned = output.packageApplication.outputFile
-                        File aligned = output.outputFile
-                        if (!unaligned.getName().equalsIgnoreCase(aligned.getName())) {
-                            unaligned.delete()
-                        }
-                    }
-
-                    exec {
-                        if (System.properties['os.name'].toLowerCase().contains('mac os x')) {
-                            ['open', '-R', path].execute()
-                        } else if (System.properties['os.name'].toLowerCase().contains('windows')) {
-                            ['explorer', '/select,', path].execute()
-                        }
-                    }
-                }
-            }
-        }
-        */
     }
 
     // Ignore useless variants, such as devRelease.
@@ -148,11 +113,27 @@ android {
         def debugFilters = ["paid", "free", 'amazonPaid', "amazonFree"]
         def relFilters = ["dev", "devPre21"]
 
+        if (System.getenv("TRAVIS")) {
+            relFilters << "amazonPaid"
+            relFilters << "amazonFree"
+        }
+
         def filter = { name -> names.contains(name) }
         def debugIgnore = buildTypes.contains("debug") && debugFilters.stream().anyMatch(filter)
         def releaseIgnore = buildTypes.contains("release") && relFilters.stream().anyMatch(filter)
 
         setIgnore(debugIgnore || releaseIgnore)
+    }
+
+    // Set the version code for release builds
+    applicationVariants.all { variant ->
+        if (variant.buildType.name == "release") {
+            def newVersionCode = generateVersionCode()
+            variant.outputs.all { output ->
+                output.setVersionCodeOverride(newVersionCode)
+            }
+            variant.mergedFlavor.versionCode = newVersionCode
+        }
     }
 
     // Used to enable Java8 features
@@ -172,6 +153,8 @@ android {
 
             //Enable multiDex for debug builds, since they don't use proguard
             multiDexEnabled true
+
+            resConfigs "en", "xxhdpi"
         }
 
         paid {
@@ -229,6 +212,7 @@ android {
 }
 
 dependencies {
+
     implementation fileTree(include: '*.jar', dir: 'libs')
 
     // //////////////////////////////////////////////////////////////////////////
@@ -243,6 +227,7 @@ dependencies {
     implementation libs.recyclerView
     implementation libs.supportv4
     implementation libs.firebaseCore
+    implementation libs.firebaseRemoteConfig
     implementation libs.constraintLayout
     implementation libs.chromecast
 
@@ -258,7 +243,7 @@ dependencies {
     debugImplementation libs.haha
     debugImplementation libs.leakCanaryDebug
     releaseImplementation libs.leakCanaryRel
-    
+
     // //////////////////////////////////////////////////////////////////////////
     // External libs
     // /////////////////////////////////////////////////////////////////////////
@@ -331,25 +316,49 @@ configurations.all {
     }
 }
 
-def gitCommitCount() {
-    def commitCount = 0
-    try {
-        def stdout = new ByteArrayOutputStream()
-        exec {
-            commandLine 'git', 'rev-list', '--all', '--count'
-            standardOutput stdout
+class Globals {
+    static int versionCode = -1
+}
+
+static int generateVersionCode() {
+    if (Globals.versionCode == -1) {
+        def versionCode = 5000
+        if (System.getenv("TRAVIS_BUILD_NUMBER")) {
+            def travisBuildNumber = System.getenv("TRAVIS_BUILD_NUMBER").toInteger()
+            println "Travis build number: $travisBuildNumber"
+            versionCode += travisBuildNumber
         }
-        commitCount = stdout.toString().trim().toInteger()
+        println "Version code: $versionCode"
+        Globals.versionCode = versionCode
+        return versionCode
     }
-    catch (error) {
-        println "Error: ${error}"
+    return Globals.versionCode
+}
+
+static String getPlayStoreTrack() {
+    def track = 'alpha'
+    if (System.getenv("TRAVIS_TAG")) {
+        String branch = System.getenv("TRAVIS_TAG").toString()
+        if (branch.contains('alpha')) {
+            track = 'alpha'
+        } else if (branch.contains('beta')) {
+            track = 'beta'
+        } else if (branch.contains('release')) {
+            track = 'production'
+        } else if (branch.contains('rollout')) {
+            track = 'rollout'
+        }
     }
-    return commitCount
+    println "Play store track: $track"
+    return track
 }
 
 play {
-    track = 'beta'
+    track = getPlayStoreTrack()
+    userFraction = 0.1
     untrackOld = true
     serviceAccountEmail = 'app-deployment@api-5801704373554614142-812229.iam.gserviceaccount.com'
     jsonFile = file('../deployment_keys.json')
 }
+
+apply plugin: 'com.google.gms.google-services'

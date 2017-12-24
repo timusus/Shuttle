@@ -8,7 +8,7 @@ android:
   components:
   - tools
   - platform-tools
-  - build-tools-27.0.2
+  - build-tools-27.0.3
   - android-27
   - extra-android-support
   - extra-android-m2repository
@@ -25,6 +25,7 @@ script:
 - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash .travis/run_on_non_pull_requests; fi
 
 before_install:
+- yes | sdkmanager "platforms;android-27"
 - mkdir "$ANDROID_HOME/licenses" || true
 - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
 - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
@@ -54,16 +55,19 @@ deploy:
     condition: $TRAVIS_TAG =~ beta || $TRAVIS_TAG =~ alpha || $TRAVIS_TAG =~ release
 
 # Play Store beta release
-#- provider: script
-#  script: ./gradlew publishApkFreeRelease publishApkPaidRelease
-#  skip_cleanup: true
-#  on:
-#    repo: timusus/Shuttle
-#    tags: true
-#    condition: $TRAVIS_TAG =~ beta
+- provider: script
+  script: ./gradlew publishApkFreeRelease publishApkPaidRelease
+  skip_cleanup: true
+  on:
+    repo: timusus/Shuttle
+    tags: true
+    condition: $TRAVIS_TAG =~ beta || $TRAVIS_TAG =~ alpha || $TRAVIS_TAG =~ release
 
 # Slack build notifications
 notifications:
-  slack: shuttlemusicplayer:g90QK9lL6Hg5jfzegqjjNqqN
-  template: 
-    - "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}: '%{commit_subject}'>) by %{author} %{result} in %{duration}."
+  slack:
+    rooms:
+      - shuttlemusicplayer:g90QK9lL6Hg5jfzegqjjNqqN
+    on_pull_requests: false
+    template:
+      - "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}: '%{commit_subject}'>) by %{author} %{result} in %{duration}."

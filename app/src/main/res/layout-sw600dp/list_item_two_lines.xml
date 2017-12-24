@@ -43,7 +43,7 @@
         android:minWidth="28dp"
         android:tag=":aesthetic_ignore"
         android:textSize="14sp"
-        android:visibility="visible"/>
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/line_three"

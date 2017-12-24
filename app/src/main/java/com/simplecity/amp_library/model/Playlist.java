@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Pair;
 
+import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
@@ -155,11 +156,12 @@ public class Playlist implements Serializable {
     );
 
     @NonNull
-    public static Single<Playlist> favoritesPlaylist() {
+    public static Single<Optional<Playlist>> favoritesPlaylist() {
         return DataManager.getInstance().getPlaylistsRelay()
                 .first(Collections.emptyList())
                 .flatMapObservable(Observable::fromIterable)
                 .filter(playlist ->  playlist.type == Type.FAVORITES)
+                .map(Optional::of)
                 .switchIfEmpty(Observable.fromCallable(PlaylistUtils::createFavoritePlaylist))
                 .firstOrError();
     }

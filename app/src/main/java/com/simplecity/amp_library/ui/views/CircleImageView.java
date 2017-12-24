@@ -279,9 +279,9 @@ public class CircleImageView extends AppCompatImageView {
             aestheticDisposable = Aesthetic.get(getContext()).isDark()
                     .subscribe(isDark -> {
                         if (isDark) {
-                            setBorderColor(ContextCompat.getColor(getContext(), R.color.grey_900));
+                            setBorderColor(ContextCompat.getColor(getContext(), R.color.md_grey_900));
                         } else {
-                            setBorderColor(ContextCompat.getColor(getContext(), R.color.grey_250));
+                            setBorderColor(ContextCompat.getColor(getContext(), R.color.md_grey_250));
                         }
                     });
         }

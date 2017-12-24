@@ -133,7 +133,7 @@ public class SettingsManager {
 
     @ViewType
     public int getAlbumDisplayType() {
-        return getInt(KEY_ALBUM_DISPLAY_TYPE, ViewType.ALBUM_LIST);
+        return getInt(KEY_ALBUM_DISPLAY_TYPE, ShuttleUtils.isTablet() ? ViewType.ALBUM_PALETTE : ViewType.ALBUM_LIST);
     }
 
     private static final String KEY_ARTIST_DISPLAY_TYPE = "artist_display_type_new";

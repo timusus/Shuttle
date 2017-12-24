@@ -6,8 +6,6 @@
     <dimen name="equalizer_activity_top_padding">64dp</dimen>
     <dimen name="equalizer_activity_edge_padding">64dp</dimen>
 
-    <dimen name="mini_player_height">72dp</dimen>
-
     <dimen name="header_view_height">420dp</dimen>
 
 </resources>

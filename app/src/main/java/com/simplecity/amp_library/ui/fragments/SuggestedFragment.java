@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.ui.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
@@ -32,6 +34,7 @@ import com.simplecity.amp_library.ui.modelviews.SuggestedHeaderView;
 import com.simplecity.amp_library.ui.modelviews.SuggestedSongView;
 import com.simplecity.amp_library.ui.views.SuggestedDividerDecoration;
 import com.simplecity.amp_library.utils.ComparisonUtils;
+import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
@@ -75,7 +78,7 @@ public class SuggestedFragment extends BaseFragment implements
 
         @Override
         public void onSongClick(Song song, SuggestedSongView.ViewHolder holder) {
-            MusicUtils.playAll(songs, songs.indexOf(song), (String message) -> Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show());
+            MusicUtils.playAll(songs, songs.indexOf(song), true, (String message) -> Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show());
         }
 
         @Override
@@ -173,7 +176,9 @@ public class SuggestedFragment extends BaseFragment implements
             recyclerView.addItemDecoration(new SuggestedDividerDecoration(getResources()));
             recyclerView.setRecyclerListener(new RecyclerListener());
 
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 6);
+            int spanCount = ShuttleUtils.isTablet() ? 12 : 6;
+
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), spanCount);
             gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
@@ -184,7 +189,7 @@ public class SuggestedFragment extends BaseFragment implements
                                 || (item instanceof AlbumView && item.getViewType() == ViewType.ALBUM_LIST)
                                 || (item instanceof AlbumView && item.getViewType() == ViewType.ALBUM_LIST_SMALL)
                                 || item instanceof EmptyView) {
-                            return 6;
+                            return spanCount;
                         }
                         if (item instanceof AlbumView && item.getViewType() == ViewType.ALBUM_CARD_LARGE) {
                             return 3;
@@ -287,37 +292,41 @@ public class SuggestedFragment extends BaseFragment implements
                 });
     }
 
+    @SuppressLint("CheckResult")
     Observable<List<ViewModel>> getFavoriteSongViewModels() {
-        Observable<Playlist> favoritesPlaylist = Playlist.favoritesPlaylist().toObservable().cache();
-        Observable<List<Song>> favoritesSongs = favoritesPlaylist
-                .flatMap(Playlist::getSongsObservable)
-                .flatMapSingle(songs -> Observable.fromIterable(songs)
-                        .take(20)
-                        .toList());
 
-        return Observable.zip(favoritesPlaylist, favoritesSongs, (playlist, songs) -> {
-            if (!songs.isEmpty()) {
-                List<ViewModel> viewModels = new ArrayList<>();
+        Observable<List<Song>> favoritesSongs = DataManager.getInstance().getFavoriteSongsRelay()
+                .take(20);
 
-                SuggestedHeader favoriteHeader = new SuggestedHeader(getString(R.string.fav_title), getString(R.string.suggested_favorite_subtitle), playlist);
-                SuggestedHeaderView favoriteHeaderView = new SuggestedHeaderView(favoriteHeader);
-                favoriteHeaderView.setClickListener(this);
-                viewModels.add(favoriteHeaderView);
+        return Observable.combineLatest(
+                favoritesSongs,
+                Playlist.favoritesPlaylist()
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .toObservable(),
+                (songs, playlist) -> {
+                    if (!songs.isEmpty()) {
+                        List<ViewModel> viewModels = new ArrayList<>();
 
-                viewModels.add(favoriteRecyclerView);
+                        SuggestedHeader favoriteHeader = new SuggestedHeader(getString(R.string.fav_title), getString(R.string.suggested_favorite_subtitle), playlist);
+                        SuggestedHeaderView favoriteHeaderView = new SuggestedHeaderView(favoriteHeader);
+                        favoriteHeaderView.setClickListener(SuggestedFragment.this);
+                        viewModels.add(favoriteHeaderView);
 
-                SongClickListener songClickListener = new SongClickListener(songs);
-                favoriteRecyclerView.viewModelAdapter.setItems(Stream.of(songs).map(song -> {
-                    SuggestedSongView suggestedSongView = new SuggestedSongView(song, requestManager);
-                    suggestedSongView.setClickListener(songClickListener);
-                    return (ViewModel) suggestedSongView;
-                }).toList());
+                        viewModels.add(favoriteRecyclerView);
 
-                return viewModels;
-            } else {
-                return Collections.emptyList();
-            }
-        });
+                        SongClickListener songClickListener = new SongClickListener(songs);
+                        favoriteRecyclerView.viewModelAdapter.setItems(Stream.of(songs).map(song -> {
+                            SuggestedSongView suggestedSongView = new SuggestedSongView(song, requestManager);
+                            suggestedSongView.setClickListener(songClickListener);
+                            return (ViewModel) suggestedSongView;
+                        }).toList());
+
+                        return viewModels;
+                    } else {
+                        return Collections.emptyList();
+                    }
+                });
     }
 
     Observable<List<ViewModel>> getRecentlyAddedViewModels() {
@@ -351,12 +360,17 @@ public class SuggestedFragment extends BaseFragment implements
     }
 
     void refreshAdapterItems() {
+
+        if (setItemsDisposable != null) {
+            setItemsDisposable.dispose();
+        }
+
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {
                 refreshDisposables.add(Observable.combineLatest(
                         getMostPlayedViewModels(),
                         getRecentlyPlayedViewModels(),
-                        getFavoriteSongViewModels(),
+                        getFavoriteSongViewModels().switchIfEmpty(Observable.just(Collections.emptyList())),
                         getRecentlyAddedViewModels(),
                         (mostPlayedSongs1, recentlyPlayedAlbums1, favoriteSongs1, recentlyAddedAlbums1) -> {
                             List<ViewModel> items = new ArrayList<>();
@@ -366,13 +380,10 @@ public class SuggestedFragment extends BaseFragment implements
                             items.addAll(recentlyAddedAlbums1);
                             return items;
                         })
-                        .switchIfEmpty(Observable.just(Collections.emptyList()))
                         .debounce(200, TimeUnit.MILLISECONDS)
+                        .switchIfEmpty(Observable.just(Collections.emptyList()))
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(adaptableItems -> {
-                            if (setItemsDisposable != null) {
-                                setItemsDisposable.dispose();
-                            }
                             if (adaptableItems.isEmpty()) {
                                 setItemsDisposable = adapter.setItems(Collections.singletonList((new EmptyView(R.string.empty_suggested))));
                             } else {

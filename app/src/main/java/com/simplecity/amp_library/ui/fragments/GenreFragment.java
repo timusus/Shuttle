@@ -25,6 +25,7 @@ import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -114,6 +115,7 @@ public class GenreFragment extends BaseFragment implements
             if (getActivity() != null && isAdded()) {
                 disposable = DataManager.getInstance().getGenresRelay()
                         .skipWhile(genres -> !force && adapter.items.size() == genres.size())
+                        .debounce(150, TimeUnit.MILLISECONDS)
                         .map(genres -> Stream.of(genres)
                                 .sorted((a, b) -> ComparisonUtils.compare(a.name, b.name))
                                 .map(genre -> {

@@ -150,12 +150,22 @@ public class UpNextView extends LinearLayout {
         disposables.add(Observable.combineLatest(
                 Aesthetic.get(getContext()).textColorPrimary(),
                 Aesthetic.get(getContext()).textColorPrimaryInverse(),
-                Observable.just(ShuttleUtils.isLandscape()),
+                Aesthetic.get(getContext()).isDark().map(isDark -> ShuttleUtils.isLandscape() && !isDark),
                 LightDarkColorState.creator())
                 .subscribe(colorState -> {
                     DrawableCompat.setTint(arrowDrawable, colorState.color());
                     arrow.setImageDrawable(arrowDrawable);
                 }));
+
+        disposables.add(Aesthetic.get(getContext()).isDark()
+                .map(isDark -> ShuttleUtils.isLandscape() && !isDark)
+                .flatMap(isDark -> isDark ? Aesthetic.get(getContext()).textColorPrimaryInverse() : Aesthetic.get(getContext()).textColorPrimary())
+                .subscribe(color -> queueText.setTextColor(color)));
+
+        disposables.add(Aesthetic.get(getContext()).isDark()
+                .map(isDark -> ShuttleUtils.isLandscape() && !isDark)
+                .flatMap(isDark -> (isDark ? Aesthetic.get(getContext()).textColorSecondaryInverse() : Aesthetic.get(getContext()).textColorSecondary()))
+                .subscribe(color -> queuePositionTextView.setTextColor(color)));
 
         if (ShuttleUtils.isLandscape()) {
             disposables.add(Aesthetic.get(getContext()).colorPrimary()

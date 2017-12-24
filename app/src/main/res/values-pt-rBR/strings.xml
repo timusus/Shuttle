@@ -93,12 +93,11 @@ músicas adicionadas à fila.</item>
     <string name="upgraded_title">Obrigado</string>
     <string name="upgraded_message">Você atualizou para o Shuttle+ com sucesso. Eu agradeço o suporte.
 \n\nPor favor, reinicie o aplicativo para garantir que todos os recursos estão habilitados</string>
-    <string name="upgrade_dialog_message">Fazer a atualização irá desbloquear recursos adicionais no Shuttle, incluindo:
-\n\n• Toneladas de temas
+    <string name="upgrade_dialog_message">• Suporte ao ChromeCast
+\n• Temas extras
 \n• Edição de tags
 \n• Navegação por pastas
-\n• Suporte ao ChromeCast
-\n\nE também ajuda a promover o desenvolvimento futuro do aplicativo.\n\nVocê não precisa atualizar se você já tem o Shuttle+</string>
+\n• Ajuda e suporte ao desenvolvimento do app ❤️</string>
     <string name="btn_upgrade">Atualizar</string>
     <!-- -->
     <string name="get_pro_button_no">Não, obrigado</string>

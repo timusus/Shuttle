@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.crashlytics.android.Crashlytics;
 import com.simplecity.amp_library.R;
@@ -456,21 +457,25 @@ public class PlaylistUtils {
             playlist = new Playlist(Playlist.Type.USER_CREATED, id, name, true, false, true, true, true);
         } else {
             Crashlytics.log(String.format("Failed to create playlist. Name: %s, id: %d", name, id));
-            DataManager.getInstance().getPlaylistsRelay().first(Collections.emptyList()).subscribe(playlists -> Crashlytics.log("Existing playlists: " + playlists));
+            DataManager.getInstance().getPlaylistsRelay().first(Collections.emptyList())
+                    .subscribe(
+                            playlists -> Crashlytics.log("Existing playlists: " + playlists),
+                            throwable -> {
+                            });
         }
 
         return playlist;
     }
 
     @Nullable
-    public static Playlist createFavoritePlaylist() {
+    public static Optional<Playlist> createFavoritePlaylist() {
         Playlist playlist = PlaylistUtils.createPlaylist(ShuttleApplication.getInstance(), ShuttleApplication.getInstance().getString(R.string.fav_title));
         if (playlist != null) {
             playlist.canDelete = false;
             playlist.canRename = false;
             playlist.type = Playlist.Type.FAVORITES;
         }
-        return playlist;
+        return Optional.ofNullable(playlist);
     }
 
     /**
@@ -478,6 +483,8 @@ public class PlaylistUtils {
      */
     public static void clearFavorites() {
         Playlist.favoritesPlaylist()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .flatMapCompletable(playlist -> Completable.fromAction(() -> {
                     final Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlist.id);
                     ShuttleApplication.getInstance().getContentResolver().delete(uri, null, null);
@@ -514,7 +521,10 @@ public class PlaylistUtils {
     @SuppressLint("CheckResult")
     public static void addToFavorites(@NonNull Song song, UnsafeConsumer<Boolean> success) {
         Single.zip(
-                Playlist.favoritesPlaylist(),
+                Playlist.favoritesPlaylist()
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .toSingle(),
                 DataManager.getInstance().getFavoriteSongsRelay()
                         .first(Collections.emptyList())
                         .map(List::size),
@@ -531,12 +541,16 @@ public class PlaylistUtils {
                 .delay(150, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(success);
+                .subscribe(
+                        success,
+                        throwable -> LogUtils.logException(TAG, "Error adding to playlist", throwable));
     }
 
     @SuppressLint("CheckResult")
     public static void removeFromFavorites(@NonNull Song song, @Nullable UnsafeConsumer<Boolean> success) {
         Playlist.favoritesPlaylist()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(

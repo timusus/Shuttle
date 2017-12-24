@@ -172,7 +172,10 @@ public class QueueFragment extends BaseFragment implements
 
             disposables.add(multiSheetSlideEventRelay.getEvents()
                     .filter(multiSheetEvent -> multiSheetEvent.sheet == MultiSheetView.Sheet.SECOND)
-                    .subscribe(multiSheetEvent -> statusBarView.setTranslationY((1 - multiSheetEvent.slideOffset) * ResourceUtils.toPixels(16))));
+                    .filter(multiSheetEvent -> multiSheetEvent.slideOffset >= 0)
+                    .subscribe(multiSheetEvent -> {
+                        statusBarView.setTranslationY((1 - multiSheetEvent.slideOffset) * ResourceUtils.toPixels(16));
+                    }));
         }
 
         setupContextualToolbar();

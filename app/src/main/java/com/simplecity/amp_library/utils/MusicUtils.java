@@ -39,15 +39,15 @@ public class MusicUtils {
     public static void playAll(Single<List<Song>> songsSingle, UnsafeConsumer<String> onEmpty) {
         songsSingle
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(songs -> playAll(songs, 0, onEmpty));
+                .subscribe(songs -> playAll(songs, 0, true, onEmpty));
     }
 
     /**
      * Sends a list of songs to the MusicService for playback
      */
-    public static void playAll(List<Song> songs, int position, UnsafeConsumer<String> onEmpty) {
+    public static void playAll(List<Song> songs, int position, boolean canClearShuffle, UnsafeConsumer<String> onEmpty) {
 
-        if (!SettingsManager.getInstance().getRememberShuffle()) {
+        if (canClearShuffle && !SettingsManager.getInstance().getRememberShuffle()) {
             setShuffleMode(MusicService.ShuffleMode.OFF);
         }
 
@@ -76,7 +76,11 @@ public class MusicUtils {
         songsSingle
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        songs -> playAll(songs, new Random().nextInt(songs.size()), onEmpty),
+                        songs -> {
+                            if (!songs.isEmpty()) {
+                                playAll(songs, new Random().nextInt(songs.size()), false, onEmpty);
+                            }
+                        },
                         e -> LogUtils.logException(TAG, "Shuffle all error", e));
     }
 

@@ -43,25 +43,27 @@ public class DrawerPresenter extends PurchasePresenter<DrawerView> {
 
         loadData(view);
 
-        addDisposable(navigationEventRelay.getEvents().subscribe(drawerEvent -> {
-            DrawerView drawerView = getView();
-            switch (drawerEvent.type) {
-                case NavigationEventRelay.NavigationEvent.Type.LIBRARY_SELECTED:
-                    if (drawerView != null) {
-                        drawerView.setDrawerItemSelected(DrawerParent.Type.LIBRARY);
+        addDisposable(navigationEventRelay.getEvents()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(drawerEvent -> {
+                    DrawerView drawerView = getView();
+                    switch (drawerEvent.type) {
+                        case NavigationEventRelay.NavigationEvent.Type.LIBRARY_SELECTED:
+                            if (drawerView != null) {
+                                drawerView.setDrawerItemSelected(DrawerParent.Type.LIBRARY);
+                            }
+                            break;
+                        case NavigationEventRelay.NavigationEvent.Type.FOLDERS_SELECTED:
+                            if (drawerView != null) {
+                                if (ShuttleUtils.isUpgraded()) {
+                                    drawerView.setDrawerItemSelected(DrawerParent.Type.FOLDERS);
+                                } else {
+                                    upgradeClicked();
+                                }
+                            }
+                            break;
                     }
-                    break;
-                case NavigationEventRelay.NavigationEvent.Type.FOLDERS_SELECTED:
-                    if (drawerView != null) {
-                        if (ShuttleUtils.isUpgraded()) {
-                            drawerView.setDrawerItemSelected(DrawerParent.Type.FOLDERS);
-                        } else {
-                            upgradeClicked();
-                        }
-                    }
-                    break;
-            }
-        }));
+                }));
     }
 
     void onDrawerItemClicked(DrawerParent drawerParent) {

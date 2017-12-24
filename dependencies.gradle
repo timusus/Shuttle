@@ -4,7 +4,7 @@ ext.versions = [
         // App versions
         // /////////////////////////////////////////////////////////////////////////
 
-        name                          : "2.0.0-beta23",
+        name                          : "2.0.0",
 
         // //////////////////////////////////////////////////////////////////////////
         // Compile versions
@@ -13,7 +13,7 @@ ext.versions = [
         minSdk                        : 16,
         targetSdk                     : 27,
         compileSdk                    : 27,
-        buildTools                    : "27.0.2",
+        buildTools                    : "27.0.3",
 
         // //////////////////////////////////////////////////////////////////////////
         // Plugin versions
@@ -25,14 +25,16 @@ ext.versions = [
         playPublisher                 : "1.2.0",
         gradleVersions                : "0.15.0",
         retroLambda                   : "3.7.0",
+        playServices                  : "3.1.2",
 
         // //////////////////////////////////////////////////////////////////////////
         // Google lib versions
         // /////////////////////////////////////////////////////////////////////////
 
         supportLib                    : "26.1.0",
-        firebaseCore                  : "11.2.0",
-        chromecast                    : "11.2.0",
+        firebaseCore                  : "11.8.0",
+        firebaseRemoteConfig          : "11.8.0",
+        chromecast                    : "11.8.0",
         constraintLayout              : "1.0.2",
 
         // //////////////////////////////////////////////////////////////////////////
@@ -81,7 +83,7 @@ ext.versions = [
         // //////////////////////////////////////////////////////////////////////////
         // MultiDex
         // /////////////////////////////////////////////////////////////////////////
-        multiDex                      : "1.0.1",
+        multiDex                      : "1.0.2",
 
         // //////////////////////////////////////////////////////////////////////////
         // Testing
@@ -106,7 +108,8 @@ ext.gradlePlugins = [
         dexcount      : "com.getkeepsafe.dexcount:dexcount-gradle-plugin:$versions.dexcountGradlePlugin",
         fabric        : "io.fabric.tools:gradle:$versions.fabricGradlePlugin",
         playPublisher : "com.github.triplet.gradle:play-publisher:$versions.playPublisher",
-        gradleVersions: "com.github.ben-manes:gradle-versions-plugin:$versions.gradleVersions"
+        gradleVersions: "com.github.ben-manes:gradle-versions-plugin:$versions.gradleVersions",
+        playServices  : "com.google.gms:google-services:$versions.playServices"
 ]
 
 ext.libs = [
@@ -122,6 +125,7 @@ ext.libs = [
         recyclerView                  : "com.android.support:recyclerview-v7:$versions.supportLib",
         supportv4                     : "com.android.support:support-v4:$versions.supportLib",
         firebaseCore                  : "com.google.firebase:firebase-core:$versions.firebaseCore",
+        firebaseRemoteConfig          : "com.google.firebase:firebase-config:$versions.firebaseRemoteConfig",
         appcompat                     : "com.android.support:appcompat-v7:${versions.supportLib}",
         mediarouter                   : "com.android.support:mediarouter-v7:${versions.supportLib}",
         chromecast                    : "com.google.android.gms:play-services-cast:${versions.chromecast}",

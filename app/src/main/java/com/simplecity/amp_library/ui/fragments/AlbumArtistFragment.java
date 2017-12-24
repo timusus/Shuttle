@@ -42,6 +42,7 @@ import com.simplecityapps.recycler_adapter.recyclerview.SpanSizeLookup;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -177,6 +178,7 @@ public class AlbumArtistFragment extends BaseFragment implements
 
                 disposable = DataManager.getInstance().getAlbumArtistsRelay()
                         .skipWhile(albumArtists -> !force && adapter.items.size() == albumArtists.size())
+                        .debounce(150, TimeUnit.MILLISECONDS)
                         .flatMapSingle(albumArtists -> {
                             //Sort
                             SortManager.getInstance().sortAlbumArtists(albumArtists);
@@ -299,9 +301,11 @@ public class AlbumArtistFragment extends BaseFragment implements
             gridMenuItem.setVisible(false);
         } else {
             gridMenuItem.setVisible(true);
-            gridMenuItem.getSubMenu()
-                    .findItem(SettingsManager.getInstance().getArtistColumnCount(getResources()))
-                    .setChecked(true);
+            SubMenu subMenu = gridMenuItem.getSubMenu();
+            if (subMenu != null) {
+                subMenu.findItem(SettingsManager.getInstance().getArtistColumnCount(getResources()))
+                        .setChecked(true);
+            }
         }
     }
 

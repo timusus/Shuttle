@@ -766,9 +766,9 @@ public class MenuUtils implements MusicUtils.Defs {
                     getSongForFile(fileObject).subscribe(song -> showSongInfo(context, song), errorHandler);
                     return true;
                 case R.id.blacklist:
-                    getSongForFile(fileObject).subscribe(song -> blacklist(song));
+                    getSongForFile(fileObject).subscribe(song -> blacklist(song), errorHandler);
                 case R.id.whitelist:
-                    getSongForFile(fileObject).subscribe(song -> whitelist(song));
+                    getSongForFile(fileObject).subscribe(song -> whitelist(song), errorHandler);
                     return true;
                 case R.id.rename:
                     renameFile(context, fileObject, filenameChanged);

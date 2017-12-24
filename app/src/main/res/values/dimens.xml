@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
+
     <dimen name="pause_bar_width">4dp</dimen>
     <dimen name="pause_bar_distance">6dp</dimen>
     <dimen name="pause_bar_height">20dp</dimen>
@@ -11,8 +11,6 @@
 
     <dimen name="equalizer_activity_edge_padding">16dp</dimen>
     <dimen name="equalizer_activity_top_padding">16dp</dimen>
-
-    <dimen name="mini_player_height">64dp</dimen>
 
     <dimen name="header_view_height">320dp</dimen>
 

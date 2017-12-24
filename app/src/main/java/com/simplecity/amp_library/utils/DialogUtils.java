@@ -78,9 +78,13 @@ public class DialogUtils {
         if (!SettingsManager.getInstance().getHasRated() && !SettingsManager.getInstance().hasSeenRateSnackbar) {
             //If this is the tenth launch, or a multiple of 50
             if (SettingsManager.getInstance().getLaunchCount() == 10 || (SettingsManager.getInstance().getLaunchCount() != 0 && SettingsManager.getInstance().getLaunchCount() % 50 == 0)) {
+
                 Snackbar snackbar = Snackbar.make(view, R.string.snackbar_rate_text, Snackbar.LENGTH_INDEFINITE)
                         .setDuration(15000)
-                        .setAction(R.string.snackbar_rate_action, v -> ShuttleUtils.openShuttleLink(activity, ShuttleApplication.getInstance().getPackageName(), activity.getPackageManager()))
+                        .setAction(R.string.snackbar_rate_action, v -> {
+                            ShuttleUtils.openShuttleLink(activity, ShuttleApplication.getInstance().getPackageName(), activity.getPackageManager());
+                            AnalyticsManager.logRateClicked();
+                        })
                         .addCallback(new Snackbar.Callback() {
                             @Override
                             public void onDismissed(Snackbar transientBottomBar, int event) {
@@ -99,6 +103,8 @@ public class DialogUtils {
                 if (snackbarText != null) {
                     snackbarText.setTextColor(Color.WHITE);
                 }
+
+                AnalyticsManager.logRateShown();
             }
 
             SettingsManager.getInstance().hasSeenRateSnackbar = true;

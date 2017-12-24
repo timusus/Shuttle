@@ -119,8 +119,8 @@
                     android:layout_marginStart="16dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
+                    android:tag=":aesthetic_ignore"
                     android:text="@string/up_next_title"
-                    android:textColor="?android:textColorPrimaryInverse"
                     android:textSize="16sp"/>
 
                 <android.support.v4.widget.Space
@@ -135,8 +135,8 @@
                     android:layout_marginStart="16dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
+                    android:tag=":aesthetic_ignore"
                     android:textAppearance="?attr/secondaryTextViewStyle"
-                    android:textColor="?android:textColorSecondaryInverse"
                     android:textSize="12sp"
                     tools:text="1 / 26"/>
 
