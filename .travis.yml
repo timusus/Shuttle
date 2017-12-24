@@ -52,7 +52,7 @@ deploy:
   on:
     repo: timusus/Shuttle
     tags: true
-    condition: $TRAVIS_TAG =~ beta || $TRAVIS_TAG =~ alpha || $TRAVIS_TAG =~ release
+    condition: $TRAVIS_TAG =~ beta || $TRAVIS_TAG =~ alpha || $TRAVIS_TAG =~ release || $TRAVIS_TAG =~ rollout
 
 # Play Store beta release
 - provider: script
@@ -61,7 +61,7 @@ deploy:
   on:
     repo: timusus/Shuttle
     tags: true
-    condition: $TRAVIS_TAG =~ beta || $TRAVIS_TAG =~ alpha || $TRAVIS_TAG =~ release
+    condition: $TRAVIS_TAG =~ beta || $TRAVIS_TAG =~ alpha || $TRAVIS_TAG =~ release || $TRAVIS_TAG =~ rollout
 
 # Slack build notifications
 notifications:
