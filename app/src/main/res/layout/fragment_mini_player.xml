@@ -4,10 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/mini_player_height"
+    android:layout_height="match_parent"
     android:background="?colorPrimary"
     android:elevation="4dp"
-    android:foreground="?attr/list_selector">
+    android:foreground="?attr/list_selector"
+    tools:layout_height="64dp">
 
     <ImageView
         android:layout_width="match_parent"
@@ -33,10 +34,10 @@
             app:mpb_useIntrinsicPadding="false"
             tools:progress="50"/>
 
-        <ImageView
+        <com.simplecity.amp_library.ui.views.SquareHeightImageView
             android:id="@+id/mini_album_artwork"
-            android:layout_width="@dimen/mini_player_height"
-            android:layout_height="@dimen/mini_player_height"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:scaleType="centerCrop"/>
 
@@ -59,7 +60,8 @@
                 android:lines="1"
                 android:tag=":aesthetic_ignore"
                 android:textColor="?android:textColorPrimary"
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                tools:text="Track name"/>
 
             <TextView
                 android:id="@+id/artist_name"
@@ -70,7 +72,8 @@
                 android:lines="1"
                 android:tag=":aesthetic_ignore"
                 android:textColor="?android:textColorSecondary"
-                android:textSize="14sp"/>
+                android:textSize="14sp"
+                tools:text="Artist - Album"/>
         </LinearLayout>
 
         <ImageView
