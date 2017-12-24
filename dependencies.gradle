@@ -13,7 +13,7 @@ ext.versions = [
         minSdk                        : 16,
         targetSdk                     : 27,
         compileSdk                    : 27,
-        buildTools                    : "27.0.2",
+        buildTools                    : "27.0.3",
 
         // //////////////////////////////////////////////////////////////////////////
         // Plugin versions
