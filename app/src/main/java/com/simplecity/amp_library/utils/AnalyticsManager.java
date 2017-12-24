@@ -108,4 +108,19 @@ public class AnalyticsManager {
         FirebaseAnalytics.getInstance(ShuttleApplication.getInstance())
                 .logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
+
+    public static void didSnow(){
+        if (!analyticsEnabled()) {
+            return;
+        }
+
+        Bundle params = new Bundle();
+        params.putString(FirebaseAnalytics.Param.ITEM_ID, "show_snow");
+        params.putString(FirebaseAnalytics.Param.ITEM_NAME, "show_snow");
+        params.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, "easter_eggs");
+
+        FirebaseAnalytics.getInstance(ShuttleApplication.getInstance())
+                .logEvent(FirebaseAnalytics.Event.VIEW_ITEM, params);
+
+    }
 }

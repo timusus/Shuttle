@@ -8,13 +8,13 @@ import android.graphics.Paint;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.utils.AnalyticsManager;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -142,7 +142,7 @@ public class SnowfallView extends View {
                 if (remoteConfig.getBoolean(LET_IT_SNOW)) {
                     snowHandler.removeCallbacksAndMessages(null);
                     snowHandler.postDelayed(this::generateSnow, SNOWFALL_DELAY);
-                    Log.d(TAG, "let it snow!");
+                    AnalyticsManager.didSnow();
                 }
             }
         });
