@@ -94,19 +94,21 @@ public class SnowfallView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        for (int i = snowflakes.size() - 1; i >= 0; i--) {
-            Snowflake snowflake = snowflakes.get(i);
-            if (round(snowflake.snowY()) > getHeight()) {
-                if (snowflake.shouldRemove) {
-                    snowflakes.remove(snowflake);
-                } else {
-                    snowflake.reset();
+        if (!snowflakes.isEmpty()) {
+            for (int i = snowflakes.size() - 1; i >= 0; i--) {
+                Snowflake snowflake = snowflakes.get(i);
+                if (round(snowflake.snowY()) > getHeight()) {
+                    if (snowflake.shouldRemove) {
+                        snowflakes.remove(snowflake);
+                    } else {
+                        snowflake.reset();
+                    }
                 }
+                snowPaint.setAlpha(snowflake.alpha);
+                canvas.drawCircle(snowflake.snowX(), snowflake.snowY(), snowflake.snowR, snowPaint);
             }
-            snowPaint.setAlpha(snowflake.alpha);
-            canvas.drawCircle(snowflake.snowX(), snowflake.snowY(), snowflake.snowR, snowPaint);
+            invalidate();
         }
-        invalidate();
     }
 
     @Override
