@@ -176,7 +176,9 @@ public class SuggestedFragment extends BaseFragment implements
             recyclerView.addItemDecoration(new SuggestedDividerDecoration(getResources()));
             recyclerView.setRecyclerListener(new RecyclerListener());
 
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 6);
+            int spanCount = ShuttleUtils.isTablet() ? 12 : 6;
+
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), spanCount);
             gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
@@ -187,7 +189,7 @@ public class SuggestedFragment extends BaseFragment implements
                                 || (item instanceof AlbumView && item.getViewType() == ViewType.ALBUM_LIST)
                                 || (item instanceof AlbumView && item.getViewType() == ViewType.ALBUM_LIST_SMALL)
                                 || item instanceof EmptyView) {
-                            return 6;
+                            return spanCount;
                         }
                         if (item instanceof AlbumView && item.getViewType() == ViewType.ALBUM_CARD_LARGE) {
                             return 3;
