@@ -66,6 +66,12 @@ public class DrawerAdapter extends ExpandableRecyclerAdapter<Parent<DrawerChild>
 
     @Override
     public void onBindChildViewHolder(@NonNull DrawerChild.ChildHolder childViewHolder, int parentPosition, int childPosition, @NonNull DrawerChild drawerChild) {
-        getParentList().get(parentPosition).getChildList().get(childPosition).bindView(childViewHolder);
+        List<Parent<DrawerChild>> parentList = getParentList();
+        if (parentPosition >= 0 && !parentList.isEmpty() && parentPosition < parentList.size()) {
+            List<DrawerChild> childList = parentList.get(parentPosition).getChildList();
+            if (childPosition >= 0 && !childList.isEmpty() && childPosition < childList.size()) {
+                childList.get(childPosition).bindView(childViewHolder);
+            }
+        }
     }
 }
