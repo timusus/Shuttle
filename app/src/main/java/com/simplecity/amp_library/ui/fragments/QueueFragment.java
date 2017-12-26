@@ -279,6 +279,10 @@ public class QueueFragment extends BaseFragment implements
             return;
         }
 
+        if (recyclerView == null) {
+            return;
+        }
+
         if (!fromUser) {
             recyclerView.scrollToPosition(position);
         }
