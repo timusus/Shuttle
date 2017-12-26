@@ -2,7 +2,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- ## Toast Messages ## -->
     <!-- Shown when a user attempts to edit tags, but they don't have a 'DocumentProvider' available to pick the directory of their music (and thus give permission to Shuttle)-->
-    <string name="R.string.toast_no_document_provider">Недоступен провайдер документов, чтобы выдать разрешение на запрос</string>
+    <string name="R.string.toast_no_document_provider">Провайдер документов недоступен, чтобы предоставить разрешение на запрос</string>
     <!-- Displayed when an M3U playlist is being saved, but it already exists -->
     <!-- Displayed when an M3U playlist save fails -->
     <string name="playlist_save_failed">Невозможно сохранить плей-лист</string>
@@ -99,12 +99,11 @@
     <string name="upgraded_title">Спасибо</string>
     <string name="upgraded_message">Вы успешно обновились до Shuttle+. Спасибо за Вашу поддержку!
 \n\nПожалуйста, перезапустите приложение чтобы включить все функции</string>
-    <string name="upgrade_dialog_message">Обновление откроет дополнительные функции в Shuttle, включая:
-\n\n• Много дополнительных тем
-\n• Редактор тэгов (функциональность ограничена в Android 4.4 Kit-Kat)
-\n• Встроенный проводник
-\n• Поддержка ChromeCast
-\n\nТакже это поддержит дальнейшую разработку.\n\nВам не нужно обновляться, если вы уже купили Shuttle+</string>
+    <string name="upgrade_dialog_message">• Поддержка ChromeCast
+\n• Дополнительные темы
+\n• Редактор тэгов
+\n• Просмотр папок
+\n• Поддержка разработки ❤️</string>
     <string name="btn_upgrade">Обновить</string>
     <!-- -->
     <string name="get_pro_button_no">Спасибо, не надо</string>
@@ -121,7 +120,7 @@
     <!-- Delete confirmation dialog message when deleting artists -->
     <string name="delete_album_artist_desc_multiple">Все песни следующих исполнителей:<xliff:g id="album-artist">%s</xliff:g> будут безвозвратно удалены</string>
     <!-- Delete confirmation dialog when deleting an entire album -->
-    <string name="delete_album_desc">Весь альбом <xliff:g id="album">%s</xliff:g> будет безвозвратно удалён.</string>
+    <string name="delete_album_desc">Все песни из альбома <xliff:g id="album">%s</xliff:g> будут безвозвратно удалены.</string>
     <!-- Delete confirmation dialog message when deleting albums -->
     <string name="get_pro_button_play_store">Play Маркет</string>
     <string name="get_pro_button_amazon">Amazon</string>
@@ -325,7 +324,7 @@
     <!-- Settings title for gmail style placeholders checkbox-->
     <string name="pref_title_placeholders">Использовать иконки в стиле Gmail</string>
     <!-- Settings summary for gmail style placeholders checkbox-->
-    <string name="pref_summary_placeholders">Использовать иконки в стиле \'Gmail\' по умолчанию. Если отключено, будет использоваться иконка Shuttle</string>
+    <string name="pref_summary_placeholders">Заполнять значки в стиле \'Gmail\'. Если отключено, будут использоваться значки Shuttle без заполнения</string>
     <!-- Settings title for the enable lockscreen controls checkbox -->
     <string name="pref_title_lockscreen">Включить показ обложки на экране блокировки</string>
     <!-- Settings summary for the enable lockscreen controls checkbox -->
@@ -458,15 +457,15 @@
     <string name="onefolder">1 папка</string>
     <plurals name="Nfolders">
         <item quantity="other"><xliff:g id="count">%d</xliff:g> 
-папок</item>
+папки</item>
         <item quantity="few">"
 <xliff:g id="count">%d</xliff:g> 
-папок"</item>
+папки"</item>
         <item quantity="many"><xliff:g id="count">%d</xliff:g> 
 папок</item>
         <item quantity="one">"
             <xliff:g id="count">%d</xliff:g>
-            папки (-ок)
+            папка
         "</item>
     </plurals>
     <!-- -->
@@ -643,7 +642,7 @@
     <!-- Default value if album year unknown -->
     <string name="unknown_year">Неизвестный год</string>
     <!-- Song info overflow option-->
-    <string name="song_info">Информация</string>
+    <string name="song_info">Информация о песне</string>
     <!-- Artwork Download Service Label-->
     <string name="download_service">Сервис загрузки</string>
     <!-- Accessibility button description -->
