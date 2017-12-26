@@ -1938,10 +1938,14 @@ public class MusicService extends Service {
                 mediaSession.setMetadata(metaData.build());
             }
 
-            mediaSession.setPlaybackState(new PlaybackStateCompat.Builder()
-                    .setActions(playbackActions)
-                    .setState(playState, getPosition(), 1.0f)
-                    .build());
+            try {
+                mediaSession.setPlaybackState(new PlaybackStateCompat.Builder()
+                        .setActions(playbackActions)
+                        .setState(playState, getPosition(), 1.0f)
+                        .build());
+            } catch (IllegalStateException e){
+                LogUtils.logException(TAG, "Error setting playback state", e);
+            }
         }
     }
 
