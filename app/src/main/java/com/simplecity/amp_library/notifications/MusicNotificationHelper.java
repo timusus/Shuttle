@@ -138,8 +138,12 @@ public class MusicNotificationHelper extends NotificationHelper {
                     public void onLoadFailed(Exception e, Drawable errorDrawable) {
                         MusicNotificationHelper.this.bitmap = GlideUtils.drawableToBitmap(errorDrawable);
                         super.onLoadFailed(e, errorDrawable);
-                        notification = getBuilder(context, song, mediaSessionCompat, bitmap, isPlaying, isFavorite).build();
-                        MusicNotificationHelper.this.notify(NOTIFICATION_ID, notification);
+                        try {
+                            notification = getBuilder(context, song, mediaSessionCompat, bitmap, isPlaying, isFavorite).build();
+                            MusicNotificationHelper.this.notify(NOTIFICATION_ID, notification);
+                        } catch (IllegalArgumentException error) {
+                            LogUtils.logException(TAG, "Exception while attempting to update notification with error image", error);
+                        }
                     }
                 }));
     }
