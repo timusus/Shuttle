@@ -53,7 +53,11 @@ public class IabManager {
             if (iabHelper == null) return;
 
             Log.d(TAG, "In-app Billing is set up");
-            iabHelper.queryInventoryAsync(new QueryFinishedListener(iabHelper, messageCallback));
+            try {
+                iabHelper.queryInventoryAsync(new QueryFinishedListener(iabHelper, messageCallback));
+            } catch (NullPointerException e) {
+                LogUtils.logException(TAG, "setup().. Failed to query inventory", e);
+            }
         });
     }
 
@@ -86,7 +90,11 @@ public class IabManager {
 
     public void restorePurchases(@Nullable UnsafeConsumer<Integer> messageCallback) {
         if (iabHelper.setupDone) {
-            iabHelper.queryInventoryAsync(new QueryFinishedListener(iabHelper, messageCallback));
+            try {
+                iabHelper.queryInventoryAsync(new QueryFinishedListener(iabHelper, messageCallback));
+            } catch (NullPointerException e) {
+                LogUtils.logException(TAG, "restorePurchases().. Failed to query inventory", e);
+            }
         } else {
             setup(messageCallback);
         }
