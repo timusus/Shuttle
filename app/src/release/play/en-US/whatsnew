@@ -1,0 +1,5 @@
+v2.0.2
+
+- Fixed an issue where playback randomly paused due to changes to nearby bluetooth devices
+- Fixed an issue where bitrate &amp; other song info didn't show up
+- Various crash fixes
