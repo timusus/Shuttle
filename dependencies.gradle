@@ -118,7 +118,7 @@ ext.libs = [
         // Google libs
         // /////////////////////////////////////////////////////////////////////////
 
-        ccl                           : project(':libraries/:ccl'),
+        ccl                           : project(':libraries:ccl'),
         cardView                      : "com.android.support:cardview-v7:$versions.supportLib",
         design                        : "com.android.support:design:$versions.supportLib",
         palette                       : "com.android.support:palette-v7:$versions.supportLib",
@@ -151,11 +151,11 @@ ext.libs = [
         // /////////////////////////////////////////////////////////////////////////
 
         // Internal navigation library
-        navigation                    : project(':libraries/:navigation'),
+        navigation                    : project(':libraries:navigation'),
         // Internal recycler adapter library
-        recyclerAdapter               : project(':libraries/:recycler-adapter'),
+        recyclerAdapter               : project(':libraries:recycler-adapter'),
         // Multi Sheet View
-        multiSheetView                : project(':libraries/:multisheetview'),
+        multiSheetView                : project(':libraries:multisheetview'),
 
         // NanoHttp - https://github.com/NanoHttpd/nanohttpd (Various)
         nanoHttp                      : "org.nanohttpd:nanohttpd-webserver:$versions.nanoHttp",
@@ -178,7 +178,7 @@ ext.libs = [
         // Streams Backport - https://git.io/vCazA (Victor Melnik)
         streams                       : "com.annimon:stream:$versions.streams",
         // Glide Palette - https://git.io/vix57 (Florent Champigny)
-        glidePalette                  : project(":libraries/:glidepalette"),
+        glidePalette                  : project(":libraries:glidepalette"),
         // Butterknife
         butterknife                   : "com.jakewharton:butterknife:$versions.butterknife",
         butterknifeAnnotationProcessor: "com.jakewharton:butterknife-compiler:$versions.butterknifeAnnotationProcessor",
@@ -188,7 +188,7 @@ ext.libs = [
         // Expandable Recycler View - https://github.com/thoughtbot/expandable-recycler-view
         expandableRecyclerView        : "com.bignerdranch.android:expandablerecyclerview:$versions.expandableRecyclerView",
         // Aesthetic - Theming Engine
-        aesthetic                     : project(":libraries/:aesthetic"),
+        aesthetic                     : project(":libraries:aesthetic"),
 
         // RX
 
