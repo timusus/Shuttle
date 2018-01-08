@@ -7,7 +7,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.bluetooth.BluetoothA2dp;
-import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothHeadset;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -750,46 +749,56 @@ public class MusicService extends Service {
     private void registerBluetoothReceiver() {
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED);
-        filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
-        filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
-        filter.addAction(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED);
+        filter.addAction(BluetoothHeadset.ACTION_AUDIO_STATE_CHANGED);
 
         bluetoothReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
 
-                if (SettingsManager.getInstance().getBluetoothPauseDisconnect()) {
-                    if (intent.getAction().equals(BluetoothDevice.ACTION_ACL_DISCONNECTED)) {
-                        pause();
-                    }
-                    if (intent.getAction().equals(BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED)) {
-                        int state = intent.getExtras().getInt(BluetoothA2dp.EXTRA_STATE);
-                        if (state == BluetoothA2dp.STATE_DISCONNECTED) {
-                            pause();
+                String action = intent.getAction();
+                if (action != null) {
+                    Bundle extras = intent.getExtras();
+                    if (SettingsManager.getInstance().getBluetoothPauseDisconnect()) {
+                        switch (action) {
+                            case BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED:
+                                if (extras != null) {
+                                    int state = extras.getInt(BluetoothA2dp.EXTRA_STATE);
+                                    int previousState = extras.getInt(BluetoothA2dp.EXTRA_PREVIOUS_STATE);
+                                    if ((state == BluetoothA2dp.STATE_DISCONNECTED || state == BluetoothA2dp.STATE_DISCONNECTING) && previousState == BluetoothA2dp.STATE_CONNECTED) {
+                                        pause();
+                                    }
+                                }
+                                break;
+                            case BluetoothHeadset.ACTION_AUDIO_STATE_CHANGED:
+                                if (extras != null) {
+                                    int state = extras.getInt(BluetoothHeadset.EXTRA_STATE);
+                                    int previousState = extras.getInt(BluetoothHeadset.EXTRA_PREVIOUS_STATE);
+                                    if (state == BluetoothHeadset.STATE_AUDIO_DISCONNECTED && previousState == BluetoothHeadset.STATE_AUDIO_CONNECTED) {
+                                        pause();
+                                    }
+                                }
+                                break;
                         }
                     }
-                    if (intent.getAction().equals(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED)) {
-                        int state = intent.getExtras().getInt(BluetoothHeadset.EXTRA_STATE);
-                        if (state == BluetoothHeadset.STATE_DISCONNECTED || state == BluetoothHeadset.STATE_AUDIO_DISCONNECTED) {
-                            pause();
-                        }
-                    }
-                }
 
-                if (SettingsManager.getInstance().getBluetoothResumeConnect()) {
-                    if (intent.getAction().equals(BluetoothDevice.ACTION_ACL_CONNECTED)) {
-                        play();
-                    }
-                    if (intent.getAction().equals(BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED)) {
-                        int state = intent.getExtras().getInt(BluetoothA2dp.EXTRA_STATE);
-                        if (state == BluetoothA2dp.STATE_CONNECTED) {
-                            play();
-                        }
-                    }
-                    if (intent.getAction().equals(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED)) {
-                        int state = intent.getExtras().getInt(BluetoothHeadset.EXTRA_STATE);
-                        if (state == BluetoothHeadset.STATE_CONNECTED || state == BluetoothHeadset.STATE_AUDIO_CONNECTED) {
-                            play();
+                    if (SettingsManager.getInstance().getBluetoothResumeConnect()) {
+                        switch (action) {
+                            case BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED:
+                                if (extras != null) {
+                                    int state = extras.getInt(BluetoothA2dp.EXTRA_STATE);
+                                    if (state == BluetoothA2dp.STATE_CONNECTED) {
+                                        play();
+                                    }
+                                }
+                                break;
+                            case BluetoothHeadset.ACTION_AUDIO_STATE_CHANGED:
+                                if (extras != null) {
+                                    int state = extras.getInt(BluetoothHeadset.EXTRA_STATE);
+                                    if (state == BluetoothHeadset.STATE_AUDIO_CONNECTED) {
+                                        play();
+                                    }
+                                }
+                                break;
                         }
                     }
                 }
@@ -1943,7 +1952,7 @@ public class MusicService extends Service {
                         .setActions(playbackActions)
                         .setState(playState, getPosition(), 1.0f)
                         .build());
-            } catch (IllegalStateException e){
+            } catch (IllegalStateException e) {
                 LogUtils.logException(TAG, "Error setting playback state", e);
             }
         }
@@ -2334,26 +2343,26 @@ public class MusicService extends Service {
 
             if (songsToRemove.contains(currentSong)) {
                 /*
-                * If we remove a list of songs from the current queue, and that list contains our currently
-                * playing song, we need to figure out which song should play next. We'll play the first song
-                * that comes after the list of songs to be removed.
-                *
-                * In this example, let's say Song 7 is currently playing
-                *
-                * Playlist:                    [Song 3,    Song 4,     Song 5,     Song 6,     Song 7,     Song 8]
-                * Indices:                     [0,         1,          2,          3,          4,          5]
-                *
-                * Remove;                                              [Song 5,     Song 6,     Song 7]
-                *
-                * First removed song:                                  Song 5
-                * Index of first removed song:                         2
-                *
-                * Playlist after removal:      [Song 3,    Song 4,     Song 8]
-                * Indices:                     [0,         1,          2]
-                *
-                *
-                * So after the removal, we'll play index 2, which is Song 8.
-                */
+                 * If we remove a list of songs from the current queue, and that list contains our currently
+                 * playing song, we need to figure out which song should play next. We'll play the first song
+                 * that comes after the list of songs to be removed.
+                 *
+                 * In this example, let's say Song 7 is currently playing
+                 *
+                 * Playlist:                    [Song 3,    Song 4,     Song 5,     Song 6,     Song 7,     Song 8]
+                 * Indices:                     [0,         1,          2,          3,          4,          5]
+                 *
+                 * Remove;                                              [Song 5,     Song 6,     Song 7]
+                 *
+                 * First removed song:                                  Song 5
+                 * Index of first removed song:                         2
+                 *
+                 * Playlist after removal:      [Song 3,    Song 4,     Song 8]
+                 * Indices:                     [0,         1,          2]
+                 *
+                 *
+                 * So after the removal, we'll play index 2, which is Song 8.
+                 */
                 playPos = Collections.indexOfSubList(getCurrentPlaylist(), songsToRemove);
                 removedCurrentSong();
             } else {
