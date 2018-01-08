@@ -198,13 +198,13 @@ public class QueueFragment extends BaseFragment implements
     @Override
     public void onPause() {
         super.onPause();
-
-        playerPresenter.unbindView(playerViewAdapter);
-        queuePresenter.unbindView(this);
-
+        
         if (loadDataDisposable != null) {
             loadDataDisposable.dispose();
         }
+
+        playerPresenter.unbindView(playerViewAdapter);
+        queuePresenter.unbindView(this);
     }
 
     @Override
@@ -254,7 +254,9 @@ public class QueueFragment extends BaseFragment implements
                     @Override
                     public void onComplete() {
                         updateQueuePosition(position, false);
-                        recyclerView.scrollToPosition(position);
+                        if (recyclerView != null) {
+                            recyclerView.scrollToPosition(position);
+                        }
                     }
                 });
             }
