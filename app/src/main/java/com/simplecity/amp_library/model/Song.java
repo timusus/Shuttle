@@ -245,7 +245,12 @@ public class Song implements
 
     public String getSampleRateLabel() {
         if (sampleRateLabel == null) {
-            sampleRateLabel = ((float) getTagInfo().sampleRate) / 1000 + ShuttleApplication.getInstance().getString(R.string.song_info_sample_rate_suffix);
+            int sampleRate = getTagInfo().sampleRate;
+            if (sampleRate == -1) {
+                sampleRateLabel = "Unknown";
+                return sampleRateLabel;
+            }
+            sampleRateLabel = ((float) sampleRate) / 1000 + ShuttleApplication.getInstance().getString(R.string.song_info_sample_rate_suffix);
         }
         return sampleRateLabel;
     }
