@@ -171,6 +171,12 @@ public class QueuePresenter extends Presenter<QueueView> {
                             }
                         }
                     },
+                    deleteDialog -> {
+                        QueueView queueView = getView();
+                        if (queueView != null) {
+                            queueView.showDeleteDialog(deleteDialog);
+                        }
+                    },
                     () -> removeFromQueue(position, song),
                     () -> playNext(position)));
             menu.show();

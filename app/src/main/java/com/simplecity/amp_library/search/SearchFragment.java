@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 import com.simplecity.amp_library.R;
@@ -34,6 +33,7 @@ import com.simplecity.amp_library.ui.adapters.LoggingViewModelAdapter;
 import com.simplecity.amp_library.ui.detail.AlbumDetailFragment;
 import com.simplecity.amp_library.ui.detail.ArtistDetailFragment;
 import com.simplecity.amp_library.ui.detail.BaseDetailFragment;
+import com.simplecity.amp_library.ui.dialog.DeleteDialog;
 import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.ui.fragments.BaseFragment;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
@@ -250,8 +250,8 @@ public class SearchFragment extends BaseFragment implements
     }
 
     @Override
-    public void showDeleteDialog(@NonNull MaterialDialog deleteDialog) {
-        deleteDialog.show();
+    public void showDeleteDialog(@NonNull DeleteDialog deleteDialog) {
+        deleteDialog.show(getChildFragmentManager());
     }
 
     @Override
@@ -309,7 +309,9 @@ public class SearchFragment extends BaseFragment implements
             disposables.add(PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe());
 
             contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(
-                    getContext(), Single.defer(() -> Operators.reduceSongSingles(contextualToolbarHelper.getItems()))));
+                    getContext(),
+                    Single.defer(() -> Operators.reduceSongSingles(contextualToolbarHelper.getItems())),
+                    deleteDialog -> deleteDialog.show(getChildFragmentManager())));
 
             contextualToolbarHelper = new ContextualToolbarHelper<Single<List<Song>>>(contextualToolbar, new ContextualToolbarHelper.Callback() {
 

@@ -827,9 +827,10 @@ public abstract class BaseDetailFragment extends BaseFragment implements
                     if (!ShuttleUtils.isUpgraded()) {
                         UpgradeDialog.getUpgradeDialog(getActivity()).show();
                     } else {
-                        taggerDialog.show(getFragmentManager());
+                        taggerDialog.show(getChildFragmentManager());
                     }
                 },
+                deleteDialog -> deleteDialog.show(getChildFragmentManager()),
                 () -> songRemoved(position, song), null));
         popupMenu.show();
     }
@@ -853,7 +854,8 @@ public abstract class BaseDetailFragment extends BaseFragment implements
         popupMenu.setOnMenuItemClickListener(
                 MenuUtils.getAlbumMenuClickListener(getContext(),
                         album,
-                        taggerDialog -> taggerDialog.show(getFragmentManager()),
+                        taggerDialog -> taggerDialog.show(getChildFragmentManager()),
+                        deleteDialog -> deleteDialog.show(getChildFragmentManager()),
                         () -> UpgradeDialog.getUpgradeDialog(getActivity()).show()));
         popupMenu.show();
     }
@@ -881,7 +883,9 @@ public abstract class BaseDetailFragment extends BaseFragment implements
             disposables.add(PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe());
 
             contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(
-                    getContext(), Single.defer(() -> Operators.reduceSongSingles(contextualToolbarHelper.getItems()))));
+                    getContext(),
+                    Single.defer(() -> Operators.reduceSongSingles(contextualToolbarHelper.getItems())),
+                    deleteDialog -> deleteDialog.show(getChildFragmentManager())));
 
             contextualToolbarHelper = new ContextualToolbarHelper<Single<List<Song>>>(contextualToolbar, new ContextualToolbarHelper.Callback() {
 

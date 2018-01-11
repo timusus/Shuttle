@@ -203,6 +203,12 @@ public class SearchPresenter extends Presenter<SearchView> implements
                         searchView.showTaggerDialog(taggerDialog);
                     }
                 },
+                deleteDialog -> {
+                    SearchView searchView = getView();
+                    if (searchView != null) {
+                        searchView.showDeleteDialog(deleteDialog);
+                    }
+                },
                 () -> {
                     SearchView searchView = getView();
                     if (searchView != null) {
@@ -238,6 +244,12 @@ public class SearchPresenter extends Presenter<SearchView> implements
                     SearchView searchView = getView();
                     if (searchView != null) {
                         searchView.showTaggerDialog(taggerDialog);
+                    }
+                },
+                deleteDialog -> {
+                    SearchView searchView = getView();
+                    if (searchView != null) {
+                        searchView.showDeleteDialog(deleteDialog);
                     }
                 },
                 () -> {
@@ -516,6 +528,12 @@ public class SearchPresenter extends Presenter<SearchView> implements
                             } else {
                                 searchView.showTaggerDialog(taggerDialog);
                             }
+                        }
+                    },
+                    deleteDialog2 -> {
+                        SearchView searchView = getView();
+                        if (searchView != null) {
+                            searchView.showDeleteDialog(deleteDialog2);
                         }
                     },
                     null, null));

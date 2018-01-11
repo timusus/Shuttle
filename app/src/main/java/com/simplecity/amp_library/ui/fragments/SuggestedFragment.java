@@ -97,9 +97,10 @@ public class SuggestedFragment extends BaseFragment implements
                         if (!ShuttleUtils.isUpgraded()) {
                             UpgradeDialog.getUpgradeDialog(getActivity()).show();
                         } else {
-                            taggerDialog.show(getFragmentManager());
+                            taggerDialog.show(getChildFragmentManager());
                         }
                     },
+                    deleteDialog -> deleteDialog.show(getChildFragmentManager()),
                     null,
                     null));
             popupMenu.show();
@@ -420,7 +421,10 @@ public class SuggestedFragment extends BaseFragment implements
     public void onAlbumOverflowClicked(View v, Album album) {
         PopupMenu menu = new PopupMenu(getContext(), v);
         MenuUtils.setupAlbumMenu(menu);
-        menu.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(getContext(), album, taggerDialog -> taggerDialog.show(getFragmentManager()), () -> UpgradeDialog.getUpgradeDialog(getActivity()).show()));
+        menu.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(getContext(), album,
+                taggerDialog -> taggerDialog.show(getChildFragmentManager()),
+                deleteDialog -> deleteDialog.show(getChildFragmentManager()),
+                () -> UpgradeDialog.getUpgradeDialog(getActivity()).show()));
         menu.show();
     }
 

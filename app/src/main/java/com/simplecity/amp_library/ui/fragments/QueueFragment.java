@@ -24,6 +24,7 @@ import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.adapters.LoggingViewModelAdapter;
+import com.simplecity.amp_library.ui.dialog.DeleteDialog;
 import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
 import com.simplecity.amp_library.ui.modelviews.SongView;
@@ -198,7 +199,7 @@ public class QueueFragment extends BaseFragment implements
     @Override
     public void onPause() {
         super.onPause();
-        
+
         if (loadDataDisposable != null) {
             loadDataDisposable.dispose();
         }
@@ -221,7 +222,9 @@ public class QueueFragment extends BaseFragment implements
         contextualToolbar.inflateMenu(R.menu.context_menu_queue);
         SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
         disposables.add(PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe());
-        contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), Single.just(MusicUtils.getQueue())));
+        contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(),
+                Single.just(MusicUtils.getQueue()),
+                deleteDialog -> deleteDialog.show(getChildFragmentManager())));
         contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
             @Override
             public void notifyItemChanged(int position, SelectableViewModel viewModel) {
@@ -309,7 +312,12 @@ public class QueueFragment extends BaseFragment implements
 
     @Override
     public void showTaggerDialog(TaggerDialog taggerDialog) {
-        taggerDialog.show(getFragmentManager());
+        taggerDialog.show(getChildFragmentManager());
+    }
+
+    @Override
+    public void showDeleteDialog(DeleteDialog deleteDialog) {
+        deleteDialog.show(getChildFragmentManager());
     }
 
     @Override

@@ -304,9 +304,10 @@ public class SongFragment extends BaseFragment implements
                     if (!ShuttleUtils.isUpgraded()) {
                         UpgradeDialog.getUpgradeDialog(getActivity()).show();
                     } else {
-                        taggerDialog.show(getFragmentManager());
+                        taggerDialog.show(getChildFragmentManager());
                     }
                 },
+                deleteDialog -> deleteDialog.show(getChildFragmentManager()),
                 null,
                 null));
         menu.show();
@@ -363,7 +364,10 @@ public class SongFragment extends BaseFragment implements
                 }
             });
 
-            contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(), Single.fromCallable(() -> contextualToolbarHelper.getItems())));
+
+            contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(),
+                    Single.fromCallable(() -> contextualToolbarHelper.getItems()),
+                    deleteDialog -> deleteDialog.show(getChildFragmentManager())));
         }
     }
 

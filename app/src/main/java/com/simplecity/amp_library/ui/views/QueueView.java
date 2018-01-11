@@ -1,6 +1,7 @@
 package com.simplecity.amp_library.ui.views;
 
 import com.simplecity.amp_library.tagger.TaggerDialog;
+import com.simplecity.amp_library.ui.dialog.DeleteDialog;
 import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 
@@ -17,6 +18,8 @@ public interface QueueView {
     void startDrag(SongView.ViewHolder holder);
 
     void showTaggerDialog(TaggerDialog taggerDialog);
+
+    void showDeleteDialog(DeleteDialog deleteDialog);
 
     void removeFromQueue(int position);
 

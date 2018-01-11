@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.interfaces.FileType;
 import com.simplecity.amp_library.model.Album;
@@ -97,24 +96,6 @@ public class MenuUtils implements MusicUtils.Defs {
         InclExclHelper.addToInclExcl(songs, InclExclItem.Type.EXCLUDE);
     }
 
-    public static void delete(Context context, List<Song> songs) {
-
-        if (songs.isEmpty()) {
-            return;
-        }
-
-        new DeleteDialog.DeleteDialogBuilder()
-                .context(context)
-                .singleMessageId(R.string.delete_song_desc)
-                .multipleMessage(R.string.delete_song_desc_multiple)
-                .itemNames(Stream.of(songs)
-                        .map(song -> song.name)
-                        .toList())
-                .songsToDelete(Single.just(songs))
-                .build()
-                .show();
-    }
-
     public static void setupSongMenu(PopupMenu menu, boolean showRemoveButton) {
         menu.inflate(R.menu.menu_song);
 
@@ -127,7 +108,7 @@ public class MenuUtils implements MusicUtils.Defs {
         PlaylistUtils.createPlaylistMenu(sub);
     }
 
-    public static Toolbar.OnMenuItemClickListener getSongMenuClickListener(Context context, Single<List<Song>> songsSingle) {
+    public static Toolbar.OnMenuItemClickListener getSongMenuClickListener(Context context, Single<List<Song>> songsSingle, UnsafeConsumer<DeleteDialog> deleteDialogCallback) {
         return item -> {
             switch (item.getItemId()) {
                 case NEW_PLAYLIST:
@@ -143,14 +124,22 @@ public class MenuUtils implements MusicUtils.Defs {
                     blacklist(songsSingle);
                     return true;
                 case R.id.delete:
-                    delete(context, songsSingle);
+                    songsSingle
+                            .subscribeOn(AndroidSchedulers.mainThread())
+                            .subscribe(songs -> deleteDialogCallback.accept(DeleteDialog.newInstance(() -> songs)));
                     return true;
             }
             return false;
         };
     }
 
-    public static PopupMenu.OnMenuItemClickListener getSongMenuClickListener(Context context, Song song, UnsafeConsumer<TaggerDialog> tagEditorCallback, @Nullable UnsafeAction onSongRemoved, @Nullable UnsafeAction onPlayNext) {
+    public static PopupMenu.OnMenuItemClickListener getSongMenuClickListener(
+            Context context,
+            Song song,
+            UnsafeConsumer<TaggerDialog> tagEditorCallback,
+            UnsafeConsumer<DeleteDialog> deleteDialogCallback,
+            @Nullable UnsafeAction onSongRemoved,
+            @Nullable UnsafeAction onPlayNext) {
         return item -> {
             switch (item.getItemId()) {
                 case R.id.playNext:
@@ -185,7 +174,7 @@ public class MenuUtils implements MusicUtils.Defs {
                     blacklist(song);
                     return true;
                 case R.id.delete:
-                    delete(context, Collections.singletonList(song));
+                    deleteDialogCallback.accept(DeleteDialog.newInstance(() -> Collections.singletonList(song)));
                     return true;
                 case R.id.remove:
                     if (onSongRemoved != null) {
@@ -279,26 +268,7 @@ public class MenuUtils implements MusicUtils.Defs {
                         throwable -> LogUtils.logException(TAG, "blacklist failed", throwable));
     }
 
-    public static void delete(Context context, Single<List<Song>> single) {
-        single.observeOn(AndroidSchedulers.mainThread())
-                .subscribe(songs -> delete(context, songs),
-                        throwable -> LogUtils.logException(TAG, "delete failed", throwable));
-    }
-
-    public static void deleteAlbums(Context context, List<Album> albums, Single<List<Song>> songsSingle) {
-        new DeleteDialog.DeleteDialogBuilder()
-                .context(context)
-                .singleMessageId(R.string.delete_album_desc)
-                .multipleMessage(R.string.delete_album_desc_multiple)
-                .itemNames(Stream.of(albums)
-                        .map(album -> album.name)
-                        .toList())
-                .songsToDelete(songsSingle)
-                .build()
-                .show();
-    }
-
-    public static Toolbar.OnMenuItemClickListener getAlbumMenuClickListener(Context context, UnsafeCallable<List<Album>> callable) {
+    public static Toolbar.OnMenuItemClickListener getAlbumMenuClickListener(Context context, UnsafeCallable<List<Album>> callable, UnsafeConsumer<DeleteDialog> deleteDialogCallback) {
         return item -> {
             switch (item.getItemId()) {
                 case NEW_PLAYLIST:
@@ -311,15 +281,14 @@ public class MenuUtils implements MusicUtils.Defs {
                     addToQueue(context, getSongsForAlbums(callable.call()));
                     return true;
                 case R.id.delete:
-                    List<Album> albums = callable.call();
-                    deleteAlbums(context, albums, getSongsForAlbums(albums));
+                    deleteDialogCallback.accept(DeleteDialog.newInstance(callable::call));
                     return true;
             }
             return false;
         };
     }
 
-    public static PopupMenu.OnMenuItemClickListener getAlbumMenuClickListener(Context context, Album album, UnsafeConsumer<TaggerDialog> tagEditorCallback, UnsafeAction showUpgradeDialog) {
+    public static PopupMenu.OnMenuItemClickListener getAlbumMenuClickListener(Context context, Album album, UnsafeConsumer<TaggerDialog> tagEditorCallback, UnsafeConsumer<DeleteDialog> deleteDialogCallback, UnsafeAction showUpgradeDialog) {
         return item -> {
             switch (item.getItemId()) {
                 case R.id.play:
@@ -351,7 +320,7 @@ public class MenuUtils implements MusicUtils.Defs {
                     blacklist(getSongsForAlbum(album));
                     return true;
                 case R.id.delete:
-                    deleteAlbums(context, Collections.singletonList(album), album.getSongsSingle());
+                    deleteDialogCallback.accept(DeleteDialog.newInstance(() -> Collections.singletonList(album)));
                     return true;
             }
             return false;
@@ -396,20 +365,7 @@ public class MenuUtils implements MusicUtils.Defs {
         ArtworkDialog.build(context, albumArtist).show();
     }
 
-    public static void deleteAlbumArtists(Context context, List<AlbumArtist> albumArtists, Single<List<Song>> songsObservable) {
-        new DeleteDialog.DeleteDialogBuilder()
-                .context(context)
-                .singleMessageId(R.string.delete_album_artist_desc)
-                .multipleMessage(R.string.delete_album_artist_desc_multiple)
-                .itemNames(Stream.of(albumArtists)
-                        .map(albumArtist -> albumArtist.name)
-                        .toList())
-                .songsToDelete(songsObservable)
-                .build()
-                .show();
-    }
-
-    public static Toolbar.OnMenuItemClickListener getAlbumArtistMenuClickListener(Context context, UnsafeCallable<List<AlbumArtist>> callable) {
+    public static Toolbar.OnMenuItemClickListener getAlbumArtistMenuClickListener(Context context, UnsafeCallable<List<AlbumArtist>> callable, UnsafeConsumer<DeleteDialog> deleteDialogCallback) {
         return item -> {
             switch (item.getItemId()) {
                 case NEW_PLAYLIST:
@@ -422,15 +378,14 @@ public class MenuUtils implements MusicUtils.Defs {
                     addToQueue(context, getSongsForAlbumArtists(callable.call()));
                     return true;
                 case R.id.delete:
-                    List<AlbumArtist> albumArtists = callable.call();
-                    deleteAlbumArtists(context, albumArtists, getSongsForAlbumArtists(albumArtists));
+                    deleteDialogCallback.accept(DeleteDialog.newInstance(callable::call));
                     return true;
             }
             return false;
         };
     }
 
-    public static PopupMenu.OnMenuItemClickListener getAlbumArtistClickListener(Context context, AlbumArtist albumArtist, UnsafeConsumer<TaggerDialog> tagEditorCallback, UnsafeAction showUpgradeDialog) {
+    public static PopupMenu.OnMenuItemClickListener getAlbumArtistClickListener(Context context, AlbumArtist albumArtist, UnsafeConsumer<TaggerDialog> tagEditorCallback, UnsafeConsumer<DeleteDialog> deleteDialogCallback, UnsafeAction showUpgradeDialog) {
         return item -> {
             switch (item.getItemId()) {
                 case R.id.play:
@@ -465,7 +420,7 @@ public class MenuUtils implements MusicUtils.Defs {
                     blacklist(getSongsForAlbumArtist(albumArtist));
                     return true;
                 case R.id.delete:
-                    deleteAlbumArtists(context, Collections.singletonList(albumArtist), getSongsForAlbumArtist(albumArtist));
+                    deleteDialogCallback.accept(DeleteDialog.newInstance(() -> Collections.singletonList(albumArtist)));
                     return true;
             }
             return false;

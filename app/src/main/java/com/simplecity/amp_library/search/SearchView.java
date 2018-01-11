@@ -3,10 +3,10 @@ package com.simplecity.amp_library.search;
 import android.support.annotation.NonNull;
 import android.view.View;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.tagger.TaggerDialog;
+import com.simplecity.amp_library.ui.dialog.DeleteDialog;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 
 import java.util.List;
@@ -31,7 +31,7 @@ public interface SearchView {
 
     void showTaggerDialog(@NonNull TaggerDialog taggerDialog);
 
-    void showDeleteDialog(@NonNull MaterialDialog deleteDialog);
+    void showDeleteDialog(@NonNull DeleteDialog deleteDialog);
 
     void goToArtist(AlbumArtist albumArtist, View transitionView);
 
