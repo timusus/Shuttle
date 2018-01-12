@@ -705,4 +705,5 @@ segítségével
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">Lejátszási lista nem érhető el</string>
     <!-- Displayed at the top of the album list, album shuffle mode-->
+    <!-- Storage Access Framework (Used when deleting files from SD CarD)-->
 </resources>

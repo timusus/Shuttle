@@ -104,6 +104,7 @@
 \n• Редактор тэгов
 \n• Просмотр папок
 \n• Поддержка разработки ❤️</string>
+    <string name="upgrade_required_folders">Обновиться до Shuttle+</string>
     <string name="btn_upgrade">Обновить</string>
     <!-- -->
     <string name="get_pro_button_no">Спасибо, не надо</string>
@@ -183,6 +184,7 @@
     <!-- Multi select menu item-->
     <string name="menu_queue">Очередь</string>
     <!-- Artist overflow menu item-->
+    <string name="menu_album_shuffle">Перемешать альбом</string>
     <!-- Context menu item -->
     <string name="new_playlist">Создать</string>
     <!-- menu item to save the current list as a new playlist -->
@@ -233,6 +235,7 @@
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Другое</string>
     <!--Settings category for 'playback' items -->
+    <string name="pref_category_playback">Воспроизведние</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
     <string name="pref_title_choose_tabs">Выбрать отображаемые закладки</string>
     <!--Settings summary for opening the dialog to pick which categories are shown as tab headings -->
@@ -376,10 +379,15 @@
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Поддержка</string>
     <!-- Settings title for toggling between remaining time and total time -->
+    <string name="pref_title_display_remaining_time">Показывать оставшееся время</string>
     <!-- Settings summary for toggling between remaining time and total time -->
+    <string name="pref_summary_display_remaining_time">Показывать оставшееся время вместо продолжительности на экране «Сейчас воспроизводится»</string>
     <!-- Settings title for the playback options -->
+    <string name="pref_title_playback">Воспроизведение</string>
     <!-- Settings title for toggling 'remember shuff'e-->
+    <string name="pref_title_remember_shuffle">Запомнить режим перемешивания</string>
     <!-- Settings summary for toggling 'remember shuff'e-->
+    <string name="pref_summary_remember_shuffle">Режим перемешивания не отключается при воспроизведении нового списка песен</string>
     <string name="pref_title_version">Версия</string>
     <string name="pref_title_faq">Часто задаваемые вопросы</string>
     <string name="pref_summary_faq">Есть вопросы? Нужна помощь? Нажмите сюда для просмотра FAQ на www.shuttlemusicplayer.com</string>
@@ -747,4 +755,6 @@
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">Плейлист недоступен</string>
     <!-- Displayed at the top of the album list, album shuffle mode-->
+    <string name="shuffle_albums">Перемешать альбом</string>
+    <!-- Storage Access Framework (Used when deleting files from SD CarD)-->
 </resources>

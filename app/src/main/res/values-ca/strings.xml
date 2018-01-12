@@ -641,4 +641,5 @@ carpeta</item>
     <!-- "Playlist" Shortcut long label. Max 25 characters.-->
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <!-- Displayed at the top of the album list, album shuffle mode-->
+    <!-- Storage Access Framework (Used when deleting files from SD CarD)-->
 </resources>

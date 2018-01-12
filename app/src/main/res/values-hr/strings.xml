@@ -94,12 +94,12 @@
     <string name="upgraded_title">Hvala vam</string>
     <string name="upgraded_message">Uspješno ste nadogradili na Shuttle+. Zahvaljujem na podršci.
 \n\nMolimo ponovno pokrenite aplikaciju kako bi bili sigurni da su sve značajke omogućene.</string>
-    <string name="upgrade_dialog_message">Nadogradnjom će te otključati dodatne značajke u Shuttleu, uključujući:
-\n\nHrpu novih tema
-\nUređivanje oznaka (ograničena podrška na Android 4.4 Kitkat)
-\nPregledavanje mapa
-\nChromeCast podrška
-\n\nTakođer će pomoći u budućem razvoju.\n\nNe morate nadograditi ako već imate Shuttle+</string>
+    <string name="upgrade_dialog_message">• ChromeCast support
+        \n• Extra themes
+        \n• Tag editing
+        \n• Folder browsing
+        \n• Support development ❤️</string>
+    <string name="upgrade_required_folders">Nadogradi na Shuttle+</string>
     <string name="btn_upgrade">Nadogradi</string>
     <!-- -->
     <string name="get_pro_button_no">Ne hvala</string>
@@ -179,6 +179,7 @@
     <!-- Multi select menu item-->
     <string name="menu_queue">Red čekanja</string>
     <!-- Artist overflow menu item-->
+    <string name="menu_album_shuffle">Nasumično repr. album</string>
     <!-- Context menu item -->
     <string name="new_playlist">Novo</string>
     <!-- menu item to save the current list as a new playlist -->
@@ -229,6 +230,7 @@
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Ostalo</string>
     <!--Settings category for 'playback' items -->
+    <string name="pref_category_playback">Reprodukcija</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
     <string name="pref_title_choose_tabs">Odaberi stavke kartica</string>
     <!--Settings summary for opening the dialog to pick which categories are shown as tab headings -->
@@ -372,10 +374,15 @@ Ako nije označeno, Shuttle ikona će se koristiti kao sličica</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Podrška</string>
     <!-- Settings title for toggling between remaining time and total time -->
+    <string name="pref_title_display_remaining_time">Prikaži preostalo vrijeme</string>
     <!-- Settings summary for toggling between remaining time and total time -->
+    <string name="pref_summary_display_remaining_time">Prikažite preostalo vrijeme umjesto trajanja na zaslonu reprodukcije</string>
     <!-- Settings title for the playback options -->
+    <string name="pref_title_playback">Reprodukcija</string>
     <!-- Settings title for toggling 'remember shuff'e-->
+    <string name="pref_title_remember_shuffle">Zapamti način nasumične reprodukcije</string>
     <!-- Settings summary for toggling 'remember shuff'e-->
+    <string name="pref_summary_remember_shuffle">Način nasumične reprodukcije se neće isključiti kad se reproducira novi popis pjesama</string>
     <string name="pref_title_version">Verzija</string>
     <string name="pref_title_faq">Često postavljana pitanja</string>
     <string name="pref_summary_faq">Imate pitanja? Trebate pomoč? Pritisnite ovdje kako bi pričitali FAQ @ www.shuttlemusicplayer.com</string>
@@ -528,6 +535,7 @@ mapa</item>
     <string name="empty_songlist">Nema pronađenih pjesama. Kopirajte neke pjesme na vaš uređaj.</string>
     <!-- -->
     <string name="empty_suggested">Reproducirajte još malo glazbe, i prijedlozi će se ovdje pojaviti.</string>
+    <string name="empty_search">Nema rezultata.</string>
     <!-- ## Sort options ## -->
     <string name="sorting">Sortiranje</string>
     <string name="sort_default">Zadano</string>
@@ -739,4 +747,6 @@ mapa</item>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">Popis naslova nije dostupan</string>
     <!-- Displayed at the top of the album list, album shuffle mode-->
+    <string name="shuffle_albums">Nasumično repr. album</string>
+    <!-- Storage Access Framework (Used when deleting files from SD CarD)-->
 </resources>

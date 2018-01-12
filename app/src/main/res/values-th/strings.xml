@@ -732,4 +732,5 @@
     <string name="shortcut_playlist_disabled">ไม่มีเพลย์ลิสต์</string>
     <!-- Displayed at the top of the album list, album shuffle mode-->
     <string name="shuffle_albums">อัลบั้มแบบสุ่ม</string>
+    <!-- Storage Access Framework (Used when deleting files from SD CarD)-->
 </resources>

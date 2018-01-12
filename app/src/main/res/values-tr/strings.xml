@@ -2,7 +2,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- ## Toast Messages ## -->
     <!-- Shown when a user attempts to edit tags, but they don't have a 'DocumentProvider' available to pick the directory of their music (and thus give permission to Shuttle)-->
-    <string name="R.string.toast_no_document_provider">İzin isteğini el ile giriş yapabilmek için kullanılabilir bir Döküman Sağlayıcı mevcut değil</string>
+    <string name="R.string.toast_no_document_provider">İzin isteği için kullanılabilir bir Döküman Sağlayıcı mevcut değil</string>
     <!-- Displayed when an M3U playlist is being saved, but it already exists -->
     <!-- Displayed when an M3U playlist save fails -->
     <string name="playlist_save_failed">Şarkı listesi kaydedilemedi</string>
@@ -81,13 +81,13 @@
     <!-- -->
     <string name="get_pro_title">Shuttle+ \'a Yükselt</string>
     <!-- -->
-    <string name="get_pro_message">Eğer Shuttle\'ı beğendiyseniz, lütfen tam sürüme yükseltmeyi bir düşünün.
+    <string name="get_pro_message">Eğer Shuttle\'ı beğendiyseniz, lütfen pro sürüme yükseltmeyi bir düşünün.
 \n\nÖzellikler:
-\n•Fazladan tonlarca tema
-\n•Etiket düzenleme
-\n•Klasör tarama
-\n•ChromeCast Desteği\n
-\n\Üstelik uygulamanın geliştirilmesine de yardımcı olur.</string>
+\n• Ekstra tonlarda tema
+\n• Etiket düzenleme
+\n• Klasör tarama
+\n• ChromeCast Desteği\n
+\n\ Üstelik uygulamanın geliştirilmesine de yardımcı olur.</string>
     <!-- -->
     <string name="upgraded_title">Teşekkürler</string>
     <string name="upgraded_message">Başarıyla Shuttle+\'a yükselttiniz. Desteğiniz için teşekkür ederim.
@@ -192,7 +192,7 @@
     <!-- Playing screen, menu item -->
     <string name="fav_title">Favoriler</string>
     <!-- -->
-    <string name="library_title">Kütüphane</string>
+    <string name="library_title">Kitaplık</string>
     <!-- -->
     <!-- Library screen, menu item -->
     <string name="search_title">Ara</string>
@@ -504,7 +504,7 @@ dosyalar</item>
     <!-- Genre (singular)-->
     <string name="genre_title">Tür</string>
     <!-- Album artist (singular)-->
-    <string name="album_artist_title">Albüm-Sanatçısı</string>
+    <string name="album_artist_title">Albüm Sanatçısı</string>
     <!-- ## Equalizer ## -->
     <!-- Menu item to open the equalizer -->
     <string name="equalizer">Ekolayzer</string>
@@ -742,4 +742,5 @@ dosyalar</item>
     <string name="shortcut_playlist_disabled">Şarkı listesi kullanılabilir değil</string>
     <!-- Displayed at the top of the album list, album shuffle mode-->
     <string name="shuffle_albums">Albüm karıştır</string>
+    <!-- Storage Access Framework (Used when deleting files from SD CarD)-->
 </resources>

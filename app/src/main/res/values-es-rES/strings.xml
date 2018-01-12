@@ -732,4 +732,5 @@ carpetas</item>
     <string name="shortcut_playlist_disabled">Lista de Reproducción no disponible</string>
     <!-- Displayed at the top of the album list, album shuffle mode-->
     <string name="shuffle_albums">álbum aleatorio</string>
+    <!-- Storage Access Framework (Used when deleting files from SD CarD)-->
 </resources>

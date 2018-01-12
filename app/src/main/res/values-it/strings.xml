@@ -97,7 +97,7 @@
 \n\&#8226;-Supporto a ChromeCast
 \n\nPermette inoltre di promuovere il futuro sviluppo dell\'applicazione. \n\n Non è necessario effettuare l\'upgrade se hai già acquistato Shuttle+.</string>
     <string name="upgrade_required_folders">Aggiorna a Shuttle+</string>
-    <string name="btn_upgrade">Upgrade</string>
+    <string name="btn_upgrade">Aggiorna</string>
     <!-- -->
     <string name="get_pro_button_no">No, grazie</string>
     <!-- Dialog 'close' button -->
@@ -389,7 +389,7 @@
     <string name="pref_title_gplus">Ottieni aiuto</string>
     <string name="pref_summary_gplus">C\'è una comunità molto attiva di utenti di Shuttle su Google+. Se hai domande o hai bisogno di aiuto, questo è il miglior posto dove andare.</string>
     <string name="pref_title_rate">Ringrazia</string>
-    <string name="pref_summary_rate">Se ti piace utilizzare Shuttle, per favore scrivi una ricensione.</string>
+    <string name="pref_summary_rate">Se ti piace utilizzare Shuttle, per favore scrivi una recensione.</string>
     <string name="pref_title_headset_beep">Bip al salto</string>
     <string name="pref_summary_headset_beep">Riproduci un bip quando salti un brano tramite i pulsanti delle cuffie.</string>
     <!-- Settings title for ignore playlist duplicates -->
@@ -744,4 +744,5 @@
     <string name="shortcut_playlist_disabled">Playlist non disponibile</string>
     <!-- Displayed at the top of the album list, album shuffle mode-->
     <string name="shuffle_albums">Album casuale</string>
+    <!-- Storage Access Framework (Used when deleting files from SD CarD)-->
 </resources>

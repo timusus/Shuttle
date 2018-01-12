@@ -737,4 +737,5 @@ karpeta</item>
     <string name="shortcut_playlist_disabled">Zerrenda ez dago eskuragarri</string>
     <!-- Displayed at the top of the album list, album shuffle mode-->
     <string name="shuffle_albums">Albumak nahastu</string>
+    <!-- Storage Access Framework (Used when deleting files from SD CarD)-->
 </resources>

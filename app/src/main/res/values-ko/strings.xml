@@ -2,7 +2,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- ## Toast Messages ## -->
     <!-- Shown when a user attempts to edit tags, but they don't have a 'DocumentProvider' available to pick the directory of their music (and thus give permission to Shuttle)-->
-    <string name="R.string.toast_no_document_provider">이 권한 요청을 처리할 문서 제공자가 없습니다.</string>
+    <string name="R.string.toast_no_document_provider">이 권한 요청을 처리할 DocumentProvider가 없습니다.</string>
     <!-- Displayed when an M3U playlist is being saved, but it already exists -->
     <!-- Displayed when an M3U playlist save fails -->
     <string name="playlist_save_failed">재생 목록을 저장할 수 없습니다.</string>
@@ -97,6 +97,7 @@
         \n• 폴더 브라우징
         \n• ChromeCast 지원
         \n\n추가적인 개발에도 도움이 됩니다.\n\nShuttle+를 이미 가지고 계신다면 업그레이드하실 필요가 없습니다.</string>
+    <string name="upgrade_required_folders">Shuttle+ 로 업그레이드하기</string>
     <string name="btn_upgrade">업그레이드</string>
     <!-- -->
     <string name="get_pro_button_no">아니오</string>
@@ -369,9 +370,11 @@
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">지원</string>
     <!-- Settings title for toggling between remaining time and total time -->
+    <string name="pref_title_display_remaining_time">남은 시간 표시</string>
     <!-- Settings summary for toggling between remaining time and total time -->
     <!-- Settings title for the playback options -->
     <!-- Settings title for toggling 'remember shuff'e-->
+    <string name="pref_title_remember_shuffle">셔플 모드 기억하기</string>
     <!-- Settings summary for toggling 'remember shuff'e-->
     <string name="pref_title_version">버전</string>
     <string name="pref_title_faq">FAQ</string>
@@ -732,4 +735,5 @@
     <string name="shortcut_playlist_disabled">재생 목록 사용 불가</string>
     <!-- Displayed at the top of the album list, album shuffle mode-->
     <string name="shuffle_albums">앨범 랜덤 재생</string>
+    <!-- Storage Access Framework (Used when deleting files from SD CarD)-->
 </resources>

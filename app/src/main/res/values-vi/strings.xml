@@ -733,4 +733,5 @@
     <string name="shortcut_playlist_disabled">Danh sách không khả dụng</string>
     <!-- Displayed at the top of the album list, album shuffle mode-->
     <string name="shuffle_albums">Phát album ngẫu nhiên</string>
+    <!-- Storage Access Framework (Used when deleting files from SD CarD)-->
 </resources>

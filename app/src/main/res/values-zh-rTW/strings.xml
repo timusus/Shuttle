@@ -729,4 +729,5 @@
     <string name="shortcut_playlist_disabled">播放清單無法使用</string>
     <!-- Displayed at the top of the album list, album shuffle mode-->
     <string name="shuffle_albums">專輯隨機</string>
+    <!-- Storage Access Framework (Used when deleting files from SD CarD)-->
 </resources>

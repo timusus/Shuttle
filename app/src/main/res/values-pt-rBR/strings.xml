@@ -736,4 +736,5 @@ pastas</item>
     <string name="shortcut_playlist_disabled">Lista de reprodução não disponível</string>
     <!-- Displayed at the top of the album list, album shuffle mode-->
     <string name="shuffle_albums">Álbuns Aleatórios</string>
+    <!-- Storage Access Framework (Used when deleting files from SD CarD)-->
 </resources>

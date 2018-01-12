@@ -742,4 +742,5 @@ map "</item>
     <string name="shortcut_playlist_disabled">Afspeellijst niet beschikbaar</string>
     <!-- Displayed at the top of the album list, album shuffle mode-->
     <string name="shuffle_albums">Albumshuffle</string>
+    <!-- Storage Access Framework (Used when deleting files from SD CarD)-->
 </resources>
