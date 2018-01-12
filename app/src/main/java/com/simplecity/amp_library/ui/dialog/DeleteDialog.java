@@ -38,7 +38,6 @@ import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.schedulers.Schedulers;
 
 public class DeleteDialog extends DialogFragment implements SafManager.SafDialog.SafResultListener {
@@ -180,23 +179,13 @@ public class DeleteDialog extends DialogFragment implements SafManager.SafDialog
             case Type.ARTISTS:
                 return Observable.fromIterable(artists)
                         .flatMapSingle(AlbumArtist::getSongsSingle)
-                        .reduce(Collections.emptyList(), (BiFunction<List<Song>, List<Song>, List<Song>>) (songs, songs2) -> {
-                            List<Song> allSongs = new ArrayList<>();
-                            allSongs.addAll(songs);
-                            allSongs.addAll(songs2);
-                            return allSongs;
-                        })
+                        .reduce(Collections.<Song>emptyList(), (songs, songs2) -> Stream.concat(Stream.of(songs), Stream.of(songs2)).toList())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread());
             case Type.ALBUMS:
-                return Observable.fromIterable(artists)
-                        .flatMapSingle(AlbumArtist::getSongsSingle)
-                        .reduce(Collections.emptyList(), (BiFunction<List<Song>, List<Song>, List<Song>>) (songs, songs2) -> {
-                            List<Song> allSongs = new ArrayList<>();
-                            allSongs.addAll(songs);
-                            allSongs.addAll(songs2);
-                            return allSongs;
-                        })
+                return Observable.fromIterable(albums)
+                        .flatMapSingle(Album::getSongsSingle)
+                        .reduce(Collections.<Song>emptyList(), (songs, songs2) -> Stream.concat(Stream.of(songs), Stream.of(songs2)).toList())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread());
             case Type.SONGS:
