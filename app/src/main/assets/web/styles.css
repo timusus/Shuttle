@@ -3,6 +3,8 @@
 	color: #333333;
 }
 
+html, body {overflow: hidden; }
+
 body
 {
  	padding-top: 0px;
