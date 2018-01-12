@@ -530,10 +530,10 @@ public class SearchPresenter extends Presenter<SearchView> implements
                             }
                         }
                     },
-                    deleteDialog2 -> {
+                    deleteDialog -> {
                         SearchView searchView = getView();
                         if (searchView != null) {
-                            searchView.showDeleteDialog(deleteDialog2);
+                            searchView.showDeleteDialog(deleteDialog);
                         }
                     },
                     null, null));
