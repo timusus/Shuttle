@@ -206,6 +206,7 @@ public class Album implements
     }
 
     @Override
+    @NonNull
     public String getArtworkKey() {
         if (artworkKey == null) setArtworkKey();
         return artworkKey;

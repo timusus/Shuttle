@@ -3,7 +3,11 @@ package com.simplecity.amp_library.ui.fragments;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.util.Pair;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,9 +36,12 @@ import com.simplecity.amp_library.ui.settings.SettingsParentFragment;
 import com.simplecity.amp_library.ui.views.UpNextView;
 import com.simplecity.amp_library.ui.views.multisheet.CustomMultiSheetView;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.SleepTimer;
 import com.simplecity.multisheetview.ui.view.MultiSheetView;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -245,5 +252,28 @@ public class MainController extends BaseNavigationController implements BackPres
         }
 
         ((DrawerProvider) getActivity()).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+    }
+
+    // Todo:  Remove once cause of shared element crash is understood.
+    // This is a copy of the superclass method of the same name/signature, with some additional logging
+    // to help ascertain the cause of a crash.
+    @Override
+    public void pushViewController(@NonNull Fragment fragment, @Nullable String tag, @Nullable List<Pair<View, String>> sharedElements) {
+        FragmentTransaction fragmentTransaction = getChildFragmentManager()
+                .beginTransaction();
+
+        if (sharedElements != null) {
+            for (Pair<View, String> pair : sharedElements) {
+                try {
+                    fragmentTransaction.addSharedElement(pair.first, pair.second);
+                } catch (IllegalArgumentException e) {
+                    LogUtils.logException(TAG, String.format("Error adding shared element transition.. key: %s, value: %s", pair.first, pair.second), e);
+                }
+            }
+        }
+
+        fragmentTransaction.addToBackStack(null)
+                .replace(test.com.androidnavigation.R.id.mainContainer, fragment, tag)
+                .commit();
     }
 }

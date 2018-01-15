@@ -360,6 +360,7 @@ public class Song implements
     }
 
     @Override
+    @NonNull
     public String getArtworkKey() {
         if (artworkKey == null) setArtworkKey();
         return artworkKey;
