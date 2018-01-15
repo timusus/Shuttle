@@ -88,7 +88,7 @@ public class SongFragment extends BaseFragment implements
 
         setHasOptionsMenu(true);
 
-        adapter = new SectionedAdapter("SongFragment");
+        adapter = new SectionedAdapter();
 
         shuffleView = new ShuffleView();
         shuffleView.setClickListener(this);

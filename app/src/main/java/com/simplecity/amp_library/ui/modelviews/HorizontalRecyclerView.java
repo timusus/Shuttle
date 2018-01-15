@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.simplecity.amp_library.ui.adapters.LoggingViewModelAdapter;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.BaseViewModel;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
@@ -24,7 +23,7 @@ public class HorizontalRecyclerView extends BaseViewModel<HorizontalRecyclerView
     public ViewModelAdapter viewModelAdapter;
 
     public HorizontalRecyclerView(String tag) {
-        this.viewModelAdapter = new LoggingViewModelAdapter(tag);
+        this.viewModelAdapter = new ViewModelAdapter();
     }
 
     public Disposable setItems(List<ViewModel> items) {

@@ -23,7 +23,6 @@ import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.tagger.TaggerDialog;
-import com.simplecity.amp_library.ui.adapters.LoggingViewModelAdapter;
 import com.simplecity.amp_library.ui.dialog.DeleteDialog;
 import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
@@ -128,7 +127,7 @@ public class QueueFragment extends BaseFragment implements
 
         setHasOptionsMenu(true);
 
-        adapter = new LoggingViewModelAdapter("QueueFragment");
+        adapter = new ViewModelAdapter();
     }
 
     @Override

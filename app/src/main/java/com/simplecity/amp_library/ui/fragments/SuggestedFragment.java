@@ -23,7 +23,6 @@ import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.model.SuggestedHeader;
-import com.simplecity.amp_library.ui.adapters.LoggingViewModelAdapter;
 import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.ui.detail.PlaylistDetailFragment;
 import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
@@ -164,7 +163,7 @@ public class SuggestedFragment extends BaseFragment implements
                 .plus(new FragmentModule(this))
                 .inject(this);
 
-        adapter = new LoggingViewModelAdapter("SuggestedFragment");
+        adapter = new ViewModelAdapter();
         mostPlayedRecyclerView = new HorizontalRecyclerView("SuggestedFragment - mostPlayed");
         favoriteRecyclerView = new HorizontalRecyclerView("SuggestedFragment - favorite");
     }

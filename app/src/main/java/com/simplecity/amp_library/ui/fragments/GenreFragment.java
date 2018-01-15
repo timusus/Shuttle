@@ -76,7 +76,7 @@ public class GenreFragment extends BaseFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        adapter = new SectionedAdapter("GenreFragment");
+        adapter = new SectionedAdapter();
     }
 
     @Override

@@ -18,7 +18,6 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.glide.preloader.RecyclerViewPreloader;
-import com.simplecity.amp_library.ui.adapters.LoggingViewModelAdapter;
 import com.simplecity.amp_library.ui.modelviews.QueuePagerItemView;
 import com.simplecity.amp_library.ui.presenters.QueuePagerPresenter;
 import com.simplecity.amp_library.ui.views.QueuePagerView;
@@ -78,7 +77,7 @@ public class QueuePagerFragment extends BaseFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        viewModelAdapter = new LoggingViewModelAdapter("QueuePagerFragment");
+        viewModelAdapter = new ViewModelAdapter();
 
         ShuttleApplication.getInstance().getAppComponent()
                 .plus(new FragmentModule(this))

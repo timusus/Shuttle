@@ -20,7 +20,6 @@ import com.simplecity.amp_library.model.ArtworkModel;
 import com.simplecity.amp_library.model.ArtworkProvider;
 import com.simplecity.amp_library.model.UserSelectedArtwork;
 import com.simplecity.amp_library.sql.databases.CustomArtworkTable;
-import com.simplecity.amp_library.ui.adapters.LoggingViewModelAdapter;
 import com.simplecity.amp_library.ui.modelviews.ArtworkLoadingView;
 import com.simplecity.amp_library.ui.modelviews.ArtworkView;
 import com.simplecity.amp_library.ui.recyclerview.SpacesItemDecoration;
@@ -50,7 +49,7 @@ public class ArtworkDialog {
         @SuppressLint("InflateParams")
         View customView = LayoutInflater.from(context).inflate(R.layout.dialog_artwork, null);
 
-        ViewModelAdapter adapter = new LoggingViewModelAdapter("ArtworkDialog");
+        ViewModelAdapter adapter = new ViewModelAdapter();
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         RecyclerView recyclerView = customView.findViewById(R.id.recyclerView);

@@ -130,7 +130,7 @@ public class AlbumFragment extends BaseFragment implements
 
         setHasOptionsMenu(true);
 
-        adapter = new SectionedAdapter("AlbumFragment");
+        adapter = new SectionedAdapter();
     }
 
     @SuppressLint("NewApi")

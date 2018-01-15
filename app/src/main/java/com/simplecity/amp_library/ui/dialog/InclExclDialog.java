@@ -13,7 +13,6 @@ import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.InclExclItem;
 import com.simplecity.amp_library.sql.databases.InclExclHelper;
-import com.simplecity.amp_library.ui.adapters.LoggingViewModelAdapter;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.InclExclView;
 import com.simplecity.amp_library.utils.DataManager;
@@ -54,7 +53,7 @@ public class InclExclDialog {
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        final ViewModelAdapter inclExclAdapter = new LoggingViewModelAdapter("InclExclDialog");
+        final ViewModelAdapter inclExclAdapter = new ViewModelAdapter();
 
         recyclerView.setAdapter(inclExclAdapter);
 
