@@ -199,7 +199,7 @@ public final class ShuttleUtils {
     }
 
     public static boolean isUpgraded() {
-
+        
         if (ShuttleApplication.getInstance().getIsUpgraded()) {
             return true;
         }

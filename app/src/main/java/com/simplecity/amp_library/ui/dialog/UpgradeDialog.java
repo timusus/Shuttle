@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.simplecity.amp_library.IabManager;
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.ui.activities.MainActivity;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 
@@ -25,7 +26,12 @@ public class UpgradeDialog {
                 .positiveText(R.string.btn_upgrade)
                 .onPositive((dialog, which) -> {
                     if (ShuttleUtils.isAmazonBuild()) {
-                        activity.startActivity(ShuttleUtils.getShuttleStoreIntent("com.simplecity.amp_pro"));
+                        Intent storeIntent = ShuttleUtils.getShuttleStoreIntent("com.simplecity.amp_pro");
+                        if (storeIntent.resolveActivity(ShuttleApplication.getInstance().getPackageManager()) != null) {
+                            activity.startActivity(storeIntent);
+                        } else {
+                            activity.startActivity(ShuttleUtils.getShuttleWebIntent("com.simplecity.amp_pro"));
+                        }
                     } else {
                         purchaseUpgrade(activity);
                     }
