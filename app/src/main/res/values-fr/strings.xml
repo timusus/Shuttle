@@ -82,17 +82,21 @@
     <!-- -->
     <string name="get_pro_title">Passer à Shuttle+</string>
     <!-- -->
-    <string name="get_pro_message">Si vous aimez Shuttle Music Player, envisagez de passer à Shuttle+. \n\nFonctionnalités :\n\n\{&#8226;} Thèmes supplémentaires\n\{&#8226;} Édition des tags\n\{&#8226;} Navigation par dossiers\n\{&#8226;} Aucune publicité!\n\nCela permet aussi de contribuer au développement de l\'application!</string>
+    <string name="get_pro_message">Si vous aimez Shuttle Music Player, envisagez de passer à Shuttle+. \n\nFonctionnalitées :
+\n• De nombreux thèmes supplémentaires
+\n• Édition des tags
+\n• Navigation par dossiers
+\n• Pise en charge Chromecast\n
+\nCela permet aussi de contribuer au développement de l\'application!</string>
     <!-- -->
     <string name="upgraded_title">Merci</string>
     <string name="upgraded_message">Vous avez mis à niveau vers Shuttle+ avec succès. Merci de votre soutient.
 \n\nVeuillez redémarrer l\'application pour que toute les fonctions soient activent.</string>
-    <string name="upgrade_dialog_message">Mettre à jour débloque des fonctionnalités supplémentaires dont :
-\n\n\{&#8226;} Thèmes supplémentaires
-\n\{&#8226;} Édition des tags
-\n\{&#8226;} Navigation par dossiers
-\n\{&#8226;} Support de ChromeCast
-\n\nCela permet aussi de contribuer au développement de l\'application.\n\nVous n\'avez pas besoin de mettre à jour si vous possédez déjà Shuttle+</string>
+    <string name="upgrade_dialog_message">• Prise en charge Chromecast
+\n• Thèmes supplémentaires
+\n• Édition des tags
+\n• Navigation par dossiers
+\n• Contribuer au développement ❤️</string>
     <string name="upgrade_required_folders">Passer a Shuttle+</string>
     <string name="btn_upgrade">Mise à niveau</string>
     <!-- -->
@@ -743,4 +747,9 @@
     <!-- Displayed at the top of the album list, album shuffle mode-->
     <string name="shuffle_albums">Lecture aléatoire</string>
     <!-- Storage Access Framework (Used when deleting files from SD CarD)-->
+    <string name="saf_failure_kitkat_title">Impossible d’accéder aux fichiers</string>
+    <string name="saf_failure_kitkat_message">Google a arrêté la prise en charge des accès à la carte SD sous Kitkat, et n\'a proposé aucune solution avant Lollipop. Malheureusement, Shuttle ne peut accéder à vos fichiers.</string>
+    <string name="saf_access_required_title">Accès au stockage requis</string>
+    <string name="saf_access_required_message">Shuttle a besoin d\'une autorisation pour accéder à ces fichiers. Veuillez sélectionner le dossier contenant votre musique.</string>
+    <string name="saf_show_files_button">Afficher les fichiers</string>
 </resources>

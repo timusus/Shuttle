@@ -743,4 +743,9 @@ dosyalar</item>
     <!-- Displayed at the top of the album list, album shuffle mode-->
     <string name="shuffle_albums">Albüm karıştır</string>
     <!-- Storage Access Framework (Used when deleting files from SD CarD)-->
+    <string name="saf_failure_kitkat_title">Dosyalara erişilemiyor</string>
+    <string name="saf_failure_kitkat_message">Google Kitkat\'ta SD Kartta bulunan dosyalara erişim desteğini sonlandırdı, ve Lollipop\'a kadar bir geçici çözüm sağlamadı. Maalesef Shuttle, dosyalarınıza erişemiyor</string>
+    <string name="saf_access_required_title">Depolama Erişimi Gerekli</string>
+    <string name="saf_access_required_message">Shuttle, bu dosyalara erişmek için izin gerektirir. Lütfen şarkılarınızın bulunduğu dizini seçin.</string>
+    <string name="saf_show_files_button">Dosyaları göster</string>
 </resources>
