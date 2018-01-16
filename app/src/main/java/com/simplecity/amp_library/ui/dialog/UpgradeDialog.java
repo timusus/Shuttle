@@ -4,16 +4,21 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.widget.Toast;
+import android.util.Log;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.simplecity.amp_library.IabManager;
+import com.android.billingclient.api.BillingClient;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.billing.BillingManager;
+import com.simplecity.amp_library.constants.Config;
+import com.simplecity.amp_library.ui.activities.BaseActivity;
 import com.simplecity.amp_library.ui.activities.MainActivity;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 
 public class UpgradeDialog {
+
+    private static final String TAG = "UpgradeDialog";
 
     private UpgradeDialog() {
         //no instance
@@ -41,16 +46,17 @@ public class UpgradeDialog {
     }
 
     private static void purchaseUpgrade(@NonNull Activity activity) {
-        IabManager.getInstance().purchaseUpgrade(activity, success -> {
-            if (success) {
-                getUpgradeSuccessDialog(activity).show();
-            } else {
-                Toast.makeText(activity, R.string.iab_purchase_failed, Toast.LENGTH_LONG).show();
-            }
-        });
+        if (!(activity instanceof BaseActivity)) {
+            Log.e(TAG, "Purchase may only be initiated with a BaseActivity");
+            return;
+        }
+        BillingManager billingManager = ((BaseActivity) activity).getBillingManager();
+        if (billingManager != null) {
+            billingManager.initiatePurchaseFlow(Config.SKU_PREMIUM, BillingClient.SkuType.INAPP);
+        }
     }
 
-    private static MaterialDialog getUpgradeSuccessDialog(@NonNull Activity activity) {
+    public static MaterialDialog getUpgradeSuccessDialog(@NonNull Activity activity) {
         return new MaterialDialog.Builder(activity)
                 .title(activity.getResources().getString(R.string.upgraded_title))
                 .content(activity.getResources().getString(R.string.upgraded_message))

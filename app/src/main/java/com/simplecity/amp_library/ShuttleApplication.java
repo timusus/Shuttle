@@ -139,8 +139,6 @@ public class ShuttleApplication extends Application {
         );
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        setIsUpgraded(prefs.getBoolean("pref_theme_gold", false));
-
         // we cannot call setDefaultValues for multiple fragment based XML preference
         // files with readAgain flag set to false, so always check KEY_HAS_SET_DEFAULT_VALUES
         if (!prefs.getBoolean(PreferenceManager.KEY_HAS_SET_DEFAULT_VALUES, false)) {
@@ -233,7 +231,7 @@ public class ShuttleApplication extends Application {
     }
 
     public boolean getIsUpgraded() {
-        return isUpgraded || BuildConfig.DEBUG;
+        return isUpgraded ;//|| BuildConfig.DEBUG;
     }
 
     public static File getDiskCacheDir(String uniqueName) {

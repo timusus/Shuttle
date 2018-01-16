@@ -199,8 +199,16 @@ public final class ShuttleUtils {
     }
 
     public static boolean isUpgraded() {
-        
+
+        if (BuildConfig.DEBUG) {
+            return true;
+        }
+
         if (ShuttleApplication.getInstance().getIsUpgraded()) {
+            return true;
+        }
+
+        if (SettingsManager.getInstance().getIsLegacyUpgraded()) {
             return true;
         }
 

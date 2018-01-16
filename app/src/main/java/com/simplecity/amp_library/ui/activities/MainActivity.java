@@ -21,7 +21,6 @@ import android.widget.Toast;
 import com.afollestad.aesthetic.Aesthetic;
 import com.greysonparrelli.permiso.Permiso;
 import com.simplecity.amp_library.BuildConfig;
-import com.simplecity.amp_library.IabManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Playlist;
@@ -115,9 +114,6 @@ public class MainActivity extends BaseCastActivity implements
         }
 
         handleIntent(getIntent());
-
-        // Calls through to IabManager.setup()
-        IabManager.getInstance();
     }
 
     @Override

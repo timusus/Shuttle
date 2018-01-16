@@ -68,7 +68,7 @@ ext.versions = [
         daggerAnnotationProcessor     : "2.14.1",
         expandableRecyclerView        : "3.0.0-RC1",
         aesthetic                     : "0.4.0",
-        betterPickers                 : "3.1.0",
+        billing                       : "1.0",
 
         // RX
         rxAndroid                     : "2.0.1",
@@ -189,6 +189,8 @@ ext.libs = [
         expandableRecyclerView        : "com.bignerdranch.android:expandablerecyclerview:$versions.expandableRecyclerView",
         // Aesthetic - Theming Engine
         aesthetic                     : project(":libraries:aesthetic"),
+        // In app purchases
+        billing                       : "com.android.billingclient:billing:$versions.billing",
 
         // RX
 

@@ -14,12 +14,13 @@ import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.annimon.stream.IntPair;
 import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
-import com.simplecity.amp_library.IabManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.billing.BillingManager;
 import com.simplecity.amp_library.model.CategoryItem;
 import com.simplecity.amp_library.model.InclExclItem;
 import com.simplecity.amp_library.services.ArtworkDownloadService;
+import com.simplecity.amp_library.ui.activities.BaseActivity;
 import com.simplecity.amp_library.ui.dialog.ChangelogDialog;
 import com.simplecity.amp_library.ui.dialog.InclExclDialog;
 import com.simplecity.amp_library.ui.dialog.TabChooserDialog;
@@ -54,13 +55,13 @@ public class SettingsPresenter extends PurchasePresenter<SettingsView> {
         }
     }
 
-    public void restorePurchasesClicked() {
-        IabManager.getInstance().restorePurchases(messageResId -> {
-            SettingsView settingsView = getView();
-            if (settingsView != null) {
-                settingsView.showRestorePurchasesMessage(messageResId);
+    public void restorePurchasesClicked(Activity activity) {
+        if (activity instanceof BaseActivity) {
+            BillingManager billingManager = ((BaseActivity) activity).getBillingManager();
+            if (billingManager != null) {
+                billingManager.queryPurchases();
             }
-        });
+        }
     }
 
     // Display

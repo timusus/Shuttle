@@ -282,6 +282,7 @@ dependencies {
     annotationProcessor libs.daggerAnnotationProcessor
     implementation libs.expandableRecyclerView
     implementation libs.aesthetic
+    implementation libs.billing
 
     // //////////////////////////////////////////////////////////////////////////
     // Multidex (Only used in non-proguard pre-21 builds)

@@ -488,4 +488,13 @@ public class SettingsManager {
     public void setDefaultPageType(@CategoryItem.Type int type) {
         setInt(KEY_DEFAULT_PAGE, type);
     }
+
+
+    // Legacy Upgrade Preference
+    private static final String KEY_UPGRADED = "pref_theme_gold";
+
+    public boolean getIsLegacyUpgraded() {
+        return getBool(KEY_UPGRADED, false);
+    }
+
 }

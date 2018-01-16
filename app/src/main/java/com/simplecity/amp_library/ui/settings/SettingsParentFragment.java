@@ -215,7 +215,7 @@ public class SettingsParentFragment extends BaseNavigationController implements
                     restorePurchasesPreference.setVisible(false);
                 }
                 restorePurchasesPreference.setOnPreferenceClickListener(preference -> {
-                    settingsPresenter.restorePurchasesClicked();
+                    settingsPresenter.restorePurchasesClicked(getActivity());
                     return true;
                 });
             }
