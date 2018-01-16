@@ -231,7 +231,7 @@ public class ShuttleApplication extends Application {
     }
 
     public boolean getIsUpgraded() {
-        return isUpgraded ;//|| BuildConfig.DEBUG;
+        return isUpgraded || BuildConfig.DEBUG;
     }
 
     public static File getDiskCacheDir(String uniqueName) {

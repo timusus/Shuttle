@@ -95,7 +95,7 @@ ext.versions = [
 
         // Mockito version restriction -- PowerMock does not fully support Mockito2 yet.
         // https://github.com/powermock/powermock/wiki/Mockito2_maven
-        mockito                       : "2.13.0",
+        mockito                       : "2.8.47",
         powermock                     : "1.7.1",
 
         // Future note: PowerMock and Robolectric can't work together until Robolectric 3.3 is released
