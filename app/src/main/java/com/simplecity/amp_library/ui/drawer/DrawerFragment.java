@@ -133,10 +133,6 @@ public class DrawerFragment extends BaseFragment implements
         drawerParents.add(DrawerParent.settingsParent);
         drawerParents.add(DrawerParent.supportParent);
 
-        Stream.of(drawerParents)
-                .filter(parent -> parent instanceof DrawerParent)
-                .forEach(parent -> ((DrawerParent) parent).setListener(this));
-
         adapter = new DrawerAdapter(drawerParents);
     }
 
@@ -204,11 +200,19 @@ public class DrawerFragment extends BaseFragment implements
                                 }),
                         throwable -> LogUtils.logException(TAG, "Error observing sleep state", throwable))
         );
+
+        Stream.of(drawerParents)
+                .filter(parent -> parent instanceof DrawerParent)
+                .forEach(parent -> ((DrawerParent) parent).setListener(this));
     }
 
     @Override
     public void onPause() {
         disposables.clear();
+
+        Stream.of(drawerParents)
+                .filter(parent -> parent instanceof DrawerParent)
+                .forEach(parent -> ((DrawerParent) parent).setListener(null));
 
         super.onPause();
     }
@@ -217,10 +221,6 @@ public class DrawerFragment extends BaseFragment implements
     public void onDestroyView() {
         drawerPresenter.unbindView(this);
         playerPresenter.unbindView(playerViewAdapter);
-
-        Stream.of(drawerParents)
-                .filter(parent -> parent instanceof DrawerParent)
-                .forEach(parent -> ((DrawerParent) parent).setListener(null));
 
         super.onDestroyView();
     }
