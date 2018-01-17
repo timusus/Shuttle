@@ -114,6 +114,8 @@ android {
         def relFilters = ["dev", "devPre21"]
 
         if (System.getenv("TRAVIS")) {
+            relFilters << "dev"
+            relFilters << "devPre21"
             relFilters << "amazonPaid"
             relFilters << "amazonFree"
         }
