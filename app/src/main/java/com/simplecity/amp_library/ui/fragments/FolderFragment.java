@@ -407,10 +407,13 @@ public class FolderFragment extends BaseFragment implements
 
     @Override
     public boolean consumeBackPress() {
-        if (fileBrowser.getCurrentDir() != null && fileBrowser.getRootDir() != null && fileBrowser.getCurrentDir().compareTo(fileBrowser.getRootDir()) != 0) {
-            File parent = fileBrowser.getCurrentDir().getParentFile();
-            changeDir(parent);
-            return true;
+        if (getUserVisibleHint()) {
+            final File currDir = fileBrowser.getCurrentDir();
+            final File rootDir = fileBrowser.getRootDir();
+            if (currDir != null && rootDir != null && currDir.compareTo(rootDir) != 0) {
+                changeDir(currDir.getParentFile());
+                return true;
+            }
         }
         return false;
     }
