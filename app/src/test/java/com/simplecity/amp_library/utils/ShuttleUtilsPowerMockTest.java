@@ -98,17 +98,33 @@ public class ShuttleUtilsPowerMockTest {
     @Test
     public void testIsUpgraded() throws Exception {
         ShuttleApplication mockApplication = mock(ShuttleApplication.class);
+        SharedPreferences mockSharedPreferences = mock(SharedPreferences.class);
 
+        mockStatic(PreferenceManager.class);
         mockStatic(ShuttleApplication.class);
+
+        when(PreferenceManager.getDefaultSharedPreferences(any(Context.class))).thenReturn(mockSharedPreferences);
         when(ShuttleApplication.getInstance()).thenReturn(mockApplication);
 
+        // If our Application class is upgraded, then the user is upgraded
         when(mockApplication.getIsUpgraded()).thenReturn(true);
         assertThat(ShuttleUtils.isUpgraded()).isTrue();
 
+        // Set the Application upgraded value back to false
         when(mockApplication.getIsUpgraded()).thenReturn(false);
+
+        // We're upgraded if we're a legacy user with the upgrade preference
+        when(mockSharedPreferences.getBoolean("pref_theme_gold", false)).thenReturn(true);
+        assertThat(ShuttleUtils.isUpgraded()).isTrue();
+
+        // Set the 'legacy' upgrade back to false
+        when(mockSharedPreferences.getBoolean("pref_theme_gold", false)).thenReturn(false);
+
+        // We're upgraded if the package name is the Shuttle+ package name
         when(mockApplication.getPackageName()).thenReturn("com.simplecity.amp_pro");
         assertThat(ShuttleUtils.isUpgraded()).isTrue();
 
+        // We're not upgraded for dodgy package names
         when(mockApplication.getPackageName()).thenReturn("bad.package.name");
         assertThat(ShuttleUtils.isUpgraded()).isFalse();
     }
