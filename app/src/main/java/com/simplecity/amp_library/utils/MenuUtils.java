@@ -591,7 +591,6 @@ public class MenuUtils implements MusicUtils.Defs {
         switch (fileObject.fileType) {
             case FileType.FILE:
                 menu.getMenu().findItem(R.id.play).setVisible(false);
-                menu.getMenu().findItem(R.id.setInitialDir).setVisible(false);
                 break;
             case FileType.FOLDER:
                 menu.getMenu().findItem(R.id.playNext).setVisible(false);
@@ -671,11 +670,6 @@ public class MenuUtils implements MusicUtils.Defs {
                 .show();
     }
 
-    public static void setInitialDir(Context context, FolderObject folderObject) {
-        SettingsManager.getInstance().setFolderBrowserInitialDir(folderObject.path);
-        Toast.makeText(context, folderObject.path + context.getResources().getString(R.string.initial_dir_set_message), Toast.LENGTH_SHORT).show();
-    }
-
     @Nullable
     public static PopupMenu.OnMenuItemClickListener getFolderMenuClickListener(Context context, BaseFileObject fileObject, UnsafeConsumer<TaggerDialog> tagEditorCallback, UnsafeAction filenameChanged, UnsafeAction fileDeleted) {
         switch (fileObject.fileType) {
@@ -750,9 +744,6 @@ public class MenuUtils implements MusicUtils.Defs {
                     return true;
                 case R.id.addToQueue:
                     addToQueue(context, getSongsForFolderObject(folderObject));
-                    return true;
-                case R.id.setInitialDir:
-                    setInitialDir(context, folderObject);
                     return true;
                 case R.id.scan:
                     scanFolder(context, folderObject);

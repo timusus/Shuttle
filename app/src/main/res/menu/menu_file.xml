@@ -26,10 +26,6 @@
     </item>
 
     <item
-        android:id="@+id/setInitialDir"
-        android:title="@string/set_initial_dir"/>
-
-    <item
         android:id="@+id/scan"
         android:title="@string/scan_file"/>
 

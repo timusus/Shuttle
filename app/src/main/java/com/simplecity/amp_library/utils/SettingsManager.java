@@ -229,7 +229,7 @@ public class SettingsManager {
     }
 
     public String getFolderBrowserInitialDir() {
-        return getString(KEY_FOLDER_BROWSER_INITIAL_DIR);
+        return getString(KEY_FOLDER_BROWSER_INITIAL_DIR, "");
     }
 
     private static final String KEY_FOLDER_BROWSER_FILES_SORT_ORDER = "folder_browser_files_sort_order";

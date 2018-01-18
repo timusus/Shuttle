@@ -504,6 +504,10 @@
     <string name="parent_folder">Parent Folder</string>
     <!-- -->
     <string name="show_filenames">Show Filenames</string>
+    <!-- -->
+    <string name="set_home_dir">Set home directory</string>
+    <string name="remove_home_dir">Remove home directory</string>
+    <string name="nav_home_dir">Navigate to home directory</string>
     <!-- 'Scan'-->
     <string name="scan_file">Scan</string>
     <!-- Scan Complete-->

@@ -262,7 +262,7 @@ public class FolderView extends BaseSelectableViewModel<FolderView.ViewHolder> {
             int colorPrimary = Aesthetic.get(itemView.getContext()).colorPrimary().blockingFirst();
 
             folderDrawable = ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_folder_24dp);
-            parentFolderDrawable = ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_folder_open_24dp);
+            parentFolderDrawable = ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_folder_outline);
             fileDrawable = ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_headphones_white);
 
             imageView.setColorFilter(colorPrimary);

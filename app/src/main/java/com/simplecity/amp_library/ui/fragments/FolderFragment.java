@@ -132,9 +132,6 @@ public class FolderFragment extends BaseFragment implements
     @Nullable
     private Disposable setItemsDisposable;
 
-    public FolderFragment() {
-    }
-
     public static FolderFragment newInstance(String pageTitle, boolean isDisplayedInTabs) {
         FolderFragment fragment = new FolderFragment();
         Bundle args = new Bundle();
@@ -327,6 +324,8 @@ public class FolderFragment extends BaseFragment implements
                 break;
         }
 
+        menu.findItem(R.id.folder_home_dir).setIcon(fileBrowser.getHomeDirIcon());
+        menu.findItem(R.id.folder_home_dir).setTitle(fileBrowser.getHomeDirTitle());
         menu.findItem(R.id.show_filenames).setChecked(SettingsManager.getInstance().getFolderBrowserShowFileNames());
         menu.findItem(R.id.files_ascending).setChecked(SettingsManager.getInstance().getFolderBrowserFilesAscending());
         menu.findItem(R.id.folders_ascending).setChecked(SettingsManager.getInstance().getFolderBrowserFoldersAscending());
@@ -396,6 +395,7 @@ public class FolderFragment extends BaseFragment implements
                     if (adapter != null) {
                         changeBreadcrumbPath();
                     }
+                    updateMenuItems();
                 }, error -> LogUtils.logException(TAG, "Error changing dir", error));
     }
 
@@ -409,8 +409,8 @@ public class FolderFragment extends BaseFragment implements
     public boolean consumeBackPress() {
         if (getUserVisibleHint()) {
             final File currDir = fileBrowser.getCurrentDir();
-            final File rootDir = fileBrowser.getRootDir();
-            if (currDir != null && rootDir != null && currDir.compareTo(rootDir) != 0) {
+            final File homeDir = fileBrowser.getHomeDir();
+            if (currDir != null && homeDir != null && currDir.compareTo(homeDir) != 0) {
                 changeDir(currDir.getParentFile());
                 return true;
             }
@@ -563,6 +563,17 @@ public class FolderFragment extends BaseFragment implements
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
+            case R.id.folder_home_dir:
+                if (fileBrowser.atHomeDirectory()) {
+                    fileBrowser.clearHomeDir();
+                    updateMenuItems();
+                } else if (fileBrowser.hasHomeDir()) {
+                    changeDir(fileBrowser.getHomeDir());
+                } else {
+                    fileBrowser.setHomeDir();
+                    updateMenuItems();
+                }
+                return true;
             case R.id.sort_files_default:
                 SettingsManager.getInstance().setFolderBrowserFilesSortOrder(SortManager.SortFiles.DEFAULT);
                 reload();

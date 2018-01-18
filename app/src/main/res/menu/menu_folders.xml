@@ -3,6 +3,12 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/folder_home_dir"
+        android:icon="@drawable/ic_folder_outline"
+        android:title="@string/set_home_dir"
+        app:showAsAction="ifRoom"/>
+
+    <item
         android:icon="@drawable/ic_sort_24dp"
         android:title="@string/sorting"
         app:showAsAction="ifRoom">
