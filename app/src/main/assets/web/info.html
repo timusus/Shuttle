@@ -2,171 +2,176 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="viewport" content="initial-scale=1.0" />
-	<link rel="stylesheet" href="styles.css" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
+<h4>2.0.3-beta3</h4>
+<ul>
+    <li>Added ability to quickly set, remove, and navigate to a specified home directory when folder browsing.</li>
+    <li>When a home directory is specified, the back button won't navigate past that directory.</li>
+</ul>
 <h4>2.0.3-beta2</h4>
 <ul>
-	<li>Crash fixes</li>
-	<li>Translation updates</li>
-	<li>Fixed an issue where back button didn't work correctly when displaying folder browser in tabs</li>
+    <li>Crash fixes</li>
+    <li>Translation updates</li>
+    <li>Fixed an issue where back button didn't work correctly when displaying folder browser in tabs</li>
 </ul>
 <h4>2.0.3-beta1</h4>
 <ul>
-	<li>Reinstated SD card file deletion (Lollipop+)</li>
+    <li>Reinstated SD card file deletion (Lollipop+)</li>
 </ul>
 <h4>2.0.2</h4>
 <ul>
-	<li>Fixed an issue where playback randomly paused due to changes to nearby bluetooth devices</li>
-	<li>Fixed an issue where bitrate &amp; other song info didn't show up</li>
-	<li>Various crash fixes</li>
+    <li>Fixed an issue where playback randomly paused due to changes to nearby bluetooth devices</li>
+    <li>Fixed an issue where bitrate &amp; other song info didn't show up</li>
+    <li>Various crash fixes</li>
 </ul>
 <h4>2.0.1</h4>
 <ul>
-	<li>Lowered translation threshold. Translations need to be only 70% complete to make it into Shuttle.
-		</p>
-		</p>
-		Calling all translators: <a href="https://www.shuttle.oneskyapp.com">Shuttle Translations</a> </li>
-	<li>Various crash fixes</li>
+    <li>Lowered translation threshold. Translations need to be only 70% complete to make it into Shuttle.
+        </p>
+        </p>
+        Calling all translators: <a href="https://www.shuttle.oneskyapp.com">Shuttle Translations</a> </li>
+    <li>Various crash fixes</li>
 </ul>
 <h4>2.0.0</h4>
 <h5>
-	Features:
+    Features:
 </h5>
 <ul>
-	<li>Show changelog on launch</li>
-	<li>Dynamic themes!</li>
-	<li>Added album-shuffle (thanks Will Coughlin)</li>
-	<li>Added a display option to show remaining time (thanks lastbulletbender)</li>
-	<li>Added multi-select to artist/album/playlist/genre detail screens & search screen</li>
-	<li>Added 'share' option to now playing screen menu items</li>
-	<li>Added 'go to genre' option to now playing screen</li>
-	<li>Added more playlist menu options to playlist detail screen</li>
-	<li>Shuffle now turns off when a new list of songs is added to the queue. This can be disabled in playback settings</li>
-	<li>Remember playlist sorting per-playlist</li>
+    <li>Show changelog on launch</li>
+    <li>Dynamic themes!</li>
+    <li>Added album-shuffle (thanks Will Coughlin)</li>
+    <li>Added a display option to show remaining time (thanks lastbulletbender)</li>
+    <li>Added multi-select to artist/album/playlist/genre detail screens & search screen</li>
+    <li>Added 'share' option to now playing screen menu items</li>
+    <li>Added 'go to genre' option to now playing screen</li>
+    <li>Added more playlist menu options to playlist detail screen</li>
+    <li>Shuffle now turns off when a new list of songs is added to the queue. This can be disabled in playback settings</li>
+    <li>Remember playlist sorting per-playlist</li>
 </ul>
 
 <h5>
-	UI changes:
+    UI changes:
 </h5>
 <ul>
-	<li>Major theming overhaul. More stuff is themed correctly now</li>
-	<li>App theme now matches the current artwork. This can be set to only occur on the 'now playing' screen, or turned off in settings</li>
-	<li>Redesigned artist/album/genre/playlist 'detail' screen.</li>
-	<li>Toolbar now collapses when scrolling</li>
-	<li>'Up Next' now slides up from now-playing</li>
-	<li>Artwork is now full-bleed to the top of the screen</li>
-	<li>Overhauled landscape mode</li>
-	<li>Album count shown for artists</li>
-	<li>Song count shown for albums</li>
-	<li>Settings has had a facelift</li>
-	<li>Moved Equaliser &amp; Sleep Timer to Navigation Drawer</li>
-	<li>Sleep timer now displays time remaining in drawer when active</li>
-	<li>Lyrics are now displayed in their own popup, instead of on top of the artwork</li>
-	<li>Close Voice Search screen if no results are found</li>
+    <li>Major theming overhaul. More stuff is themed correctly now</li>
+    <li>App theme now matches the current artwork. This can be set to only occur on the 'now playing' screen, or turned off in settings</li>
+    <li>Redesigned artist/album/genre/playlist 'detail' screen.</li>
+    <li>Toolbar now collapses when scrolling</li>
+    <li>'Up Next' now slides up from now-playing</li>
+    <li>Artwork is now full-bleed to the top of the screen</li>
+    <li>Overhauled landscape mode</li>
+    <li>Album count shown for artists</li>
+    <li>Song count shown for albums</li>
+    <li>Settings has had a facelift</li>
+    <li>Moved Equaliser &amp; Sleep Timer to Navigation Drawer</li>
+    <li>Sleep timer now displays time remaining in drawer when active</li>
+    <li>Lyrics are now displayed in their own popup, instead of on top of the artwork</li>
+    <li>Close Voice Search screen if no results are found</li>
 </ul>
 
 <h5>
-	Code improvements:
+    Code improvements:
 </h5>
 <ul>
-	<li>Major redesign of many aspects of the codebase</li>
-	<li>Overhauled theming engine</li>
-	<li>Migrated to RxJava 2</li>
-	<li>Removed lots of old, unused resources - smaller app size, easier to maintain</li>
-	<li>Reduce the number of SQL queries being performed, particularly during launch</li>
+    <li>Major redesign of many aspects of the codebase</li>
+    <li>Overhauled theming engine</li>
+    <li>Migrated to RxJava 2</li>
+    <li>Removed lots of old, unused resources - smaller app size, easier to maintain</li>
+    <li>Reduce the number of SQL queries being performed, particularly during launch</li>
 </ul>
 
 <h5>
-	Bug fixes:
+    Bug fixes:
 </h5>
 <ul>
-	<li>Fixed an issue where 'play next' created a duplicate when used from now-playing queue</li>
-	<li>Fixed an issue where playback didn't stop when disconnecting from bluetooth</li>
-	<li>Fixed various tag editing issues</li>
-	<li>Work around a Last.FM issue to ensure artwork is high quality</li>
-	<li>Fixed crash when using gmail style placeholders</li>
-	<li>Fixed an issue where playing a song from a folder didn't enqueue the surrounding songs</li>
-	<li>Fixed some memory leaks (thanks Khang)</li>
-	<li>Lots and lots of other crash fixes</li>
+    <li>Fixed an issue where 'play next' created a duplicate when used from now-playing queue</li>
+    <li>Fixed an issue where playback didn't stop when disconnecting from bluetooth</li>
+    <li>Fixed various tag editing issues</li>
+    <li>Work around a Last.FM issue to ensure artwork is high quality</li>
+    <li>Fixed crash when using gmail style placeholders</li>
+    <li>Fixed an issue where playing a song from a folder didn't enqueue the surrounding songs</li>
+    <li>Fixed some memory leaks (thanks Khang)</li>
+    <li>Lots and lots of other crash fixes</li>
 </ul>
 
 <h4>1.6.7</h4>
 <ul>
-	<li>Fixed an issue where enqueued songs were lost when changing shuffle mode</li>
-	<li>Fixed an issue where the folder scanner only scanned songs already available in the MediaStore (didn't find new music)</li>
-	<li>Fixed an issue preventing albums & songs showing up in album, artist & genre detail screens</li>
-	<li>Close drawer when back button is pressed</li>
-	<li>Reduced 'most played' playlist to 20 most played songs. Only count songs with 2 or more plays.</li>
-	<li>Fixed crash when adding apostrophe to playlist name</li>
-	<li>Fixed crash when attempting to edit tags</li>
-	<li>Various other crash fixes</li>
+    <li>Fixed an issue where enqueued songs were lost when changing shuffle mode</li>
+    <li>Fixed an issue where the folder scanner only scanned songs already available in the MediaStore (didn't find new music)</li>
+    <li>Fixed an issue preventing albums & songs showing up in album, artist & genre detail screens</li>
+    <li>Close drawer when back button is pressed</li>
+    <li>Reduced 'most played' playlist to 20 most played songs. Only count songs with 2 or more plays.</li>
+    <li>Fixed crash when adding apostrophe to playlist name</li>
+    <li>Fixed crash when attempting to edit tags</li>
+    <li>Various other crash fixes</li>
 </ul>
 <h4>1.6.6</h4>
 <ul>
-	<li>Reverted a change which caused compilation albums without 'album-artist' tags to be split up</li>
+    <li>Reverted a change which caused compilation albums without 'album-artist' tags to be split up</li>
 </ul>
 <h4>1.6.5</h4>
 <ul>
-	<li>Show this changelog on startup (meta)</li>
-	<li>Fixed an issue with slow loading of library on some devices</li>
-	<li>Added back 'QuickLyric' button to lyrics screen</li>
-	<li>Fixed an issue where songs with no album tag information ended up being grouped under one artist</li>
-	<li>Search: Improved speed & accuracy of search results</li>
-	<li>Search: Fixed an issue where searching didn't work very well for songs/albums/artists with multiple words in the name</li>
-	<li>Search: Added option to remove artists & albums from search results</li>
-	<li>Search: Added option to disable fuzzy searching</li>
-	<li>Added accessibility content descriptions to notification buttons & widgets</li>
-	<li>Fixed an issue where the current playback position made available to 3rd party apps was incorrect after changing tracks</li>
-	<li>Fixed an issue with FAB position in artist/album detail screen on older devices</li>
-	<li>Fixed an issue where the artist/album list sometimes showed as a two-column grid</li>
-	<li>Fixed an issue where inverted notification icons weren't very visible on devices running API < 24</li>
-	<li>Fixed an issue with 'breadcrumbs' in Folder screen</li>
-	<li>Fixed an issue where the equalizer toggle didn't change color when set to 'off'</li>
-	<li>Fixed a crash when choosing to invert icons on API < 21. This feature is no longer available on such devices</li>
-	<li>Fixed several folder browser crashes</li>
-	<li>Various other crash fixes</li>
+    <li>Show this changelog on startup (meta)</li>
+    <li>Fixed an issue with slow loading of library on some devices</li>
+    <li>Added back 'QuickLyric' button to lyrics screen</li>
+    <li>Fixed an issue where songs with no album tag information ended up being grouped under one artist</li>
+    <li>Search: Improved speed & accuracy of search results</li>
+    <li>Search: Fixed an issue where searching didn't work very well for songs/albums/artists with multiple words in the name</li>
+    <li>Search: Added option to remove artists & albums from search results</li>
+    <li>Search: Added option to disable fuzzy searching</li>
+    <li>Added accessibility content descriptions to notification buttons & widgets</li>
+    <li>Fixed an issue where the current playback position made available to 3rd party apps was incorrect after changing tracks</li>
+    <li>Fixed an issue with FAB position in artist/album detail screen on older devices</li>
+    <li>Fixed an issue where the artist/album list sometimes showed as a two-column grid</li>
+    <li>Fixed an issue where inverted notification icons weren't very visible on devices running API < 24</li>
+    <li>Fixed an issue with 'breadcrumbs' in Folder screen</li>
+    <li>Fixed an issue where the equalizer toggle didn't change color when set to 'off'</li>
+    <li>Fixed a crash when choosing to invert icons on API < 21. This feature is no longer available on such devices</li>
+    <li>Fixed several folder browser crashes</li>
+    <li>Various other crash fixes</li>
 </ul>
 <h4>1.6.4</h4>
 <ul>
-	<li>Fixed a bug where choosing to play a song from the folder browser ended up playing the whole library (and related issues)</li>
-	<li>Fixed a crash when editing tags/setting ringtone from folder browser</li>
-	<li>Fixed a crash when attempting to view/edit tags for certain file types</li>
-	<li>Fixed a crash when sorting by 'album name', then attempting to view the contents of an album</li>
+    <li>Fixed a bug where choosing to play a song from the folder browser ended up playing the whole library (and related issues)</li>
+    <li>Fixed a crash when editing tags/setting ringtone from folder browser</li>
+    <li>Fixed a crash when attempting to view/edit tags for certain file types</li>
+    <li>Fixed a crash when sorting by 'album name', then attempting to view the contents of an album</li>
 </ul>
 <h4>1.6.3</h4>
 <ul>
-	<li>Fixed a bug where Podcasts, music stored in the /podcast/ directory and the Podcast playlist didn't show up</li>
-	<li>Added 'fuzzy search' algorithm. Search results are now sorted by how closely they match the query. Thanks Andrew Neal for his help with that.</li>
-	<li>Added option to share songs from more places (via song context menu)</li>
-	<li>Fixed an issue where 'most played' wasn't sorted by 'default'</li>
-	<li>Fixed an issue with search - incorrect results showing up</li>
-	<li>Show track number in detail view (when viewing albums & sorting by default/track number</li>
-	<li>Show disc number in detail view, for multi-disc albums</li>
-	<li>Added option to change grid column count</li>
-	<li>Added option to invert notification icons/text (Settings -> Display)</li>
-	<li>Fixed crash when opening queue</li>
+    <li>Fixed a bug where Podcasts, music stored in the /podcast/ directory and the Podcast playlist didn't show up</li>
+    <li>Added 'fuzzy search' algorithm. Search results are now sorted by how closely they match the query. Thanks Andrew Neal for his help with that.</li>
+    <li>Added option to share songs from more places (via song context menu)</li>
+    <li>Fixed an issue where 'most played' wasn't sorted by 'default'</li>
+    <li>Fixed an issue with search - incorrect results showing up</li>
+    <li>Show track number in detail view (when viewing albums & sorting by default/track number</li>
+    <li>Show disc number in detail view, for multi-disc albums</li>
+    <li>Added option to change grid column count</li>
+    <li>Added option to invert notification icons/text (Settings -> Display)</li>
+    <li>Fixed crash when opening queue</li>
 </ul>
 <h4>1.6.2</h4>
 <ul>
-	<li>Reinstated playlist sorting</li>
-	<li>Fixed tag editing issue for files on SD card</li>
-	<li>Fixed an issue where the queue didn't automatically scroll to the current song</li>
-	<li>Fixed order of playlists in drawer/playlist screen</li>
-	<li>Added fast-scrolling to queue</li>
-	<li>Fixed a crash when reloading the queue</li>
-	<li>Various other crash fixes</li>
+    <li>Reinstated playlist sorting</li>
+    <li>Fixed tag editing issue for files on SD card</li>
+    <li>Fixed an issue where the queue didn't automatically scroll to the current song</li>
+    <li>Fixed order of playlists in drawer/playlist screen</li>
+    <li>Added fast-scrolling to queue</li>
+    <li>Fixed a crash when reloading the queue</li>
+    <li>Various other crash fixes</li>
 </ul>
 <h4>1.6.1</h4>
 <ul>
-	<li>Fixed crash when selecting colors</li>
-	<li>Fixed crash when toggling shuffle</li>
-	<li>Fixed issue where queue covered play/pause/prev/next buttons</li>
-	<li>Fixed location of queue shuffle button on pre-lollipop devices</li>
-	<li>Fixes for the most common crashes reported via Crashlytics</li>
+    <li>Fixed crash when selecting colors</li>
+    <li>Fixed crash when toggling shuffle</li>
+    <li>Fixed issue where queue covered play/pause/prev/next buttons</li>
+    <li>Fixed location of queue shuffle button on pre-lollipop devices</li>
+    <li>Fixes for the most common crashes reported via Crashlytics</li>
 </ul>
 <h4>1.6.0</h4>
 <h4>Album-artist support.</h4>
@@ -185,791 +190,791 @@
 <p>Lots of work has been done on the artwork loading (more info below). Note: Cache cleaners like 'Sd Maid' will delete Shuttle's artwork.. My recommendation is to avoid cache cleaners and instead allow the Android system to manage caches the way they're meant to be managed!</p>
 <h4>Folder browsing:</h4>
 <ul>
-	<li>Improved the folder browser media scanner. Now actually works when scanning a directory.</li>
-	<li>Fixed folder browser crash when attempting to play empty folder</li>
+    <li>Improved the folder browser media scanner. Now actually works when scanning a directory.</li>
+    <li>Fixed folder browser crash when attempting to play empty folder</li>
 </ul>
 <h4>Playlists:</h4>
 <ul>
-	<li>Fixed an issue where playlist sort order was not preserved</li>
-	<li>Fixed an issue where deleting playlist items had no effect</li>
-	<li>Empty playlists don't show up in the nav drawer</li>
-	<li>Playlists are now exported to a folder with a .nomedia file, preventing duplicate playlists from being created.</li>
+    <li>Fixed an issue where playlist sort order was not preserved</li>
+    <li>Fixed an issue where deleting playlist items had no effect</li>
+    <li>Empty playlists don't show up in the nav drawer</li>
+    <li>Playlists are now exported to a folder with a .nomedia file, preventing duplicate playlists from being created.</li>
 </ul>
 <h4>Genres:</h4>
 <ul>
-	<li>Empty genres no longer show up in the genre list</li>
-	<li>Show album &amp; song count for genres</li>
-	<li>Remove empty genres on launch</li>
+    <li>Empty genres no longer show up in the genre list</li>
+    <li>Show album &amp; song count for genres</li>
+    <li>Remove empty genres on launch</li>
 </ul>
 <h4>Artwork:</h4>
 <ul>
-	<li>Fixed an issue with the 'download all' artwork option - where it only downloaded when on WiFi and 'automatic downloading' was enabled</li>
-	<li>Fixed an issue where notification artwork was downloaded each time the notification changed</li>
-	<li>Fixed an issue where prefer embedded artwork actually preferred folder artwork, and vise-versa.</li>
-	<li>Added some logic to use the largest-filesize artwork when faced with a choice between cover/album/artwork.jpg/jpeg/png.</li>
-	<li>Fixed an issue where 'download artwork' option only downloaded album or artist images, instead of both</li>
-	<li>Significantly improved speed of 'download artwork' option in artwork settings</li>
-	<li>Ensure ridiculously large images from Last.fm are downsized before being stored in the cache (nothing bigger than 2048px)</li>
-	<li>Various other improvements to prevent the artwork cache from growing unnecessarily large</li>
-	<li>Fixed an issue where 'download artwork' popped up again if you crashed the app from 'recent tasks'</li>
+    <li>Fixed an issue with the 'download all' artwork option - where it only downloaded when on WiFi and 'automatic downloading' was enabled</li>
+    <li>Fixed an issue where notification artwork was downloaded each time the notification changed</li>
+    <li>Fixed an issue where prefer embedded artwork actually preferred folder artwork, and vise-versa.</li>
+    <li>Added some logic to use the largest-filesize artwork when faced with a choice between cover/album/artwork.jpg/jpeg/png.</li>
+    <li>Fixed an issue where 'download artwork' option only downloaded album or artist images, instead of both</li>
+    <li>Significantly improved speed of 'download artwork' option in artwork settings</li>
+    <li>Ensure ridiculously large images from Last.fm are downsized before being stored in the cache (nothing bigger than 2048px)</li>
+    <li>Various other improvements to prevent the artwork cache from growing unnecessarily large</li>
+    <li>Fixed an issue where 'download artwork' popped up again if you crashed the app from 'recent tasks'</li>
 </ul>
 <h4>Blacklist/Whitelist:</h4>
 <ul>
-	<li>The blacklist and whitelist have been improved. You can now blacklist albums &amp; artists. Also, if all songs belonging to an album are blacklisted, that album no longer shows up in the listing screens.</li>
+    <li>The blacklist and whitelist have been improved. You can now blacklist albums &amp; artists. Also, if all songs belonging to an album are blacklisted, that album no longer shows up in the listing screens.</li>
 </ul>
 <h4>Various:</h4>
 <ul>
-	<li>The tag editor has had a bit of a facelift</li>
-	<li>The 'suggested' screen has been overhauled. Shows more suggestions via horizontal lists.</li>
-	<li>Search has been rewritten. Should fix issue where search results didn't show up for some users.</li>
-	<li>Added selection count to multi-selection toolbar</li>
-	<li>Integrated Firebase Analytics. Shuttle now anonymously tracks events like number of screen views, which tabs get used the most, which colors are used the most, etc. No personally identifiable information is collected. This information will be used to help make informed decisions about future changes to Shuttle.</li>
+    <li>The tag editor has had a bit of a facelift</li>
+    <li>The 'suggested' screen has been overhauled. Shows more suggestions via horizontal lists.</li>
+    <li>Search has been rewritten. Should fix issue where search results didn't show up for some users.</li>
+    <li>Added selection count to multi-selection toolbar</li>
+    <li>Integrated Firebase Analytics. Shuttle now anonymously tracks events like number of screen views, which tabs get used the most, which colors are used the most, etc. No personally identifiable information is collected. This information will be used to help make informed decisions about future changes to Shuttle.</li>
 </ul>
 <h4>Fixes:</h4>
 <ul>
-	<li>Fixed ChromeCast track skipping issue</li>
-	<li>Fixed an issue where 'shuffle all' resulted in the same song being played first each time</li>
-	<li>Fixed multi-selection highlight issue for album-artists</li>
-	<li>Too many crash fixes to detail here.</li>
-	<li>Fixed an issue where the color palette didn't change for upgraded users</li>
+    <li>Fixed ChromeCast track skipping issue</li>
+    <li>Fixed an issue where 'shuffle all' resulted in the same song being played first each time</li>
+    <li>Fixed multi-selection highlight issue for album-artists</li>
+    <li>Too many crash fixes to detail here.</li>
+    <li>Fixed an issue where the color palette didn't change for upgraded users</li>
 </ul>
 <h4>Other</h4>
 <ul>
-	<li>Accessibility improvements</li>
-	<li>Updated translations</li>
+    <li>Accessibility improvements</li>
+    <li>Updated translations</li>
 </ul>
 
 <h4>1.5.15</h4>
 <ul>
-	<li>Added 'check for duplicates' when adding to playlist</li>
-	<li>Fixed notification layout issues on G3 & G4</li>
-	<li>Fixed issue where changes to artwork settings weren't persisted</li>
-	<li>Potential fix for Now Playing artwork aspect ratio issue</li>
-	<li>Crash fix for Alcatel OneTouch Pop devices</li>
-	<li>Fixes for the most common crashes reported via Crashlytics</li>
+    <li>Added 'check for duplicates' when adding to playlist</li>
+    <li>Fixed notification layout issues on G3 & G4</li>
+    <li>Fixed issue where changes to artwork settings weren't persisted</li>
+    <li>Potential fix for Now Playing artwork aspect ratio issue</li>
+    <li>Crash fix for Alcatel OneTouch Pop devices</li>
+    <li>Fixes for the most common crashes reported via Crashlytics</li>
 </ul>
 <h4>1.5.14</h4>
 <ul>
-	<li>Fixed a major issue where the app would hang/crash when attempting to play from the 'most played' playlist, in some specific situations</li>
-	<li>Remove items from 'most played' when they no longer exist in the MediaStore</li>
-	<li>Updated notification style for Android N</li>
-	<li>Fixed an issue where widgets artwork didn't change to placeholder when artwork isn't found</li>
-	<li>Fixed a crash specific to OPO devices running Android 6.0.1</li>
-	<li>Fixed a crash occurring when headset 'play' button is pressed but the app doesn't have required permissions</li>
-	<li>Fixed a crash occurring when moving playlist items</li>
-	<li>Fixed a crash occurring when attempting to update the play count</li>
-	<li>Fixes for the most common crashes reported via Crashlytics</li>
+    <li>Fixed a major issue where the app would hang/crash when attempting to play from the 'most played' playlist, in some specific situations</li>
+    <li>Remove items from 'most played' when they no longer exist in the MediaStore</li>
+    <li>Updated notification style for Android N</li>
+    <li>Fixed an issue where widgets artwork didn't change to placeholder when artwork isn't found</li>
+    <li>Fixed a crash specific to OPO devices running Android 6.0.1</li>
+    <li>Fixed a crash occurring when headset 'play' button is pressed but the app doesn't have required permissions</li>
+    <li>Fixed a crash occurring when moving playlist items</li>
+    <li>Fixed a crash occurring when attempting to update the play count</li>
+    <li>Fixes for the most common crashes reported via Crashlytics</li>
 </ul>
 <h4>1.5.13</h4>
 <ul>
-	<li>Added album art to 'up next'</li>
-	<li>Added custom color picker</li>
-	<li>Fixed an issue where when pausing the app and swiping away from recents, the notification came back after a couple of seconds</li>
-	<li>Completely overhauled artwork loading/downloading. Reduced memory usage &amp; improved scrolling performance. Note, you will have to re-download your artwork.</li>
-	<li>Added 'album-artist' metadata to the lockscreen (may be used by some devices)</li>
-	<li>ChromeCast updates/fixes</li>
-	<li>Various behind the scenes changes to navigation.. Should feel a bit more fluid when changing screens.</li>
-	<li>Fixed an issue where artist didn't show on some bluetooth devices</li>
-	<li>Fixed a line break issue for lyrics</li>
-	<li>Replaced ListView with RecyclerView everywhere. Nicer animations when sorting, changing view types etc.</li>
-	<li>Fixed an issue on older Android versions where the notification 'x' didn't work</li>
-	<li>Fixed an issue where&nbsp;message didn't display when setting sleep timer</li>
-	<li>Fixed an issue where collapsing the queue didn't set the title back to 'library' (and similar related issues)</li>
-	<li>Fixed issue when attempting to create playlists from folder browser</li>
-	<li>Fixed issue where queue FAB would disappear when exiting &amp; returning to app</li>
-	<li>Fixed issue where queue would close when rotating screen/exiting &amp; returning to app</li>
-	<li>Fixed an issue where the play/pause icon had a gap in the middle on some devices</li>
-	<li>Fixed a crash occurring when tag editor finishes editing</li>
-	<li>Fixed an issue where now playing screen didn't show when returning to app</li>
-	<li>Fixed an issue where the action bar was transparent when returning to app</li>
-	<li>Fixed an issue where the 'choose tab items' drag &amp; drop didn't work properly for some&nbsp;users</li>
-	<li>Fixed issue where sorting showed up multiple times in menu</li>
-	<li>Fixed issue where ringtone couldn't be set on Android M</li>
-	<li>Fixed a crash occurring when exiting detail screen while scrolling</li>
-	<li>Fixed crashes when retrieving artist &amp; album bios</li>
-	<li>Fixed a crash when editing tags</li>
-	<li>Fixed issue where artwork disappeared from now- when rotating.</li>
-	<li>Fixed issue where 'download artwork' stopped before it was finished</li>
-	<li>Fixed issue where double tapping for lyrics didn't open lyrics</li>
-	<li>Fixed an issue where 'remove from queue' didn't remove from queue</li>
-	<li>Fixed an issue where images disappeared from lists and didn't reappear until you scroll away and back again</li>
-	<li>Fixed an issue where albums didn't show up in the artist/playlist/genre view if the songs loaded after the albums did</li>
-	<li>Fixed an issue where 'show file names' wasn't persisted in folder browser</li>
-	<li>Minor Search UI fixes</li>
-	<li>Removed 'tint status bar' option</li>
+    <li>Added album art to 'up next'</li>
+    <li>Added custom color picker</li>
+    <li>Fixed an issue where when pausing the app and swiping away from recents, the notification came back after a couple of seconds</li>
+    <li>Completely overhauled artwork loading/downloading. Reduced memory usage &amp; improved scrolling performance. Note, you will have to re-download your artwork.</li>
+    <li>Added 'album-artist' metadata to the lockscreen (may be used by some devices)</li>
+    <li>ChromeCast updates/fixes</li>
+    <li>Various behind the scenes changes to navigation.. Should feel a bit more fluid when changing screens.</li>
+    <li>Fixed an issue where artist didn't show on some bluetooth devices</li>
+    <li>Fixed a line break issue for lyrics</li>
+    <li>Replaced ListView with RecyclerView everywhere. Nicer animations when sorting, changing view types etc.</li>
+    <li>Fixed an issue on older Android versions where the notification 'x' didn't work</li>
+    <li>Fixed an issue where&nbsp;message didn't display when setting sleep timer</li>
+    <li>Fixed an issue where collapsing the queue didn't set the title back to 'library' (and similar related issues)</li>
+    <li>Fixed issue when attempting to create playlists from folder browser</li>
+    <li>Fixed issue where queue FAB would disappear when exiting &amp; returning to app</li>
+    <li>Fixed issue where queue would close when rotating screen/exiting &amp; returning to app</li>
+    <li>Fixed an issue where the play/pause icon had a gap in the middle on some devices</li>
+    <li>Fixed a crash occurring when tag editor finishes editing</li>
+    <li>Fixed an issue where now playing screen didn't show when returning to app</li>
+    <li>Fixed an issue where the action bar was transparent when returning to app</li>
+    <li>Fixed an issue where the 'choose tab items' drag &amp; drop didn't work properly for some&nbsp;users</li>
+    <li>Fixed issue where sorting showed up multiple times in menu</li>
+    <li>Fixed issue where ringtone couldn't be set on Android M</li>
+    <li>Fixed a crash occurring when exiting detail screen while scrolling</li>
+    <li>Fixed crashes when retrieving artist &amp; album bios</li>
+    <li>Fixed a crash when editing tags</li>
+    <li>Fixed issue where artwork disappeared from now- when rotating.</li>
+    <li>Fixed issue where 'download artwork' stopped before it was finished</li>
+    <li>Fixed issue where double tapping for lyrics didn't open lyrics</li>
+    <li>Fixed an issue where 'remove from queue' didn't remove from queue</li>
+    <li>Fixed an issue where images disappeared from lists and didn't reappear until you scroll away and back again</li>
+    <li>Fixed an issue where albums didn't show up in the artist/playlist/genre view if the songs loaded after the albums did</li>
+    <li>Fixed an issue where 'show file names' wasn't persisted in folder browser</li>
+    <li>Minor Search UI fixes</li>
+    <li>Removed 'tint status bar' option</li>
 </ul>
 <h4>1.5.12</h4>
 <ul>
-	<li>Fixed a crash occurring when trying to set a ringtone</li>
-	<li>ChromeCast related fixes/improvements. Adjusting ChromeCast volume works much better now.</li>
-	<li>Fixed some text color issues. The toolbar/actionbar title color is now pure white, instead of semi-transparent.</li>
-	<li>Fixed a styling issue for the 'add to queue' button on the now playing screen on large, landscape oriented devices when ChromeCast is not available.</li>
-	<li>Attempt to fix a crash occurring on Amazon devices when attempting to access favorites playlist</li>
-	<li>Fixed an issue where viewing an artist with no albums showed a blank space where the albums would otherwise be</li>
-	<li>Fixed some permissions related crashes</li>
-	<li>Various other minor crash fixes</li>
+    <li>Fixed a crash occurring when trying to set a ringtone</li>
+    <li>ChromeCast related fixes/improvements. Adjusting ChromeCast volume works much better now.</li>
+    <li>Fixed some text color issues. The toolbar/actionbar title color is now pure white, instead of semi-transparent.</li>
+    <li>Fixed a styling issue for the 'add to queue' button on the now playing screen on large, landscape oriented devices when ChromeCast is not available.</li>
+    <li>Attempt to fix a crash occurring on Amazon devices when attempting to access favorites playlist</li>
+    <li>Fixed an issue where viewing an artist with no albums showed a blank space where the albums would otherwise be</li>
+    <li>Fixed some permissions related crashes</li>
+    <li>Various other minor crash fixes</li>
 </ul>
 <h4>1.5.11</h4>
 <ul>
-	<li>Fixed default album & artist sort order (no longer alphabetical)</li>
-	<li>Some minor performance improvements</li>
-	<li>Fixed a major crash affecting anyone using dashclock/apps which integrate dashclock</li>
-	<li>Various music playback related crash fixes</li>
-	<li>Fixed an issue where directories containing a period displayed an incorrect name</li>
-	<li>Fixed 'green tint' artwork issue</li>
+    <li>Fixed default album & artist sort order (no longer alphabetical)</li>
+    <li>Some minor performance improvements</li>
+    <li>Fixed a major crash affecting anyone using dashclock/apps which integrate dashclock</li>
+    <li>Various music playback related crash fixes</li>
+    <li>Fixed an issue where directories containing a period displayed an incorrect name</li>
+    <li>Fixed 'green tint' artwork issue</li>
 </ul>
 <h4>1.5.10</h4>
 <ul>
-	<li>Added support for Android 6.0 Marshmallow</li>
-	<li>Moved 'shuffle all' button from settings menu to above 'songs' list</li>
-	<li>Fast scroller / alphabet indexer now respects sort order</li>
-	<li>Shuffle all now respects whitelist/blacklist</li>
-	<li>Rewrote search. Fixed issue where no results showed up. Made Search open instantly on click</li>
-	<li>Added search word highlighting (thanks Andrew Neal)</li>
-	<li>Show voice search query in search view</li>
-	<li>Major folder browser work. Go see for yourself!</li>
-	<li>Added a 'snackbar' asking you to rate the app. Shown for 15 seconds on the 10th, 50th, 100th, 150th, etc. time you launch the app. This will never show again if you click 'rate it' (you don't have to leave a rating)</li>
-	<li>Added option to tint navigation bar</li>
-	<li>Dark themed changelog!!</li>
-	<li>Fixed whitelist checkbox padding issue</li>
-	<li>Reduced APK size from ~7.5mb to ~5.0mb!</li>
-	<li>Sorting overhaul</li>
-	<li>Added sorting options to 'detail' activity</li>
-	<li>Added Wake Lock permission request on Marshmallow - wake locks are required for Shuttle to run (the MusicService needs to be awake to play music, among other things)</li>
-	<li>Updated the item selection ripple animation</li>
-	<li>Updated the dialog for deleting multiple artists, albums or songs (thanks Andrew Neal)</li>
-	<li>Updated the changelog to include this message (Meta)</li>
-	<li>Updated launcher icon (thanks Rink)</li>
-	<li>Re-added close button pre-lollipop</li>
-	<li>Moved settings menu to drawer.</li>
-	<li>Added bluetooth 'resume on connect' option. Like headset, probably doesn't work unless Shuttle is already running.. TBC</li>
-	<li>Removed support for API versions below Jellybean</li>
-	<li>Various UI tweaks in accordance with Material Spec</li>
-	<li>Background service timeout increased from 1 to 5 minutes</li>
-	<li>Previous button added to notification. Swipe when paused to dismiss.</li>
-	<li>Playlists moved to collapsible heading in drawer</li>
-	<li>Re-added 'remove from playlist' option</li>
-	<li>Updated translations</li>
-	<li>Added option to cancel artwork downloads from notification</li>
-	<li>Updated playlist view. Fixed issue where playlist items couldn't be removed</li>
-	<li>Fixed issue where moving items in list caused a momentary flicker</li>
-	<li>Scan library option has been removed. This literally did nothing. You can now scan files via the folder browser.</li>
+    <li>Added support for Android 6.0 Marshmallow</li>
+    <li>Moved 'shuffle all' button from settings menu to above 'songs' list</li>
+    <li>Fast scroller / alphabet indexer now respects sort order</li>
+    <li>Shuffle all now respects whitelist/blacklist</li>
+    <li>Rewrote search. Fixed issue where no results showed up. Made Search open instantly on click</li>
+    <li>Added search word highlighting (thanks Andrew Neal)</li>
+    <li>Show voice search query in search view</li>
+    <li>Major folder browser work. Go see for yourself!</li>
+    <li>Added a 'snackbar' asking you to rate the app. Shown for 15 seconds on the 10th, 50th, 100th, 150th, etc. time you launch the app. This will never show again if you click 'rate it' (you don't have to leave a rating)</li>
+    <li>Added option to tint navigation bar</li>
+    <li>Dark themed changelog!!</li>
+    <li>Fixed whitelist checkbox padding issue</li>
+    <li>Reduced APK size from ~7.5mb to ~5.0mb!</li>
+    <li>Sorting overhaul</li>
+    <li>Added sorting options to 'detail' activity</li>
+    <li>Added Wake Lock permission request on Marshmallow - wake locks are required for Shuttle to run (the MusicService needs to be awake to play music, among other things)</li>
+    <li>Updated the item selection ripple animation</li>
+    <li>Updated the dialog for deleting multiple artists, albums or songs (thanks Andrew Neal)</li>
+    <li>Updated the changelog to include this message (Meta)</li>
+    <li>Updated launcher icon (thanks Rink)</li>
+    <li>Re-added close button pre-lollipop</li>
+    <li>Moved settings menu to drawer.</li>
+    <li>Added bluetooth 'resume on connect' option. Like headset, probably doesn't work unless Shuttle is already running.. TBC</li>
+    <li>Removed support for API versions below Jellybean</li>
+    <li>Various UI tweaks in accordance with Material Spec</li>
+    <li>Background service timeout increased from 1 to 5 minutes</li>
+    <li>Previous button added to notification. Swipe when paused to dismiss.</li>
+    <li>Playlists moved to collapsible heading in drawer</li>
+    <li>Re-added 'remove from playlist' option</li>
+    <li>Updated translations</li>
+    <li>Added option to cancel artwork downloads from notification</li>
+    <li>Updated playlist view. Fixed issue where playlist items couldn't be removed</li>
+    <li>Fixed issue where moving items in list caused a momentary flicker</li>
+    <li>Scan library option has been removed. This literally did nothing. You can now scan files via the folder browser.</li>
 </ul>
 <h5>Performance</h5>
 <ul>
-	<li>Major performance improvements. Increased number of concurrent background tasks</li>
-	<li>Artwork downloading fixes &amp; improvements. No more &gt;100% downloads.</li>
-	<li>Flattened the view hierarchy for lots of ListView items. (General performance improvement)</li>
-	<li>Fixed several memory leaks</li>
+    <li>Major performance improvements. Increased number of concurrent background tasks</li>
+    <li>Artwork downloading fixes &amp; improvements. No more &gt;100% downloads.</li>
+    <li>Flattened the view hierarchy for lots of ListView items. (General performance improvement)</li>
+    <li>Fixed several memory leaks</li>
 </ul>
 <h5>General Fixes</h5>
 <ul>
-	<li>Fixed issue where tapping playlist items wouldn't play them</li>
-	<li>Fixed off-by-one when using multi-selector for playlists</li>
-	<li>Fixed some delay issues when hitting play/pause</li>
-	<li>Fixed issue where tapping a song would play a song several places above</li>
-	<li>Fixed issue where 'now playing' artwork was blank when launching app</li>
-	<li>Fixed issue where playing indicator didn't update when track changes</li>
-	<li>Fixed a couple of cursor leaks</li>
-	<li>Fixed dialog background color issues</li>
-	<li>Fixed issue where tabs would get cut off</li>
-	<li>Fixed issue where artwork wouldn't update from the tag editor</li>
+    <li>Fixed issue where tapping playlist items wouldn't play them</li>
+    <li>Fixed off-by-one when using multi-selector for playlists</li>
+    <li>Fixed some delay issues when hitting play/pause</li>
+    <li>Fixed issue where tapping a song would play a song several places above</li>
+    <li>Fixed issue where 'now playing' artwork was blank when launching app</li>
+    <li>Fixed issue where playing indicator didn't update when track changes</li>
+    <li>Fixed a couple of cursor leaks</li>
+    <li>Fixed dialog background color issues</li>
+    <li>Fixed issue where tabs would get cut off</li>
+    <li>Fixed issue where artwork wouldn't update from the tag editor</li>
 </ul>
 <h5>Crash Fixes</h5>
 <ul>
-	<li>Fixed Chromecast crash</li>
-	<li>Fixed playlist shuffle crash &amp; playlist slideshow crash</li>
-	<li>Fixed 'set as ringtone' crash on pre Marshmallow</li>
-	<li>Fixed several network crashes</li>
-	<li>Fixed several folder browser crashes</li>
-	<li>Fixed search crash</li>
-	<li>Fixed a crash occurring when attempting to play songs</li>
-	<li>Fixed a crash when trying to rename a folder</li>
-	<li>Fixed several tag editing crashes</li>
-	<li>Fixed an equalizer crash</li>
-	<li>Fixed crash when attempting to open 'recently played' list</li>
-	<li>Fixed a bunch of crashes to do with sorting</li>
-	<li>Fixed a crash when trying to save an auto-generated playlist as m3u</li>
-	<li>Fixed a navigation drawer crash</li>
-	<li>Tons of various unspecified crash fixes</li>
+    <li>Fixed Chromecast crash</li>
+    <li>Fixed playlist shuffle crash &amp; playlist slideshow crash</li>
+    <li>Fixed 'set as ringtone' crash on pre Marshmallow</li>
+    <li>Fixed several network crashes</li>
+    <li>Fixed several folder browser crashes</li>
+    <li>Fixed search crash</li>
+    <li>Fixed a crash occurring when attempting to play songs</li>
+    <li>Fixed a crash when trying to rename a folder</li>
+    <li>Fixed several tag editing crashes</li>
+    <li>Fixed an equalizer crash</li>
+    <li>Fixed crash when attempting to open 'recently played' list</li>
+    <li>Fixed a bunch of crashes to do with sorting</li>
+    <li>Fixed a crash when trying to save an auto-generated playlist as m3u</li>
+    <li>Fixed a navigation drawer crash</li>
+    <li>Tons of various unspecified crash fixes</li>
 </ul>
 <h4>1.5.9</h4>
 <ul>
-	<li>Fixed the skip/repeat bug</li>
+    <li>Fixed the skip/repeat bug</li>
 </ul>
 <h4>1.5.8</h4>
 <ul>
-	<li>Fixed (again) an issue where tracks repeat/skip for no apparent reason</li>
-	<li>Fixed (again) a crash occurring with LG QuickCircle activity</li>
-	<li>Fixed 'share audio file' bug.</li>
-	<li>Added data usage warning dialog before starting manual artwork download.</li>
-	<li>Various minor crash fixes</li>
+    <li>Fixed (again) an issue where tracks repeat/skip for no apparent reason</li>
+    <li>Fixed (again) a crash occurring with LG QuickCircle activity</li>
+    <li>Fixed 'share audio file' bug.</li>
+    <li>Added data usage warning dialog before starting manual artwork download.</li>
+    <li>Various minor crash fixes</li>
 </ul>
 <h4>1.5.6</h4>
 <ul>
-	<li>Fixed Last.fm artwork downloading issues</li>
-	<li>Lots of crash fixes</li>
-	<li>Added a few extra color schemes for the free version users :)</li>
+    <li>Fixed Last.fm artwork downloading issues</li>
+    <li>Lots of crash fixes</li>
+    <li>Added a few extra color schemes for the free version users :)</li>
 </ul>
 <h4>1.5.5</h4>
 <ul>
-	<li>Major equalizer overhaul. Reduced EQ 'popping' &amp; fixed issue where EQ turns off after a track ends. Added virtualizer.</li>
-	<li>Whole bunch of crash fixes</li>
-	<li>Fixed issues where incorrect artwork displayed on the 'now playing' screen</li>
-	<li>Fixed an incredibly annoying bug where pressing the close button on the queue would collapse the now playing panel instead of closing the queue</li>
-	<li>Updated translations</li>
-	<li>Updated the scrobbling icon</li>
-	<li>Re-enabled tag editing on files stored on the SD Card on Android 5.0+</li>
+    <li>Major equalizer overhaul. Reduced EQ 'popping' &amp; fixed issue where EQ turns off after a track ends. Added virtualizer.</li>
+    <li>Whole bunch of crash fixes</li>
+    <li>Fixed issues where incorrect artwork displayed on the 'now playing' screen</li>
+    <li>Fixed an incredibly annoying bug where pressing the close button on the queue would collapse the now playing panel instead of closing the queue</li>
+    <li>Updated translations</li>
+    <li>Updated the scrobbling icon</li>
+    <li>Re-enabled tag editing on files stored on the SD Card on Android 5.0+</li>
 </ul>
 <h4>1.5.4</h4>
 <ul>
-	<li>Added 'black' base theme</li>
-	<li>Crash fixes</li>
-	<li>Fixed some device rotation issues</li>
-	<li>Fixed an issue where the queue button would disappear</li>
+    <li>Added 'black' base theme</li>
+    <li>Crash fixes</li>
+    <li>Fixed some device rotation issues</li>
+    <li>Fixed an issue where the queue button would disappear</li>
 </ul>
 <h4>1.5.3</h4>
 <ul>
-	<li>Artist/Album &amp; Genre detail screen redesign.</li>
-	<li>Huge image caching rewrite.</li>
-	<li>Added option to view lists using palette, cards, material style grid, or lists (see 'view as' option).</li>
-	<li>Massively reduced memory usage.</li>
-	<li>Added song info dialog.</li>
-	<li>Added option to circumvent MediaStore when retrieving artwork from tags.</li>
-	<li>New queue UI!</li>
-	<li>Added option to blacklist &amp; view song info in queue.</li>
-	<li>Fixed suggested layout alignment.</li>
-	<li>Updated theme colours to match Material design spec.</li>
-	<li>Fixed issue where system equalizer would not launch on some devices.</li>
-	<li>Fixed issue where multi-selected items in the queue didn't show as selected.</li>
-	<li>Fixed theming issues for edit text fields.</li>
-	<li>Added option to view &amp; edit white/blacklists, and update whitelist. (Via settings)</li>
-	<li>Added option to restore purchases from settings, for those having trouble with Shuttle recognising their upgrade.</li>
-	<li>Added circular ripple effect behind image buttons.</li>
-	<li>New animated play/pause button. Thanks to Alex Lockwood for making that easy.</li>
-	<li>Removed nonsensical hamburger animation.</li>
-	<li>Major performance improvements.</li>
-	<li>Various bug fixes.</li>
+    <li>Artist/Album &amp; Genre detail screen redesign.</li>
+    <li>Huge image caching rewrite.</li>
+    <li>Added option to view lists using palette, cards, material style grid, or lists (see 'view as' option).</li>
+    <li>Massively reduced memory usage.</li>
+    <li>Added song info dialog.</li>
+    <li>Added option to circumvent MediaStore when retrieving artwork from tags.</li>
+    <li>New queue UI!</li>
+    <li>Added option to blacklist &amp; view song info in queue.</li>
+    <li>Fixed suggested layout alignment.</li>
+    <li>Updated theme colours to match Material design spec.</li>
+    <li>Fixed issue where system equalizer would not launch on some devices.</li>
+    <li>Fixed issue where multi-selected items in the queue didn't show as selected.</li>
+    <li>Fixed theming issues for edit text fields.</li>
+    <li>Added option to view &amp; edit white/blacklists, and update whitelist. (Via settings)</li>
+    <li>Added option to restore purchases from settings, for those having trouble with Shuttle recognising their upgrade.</li>
+    <li>Added circular ripple effect behind image buttons.</li>
+    <li>New animated play/pause button. Thanks to Alex Lockwood for making that easy.</li>
+    <li>Removed nonsensical hamburger animation.</li>
+    <li>Major performance improvements.</li>
+    <li>Various bug fixes.</li>
 </ul>
 <h4>1.5.2</h4>
 <ul>
-	<li>Added QuickLyric support for online lyrics (double tap the artwork in the now playing screen)</li>
-	<li>Navigation drawer overlays status bar on Kitkat</li>
-	<li>Fixed Toolbar height issue in album/artist activity</li>
-	<li>Fixed major issue on older devices, where Toolbar wasn't visible in artist/album activity</li>
-	<li>Fixed issue where home button didn't do anything when 'now playing' screen is visible from the main screen</li>
-	<li>Fixed fast scroll issues</li>
-	<li>Reworked the way darker color variants are determined</li>
-	<li>Materialised the Navigation Drawer.</li>
-	<li>Reinstated option to disable lockscreen artwork. Note that this is just the artwork - controls aren't optional anymore..</li>
-	<li>Fixed Lollipop headset/wear/bluetooth controls</li>
-	<li>Fixed contextual actionbar color issue</li>
-	<li>Various crash fixes</li>
+    <li>Added QuickLyric support for online lyrics (double tap the artwork in the now playing screen)</li>
+    <li>Navigation drawer overlays status bar on Kitkat</li>
+    <li>Fixed Toolbar height issue in album/artist activity</li>
+    <li>Fixed major issue on older devices, where Toolbar wasn't visible in artist/album activity</li>
+    <li>Fixed issue where home button didn't do anything when 'now playing' screen is visible from the main screen</li>
+    <li>Fixed fast scroll issues</li>
+    <li>Reworked the way darker color variants are determined</li>
+    <li>Materialised the Navigation Drawer.</li>
+    <li>Reinstated option to disable lockscreen artwork. Note that this is just the artwork - controls aren't optional anymore..</li>
+    <li>Fixed Lollipop headset/wear/bluetooth controls</li>
+    <li>Fixed contextual actionbar color issue</li>
+    <li>Various crash fixes</li>
 </ul>
 <h4>1.5.1</h4>
 <ul>
-	<li>Minor bug fixes</li>
+    <li>Minor bug fixes</li>
 </ul>
 <h4>1.5.0</h4>
 <ul>
-	<li>Material redesign!</li>
-	<li>Built in embedded-artwork scanner</li>
-	<li>Option to download artwork from iTunes instead of Last.fm</li>
-	<li>Removed MusixMatch support forever</li>
-	<li>You can now upgrade the free version via IAP.</li>
-	<li>New 'support' menu: Version info, e-mail me, link to the FAQ, DONATE ALL YOUR MONEY!</li>
-	<li>Lots of behind-the-scenes improvements</li>
-	<li>Removed Google Analytics</li>
-	<li>Fixed issue where tags wouldn't save when changing text case</li>
-	<li>Added lyrics &amp; comment editing to tag editor</li>
-	<li>Brought back the sliding panel. Phones only</li>
-	<li>Updated icon</li>
-	<li>Added new 'suggested' view</li>
-	<li>Fixed a huge number of crashes &amp; bugs</li>
-	<li>Made the sliding up panel more responsive</li>
-	<li>Some major performance improvements</li>
-	<li>Updated translations</li>
+    <li>Material redesign!</li>
+    <li>Built in embedded-artwork scanner</li>
+    <li>Option to download artwork from iTunes instead of Last.fm</li>
+    <li>Removed MusixMatch support forever</li>
+    <li>You can now upgrade the free version via IAP.</li>
+    <li>New 'support' menu: Version info, e-mail me, link to the FAQ, DONATE ALL YOUR MONEY!</li>
+    <li>Lots of behind-the-scenes improvements</li>
+    <li>Removed Google Analytics</li>
+    <li>Fixed issue where tags wouldn't save when changing text case</li>
+    <li>Added lyrics &amp; comment editing to tag editor</li>
+    <li>Brought back the sliding panel. Phones only</li>
+    <li>Updated icon</li>
+    <li>Added new 'suggested' view</li>
+    <li>Fixed a huge number of crashes &amp; bugs</li>
+    <li>Made the sliding up panel more responsive</li>
+    <li>Some major performance improvements</li>
+    <li>Updated translations</li>
 </ul>
 <h4>1.4.10</h4>
 <ul>
-	<li>More bug fixes. The app should crash far less frequently, however I'm still prioritising bug fixes, and I will be keeping a close eye on remaining bugs</li>
-	<li>Updated translations.</li>
-	<li>Significantly reduced RAM usage</li>
-	<li>Performance improvements</li>
+    <li>More bug fixes. The app should crash far less frequently, however I'm still prioritising bug fixes, and I will be keeping a close eye on remaining bugs</li>
+    <li>Updated translations.</li>
+    <li>Significantly reduced RAM usage</li>
+    <li>Performance improvements</li>
 </ul>
 <h4>1.4.9</h4>
 <ul>
-	<li>Tons of force closure fixes</li>
-	<li>Added accessibility support for on screen buttons</li>
-	<li>Added support for Crashlytics. Expect the app to become much more stable by the next release</li>
-	<li>Added new 'detail' screen for genres. You can now view genres by album.</li>
-	<li>Added preliminary support for Android 5.0. Note that Lyrics via MusixMatch are not available on 5.0 until MusixMatch update their sdk.</li>
+    <li>Tons of force closure fixes</li>
+    <li>Added accessibility support for on screen buttons</li>
+    <li>Added support for Crashlytics. Expect the app to become much more stable by the next release</li>
+    <li>Added new 'detail' screen for genres. You can now view genres by album.</li>
+    <li>Added preliminary support for Android 5.0. Note that Lyrics via MusixMatch are not available on 5.0 until MusixMatch update their sdk.</li>
 </ul>
 <h4>1.4.8</h4>
 <ul>
-	<li>Fixed settings background color issues</li>
-	<li>Fixed issue where closing app from search would cause music to stop playing</li>
-	<li>Playing a song from search now adds all other songs from the list, and turns shuffle on automatically</li>
-	<li>Playing an individual song from voice search now adds all other songs by the same artist to the queue (and turns shuffle on)</li>
-	<li>Playing any item (artist/album/song) from voice-search now turns shuffle on</li>
-	<li>Fixed a bunch of force close bugs</li>
-	<li>Fixed issue where widget icon colors changed depending on the base theme</li>
-	<li>Added option to clear favorites &amp; most-played</li>
-	<li>Added Google Analytics. No personal data is collected. You may opt out via the settings menu.</li>
+    <li>Fixed settings background color issues</li>
+    <li>Fixed issue where closing app from search would cause music to stop playing</li>
+    <li>Playing a song from search now adds all other songs from the list, and turns shuffle on automatically</li>
+    <li>Playing an individual song from voice search now adds all other songs by the same artist to the queue (and turns shuffle on)</li>
+    <li>Playing any item (artist/album/song) from voice-search now turns shuffle on</li>
+    <li>Fixed a bunch of force close bugs</li>
+    <li>Fixed issue where widget icon colors changed depending on the base theme</li>
+    <li>Added option to clear favorites &amp; most-played</li>
+    <li>Added Google Analytics. No personal data is collected. You may opt out via the settings menu.</li>
 </ul>
 <h4>1.4.7</h4>
 <ul>
-	<li>Fixed some force close bugs</li>
+    <li>Fixed some force close bugs</li>
 </ul>
 <h4>1.4.6</h4>
 <ul>
-	<li>Updated settings layout</li>
-	<li>Fixed some theme issues</li>
-	<li>Major UI update</li>
-	<li>Added Material icons</li>
-	<li>Added swipe controls to mini-player (swipe left to skip, right to go back)</li>
-	<li>Added SeekBar to mini-player</li>
-	<li>Added more color options</li>
-	<li>Fixed some bugs</li>
-	<li>New shuffle/queue system</li>
-	<li>Updated translations</li>
-	<li>ChromeCast icon no longer shows when ChromeCast is not available</li>
-	<li>ChromeCast artwork correctly updates on track change</li>
-	<li>Themes apply automatically when changing colors</li>
-	<li>Fixed issue with 'invert widget' option</li>
-	<li>Newly themed settings menu</li>
+    <li>Updated settings layout</li>
+    <li>Fixed some theme issues</li>
+    <li>Major UI update</li>
+    <li>Added Material icons</li>
+    <li>Added swipe controls to mini-player (swipe left to skip, right to go back)</li>
+    <li>Added SeekBar to mini-player</li>
+    <li>Added more color options</li>
+    <li>Fixed some bugs</li>
+    <li>New shuffle/queue system</li>
+    <li>Updated translations</li>
+    <li>ChromeCast icon no longer shows when ChromeCast is not available</li>
+    <li>ChromeCast artwork correctly updates on track change</li>
+    <li>Themes apply automatically when changing colors</li>
+    <li>Fixed issue with 'invert widget' option</li>
+    <li>Newly themed settings menu</li>
 </ul>
 <h4>1.4.5</h4>
 <ul>
-	<li>Fixed force close error introduced in previous update</li>
-	<li>Fixed issue where Gmail style placeholders would only display english characters</li>
+    <li>Fixed force close error introduced in previous update</li>
+    <li>Fixed issue where Gmail style placeholders would only display english characters</li>
 </ul>
 <h4>1.4.4</h4>
 <ul>
-	<li>Updated icon</li>
-	<li>Fixed dropdown menu style</li>
-	<li>Added on-screen ChromeCast volume controls</li>
-	<li>Various ChromeCast related fixes</li>
-	<li>Added Gmail style placeholders to widgets &amp; notifications</li>
-	<li>Added warning prompt to 'delete artwork' button</li>
-	<li>Updated translations</li>
+    <li>Updated icon</li>
+    <li>Fixed dropdown menu style</li>
+    <li>Added on-screen ChromeCast volume controls</li>
+    <li>Various ChromeCast related fixes</li>
+    <li>Added Gmail style placeholders to widgets &amp; notifications</li>
+    <li>Added warning prompt to 'delete artwork' button</li>
+    <li>Updated translations</li>
 </ul>
 <h4>1.4.3</h4>
 <ul>
-	<li>Fixed tag editing issue. Batch-editing artists or albums now works again, instead of just changing the tags of one song</li>
-	<li>Fixed crash caused by 'Gmail style' placeholders</li>
-	<li>Removed 'android icon' from empty Gmail-style placeholders when the text is unknown</li>
-	<li>Updated translations</li>
-	<li>Added option to pause when bluetooth is disconnected. (On by default)(Untested)</li>
+    <li>Fixed tag editing issue. Batch-editing artists or albums now works again, instead of just changing the tags of one song</li>
+    <li>Fixed crash caused by 'Gmail style' placeholders</li>
+    <li>Removed 'android icon' from empty Gmail-style placeholders when the text is unknown</li>
+    <li>Updated translations</li>
+    <li>Added option to pause when bluetooth is disconnected. (On by default)(Untested)</li>
 </ul>
 <h4>1.4.2</h4>
 <ul>
-	<li>Fixed issue where wrong artwork was displayed</li>
-	<li>Brought back 'Gmail style' placeholders (disabled by default, go to settings -&gt; artwork to enable)</li>
-	<li>Fixed random force-closure error</li>
-	<li>Fixed bug where 'default page' was not respected</li>
+    <li>Fixed issue where wrong artwork was displayed</li>
+    <li>Brought back 'Gmail style' placeholders (disabled by default, go to settings -&gt; artwork to enable)</li>
+    <li>Fixed random force-closure error</li>
+    <li>Fixed bug where 'default page' was not respected</li>
 </ul>
 <h4>1.4.1</h4>
 <ul>
-	<li>Fixed settings crash</li>
-	<li>Minor bug fixes</li>
+    <li>Fixed settings crash</li>
+    <li>Minor bug fixes</li>
 </ul>
 <h4>1.4.0</h4>
 <ul>
-	<li>Significantly reduced app size</li>
-	<li>Removed cards view for list items</li>
-	<li>Tag editing fixes</li>
-	<li>Added LG QuickCircle support</li>
-	<li>Completely overhauled theme system</li>
-	<li>New widget options</li>
-	<li>Fixed crash when opening podcasts</li>
-	<li>Removed STICKY_BROADCAST permission</li>
-	<li>Various bugfixes</li>
-	<li>Fixed issue where artwork wouldn't display on first run</li>
-	<li>Updated translations</li>
-	<li>Reduced time between headset disconnecting and music pausing</li>
-	<li>Fixed issue where album art would get out of sync</li>
-	<li>Removed gmail style placeholders</li>
-	<li>Fixed issue where miniplayer would show up even when the queue was empty</li>
-	<li>Moved grid/list view options from the settings menus to the menu of the artist/album lists</li>
-	<li>Fixed issue where playback would stop after closing the app (thanks Victor)</li>
-	<li>Added option to show/rearrange items in the main display page</li>
+    <li>Significantly reduced app size</li>
+    <li>Removed cards view for list items</li>
+    <li>Tag editing fixes</li>
+    <li>Added LG QuickCircle support</li>
+    <li>Completely overhauled theme system</li>
+    <li>New widget options</li>
+    <li>Fixed crash when opening podcasts</li>
+    <li>Removed STICKY_BROADCAST permission</li>
+    <li>Various bugfixes</li>
+    <li>Fixed issue where artwork wouldn't display on first run</li>
+    <li>Updated translations</li>
+    <li>Reduced time between headset disconnecting and music pausing</li>
+    <li>Fixed issue where album art would get out of sync</li>
+    <li>Removed gmail style placeholders</li>
+    <li>Fixed issue where miniplayer would show up even when the queue was empty</li>
+    <li>Moved grid/list view options from the settings menus to the menu of the artist/album lists</li>
+    <li>Fixed issue where playback would stop after closing the app (thanks Victor)</li>
+    <li>Added option to show/rearrange items in the main display page</li>
 </ul>
 <h4>1.3.23</h4>
 <ul>
-	<li>More bug fixes</li>
-	<li>Does anyone read these? Anyone at all?</li>
+    <li>More bug fixes</li>
+    <li>Does anyone read these? Anyone at all?</li>
 </ul>
 <h4>1.3.22</h4>
 <ul>
-	<li>Removed giant blue icon placeholder</li>
-	<li>Add settings option to disable seekbar thumb</li>
-	<li>Some ChromeCast related resource management improvements</li>
-	<li>Potential fix for bluetooth receivers displaying outdated track info</li>
-	<li>Fixed a bunch of crashes</li>
-	<li>Access lyrics by double tapping artwork, rather than pressing the lyrics menu option</li>
-	<li>Added option to clear all recents</li>
-	<li>Removed 'sort menu' for playlists where sorting is not allowed</li>
-	<li>Fixed play/pause button color in hybrid theme</li>
-	<li>Updated translations</li>
-	<li>Added 'most played' playlist with play count!</li>
-	<li>Fixed issue where wrong lyrics would display</li>
-	<li>Added option to share the currently playing audio file</li>
+    <li>Removed giant blue icon placeholder</li>
+    <li>Add settings option to disable seekbar thumb</li>
+    <li>Some ChromeCast related resource management improvements</li>
+    <li>Potential fix for bluetooth receivers displaying outdated track info</li>
+    <li>Fixed a bunch of crashes</li>
+    <li>Access lyrics by double tapping artwork, rather than pressing the lyrics menu option</li>
+    <li>Added option to clear all recents</li>
+    <li>Removed 'sort menu' for playlists where sorting is not allowed</li>
+    <li>Fixed play/pause button color in hybrid theme</li>
+    <li>Updated translations</li>
+    <li>Added 'most played' playlist with play count!</li>
+    <li>Fixed issue where wrong lyrics would display</li>
+    <li>Added option to share the currently playing audio file</li>
 </ul>
 <h4>1.3.20</h4>
 <ul>
-	<li>Add alphabetical section indexer</li>
-	<li>Fixed several force close issues</li>
-	<li>Updated translations</li>
+    <li>Add alphabetical section indexer</li>
+    <li>Fixed several force close issues</li>
+    <li>Updated translations</li>
 </ul>
 <h4>1.3.19</h4>
 <ul>
-	<li>Fixed issue where artwork would disappear and have to be re-downloaded (resets current artwork)</li>
-	<li>Search music folders on device for artwork</li>
-	<li>Added seekbar 'thumb' for easier scrubbing</li>
-	<li>Some minor theme changes. Light theme is more light, dark theme is more dark.</li>
-	<li>Add option to long-press playing screen 'header' to see options to navigate to current artist or album</li>
-	<li>Improve artwork quality</li>
-	<li>Translation updates</li>
+    <li>Fixed issue where artwork would disappear and have to be re-downloaded (resets current artwork)</li>
+    <li>Search music folders on device for artwork</li>
+    <li>Added seekbar 'thumb' for easier scrubbing</li>
+    <li>Some minor theme changes. Light theme is more light, dark theme is more dark.</li>
+    <li>Add option to long-press playing screen 'header' to see options to navigate to current artist or album</li>
+    <li>Improve artwork quality</li>
+    <li>Translation updates</li>
 </ul>
 <h4>1.3.18</h4>
 <ul>
-	<li>Fixed force closure when using tag editor</li>
-	<li>Fixed force closure when accessing lyrics</li>
-	<li>Fix issue where lyrics could be opened multiple times, overlaying itself each time</li>
+    <li>Fixed force closure when using tag editor</li>
+    <li>Fixed force closure when accessing lyrics</li>
+    <li>Fix issue where lyrics could be opened multiple times, overlaying itself each time</li>
 </ul>
 <h4>1.3.17</h4>
 <ul>
-	<li>Major ChromeCast bug fix. ChromeCasting should be much more reliable now.</li>
+    <li>Major ChromeCast bug fix. ChromeCasting should be much more reliable now.</li>
 </ul>
 <h4>1.3.16</h4>
 <ul>
-	<li>Huge translation updates. <a href="http://shuttle.oneskyapp.com">Help translate</a></li>
-	<li>Fixed bug where notification would stop responding</li>
-	<li>Fixed a force closure occurring when attempting to close the notification</li>
-	<li>Fixed some potential memory leaks</li>
+    <li>Huge translation updates. <a href="http://shuttle.oneskyapp.com">Help translate</a></li>
+    <li>Fixed bug where notification would stop responding</li>
+    <li>Fixed a force closure occurring when attempting to close the notification</li>
+    <li>Fixed some potential memory leaks</li>
 </ul>
 <h4>1.3.15</h4>
 <ul>
-	<li>Fixed a bug where the notification wouldn't show as 'paused' after pausing a song</li>
-	<li>Several force close fixes</li>
+    <li>Fixed a bug where the notification wouldn't show as 'paused' after pausing a song</li>
+    <li>Several force close fixes</li>
 </ul>
 <h4>1.3.14</h4>
 <ul>
-	<li>Fixed an issue on some devices where 'Playing Screen' would underlay the ActionBar (instead of sitting below it).</li>
-	<li>Fix animation bug when changing songs</li>
-	<li>Fast-scroller now displays in the album list again</li>
+    <li>Fixed an issue on some devices where 'Playing Screen' would underlay the ActionBar (instead of sitting below it).</li>
+    <li>Fix animation bug when changing songs</li>
+    <li>Fast-scroller now displays in the album list again</li>
 </ul>
 <h4>1.3.12</h4>
 <ul>
-	<li>Chromecast fixes</li>
-	<li>The notification is now hidden when the app is open</li>
-	<li>Fix crash occurring when deleting folders containing songs/artists/album names with apostrophes</li>
-	<li>Improve artist artwork resolution (may require clearing artwork cache)</li>
-	<li>'Rescan' option should work more reliably</li>
-	<li>Fixed bug where sort options weren't working</li>
-	<li>Improved app responsiveness</li>
-	<li>Various force close fixes</li>
+    <li>Chromecast fixes</li>
+    <li>The notification is now hidden when the app is open</li>
+    <li>Fix crash occurring when deleting folders containing songs/artists/album names with apostrophes</li>
+    <li>Improve artist artwork resolution (may require clearing artwork cache)</li>
+    <li>'Rescan' option should work more reliably</li>
+    <li>Fixed bug where sort options weren't working</li>
+    <li>Improved app responsiveness</li>
+    <li>Various force close fixes</li>
 </ul>
 <h4>1.3.9</h4>
 <ul>
-	<li>Add option to save playlists as .m3u (saves to /sdcard/playlists/)</li>
-	<li>Use system background color for notifications</li>
-	<li>Fix issue where lyrics wouldn't update on track change</li>
-	<li>Fix issue where 'restrict library' (now whitelist) button doesn't do anything</li>
-	<li>Fix theme issues</li>
+    <li>Add option to save playlists as .m3u (saves to /sdcard/playlists/)</li>
+    <li>Use system background color for notifications</li>
+    <li>Fix issue where lyrics wouldn't update on track change</li>
+    <li>Fix issue where 'restrict library' (now whitelist) button doesn't do anything</li>
+    <li>Fix theme issues</li>
 </ul>
 <h4>1.3.8</h4>
 <ul>
-	<li>Fixed a bunch of force closures</li>
-	<li>Minor UI improvements</li>
+    <li>Fixed a bunch of force closures</li>
+    <li>Minor UI improvements</li>
 </ul>
 <h4>1.3.7</h4>
 <ul>
-	<li>New pink theme!</li>
-	<li>Various UI changes</li>
-	<li>Added chromecast support</li>
-	<li>Fixed issues with tag editor not opening</li>
-	<li>Choosing new album art is more reliable now</li>
-	<li>Improved scrolling performance... again</li>
+    <li>New pink theme!</li>
+    <li>Various UI changes</li>
+    <li>Added chromecast support</li>
+    <li>Fixed issues with tag editor not opening</li>
+    <li>Choosing new album art is more reliable now</li>
+    <li>Improved scrolling performance... again</li>
 </ul>
 <h4>1.3.6</h4>
 <ul>
-	<li>Lots of force close fixes</li>
-	<li>Lists remember their positions once again</li>
-	<li>Fixed issue where you had to press the previous button twice to go back a song when on shuffle</li>
-	<li>Fixed issue with swiping album art to the previous track</li>
-	<li>The seekbar is a little smoother</li>
-	<li>Fixed issue with album art 'flickering' when resuming the app</li>
+    <li>Lots of force close fixes</li>
+    <li>Lists remember their positions once again</li>
+    <li>Fixed issue where you had to press the previous button twice to go back a song when on shuffle</li>
+    <li>Fixed issue with swiping album art to the previous track</li>
+    <li>The seekbar is a little smoother</li>
+    <li>Fixed issue with album art 'flickering' when resuming the app</li>
 </ul>
 <h4>1.3.4</h4>
 <ul>
-	<li>New lyrics view. Press settings-&gt;lyrics for a much more intuitive lyrics viewing experience</li>
-	<li>Make page indicator slightly lighter on dark theme</li>
-	<li>Cleanup some code methods (hopefully improves performance)</li>
-	<li>Add last.fm info for artists &amp; albums</li>
-	<li>Re-instate ability to disable lockscreen controls</li>
-	<li>Add translucent status &amp; navigation bars</li>
-	<li>Updated icon</li>
+    <li>New lyrics view. Press settings-&gt;lyrics for a much more intuitive lyrics viewing experience</li>
+    <li>Make page indicator slightly lighter on dark theme</li>
+    <li>Cleanup some code methods (hopefully improves performance)</li>
+    <li>Add last.fm info for artists &amp; albums</li>
+    <li>Re-instate ability to disable lockscreen controls</li>
+    <li>Add translucent status &amp; navigation bars</li>
+    <li>Updated icon</li>
 </ul>
 <h4>1.3.3</h4>
 <ul>
-	<li>Correctly theme Contextual Action Bar</li>
-	<li>Fix Search crash</li>
-	<li>DSP manager fixes</li>
-	<li>Add ability to blacklist songs (see overflow menu)</li>
-	<li>Make 'download artwork' option download twice as fast</li>
-	<li>Layout improvements &amp; optimisations</li>
-	<li>Added whitelist option to folder browser. (Press settings -&gt; 'Restrict Library')</li>
-	<li>Added Chinese translations</li>
-	<li>Updated Spanish, Italian &amp; German translations</li>
+    <li>Correctly theme Contextual Action Bar</li>
+    <li>Fix Search crash</li>
+    <li>DSP manager fixes</li>
+    <li>Add ability to blacklist songs (see overflow menu)</li>
+    <li>Make 'download artwork' option download twice as fast</li>
+    <li>Layout improvements &amp; optimisations</li>
+    <li>Added whitelist option to folder browser. (Press settings -&gt; 'Restrict Library')</li>
+    <li>Added Chinese translations</li>
+    <li>Updated Spanish, Italian &amp; German translations</li>
 </ul>
 <h4>1.3.2</h4>
 <ul>
-	<li>Fixed several force close issues</li>
-	<li>Changed 'favourite star' colour on dark themes</li>
-	<li>Made non-inverted widget text all-white</li>
-	<li>Fixed 4x4 widget not displaying placeholder image when no artwork is available</li>
-	<li>Fixed error in album art chooser</li>
-	<li>Re-enabled DSP by default</li>
+    <li>Fixed several force close issues</li>
+    <li>Changed 'favourite star' colour on dark themes</li>
+    <li>Made non-inverted widget text all-white</li>
+    <li>Fixed 4x4 widget not displaying placeholder image when no artwork is available</li>
+    <li>Fixed error in album art chooser</li>
+    <li>Re-enabled DSP by default</li>
 </ul>
 <h4>1.3.1</h4>
 <ul>
-	<li>Added folder-browser!</li>
-	<li>Enable 'overflow' options to search items</li>
-	<li>Favorite icon re-enabled</li>
-	<li>Gmail-style placeholders are now cached &amp; no longer change color all the time</li>
-	<li>Equalizer fixes (DSP manager shuts down if Shuttle EQ is in use - less glitches &amp; DSP crashes)</li>
-	<li>Add support for Google Now voice commands (play x artist/album/song)</li>
-	<li>Fix sleep timer display issues in Android 4.4 (KitKat)</li>
-	<li>Add option to edit album-artist tag in tag editor</li>
-	<li>Display duration/artist/album information for songs in the Genres category</li>
-	<li>Add lockscreen seekbar controls for Android 4.4 (KitKat)</li>
-	<li>Move overflow icon slightly in to avoid fast-scroller overlap</li>
-	<li>Fix issue where search results displayed an empty image frame for song items</li>
-	<li>Updated Russian translations</li>
+    <li>Added folder-browser!</li>
+    <li>Enable 'overflow' options to search items</li>
+    <li>Favorite icon re-enabled</li>
+    <li>Gmail-style placeholders are now cached &amp; no longer change color all the time</li>
+    <li>Equalizer fixes (DSP manager shuts down if Shuttle EQ is in use - less glitches &amp; DSP crashes)</li>
+    <li>Add support for Google Now voice commands (play x artist/album/song)</li>
+    <li>Fix sleep timer display issues in Android 4.4 (KitKat)</li>
+    <li>Add option to edit album-artist tag in tag editor</li>
+    <li>Display duration/artist/album information for songs in the Genres category</li>
+    <li>Add lockscreen seekbar controls for Android 4.4 (KitKat)</li>
+    <li>Move overflow icon slightly in to avoid fast-scroller overlap</li>
+    <li>Fix issue where search results displayed an empty image frame for song items</li>
+    <li>Updated Russian translations</li>
 </ul>
 <h4>1.2.8</h4>
 <ul>
-	<li>Artwork resolution improved (may need to clear artwork cache)</li>
-	<li>List scrolling performance greatly improved</li>
-	<li>Improved landscape layout</li>
-	<li>Some fixes for Android 4.4</li>
-	<li>More force close fixes</li>
-	<li>Sort albums by artist fixed</li>
-	<li>Rearrange some settings options</li>
-	<li>Brought back the 'hybrid' (mixed) theme!</li>
-	<li>Fixed tag editor. Editing whole artists/albums now works again.</li>
-	<li>Improved tablet layouts</li>
-	<li>Add Korean translations</li>
+    <li>Artwork resolution improved (may need to clear artwork cache)</li>
+    <li>List scrolling performance greatly improved</li>
+    <li>Improved landscape layout</li>
+    <li>Some fixes for Android 4.4</li>
+    <li>More force close fixes</li>
+    <li>Sort albums by artist fixed</li>
+    <li>Rearrange some settings options</li>
+    <li>Brought back the 'hybrid' (mixed) theme!</li>
+    <li>Fixed tag editor. Editing whole artists/albums now works again.</li>
+    <li>Improved tablet layouts</li>
+    <li>Add Korean translations</li>
 </ul>
 <h4>1.2.5</h4>
 <ul>
-	<li>Added support for embedded lyrics</li>
-	<li>Added album artwork chooser to tag editor</li>
-	<li>Potentially resolved Galaxy S3 headphone-speaker bug</li>
-	<li>Update German and Italian translations</li>
-	<li>More force-close fixes</li>
-	<li>Minor UI fixes</li>
-	<li>Remove option to disable cards-style</li>
-	<li>Moved themes to 'interface' menu</li>
-	<li>Fixed sleep timer 'wait til end of song' function</li>
-	<li>Fixed equalizer crash</li>
-	<li>Fixed issue where non-functional equalizer band was being shown</li>
-	<li>Fixed bug where changes to queue order were not being respected</li>
-	<li>Improved list scrolling performance</li>
+    <li>Added support for embedded lyrics</li>
+    <li>Added album artwork chooser to tag editor</li>
+    <li>Potentially resolved Galaxy S3 headphone-speaker bug</li>
+    <li>Update German and Italian translations</li>
+    <li>More force-close fixes</li>
+    <li>Minor UI fixes</li>
+    <li>Remove option to disable cards-style</li>
+    <li>Moved themes to 'interface' menu</li>
+    <li>Fixed sleep timer 'wait til end of song' function</li>
+    <li>Fixed equalizer crash</li>
+    <li>Fixed issue where non-functional equalizer band was being shown</li>
+    <li>Fixed bug where changes to queue order were not being respected</li>
+    <li>Improved list scrolling performance</li>
 </ul>
 <h4>1.2.4</h4>
 <ul>
-	<li>
-		<font face="arial, helvetica, sans-serif">New themes!</font>
-	</li>
-	<li>Improve memory usage of music playback service</li>
-	<li>Fixed a lot of bugs</li>
-	<li>Podcasts playlist fixed</li>
-	<li>UI improvements</li>
-	<li>Increased pressable area of overflow (3 vertical dots) icon</li>
-	<li>New display option - show artist/album as grid or list</li>
-	<li>New artwork option - ignore embedded/locally stored artwork</li>
-	<li>New headset option - enable/disable gapless playback.</li>
+    <li>
+        <font face="arial, helvetica, sans-serif">New themes!</font>
+    </li>
+    <li>Improve memory usage of music playback service</li>
+    <li>Fixed a lot of bugs</li>
+    <li>Podcasts playlist fixed</li>
+    <li>UI improvements</li>
+    <li>Increased pressable area of overflow (3 vertical dots) icon</li>
+    <li>New display option - show artist/album as grid or list</li>
+    <li>New artwork option - ignore embedded/locally stored artwork</li>
+    <li>New headset option - enable/disable gapless playback.</li>
 </ul>
 <h4>1.2.3</h4>
 <ul>
-	<li>Revert back to uncropped album art</li>
+    <li>Revert back to uncropped album art</li>
 </ul>
 <h4>1.2.2</h4>
 <ul>
-	<li>Swipe to dismiss from playlist reinstated (was accidentally removed)</li>
+    <li>Swipe to dismiss from playlist reinstated (was accidentally removed)</li>
 </ul>
 <h4>1.2.1</h4>
 <ul>
-	<li>Sleep timer - option to play last song to end. Otherwise, music fades out when time is up.</li>
-	<li>List sorting options now work correctly across all categories</li>
-	<li>Tag editing improved (should work more consistently)</li>
-	<li>Some major force close errors resolved</li>
-	<li>Enqueue fixed - when shuffle is on, enqueue no longer turns shuffle off</li>
-	<li>Portuguese-Brazilian translation updates</li>
+    <li>Sleep timer - option to play last song to end. Otherwise, music fades out when time is up.</li>
+    <li>List sorting options now work correctly across all categories</li>
+    <li>Tag editing improved (should work more consistently)</li>
+    <li>Some major force close errors resolved</li>
+    <li>Enqueue fixed - when shuffle is on, enqueue no longer turns shuffle off</li>
+    <li>Portuguese-Brazilian translation updates</li>
 </ul>
 <h4>1.2.0</h4>
 <ul>
-	<li>Playlist items moved to the navigation drawer</li>
-	<li>Added Portuguese-Brazilian &amp; Turkish translations</li>
-	<li>Option to delete currently playing item, and save queue as playlist</li>
-	<li>Empty lists now display empty message</li>
-	<li>Scrolling performance improved</li>
-	<li>Undo option added to swipe-to-dismiss &amp; sensitivity reduced</li>
-	<li>&nbsp;4x4 Widget</li>
-	<li>Enqueue now works even when shuffle is on</li>
-	<li>Swiping the album art no longer ignores shuffle (will momentarily display incorrect album art)</li>
-	<li>Interface settings menu added. Option to stay on same page after pressing a song.</li>
-	<li>Seekbar visibility improved in dark theme</li>
-	<li>Force close error occurring when artist name contains an apostrophe (e.g. Lil' Wayne) fixed</li>
-	<li>Various other force close errors fixed</li>
+    <li>Playlist items moved to the navigation drawer</li>
+    <li>Added Portuguese-Brazilian &amp; Turkish translations</li>
+    <li>Option to delete currently playing item, and save queue as playlist</li>
+    <li>Empty lists now display empty message</li>
+    <li>Scrolling performance improved</li>
+    <li>Undo option added to swipe-to-dismiss &amp; sensitivity reduced</li>
+    <li>&nbsp;4x4 Widget</li>
+    <li>Enqueue now works even when shuffle is on</li>
+    <li>Swiping the album art no longer ignores shuffle (will momentarily display incorrect album art)</li>
+    <li>Interface settings menu added. Option to stay on same page after pressing a song.</li>
+    <li>Seekbar visibility improved in dark theme</li>
+    <li>Force close error occurring when artist name contains an apostrophe (e.g. Lil' Wayne) fixed</li>
+    <li>Various other force close errors fixed</li>
 </ul>
 <h4>1.1.0</h4>
 <ul>
-	<li>Reset version number to v1.1.0. (versioning will make more sense from now on).</li>
-	<li>Prevent navigation drawer from overlaying itself on rotation</li>
-	<li>Fix resume on connect</li>
-	<li>Fix several force close bugs</li>
+    <li>Reset version number to v1.1.0. (versioning will make more sense from now on).</li>
+    <li>Prevent navigation drawer from overlaying itself on rotation</li>
+    <li>Fix resume on connect</li>
+    <li>Fix several force close bugs</li>
 </ul>
 <h4>1.5.9b</h4>
 <ul>
-	<li>Bugfixes</li>
-	<li>Major folder browser improvements</li>
-	<li>New 4x1 alternative widget</li>
+    <li>Bugfixes</li>
+    <li>Major folder browser improvements</li>
+    <li>New 4x1 alternative widget</li>
 </ul>
 <h4>1.5.8b</h4>
 <ul>
-	<li>Bugfixes</li>
+    <li>Bugfixes</li>
 </ul>
 <h4>1.5.5</h4>
 <ul>
-	<li>Cards style is now optional via settings menu</li>
-	<li>Same-name albums no longer use same album art</li>
-	<li>Equaliser improvements &amp; crash fixes</li>
-	<li>A number of long-standing force close errors fixed</li>
-	<li>Use AppCompat ActionBar instead of ActionBarSherlock</li>
-	<li>Reduce APK size substantially</li>
-	<li>Add swipe to remove for playlists</li>
-	<li>Add option to share current song with #NowPlaying</li>
-	<li>Add musiXmatch lyrics plugin</li>
-	<li>Navigation from Now Playing -&gt; Album -&gt; Artist re-introduced</li>
-	<li>Improved artwork downloading including automatic downloading</li>
-	<li>Overhaul search</li>
-	<li>Fast forward/rewind controls added</li>
-	<li>Make 'gmail' style placeholders optional</li>
+    <li>Cards style is now optional via settings menu</li>
+    <li>Same-name albums no longer use same album art</li>
+    <li>Equaliser improvements &amp; crash fixes</li>
+    <li>A number of long-standing force close errors fixed</li>
+    <li>Use AppCompat ActionBar instead of ActionBarSherlock</li>
+    <li>Reduce APK size substantially</li>
+    <li>Add swipe to remove for playlists</li>
+    <li>Add option to share current song with #NowPlaying</li>
+    <li>Add musiXmatch lyrics plugin</li>
+    <li>Navigation from Now Playing -&gt; Album -&gt; Artist re-introduced</li>
+    <li>Improved artwork downloading including automatic downloading</li>
+    <li>Overhaul search</li>
+    <li>Fast forward/rewind controls added</li>
+    <li>Make 'gmail' style placeholders optional</li>
 </ul>
 <h4>1.5.0</h4>
 <ul>
-	<li>Minor update - bug fixes including:</li>
-	<li>Reduce scrolling lag</li>
-	<li>Fix force close when opening the app from various places</li>
-	<li>Potentially resolved equalizer force close issue</li>
-	<li>Another minor update to come soon, to make gmail style placeholders optional.</li>
+    <li>Minor update - bug fixes including:</li>
+    <li>Reduce scrolling lag</li>
+    <li>Fix force close when opening the app from various places</li>
+    <li>Potentially resolved equalizer force close issue</li>
+    <li>Another minor update to come soon, to make gmail style placeholders optional.</li>
 </ul>
 <h4>1.4.9</h4>
 <ul>
-	<li>Multi select functions! Batch add to playlist, queue &amp; batch delete</li>
-	<li>New gmail style placeholders everywhere!</li>
-	<li>Improved image thumbnail resolution</li>
-	<li>Vastly improved scrolling performance</li>
-	<li>Many UI improvements</li>
-	<li>New navigation drawer</li>
-	<li>Bug fixes &amp; code optimisation</li>
-	<li>Light theme available for Shuttle (free)</li>
-	<li>Improved tablet &amp; landscape layout</li>
+    <li>Multi select functions! Batch add to playlist, queue &amp; batch delete</li>
+    <li>New gmail style placeholders everywhere!</li>
+    <li>Improved image thumbnail resolution</li>
+    <li>Vastly improved scrolling performance</li>
+    <li>Many UI improvements</li>
+    <li>New navigation drawer</li>
+    <li>Bug fixes &amp; code optimisation</li>
+    <li>Light theme available for Shuttle (free)</li>
+    <li>Improved tablet &amp; landscape layout</li>
 </ul>
 <h4>1.4.2</h4>
 <ul>
-	<li>Artist view fixed</li>
-	<li>'Folders' category removed (unfinished)</li>
-	<li>Widget improvements</li>
-	<li>Resolved some FC bugs (particularly on smaller screen)</li>
+    <li>Artist view fixed</li>
+    <li>'Folders' category removed (unfinished)</li>
+    <li>Widget improvements</li>
+    <li>Resolved some FC bugs (particularly on smaller screen)</li>
 </ul>
 <h4>1.4.1</h4>
 <ul>
-	<li>Gapless playback fix.</li>
+    <li>Gapless playback fix.</li>
 </ul>
 <h4>1.4.0</h4>
 <ul>
-	<li>Added 4x2 widgets to Shuttle (free).</li>
-	<li>Improved sleep timer layout on smaller screens</li>
-	<li>Improved Bluetooth support</li>
-	<li>Add Pebble support</li>
-	<li>Added %MTRACK variable for Tasker</li>
-	<li>Fix artist image deletion issues</li>
-	<li>Resolved some ANR (Application Not Responding) issues when the track changes</li>
-	<li>Improved translations</li>
-	<li>Add Spanish, Dutch, Romanian, Polish &amp; Hungarian translations</li>
-	<li>Removed Chinese, French &amp; Arabic translations (until improved translations are available)</li>
-	<li>Added 'clear queue' option</li>
-	<li>Added tag editing (a more robust album art editor coming soon)</li>
-	<li>Fix album art resolution in the 'recents' category.</li>
+    <li>Added 4x2 widgets to Shuttle (free).</li>
+    <li>Improved sleep timer layout on smaller screens</li>
+    <li>Improved Bluetooth support</li>
+    <li>Add Pebble support</li>
+    <li>Added %MTRACK variable for Tasker</li>
+    <li>Fix artist image deletion issues</li>
+    <li>Resolved some ANR (Application Not Responding) issues when the track changes</li>
+    <li>Improved translations</li>
+    <li>Add Spanish, Dutch, Romanian, Polish &amp; Hungarian translations</li>
+    <li>Removed Chinese, French &amp; Arabic translations (until improved translations are available)</li>
+    <li>Added 'clear queue' option</li>
+    <li>Added tag editing (a more robust album art editor coming soon)</li>
+    <li>Fix album art resolution in the 'recents' category.</li>
 </ul>
 <h4>1.3.7</h4>
 <ul>
-	<li>Fixed Artist/Album downloader (% display &amp; other issues)</li>
-	<li>Rotation issues resolved</li>
-	<li>Fixed duplicate provider issue (will have to re-download Artist images, sorry)</li>
-	<li>Updated Russian translations</li>
-	<li>Reduced overdraw (improved scrolling performance)</li>
-	<li>Sleep timer UI overhaul</li>
-	<li>Added list sorting options</li>
+    <li>Fixed Artist/Album downloader (% display &amp; other issues)</li>
+    <li>Rotation issues resolved</li>
+    <li>Fixed duplicate provider issue (will have to re-download Artist images, sorry)</li>
+    <li>Updated Russian translations</li>
+    <li>Reduced overdraw (improved scrolling performance)</li>
+    <li>Sleep timer UI overhaul</li>
+    <li>Added list sorting options</li>
 </ul>
 <h4>1.3.6</h4>
 <ul>
-	<li>UI Overhaul</li>
-	<li>Some minor bug fixes</li>
-	<li>Russian Translation Overhaul</li>
-	<li>Italian Translation updates</li>
+    <li>UI Overhaul</li>
+    <li>Some minor bug fixes</li>
+    <li>Russian Translation Overhaul</li>
+    <li>Italian Translation updates</li>
 </ul>
 <h4>1.3.5</h4>
 <ul>
-	<li>Fixed 'delete' option</li>
-	<li>Included ability to rearrange/remove playlist items</li>
-	<li>Various bug fixes</li>
-	<li>Performance improvements</li>
+    <li>Fixed 'delete' option</li>
+    <li>Included ability to rearrange/remove playlist items</li>
+    <li>Various bug fixes</li>
+    <li>Performance improvements</li>
 </ul>
 <h4>1.3.2</h4>
 <ul>
-	<li>Fixed some force close issues</li>
+    <li>Fixed some force close issues</li>
 </ul>
 <h4>1.3.0</h4>
 <ul>
-	<li>Add 4x2 widget</li>
-	<li>Add 'favourites' option (star button)</li>
-	<li>Add 'recents' category</li>
-	<li>Add genres category</li>
-	<li>Improved notification controls</li>
-	<li>DashClock Support</li>
-	<li>Previous button now works in shuffle mode</li>
-	<li>UI improvements</li>
-	<li>Added sleep timer</li>
-	<li>Swipe animation added (don't swipe too fast)</li>
-	<li>Tentative language support (feel free to contribute, or let me know if something's amiss)</li>
+    <li>Add 4x2 widget</li>
+    <li>Add 'favourites' option (star button)</li>
+    <li>Add 'recents' category</li>
+    <li>Add genres category</li>
+    <li>Improved notification controls</li>
+    <li>DashClock Support</li>
+    <li>Previous button now works in shuffle mode</li>
+    <li>UI improvements</li>
+    <li>Added sleep timer</li>
+    <li>Swipe animation added (don't swipe too fast)</li>
+    <li>Tentative language support (feel free to contribute, or let me know if something's amiss)</li>
 </ul>
 <h4>1.2.6</h4>
 <ul>
-	<li>Added DSP support back in</li>
-	<li>Some more equalizer fixes (not 100%, but almost)</li>
-	<li>Added 'bass boost' option</li>
-	<li>Changed name from AMP to Shuttle (trademark issues)</li>
+    <li>Added DSP support back in</li>
+    <li>Some more equalizer fixes (not 100%, but almost)</li>
+    <li>Added 'bass boost' option</li>
+    <li>Changed name from AMP to Shuttle (trademark issues)</li>
 </ul>
 <h4>1.2.5</h4>
 <ul>
-	<li>Added search function</li>
-	<li>Fix equalizer crashes</li>
-	<li>Fix 'previous' button behaviour</li>
-	<li>Added 'all songs' item for artists</li>
-	<li>Added themes</li>
-	<li>Added scrobbling support (via Simple Last.FM scrobbler)</li>
-	<li>Added widget transparency options</li>
-	<li>Fix long press errors</li>
-	<li>Added 'info' screen</li>
-	<li>Reversed gesture controls</li>
-	<li>Various bug fixes</li>
-	<li>Remove DSP manager support (DSP manager does not play nice with the equalizer)</li>
+    <li>Added search function</li>
+    <li>Fix equalizer crashes</li>
+    <li>Fix 'previous' button behaviour</li>
+    <li>Added 'all songs' item for artists</li>
+    <li>Added themes</li>
+    <li>Added scrobbling support (via Simple Last.FM scrobbler)</li>
+    <li>Added widget transparency options</li>
+    <li>Fix long press errors</li>
+    <li>Added 'info' screen</li>
+    <li>Reversed gesture controls</li>
+    <li>Various bug fixes</li>
+    <li>Remove DSP manager support (DSP manager does not play nice with the equalizer)</li>
 </ul>
 <h3>Licenses:</h3>
 <p>Shuttle+ uses the following open-source libraries:</p>
@@ -1156,7 +1161,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 </pre>
 <p>
-	<font face="arial, helvetica, sans-serif"><strong>SwipeToDismissUndoList</strong></font>
+    <font face="arial, helvetica, sans-serif"><strong>SwipeToDismissUndoList</strong></font>
 </p>
 <pre>
 Copyright 2013 Tim Roes, Roman Nurik
@@ -1172,14 +1177,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 </pre>
 <p>
-	<font face="arial, helvetica, sans-serif"><strong>LetterTileProvider</strong></font>
+    <font face="arial, helvetica, sans-serif"><strong>LetterTileProvider</strong></font>
 </p>
 <pre>
 Copyright 2014 Andrew Neal
 
 </pre>
 <p>
-	<font face="arial, helvetica, sans-serif"><strong>Material Dialogs</strong></font>
+    <font face="arial, helvetica, sans-serif"><strong>Material Dialogs</strong></font>
 </p>
 <pre>
 Copyright (c) 2014 Aidan Michael Follestad
@@ -1202,7 +1207,7 @@ SOFTWARE.
 
 </pre>
 <p>
-	<font face="arial, helvetica, sans-serif"><strong>Floating Action Button</strong></font>
+    <font face="arial, helvetica, sans-serif"><strong>Floating Action Button</strong></font>
 </p>
 <pre>
 Copyright (C) 2014 Jerzy Chalupski
