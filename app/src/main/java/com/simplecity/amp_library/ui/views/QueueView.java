@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.ui.views;
 
+import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.dialog.DeleteDialog;
 import com.simplecity.amp_library.ui.modelviews.SongView;
@@ -22,6 +23,8 @@ public interface QueueView {
     void showDeleteDialog(DeleteDialog deleteDialog);
 
     void removeFromQueue(int position);
+
+    void removeFromQueue(List<Song> songs);
 
     void moveQueueItem(int from, int to);
 

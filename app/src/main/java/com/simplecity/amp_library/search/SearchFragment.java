@@ -310,7 +310,8 @@ public class SearchFragment extends BaseFragment implements
             contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(
                     getContext(),
                     Single.defer(() -> Operators.reduceSongSingles(contextualToolbarHelper.getItems())),
-                    deleteDialog -> deleteDialog.show(getChildFragmentManager())));
+                    deleteDialog -> deleteDialog.show(getChildFragmentManager())
+                    , () -> contextualToolbarHelper.finish()));
 
             contextualToolbarHelper = new ContextualToolbarHelper<Single<List<Song>>>(contextualToolbar, new ContextualToolbarHelper.Callback() {
 

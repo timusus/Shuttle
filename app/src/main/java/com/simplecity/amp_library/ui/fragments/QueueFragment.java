@@ -36,6 +36,7 @@ import com.simplecity.amp_library.ui.views.QueueView;
 import com.simplecity.amp_library.ui.views.ThemedStatusBarView;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetSlideEventRelay;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
+import com.simplecity.amp_library.utils.ContextualToolbarHelper.Callback;
 import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
@@ -60,10 +61,11 @@ import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
-public class QueueFragment extends BaseFragment implements
-        QueueView {
+public class QueueFragment extends BaseFragment implements QueueView {
 
     private static final String TAG = "QueueFragment";
+
+    private final CompositeDisposable disposables = new CompositeDisposable();
 
     @BindView(R.id.statusBarView)
     ThemedStatusBarView statusBarView;
@@ -81,11 +83,7 @@ public class QueueFragment extends BaseFragment implements
     FastScrollRecyclerView recyclerView;
 
     @BindView(R.id.contextualToolbar)
-    ContextualToolbar contextualToolbar;
-
-    private ItemTouchHelper itemTouchHelper;
-
-    private ViewModelAdapter adapter;
+    ContextualToolbar cabToolbar;
 
     @Inject
     RequestManager requestManager;
@@ -93,18 +91,20 @@ public class QueueFragment extends BaseFragment implements
     @Inject
     MultiSheetSlideEventRelay multiSheetSlideEventRelay;
 
-    QueuePresenter queuePresenter;
-
     @Inject
     PlayerPresenter playerPresenter;
 
-    private CompositeDisposable disposables = new CompositeDisposable();
+    QueuePresenter queuePresenter;
 
-    private ContextualToolbarHelper<Song> contextualToolbarHelper;
+    ItemTouchHelper itemTouchHelper;
 
-    private Disposable loadDataDisposable;
+    ViewModelAdapter adapter;
 
-    private Unbinder unbinder;
+    ContextualToolbarHelper<Song> cabHelper;
+
+    Disposable loadDataDisposable;
+
+    Unbinder unbinder;
 
     public static QueueFragment newInstance() {
         Bundle args = new Bundle();
@@ -113,20 +113,13 @@ public class QueueFragment extends BaseFragment implements
         return fragment;
     }
 
-    public QueueFragment() {
-
-    }
-
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         ShuttleApplication.getInstance().getAppComponent()
                 .plus(new FragmentModule(this))
                 .inject(this);
-
         setHasOptionsMenu(true);
-
         adapter = new ViewModelAdapter();
     }
 
@@ -179,18 +172,14 @@ public class QueueFragment extends BaseFragment implements
         }
 
         setupContextualToolbar();
-
-        queuePresenter = new QueuePresenter(requestManager, contextualToolbarHelper);
-
+        queuePresenter = new QueuePresenter(requestManager, cabHelper);
         return rootView;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
         adapter.notifyItemRangeChanged(0, adapter.getItemCount());
-
         playerPresenter.bindView(playerViewAdapter);
         queuePresenter.bindView(this);
     }
@@ -198,11 +187,9 @@ public class QueueFragment extends BaseFragment implements
     @Override
     public void onPause() {
         super.onPause();
-
         if (loadDataDisposable != null) {
             loadDataDisposable.dispose();
         }
-
         playerPresenter.unbindView(playerViewAdapter);
         queuePresenter.unbindView(this);
     }
@@ -210,25 +197,27 @@ public class QueueFragment extends BaseFragment implements
     @Override
     public void onDestroyView() {
         disposables.clear();
-
         unbinder.unbind();
-
         super.onDestroyView();
     }
 
     private void setupContextualToolbar() {
-        contextualToolbar.getMenu().clear();
-        contextualToolbar.inflateMenu(R.menu.context_menu_queue);
-        SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
+        cabToolbar.getMenu().clear();
+        cabToolbar.inflateMenu(R.menu.context_menu_queue);
+
+        final SubMenu sub = cabToolbar.getMenu().findItem(R.id.queue_add_to_playlist).getSubMenu();
         disposables.add(PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe());
-        contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(),
-                Single.just(MusicUtils.getQueue()),
-                deleteDialog -> deleteDialog.show(getChildFragmentManager())));
-        contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
+        cabToolbar.setOnMenuItemClickListener(MenuUtils.getQueueMenuClickListener(getContext(),
+                Single.fromCallable(() -> cabHelper.getItems()),
+                deleteDialog -> deleteDialog.show(getChildFragmentManager()), () -> {
+                    queuePresenter.removeFromQueue(cabHelper.getItems());
+                    cabHelper.finish();
+                }, () -> cabHelper.finish()));
+
+        cabHelper = new ContextualToolbarHelper<>(cabToolbar, new Callback() {
             @Override
             public void notifyItemChanged(int position, SelectableViewModel viewModel) {
                 adapter.notifyItemChanged(position, 0);
-
             }
 
             @Override
@@ -247,11 +236,9 @@ public class QueueFragment extends BaseFragment implements
     public void loadData(List<ViewModel> items, int position) {
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {
-
                 if (loadDataDisposable != null) {
                     loadDataDisposable.dispose();
                 }
-
                 loadDataDisposable = adapter.setItems(items, new CompletionListUpdateCallbackAdapter() {
                     @Override
                     public void onComplete() {
@@ -278,19 +265,15 @@ public class QueueFragment extends BaseFragment implements
 
     @Override
     public void updateQueuePosition(int position, boolean fromUser) {
-
         if (adapter.items.isEmpty() || position >= adapter.items.size() || position < 0) {
             return;
         }
-
         if (recyclerView == null) {
             return;
         }
-
         if (!fromUser) {
             recyclerView.scrollToPosition(position);
         }
-
         int prevPosition = -1;
         int len = adapter.items.size();
         for (int i = 0; i < len; i++) {
@@ -302,9 +285,7 @@ public class QueueFragment extends BaseFragment implements
                 ((SongView) viewModel).setCurrentTrack(i == position);
             }
         }
-
         ((SongView) adapter.items.get(position)).setCurrentTrack(true);
-
         adapter.notifyItemChanged(prevPosition, 1);
         adapter.notifyItemChanged(position, 1);
     }
@@ -325,6 +306,11 @@ public class QueueFragment extends BaseFragment implements
     }
 
     @Override
+    public void removeFromQueue(List<Song> songs) {
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void moveQueueItem(int from, int to) {
         adapter.moveItem(from, to);
     }
@@ -334,7 +320,7 @@ public class QueueFragment extends BaseFragment implements
         UpgradeDialog.getUpgradeDialog(getActivity()).show();
     }
 
-    private PlayerViewAdapter playerViewAdapter = new PlayerViewAdapter() {
+    private final PlayerViewAdapter playerViewAdapter = new PlayerViewAdapter() {
         @Override
         public void trackInfoChanged(@Nullable Song song) {
             if (song != null) {
@@ -368,4 +354,5 @@ public class QueueFragment extends BaseFragment implements
             return false;
         }
     };
+
 }

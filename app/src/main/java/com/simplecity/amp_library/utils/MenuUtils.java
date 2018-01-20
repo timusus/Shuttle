@@ -55,13 +55,13 @@ public class MenuUtils implements MusicUtils.Defs {
                 Toast.makeText(context, string, Toast.LENGTH_SHORT).show());
     }
 
-    public static void newPlaylist(Context context, List<Song> songs) {
-        PlaylistUtils.createPlaylistDialog(context, songs);
+    public static void newPlaylist(Context context, List<Song> songs, Runnable insertCallback) {
+        PlaylistUtils.createPlaylistDialog(context, songs, insertCallback);
     }
 
-    public static void addToPlaylist(Context context, MenuItem item, List<Song> songs) {
+    public static void addToPlaylist(Context context, MenuItem item, List<Song> songs, Runnable insertCallback) {
         Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(PlaylistUtils.ARG_PLAYLIST);
-        PlaylistUtils.addToPlaylist(context, playlist, songs);
+        PlaylistUtils.addToPlaylist(context, playlist, songs, insertCallback);
     }
 
     public static void showSongInfo(Context context, Song song) {
@@ -76,8 +76,14 @@ public class MenuUtils implements MusicUtils.Defs {
         return TaggerDialog.newInstance(song);
     }
 
-    public static void addToQueue(Context context, List<Song> songs) {
-        MusicUtils.addToQueue(songs, message -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show());
+    public static void addToQueue(Context context, List<Song> songs, Runnable onAdded) {
+        MusicUtils.addToQueue(songs,
+                message -> {
+                    if (onAdded != null) {
+                        onAdded.run();
+                    }
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                });
     }
 
     public static void whitelist(Song song) {
@@ -108,17 +114,40 @@ public class MenuUtils implements MusicUtils.Defs {
         PlaylistUtils.createPlaylistMenu(sub);
     }
 
-    public static Toolbar.OnMenuItemClickListener getSongMenuClickListener(Context context, Single<List<Song>> songsSingle, UnsafeConsumer<DeleteDialog> deleteDialogCallback) {
+    public static Toolbar.OnMenuItemClickListener getQueueMenuClickListener(
+            Context context, Single<List<Song>> songsSingle,
+            UnsafeConsumer<DeleteDialog> deleteDialogCallback,
+            Runnable removeFromQueue, Runnable insertCallback) {
         return item -> {
             switch (item.getItemId()) {
                 case NEW_PLAYLIST:
-                    newPlaylist(context, songsSingle);
+                    newPlaylist(context, songsSingle, insertCallback);
                     return true;
                 case PLAYLIST_SELECTED:
-                    addToPlaylist(context, item, songsSingle);
+                    addToPlaylist(context, item, songsSingle, insertCallback);
+                    return true;
+                case R.id.queue_remove:
+                    removeFromQueue.run();
+                    return true;
+            }
+            return false;
+        };
+    }
+
+    public static Toolbar.OnMenuItemClickListener getSongMenuClickListener(
+            Context context, Single<List<Song>> songsSingle,
+            UnsafeConsumer<DeleteDialog> deleteDialogCallback,
+            Runnable insertCallback) {
+        return item -> {
+            switch (item.getItemId()) {
+                case NEW_PLAYLIST:
+                    newPlaylist(context, songsSingle, insertCallback);
+                    return true;
+                case PLAYLIST_SELECTED:
+                    addToPlaylist(context, item, songsSingle, insertCallback);
                     return true;
                 case R.id.addToQueue:
-                    addToQueue(context, songsSingle);
+                    addToQueue(context, songsSingle, insertCallback);
                     return true;
                 case R.id.blacklist:
                     blacklist(songsSingle);
@@ -139,7 +168,7 @@ public class MenuUtils implements MusicUtils.Defs {
             UnsafeConsumer<TaggerDialog> tagEditorCallback,
             UnsafeConsumer<DeleteDialog> deleteDialogCallback,
             @Nullable UnsafeAction onSongRemoved,
-            @Nullable UnsafeAction onPlayNext) {
+            @Nullable UnsafeAction onPlayNext, Runnable insertCallback) {
         return item -> {
             switch (item.getItemId()) {
                 case R.id.playNext:
@@ -150,13 +179,13 @@ public class MenuUtils implements MusicUtils.Defs {
                     }
                     return true;
                 case NEW_PLAYLIST:
-                    newPlaylist(context, Collections.singletonList(song));
+                    newPlaylist(context, Collections.singletonList(song), insertCallback);
                     return true;
                 case PLAYLIST_SELECTED:
-                    addToPlaylist(context, item, Collections.singletonList(song));
+                    addToPlaylist(context, item, Collections.singletonList(song), insertCallback);
                     return true;
                 case R.id.addToQueue:
-                    addToQueue(context, Collections.singletonList(song));
+                    addToQueue(context, Collections.singletonList(song), insertCallback);
                     return true;
                 case R.id.editTags:
                     tagEditorCallback.accept(editTags(song));
@@ -223,23 +252,28 @@ public class MenuUtils implements MusicUtils.Defs {
         MusicUtils.playAll(observable, message -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show());
     }
 
-    public static void newPlaylist(Context context, Single<List<Song>> single) {
+    public static void newPlaylist(Context context, Single<List<Song>> single, Runnable insertCallback) {
         single.observeOn(AndroidSchedulers.mainThread())
-                .subscribe(songs -> PlaylistUtils.createPlaylistDialog(context, songs),
+                .subscribe(songs -> PlaylistUtils.createPlaylistDialog(context, songs, insertCallback),
                         throwable -> LogUtils.logException(TAG, "Error adding to new playlist", throwable));
     }
 
-    public static void addToPlaylist(Context context, MenuItem item, Single<List<Song>> single) {
+    public static void addToPlaylist(Context context, MenuItem item, Single<List<Song>> single, Runnable insertCallback) {
         single.observeOn(AndroidSchedulers.mainThread())
                 .subscribe(songs -> {
                     Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(PlaylistUtils.ARG_PLAYLIST);
-                    PlaylistUtils.addToPlaylist(context, playlist, songs);
+                    PlaylistUtils.addToPlaylist(context, playlist, songs, insertCallback);
                 }, throwable -> LogUtils.logException(TAG, "Error adding to playlist", throwable));
     }
 
-    public static void addToQueue(Context context, Single<List<Song>> single) {
+    public static void addToQueue(Context context, Single<List<Song>> single, Runnable onAdded) {
         single.observeOn(AndroidSchedulers.mainThread())
-                .subscribe(songs -> MusicUtils.addToQueue(songs, message -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show()),
+                .subscribe(songs -> MusicUtils.addToQueue(songs, message -> {
+                            if (onAdded != null) {
+                                onAdded.run();
+                            }
+                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                        }),
                         throwable -> LogUtils.logException(TAG, "Error adding to queue", throwable));
     }
 
@@ -268,17 +302,19 @@ public class MenuUtils implements MusicUtils.Defs {
                         throwable -> LogUtils.logException(TAG, "blacklist failed", throwable));
     }
 
-    public static Toolbar.OnMenuItemClickListener getAlbumMenuClickListener(Context context, UnsafeCallable<List<Album>> callable, UnsafeConsumer<DeleteDialog> deleteDialogCallback) {
+    public static Toolbar.OnMenuItemClickListener getAlbumMenuClickListener(
+            Context context, UnsafeCallable<List<Album>> callable,
+            UnsafeConsumer<DeleteDialog> deleteDialogCallback, Runnable insertCallback) {
         return item -> {
             switch (item.getItemId()) {
                 case NEW_PLAYLIST:
-                    newPlaylist(context, getSongsForAlbums(callable.call()));
+                    newPlaylist(context, getSongsForAlbums(callable.call()), insertCallback);
                     return true;
                 case PLAYLIST_SELECTED:
-                    addToPlaylist(context, item, getSongsForAlbums(callable.call()));
+                    addToPlaylist(context, item, getSongsForAlbums(callable.call()), insertCallback);
                     return true;
                 case R.id.addToQueue:
-                    addToQueue(context, getSongsForAlbums(callable.call()));
+                    addToQueue(context, getSongsForAlbums(callable.call()), insertCallback);
                     return true;
                 case R.id.delete:
                     deleteDialogCallback.accept(DeleteDialog.newInstance(callable::call));
@@ -288,20 +324,23 @@ public class MenuUtils implements MusicUtils.Defs {
         };
     }
 
-    public static PopupMenu.OnMenuItemClickListener getAlbumMenuClickListener(Context context, Album album, UnsafeConsumer<TaggerDialog> tagEditorCallback, UnsafeConsumer<DeleteDialog> deleteDialogCallback, UnsafeAction showUpgradeDialog) {
+    public static PopupMenu.OnMenuItemClickListener getAlbumMenuClickListener(
+            Context context, Album album, UnsafeConsumer<TaggerDialog> tagEditorCallback,
+            UnsafeConsumer<DeleteDialog> deleteDialogCallback, UnsafeAction showUpgradeDialog,
+            Runnable insertCallback) {
         return item -> {
             switch (item.getItemId()) {
                 case R.id.play:
                     play(context, getSongsForAlbum(album));
                     return true;
                 case NEW_PLAYLIST:
-                    newPlaylist(context, getSongsForAlbum(album));
+                    newPlaylist(context, getSongsForAlbum(album), insertCallback);
                     return true;
                 case PLAYLIST_SELECTED:
-                    addToPlaylist(context, item, getSongsForAlbum(album));
+                    addToPlaylist(context, item, getSongsForAlbum(album), insertCallback);
                     return true;
                 case R.id.addToQueue:
-                    addToQueue(context, getSongsForAlbum(album));
+                    addToQueue(context, getSongsForAlbum(album), insertCallback);
                     return true;
                 case R.id.editTags:
                     if (!ShuttleUtils.isUpgraded()) {
@@ -365,17 +404,19 @@ public class MenuUtils implements MusicUtils.Defs {
         ArtworkDialog.build(context, albumArtist).show();
     }
 
-    public static Toolbar.OnMenuItemClickListener getAlbumArtistMenuClickListener(Context context, UnsafeCallable<List<AlbumArtist>> callable, UnsafeConsumer<DeleteDialog> deleteDialogCallback) {
+    public static Toolbar.OnMenuItemClickListener getAlbumArtistMenuClickListener(
+            Context context, UnsafeCallable<List<AlbumArtist>> callable,
+            UnsafeConsumer<DeleteDialog> deleteDialogCallback, Runnable insertCallback) {
         return item -> {
             switch (item.getItemId()) {
                 case NEW_PLAYLIST:
-                    newPlaylist(context, getSongsForAlbumArtists(callable.call()));
+                    newPlaylist(context, getSongsForAlbumArtists(callable.call()), insertCallback);
                     return true;
                 case PLAYLIST_SELECTED:
-                    addToPlaylist(context, item, getSongsForAlbumArtists(callable.call()));
+                    addToPlaylist(context, item, getSongsForAlbumArtists(callable.call()), insertCallback);
                     return true;
                 case R.id.addToQueue:
-                    addToQueue(context, getSongsForAlbumArtists(callable.call()));
+                    addToQueue(context, getSongsForAlbumArtists(callable.call()), insertCallback);
                     return true;
                 case R.id.delete:
                     deleteDialogCallback.accept(DeleteDialog.newInstance(callable::call));
@@ -385,7 +426,11 @@ public class MenuUtils implements MusicUtils.Defs {
         };
     }
 
-    public static PopupMenu.OnMenuItemClickListener getAlbumArtistClickListener(Context context, AlbumArtist albumArtist, UnsafeConsumer<TaggerDialog> tagEditorCallback, UnsafeConsumer<DeleteDialog> deleteDialogCallback, UnsafeAction showUpgradeDialog) {
+    public static PopupMenu.OnMenuItemClickListener getAlbumArtistClickListener(
+            Context context, AlbumArtist albumArtist,
+            UnsafeConsumer<TaggerDialog> tagEditorCallback,
+            UnsafeConsumer<DeleteDialog> deleteDialogCallback,
+            UnsafeAction showUpgradeDialog, Runnable insertCallback) {
         return item -> {
             switch (item.getItemId()) {
                 case R.id.play:
@@ -395,13 +440,13 @@ public class MenuUtils implements MusicUtils.Defs {
                     play(context, getSongsForAlbumArtist(albumArtist).map(Operators::albumShuffleSongs));
                     return true;
                 case NEW_PLAYLIST:
-                    newPlaylist(context, getSongsForAlbumArtist(albumArtist));
+                    newPlaylist(context, getSongsForAlbumArtist(albumArtist), insertCallback);
                     return true;
                 case PLAYLIST_SELECTED:
-                    addToPlaylist(context, item, getSongsForAlbumArtist(albumArtist));
+                    addToPlaylist(context, item, getSongsForAlbumArtist(albumArtist), insertCallback);
                     return true;
                 case R.id.addToQueue:
-                    addToQueue(context, getSongsForAlbumArtist(albumArtist));
+                    addToQueue(context, getSongsForAlbumArtist(albumArtist), insertCallback);
                     return true;
                 case R.id.editTags:
                     if (!ShuttleUtils.isUpgraded()) {
@@ -545,20 +590,21 @@ public class MenuUtils implements MusicUtils.Defs {
                 });
     }
 
-    public static PopupMenu.OnMenuItemClickListener getGenreClickListener(final Context context, final Genre genre) {
+    public static PopupMenu.OnMenuItemClickListener getGenreClickListener(
+            final Context context, final Genre genre, Runnable insertCallback) {
         return item -> {
             switch (item.getItemId()) {
                 case R.id.play:
                     play(context, getSongsForGenre(genre));
                     return true;
                 case NEW_PLAYLIST:
-                    newPlaylist(context, getSongsForGenre(genre));
+                    newPlaylist(context, getSongsForGenre(genre), insertCallback);
                     return true;
                 case PLAYLIST_SELECTED:
-                    addToPlaylist(context, item, getSongsForGenre(genre));
+                    addToPlaylist(context, item, getSongsForGenre(genre), insertCallback);
                     return true;
                 case R.id.addToQueue:
-                    addToQueue(context, getSongsForGenre(genre));
+                    addToQueue(context, getSongsForGenre(genre), insertCallback);
                     return true;
             }
             return false;
@@ -671,17 +717,22 @@ public class MenuUtils implements MusicUtils.Defs {
     }
 
     @Nullable
-    public static PopupMenu.OnMenuItemClickListener getFolderMenuClickListener(Context context, BaseFileObject fileObject, UnsafeConsumer<TaggerDialog> tagEditorCallback, UnsafeAction filenameChanged, UnsafeAction fileDeleted) {
+    public static PopupMenu.OnMenuItemClickListener getFolderMenuClickListener(
+            Context context, BaseFileObject fileObject,
+            UnsafeConsumer<TaggerDialog> tagEditorCallback,
+            UnsafeAction filenameChanged, UnsafeAction fileDeleted, Runnable insertCallback) {
         switch (fileObject.fileType) {
             case FileType.FILE:
-                return getFileMenuClickListener(context, (FileObject) fileObject, tagEditorCallback, filenameChanged, fileDeleted);
+                return getFileMenuClickListener(context, (FileObject) fileObject, tagEditorCallback, filenameChanged, fileDeleted, insertCallback);
             case FileType.FOLDER:
-                return getFolderMenuClickListener(context, (FolderObject) fileObject, filenameChanged, fileDeleted);
+                return getFolderMenuClickListener(context, (FolderObject) fileObject, filenameChanged, fileDeleted, insertCallback);
         }
         return null;
     }
 
-    private static PopupMenu.OnMenuItemClickListener getFileMenuClickListener(Context context, FileObject fileObject, UnsafeConsumer<TaggerDialog> tagEditorCallback, UnsafeAction filenameChanged, UnsafeAction fileDeleted) {
+    private static PopupMenu.OnMenuItemClickListener getFileMenuClickListener(
+            Context context, FileObject fileObject, UnsafeConsumer<TaggerDialog> tagEditorCallback,
+            UnsafeAction filenameChanged, UnsafeAction fileDeleted, Runnable insertCallback) {
         return menuItem -> {
 
             Consumer<Throwable> errorHandler = e -> LogUtils.logException(TAG, "getFileMenuClickListener threw error", e);
@@ -691,13 +742,13 @@ public class MenuUtils implements MusicUtils.Defs {
                     getSongForFile(fileObject).subscribe(song -> playNext(context, song), errorHandler);
                     return true;
                 case NEW_PLAYLIST:
-                    getSongForFile(fileObject).subscribe(song -> newPlaylist(context, Collections.singletonList(song)), errorHandler);
+                    getSongForFile(fileObject).subscribe(song -> newPlaylist(context, Collections.singletonList(song), insertCallback), errorHandler);
                     return true;
                 case PLAYLIST_SELECTED:
-                    getSongForFile(fileObject).subscribe(song -> addToPlaylist(context, menuItem, Collections.singletonList(song)), errorHandler);
+                    getSongForFile(fileObject).subscribe(song -> addToPlaylist(context, menuItem, Collections.singletonList(song), insertCallback), errorHandler);
                     return true;
                 case R.id.addToQueue:
-                    getSongForFile(fileObject).subscribe(song -> addToQueue(context, Collections.singletonList(song)), errorHandler);
+                    getSongForFile(fileObject).subscribe(song -> addToQueue(context, Collections.singletonList(song), insertCallback), errorHandler);
                     return true;
                 case R.id.scan:
                     scanFile(context, fileObject);
@@ -730,20 +781,22 @@ public class MenuUtils implements MusicUtils.Defs {
         };
     }
 
-    private static PopupMenu.OnMenuItemClickListener getFolderMenuClickListener(Context context, FolderObject folderObject, UnsafeAction filenameChanged, UnsafeAction fileDeleted) {
+    private static PopupMenu.OnMenuItemClickListener getFolderMenuClickListener(
+            Context context, FolderObject folderObject, UnsafeAction filenameChanged,
+            UnsafeAction fileDeleted, Runnable insertCallback) {
         return menuItem -> {
             switch (menuItem.getItemId()) {
                 case R.id.play:
                     play(context, getSongsForFolderObject(folderObject));
                     return true;
                 case NEW_PLAYLIST:
-                    newPlaylist(context, getSongsForFolderObject(folderObject));
+                    newPlaylist(context, getSongsForFolderObject(folderObject), insertCallback);
                     return true;
                 case PLAYLIST_SELECTED:
-                    addToPlaylist(context, menuItem, getSongsForFolderObject(folderObject));
+                    addToPlaylist(context, menuItem, getSongsForFolderObject(folderObject), insertCallback);
                     return true;
                 case R.id.addToQueue:
-                    addToQueue(context, getSongsForFolderObject(folderObject));
+                    addToQueue(context, getSongsForFolderObject(folderObject), insertCallback);
                     return true;
                 case R.id.scan:
                     scanFolder(context, folderObject);

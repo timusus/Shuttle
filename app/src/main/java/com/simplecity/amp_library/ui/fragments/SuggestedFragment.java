@@ -101,6 +101,7 @@ public class SuggestedFragment extends BaseFragment implements
                     },
                     deleteDialog -> deleteDialog.show(getChildFragmentManager()),
                     null,
+                    null,
                     null));
             popupMenu.show();
         }
@@ -423,6 +424,7 @@ public class SuggestedFragment extends BaseFragment implements
         menu.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(getContext(), album,
                 taggerDialog -> taggerDialog.show(getChildFragmentManager()),
                 deleteDialog -> deleteDialog.show(getChildFragmentManager()),
+                null,
                 () -> UpgradeDialog.getUpgradeDialog(getActivity()).show()));
         menu.show();
     }

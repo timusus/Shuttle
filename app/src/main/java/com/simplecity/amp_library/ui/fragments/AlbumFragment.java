@@ -422,6 +422,7 @@ public class AlbumFragment extends BaseFragment implements
                 album,
                 taggerDialog -> taggerDialog.show(getChildFragmentManager()),
                 deleteDialog -> deleteDialog.show(getChildFragmentManager()),
+                null,
                 () -> UpgradeDialog.getUpgradeDialog(getActivity()).show()));
         menu.show();
     }
@@ -461,7 +462,8 @@ public class AlbumFragment extends BaseFragment implements
             playlistMenuDisposable = PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe();
             contextualToolbar.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(
                     getContext(), () -> contextualToolbarHelper.getItems(),
-                    deleteDialog -> deleteDialog.show(getChildFragmentManager()))
+                    deleteDialog -> deleteDialog.show(getChildFragmentManager()),
+                    () -> contextualToolbarHelper.finish())
             );
 
             contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {

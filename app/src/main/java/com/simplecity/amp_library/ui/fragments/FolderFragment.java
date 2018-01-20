@@ -460,7 +460,7 @@ public class FolderFragment extends BaseFragment implements
                     } else {
                         taggerDialog.show(getFragmentManager());
                     }
-                },
+                }, null,
                 () -> IntStream.range(0, adapter.getItemCount())
                         .filter(i -> adapter.items.get(i) == folderView)
                         .findFirst()

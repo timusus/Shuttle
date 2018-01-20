@@ -147,7 +147,7 @@ public class GenreFragment extends BaseFragment implements
     public void onOverflowClick(View v, Genre genre) {
         PopupMenu popupMenu = new PopupMenu(getContext(), v);
         popupMenu.inflate(R.menu.menu_genre);
-        popupMenu.setOnMenuItemClickListener(MenuUtils.getGenreClickListener(getContext(), genre));
+        popupMenu.setOnMenuItemClickListener(MenuUtils.getGenreClickListener(getContext(), genre, null));
         popupMenu.show();
     }
 

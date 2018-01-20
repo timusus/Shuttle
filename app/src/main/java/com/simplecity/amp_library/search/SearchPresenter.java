@@ -208,7 +208,7 @@ public class SearchPresenter extends Presenter<SearchView> implements
                     if (searchView != null) {
                         searchView.showDeleteDialog(deleteDialog);
                     }
-                },
+                }, null,
                 () -> {
                     SearchView searchView = getView();
                     if (searchView != null) {
@@ -251,7 +251,7 @@ public class SearchPresenter extends Presenter<SearchView> implements
                     if (searchView != null) {
                         searchView.showDeleteDialog(deleteDialog);
                     }
-                },
+                }, null,
                 () -> {
                     SearchView searchView = getView();
                     if (searchView != null) {
@@ -535,8 +535,7 @@ public class SearchPresenter extends Presenter<SearchView> implements
                         if (searchView != null) {
                             searchView.showDeleteDialog(deleteDialog);
                         }
-                    },
-                    null, null));
+                    }, null, null, null));
             menu.show();
         }
 

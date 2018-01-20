@@ -82,16 +82,24 @@ public class QueuePresenter extends Presenter<QueueView> {
     }
 
     public void saveQueue(Context context) {
-        PlaylistUtils.createPlaylistDialog(context, MusicUtils.getQueue());
+        PlaylistUtils.createPlaylistDialog(context, MusicUtils.getQueue(), null);
     }
 
     public void saveQueue(Context context, MenuItem item) {
         Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(PlaylistUtils.ARG_PLAYLIST);
-        PlaylistUtils.addToPlaylist(context, playlist, MusicUtils.getQueue());
+        PlaylistUtils.addToPlaylist(context, playlist, MusicUtils.getQueue(), null);
     }
 
     public void clearQueue() {
         MusicUtils.clearQueue();
+    }
+
+    public void removeFromQueue(List<Song> songs) {
+        QueueView queueView = getView();
+        if (queueView != null) {
+            queueView.removeFromQueue(songs);
+        }
+        MusicUtils.removeFromQueue(songs);
     }
 
     public void removeFromQueue(int position, Song song) {
@@ -178,7 +186,7 @@ public class QueuePresenter extends Presenter<QueueView> {
                         }
                     },
                     () -> removeFromQueue(position, song),
-                    () -> playNext(position)));
+                    () -> playNext(position), null));
             menu.show();
         }
 

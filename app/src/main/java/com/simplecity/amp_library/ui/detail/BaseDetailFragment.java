@@ -602,10 +602,12 @@ public abstract class BaseDetailFragment extends BaseFragment implements
                 detailPresenter.addToQueue();
                 return true;
             case MusicUtils.Defs.NEW_PLAYLIST:
-                detailPresenter.newPlaylist(getContext());
+                detailPresenter.newPlaylist(getContext(),
+                        () -> contextualToolbarHelper.finish());
                 return true;
             case MusicUtils.Defs.PLAYLIST_SELECTED:
-                detailPresenter.playlistSelected(getContext(), item);
+                detailPresenter.playlistSelected(getContext(), item,
+                        () -> contextualToolbarHelper.finish());
                 return true;
             case R.id.editTags:
                 detailPresenter.editTags(getTaggerDialog(), UpgradeDialog.getUpgradeDialog(getActivity()));
@@ -830,6 +832,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
                     }
                 },
                 deleteDialog -> deleteDialog.show(getChildFragmentManager()),
+                null,
                 () -> songRemoved(position, song), null));
         popupMenu.show();
     }
@@ -855,6 +858,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
                         album,
                         taggerDialog -> taggerDialog.show(getChildFragmentManager()),
                         deleteDialog -> deleteDialog.show(getChildFragmentManager()),
+                        null,
                         () -> UpgradeDialog.getUpgradeDialog(getActivity()).show()));
         popupMenu.show();
     }
@@ -884,7 +888,8 @@ public abstract class BaseDetailFragment extends BaseFragment implements
             contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(
                     getContext(),
                     Single.defer(() -> Operators.reduceSongSingles(contextualToolbarHelper.getItems())),
-                    deleteDialog -> deleteDialog.show(getChildFragmentManager())));
+                    deleteDialog -> deleteDialog.show(getChildFragmentManager()),
+                    () -> contextualToolbarHelper.finish()));
 
             contextualToolbarHelper = new ContextualToolbarHelper<Single<List<Song>>>(contextualToolbar, new ContextualToolbarHelper.Callback() {
 

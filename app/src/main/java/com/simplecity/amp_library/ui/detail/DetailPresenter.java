@@ -100,16 +100,16 @@ class DetailPresenter extends Presenter<DetailView> {
         }
     }
 
-    void newPlaylist(Context context) {
+    void newPlaylist(Context context, Runnable insertCallback) {
         songsProvider.getSongs().observeOn(AndroidSchedulers.mainThread())
-                .subscribe(songs -> PlaylistUtils.createPlaylistDialog(context, songs));
+                .subscribe(songs -> PlaylistUtils.createPlaylistDialog(context, songs, insertCallback));
     }
 
-    void playlistSelected(Context context, MenuItem item) {
+    void playlistSelected(Context context, MenuItem item, Runnable insertCallback) {
         songsProvider.getSongs().observeOn(AndroidSchedulers.mainThread())
                 .subscribe(songs -> {
                     Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(PlaylistUtils.ARG_PLAYLIST);
-                    PlaylistUtils.addToPlaylist(context, playlist, songs);
+                    PlaylistUtils.addToPlaylist(context, playlist, songs, insertCallback);
                 });
     }
 

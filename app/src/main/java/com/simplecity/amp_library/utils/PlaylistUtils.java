@@ -259,7 +259,7 @@ public class PlaylistUtils {
     }
 
     @SuppressLint("CheckResult")
-    public static void addFileObjectsToPlaylist(Context context, Playlist playlist, List<BaseFileObject> fileObjects) {
+    public static void addFileObjectsToPlaylist(Context context, Playlist playlist, List<BaseFileObject> fileObjects, Runnable insertCallback) {
 
         ProgressDialog progressDialog = ProgressDialog.show(context, "", context.getString(R.string.gathering_songs), false);
 
@@ -277,7 +277,7 @@ public class PlaylistUtils {
                     if (progressDialog != null && progressDialog.isShowing()) {
                         progressDialog.dismiss();
                     }
-                    addToPlaylist(context, playlist, songs);
+                    addToPlaylist(context, playlist, songs, insertCallback);
                 }, error -> LogUtils.logException(TAG, "Error getting songs for file object", error));
     }
 
@@ -289,7 +289,7 @@ public class PlaylistUtils {
      * @return boolean true if the playlist addition was successful
      */
     @SuppressLint("CheckResult")
-    public static void addToPlaylist(Context context, Playlist playlist, List<Song> songs) {
+    public static void addToPlaylist(Context context, Playlist playlist, List<Song> songs, Runnable insertCallback) {
 
         if (playlist == null || songs == null || songs.isEmpty()) {
             return;
@@ -338,7 +338,7 @@ public class PlaylistUtils {
                                             applyToAll.setText(getApplyCheckboxString(context, duplicates.size()));
                                         } else {
                                             //Add all songs to the playlist
-                                            insertPlaylistItems(context, playlist, mutableSongList, existingSongs.size());
+                                            insertPlaylistItems(context, playlist, mutableSongList, existingSongs.size(), insertCallback);
                                             SettingsManager.getInstance().setIgnoreDuplicates(alwaysAdd.isChecked());
                                             dialog.dismiss();
                                         }
@@ -357,22 +357,25 @@ public class PlaylistUtils {
                                             Stream.of(duplicates)
                                                     .filter(mutableSongList::contains)
                                                     .forEach(mutableSongList::remove);
-                                            insertPlaylistItems(context, playlist, mutableSongList, existingSongs.size());
+                                            insertPlaylistItems(context, playlist, mutableSongList, existingSongs.size(), insertCallback);
                                             SettingsManager.getInstance().setIgnoreDuplicates(alwaysAdd.isChecked());
                                             dialog.dismiss();
                                         }
                                     })
                                     .show();
                         } else {
-                            insertPlaylistItems(context, playlist, mutableSongList, existingSongs.size());
+                            insertPlaylistItems(context, playlist, mutableSongList, existingSongs.size(), insertCallback);
                         }
                     } else {
-                        insertPlaylistItems(context, playlist, mutableSongList, existingSongs.size());
+                        insertPlaylistItems(context, playlist, mutableSongList, existingSongs.size(), insertCallback);
                     }
                 }, error -> LogUtils.logException(TAG, "PlaylistUtils: Error determining existing songs", error));
     }
 
-    private static void insertPlaylistItems(@NonNull Context context, @NonNull Playlist playlist, @NonNull List<Song> songs, int songCount) {
+    private static void insertPlaylistItems(@NonNull Context context,
+                                            @NonNull Playlist playlist,
+                                            @NonNull List<Song> songs, int songCount,
+                                            Runnable insertCallback) {
 
         if (songs.isEmpty()) {
             return;
@@ -389,6 +392,9 @@ public class PlaylistUtils {
         if (uri != null) {
             ShuttleApplication.getInstance().getContentResolver().bulkInsert(uri, contentValues);
             PlaylistUtils.showPlaylistToast(context, songs.size());
+            if (insertCallback != null) {
+                insertCallback.run();
+            }
         }
     }
 
@@ -587,14 +593,14 @@ public class PlaylistUtils {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
-    public static void createPlaylistDialog(final Context context, List<Song> songs) {
+    public static void createPlaylistDialog(final Context context, List<Song> songs, Runnable insertCallback) {
         createPlaylistDialog(context, playlistId ->
-                addToPlaylist(context, playlistId, songs));
+                addToPlaylist(context, playlistId, songs, insertCallback));
     }
 
-    public static void createFileObjectPlaylistDialog(final Context context, List<BaseFileObject> fileObjects) {
+    public static void createFileObjectPlaylistDialog(final Context context, List<BaseFileObject> fileObjects, Runnable insertCallback) {
         createPlaylistDialog(context, playlistId ->
-                addFileObjectsToPlaylist(context, playlistId, fileObjects));
+                addFileObjectsToPlaylist(context, playlistId, fileObjects, insertCallback));
     }
 
     @SuppressLint("CheckResult")

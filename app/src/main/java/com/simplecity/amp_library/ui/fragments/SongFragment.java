@@ -309,6 +309,7 @@ public class SongFragment extends BaseFragment implements
                 },
                 deleteDialog -> deleteDialog.show(getChildFragmentManager()),
                 null,
+                null,
                 null));
         menu.show();
     }
@@ -367,7 +368,8 @@ public class SongFragment extends BaseFragment implements
 
             contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(),
                     Single.fromCallable(() -> contextualToolbarHelper.getItems()),
-                    deleteDialog -> deleteDialog.show(getChildFragmentManager())));
+                    deleteDialog -> deleteDialog.show(getChildFragmentManager()),
+                    () -> contextualToolbarHelper.finish()));
         }
     }
 
