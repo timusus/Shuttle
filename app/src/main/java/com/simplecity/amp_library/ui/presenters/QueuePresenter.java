@@ -37,7 +37,7 @@ public class QueuePresenter extends Presenter<QueueView> {
 
     private RequestManager requestManager;
 
-    private ContextualToolbarHelper<Song> contextualToolbarHelper;
+    ContextualToolbarHelper<Song> contextualToolbarHelper;
 
     public QueuePresenter(RequestManager requestManager, ContextualToolbarHelper<Song> contextualToolbarHelper) {
         this.requestManager = requestManager;
@@ -110,7 +110,7 @@ public class QueuePresenter extends Presenter<QueueView> {
         MusicUtils.removeFromQueue(position);
     }
 
-    private void playNext(int position) {
+    void playNext(int position) {
         int newPosition = MusicUtils.getQueuePosition() + 1;
 
         QueueView queueView = getView();

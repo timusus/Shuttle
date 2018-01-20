@@ -36,9 +36,9 @@ public class BillingManager implements PurchasesUpdatedListener {
 
     private BillingClient billingClient;
 
-    private boolean serviceConnected = false;
+    boolean serviceConnected = false;
 
-    private int billingClientResponseCode = BILLING_MANAGER_NOT_INITIALIZED;
+    int billingClientResponseCode = BILLING_MANAGER_NOT_INITIALIZED;
 
     private boolean purchaseFlowInitiated = false;
     private boolean restorePurchasesInitiated = false;

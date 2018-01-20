@@ -113,7 +113,7 @@ public class SuggestedFragment extends BaseFragment implements
 
     private RecyclerView recyclerView;
 
-    private ViewModelAdapter adapter;
+    ViewModelAdapter adapter;
 
     private CompositeDisposable refreshDisposables = new CompositeDisposable();
 

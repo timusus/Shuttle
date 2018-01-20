@@ -56,7 +56,7 @@ public class SongFragment extends BaseFragment implements
 
     private FastScrollRecyclerView recyclerView;
 
-    private SectionedAdapter adapter;
+    SectionedAdapter adapter;
 
     private boolean sortOrderChanged = false;
 

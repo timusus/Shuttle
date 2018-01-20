@@ -80,7 +80,7 @@ public class AlbumFragment extends BaseFragment implements
 
     private GridLayoutManager layoutManager;
 
-    private SectionedAdapter adapter;
+    SectionedAdapter adapter;
 
     private SpanSizeLookup spanSizeLookup;
 

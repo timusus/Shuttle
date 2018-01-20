@@ -52,7 +52,7 @@ public class QueuePagerItemView extends BaseViewModel<QueuePagerItemView.ViewHol
 
     public static class ViewHolder extends BaseViewHolder<QueuePagerItemView> {
 
-        private ImageView imageView;
+        ImageView imageView;
 
         public ViewHolder(View itemView) {
             super(itemView);

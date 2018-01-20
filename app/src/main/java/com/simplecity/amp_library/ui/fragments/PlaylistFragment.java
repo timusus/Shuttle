@@ -47,7 +47,7 @@ public class PlaylistFragment extends BaseFragment {
     private ViewModelAdapter adapter;
 
     @Nullable
-    private PlaylistClickListener playlistClickListener;
+    PlaylistClickListener playlistClickListener;
 
     private Disposable disposable;
 

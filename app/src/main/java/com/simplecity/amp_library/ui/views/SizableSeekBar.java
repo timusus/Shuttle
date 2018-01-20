@@ -17,10 +17,10 @@ public class SizableSeekBar extends AestheticSeekBar {
 
     private static final float maxThumbSizeRatio = 2.0f;
 
-    private float currentThumbSizeRatio = 1.0f;
-    private OnSeekBarChangeListener seekListener;
+    float currentThumbSizeRatio = 1.0f;
+    OnSeekBarChangeListener seekListener;
     private Drawable pendingThumb;
-    private Drawable thumb;
+    Drawable thumb;
     private ValueAnimator thumbGrowAnimator;
     private ValueAnimator thumbShrinkAnimator;
     private AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();

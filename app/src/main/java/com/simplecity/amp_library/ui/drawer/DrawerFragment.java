@@ -93,9 +93,9 @@ public class DrawerFragment extends BaseFragment implements
     @Inject
     DrawerPresenter drawerPresenter;
 
-    private RequestManager requestManager;
+    RequestManager requestManager;
 
-    private Drawable backgroundPlaceholder;
+    Drawable backgroundPlaceholder;
 
     private CompositeDisposable disposables = new CompositeDisposable();
 

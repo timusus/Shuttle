@@ -42,7 +42,7 @@ public class ArtworkView extends BaseViewModel<ArtworkView.ViewHolder> {
 
     private ArtworkProvider artworkProvider;
 
-    private GlideListener glideListener;
+    GlideListener glideListener;
 
     public File file;
 

@@ -80,19 +80,19 @@ public class FolderView extends BaseSelectableViewModel<FolderView.ViewHolder> {
         }
     }
 
-    private void onClick(int position) {
+    void onClick(int position) {
         if (listener != null) {
             listener.onFileObjectClick(position, this);
         }
     }
 
-    private void onOverflowClick(View v) {
+    void onOverflowClick(View v) {
         if (listener != null) {
             listener.onFileObjectOverflowClick(v, this);
         }
     }
 
-    private void onCheckboxClick(CheckBox checkbox) {
+    void onCheckboxClick(CheckBox checkbox) {
 
         setSelected(checkbox.isChecked());
 

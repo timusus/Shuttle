@@ -35,7 +35,7 @@ public class InclExclView extends BaseViewModel<InclExclView.ViewHolder> {
         this.listener = listener;
     }
 
-    private void onRemove() {
+    void onRemove() {
         if (listener != null) {
             listener.onRemove(this);
         }

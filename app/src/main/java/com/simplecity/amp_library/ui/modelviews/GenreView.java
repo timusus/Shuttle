@@ -40,13 +40,13 @@ public class GenreView extends BaseViewModel<GenreView.ViewHolder> implements
         this.clickListener = clickListener;
     }
 
-    private void onClick() {
+    void onClick() {
         if (clickListener != null) {
             clickListener.onItemClick(genre);
         }
     }
 
-    private void onOverflowClick(View v) {
+    void onOverflowClick(View v) {
         if (clickListener != null) {
             clickListener.onOverflowClick(v, genre);
         }

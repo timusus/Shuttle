@@ -84,7 +84,7 @@ public class UpNextView extends LinearLayout {
     @BindView(R.id.textContainer)
     View textcontainer;
 
-    private boolean isSeeking;
+    boolean isSeeking;
 
     private Drawable arrowDrawable;
 

@@ -260,7 +260,7 @@ public class MusicService extends Service {
 
     private ComponentName mediaButtonReceiverComponent;
 
-    private int castMediaStatus = -1;
+    int castMediaStatus = -1;
 
     //Todo:
     // Don't make this public. The MultiPlayer uses it. Just attach a listener to the MultiPlayer
@@ -1076,7 +1076,7 @@ public class MusicService extends Service {
     /**
      * Converts a string representation of a playlist from SharedPrefs into a list of songs.
      */
-    private List<Song> deserializePlaylist(String listString, List<Song> allSongs) {
+    List<Song> deserializePlaylist(String listString, List<Song> allSongs) {
         List<Long> ids = new ArrayList<>();
         int n = 0;
         int shift = 0;

@@ -27,8 +27,8 @@ public class CustomMultiSheetView extends MultiSheetView {
 
     private CompositeDisposable disposables;
 
-    private DrawerLockManager.DrawerLock sheet1Lock = () -> "Sheet 1";
-    private DrawerLockManager.DrawerLock sheet2Lock = () -> "Sheet 2";
+    DrawerLockManager.DrawerLock sheet1Lock = () -> "Sheet 1";
+    DrawerLockManager.DrawerLock sheet2Lock = () -> "Sheet 2";
 
     public CustomMultiSheetView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);

@@ -87,7 +87,7 @@ public class FolderFragment extends BaseFragment implements
 
     private static final String ARG_DISPLAYED_IN_TABS = "displayed_in_tabs";
 
-    private ViewModelAdapter adapter;
+    ViewModelAdapter adapter;
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;

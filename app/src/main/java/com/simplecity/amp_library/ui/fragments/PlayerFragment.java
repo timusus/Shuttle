@@ -142,7 +142,7 @@ public class PlayerFragment extends BaseFragment implements
     @BindView(R.id.let_it_snow)
     SnowfallView snowfallView;
 
-    private CompositeDisposable disposables = new CompositeDisposable();
+    CompositeDisposable disposables = new CompositeDisposable();
 
     @Inject
     PlayerPresenter presenter;
@@ -155,7 +155,7 @@ public class PlayerFragment extends BaseFragment implements
 
     private Unbinder unbinder;
 
-    private int currentColor = Color.TRANSPARENT;
+    int currentColor = Color.TRANSPARENT;
 
     @Nullable
     private Target<GlideDrawable> target;
@@ -515,7 +515,7 @@ public class PlayerFragment extends BaseFragment implements
         }
     }
 
-    private void invalidateColors(int color) {
+    void invalidateColors(int color) {
 
         currentColor = color;
 
@@ -629,7 +629,7 @@ public class PlayerFragment extends BaseFragment implements
                         error -> LogUtils.logException(TAG, "Error retrieving genre", error));
     }
 
-    private void animateColors(int from, int to, UnsafeConsumer<Integer> consumer) {
+    void animateColors(int from, int to, UnsafeConsumer<Integer> consumer) {
         ValueAnimator valueAnimator = ValueAnimator.ofInt(from, to);
         valueAnimator.setEvaluator(new ArgbEvaluator());
         valueAnimator.setDuration(450);

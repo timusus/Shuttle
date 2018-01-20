@@ -57,7 +57,7 @@ public class SearchPresenter extends Presenter<SearchView> implements
 
     private RequestManager requestManager;
 
-    private ContextualToolbarHelper<Single<List<Song>>> contextualToolbarHelper;
+    ContextualToolbarHelper<Single<List<Song>>> contextualToolbarHelper;
 
     private Disposable performSearchSubscription;
     private Disposable setItemsSubscription;
@@ -264,13 +264,13 @@ public class SearchPresenter extends Presenter<SearchView> implements
 
     private class SongFilterOperator implements SingleOperator<List<ViewModel>, List<Song>> {
 
-        private String filterString;
+        String filterString;
 
-        private RequestManager requestManager;
+        RequestManager requestManager;
 
-        private PrefixHighlighter prefixHighlighter;
+        PrefixHighlighter prefixHighlighter;
 
-        private SearchHeaderView songsHeader = new SearchHeaderView(new Header(ShuttleApplication.getInstance().getString(R.string.tracks_title)));
+        SearchHeaderView songsHeader = new SearchHeaderView(new Header(ShuttleApplication.getInstance().getString(R.string.tracks_title)));
 
         SongFilterOperator(@NonNull String filterString, @NonNull RequestManager requestManager, @NonNull PrefixHighlighter prefixHighlighter) {
             this.filterString = filterString;
@@ -327,7 +327,7 @@ public class SearchPresenter extends Presenter<SearchView> implements
             };
         }
 
-        private Stream<Song> applyJaroWinklerFilter(Stream<Song> songStream) {
+        Stream<Song> applyJaroWinklerFilter(Stream<Song> songStream) {
             return songStream.map(song -> new SearchUtils.JaroWinklerObject<>(song, filterString, song.name))
                     .filter(jaroWinklerObject -> jaroWinklerObject.score > SCORE_THRESHOLD || TextUtils.isEmpty(filterString))
                     .sorted((a, b) -> a.object.compareTo(b.object))
@@ -335,20 +335,20 @@ public class SearchPresenter extends Presenter<SearchView> implements
                     .map(jaroWinklerObject -> jaroWinklerObject.object);
         }
 
-        private Stream<Song> applySongFilter(Stream<Song> songStream) {
+        Stream<Song> applySongFilter(Stream<Song> songStream) {
             return songStream.filter(song -> StringUtils.containsIgnoreCase(song.name, filterString));
         }
     }
 
     private class AlbumFilterOperator implements SingleOperator<List<ViewModel>, List<Album>> {
 
-        private String filterString;
+        String filterString;
 
-        private RequestManager requestManager;
+        RequestManager requestManager;
 
-        private PrefixHighlighter prefixHighlighter;
+        PrefixHighlighter prefixHighlighter;
 
-        private SearchHeaderView albumsHeader = new SearchHeaderView(new Header(ShuttleApplication.getInstance().getString(R.string.albums_title)));
+        SearchHeaderView albumsHeader = new SearchHeaderView(new Header(ShuttleApplication.getInstance().getString(R.string.albums_title)));
 
         AlbumFilterOperator(@NonNull String filterString, @NonNull RequestManager requestManager, @NonNull PrefixHighlighter prefixHighlighter) {
             this.filterString = filterString;
@@ -398,7 +398,7 @@ public class SearchPresenter extends Presenter<SearchView> implements
             };
         }
 
-        private Stream<Album> applyJaroWinklerAlbumFilter(Stream<Album> stream) {
+        Stream<Album> applyJaroWinklerAlbumFilter(Stream<Album> stream) {
             return stream.map(album -> new SearchUtils.JaroWinklerObject<>(album, filterString, album.name))
                     .filter(jaroWinklerObject -> jaroWinklerObject.score > SCORE_THRESHOLD || TextUtils.isEmpty(filterString))
                     .sorted((a, b) -> a.object.compareTo(b.object))
@@ -406,20 +406,20 @@ public class SearchPresenter extends Presenter<SearchView> implements
                     .map(jaroWinklerObject -> jaroWinklerObject.object);
         }
 
-        private Stream<Album> applyAlbumFilter(Stream<Album> stream) {
+        Stream<Album> applyAlbumFilter(Stream<Album> stream) {
             return stream.filter(album -> StringUtils.containsIgnoreCase(album.name, filterString));
         }
     }
 
     private class AlbumArtistFilterOperator implements SingleOperator<List<ViewModel>, List<AlbumArtist>> {
 
-        private String filterString;
+        String filterString;
 
-        private RequestManager requestManager;
+        RequestManager requestManager;
 
-        private PrefixHighlighter prefixHighlighter;
+        PrefixHighlighter prefixHighlighter;
 
-        private SearchHeaderView artistsHeader = new SearchHeaderView(new Header(ShuttleApplication.getInstance().getString(R.string.artists_title)));
+        SearchHeaderView artistsHeader = new SearchHeaderView(new Header(ShuttleApplication.getInstance().getString(R.string.artists_title)));
 
         AlbumArtistFilterOperator(@NonNull String filterString, @NonNull RequestManager requestManager, @NonNull PrefixHighlighter prefixHighlighter) {
             this.filterString = filterString;
@@ -471,7 +471,7 @@ public class SearchPresenter extends Presenter<SearchView> implements
             };
         }
 
-        private Stream<AlbumArtist> applyJaroWinklerAlbumArtistFilter(Stream<AlbumArtist> stream) {
+        Stream<AlbumArtist> applyJaroWinklerAlbumArtistFilter(Stream<AlbumArtist> stream) {
             return stream.map(albumArtist -> new SearchUtils.JaroWinklerObject<>(albumArtist, filterString, albumArtist.name))
                     .filter(jaroWinklerObject -> jaroWinklerObject.score > SCORE_THRESHOLD || TextUtils.isEmpty(filterString))
                     .sorted((a, b) -> a.object.compareTo(b.object))
@@ -479,7 +479,7 @@ public class SearchPresenter extends Presenter<SearchView> implements
                     .map(jaroWinklerObject -> jaroWinklerObject.object);
         }
 
-        private Stream<AlbumArtist> applyAlbumArtistFilter(Stream<AlbumArtist> stream) {
+        Stream<AlbumArtist> applyAlbumArtistFilter(Stream<AlbumArtist> stream) {
             return stream.filter(albumArtist -> StringUtils.containsIgnoreCase(albumArtist.name, filterString));
         }
     }

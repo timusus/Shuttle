@@ -59,9 +59,9 @@ public class QueuePagerFragment extends BaseFragment implements
     @Inject
     QueuePagerPresenter queuePagerPresenter;
 
-    private ViewModelAdapter viewModelAdapter;
+    ViewModelAdapter viewModelAdapter;
 
-    private int[] imageSize = new int[2];
+    int[] imageSize = new int[2];
 
     public static QueuePagerFragment newInstance() {
         Bundle args = new Bundle();

@@ -40,11 +40,11 @@ public class MusicNotificationHelper extends NotificationHelper {
 
     private static final int NOTIFICATION_ID = 150;
 
-    private Notification notification;
+    Notification notification;
 
-    private boolean isFavorite = false;
+    boolean isFavorite = false;
 
-    private Bitmap bitmap;
+    Bitmap bitmap;
 
     private Handler handler;
 

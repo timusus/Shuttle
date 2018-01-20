@@ -56,7 +56,7 @@ public class ShuffleView extends BaseViewModel<ShuffleView.ViewHolder> {
         holder.title.setText(titleResId);
     }
 
-    private void onItemClick() {
+    void onItemClick() {
         if (listener != null) {
             listener.onShuffleItemClick();
         }

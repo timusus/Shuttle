@@ -34,13 +34,13 @@ public class SuggestedSongView extends MultiItemView<SuggestedSongView.ViewHolde
         this.requestManager = requestManager;
     }
 
-    private void onItemClick(ViewHolder holder) {
+    void onItemClick(ViewHolder holder) {
         if (listener != null) {
             listener.onSongClick(song, holder);
         }
     }
 
-    private void onOverflowClick(View v) {
+    void onOverflowClick(View v) {
         if (listener != null) {
             listener.onSongOverflowClicked(v, song);
         }

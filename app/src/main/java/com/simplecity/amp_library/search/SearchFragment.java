@@ -80,7 +80,7 @@ public class SearchFragment extends BaseFragment implements
     @BindView(R.id.recyclerView)
     FastScrollRecyclerView recyclerView;
 
-    private ViewModelAdapter adapter;
+    ViewModelAdapter adapter;
 
     private LoadingView loadingView;
 
@@ -90,9 +90,9 @@ public class SearchFragment extends BaseFragment implements
 
     SearchPresenter searchPresenter;
 
-    private View rootView;
+    View rootView;
 
-    private SearchView searchView;
+    SearchView searchView;
 
     private ContextualToolbarHelper<Single<List<Song>>> contextualToolbarHelper;
 

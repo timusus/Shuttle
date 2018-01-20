@@ -132,8 +132,8 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     @BindView(R.id.contextualToolbar)
     ContextualToolbar contextualToolbar;
 
-    private ColorStateList collapsingToolbarTextColor;
-    private ColorStateList collapsingToolbarSubTextColor;
+    ColorStateList collapsingToolbarTextColor;
+    ColorStateList collapsingToolbarSubTextColor;
 
     protected CompositeDisposable disposables = new CompositeDisposable();
 
@@ -149,7 +149,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
     protected ViewModelAdapter adapter;
 
-    private HorizontalRecyclerView horizontalRecyclerView;
+    HorizontalRecyclerView horizontalRecyclerView;
 
     @Nullable
     Album currentSlideShowAlbum;

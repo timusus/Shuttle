@@ -117,26 +117,26 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder> imple
         return isCurrentTrack;
     }
 
-    private void onItemClick(int position) {
+    void onItemClick(int position) {
         if (listener != null) {
             listener.onSongClick(position, this);
         }
     }
 
-    private void onOverflowClick(int position, View v) {
+    void onOverflowClick(int position, View v) {
         if (listener != null) {
             listener.onSongOverflowClick(position, v, song);
         }
     }
 
-    private boolean onItemLongClick(int position) {
+    boolean onItemLongClick(int position) {
         if (listener != null) {
             return listener.onSongLongClick(position, this);
         }
         return false;
     }
 
-    private void onStartDrag(ViewHolder holder) {
+    void onStartDrag(ViewHolder holder) {
         if (listener != null) {
             listener.onStartDrag(holder);
         }

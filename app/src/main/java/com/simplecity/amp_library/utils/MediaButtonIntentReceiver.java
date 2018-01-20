@@ -41,7 +41,7 @@ public class MediaButtonIntentReceiver extends WakefulBroadcastReceiver {
     /**
      * Play a beep sound.
      */
-    private static void beep(Context context) {
+    static void beep(Context context) {
         if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("pref_headset_beep", true)) {
             AsyncPlayer beepPlayer = new AsyncPlayer("BeepPlayer");
             Uri beepSoundUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +

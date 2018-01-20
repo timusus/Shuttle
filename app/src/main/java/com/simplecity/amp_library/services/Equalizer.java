@@ -201,7 +201,7 @@ public class Equalizer {
     /**
      * Known audio sessions and their associated audioeffect suites.
      */
-    private final Map<Integer, EffectSet> mAudioSessions = new ConcurrentHashMap<>();
+    final Map<Integer, EffectSet> mAudioSessions = new ConcurrentHashMap<>();
 
     /**
      * Receive new broadcast intents for adding DSP to session

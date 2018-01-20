@@ -33,7 +33,7 @@ public class SuggestedHeaderView extends BaseViewModel<SuggestedHeaderView.ViewH
         this.listener = listener;
     }
 
-    private void onClick() {
+    void onClick() {
         if (listener != null) {
             listener.onSuggestedHeaderClick(suggestedHeader);
         }

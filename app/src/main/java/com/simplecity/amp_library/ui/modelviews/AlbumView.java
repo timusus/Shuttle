@@ -62,19 +62,19 @@ public class AlbumView extends MultiItemView<AlbumView.ViewHolder, Album> implem
         this.prefix = prefix;
     }
 
-    private void onItemClick(int position, ViewHolder holder) {
+    void onItemClick(int position, ViewHolder holder) {
         if (listener != null) {
             listener.onAlbumClick(position, this, holder);
         }
     }
 
-    private void onOverflowClick(View v) {
+    void onOverflowClick(View v) {
         if (listener != null) {
             listener.onAlbumOverflowClicked(v, album);
         }
     }
 
-    private boolean onAlbumLongclick(int position) {
+    boolean onAlbumLongclick(int position) {
         if (listener != null) {
             return listener.onAlbumLongClick(position, this);
         }
