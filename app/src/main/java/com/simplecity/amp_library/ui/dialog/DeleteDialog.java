@@ -26,6 +26,7 @@ import com.simplecity.amp_library.saf.SafManager;
 import com.simplecity.amp_library.sql.providers.PlayCountTable;
 import com.simplecity.amp_library.utils.CustomMediaScanner;
 import com.simplecity.amp_library.utils.DialogUtils;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 
 import java.io.File;
@@ -243,9 +244,12 @@ public class DeleteDialog extends DialogFragment implements SafManager.SafDialog
                                         Toast.makeText(getContext(), getString(R.string.delete_songs_failure_toast), Toast.LENGTH_SHORT).show();
                                     }
                                     dismiss();
+                                }, error -> {
+                                    LogUtils.logException(TAG, "Failed to delete songs", error);
+                                    Toast.makeText(getContext(), getString(R.string.delete_songs_failure_toast), Toast.LENGTH_SHORT).show();
                                 });
                     }
-                });
+                }, error -> LogUtils.logException(TAG, "Failed to delete songs", error));
     }
 
     @SuppressLint("CheckResult")
