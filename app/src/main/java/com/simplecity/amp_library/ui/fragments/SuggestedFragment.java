@@ -424,8 +424,9 @@ public class SuggestedFragment extends BaseFragment implements
         menu.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(getContext(), album,
                 taggerDialog -> taggerDialog.show(getChildFragmentManager()),
                 deleteDialog -> deleteDialog.show(getChildFragmentManager()),
-                null,
-                () -> UpgradeDialog.getUpgradeDialog(getActivity()).show()));
+                () -> UpgradeDialog.getUpgradeDialog(getActivity()).show(),
+                null
+                ));
         menu.show();
     }
 

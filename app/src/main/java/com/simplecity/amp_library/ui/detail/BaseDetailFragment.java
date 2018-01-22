@@ -858,8 +858,9 @@ public abstract class BaseDetailFragment extends BaseFragment implements
                         album,
                         taggerDialog -> taggerDialog.show(getChildFragmentManager()),
                         deleteDialog -> deleteDialog.show(getChildFragmentManager()),
-                        null,
-                        () -> UpgradeDialog.getUpgradeDialog(getActivity()).show()));
+                        () -> UpgradeDialog.getUpgradeDialog(getActivity()).show(),
+                        null
+                        ));
         popupMenu.show();
     }
 

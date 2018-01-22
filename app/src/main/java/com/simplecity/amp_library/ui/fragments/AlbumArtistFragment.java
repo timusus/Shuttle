@@ -409,8 +409,9 @@ public class AlbumArtistFragment extends BaseFragment implements
                 getContext(),
                 albumArtist,
                 taggerDialog -> taggerDialog.show(getChildFragmentManager()),
-                deleteDialog -> deleteDialog.show(getChildFragmentManager()), null,
-                () -> UpgradeDialog.getUpgradeDialog(getActivity()).show()));
+                deleteDialog -> deleteDialog.show(getChildFragmentManager()), () -> UpgradeDialog.getUpgradeDialog(getActivity()).show(),
+                null
+        ));
         menu.show();
     }
 

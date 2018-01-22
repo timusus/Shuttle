@@ -422,8 +422,9 @@ public class AlbumFragment extends BaseFragment implements
                 album,
                 taggerDialog -> taggerDialog.show(getChildFragmentManager()),
                 deleteDialog -> deleteDialog.show(getChildFragmentManager()),
-                null,
-                () -> UpgradeDialog.getUpgradeDialog(getActivity()).show()));
+                () -> UpgradeDialog.getUpgradeDialog(getActivity()).show(),
+                null
+                ));
         menu.show();
     }
 
