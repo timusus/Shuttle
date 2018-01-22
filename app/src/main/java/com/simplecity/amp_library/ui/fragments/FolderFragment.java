@@ -343,7 +343,7 @@ public class FolderFragment extends BaseFragment implements
             setItemsDisposable.dispose();
         }
 
-        Single.zip(
+        disposables.add(Single.zip(
                 DataManager.getInstance().getIncludeItems().first(Collections.emptyList()),
                 DataManager.getInstance().getExcludeItems().first(Collections.emptyList()),
                 Single.fromCallable(() -> {
@@ -396,7 +396,7 @@ public class FolderFragment extends BaseFragment implements
                         changeBreadcrumbPath();
                     }
                     updateMenuItems();
-                }, error -> LogUtils.logException(TAG, "Error changing dir", error));
+                }, error -> LogUtils.logException(TAG, "Error changing dir", error)));
     }
 
     public void reload() {
