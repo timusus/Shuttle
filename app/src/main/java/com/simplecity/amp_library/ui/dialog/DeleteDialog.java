@@ -341,7 +341,7 @@ public class DeleteDialog extends DialogFragment implements SafManager.SafDialog
                             Toast.makeText(getContext(), getString(R.string.delete_songs_failure_toast), Toast.LENGTH_SHORT).show();
                         }
                         dismiss();
-                    }));
+                    }, error -> LogUtils.logException(TAG, "Failed to delete songs", error)));
 
 
         } else {
