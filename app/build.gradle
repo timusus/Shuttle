@@ -301,7 +301,7 @@ dependencies {
     testImplementation libs.powermockjunit
     testImplementation libs.robolectric
     testImplementation libs.assertj
-    androidTestCompile(libs.espresso) {
+    androidTestImplementation(libs.espresso) {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
 }

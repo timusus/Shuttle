@@ -19,7 +19,7 @@ ext.versions = [
         // Plugin versions
         // /////////////////////////////////////////////////////////////////////////
 
-        androidGradlePlugin           : "3.1.0-alpha08",
+        androidGradlePlugin           : "3.1.0-alpha09",
         dexcountGradlePlugin          : "0.8.2",
         fabricGradlePlugin            : "1.+",
         playPublisher                 : "1.2.0",
