@@ -471,6 +471,7 @@ Ordner</item>
     <string name="parent_folder">Übergeordneter Ordner</string>
     <!-- -->
     <string name="show_filenames">Zeige Dateinamen</string>
+    <!-- -->
     <!-- 'Scan'-->
     <string name="scan_file">Scan</string>
     <!-- Scan Complete-->

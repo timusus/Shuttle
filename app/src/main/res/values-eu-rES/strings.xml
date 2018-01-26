@@ -459,6 +459,7 @@ karpeta</item>
     <string name="parent_folder">Karpeta gurasoa</string>
     <!-- -->
     <string name="show_filenames">Fitxategi izenak erakutsi</string>
+    <!-- -->
     <!-- 'Scan'-->
     <string name="scan_file">Bilaketa</string>
     <!-- Scan Complete-->

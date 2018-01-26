@@ -447,6 +447,7 @@ segítségével
     <string name="parent_folder">Fő mappa</string>
     <!-- -->
     <string name="show_filenames">Fájlnevek mutatása</string>
+    <!-- -->
     <!-- 'Scan'-->
     <string name="scan_file">Keresés</string>
     <!-- Scan Complete-->

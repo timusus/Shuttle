@@ -418,6 +418,7 @@ carpeta</item>
     <string name="parent_folder">Carpeta principal</string>
     <!-- -->
     <string name="show_filenames">Mostrar nom dels arxius</string>
+    <!-- -->
     <!-- 'Scan'-->
     <string name="scan_file">Escanejar</string>
     <!-- Scan Complete-->

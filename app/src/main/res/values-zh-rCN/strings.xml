@@ -461,6 +461,7 @@ www.shuttlemusicplayer.com</string>
     <string name="parent_folder">上级目录</string>
     <!-- -->
     <string name="show_filenames">显示文件名</string>
+    <!-- -->
     <!-- 'Scan'-->
     <string name="scan_file">搜索</string>
     <!-- Scan Complete-->

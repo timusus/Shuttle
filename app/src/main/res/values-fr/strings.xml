@@ -468,6 +468,7 @@
     <string name="parent_folder">Dossier parent</string>
     <!-- -->
     <string name="show_filenames">Montrer les noms de fichiers</string>
+    <!-- -->
     <!-- 'Scan'-->
     <string name="scan_file">Scan</string>
     <!-- Scan Complete-->

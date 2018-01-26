@@ -448,6 +448,7 @@
     <string name="parent_folder">Carpeta Raíz</string>
     <!-- -->
     <string name="show_filenames">Mostrar nombres de archivo.</string>
+    <!-- -->
     <!-- 'Scan'-->
     <string name="scan_file">Escanear</string>
     <!-- Scan Complete-->

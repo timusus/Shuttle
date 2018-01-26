@@ -473,6 +473,7 @@ katalog</item>
     <string name="parent_folder">Katalog nadrzędny</string>
     <!-- -->
     <string name="show_filenames">Nazwy plików</string>
+    <!-- -->
     <!-- 'Scan'-->
     <string name="scan_file">Uaktualnij</string>
     <!-- Scan Complete-->

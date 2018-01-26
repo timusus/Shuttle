@@ -466,6 +466,7 @@
     <string name="parent_folder">Cartella genitore</string>
     <!-- -->
     <string name="show_filenames">Mostra i nomi dei file</string>
+    <!-- -->
     <!-- 'Scan'-->
     <string name="scan_file">Scansiona</string>
     <!-- Scan Complete-->

@@ -442,6 +442,7 @@
     <string name="parent_folder">Главна папка</string>
     <!-- -->
     <string name="show_filenames">Покажи имената на файловете</string>
+    <!-- -->
     <!-- 'Scan'-->
     <string name="scan_file">Сканирай</string>
     <!-- Scan Complete-->

@@ -456,6 +456,7 @@
     <string name="parent_folder">โฟลเดอร์หลัก</string>
     <!-- -->
     <string name="show_filenames">แสดงชื่อไฟล์</string>
+    <!-- -->
     <!-- 'Scan'-->
     <string name="scan_file">สแกน</string>
     <!-- Scan Complete-->

@@ -459,6 +459,7 @@
     <string name="parent_folder">상위 폴더</string>
     <!-- -->
     <string name="show_filenames">파일 이름 보기</string>
+    <!-- -->
     <!-- 'Scan'-->
     <string name="scan_file">스캔</string>
     <!-- Scan Complete-->

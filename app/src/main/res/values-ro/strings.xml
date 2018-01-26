@@ -426,6 +426,7 @@
     <string name="parent_folder">Folder-ul Părinte</string>
     <!-- -->
     <string name="show_filenames">Arată numele fișierelor</string>
+    <!-- -->
     <!-- 'Scan'-->
     <string name="scan_file">Scanează</string>
     <!-- Scan Complete-->

@@ -462,6 +462,7 @@
     <string name="parent_folder">親フォルダ</string>
     <!-- -->
     <string name="show_filenames">ファイル名を表示</string>
+    <!-- -->
     <!-- 'Scan'-->
     <string name="scan_file">スキャン</string>
     <!-- Scan Complete-->

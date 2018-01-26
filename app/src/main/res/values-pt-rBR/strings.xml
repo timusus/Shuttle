@@ -458,6 +458,7 @@ pastas</item>
     <string name="parent_folder">Pasta principal</string>
     <!-- -->
     <string name="show_filenames">Mostrar nomes de arquivos</string>
+    <!-- -->
     <!-- 'Scan'-->
     <string name="scan_file">Escanear</string>
     <!-- Scan Complete-->

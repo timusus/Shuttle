@@ -448,6 +448,7 @@
     <string name="parent_folder">Батьківська папка</string>
     <!-- -->
     <string name="show_filenames">Показувати назви файлів</string>
+    <!-- -->
     <!-- 'Scan'-->
     <string name="scan_file">Сканувати</string>
     <!-- Scan Complete-->

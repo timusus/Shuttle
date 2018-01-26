@@ -480,6 +480,7 @@
     <string name="parent_folder">Родительская папка</string>
     <!-- -->
     <string name="show_filenames">Отображать имена файлов</string>
+    <!-- -->
     <!-- 'Scan'-->
     <string name="scan_file">Сканирование</string>
     <!-- Scan Complete-->

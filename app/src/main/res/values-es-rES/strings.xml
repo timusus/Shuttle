@@ -454,6 +454,7 @@ carpetas</item>
     <string name="parent_folder">Carpeta superior</string>
     <!-- -->
     <string name="show_filenames">Mostrar nombres de archivo</string>
+    <!-- -->
     <!-- 'Scan'-->
     <string name="scan_file">Búsqueda</string>
     <!-- Scan Complete-->

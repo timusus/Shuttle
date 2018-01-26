@@ -468,6 +468,7 @@ mapa</item>
     <string name="parent_folder">Početna mapa</string>
     <!-- -->
     <string name="show_filenames">Prikaži nazive datoteka</string>
+    <!-- -->
     <!-- 'Scan'-->
     <string name="scan_file">Skeniraj</string>
     <!-- Scan Complete-->

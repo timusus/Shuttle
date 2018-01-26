@@ -457,6 +457,7 @@
     <string name="parent_folder">Thư mục chính</string>
     <!-- -->
     <string name="show_filenames">Hiện tên tập tin</string>
+    <!-- -->
     <!-- 'Scan'-->
     <string name="scan_file">Quét</string>
     <!-- Scan Complete-->

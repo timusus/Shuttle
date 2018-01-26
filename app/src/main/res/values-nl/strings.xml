@@ -464,6 +464,7 @@ map "</item>
     <string name="parent_folder">Hoofdmap</string>
     <!-- -->
     <string name="show_filenames">Laat bestandsnamen zien</string>
+    <!-- -->
     <!-- 'Scan'-->
     <string name="scan_file">Scannen</string>
     <!-- Scan Complete-->

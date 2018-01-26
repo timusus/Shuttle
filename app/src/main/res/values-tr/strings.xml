@@ -464,6 +464,7 @@ dosyalar</item>
     <string name="parent_folder">Üst Klasör</string>
     <!-- -->
     <string name="show_filenames">Dosya Adlarını Göster</string>
+    <!-- -->
     <!-- 'Scan'-->
     <string name="scan_file">Tara</string>
     <!-- Scan Complete-->

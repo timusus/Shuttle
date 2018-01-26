@@ -90,12 +90,12 @@
     <string name="upgraded_title">感謝您</string>
     <string name="upgraded_message">您已成功升級至 Shuttle+，非常感謝您的支持。
 \n\n請重新啟動 Shuttle+，以確保所有功能已啟用，並且能夠正常運作</string>
-    <string name="upgrade_dialog_message">升級您的 Shuttle 將能使用更多功能，包括：
-\n\n• 更多配色與主題
-\n• 編輯音樂標籤
+    <string name="upgrade_dialog_message">• 支援 ChromeCast
+\n• 更多主題
+\n• 音樂標籤編輯
 \n• 資料夾瀏覽模式
-\n• 支援 ChromeCast
-\n\n這也有助於開發者持續增進產品功能與改善使用體驗\n\n若您已擁有 Shuttle+ 則不需再次進行升級</string>
+\n• 給予開發者鼓勵 ❤️</string>
+    <string name="upgrade_required_folders">升級至 Shuttle+</string>
     <string name="btn_upgrade">升級</string>
     <!-- -->
     <string name="get_pro_button_no">不用了，謝謝</string>
@@ -226,6 +226,7 @@
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">其他</string>
     <!--Settings category for 'playback' items -->
+    <string name="pref_category_playback">回放</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
     <string name="pref_title_choose_tabs">選擇要顯示的分頁</string>
     <!--Settings summary for opening the dialog to pick which categories are shown as tab headings -->
@@ -367,10 +368,15 @@
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">支援</string>
     <!-- Settings title for toggling between remaining time and total time -->
+    <string name="pref_title_display_remaining_time">顯示剩餘時間</string>
     <!-- Settings summary for toggling between remaining time and total time -->
+    <string name="pref_summary_display_remaining_time">於現正播放畫面中顯示剩餘時間以取代長度</string>
     <!-- Settings title for the playback options -->
+    <string name="pref_title_playback">回放</string>
     <!-- Settings title for toggling 'remember shuff'e-->
+    <string name="pref_title_remember_shuffle">記憶隨機播放</string>
     <!-- Settings summary for toggling 'remember shuff'e-->
+    <string name="pref_summary_remember_shuffle">播放新的佇列和曲目時不會關閉隨機播放模式</string>
     <string name="pref_title_version">版本</string>
     <string name="pref_title_faq">常見問題</string>
     <string name="pref_summary_faq">有問題或需要協助嗎？請按這裡查詢常見問題 www.shuttlemusicplayer.com</string>
@@ -453,6 +459,7 @@
     <string name="parent_folder">回上層</string>
     <!-- -->
     <string name="show_filenames">顯示檔案名稱</string>
+    <!-- -->
     <!-- 'Scan'-->
     <string name="scan_file">掃描</string>
     <!-- Scan Complete-->
@@ -730,4 +737,9 @@
     <!-- Displayed at the top of the album list, album shuffle mode-->
     <string name="shuffle_albums">專輯隨機</string>
     <!-- Storage Access Framework (Used when deleting files from SD CarD)-->
+    <string name="saf_failure_kitkat_title">無法存取檔案</string>
+    <string name="saf_failure_kitkat_message">Google 已終止 KitKat 存取 SD 卡檔案的支援，並且在 Lollipop 之前未提供任何解決方案。很抱歉，Shuttle 無法存取您的檔案</string>
+    <string name="saf_access_required_title">儲存空間存取要求</string>
+    <string name="saf_access_required_message">Shuttle 需要權限允許才能存取檔案。請選擇您的音樂所在的路徑。</string>
+    <string name="saf_show_files_button">顯示檔案</string>
 </resources>
