@@ -126,6 +126,14 @@ public class MenuUtils implements MusicUtils.Defs {
                 case PLAYLIST_SELECTED:
                     addToPlaylist(context, item, songsSingle, insertCallback);
                     return true;
+                case R.id.delete:
+                    songsSingle
+                            .subscribeOn(AndroidSchedulers.mainThread())
+                            .subscribe(songs -> {
+                                final DeleteDialog dd = DeleteDialog.newInstance(() -> songs);
+                                deleteDialogCallback.accept(dd);
+                            });
+                    return true;
                 case R.id.queue_remove:
                     removeFromQueue.run();
                     return true;
