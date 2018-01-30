@@ -825,15 +825,15 @@ public abstract class BaseDetailFragment extends BaseFragment implements
                 getContext(),
                 song,
                 taggerDialog -> {
-                    if (!ShuttleUtils.isUpgraded()) {
-                        UpgradeDialog.getUpgradeDialog(getActivity()).show();
-                    } else {
+                    if (ShuttleUtils.isUpgraded()) {
                         taggerDialog.show(getChildFragmentManager());
+                    } else {
+                        UpgradeDialog.getUpgradeDialog(getActivity()).show();
                     }
                 },
                 deleteDialog -> deleteDialog.show(getChildFragmentManager()),
-                null,
-                () -> songRemoved(position, song), null));
+                () -> songRemoved(position, song),
+                null, null));
         popupMenu.show();
     }
 
