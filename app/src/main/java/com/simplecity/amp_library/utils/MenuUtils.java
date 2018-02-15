@@ -51,8 +51,12 @@ public class MenuUtils implements MusicUtils.Defs {
     // Songs
 
     public static void playNext(Context context, Song song) {
-        MusicUtils.playNext(Collections.singletonList(song), string ->
-                Toast.makeText(context, string, Toast.LENGTH_SHORT).show());
+        MusicUtils.playNext(Collections.singletonList(song), s ->
+                Toast.makeText(context, s, Toast.LENGTH_SHORT).show());
+    }
+
+    public static void playNext(Context context, List<Song> songs) {
+        MusicUtils.playNext(songs, s -> Toast.makeText(context, s, Toast.LENGTH_SHORT).show());
     }
 
     public static void newPlaylist(Context context, List<Song> songs, Runnable insertCallback) {
@@ -153,6 +157,14 @@ public class MenuUtils implements MusicUtils.Defs {
                     return true;
                 case PLAYLIST_SELECTED:
                     addToPlaylist(context, item, songsSingle, insertCallback);
+                    return true;
+                case R.id.playNext:
+                    songsSingle
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(songs -> playNext(context, songs));
+                    if (insertCallback != null) {
+                        insertCallback.run();
+                    }
                     return true;
                 case R.id.addToQueue:
                     addToQueue(context, songsSingle, insertCallback);
@@ -321,6 +333,14 @@ public class MenuUtils implements MusicUtils.Defs {
                 case PLAYLIST_SELECTED:
                     addToPlaylist(context, item, getSongsForAlbums(callable.call()), insertCallback);
                     return true;
+                case R.id.playNext:
+                    getSongsForAlbums(callable.call())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe((List<Song> songs) -> playNext(context, songs));
+                    if (insertCallback != null) {
+                        insertCallback.run();
+                    }
+                    return true;
                 case R.id.addToQueue:
                     addToQueue(context, getSongsForAlbums(callable.call()), insertCallback);
                     return true;
@@ -340,6 +360,11 @@ public class MenuUtils implements MusicUtils.Defs {
             switch (item.getItemId()) {
                 case R.id.play:
                     play(context, getSongsForAlbum(album));
+                    return true;
+                case R.id.playNext:
+                    getSongsForAlbum(album)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(songs -> playNext(context, songs));
                     return true;
                 case NEW_PLAYLIST:
                     newPlaylist(context, getSongsForAlbum(album), insertCallback);
@@ -423,6 +448,14 @@ public class MenuUtils implements MusicUtils.Defs {
                 case PLAYLIST_SELECTED:
                     addToPlaylist(context, item, getSongsForAlbumArtists(callable.call()), insertCallback);
                     return true;
+                case R.id.playNext:
+                    getSongsForAlbumArtists(callable.call())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(songs -> playNext(context, songs));
+                    if (insertCallback != null) {
+                        insertCallback.run();
+                    }
+                    return true;
                 case R.id.addToQueue:
                     addToQueue(context, getSongsForAlbumArtists(callable.call()), insertCallback);
                     return true;
@@ -443,6 +476,11 @@ public class MenuUtils implements MusicUtils.Defs {
             switch (item.getItemId()) {
                 case R.id.play:
                     play(context, getSongsForAlbumArtist(albumArtist));
+                    return true;
+                case R.id.playNext:
+                    getSongsForAlbumArtist(albumArtist)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(songs -> playNext(context, songs));
                     return true;
                 case R.id.albumShuffle:
                     play(context, getSongsForAlbumArtist(albumArtist).map(Operators::albumShuffleSongs));
@@ -562,6 +600,11 @@ public class MenuUtils implements MusicUtils.Defs {
             case R.id.playPlaylist:
                 play(context, playlist.getSongsObservable().first(Collections.emptyList()));
                 return true;
+            case R.id.playNext:
+                playlist.getSongsObservable().first(Collections.emptyList())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(songs -> playNext(context, songs));
+                return true;
             case R.id.deletePlaylist:
                 delete(context, playlist);
                 if (playlistDeleted != null) {
@@ -605,6 +648,11 @@ public class MenuUtils implements MusicUtils.Defs {
                 case R.id.play:
                     play(context, getSongsForGenre(genre));
                     return true;
+                case R.id.playNext:
+                    getSongsForGenre(genre)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(songs -> playNext(context, songs));
+                    return true;
                 case NEW_PLAYLIST:
                     newPlaylist(context, getSongsForGenre(genre), insertCallback);
                     return true;
@@ -647,7 +695,6 @@ public class MenuUtils implements MusicUtils.Defs {
                 menu.getMenu().findItem(R.id.play).setVisible(false);
                 break;
             case FileType.FOLDER:
-                menu.getMenu().findItem(R.id.playNext).setVisible(false);
                 menu.getMenu().findItem(R.id.songInfo).setVisible(false);
                 menu.getMenu().findItem(R.id.ringtone).setVisible(false);
                 menu.getMenu().findItem(R.id.share).setVisible(false);
@@ -796,6 +843,11 @@ public class MenuUtils implements MusicUtils.Defs {
             switch (menuItem.getItemId()) {
                 case R.id.play:
                     play(context, getSongsForFolderObject(folderObject));
+                    return true;
+                case R.id.playNext:
+                    getSongsForFolderObject(folderObject)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(songs -> playNext(context, songs));
                     return true;
                 case NEW_PLAYLIST:
                     newPlaylist(context, getSongsForFolderObject(folderObject), insertCallback);
