@@ -46,12 +46,12 @@ public class TabViewModel extends BaseViewModel<TabViewModel.ViewHolder> {
     }
 
     void onCheckboxClicked(ViewHolder viewHolder, boolean checked) {
+        categoryItem.isChecked = checked;
         if (categoryItem.type == CategoryItem.Type.FOLDERS) {
             if (listener != null) {
                 listener.onFolderChecked(this, viewHolder);
             }
         }
-        categoryItem.isChecked = checked;
     }
 
     void onStartDrag(ViewHolder viewHolder) {
