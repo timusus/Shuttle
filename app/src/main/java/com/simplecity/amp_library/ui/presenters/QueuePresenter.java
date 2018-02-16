@@ -111,7 +111,10 @@ public class QueuePresenter extends Presenter<QueueView> {
     }
 
     void playNext(int position) {
-        int newPosition = MusicUtils.getQueuePosition() + 1;
+        int newPosition = MusicUtils.getQueuePosition();
+        if (MusicUtils.getQueuePosition() < position) {
+            newPosition += 1;
+        }
 
         QueueView queueView = getView();
         if (queueView != null) {
