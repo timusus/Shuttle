@@ -257,13 +257,13 @@ public class MenuUtils implements MusicUtils.Defs {
 
     private static Single<List<Song>> getSongsForAlbums(List<Album> albums) {
         return Observable.fromIterable(albums)
-                .flatMapSingle(MenuUtils::getSongsForAlbum)
-                .reduce(Collections.emptyList(), (BiFunction<List<Song>, List<Song>, List<Song>>) (songs, songs2) -> {
-                    List<Song> allSongs = new ArrayList<>();
-                    allSongs.addAll(songs);
-                    allSongs.addAll(songs2);
-                    return allSongs;
-                })
+                .concatMap((Album album) -> getSongsForAlbum(album).toObservable())
+                .reduce(Collections.emptyList(),
+                        (BiFunction<List<Song>, List<Song>, List<Song>>) (songs, songs2) -> {
+                            List<Song> allSongs = new ArrayList<>(songs);
+                            allSongs.addAll(songs2);
+                            return allSongs;
+                        })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -376,10 +376,10 @@ public class MenuUtils implements MusicUtils.Defs {
                     addToQueue(context, getSongsForAlbum(album), insertCallback);
                     return true;
                 case R.id.editTags:
-                    if (!ShuttleUtils.isUpgraded()) {
-                        showUpgradeDialog.run();
-                    } else {
+                    if (ShuttleUtils.isUpgraded()) {
                         tagEditorCallback.accept(editTags(album));
+                    } else {
+                        showUpgradeDialog.run();
                     }
                     return true;
                 case R.id.info:
@@ -414,13 +414,13 @@ public class MenuUtils implements MusicUtils.Defs {
 
     private static Single<List<Song>> getSongsForAlbumArtists(List<AlbumArtist> albumArtists) {
         return Observable.fromIterable(albumArtists)
-                .flatMapSingle(MenuUtils::getSongsForAlbumArtist)
-                .reduce(Collections.emptyList(), (BiFunction<List<Song>, List<Song>, List<Song>>) (songs, songs2) -> {
-                    List<Song> allSongs = new ArrayList<>();
-                    allSongs.addAll(songs);
-                    allSongs.addAll(songs2);
-                    return allSongs;
-                })
+                .concatMap((AlbumArtist artist) -> getSongsForAlbumArtist(artist).toObservable())
+                .reduce(Collections.emptyList(),
+                        (BiFunction<List<Song>, List<Song>, List<Song>>) (songs, songs2) -> {
+                            List<Song> allSongs = new ArrayList<>(songs);
+                            allSongs.addAll(songs2);
+                            return allSongs;
+                        })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
