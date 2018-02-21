@@ -19,23 +19,23 @@ ext.versions = [
         // Plugin versions
         // /////////////////////////////////////////////////////////////////////////
 
-        androidGradlePlugin           : "3.1.0-alpha09",
+        androidGradlePlugin           : "3.2.0-alpha03",
         dexcountGradlePlugin          : "0.8.2",
         fabricGradlePlugin            : "1.+",
         playPublisher                 : "1.2.0",
         gradleVersions                : "0.17.0",
         retroLambda                   : "3.7.0",
-        playServices                  : "3.1.2",
+        playServices                  : "3.2.0",
 
         // //////////////////////////////////////////////////////////////////////////
         // Google lib versions
         // /////////////////////////////////////////////////////////////////////////
 
-        supportLib                    : "26.1.0",
+        supportLib                    : "27.0.2",
         firebaseCore                  : "11.8.0",
         firebaseRemoteConfig          : "11.8.0",
         chromecast                    : "11.8.0",
-        constraintLayout              : "1.0.2",
+        constraintLayout              : "1.1.0-beta5",
 
         // //////////////////////////////////////////////////////////////////////////
         // Square lib versions
@@ -43,7 +43,7 @@ ext.versions = [
 
         haha                          : "2.0.3",
         leakCanary                    : "1.5.1",
-        okio                          : "1.13.0",
+        okio                          : "1.14.0",
         okhttp                        : "3.9.1",
         retrofit                      : "2.3.0",
         retrofitGson                  : "2.3.0",
@@ -54,7 +54,7 @@ ext.versions = [
         // /////////////////////////////////////////////////////////////////////////
 
         nanoHttp                      : "2.3.1",
-        crashlytics                   : "2.8.0",
+        crashlytics                   : "2.9.0",
         dashClockApi                  : "2.0.0",
         fastScroll                    : "1.0.16",
         glide                         : "3.8.0-SNAPSHOT",
@@ -71,11 +71,11 @@ ext.versions = [
         billing                       : "1.0",
 
         // RX
-        rxAndroid                     : "2.0.1",
-        rxBinding                     : "2.0.0",
-        rxBindingAppCompat            : "2.0.0",
+        rxAndroid                     : "2.0.2",
+        rxBinding                     : "2.1.1",
+        rxBindingAppCompat            : "2.1.1",
         rxImagePicker                 : "2.0.1",
-        rxJava                        : "2.1.8",
+        rxJava                        : "2.1.9",
         rxRelay                       : "2.0.0",
         rxBroadcast                   : "2.0.0",
         rxPrefs                       : "2.0.0-RC3",
