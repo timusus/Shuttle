@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply from: 'dependencies.gradle'
 
 ext {
     PUBLISH_GROUP_ID = 'com.afollestad'
@@ -14,8 +13,8 @@ android {
     defaultConfig {
         minSdkVersion versions.minSdk
         targetSdkVersion versions.compileSdk
-        versionCode versions.publishVersionCode
-        versionName versions.publishVersion
+        versionCode 19
+        versionName '0.4.7'
     }
     buildTypes {
         release {
@@ -34,22 +33,19 @@ android {
 
 dependencies {
     repositories {
-        maven {
-            url 'https://maven.google.com'
-        }
+        google()
     }
 
-    implementation 'com.android.support:appcompat-v7:' + versions.supportLib
-    implementation 'com.android.support:cardview-v7:' + versions.supportLib
+    implementation libs.appcompat
+    implementation libs.cardView
 
-    implementation 'com.android.support:design:' + versions.supportLib
-    implementation 'com.android.support:recyclerview-v7:' + versions.supportLib
+    implementation libs.design
+    implementation libs.recyclerView
 
-    implementation 'io.reactivex.rxjava2:rxjava:' + versions.rxJava
-    implementation 'io.reactivex.rxjava2:rxandroid:' + versions.rxAndroid
-    implementation 'com.f2prateek.rx.preferences2:rx-preferences:' + versions.rxPrefs
-
-    implementation 'me.zhanghai.android.materialprogressbar:library:' + versions.mdProgressBar
+    implementation libs.rxJava
+    implementation libs.rxAndroid
+    implementation 'com.f2prateek.rx.preferences2:rx-preferences:2.0.0-RC3'
+    implementation 'me.zhanghai.android.materialprogressbar:library:1.4.2'
 }
 
 //apply from: 'https://raw.githubusercontent.com/afollestad/aidanfollestad.com/master/android-lib-release.gradle'
