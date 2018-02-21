@@ -111,11 +111,10 @@ android {
         def buildTypes = variant.buildType*.name
 
         def debugFilters = ["paid", "free", 'amazonPaid', "amazonFree"]
-        def relFilters = ["dev", "devPre21"]
+        def relFilters = ["dev"]
 
         if (System.getenv("TRAVIS")) {
             relFilters << "dev"
-            relFilters << "devPre21"
             relFilters << "amazonPaid"
             relFilters << "amazonFree"
         }
@@ -134,7 +133,6 @@ android {
             variant.outputs.all { output ->
                 output.setVersionCodeOverride(newVersionCode)
             }
-            variant.mergedFlavor.versionCode = newVersionCode
         }
     }
 
@@ -185,9 +183,6 @@ android {
 
         dev.res.srcDirs = ['src/paid/res']
         dev.java.srcDirs = ['src/paid/java']
-
-        devPre21.res.srcDirs = ['src/paid/res']
-        devPre21.java.srcDirs = ['src/paid/java']
 
         paid.res.srcDirs = ['src/paid/res']
         paid.java.srcDirs = ['src/paid/java']
