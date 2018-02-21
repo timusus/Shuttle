@@ -9,7 +9,7 @@ import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +20,7 @@ public class ContextualToolbarHelper<T> {
         void notifyDatasetChanged();
     }
 
-    private final Map<SelectableViewModel, T> map = new HashMap<>(0);
+    private final Map<SelectableViewModel, T> map = new LinkedHashMap<>(0);
 
     @NonNull
     private final ContextualToolbar contextualToolbar;

@@ -92,7 +92,8 @@ public class LibraryController extends BaseFragment implements
     @BindView(R.id.app_bar)
     AppBarLayout appBarLayout;
 
-    @Inject NavigationEventRelay navigationEventRelay;
+    @Inject
+    NavigationEventRelay navigationEventRelay;
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -171,6 +172,7 @@ public class LibraryController extends BaseFragment implements
 
     @Override
     public void onDestroyView() {
+        pager.setAdapter(null);
         compositeDisposable.clear();
         unbinder.unbind();
         super.onDestroyView();
@@ -207,24 +209,22 @@ public class LibraryController extends BaseFragment implements
         if (pagerAdapter != null && refreshPagerAdapter) {
             pagerAdapter.removeAllChildFragments();
             refreshPagerAdapter = false;
-            pagerAdapter = null;
+            pager.setAdapter(null);
         }
 
         int defaultPage = 1;
 
-        if (pagerAdapter == null) {
-            pagerAdapter = new PagerAdapter(getChildFragmentManager());
-            List<CategoryItem> categoryItems = Stream.of(CategoryItem.getCategoryItems(sharedPreferences))
-                    .filter(categoryItem -> categoryItem.isChecked)
-                    .toList();
+        pagerAdapter = new PagerAdapter(getChildFragmentManager());
+        List<CategoryItem> categoryItems = Stream.of(CategoryItem.getCategoryItems(sharedPreferences))
+                .filter(categoryItem -> categoryItem.isChecked)
+                .toList();
 
-            int defaultPageType = SettingsManager.getInstance().getDefaultPageType();
-            for (int i = 0; i < categoryItems.size(); i++) {
-                CategoryItem categoryItem = categoryItems.get(i);
-                pagerAdapter.addFragment(categoryItem.getFragment(getContext()));
-                if (categoryItem.type == defaultPageType) {
-                    defaultPage = i;
-                }
+        int defaultPageType = SettingsManager.getInstance().getDefaultPageType();
+        for (int i = 0; i < categoryItems.size(); i++) {
+            CategoryItem categoryItem = categoryItems.get(i);
+            pagerAdapter.addFragment(categoryItem.getFragment(getContext()));
+            if (categoryItem.type == defaultPageType) {
+                defaultPage = i;
             }
         }
 
