@@ -12,7 +12,7 @@ public class HttpClient {
 
     public static final String TAG = "HttpClient";
 
-    private static final String URL_LAST_FM = "http://ws.audioscrobbler.com/2.0/";
+    private static final String URL_LAST_FM = "https://ws.audioscrobbler.com/2.0/";
     private static final String URL_ITUNES = "https://itunes.apple.com/search/";
 
     private static HttpClient sInstance;
