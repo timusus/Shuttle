@@ -72,6 +72,15 @@ class DetailPresenter extends Presenter<DetailView> {
         });
     }
 
+    void playNext() {
+        MusicUtils.playNext(songsProvider.getSongs(), message -> {
+            DetailView detailView = getView();
+            if (detailView != null) {
+                detailView.showToast(message);
+            }
+        });
+    }
+
     void addToQueue() {
         songsProvider.getSongs().observeOn(AndroidSchedulers.mainThread())
                 .subscribe(songs -> MusicUtils.addToQueue(songs, message -> {

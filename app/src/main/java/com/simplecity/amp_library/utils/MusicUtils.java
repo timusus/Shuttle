@@ -370,6 +370,15 @@ public class MusicUtils {
         onAdded.accept(ShuttleApplication.getInstance().getResources().getQuantityString(R.plurals.NNNtrackstoqueue, songs.size(), songs.size()));
     }
 
+    public static void playNext(Single<List<Song>> songsSingle, UnsafeConsumer<String> onAdded) {
+        if (MusicServiceConnectionUtils.serviceBinder.getService() == null) {
+            return;
+        }
+        songsSingle
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(songs -> playNext(songs, onAdded));
+    }
+
     public static void playNext(List<Song> songs, UnsafeConsumer<String> onAdded) {
         if (MusicServiceConnectionUtils.serviceBinder.getService() == null) {
             return;

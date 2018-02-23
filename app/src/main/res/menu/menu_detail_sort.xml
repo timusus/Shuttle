@@ -22,6 +22,10 @@
         android:title="@string/play_selection"/>
 
     <item
+        android:id="@+id/playNext"
+        android:title="@string/play_next"/>
+
+    <item
         android:title="@string/menu_add_to">
         <menu>
             <item

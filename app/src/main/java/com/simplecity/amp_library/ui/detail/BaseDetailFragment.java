@@ -598,6 +598,9 @@ public abstract class BaseDetailFragment extends BaseFragment implements
             case R.id.play:
                 detailPresenter.playAll();
                 return true;
+            case R.id.playNext:
+                detailPresenter.playNext();
+                return true;
             case R.id.addToQueue:
                 detailPresenter.addToQueue();
                 return true;
