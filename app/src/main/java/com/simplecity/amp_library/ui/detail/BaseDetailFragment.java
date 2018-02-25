@@ -605,12 +605,18 @@ public abstract class BaseDetailFragment extends BaseFragment implements
                 detailPresenter.addToQueue();
                 return true;
             case MusicUtils.Defs.NEW_PLAYLIST:
-                detailPresenter.newPlaylist(getContext(),
-                        () -> contextualToolbarHelper.finish());
+                detailPresenter.newPlaylist(getContext(), () -> {
+                    if (getContext() != null) {
+                        contextualToolbarHelper.finish();
+                    }
+                });
                 return true;
             case MusicUtils.Defs.PLAYLIST_SELECTED:
-                detailPresenter.playlistSelected(getContext(), item,
-                        () -> contextualToolbarHelper.finish());
+                detailPresenter.playlistSelected(getContext(), item, () -> {
+                    if (getContext() != null) {
+                        contextualToolbarHelper.finish();
+                    }
+                });
                 return true;
             case R.id.editTags:
                 detailPresenter.editTags(getTaggerDialog(), UpgradeDialog.getUpgradeDialog(getActivity()));
@@ -929,7 +935,6 @@ public abstract class BaseDetailFragment extends BaseFragment implements
                     super.finish();
                     toolbarLayout.setCollapsedTitleTextColor(collapsingToolbarTextColor);
                     toolbarLayout.setCollapsedSubTextColor(collapsingToolbarSubTextColor);
-
                     toolbar.setVisibility(View.VISIBLE);
                 }
             };
