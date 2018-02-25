@@ -10,7 +10,7 @@ ext.versions = [
         // Compile versions
         // /////////////////////////////////////////////////////////////////////////
 
-        minSdk                        : 16,
+        minSdk                        : 21,
         targetSdk                     : 27,
         compileSdk                    : 27,
         buildTools                    : "27.0.3",
