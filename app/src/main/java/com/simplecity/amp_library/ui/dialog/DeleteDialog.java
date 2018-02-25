@@ -163,8 +163,7 @@ public class DeleteDialog extends DialogFragment implements SafManager.SafDialog
         String nameString;
         if (names.size() > 1) {
             stringToFormat = getString(deleteMessageId);
-            nameString = Stream.of(songs)
-                    .map(song -> song.name)
+            nameString = Stream.of(names)
                     .map(itemName -> "\n\u2022 " + itemName)
                     .collect(Collectors.joining()) + "\n";
         } else {
