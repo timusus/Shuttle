@@ -2,14 +2,12 @@ package com.simplecity.amp_library;
 
 import android.Manifest;
 import android.app.Application;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.multidex.MultiDex;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -80,15 +78,6 @@ public class ShuttleApplication extends Application {
     private static Logger jaudioTaggerLogger2 = Logger.getLogger("org.jaudiotagger");
 
     private AppComponent appComponent;
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-
-        if (BuildConfig.FLAVOR.equals("dev")) {
-            MultiDex.install(base);
-        }
-    }
 
     @Override
     public void onCreate() {

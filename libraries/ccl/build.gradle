@@ -1,16 +1,14 @@
-apply plugin: 'com.android.library'
+import dependencies.Dependencies
 
-ext {
-    versionName = '2.9.1'
-}
+apply plugin: Dependencies.BuildPlugins.androidLibrary
 
 android {
-    compileSdkVersion versions.compileSdk
-    buildToolsVersion versions.buildTools
+    compileSdkVersion Dependencies.compileSdk
+    buildToolsVersion Dependencies.buildTools
 
     defaultConfig {
-        minSdkVersion versions.minSdk
-        targetSdkVersion versions.targetSdk
+        minSdkVersion Dependencies.minSdk
+        targetSdkVersion Dependencies.targetSdk
     }
 
     sourceSets {
@@ -27,7 +25,7 @@ android {
 }
 
 dependencies {
-    implementation libs.appcompat
-    implementation libs.mediarouter
-    implementation libs.chromecast
+    implementation Dependencies.Google.appcompat
+    implementation Dependencies.Google.mediarouter
+    implementation Dependencies.Google.chromecast
 }

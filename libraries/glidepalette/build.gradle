@@ -1,15 +1,14 @@
-apply plugin: 'com.android.library'
+import dependencies.Dependencies
+
+apply plugin: Dependencies.BuildPlugins.androidLibrary
 
 android {
-    compileSdkVersion versions.compileSdk
-    buildToolsVersion versions.buildTools
+    compileSdkVersion Dependencies.compileSdk
+    buildToolsVersion Dependencies.buildTools
 
     defaultConfig {
-        minSdkVersion versions.minSdk
-        targetSdkVersion versions.targetSdk
-
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion Dependencies.minSdk
+        targetSdkVersion Dependencies.targetSdk
     }
     buildTypes {
         release {
@@ -21,7 +20,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation libs.palette
-    implementation libs.supportv4
-    implementation libs.glide
+    implementation Dependencies.Google.palette
+    implementation Dependencies.Google.supportv4
+    implementation Dependencies.glide
 }

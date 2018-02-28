@@ -1,18 +1,20 @@
+import dependencies.Dependencies
+
 buildscript {
     repositories {
         mavenCentral()
     }
 }
 
-apply plugin: 'com.android.library'
+apply plugin: Dependencies.BuildPlugins.androidLibrary
 
 android {
-    compileSdkVersion versions.compileSdk
-    buildToolsVersion versions.buildTools
+    compileSdkVersion Dependencies.compileSdk
+    buildToolsVersion Dependencies.buildTools
 
     defaultConfig {
-        minSdkVersion versions.minSdk
-        targetSdkVersion versions.targetSdk
+        minSdkVersion Dependencies.minSdk
+        targetSdkVersion Dependencies.targetSdk
         versionCode 1
         versionName "1.0"
     }
@@ -30,6 +32,6 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation libs.appcompat
-    implementation libs.design
+    implementation Dependencies.Google.appcompat
+    implementation Dependencies.Google.design
 }

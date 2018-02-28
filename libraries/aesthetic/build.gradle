@@ -1,18 +1,14 @@
-apply plugin: 'com.android.library'
+import dependencies.Dependencies
 
-ext {
-    PUBLISH_GROUP_ID = 'com.afollestad'
-    PUBLISH_ARTIFACT_ID = 'aesthetic'
-    PUBLISH_VERSION = versions.publishVersion
-}
+apply plugin: Dependencies.BuildPlugins.androidLibrary
 
 android {
-    compileSdkVersion versions.compileSdk
-    buildToolsVersion versions.buildTools
+    compileSdkVersion Dependencies.compileSdk
+    buildToolsVersion Dependencies.buildTools
 
     defaultConfig {
-        minSdkVersion versions.minSdk
-        targetSdkVersion versions.compileSdk
+        minSdkVersion Dependencies.minSdk
+        targetSdkVersion Dependencies.compileSdk
         versionCode 19
         versionName '0.4.7'
     }
@@ -28,7 +24,6 @@ android {
                 'src/main/res-public'
         ]
     }
-    buildToolsVersion versions.buildTools
 }
 
 dependencies {
@@ -36,16 +31,14 @@ dependencies {
         google()
     }
 
-    implementation libs.appcompat
-    implementation libs.cardView
+    implementation Dependencies.Google.appcompat
+    implementation Dependencies.Google.cardView
 
-    implementation libs.design
-    implementation libs.recyclerView
+    implementation Dependencies.Google.design
+    implementation Dependencies.Google.recyclerView
 
-    implementation libs.rxJava
-    implementation libs.rxAndroid
+    implementation Dependencies.Rx.rxJava
+    implementation Dependencies.Rx.rxAndroid
     implementation 'com.f2prateek.rx.preferences2:rx-preferences:2.0.0-RC3'
     implementation 'me.zhanghai.android.materialprogressbar:library:1.4.2'
 }
-
-//apply from: 'https://raw.githubusercontent.com/afollestad/aidanfollestad.com/master/android-lib-release.gradle'

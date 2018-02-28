@@ -1,17 +1,17 @@
-apply from: 'dependencies.gradle'
-apply plugin: 'com.github.ben-manes.versions'
+import dependencies.Dependencies
+
+apply plugin: Dependencies.BuildPlugins.gradleVersions
 
 buildscript {
-    apply from: 'dependencies.gradle'
     repositories {
         jcenter()
         google()
     }
     dependencies {
-        classpath gradlePlugins.android
-        classpath gradlePlugins.playPublisher
-        classpath gradlePlugins.gradleVersions
-        classpath gradlePlugins.playServices
+        classpath Dependencies.Plugins.android
+        classpath Dependencies.Plugins.playPublisher
+        classpath Dependencies.Plugins.gradleVersions
+        classpath Dependencies.Plugins.playServices
     }
 }
 
