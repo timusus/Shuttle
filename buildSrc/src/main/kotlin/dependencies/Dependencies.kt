@@ -72,7 +72,7 @@ object Dependencies {
     object Plugins {
 
         object Versions {
-            const val androidGradlePlugin = "3.2.0-alpha03"
+            const val androidGradlePlugin = "3.2.0-alpha04"
             const val dexcountGradlePlugin = "0.8.2"
             const val fabricGradlePlugin = "1.+"
             const val playPublisher = "1.2.0"
