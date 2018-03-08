@@ -91,7 +91,7 @@ object Dependencies {
     object Google {
 
         object Versions {
-            const val supportLib = "27.0.2"
+            const val supportLib = "27.1.0"
             const val firebaseCore = "11.8.0"
             const val firebaseRemoteConfig = "11.8.0"
             const val chromecast = "11.8.0"
