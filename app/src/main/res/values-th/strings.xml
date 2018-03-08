@@ -430,9 +430,7 @@
     <!-- Button text for saving tags  -->
     <string name="save">บันทึก</string>
     <!-- Message displayed when tag editing fails -->
-    <string name="tag_edit_error">เกิดข้อผิดพลาดในการแก้ไขแท็ก</string>
-    <string name="tag_error_lollipop">เกิดข้อผิดพลาดในการแก้ไขแท็ก หากไฟล์ถูกเก็บไว้ในการ์ด SD Shuttle อาจไม่มีสิทธิ์เข้าถึงไฟล์ดังกล่าว</string>
-    <string name="tag_error_kitkat">เกิดข้อผิดพลาดในการแก้ไขแท็ก แฟ้มเก็บอยู่ใน SD Card หรือไม่? ถ้าเป็นเช่นนั้น Google ได้ทำให้การแก้ไขแท็กเป็นไปไม่ได้สำหรับไฟล์นี้</string>
+    <string name="tag_error">เกิดข้อผิดพลาดในการแก้ไขแท็ก</string>
     <string name="tag_editor_document_tree_message">เนื่องจากการเปลี่ยนแปลงใน Android 5.0 Google ต้องการให้คุณระบุโฟลเดอร์ในการ์ด SD ที่แอปพลิเคชันสามารถแก้ไขได้\n\nShuttle จะเปิดตัวเลือกไฟล์ โปรดเลือกโฟลเดอร์หลักของไฟล์ที่คุณต้องการแก้ไข</string>
     <string name="tag_editor_check_permission">กำลังตรวจสอบสิทธิ์ ซึ่งอาจใช้เวลาสักครู่...\nตำหนิ Google!</string>
     <string name="tag_editor_document_tree_permission_failed">ดูเหมือนว่า Shuttle ยังคงไม่ได้รับอนุญาตให้แก้ไขไฟล์ ตรวจสอบไดเรกทอรีในเครื่องมือเลือกไฟล์</string>

@@ -435,9 +435,7 @@
     <!-- Button text for saving tags  -->
     <string name="save">保存</string>
     <!-- Message displayed when tag editing fails -->
-    <string name="tag_edit_error">タグの変更中エラーが発生しました</string>
-    <string name="tag_error_lollipop">タグの編集中にエラーが発生しました。SDカードに保存されている場合、Shuttleに編集権限が無いため編集できません。</string>
-    <string name="tag_error_kitkat">タグの編集中にエラーが発生しました。SDカードに音楽が保存されていますか？もしそうならGoogleがタグの編集を行えないようにしました。</string>
+    <string name="tag_error">タグの編集中にエラーが発生しました。</string>
     <string name="tag_editor_document_tree_message">Android5.0の更新により、Googleがアプリ上で編集できるSDカードのフォルダを指定するよう求めています。\n\nファイル選択画面をShuttleより開きます。変更する親フォルダを指定してください。</string>
     <string name="tag_editor_check_permission">アクセス権限を確認しています。この作業にはしばらく時間がかかる場合があります...\n\nGoogleを非難してください!</string>
     <string name="tag_editor_document_tree_permission_failed">Shuttleはファイルの編集権限を保有していないようです。ファイルの選択を再度確認してください。</string>
@@ -463,6 +461,9 @@
     <!-- -->
     <string name="show_filenames">ファイル名を表示</string>
     <!-- -->
+    <string name="set_home_dir">ホームディレクトリに設定する</string>
+    <string name="remove_home_dir">ホームディレクトリを削除する</string>
+    <string name="nav_home_dir">ホームディレクトリに移動する</string>
     <!-- 'Scan'-->
     <string name="scan_file">スキャン</string>
     <!-- Scan Complete-->
@@ -663,6 +664,7 @@
     <string name="btn_shuffle_off">シャッフル再生をオフ</string>
     <!-- Accessibility button description -->
     <!-- Accessibility button description -->
+    <string name="btn_fab_shuffle">現在のリストをシャッフルし再生</string>
     <!-- Accessibility now playing 'mini player' description. Example: Now playing <Wannabe> by <Spice Girls> -->
     <string name="btn_now_playing">%2$sさんの%1$sを再生中</string>
     <!-- Accessibility 'show lyrics' -->
@@ -716,6 +718,7 @@
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label">デイスク<xliff:g id="number">%d</xliff:g></string>
     <!-- Search Filter-->
+    <string name="search_fuzzy">ファジー</string>
     <string name="search_artists">アーティスト</string>
     <string name="search_albums">アルバム</string>
     <!-- Changelog -->
@@ -732,12 +735,12 @@
     <!-- "Playlist" Shortcut label. Max 10 characters.-->
     <string name="shortcut_playlist_short_label">プレイリスト</string>
     <!-- "Playlist" Shortcut long label. Max 25 characters.-->
+    <string name="shortcut_playlist_long_label">お気に入りのプレイリストを開く</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">プレイリストが使用できません</string>
     <!-- Displayed at the top of the album list, album shuffle mode-->
     <string name="shuffle_albums">全アルバムをシャッフルする</string>
     <!-- Storage Access Framework (Used when deleting files from SD CarD)-->
-    <string name="saf_failure_kitkat_title">ファイルにアクセスできません</string>
     <string name="saf_access_required_title">ストーレッジにアクセスの許可が必要です</string>
     <string name="saf_access_required_message">Shuttleはこのファイルにアクセスするには許可が必要です。音楽を含むディレクトリを選択してください。</string>
     <string name="saf_show_files_button">ファイルを表示する</string>

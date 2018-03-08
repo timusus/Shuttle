@@ -427,9 +427,7 @@ Si no está seleccionado, se usará el icono de Shuttle en su lugar</string>
     <!-- Button text for saving tags  -->
     <string name="save">Guardar</string>
     <!-- Message displayed when tag editing fails -->
-    <string name="tag_edit_error">Ha ocurrido un error al editar las etiquetas.</string>
-    <string name="tag_error_lollipop">Un error ocurrió al editar etiquetas. Si el archivo esta almacenado en una tarjeta SD, Shuttle podría no tener permisos para accederla.</string>
-    <string name="tag_error_kitkat">Un error ocurrió editando etiquetas. El archivo esta dentro de una tarjeta SD? Si es asi, Google ha imposibilitado la edición de etiquetas para este archivo.</string>
+    <string name="tag_error">No se pudieron editar las etiquetas. Si estás usando KitKat y el archivo está almacenado en la tarjeta SD, el editor de etiquetas no funcionará. Esto se debe a cambios en los permisos de acceso a la tarjeta SD realizados por Google. ¡Lo sentimos!</string>
     <string name="tag_editor_document_tree_message">Debido a cambios en Android 5.0, Google ahora necesita que indique en qué carpeta dentro de una tarjeta SD una aplicación puede editar.\n\nShuttle abrirá un selector de archivos. Por favor escoja la carpeta principal de los archivos que desea modificar.</string>
     <string name="tag_editor_check_permission">Comprobando permisos. Será solo un momento...\n\n¡Culpa de Google!</string>
     <string name="tag_editor_document_tree_permission_failed">Parece que Shuttle no tiene permisos para editar estos archivos. Revise la ubicación en el selector de archivos.</string>

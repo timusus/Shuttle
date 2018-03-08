@@ -57,7 +57,7 @@ android {
         versionName Config.versionName
         versionCode 5000
 
-        resConfigs "en", "zh-rCN", "fr", "de", "ko", "it", "ru", "nl", "tr", "pl", "ro", "hu", "uk", "bg-rBG", "en-rGB", "vi", "pt-rBR", "es", "en-rNZ", "zh-rTW", "es-rES", "ca", "hr", "en-rAU", "eu-rES", "th", "ja"
+        resConfigs "en", "zh-rCN", "fr", "de", "ko", "it", "ru", "nl", "tr", "pl", "ro", "hu", "uk", "bg-rBG", "en-rGB", "et-rEE", "vi", "pt-rBR", "es", "en-rNZ", "zh-rTW", "es-rES", "ca", "hr", "en-rAU", "eu-rES", "th", "ja"
 
         renderscriptTargetApi 23
 

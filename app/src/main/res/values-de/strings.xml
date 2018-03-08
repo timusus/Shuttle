@@ -444,9 +444,7 @@
     <!-- Button text for saving tags  -->
     <string name="save">Speichern</string>
     <!-- Message displayed when tag editing fails -->
-    <string name="tag_edit_error">Fehler beim Bearbeiten der Tags.</string>
-    <string name="tag_error_lollipop">Tags konnten nicht gespeichert werden. Wenn die Datei auf einer SD-Karte gespeichert ist, hat Shuttle möglicherweise keine Schreibrechte.</string>
-    <string name="tag_error_kitkat">Tags konnten nicht gespeichert werden. Wenn die Datei auf einer SD-Karte gespeichert ist, hat Google das Speichern für diese Datei unmöglich gemacht.</string>
+    <string name="tag_error">Tags konnten nicht bearbeitet werden.</string>
     <string name="tag_editor_document_tree_message">Wegen Änderungen in Android 5.0 muss angegeben werden, welche Dateien auf der SD-Karte bearbeitet werden dürfen.\n\nWähle den Überordner aus, in dem die Dateien bearbeitet werden dürfen.</string>
     <string name="tag_editor_check_permission">Rechte werden überprüft. Es könnte einen Moment dauern...\n\nGoogle ist schuld!</string>
     <string name="tag_editor_document_tree_permission_failed">Shuttle hat immer noch keine Rechte zum Bearbeiten von Dateien. Überprüfe das Verzeichnis im Explorer.</string>

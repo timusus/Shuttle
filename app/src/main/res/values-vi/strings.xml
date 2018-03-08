@@ -429,9 +429,7 @@
     <!-- Button text for saving tags  -->
     <string name="save">Lưu</string>
     <!-- Message displayed when tag editing fails -->
-    <string name="tag_edit_error">Lỗi đã xảy ra khi chỉnh sửa thẻ.</string>
-    <string name="tag_error_lollipop">Lỗi đã xảy ra trong khi chỉnh sửa thẻ. Nếu tập tin được lưu trên thẻ nhớ, Shuttle có thể không có quyền truy cập nó.</string>
-    <string name="tag_error_kitkat">Lỗi đã xảy ra trong khi chỉnh sửa thẻ. Tập tin được lưu trên thẻ nhớ? Nếu vậy, Google không cho phép chỉnh sửa thẻ của tập tin này.</string>
+    <string name="tag_error">Lỗi đã xảy ra khi chỉnh sửa thẻ.</string>
     <string name="tag_editor_document_tree_message">Vì những thay đổi trong Android 5.0, Google giờ đây yêu cầu bạn chọn thư mục nào trên thẻ nhớ mà một ứng dụng được phép chỉnh sửa.\n\nShuttle sẽ mở trình chọn tập tin. Hãy chọn thư mục chính của những tập tin bạn muốn thay đổi.</string>
     <string name="tag_editor_check_permission">Đang kiểm tra quyền truy cập. Có thể sẽ mất một lúc...\n\nXin hãy đổ lỗi cho Google!</string>
     <string name="tag_editor_document_tree_permission_failed">Có vẻ như Shuttle vẫn không có quyền chỉnh sửa tập tin. Hãy kiểm tra lại đường dẫn trong trình chọn tập tin.</string>

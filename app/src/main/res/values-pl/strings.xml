@@ -440,9 +440,7 @@ Po wyłączeniu, jako obraz zastępczy będzie używana ikona programu.</string>
     <!-- Button text for saving tags  -->
     <string name="save">Zapisz</string>
     <!-- Message displayed when tag editing fails -->
-    <string name="tag_edit_error">Wystąpił błąd podczas modyfikowania znaczników.</string>
-    <string name="tag_error_lollipop">Wystąpił błąd modyfikowania znaczników. Jeśli plik jest przechowywany na karcie SD, Shuttle może nie mieć do niego dostępu.</string>
-    <string name="tag_error_kitkat">Wystąpił błąd modyfikowania etykiet. Czy plik jest przechowywany na karcie SD? Jeśli tak, Google uniemożliwiło modyfikowanie etykiet tego pliku.</string>
+    <string name="tag_error">Wystąpił błąd modyfikowania znaczników.</string>
     <string name="tag_editor_document_tree_message">Z powodu zmian w Androidzie 5.0, Google wymaga określenia katalogów, do których aplikacja może mieć uprawnienia do zapisywania.\n\nProgram Shuttle otworzy przeglądarkę plików. Proszę wybrać katalog nadrzędny z modyfikowanymi plikami.</string>
     <string name="tag_editor_check_permission">Sprawdzanie uprawnień. Może to chwilę potrwać...\n\nObwiniaj Google!</string>
     <string name="tag_editor_document_tree_permission_failed">Wygląda na to, że Shuttle nie ma uprawnień do zapisywania plików. Proszę upewnić się, że wybrano odpowiedni katalog w przeglądarce plików.</string>

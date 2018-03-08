@@ -98,6 +98,7 @@ músicas adicionadas à fila.</item>
 \n• Edição de tags
 \n• Navegação por pastas
 \n• Ajuda e suporte ao desenvolvimento do app ❤️</string>
+    <string name="upgrade_required_folders">Atualizar para Shuttle+</string>
     <string name="btn_upgrade">Atualizar</string>
     <!-- -->
     <string name="get_pro_button_no">Não, obrigado</string>
@@ -228,6 +229,7 @@ músicas adicionadas à fila.</item>
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">Outros</string>
     <!--Settings category for 'playback' items -->
+    <string name="pref_category_playback">Reprodução</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
     <string name="pref_title_choose_tabs">Escolher guias</string>
     <!--Settings summary for opening the dialog to pick which categories are shown as tab headings -->
@@ -370,10 +372,15 @@ Se estiver desmarcado, o ícone do Shuttle será usado como uma capa</string>
     <!-- Settings title for the Support heading -->
     <string name="pref_title_support">Suporte</string>
     <!-- Settings title for toggling between remaining time and total time -->
+    <string name="pref_title_display_remaining_time">Mostrar tempo restante</string>
     <!-- Settings summary for toggling between remaining time and total time -->
+    <string name="pref_summary_display_remaining_time">Mostrar o tempo restante em vez da duração na tela \"Reproduzindo agora\"</string>
     <!-- Settings title for the playback options -->
+    <string name="pref_title_playback">Reprodução</string>
     <!-- Settings title for toggling 'remember shuff'e-->
+    <string name="pref_title_remember_shuffle">Lembre-se do modo aleatório</string>
     <!-- Settings summary for toggling 'remember shuff'e-->
+    <string name="pref_summary_remember_shuffle">O modo aleatório não desliga quando reproduz uma nova lista de músicas</string>
     <string name="pref_title_version">Versão</string>
     <string name="pref_title_faq">Perguntas frequentes</string>
     <string name="pref_summary_faq">Tem alguma pergunta? Precisa de ajuda? Clique aqui para ver as perguntas frequentes em www.shuttlemusicplayer.com</string>
@@ -431,9 +438,7 @@ Se estiver desmarcado, o ícone do Shuttle será usado como uma capa</string>
     <!-- Button text for saving tags  -->
     <string name="save">Salvar</string>
     <!-- Message displayed when tag editing fails -->
-    <string name="tag_edit_error">Um erro ocorreu ao editar tags.</string>
-    <string name="tag_error_lollipop">Ocorreu um erro ao editar as tags. Se o arquivo estiver num cartão de memória, talvez o Shuttle não tenha permissão para acessá-lo.</string>
-    <string name="tag_error_kitkat">Ocorreu um erro ao editar as tags. O arquivo está num cartão de memória? Se sim, o Google fez impossível alterar tags para esse arquivo.</string>
+    <string name="tag_error">Um erro ocorreu ao editar as tags.</string>
     <string name="tag_editor_document_tree_message">Devido à mudanças no Android 5.0, o Google agora exige que você especifique quais pastas o app pode editar num cartão de memória.\n\nO Shuttle abrirá um seletor de arquivos. Por favor, escolha a pasta mãe dos arquivos que você deseja modificar.</string>
     <string name="tag_editor_check_permission">Conferindo permissões. Isso pode demorar um pouco...\n\nCulpe o Google!</string>
     <string name="tag_editor_document_tree_permission_failed">Parece que o Shuttle ainda não tem permissões para editar os arquivos. Marque novamente o diretório no seletor de arquivos.</string>
@@ -459,6 +464,9 @@ pastas</item>
     <!-- -->
     <string name="show_filenames">Mostrar nomes de arquivos</string>
     <!-- -->
+    <string name="set_home_dir">Definir o diretório inicial</string>
+    <string name="remove_home_dir">Remover o diretório inicial</string>
+    <string name="nav_home_dir">Navegue até o diretório inicial</string>
     <!-- 'Scan'-->
     <string name="scan_file">Escanear</string>
     <!-- Scan Complete-->
@@ -738,4 +746,7 @@ pastas</item>
     <!-- Displayed at the top of the album list, album shuffle mode-->
     <string name="shuffle_albums">Álbuns Aleatórios</string>
     <!-- Storage Access Framework (Used when deleting files from SD CarD)-->
+    <string name="saf_access_required_title">Acesso de armazenamento necessário</string>
+    <string name="saf_access_required_message">O Shuttle requer permissão para acessar esses arquivos. Escolha o diretório que contém sua música.</string>
+    <string name="saf_show_files_button">Mostrar arquivos</string>
 </resources>

@@ -418,9 +418,7 @@
     <!-- Button text for saving tags  -->
     <string name="save">Зберегти</string>
     <!-- Message displayed when tag editing fails -->
-    <string name="tag_edit_error">Під час редагування тегів сталася помилка.</string>
-    <string name="tag_error_lollipop">Під час редагування тегів виникла помилка. Якщо цей файл розміщено на SD-карті, Shuttle не матиме до нього доступу.</string>
-    <string name="tag_error_kitkat">Під час редагування тегів виникла помилка. Файл розміщено на SD-карті? Якщо так, Google зробить можливим редагування цього файлу.</string>
+    <string name="tag_error">Помилка редагування тегів.</string>
     <string name="tag_editor_document_tree_message">У зв\'язку зі змінами в Android 5.0, Google потребує щоб ви визначили які теки додатку дозволено редагувати.\n\nShuttle зараз відкриє провідник. Будь ласка оберіть   теку файлів, які ви хочете змінити.</string>
     <string name="tag_editor_check_permission">Перевірка дозволів. Це займе момент...\n\nАвторство Google!</string>
     <string name="tag_editor_document_tree_permission_failed">Здається що Shuttle досі не має дозволу на редагування файлів. Двічі перевірте теку в провіднику.</string>

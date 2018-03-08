@@ -393,8 +393,7 @@ Si està desmarcat, s\'emprarà l\'icona de Shuttle.</string>
     <!-- Button text for saving tags  -->
     <string name="save">Guardar</string>
     <!-- Message displayed when tag editing fails -->
-    <string name="tag_error_lollipop">Un error ha ocorregut en editar les etiquetes. Si l\'arxiu està emmagatzemat a la targeta SD, Shuttle podria no tenir permís per accedir-hi.</string>
-    <string name="tag_error_kitkat">Un error ha ocorregut en editar les etiquetes. L\'arxiu està emmagatzemant a la targeta SD? En tal cas, Google ha fet que l\'edició d\'etiquetes per aquest arxiu sigui impossible.</string>
+    <string name="tag_error">Hi ha hagut un error en guardar les etiquetes</string>
     <string name="tag_editor_document_tree_message">Degut a canvis a Android 5.0, ara Google requereix que especifiquis a quines carpetes de la targeta SD una determinada aplicació té permès accedir.\n\nAra Shuttle obrirà un seleccionador d\'arxius. Esculli la carpeta principal dels arxius que vols modificar.</string>
     <string name="tag_editor_check_permission">Revisant els permisos. Això podria portar una estona...\n\nCulpa a Google!</string>
     <string name="tag_editor_document_tree_permission_failed">Sembla que Shuttle encara no té els permisos per editar els arxius. Torna a revisar el directori en el seleccionador d\'arxius.</string>

@@ -221,6 +221,7 @@
     <!-- Track count. i.e "1 of 15" -->
     <!-- Button text for saving tags  -->
     <!-- Message displayed when tag editing fails -->
+    <string name="tag_error">Couldn\'t edit tags. If you\'re using Kitkat, and the file is stored on the SD card, tag editing will no longer work. This is due to changes to the access permissions of the SD card enforced by Google. Sorry!</string>
     <!-- ## Folder browsing ## -->
     <!-- -->
     <!-- -->

@@ -440,9 +440,7 @@
     <!-- Button text for saving tags  -->
     <string name="save">Salva</string>
     <!-- Message displayed when tag editing fails -->
-    <string name="tag_edit_error">Si è verificato un errore durante la modifica dei tag.</string>
-    <string name="tag_error_lollipop">Errore durante la modifica dei tag. Se il file risiede su una scheda SD, Shuttle potrebbe non avere i permessi per accedere.</string>
-    <string name="tag_error_kitkat">Si è verificato un errore durante la modifica dei tag. Il file è memorizzato su una scheda SD? In tal caso, Google ha reso impossibile la modifica dei tag per questo file.</string>
+    <string name="tag_error">"Si è verificato un errore durante la modifica dei tag. "</string>
     <string name="tag_editor_document_tree_message">A causa dei cambiamenti in Android 5.0, Google ora richiede che vengano indicate quali cartelle in una scheda SD possono essere modificate da un\'app.\n\nShuttle aprirà ora un selettore di file. Per favore scegli la cartella genitore dei file che desideri modificare.</string>
     <string name="tag_editor_check_permission">Sto controllando i permessi. Potrebbe richiedere un po\' di tempo...\n\nColpa di Google!</string>
     <string name="tag_editor_document_tree_permission_failed">Sembra che Shuttle continui a non avere le necessarie autorizzazioni per modificare i file. Controlla nuovamente la cartella scelta attraverso il selettore di file.</string>

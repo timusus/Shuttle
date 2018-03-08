@@ -74,7 +74,7 @@
     <!-- Option to share audio file -->
     <string name="share_option_audio_file">Le fichier audio</string>
     <!-- Displays when you need to choose which app to share the song with -->
-    <string name="share_via">Partager le titre en cours via:</string>
+    <string name="share_via">Partager le titre via:</string>
     <!-- Displayed when an M3U playlist is being saved-->
     <string name="saving_playlist">Enregistrement de la playlist</string>
     <!-- Displayed when whitelisting a folder, as the app gathers the songs-->
@@ -91,7 +91,7 @@
     <!-- -->
     <string name="upgraded_title">Merci</string>
     <string name="upgraded_message">Vous avez mis à niveau vers Shuttle+ avec succès. Merci de votre soutient.
-\n\nVeuillez redémarrer l\'application pour que toute les fonctions soient activent.</string>
+\n\nVeuillez redémarrer l\'application pour que toute les fonctions soient actives.</string>
     <string name="upgrade_dialog_message">• Prise en charge Chromecast
 \n• Thèmes supplémentaires
 \n• Édition des tags
@@ -440,9 +440,7 @@
     <!-- Button text for saving tags  -->
     <string name="save">Enregistrer</string>
     <!-- Message displayed when tag editing fails -->
-    <string name="tag_edit_error">Une erreur est survenue pendant l\'édition des tags.</string>
-    <string name="tag_error_lollipop">Une erreur est survenue en modifiant les tags. Si le fichier est stocké sur une carte SD, Shuttle peut ne pas avoir l\'autorisation pour y accéder.</string>
-    <string name="tag_error_kitkat">Une erreur est survenue en modifiant les tags. Est-ce que le fichier est stocké sur une carte SD ? Si c\'est le cas, Google a rendu la modification de tag impossible pour ce fichier.</string>
+    <string name="tag_error">Impossible de modifier les infos. Si vous êtes sous KitKat et que le fichier est stocké sur la carte SD, la modification des méta-données ne fonctionne plus en raison des restrictions d\'autorisations d\'accès à la carte SD imposées par Google. Désolé!</string>
     <string name="tag_editor_document_tree_message">À cause de changements d\'Android 5.0, Google demande maintenant que vous spécifiez quels dossiers sur la carte SD une application peut modifier.\n\nShuttle va ouvrir maintenant un sélecteur de fichier. Merci de choisir le dossier parent des fichiers que vous souhaitez modifier.</string>
     <string name="tag_editor_check_permission">Contrôle des autorisations en cours. Cela peut prendre un peu de temps...\n\nC\'est la faute à Google!</string>
     <string name="tag_editor_document_tree_permission_failed">Il semble que Shuttle n\'a toujours pas l\'autorisation de modifier les fichiers. Recontrôlez le dossier dans le sélecteur de fichier.</string>
@@ -469,6 +467,9 @@
     <!-- -->
     <string name="show_filenames">Montrer les noms de fichiers</string>
     <!-- -->
+    <string name="set_home_dir">Choisir le répertoire racine</string>
+    <string name="remove_home_dir">Enlever le répertoire racine</string>
+    <string name="nav_home_dir">Aller au répertoire racine</string>
     <!-- 'Scan'-->
     <string name="scan_file">Scan</string>
     <!-- Scan Complete-->
@@ -748,8 +749,6 @@
     <!-- Displayed at the top of the album list, album shuffle mode-->
     <string name="shuffle_albums">Lecture aléatoire</string>
     <!-- Storage Access Framework (Used when deleting files from SD CarD)-->
-    <string name="saf_failure_kitkat_title">Impossible d’accéder aux fichiers</string>
-    <string name="saf_failure_kitkat_message">Google a arrêté la prise en charge des accès à la carte SD sous Kitkat, et n\'a proposé aucune solution avant Lollipop. Malheureusement, Shuttle ne peut accéder à vos fichiers.</string>
     <string name="saf_access_required_title">Accès au stockage requis</string>
     <string name="saf_access_required_message">Shuttle a besoin d\'une autorisation pour accéder à ces fichiers. Veuillez sélectionner le dossier contenant votre musique.</string>
     <string name="saf_show_files_button">Afficher les fichiers</string>

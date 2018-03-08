@@ -445,9 +445,7 @@
     <!-- Button text for saving tags  -->
     <string name="save">Сохранить</string>
     <!-- Message displayed when tag editing fails -->
-    <string name="tag_edit_error">Ошибка при редактировании тегов</string>
-    <string name="tag_error_lollipop">Случилась ошибка при редактировании тегов. Если файл расположен на SD карте, Shuttle может не иметь разрешения на доступ к нему.</string>
-    <string name="tag_error_kitkat">Случилась ошибка при редактировании тегов. Файл расположен на SD карте? Если так, то Google сделал невозможным редактирование тегов этого файла.</string>
+    <string name="tag_error">Невозможно отредактировать теги. Если вы используете Kitkat, и файлы находятся на SD-карте, редактирование тегов невозможно. Это связано с изменениями в политике безопасности Google.</string>
     <string name="tag_editor_document_tree_message">Вследствие изменений в Android 5.0 Вам необходимо установить, какие папки на SD карте приложению можно модифицировать.\n\nСейчас Shuttle откроет окно проводника. Пожалуйста, выберите начальную директорию, содержащую файлы, какие Вы хотите модифицировать.</string>
     <string name="tag_editor_check_permission">Проверка разрешений. Это может отнять некоторое время...\n\nБлагодарите Google!</string>
     <string name="tag_editor_document_tree_permission_failed">Похоже, Shuttle всё ещё не имеет разрешения модифицировать файлы. Проверьте директорию в окне проводника.</string>

@@ -89,7 +89,7 @@
     <!-- -->
     <string name="upgraded_title">感謝您</string>
     <string name="upgraded_message">您已成功升級至 Shuttle+，非常感謝您的支持。
-\n\n請重新啟動 Shuttle+，以確保所有功能已啟用，並且能夠正常運作</string>
+\n\n請重新啟動 Shuttle+ 以啟用所有功能</string>
     <string name="upgrade_dialog_message">• 支援 ChromeCast
 \n• 更多主題
 \n• 音樂標籤編輯
@@ -434,9 +434,7 @@
     <!-- Button text for saving tags  -->
     <string name="save">儲存</string>
     <!-- Message displayed when tag editing fails -->
-    <string name="tag_edit_error">編輯標籤時發生錯誤</string>
-    <string name="tag_error_lollipop">編輯標籤時發生錯誤。若您的檔案存放於 SD 卡中，Shuttle 可能無法進行變更</string>
-    <string name="tag_error_kitkat">編輯標籤時發生錯誤。您的檔案是否存放於 SD 卡中？由於 Google 已限制其存取權限，因此無法編輯這個檔案的標籤</string>
+    <string name="tag_error">編輯標籤時發生錯誤</string>
     <string name="tag_editor_document_tree_message">由於 Google 對於 Android 5.0 作業系統的規範變更，您必須指定 SD 卡中有哪些資料夾允許應用程式存取內容。\n\nShuttle 將會開啟檔案選取介面，請選擇您要允許應用程式使用的主要資料夾</string>
     <string name="tag_editor_check_permission">正在檢查權限，可能需要一段時間…\n\n都是 Google！</string>
     <string name="tag_editor_document_tree_permission_failed">Shuttle 似乎仍無法取得變更檔案內容的權限。請再確認一次選取介面中所選擇的資料夾路徑</string>
@@ -460,6 +458,9 @@
     <!-- -->
     <string name="show_filenames">顯示檔案名稱</string>
     <!-- -->
+    <string name="set_home_dir">設為主頁</string>
+    <string name="remove_home_dir">取消主頁</string>
+    <string name="nav_home_dir">移至主頁</string>
     <!-- 'Scan'-->
     <string name="scan_file">掃描</string>
     <!-- Scan Complete-->
@@ -737,8 +738,6 @@
     <!-- Displayed at the top of the album list, album shuffle mode-->
     <string name="shuffle_albums">專輯隨機</string>
     <!-- Storage Access Framework (Used when deleting files from SD CarD)-->
-    <string name="saf_failure_kitkat_title">無法存取檔案</string>
-    <string name="saf_failure_kitkat_message">Google 已終止 KitKat 存取 SD 卡檔案的支援，並且在 Lollipop 之前未提供任何解決方案。很抱歉，Shuttle 無法存取您的檔案</string>
     <string name="saf_access_required_title">儲存空間存取要求</string>
     <string name="saf_access_required_message">Shuttle 需要權限允許才能存取檔案。請選擇您的音樂所在的路徑。</string>
     <string name="saf_show_files_button">顯示檔案</string>

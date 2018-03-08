@@ -432,9 +432,7 @@ Desaktibatzen bada, Shuttle-en ikonoa erabiliko da bere ordez</string>
     <!-- Button text for saving tags  -->
     <string name="save">Gorde</string>
     <!-- Message displayed when tag editing fails -->
-    <string name="tag_edit_error">Errorea etiketak editatzen.</string>
-    <string name="tag_error_lollipop">Errorea etiketak editatzen. Fitxategia SD txartelean badago, Shuttle-ek sartze baimenak eduki ez ditzake.</string>
-    <string name="tag_error_kitkat">Errorea etiketak editatzen. Fitxategia SD txartel batean dago? Orduan, Google-ek etiketa editatzea ezinezkoa egin du fitxategi honetarako.</string>
+    <string name="tag_error">Errorea etiketak editatzen.</string>
     <string name="tag_editor_document_tree_message">Android 5.0 bertsioan aldaketak direla eta, Google-ek orain zein SD txarteleko karpetak editatzeko baimena eman behar diozu app bati.\n\nShuttle-ek orain fitxategi aukeratzaile bat zabalduko du. Mesedez aukeratu modifikatu nahi dituzun fitxategien karpeta aita.</string>
     <string name="tag_editor_check_permission">Baimenak egiaztatzen. Honek denbora asko eraman dezake...\n\nGoogle-en errua!</string>
     <string name="tag_editor_document_tree_permission_failed">Dirudienez Shuttle-ek oraindik ez ditu fitxategiak editatzeko baimenik. Begiratu karpeta fitxategi aukeratzailean.</string>

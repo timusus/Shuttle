@@ -399,8 +399,7 @@
     <!-- Button text for saving tags  -->
     <string name="save">Salvează</string>
     <!-- Message displayed when tag editing fails -->
-    <string name="tag_error_lollipop">A apărut o eroare la editarea tag-urilor. Dacă fișierul este stocat pe un card SD, Shuttle s-ar putea să nu aibă acces la el.</string>
-    <string name="tag_error_kitkat">A apărut o eroare la editarea tag-urilor. Fișierul este stocat pe un card SD? Dacă da, Google a făcut editarea tag-urilor imposibilă pentru acest fișier.</string>
+    <string name="tag_error">A apărut o eroare la editarea tag-urilor.</string>
     <string name="tag_editor_document_tree_message">Din cauza schimbărilor în Android 5.0, trebuie să specifici ce foldere de pe cardul SD poate edita o aplicație.\n\nShuttle va deschide acum un „file picker”. Alege folderul-părinte a fișierelor pe care vrei să le modifici.</string>
     <string name="tag_editor_check_permission">Se verifică permisiunile. S-ar putea să dureze puțin...\n\nDă vina pe Google!</string>
     <string name="tag_editor_document_tree_permission_failed">Se pare că Shuttle încă nu are permisiunea de a edita fișierele. Verifică din nou folderul din „file picker”</string>

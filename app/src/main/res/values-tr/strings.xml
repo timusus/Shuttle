@@ -437,9 +437,7 @@ Bu seçenek işaretli değilse, Shuttle simgesi kullanılacaktır.</string>
     <!-- Button text for saving tags  -->
     <string name="save">Kaydet</string>
     <!-- Message displayed when tag editing fails -->
-    <string name="tag_edit_error">Etiketleri düzenlerken bir hata oluştu.</string>
-    <string name="tag_error_lollipop">Etiketler düzenlenirken bir hata oluştu. Dosya bir SD Kartta depolanıyorsa, Shuttle\'ın ona erişme izni olmayabilir.</string>
-    <string name="tag_error_kitkat">Etiketler düzenlenirken bir hata oluştu. Dosya bir SD Kartta mı depolanıyor? Eğer öyleyse Google, bu dosyanın etiketinin düzenlemesini olanaksız hale getirdi.</string>
+    <string name="tag_error">Etiketleri düzenlerken bir hata oluştu</string>
     <string name="tag_editor_document_tree_message">Android 5.0 \'daki değişiklikler nedeniyle Google, şimdi bir SD karttaki hangi uygulamanın hangi klasörleri düzenlenmesine izin verdiğinizi belirtmenizi gerektiriyor.\n\nShuttle şimdi dosya seçiciyi açacaktır. Değiştirmek istediğiniz dosyaların üst klasörünü seçin.</string>
     <string name="tag_editor_check_permission">İzinler denetleniyor. Bu biraz zaman alabilir ...\n\nGoogle\'ı suçlayın!</string>
     <string name="tag_editor_document_tree_permission_failed">Görünüşe göre Shuttle hala dosyaları düzenleme iznine sahip değil. Dosya seçicideki dizini kontrol edin.</string>
@@ -744,8 +742,6 @@ dosyalar</item>
     <!-- Displayed at the top of the album list, album shuffle mode-->
     <string name="shuffle_albums">Albüm karıştır</string>
     <!-- Storage Access Framework (Used when deleting files from SD CarD)-->
-    <string name="saf_failure_kitkat_title">Dosyalara erişilemiyor</string>
-    <string name="saf_failure_kitkat_message">Google Kitkat\'ta SD Kartta bulunan dosyalara erişim desteğini sonlandırdı, ve Lollipop\'a kadar bir geçici çözüm sağlamadı. Maalesef Shuttle, dosyalarınıza erişemiyor</string>
     <string name="saf_access_required_title">Depolama Erişimi Gerekli</string>
     <string name="saf_access_required_message">Shuttle, bu dosyalara erişmek için izin gerektirir. Lütfen şarkılarınızın bulunduğu dizini seçin.</string>
     <string name="saf_show_files_button">Dosyaları göster</string>

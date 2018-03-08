@@ -415,9 +415,7 @@ segítségével
     <!-- Button text for saving tags  -->
     <string name="save">Mentés</string>
     <!-- Message displayed when tag editing fails -->
-    <string name="tag_edit_error">Hiba történt a címkék szerkesztése közben</string>
-    <string name="tag_error_lollipop">Hiba történt a címkék szerkesztése közben. Ha a fájlok az SD kártyán találhatóak, akkor lehet hogy a Shuttle-nek nincs engedélye hozzáférni.</string>
-    <string name="tag_error_kitkat">Hiba történt a címkék szerkesztése közben. Ha a fájlok az SD kártyán vannak, akkor a szerkesztésük nem lehetséges a Google miatt.</string>
+    <string name="tag_error">Hiba történt a címkék szerkesztése közben.</string>
     <string name="tag_editor_document_tree_message">Az Android 5.0-ban bevezetett változtatások miatt, meg kell adnia azt a mappát, amiben a Shuttle módosításokat hajthat végre.\n\nMost megnyílik egy fájlkezelő. Válassza ki azt a mappát, amiben azok a fájlok vannak amiket szerkeszteni szeretne.</string>
     <string name="tag_editor_check_permission">Engedélyek ellenőrzése. Ez eltarthat egy darabig...\n\nA Google-t hibáztassa!</string>
     <string name="tag_editor_document_tree_permission_failed">Nincs hozzáférési engedély a fájlok módosításához. Ellenőrizze a megadott mappát.</string>

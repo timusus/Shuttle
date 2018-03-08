@@ -93,7 +93,7 @@
     <!-- -->
     <string name="upgraded_title">Hvala vam</string>
     <string name="upgraded_message">Uspješno ste nadogradili na Shuttle+. Zahvaljujem na podršci.
-\n\nMolimo ponovno pokrenite aplikaciju kako bi bili sigurni da su sve značajke omogućene.</string>
+\n\nMolimo ponovno pokrenite aplikaciju kako bi bili sigurni da su sve značajke omogućene</string>
     <string name="upgrade_dialog_message">• ChromeCast support
         \n• Extra themes
         \n• Tag editing
@@ -440,9 +440,7 @@ Ako nije označeno, Shuttle ikona će se koristiti kao sličica</string>
     <!-- Button text for saving tags  -->
     <string name="save">Spremi</string>
     <!-- Message displayed when tag editing fails -->
-    <string name="tag_edit_error">Dogodila se pogreška tijekom uređivanja tagova.</string>
-    <string name="tag_error_lollipop">Dogodila se pogreška pri uređivanju oznaka. Ako je datoteka spremljena na SD kartici, Shuttle možda nema dopuštenje za pristup toj kartici.</string>
-    <string name="tag_error_kitkat">Dogodila se pogreška pri uređivanju oznaka. Je li datoteka spremljena na SD kartici? Ako je, Google je napravio uređivanje ove datoteke nemogućim.</string>
+    <string name="tag_error">Dogodio se problem tijekom uređivanja oznaka.</string>
     <string name="tag_editor_document_tree_message">Zbog promjena u Androidu 5.0, Google sada zahtijeva da odredite koje mape na SD kartici je dozvoljeno uređivati.\n\nShuttle će sada otvoriti odabir datoteka. Molimo odaberite početnu mapu koju želite uređivati</string>
     <string name="tag_editor_check_permission">Provjeravanje dopuštenja. Ovo će možda potrajati.\n\nOkrivite Google!</string>
     <string name="tag_editor_document_tree_permission_failed">Izgleda da Shuttle još nema dopuštenje za uređivanje datoteka. Dvaput provjerite direktorij u odabiru direktorija.</string>
@@ -469,6 +467,9 @@ mapa</item>
     <!-- -->
     <string name="show_filenames">Prikaži nazive datoteka</string>
     <!-- -->
+    <string name="set_home_dir">Postavi početni direktorij</string>
+    <string name="remove_home_dir">Ukloni početni direktorij</string>
+    <string name="nav_home_dir">Idi na početni direktorij</string>
     <!-- 'Scan'-->
     <string name="scan_file">Skeniraj</string>
     <!-- Scan Complete-->
@@ -750,4 +751,7 @@ mapa</item>
     <!-- Displayed at the top of the album list, album shuffle mode-->
     <string name="shuffle_albums">Nasumično repr. album</string>
     <!-- Storage Access Framework (Used when deleting files from SD CarD)-->
+    <string name="saf_access_required_title">Potrebna je dozvola za pohranu</string>
+    <string name="saf_access_required_message">Shuttle zahtijeva dozvolu za pristup ovim datotekama. Molimo odaberite direktorij koji sadrži vašu glazbu.</string>
+    <string name="saf_show_files_button">Prikaži datoteke</string>
 </resources>

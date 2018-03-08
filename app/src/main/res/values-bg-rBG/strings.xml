@@ -417,9 +417,7 @@
     <!-- Button text for saving tags  -->
     <string name="save">Запази</string>
     <!-- Message displayed when tag editing fails -->
-    <string name="tag_edit_error">Грешка при редактирането на таговете.</string>
-    <string name="tag_error_lollipop">Грешка при записването на атрибутите. Ако файлът е записан в SD картата, възможно е Shuttle да няма разрешение за достъп до него.</string>
-    <string name="tag_error_kitkat">Греша при редактирането на таговете. Файлът да не би да е на SD картата? В такъв случай Google не позволява редактиране на таговете.</string>
+    <string name="tag_error">Неуспех при редактирането на атрибутите. Ако използвате KitKat и файлът се намира във външната памет, тази функция не може да бъде използвана поради ограниченията за работа с SD карти, наложени от Google. Съжаляваме!</string>
     <string name="tag_editor_document_tree_message">Поради промени в Android 5.0, Google вече изисква да се определят папките на SD картата, които приложението може да редактира.\n\nShuttle ще отвори меню, в което можете да изберете кои папки да позволите да бъдат редактирани.</string>
     <string name="tag_editor_check_permission">Проверявам дали имам разрешение за това. Може да отнеме малко време...\n\nОт Google са виновни!</string>
     <string name="tag_editor_document_tree_permission_failed">Изглежда Shuttle не разполага с разрешение да редактира файловете. Проверете отново папката в менюто за избор на папки.</string>
