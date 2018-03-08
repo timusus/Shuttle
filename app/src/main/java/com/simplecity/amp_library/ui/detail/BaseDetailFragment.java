@@ -528,9 +528,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     @Override
     public void setSharedElementEnterTransition(Object transition) {
         super.setSharedElementEnterTransition(transition);
-        if (ShuttleUtils.hasLollipop()) {
-            ((Transition) transition).addListener(getSharedElementEnterTransitionListenerAdapter());
-        }
+        ((Transition) transition).addListener(getSharedElementEnterTransitionListenerAdapter());
     }
 
     private SharedElementCallback enterSharedElementCallback = new SharedElementCallback() {
@@ -545,18 +543,13 @@ public abstract class BaseDetailFragment extends BaseFragment implements
     };
 
     private TransitionListenerAdapter getSharedElementEnterTransitionListenerAdapter() {
-        if (ShuttleUtils.hasLollipop()) {
-            return new TransitionListenerAdapter() {
-                @Override
-                public void onTransitionEnd(Transition transition) {
-                    if (ShuttleUtils.hasLollipop()) {
-                        transition.removeListener(this);
-                        fadeInUi();
-                    }
-                }
-            };
-        }
-        return null;
+        return new TransitionListenerAdapter() {
+            @Override
+            public void onTransitionEnd(Transition transition) {
+                transition.removeListener(this);
+                fadeInUi();
+            }
+        };
     }
 
     void fadeInUi() {
@@ -869,7 +862,7 @@ public abstract class BaseDetailFragment extends BaseFragment implements
                         deleteDialog -> deleteDialog.show(getChildFragmentManager()),
                         () -> UpgradeDialog.getUpgradeDialog(getActivity()).show(),
                         null
-                        ));
+                ));
         popupMenu.show();
     }
 

@@ -475,9 +475,7 @@
     <!-- Button text for saving tags  -->
     <string name="save">Save</string>
     <!-- Message displayed when tag editing fails -->
-    <string name="tag_edit_error">An error occurred editing tags.</string>
-    <string name="tag_error_lollipop">An error occurred editing tags. If the file is stored on an SD Card, Shuttle might not have permission to access it.</string>
-    <string name="tag_error_kitkat">An error occurred editing tags. Is the file stored on an SD Card? If so, Google have made tag editing impossible for this file.</string>
+    <string name="tag_error">An error occurred editing tags. If the file is stored on an SD Card, Shuttle might not have permission to access it.</string>
     <string name="tag_editor_document_tree_message">Due to changes in Android 5.0, Google now require that you specify which folders on the SD card an app is allowed to edit.\n\nShuttle will now open a file picker. Please choose the parent folder of the files you wish to modify.</string>
     <string name="tag_editor_check_permission">Checking for permissions. This may take a while…\n\nBlame Google!</string>
     <string name="tag_editor_document_tree_permission_failed">It seems that Shuttle still doesn\'t have permission to edit the files. Double check the directory in the file picker.</string>
@@ -826,8 +824,6 @@
     <string name="shuffle_albums">Album Shuffle</string>
 
     <!-- Storage Access Framework (Used when deleting files from SD CarD)-->
-    <string name="saf_failure_kitkat_title">Can\'t access files</string>
-    <string name="saf_failure_kitkat_message">Google killed support for access to files on the SD Card in Kitkat, and didn\'t provide a workaround until Lollipop. Unfortunately, Shuttle cannot access your files</string>
     <string name="saf_access_required_title">Storage Access Required</string>
     <string name="saf_access_required_message">Shuttle requires permission to access these files. Please pick the directory containing your music.</string>
     <string name="saf_show_files_button">Show files</string>

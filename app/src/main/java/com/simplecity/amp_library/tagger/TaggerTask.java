@@ -6,7 +6,6 @@ import android.support.v4.provider.DocumentFile;
 
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.TagUpdate;
-import com.simplecity.amp_library.utils.ShuttleUtils;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -127,7 +126,7 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
                 File temp = null;
                 if (tagUpdate.hasChanged()) {
 
-                    if (ShuttleUtils.hasLollipop() && TaggerUtils.requiresPermission(paths)) {
+                    if (TaggerUtils.requiresPermission(paths)) {
                         temp = new File(ShuttleApplication.getInstance().getFilesDir(), orig.getName());
                         tempFiles.add(temp);
                         TaggerUtils.copyFile(orig, temp);
@@ -142,7 +141,7 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
                     tagUpdate.updateTag(tag);
                     AudioFileIO.write(audioFile);
 
-                    if (ShuttleUtils.hasLollipop() && requiresPermission && temp != null) {
+                    if (requiresPermission && temp != null) {
                         DocumentFile documentFile = documentFiles.get(i);
                         if (documentFile != null) {
                             ParcelFileDescriptor pfd = ShuttleApplication.getInstance().getContentResolver().openFileDescriptor(documentFile.getUri(), "w");

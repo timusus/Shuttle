@@ -3,8 +3,6 @@ package com.simplecity.amp_library.tagger;
 import android.os.AsyncTask;
 import android.support.v4.provider.DocumentFile;
 
-import com.simplecity.amp_library.utils.ShuttleUtils;
-
 import java.util.List;
 
 public class CheckDocumentPermissionsTask extends AsyncTask<Void, Void, Boolean> {
@@ -26,9 +24,7 @@ public class CheckDocumentPermissionsTask extends AsyncTask<Void, Void, Boolean>
 
     @Override
     protected Boolean doInBackground(Void... params) {
-        return !ShuttleUtils.hasLollipop() ||
-                !TaggerUtils.requiresPermission(paths) ||
-                TaggerUtils.hasDocumentTreePermission(documentFiles, paths);
+        return !TaggerUtils.requiresPermission(paths) || TaggerUtils.hasDocumentTreePermission(documentFiles, paths);
     }
 
     @Override

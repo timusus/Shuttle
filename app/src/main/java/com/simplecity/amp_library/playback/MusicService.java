@@ -863,9 +863,7 @@ public class MusicService extends Service {
         notificationStateHandler.removeCallbacksAndMessages(null);
 
         // quit the thread so that anything that gets posted won't run
-        if (ShuttleUtils.hasJellyBeanMR2()) {
-            handlerThread.quitSafely();
-        }
+        handlerThread.quitSafely();
 
         mainHandler.removeCallbacksAndMessages(null);
 
@@ -1910,12 +1908,8 @@ public class MusicService extends Service {
                     .putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, (long) (getQueuePosition() + 1))
                     //Getting the genre is expensive.. let's not bother for now.
                     //.putString(MediaMetadataCompat.METADATA_KEY_GENRE, getGenreName())
-                    .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, null);
-
-            // MetadataEditor does not support NUM_TRACKS at all, so we don't attempt to set it on <API21 devices
-            if (ShuttleUtils.hasLollipop()) {
-                metaData.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, (long) (getQueue().size()));
-            }
+                    .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, null)
+                    .putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, (long) (getQueue().size()));
 
             if (SettingsManager.getInstance().showLockscreenArtwork()) {
                 //Glide has to be called from the main thread.

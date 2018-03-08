@@ -23,7 +23,6 @@ import com.crashlytics.android.Crashlytics;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.utils.SettingsManager;
-import com.simplecity.amp_library.utils.ShuttleUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -71,7 +70,7 @@ public class SafManager {
      * @return true if the file is located on the SD Card (and thus require the SAF and DocumentsProvider for access)
      */
     public boolean requiresPermission(File file) {
-        return ShuttleUtils.hasKitKat() && getExtSdCardFolder(file) != null;
+        return getExtSdCardFolder(file) != null;
     }
 
     /**
@@ -271,15 +270,6 @@ public class SafManager {
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-            if (!ShuttleUtils.hasLollipop()) {
-                return new MaterialDialog.Builder(getContext())
-                        .title(R.string.saf_failure_kitkat_title)
-                        .content(R.string.saf_failure_kitkat_message)
-                        .negativeText(R.string.button_ok)
-                        .build();
-            }
-
             return new MaterialDialog.Builder(getContext())
                     .title(R.string.saf_access_required_title)
                     .content(R.string.saf_access_required_message)
@@ -299,27 +289,25 @@ public class SafManager {
         @Override
         public void onActivityResult(int requestCode, int resultCode, Intent data) {
             super.onActivityResult(requestCode, resultCode, data);
-            if (ShuttleUtils.hasKitKat()) {
-                SafResultListener listener = getListener();
-                switch (requestCode) {
-                    case DOCUMENT_TREE_REQUEST_CODE:
-                        if (resultCode == Activity.RESULT_OK) {
-                            Uri treeUri = data.getData();
-                            if (treeUri != null) {
-                                ShuttleApplication.getInstance().getContentResolver().takePersistableUriPermission(treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                                SettingsManager.getInstance().setDocumentTreeUri(data.getData().toString());
-                                if (listener != null) {
-                                    listener.onResult(treeUri);
-                                }
-                            }
-                        } else {
+            SafResultListener listener = getListener();
+            switch (requestCode) {
+                case DOCUMENT_TREE_REQUEST_CODE:
+                    if (resultCode == Activity.RESULT_OK) {
+                        Uri treeUri = data.getData();
+                        if (treeUri != null) {
+                            ShuttleApplication.getInstance().getContentResolver().takePersistableUriPermission(treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                            SettingsManager.getInstance().setDocumentTreeUri(data.getData().toString());
                             if (listener != null) {
-                                listener.onResult(null);
+                                listener.onResult(treeUri);
                             }
                         }
-                        dismiss();
-                        break;
-                }
+                    } else {
+                        if (listener != null) {
+                            listener.onResult(null);
+                        }
+                    }
+                    dismiss();
+                    break;
             }
         }
     }

@@ -33,7 +33,6 @@ import com.simplecity.amp_library.utils.CustomMediaScanner;
 import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
-import com.simplecity.amp_library.utils.ShuttleUtils;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -382,14 +381,7 @@ public class TaggerDialog extends DialogFragment {
 
                         if (getContext() != null && isResumed()) {
                             saveProgressDialog.dismiss();
-
-                            if (ShuttleUtils.hasKitKat() && !ShuttleUtils.hasLollipop()) {
-                                Toast.makeText(getContext(), R.string.tag_error_kitkat, Toast.LENGTH_LONG).show();
-                            } else if (ShuttleUtils.hasLollipop()) {
-                                Toast.makeText(getContext(), R.string.tag_error_lollipop, Toast.LENGTH_LONG).show();
-                            } else {
-                                Toast.makeText(getContext(), R.string.tag_edit_error, Toast.LENGTH_LONG).show();
-                            }
+                            Toast.makeText(getContext(), R.string.tag_error, Toast.LENGTH_LONG).show();
                             dismiss();
                         }
                     }
@@ -422,13 +414,11 @@ public class TaggerDialog extends DialogFragment {
                 taggerTask.execute();
             } else {
                 TaggerUtils.showChooseDocumentDialog(getContext(), (dialog1, which1) -> {
-                    if (ShuttleUtils.hasLollipop()) {
-                        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-                        if (intent.resolveActivity(ShuttleApplication.getInstance().getPackageManager()) != null) {
-                            this.startActivityForResult(intent, DOCUMENT_TREE_REQUEST_CODE);
-                        } else {
-                            Toast.makeText(getContext(), R.string.R_string_toast_no_document_provider, Toast.LENGTH_LONG).show();
-                        }
+                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+                    if (intent.resolveActivity(ShuttleApplication.getInstance().getPackageManager()) != null) {
+                        this.startActivityForResult(intent, DOCUMENT_TREE_REQUEST_CODE);
+                    } else {
+                        Toast.makeText(getContext(), R.string.R_string_toast_no_document_provider, Toast.LENGTH_LONG).show();
                     }
                 }, hasCheckedPermissions);
                 hasCheckedPermissions = true;
@@ -440,17 +430,15 @@ public class TaggerDialog extends DialogFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (ShuttleUtils.hasKitKat()) {
-            switch (requestCode) {
-                case DOCUMENT_TREE_REQUEST_CODE:
-                    if (resultCode == Activity.RESULT_OK) {
-                        Uri treeUri = data.getData();
-                        ShuttleApplication.getInstance().getContentResolver().takePersistableUriPermission(treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                        SettingsManager.getInstance().setDocumentTreeUri(data.getData().toString());
-                        saveTags();
-                    }
-                    break;
-            }
+        switch (requestCode) {
+            case DOCUMENT_TREE_REQUEST_CODE:
+                if (resultCode == Activity.RESULT_OK) {
+                    Uri treeUri = data.getData();
+                    ShuttleApplication.getInstance().getContentResolver().takePersistableUriPermission(treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    SettingsManager.getInstance().setDocumentTreeUri(data.getData().toString());
+                    saveTags();
+                }
+                break;
         }
     }
 
