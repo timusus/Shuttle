@@ -1,7 +1,8 @@
 package com.simplecity.amp_library.model;
 
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
+
+import com.simplecity.amp_library.utils.StringUtils;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -45,23 +46,15 @@ public class TagInfo implements Serializable {
                     this.albumArtistName = getTag(audioFile, FieldKey.ALBUM_ARTIST);
                     this.albumName = getTag(audioFile, FieldKey.ALBUM);
                     this.trackName = getTag(audioFile, FieldKey.TITLE);
-                    this.trackNumber = parseInt(getTag(audioFile, FieldKey.TRACK));
-                    this.trackTotal = parseInt(getTag(audioFile, FieldKey.TRACK_TOTAL));
-                    this.discNumber = parseInt(getTag(audioFile, FieldKey.DISC_NO));
-                    this.discTotal = parseInt(getTag(audioFile, FieldKey.DISC_TOTAL));
+                    this.trackNumber = StringUtils.parseInt(getTag(audioFile, FieldKey.TRACK));
+                    this.trackTotal = StringUtils.parseInt(getTag(audioFile, FieldKey.TRACK_TOTAL));
+                    this.discNumber = StringUtils.parseInt(getTag(audioFile, FieldKey.DISC_NO));
+                    this.discTotal = StringUtils.parseInt(getTag(audioFile, FieldKey.DISC_TOTAL));
                     this.bitrate = getBitrate(audioFile);
                     this.format = getFormat(audioFile);
                     this.sampleRate = getSampleRate(audioFile);
                     this.genre = getTag(audioFile, FieldKey.GENRE);
-                } catch (CannotReadException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (TagException e) {
-                    e.printStackTrace();
-                } catch (ReadOnlyFileException e) {
-                    e.printStackTrace();
-                } catch (InvalidAudioFrameException e) {
+                } catch (CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException e) {
                     e.printStackTrace();
                 }
             }
@@ -113,17 +106,6 @@ public class TagInfo implements Serializable {
                 return audioHeader.getSampleRateAsNumber();
             }
         } catch (UnsupportedOperationException ignored) {
-        }
-        return -1;
-    }
-
-    int parseInt(@Nullable String string) {
-        if (string != null) {
-            try {
-                return Integer.parseInt(string);
-            } catch (NumberFormatException ignored) {
-
-            }
         }
         return -1;
     }

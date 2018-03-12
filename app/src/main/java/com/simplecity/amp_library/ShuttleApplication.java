@@ -2,6 +2,9 @@ package com.simplecity.amp_library;
 
 import android.Manifest;
 import android.app.Application;
+import android.content.ContentProviderOperation;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Environment;
@@ -13,6 +16,7 @@ import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
@@ -28,23 +32,35 @@ import com.simplecity.amp_library.dagger.component.DaggerAppComponent;
 import com.simplecity.amp_library.dagger.module.AppModule;
 import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Query;
-import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.model.UserSelectedArtwork;
 import com.simplecity.amp_library.sql.SqlUtils;
 import com.simplecity.amp_library.sql.databases.CustomArtworkTable;
 import com.simplecity.amp_library.sql.providers.PlayCountTable;
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
 import com.simplecity.amp_library.utils.AnalyticsManager;
+import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.InputMethodManagerLeaks;
 import com.simplecity.amp_library.utils.LegacyUtils;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
+import com.simplecity.amp_library.utils.StringUtils;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.Tag;
+import org.jaudiotagger.tag.TagException;
 import org.jaudiotagger.tag.TagOptionSingleton;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -53,18 +69,19 @@ import java.util.logging.Logger;
 
 import io.fabric.sdk.android.Fabric;
 import io.reactivex.Completable;
+import io.reactivex.CompletableTransformer;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 
 public class ShuttleApplication extends Application {
+
+    private static final String TAG = "ShuttleApplication";
 
     private static ShuttleApplication instance;
 
     public static synchronized ShuttleApplication getInstance() {
         return instance;
     }
-
-    private static final String TAG = "ShuttleApplication";
 
     private boolean isUpgraded;
 
@@ -92,8 +109,6 @@ public class ShuttleApplication extends Application {
         instance = this;
 
         if (BuildConfig.DEBUG) {
-            Log.w(TAG, "**Debug mode is ON**");
-
             // Traceur.enableLogging();
 
             // enableStrictMode();
@@ -166,22 +181,42 @@ public class ShuttleApplication extends Application {
                 .subscribeOn(Schedulers.io())
                 .subscribe();
 
-        // Clean up the genres database - remove any genres which contain no songs. Also, populates song counts.
-        // Since this is called on app launch, let's delay to allow more important tasks to complete.
-        cleanGenres()
-                .delaySubscription(5000, TimeUnit.MILLISECONDS)
+        Completable.timer(5, TimeUnit.SECONDS)
+                .andThen(Completable.defer(this::repairMediaStoreYearFromTags))
+                .doOnError(throwable -> LogUtils.logException(TAG, "Failed to update year from tags", throwable))
+                .onErrorComplete()
                 .subscribeOn(Schedulers.io())
                 .subscribe();
 
-        Completable.timer(7500, TimeUnit.MILLISECONDS)
-                .andThen(cleanMostPlayedPlaylist())
+        Completable.timer(10, TimeUnit.SECONDS)
+                .andThen(Completable.defer(this::cleanGenres))
+                .doOnError(throwable -> LogUtils.logException(TAG, "Failed to clean genres", throwable))
+                .onErrorComplete()
                 .subscribeOn(Schedulers.io())
                 .subscribe();
 
-        Completable.timer(10000, TimeUnit.MILLISECONDS)
-                .andThen(LegacyUtils.deleteOldResources())
+        Completable.timer(15, TimeUnit.SECONDS)
+                .andThen(Completable.defer(this::cleanMostPlayedPlaylist))
+                .doOnError(throwable -> LogUtils.logException(TAG, "Failed to clean most played", throwable))
+                .onErrorComplete()
                 .subscribeOn(Schedulers.io())
                 .subscribe();
+
+        Completable.timer(20, TimeUnit.SECONDS)
+                .andThen(Completable.defer(LegacyUtils::deleteOldResources))
+                .doOnError(throwable -> LogUtils.logException(TAG, "Failed to delete old resources", throwable))
+                .onErrorComplete()
+                .subscribeOn(Schedulers.io())
+                .subscribe();
+
+    }
+
+    CompletableTransformer doOnDelay(long delay, TimeUnit timeUnit) {
+        return upstream -> Completable.timer(delay, timeUnit)
+                .andThen(Completable.defer(() -> upstream))
+                .doOnError(throwable -> LogUtils.logException(TAG, "Failed to delete old resources", throwable))
+                .onErrorComplete()
+                .subscribeOn(Schedulers.io());
     }
 
     public RefWatcher getRefWatcher() {
@@ -292,13 +327,13 @@ public class ShuttleApplication extends Application {
     }
 
     @NonNull
-    private Observable<List<Song>> cleanGenres() {
+    private Completable cleanGenres() {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            return Observable.empty();
+            return Completable.complete();
         }
 
-        // This observable emits a genre every 250ms. We then make a query against the genre database to populate the song count.
+        // This observable emits a genre every 50ms. We then make a query against the genre database to populate the song count.
         // If the count is zero, then the genre can be deleted.
         // The reason for the delay is, on some slower devices, if the user has tons of genres, a ton of cursors get created.
         // If the maximum number of cursors is created (based on memory/processor speed or god knows what else), then the device
@@ -306,7 +341,7 @@ public class ShuttleApplication extends Application {
         // This task isn't time critical, so we can afford to let it just casually do its job.
         return SqlBriteUtils.createSingleList(ShuttleApplication.getInstance(), Genre::new, Genre.getQuery())
                 .flatMapObservable(Observable::fromIterable)
-                .concatMap(genre -> Observable.just(genre).delay(250, TimeUnit.MILLISECONDS))
+                .concatMap(genre -> Observable.just(genre).delay(50, TimeUnit.MILLISECONDS))
                 .flatMapSingle(genre -> genre.getSongsObservable()
                         .doOnSuccess(songs -> {
                             if (songs.isEmpty()) {
@@ -317,7 +352,52 @@ public class ShuttleApplication extends Application {
                                 }
                             }
                         })
-                );
+                ).flatMapCompletable(songs -> Completable.complete());
+    }
+
+    @NonNull
+    private Completable repairMediaStoreYearFromTags() {
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            return Completable.complete();
+        }
+
+        return DataManager.getInstance()
+                .getSongsObservable(value -> value.year < 1)
+                .first(Collections.emptyList())
+                .map(songs -> Stream.of(songs)
+                        .flatMap(song -> {
+                            if (!TextUtils.isEmpty(song.path)) {
+                                File file = new File(song.path);
+                                if (file.exists()) {
+                                    try {
+                                        AudioFile audioFile = AudioFileIO.read(file);
+                                        Tag tag = audioFile.getTag();
+                                        if (tag != null) {
+                                            String year = tag.getFirst(FieldKey.YEAR);
+                                            int yearInt = StringUtils.parseInt(year);
+                                            if (yearInt > 0) {
+                                                song.year = yearInt;
+                                                ContentValues contentValues = new ContentValues();
+                                                contentValues.put(MediaStore.Audio.Media.YEAR, yearInt);
+
+                                                return Stream.of(ContentProviderOperation
+                                                        .newUpdate(ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, song.id))
+                                                        .withValues(contentValues)
+                                                        .build());
+                                            }
+                                        }
+                                    } catch (CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                            return Stream.empty();
+                        })
+                        .collect(Collectors.toCollection(ArrayList::new))
+                )
+                .doOnSuccess(contentProviderOperations -> getContentResolver().applyBatch(MediaStore.AUTHORITY, contentProviderOperations))
+                .flatMapCompletable(songs -> Completable.complete());
     }
 
     private void enableStrictMode() {

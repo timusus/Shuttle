@@ -29,42 +29,6 @@ public class StringUtils {
     }
 
     /**
-     * Method makeAlbumsLabel.
-     *
-     * @param context   context
-     * @param numalbums the number of albums for this artist
-     * @param numsongs  the number of songs for this artist
-     * @param isUnknown boolean
-     * @return a label in the vein of "5 albums | 2 songs"
-     */
-    public static String makeAlbumsLabel(Context context, int numalbums, int numsongs, boolean isUnknown) {
-        // There are two formats for the albums/songs information:
-        // "N Song(s)" - used for unknown artist/album
-        // "N Album(s)" - used for known albums
-
-        final StringBuilder songs_albums = new StringBuilder();
-
-        final Resources r = context.getResources();
-        if (isUnknown) {
-            if (numsongs == 1) {
-                songs_albums.append(context.getString(R.string.onesong));
-            } else if (numsongs > 0) {
-                final String f = r.getQuantityText(R.plurals.Nsongs, numsongs).toString();
-                sFormatBuilder.setLength(0);
-                sFormatter.format(f, numsongs);
-                songs_albums.append(sFormatBuilder);
-            }
-        } else if (numalbums > 0) {
-            final String f = r.getQuantityText(R.plurals.Nalbums, numalbums).toString();
-            sFormatBuilder.setLength(0);
-            sFormatter.format(f, numalbums);
-            songs_albums.append(sFormatBuilder);
-            songs_albums.append(context.getString(R.string.albumsongseparator));
-        }
-        return songs_albums.toString();
-    }
-
-    /**
      * Method makeTimeString.
      * <p>
      * Todo: Move to StringUtils or somewhere else
@@ -354,5 +318,16 @@ public class StringUtils {
             }
         }
         return new int[]{matches, transpositions / 2, prefix, max.length()};
+    }
+
+    public static int parseInt(@Nullable String string) {
+        if (string != null) {
+            try {
+                return Integer.parseInt(string);
+            } catch (NumberFormatException ignored) {
+
+            }
+        }
+        return -1;
     }
 }
