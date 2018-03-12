@@ -34,6 +34,7 @@ public class BillingManager implements PurchasesUpdatedListener {
 
     private BillingUpdatesListener updatesListener;
 
+    @Nullable
     private BillingClient billingClient;
 
     boolean serviceConnected = false;
@@ -56,23 +57,25 @@ public class BillingManager implements PurchasesUpdatedListener {
     }
 
     private void startServiceConnection(UnsafeAction executeOnSuccess) {
-        billingClient.startConnection(new BillingClientStateListener() {
-            @Override
-            public void onBillingSetupFinished(int responseCode) {
-                if (responseCode == BillingClient.BillingResponse.OK) {
-                    serviceConnected = true;
-                    executeOnSuccess.run();
+        if (billingClient != null) {
+            billingClient.startConnection(new BillingClientStateListener() {
+                @Override
+                public void onBillingSetupFinished(int responseCode) {
+                    if (responseCode == BillingClient.BillingResponse.OK) {
+                        serviceConnected = true;
+                        executeOnSuccess.run();
+                    }
+                    billingClientResponseCode = responseCode;
                 }
-                billingClientResponseCode = responseCode;
-            }
 
-            @Override
-            public void onBillingServiceDisconnected() {
-                // Try to restart the connection on the next request to
-                // Google Play by calling the startConnection() method.
-                serviceConnected = false;
-            }
-        });
+                @Override
+                public void onBillingServiceDisconnected() {
+                    // Try to restart the connection on the next request to
+                    // Google Play by calling the startConnection() method.
+                    serviceConnected = false;
+                }
+            });
+        }
     }
 
     @SuppressLint("DefaultLocale")
@@ -108,6 +111,7 @@ public class BillingManager implements PurchasesUpdatedListener {
 
     public void queryPurchases() {
         UnsafeAction queryAction = () -> {
+            if (billingClient == null) return;
             Purchase.PurchasesResult purchasesResult = billingClient.queryPurchases(BillingClient.SkuType.INAPP);
             if (purchasesResult.getResponseCode() == BillingClient.BillingResponse.OK) {
                 onPurchasesUpdated(BillingClient.BillingResponse.OK, purchasesResult.getPurchasesList());
@@ -132,9 +136,10 @@ public class BillingManager implements PurchasesUpdatedListener {
                     .setSku(skuId)
                     .setType(billingType)
                     .build();
-            billingClient.launchBillingFlow(activity, purchaseParams);
-
-            purchaseFlowInitiated = true;
+            if (billingClient != null) {
+                billingClient.launchBillingFlow(activity, purchaseParams);
+                purchaseFlowInitiated = true;
+            }
         };
 
         if (serviceConnected) {

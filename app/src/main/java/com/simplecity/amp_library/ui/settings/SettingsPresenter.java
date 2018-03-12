@@ -59,7 +59,7 @@ public class SettingsPresenter extends PurchasePresenter<SettingsView> {
         if (activity instanceof BaseActivity) {
             BillingManager billingManager = ((BaseActivity) activity).getBillingManager();
             if (billingManager != null) {
-                billingManager.queryPurchases();
+                billingManager.restorePurchases();
             }
         }
     }
