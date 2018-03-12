@@ -1,5 +1,5 @@
 object Config {
 
-    const val versionName = "2.0.4-beta2"
+    const val versionName = "2.0.4-beta3"
 
 }
