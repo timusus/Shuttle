@@ -212,7 +212,8 @@ public class QueueFragment extends BaseFragment implements QueueView {
                 deleteDialog -> deleteDialog.show(getChildFragmentManager()), () -> {
                     queuePresenter.removeFromQueue(cabHelper.getItems());
                     cabHelper.finish();
-                }, () -> cabHelper.finish()));
+                },
+                () -> cabHelper.finish()));
 
         cabHelper = new ContextualToolbarHelper<>(cabToolbar, new Callback() {
             @Override

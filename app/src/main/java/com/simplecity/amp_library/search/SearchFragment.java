@@ -310,8 +310,8 @@ public class SearchFragment extends BaseFragment implements
             contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(
                     getContext(),
                     Single.defer(() -> Operators.reduceSongSingles(contextualToolbarHelper.getItems())),
-                    deleteDialog -> deleteDialog.show(getChildFragmentManager())
-                    , () -> contextualToolbarHelper.finish()));
+                    deleteDialog -> deleteDialog.show(getChildFragmentManager()),
+                    () -> contextualToolbarHelper.finish()));
 
             contextualToolbarHelper = new ContextualToolbarHelper<Single<List<Song>>>(contextualToolbar, new ContextualToolbarHelper.Callback() {
 
@@ -334,9 +334,10 @@ public class SearchFragment extends BaseFragment implements
 
                 @Override
                 public void finish() {
+                    if (toolbar != null) {
+                        toolbar.setVisibility(View.VISIBLE);
+                    }
                     super.finish();
-
-                    toolbar.setVisibility(View.VISIBLE);
                 }
             };
             searchPresenter.setContextualToolbarHelper(contextualToolbarHelper);

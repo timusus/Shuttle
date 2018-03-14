@@ -925,10 +925,14 @@ public abstract class BaseDetailFragment extends BaseFragment implements
 
                 @Override
                 public void finish() {
+                    if (toolbarLayout != null) {
+                        toolbarLayout.setCollapsedTitleTextColor(collapsingToolbarTextColor);
+                        toolbarLayout.setCollapsedSubTextColor(collapsingToolbarSubTextColor);
+                    }
+                    if (toolbar != null) {
+                        toolbar.setVisibility(View.VISIBLE);
+                    }
                     super.finish();
-                    toolbarLayout.setCollapsedTitleTextColor(collapsingToolbarTextColor);
-                    toolbarLayout.setCollapsedSubTextColor(collapsingToolbarSubTextColor);
-                    toolbar.setVisibility(View.VISIBLE);
                 }
             };
         }
