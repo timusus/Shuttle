@@ -12,6 +12,7 @@ buildscript {
         classpath Dependencies.Plugins.playPublisher
         classpath Dependencies.Plugins.gradleVersions
         classpath Dependencies.Plugins.playServices
+        classpath Dependencies.Plugins.kotlin
     }
 }
 

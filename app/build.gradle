@@ -18,6 +18,7 @@ buildscript {
 }
 
 apply plugin: Dependencies.BuildPlugins.androidApplication
+apply plugin: Dependencies.BuildPlugins.kotlin
 apply plugin: Dependencies.BuildPlugins.dexCount
 apply plugin: Dependencies.BuildPlugins.fabric
 apply plugin: Dependencies.BuildPlugins.playPublisher
@@ -26,6 +27,7 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
     maven { url "https://jitpack.io" }
     maven { url 'http://oss.sonatype.org/content/repositories/snapshots' }
+    mavenCentral()
 }
 
 @Nullable
@@ -205,6 +207,9 @@ android {
 dependencies {
 
     implementation fileTree(include: '*.jar', dir: 'libs')
+
+    // Kotlin
+    implementation Dependencies.kotlin
 
     // Google libs
     implementation Dependencies.Google.cardView
