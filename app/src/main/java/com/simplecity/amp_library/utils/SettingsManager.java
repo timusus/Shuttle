@@ -1,20 +1,24 @@
 package com.simplecity.amp_library.utils;
 
-import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.CategoryItem;
 import com.simplecity.amp_library.ui.adapters.ViewType;
 
-public class SettingsManager {
+public class SettingsManager extends BaseSettingsManager {
 
     private static final String TAG = "SettingsManager";
+
+    private static SettingsManager instance;
+
+    public static SettingsManager getInstance() {
+        if (instance == null) {
+            instance = new SettingsManager();
+        }
+        return instance;
+    }
 
     // Support
     public static String KEY_PREF_CHANGELOG = "pref_changelog";
@@ -53,60 +57,11 @@ public class SettingsManager {
     // Upgrade
     public static String KEY_PREF_UPGRADE = "pref_upgrade";
 
-    private static SettingsManager sInstance;
-
-    public static SettingsManager getInstance() {
-        if (sInstance == null) {
-            sInstance = new SettingsManager();
-        }
-        return sInstance;
-    }
-
     // Whether the 'rate' snackbar has been seen during this session
     public boolean hasSeenRateSnackbar = false;
 
     private SettingsManager() {
 
-    }
-
-    private SharedPreferences getSharedPreferences() {
-        return PreferenceManager.getDefaultSharedPreferences(ShuttleApplication.getInstance());
-    }
-
-    @Nullable
-    private String getString(@NonNull String key) {
-        return getString(key, null);
-    }
-
-    @NonNull
-    private String getString(@NonNull String key, @NonNull String defaultValue) {
-        return getSharedPreferences().getString(key, defaultValue);
-    }
-
-    private void setString(@NonNull String key, @Nullable String value) {
-        final SharedPreferences.Editor editor = getSharedPreferences().edit();
-        editor.putString(key, value);
-        editor.apply();
-    }
-
-    private boolean getBool(@NonNull String key, boolean defaultValue) {
-        return getSharedPreferences().getBoolean(key, defaultValue);
-    }
-
-    private void setBool(@NonNull String key, boolean value) {
-        final SharedPreferences.Editor editor = getSharedPreferences().edit();
-        editor.putBoolean(key, value);
-        editor.apply();
-    }
-
-    private int getInt(@NonNull String key, int defaultValue) {
-        return getSharedPreferences().getInt(key, defaultValue);
-    }
-
-    private void setInt(@NonNull String key, int value) {
-        final SharedPreferences.Editor editor = getSharedPreferences().edit();
-        editor.putInt(key, value);
-        editor.apply();
     }
 
     public static final String KEY_SHOW_LOCKSCREEN_ARTWORK = "pref_show_lockscreen_artwork";

@@ -25,7 +25,7 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Query;
-import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.playback.constants.ShortcutCommands;
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
 import com.simplecity.amp_library.ui.dialog.ChangelogDialog;
 import com.simplecity.amp_library.ui.drawer.DrawerProvider;
@@ -140,12 +140,12 @@ public class MainActivity extends BaseCastActivity implements
     private void handleIntent(Intent intent) {
         Single.fromCallable(() -> {
             boolean handled = false;
-            if (MusicService.ShortcutCommands.PLAYLIST.equals(intent.getAction())) {
+            if (ShortcutCommands.PLAYLIST.equals(intent.getAction())) {
                 Playlist playlist = (Playlist) intent.getExtras().getSerializable(PlaylistUtils.ARG_PLAYLIST);
                 NavigationEventRelay.NavigationEvent navigationEvent = new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.PLAYLIST_SELECTED, playlist, true);
                 navigationEventRelay.sendEvent(navigationEvent);
                 handled = true;
-            } else if (MusicService.ShortcutCommands.FOLDERS.equals(intent.getAction())) {
+            } else if (ShortcutCommands.FOLDERS.equals(intent.getAction())) {
                 NavigationEventRelay.NavigationEvent foldersSelectedEvent = new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.FOLDERS_SELECTED, null, true);
                 navigationEventRelay.sendEvent(foldersSelectedEvent);
                 handled = true;

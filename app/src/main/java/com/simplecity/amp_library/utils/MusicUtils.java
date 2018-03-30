@@ -12,7 +12,7 @@ import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Song;
-import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.playback.QueueManager;
 import com.simplecity.amp_library.rx.UnsafeConsumer;
 
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ public class MusicUtils {
     public static void playAll(List<Song> songs, int position, boolean canClearShuffle, UnsafeConsumer<String> onEmpty) {
 
         if (canClearShuffle && !SettingsManager.getInstance().getRememberShuffle()) {
-            setShuffleMode(MusicService.ShuffleMode.OFF);
+            setShuffleMode(QueueManager.ShuffleMode.OFF);
         }
 
         if (songs.size() == 0
@@ -72,7 +72,7 @@ public class MusicUtils {
      */
     @SuppressLint("CheckResult")
     public static void shuffleAll(Single<List<Song>> songsSingle, UnsafeConsumer<String> onEmpty) {
-        setShuffleMode(MusicService.ShuffleMode.ON);
+        setShuffleMode(QueueManager.ShuffleMode.ON);
         songsSingle
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -366,7 +366,7 @@ public class MusicUtils {
         if (MusicServiceConnectionUtils.serviceBinder.getService() == null) {
             return;
         }
-        MusicServiceConnectionUtils.serviceBinder.getService().enqueue(songs, MusicService.EnqueueAction.LAST);
+        MusicServiceConnectionUtils.serviceBinder.getService().enqueue(songs, QueueManager.EnqueueAction.LAST);
         onAdded.accept(ShuttleApplication.getInstance().getResources().getQuantityString(R.plurals.NNNtrackstoqueue, songs.size(), songs.size()));
     }
 
@@ -383,7 +383,7 @@ public class MusicUtils {
         if (MusicServiceConnectionUtils.serviceBinder.getService() == null) {
             return;
         }
-        MusicServiceConnectionUtils.serviceBinder.getService().enqueue(songs, MusicService.EnqueueAction.NEXT);
+        MusicServiceConnectionUtils.serviceBinder.getService().enqueue(songs, QueueManager.EnqueueAction.NEXT);
         onAdded.accept(ShuttleApplication.getInstance().getResources().getQuantityString(R.plurals.NNNtrackstoqueue, songs.size(), songs.size()));
     }
 

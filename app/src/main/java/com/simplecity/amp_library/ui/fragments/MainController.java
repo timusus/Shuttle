@@ -21,7 +21,7 @@ import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Playlist;
-import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.ui.detail.AlbumDetailFragment;
 import com.simplecity.amp_library.ui.detail.ArtistDetailFragment;
@@ -184,8 +184,8 @@ public class MainController extends BaseNavigationController implements BackPres
                 }));
 
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(MusicService.InternalIntents.SERVICE_CONNECTED);
-        intentFilter.addAction(MusicService.InternalIntents.QUEUE_CHANGED);
+        intentFilter.addAction(InternalIntents.SERVICE_CONNECTED);
+        intentFilter.addAction(InternalIntents.QUEUE_CHANGED);
         disposables.add(
                 RxBroadcast.fromBroadcast(getContext(), intentFilter)
                         .subscribeOn(Schedulers.io())

@@ -15,6 +15,7 @@ import com.cantrowitz.rxbroadcast.RxBroadcast;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.views.QueueView;
@@ -49,9 +50,9 @@ public class QueuePresenter extends Presenter<QueueView> {
         super.bindView(view);
 
         IntentFilter filter = new IntentFilter();
-        filter.addAction(MusicService.InternalIntents.META_CHANGED);
+        filter.addAction(InternalIntents.META_CHANGED);
         addDisposable(RxBroadcast.fromBroadcast(ShuttleApplication.getInstance(), filter)
-                .startWith(new Intent(MusicService.InternalIntents.QUEUE_CHANGED))
+                .startWith(new Intent(InternalIntents.QUEUE_CHANGED))
                 .toFlowable(BackpressureStrategy.LATEST)
                 .debounce(150, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -63,15 +64,15 @@ public class QueuePresenter extends Presenter<QueueView> {
                 }));
 
         filter = new IntentFilter();
-        filter.addAction(MusicService.InternalIntents.REPEAT_CHANGED);
-        filter.addAction(MusicService.InternalIntents.SHUFFLE_CHANGED);
-        filter.addAction(MusicService.InternalIntents.QUEUE_CHANGED);
-        filter.addAction(MusicService.InternalIntents.SERVICE_CONNECTED);
+        filter.addAction(InternalIntents.REPEAT_CHANGED);
+        filter.addAction(InternalIntents.SHUFFLE_CHANGED);
+        filter.addAction(InternalIntents.QUEUE_CHANGED);
+        filter.addAction(InternalIntents.SERVICE_CONNECTED);
         addDisposable(RxBroadcast.fromBroadcast(ShuttleApplication.getInstance(), filter)
-                .startWith(new Intent(MusicService.InternalIntents.QUEUE_CHANGED))
+                .startWith(new Intent(InternalIntents.QUEUE_CHANGED))
                 .toFlowable(BackpressureStrategy.LATEST)
                 .filter(intent -> {
-                    if (MusicService.InternalIntents.QUEUE_CHANGED.equals(intent.getAction()) && intent.getBooleanExtra(MusicService.FROM_USER, false)) {
+                    if (InternalIntents.QUEUE_CHANGED.equals(intent.getAction()) && intent.getBooleanExtra(MusicService.FROM_USER, false)) {
                         return false;
                     }
                     return true;

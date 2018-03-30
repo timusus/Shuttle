@@ -6,6 +6,9 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
+import com.simplecity.amp_library.playback.constants.InternalIntents;
+import com.simplecity.amp_library.playback.constants.PlayerHandler;
+
 import java.lang.ref.WeakReference;
 
 final class MediaPlayerHandler extends Handler {
@@ -28,19 +31,19 @@ final class MediaPlayerHandler extends Handler {
         }
 
         switch (msg.what) {
-            case MusicService.PlayerHandler.FADE_DOWN:
+            case PlayerHandler.FADE_DOWN:
                 mCurrentVolume -= .05f;
                 if (mCurrentVolume > .2f) {
-                    sendEmptyMessageDelayed(MusicService.PlayerHandler.FADE_DOWN, 10);
+                    sendEmptyMessageDelayed(PlayerHandler.FADE_DOWN, 10);
                 } else {
                     mCurrentVolume = .2f;
                 }
                 service.player.setVolume(mCurrentVolume);
                 break;
-            case MusicService.PlayerHandler.FADE_UP:
+            case PlayerHandler.FADE_UP:
                 mCurrentVolume += .01f;
                 if (mCurrentVolume < 1.0f) {
-                    sendEmptyMessageDelayed(MusicService.PlayerHandler.FADE_UP, 10);
+                    sendEmptyMessageDelayed(PlayerHandler.FADE_UP, 10);
                 } else {
                     mCurrentVolume = 1.0f;
                 }
@@ -48,20 +51,20 @@ final class MediaPlayerHandler extends Handler {
                     service.player.setVolume(mCurrentVolume);
                 }
                 break;
-            case MusicService.PlayerHandler.SERVER_DIED:
+            case PlayerHandler.SERVER_DIED:
                 if (service.isPlaying()) {
                     service.gotoNext(true);
                 } else {
                     service.openCurrentAndNext();
                 }
                 break;
-            case MusicService.PlayerHandler.TRACK_WENT_TO_NEXT:
-                service.notifyChange(MusicService.InternalIntents.TRACK_ENDING);
-                service.playPos = service.nextPlayPos;
-                if (service.playPos >= 0 && !service.getCurrentPlaylist().isEmpty() && service.playPos < service.getCurrentPlaylist().size()) {
-                    service.currentSong = service.getCurrentPlaylist().get(service.playPos);
+            case PlayerHandler.TRACK_WENT_TO_NEXT:
+                service.notifyChange(InternalIntents.TRACK_ENDING);
+                service.queueManager.queuePosition = service.queueManager.nextPlayPos;
+                if (service.queueManager.queuePosition >= 0 && !service.queueManager.getCurrentPlaylist().isEmpty() && service.queueManager.queuePosition < service.queueManager.getCurrentPlaylist().size()) {
+                    service.queueManager.currentSong = service.queueManager.getCurrentPlaylist().get(service.queueManager.queuePosition);
                 }
-                service.notifyChange(MusicService.InternalIntents.META_CHANGED);
+                service.notifyChange(InternalIntents.META_CHANGED);
                 service.updateNotification();
                 service.setNextTrack();
 
@@ -70,20 +73,20 @@ final class MediaPlayerHandler extends Handler {
                     service.pauseOnTrackFinish = false;
                 }
                 break;
-            case MusicService.PlayerHandler.TRACK_ENDED:
-                service.notifyChange(MusicService.InternalIntents.TRACK_ENDING);
-                if (service.repeatMode == MusicService.RepeatMode.ONE) {
+            case PlayerHandler.TRACK_ENDED:
+                service.notifyChange(InternalIntents.TRACK_ENDING);
+                if (service.queueManager.repeatMode == QueueManager.RepeatMode.ONE) {
                     service.seekTo(0);
                     service.play();
                 } else {
                     service.gotoNext(false);
                 }
                 break;
-            case MusicService.PlayerHandler.RELEASE_WAKELOCK:
+            case PlayerHandler.RELEASE_WAKELOCK:
                 service.wakeLock.release();
                 break;
 
-            case MusicService.PlayerHandler.FOCUS_CHANGE:
+            case PlayerHandler.FOCUS_CHANGE:
                 // This code is here so we can better synchronize it with
                 // the code that handles fade-in
                 switch (msg.arg1) {
@@ -94,8 +97,8 @@ final class MediaPlayerHandler extends Handler {
                         service.pause();
                         break;
                     case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                        removeMessages(MusicService.PlayerHandler.FADE_UP);
-                        sendEmptyMessage(MusicService.PlayerHandler.FADE_DOWN);
+                        removeMessages(PlayerHandler.FADE_UP);
+                        sendEmptyMessage(PlayerHandler.FADE_DOWN);
                         break;
                     case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                         if (service.isPlaying()) {
@@ -111,8 +114,8 @@ final class MediaPlayerHandler extends Handler {
                             service.player.setVolume(mCurrentVolume);
                             service.play(); // also queues a fade-in
                         } else {
-                            removeMessages(MusicService.PlayerHandler.FADE_DOWN);
-                            sendEmptyMessage(MusicService.PlayerHandler.FADE_UP);
+                            removeMessages(PlayerHandler.FADE_DOWN);
+                            sendEmptyMessage(PlayerHandler.FADE_UP);
                         }
                         break;
                     default:
@@ -120,25 +123,25 @@ final class MediaPlayerHandler extends Handler {
                 }
                 break;
 
-            case MusicService.PlayerHandler.FADE_DOWN_STOP:
+            case PlayerHandler.FADE_DOWN_STOP:
                 mCurrentVolume -= .05f;
                 if (mCurrentVolume > 0f) {
-                    sendEmptyMessageDelayed(MusicService.PlayerHandler.FADE_DOWN_STOP, 200);
+                    sendEmptyMessageDelayed(PlayerHandler.FADE_DOWN_STOP, 200);
                 } else {
                     service.pause();
                 }
                 service.player.setVolume(mCurrentVolume);
                 break;
 
-            case MusicService.PlayerHandler.GO_TO_NEXT:
+            case PlayerHandler.GO_TO_NEXT:
                 service.gotoNext(true);
                 break;
 
-            case MusicService.PlayerHandler.GO_TO_PREV:
+            case PlayerHandler.GO_TO_PREV:
                 service.previous();
                 break;
 
-            case MusicService.PlayerHandler.SHUFFLE_ALL:
+            case PlayerHandler.SHUFFLE_ALL:
                 service.playAutoShuffleList();
                 break;
         }

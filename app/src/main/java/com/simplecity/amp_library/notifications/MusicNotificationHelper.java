@@ -25,6 +25,7 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.glide.utils.GlideUtils;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.playback.constants.ServiceCommand;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.PlaylistUtils;
@@ -73,22 +74,22 @@ public class MusicNotificationHelper extends NotificationHelper {
                 .addAction(
                         R.drawable.ic_skip_previous_24dp,
                         context.getString(R.string.btn_prev),
-                        MusicService.retrievePlaybackAction(context, MusicService.ServiceCommand.PREV_ACTION)
+                        MusicService.retrievePlaybackAction(context, ServiceCommand.PREV_ACTION)
                 )
                 .addAction(
                         isPlaying ? R.drawable.ic_pause_24dp : R.drawable.ic_play_24dp,
                         context.getString(isPlaying ? R.string.btn_pause : R.string.btn_play),
-                        MusicService.retrievePlaybackAction(context, MusicService.ServiceCommand.TOGGLE_PAUSE_ACTION)
+                        MusicService.retrievePlaybackAction(context, ServiceCommand.TOGGLE_PAUSE_ACTION)
                 )
                 .addAction(
                         R.drawable.ic_skip_next_24dp,
                         context.getString(R.string.btn_skip),
-                        MusicService.retrievePlaybackAction(context, MusicService.ServiceCommand.NEXT_ACTION)
+                        MusicService.retrievePlaybackAction(context, ServiceCommand.NEXT_ACTION)
                 )
                 .addAction(
                         isFavorite ? R.drawable.ic_favorite_24dp_scaled : R.drawable.ic_favorite_border_24dp_scaled,
                         context.getString(R.string.fav_add),
-                        MusicService.retrievePlaybackAction(context, MusicService.ServiceCommand.TOGGLE_FAVORITE)
+                        MusicService.retrievePlaybackAction(context, ServiceCommand.TOGGLE_FAVORITE)
                 )
                 .setShowWhen(false)
                 .setVisibility(android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC);

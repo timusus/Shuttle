@@ -11,13 +11,13 @@ import android.util.AttributeSet;
 
 import com.afollestad.aesthetic.Aesthetic;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.playback.QueueManager;
 
 import io.reactivex.disposables.Disposable;
 
 public class RepeatButton extends android.support.v7.widget.AppCompatImageButton {
 
-    @MusicService.RepeatMode
+    @QueueManager.RepeatMode
     private int repeatMode;
 
     private Disposable aestheticDisposable;
@@ -43,10 +43,10 @@ public class RepeatButton extends android.support.v7.widget.AppCompatImageButton
         oneDrawable = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.ic_repeat_one_24dp_scaled));
         allDrawable = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.ic_repeat_24dp_scaled)).mutate();
 
-        setRepeatMode(MusicService.RepeatMode.OFF);
+        setRepeatMode(QueueManager.RepeatMode.OFF);
     }
 
-    public void setRepeatMode(@MusicService.RepeatMode int repeatMode) {
+    public void setRepeatMode(@QueueManager.RepeatMode int repeatMode) {
 
         if (repeatMode != this.repeatMode) {
             this.repeatMode = repeatMode;
@@ -54,15 +54,15 @@ public class RepeatButton extends android.support.v7.widget.AppCompatImageButton
             invalidateColors(selectedColor);
 
             switch (repeatMode) {
-                case MusicService.RepeatMode.ALL:
+                case QueueManager.RepeatMode.ALL:
                     setContentDescription(getResources().getString(R.string.btn_repeat_all));
                     setImageDrawable(allDrawable);
                     break;
-                case MusicService.RepeatMode.ONE:
+                case QueueManager.RepeatMode.ONE:
                     setContentDescription(getResources().getString(R.string.btn_repeat_current));
                     setImageDrawable(oneDrawable);
                     break;
-                case MusicService.RepeatMode.OFF:
+                case QueueManager.RepeatMode.OFF:
                     setContentDescription(getResources().getString(R.string.btn_repeat_off));
                     setImageDrawable(offDrawable);
                     break;

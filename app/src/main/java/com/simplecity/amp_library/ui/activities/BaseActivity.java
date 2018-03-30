@@ -23,7 +23,7 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.billing.BillingManager;
 import com.simplecity.amp_library.constants.Config;
-import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
@@ -142,7 +142,7 @@ public abstract class BaseActivity extends AestheticActivity implements ServiceC
     @Override
     @CallSuper
     public void onServiceConnected(ComponentName name, IBinder service) {
-        sendBroadcast(new Intent(MusicService.InternalIntents.SERVICE_CONNECTED));
+        sendBroadcast(new Intent(InternalIntents.SERVICE_CONNECTED));
     }
 
     @Override

@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.crashlytics.android.core.CrashlyticsCore;
+import com.simplecity.amp_library.playback.constants.PlayerHandler;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 
 import java.lang.ref.WeakReference;
@@ -208,7 +209,7 @@ class MultiPlayer implements
                 mCurrentMediaPlayer.release();
                 mCurrentMediaPlayer = new MediaPlayer();
                 mCurrentMediaPlayer.setWakeMode(mService.get(), PowerManager.PARTIAL_WAKE_LOCK);
-                mHandler.sendMessageDelayed(mHandler.obtainMessage(MusicService.PlayerHandler.SERVER_DIED), 2000);
+                mHandler.sendMessageDelayed(mHandler.obtainMessage(PlayerHandler.SERVER_DIED), 2000);
                 return true;
             default:
                 break;
@@ -222,11 +223,11 @@ class MultiPlayer implements
             mCurrentMediaPlayer.release();
             mCurrentMediaPlayer = mNextMediaPlayer;
             mNextMediaPlayer = null;
-            mHandler.sendEmptyMessage(MusicService.PlayerHandler.TRACK_WENT_TO_NEXT);
+            mHandler.sendEmptyMessage(PlayerHandler.TRACK_WENT_TO_NEXT);
         } else {
             mService.get().wakeLock.acquire(30000);
-            mHandler.sendEmptyMessage(MusicService.PlayerHandler.TRACK_ENDED);
-            mHandler.sendEmptyMessage(MusicService.PlayerHandler.RELEASE_WAKELOCK);
+            mHandler.sendEmptyMessage(PlayerHandler.TRACK_ENDED);
+            mHandler.sendEmptyMessage(PlayerHandler.RELEASE_WAKELOCK);
         }
     }
 }

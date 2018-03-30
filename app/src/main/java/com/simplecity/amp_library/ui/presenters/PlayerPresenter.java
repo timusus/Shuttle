@@ -9,7 +9,7 @@ import com.cantrowitz.rxbroadcast.RxBroadcast;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.lyrics.LyricsDialog;
 import com.simplecity.amp_library.model.Song;
-import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.playback.PlaybackMonitor;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.dialog.BiographyDialog;
@@ -80,12 +80,12 @@ public class PlayerPresenter extends Presenter<PlayerView> {
                         error -> LogUtils.logException(TAG, "PlayerPresenter: Error emitting current time", error)));
 
         final IntentFilter filter = new IntentFilter();
-        filter.addAction(MusicService.InternalIntents.META_CHANGED);
-        filter.addAction(MusicService.InternalIntents.QUEUE_CHANGED);
-        filter.addAction(MusicService.InternalIntents.PLAY_STATE_CHANGED);
-        filter.addAction(MusicService.InternalIntents.SHUFFLE_CHANGED);
-        filter.addAction(MusicService.InternalIntents.REPEAT_CHANGED);
-        filter.addAction(MusicService.InternalIntents.SERVICE_CONNECTED);
+        filter.addAction(InternalIntents.META_CHANGED);
+        filter.addAction(InternalIntents.QUEUE_CHANGED);
+        filter.addAction(InternalIntents.PLAY_STATE_CHANGED);
+        filter.addAction(InternalIntents.SHUFFLE_CHANGED);
+        filter.addAction(InternalIntents.REPEAT_CHANGED);
+        filter.addAction(InternalIntents.SERVICE_CONNECTED);
 
         addDisposable(RxBroadcast.fromBroadcast(ShuttleApplication.getInstance(), filter)
                 .toFlowable(BackpressureStrategy.LATEST)
@@ -94,24 +94,24 @@ public class PlayerPresenter extends Presenter<PlayerView> {
                     final String action = intent.getAction();
                     if (action != null) {
                         switch (action) {
-                            case MusicService.InternalIntents.META_CHANGED:
+                            case InternalIntents.META_CHANGED:
                                 updateTrackInfo();
                                 break;
-                            case MusicService.InternalIntents.QUEUE_CHANGED:
+                            case InternalIntents.QUEUE_CHANGED:
                                 updateTrackInfo();
                                 break;
-                            case MusicService.InternalIntents.PLAY_STATE_CHANGED:
+                            case InternalIntents.PLAY_STATE_CHANGED:
                                 updateTrackInfo();
                                 updatePlaystate();
                                 break;
-                            case MusicService.InternalIntents.SHUFFLE_CHANGED:
+                            case InternalIntents.SHUFFLE_CHANGED:
                                 updateTrackInfo();
                                 updateShuffleMode();
                                 break;
-                            case MusicService.InternalIntents.REPEAT_CHANGED:
+                            case InternalIntents.REPEAT_CHANGED:
                                 updateRepeatMode();
                                 break;
-                            case MusicService.InternalIntents.SERVICE_CONNECTED:
+                            case InternalIntents.SERVICE_CONNECTED:
                                 updateTrackInfo();
                                 updatePlaystate();
                                 updateShuffleMode();

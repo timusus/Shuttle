@@ -11,13 +11,13 @@ import android.util.AttributeSet;
 
 import com.afollestad.aesthetic.Aesthetic;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.playback.QueueManager;
 
 import io.reactivex.disposables.Disposable;
 
 public class ShuffleButton extends android.support.v7.widget.AppCompatImageButton {
 
-    @MusicService.ShuffleMode
+    @QueueManager.ShuffleMode
     private int shuffleMode;
 
     private Disposable aestheticDisposable;
@@ -41,21 +41,21 @@ public class ShuffleButton extends android.support.v7.widget.AppCompatImageButto
         shuffleOff = ContextCompat.getDrawable(context, R.drawable.ic_shuffle_24dp_scaled);
         shuffleTracks = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.ic_shuffle_24dp_scaled).mutate());
 
-        setShuffleMode(MusicService.ShuffleMode.OFF);
+        setShuffleMode(QueueManager.ShuffleMode.OFF);
     }
 
-    public void setShuffleMode(@MusicService.ShuffleMode int shuffleMode) {
+    public void setShuffleMode(@QueueManager.ShuffleMode int shuffleMode) {
         if (this.shuffleMode != shuffleMode) {
             this.shuffleMode = shuffleMode;
 
             invalidateColors(selectedColor);
 
             switch (shuffleMode) {
-                case MusicService.ShuffleMode.OFF:
+                case QueueManager.ShuffleMode.OFF:
                     setContentDescription(getResources().getString(R.string.btn_shuffle_off));
                     setImageDrawable(shuffleOff);
                     break;
-                case MusicService.ShuffleMode.ON:
+                case QueueManager.ShuffleMode.ON:
                     setContentDescription(getResources().getString(R.string.btn_shuffle_on));
                     setImageDrawable(shuffleTracks);
                     break;

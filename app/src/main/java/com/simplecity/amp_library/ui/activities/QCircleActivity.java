@@ -20,7 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 
@@ -107,8 +107,8 @@ public class QCircleActivity extends BaseActivity {
         super.onStart();
 
         final IntentFilter filter = new IntentFilter();
-        filter.addAction(MusicService.InternalIntents.PLAY_STATE_CHANGED);
-        filter.addAction(MusicService.InternalIntents.META_CHANGED);
+        filter.addAction(InternalIntents.PLAY_STATE_CHANGED);
+        filter.addAction(InternalIntents.META_CHANGED);
         registerReceiver(mStatusListener, new IntentFilter(filter));
 
     }
@@ -324,10 +324,10 @@ public class QCircleActivity extends BaseActivity {
 
             final String action = intent.getAction();
             if (action != null) {
-                if (action.equals(MusicService.InternalIntents.META_CHANGED)) {
+                if (action.equals(InternalIntents.META_CHANGED)) {
                     updateTrackInfo();
                     setPauseButtonImage();
-                } else if (action.equals(MusicService.InternalIntents.PLAY_STATE_CHANGED)) {
+                } else if (action.equals(InternalIntents.PLAY_STATE_CHANGED)) {
                     setPauseButtonImage();
                 }
             }

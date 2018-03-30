@@ -44,7 +44,7 @@ import com.simplecity.amp_library.glide.palette.PaletteBitmapTranscoder;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Song;
-import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.playback.QueueManager;
 import com.simplecity.amp_library.rx.UnsafeConsumer;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.drawer.NavigationEventRelay;
@@ -382,14 +382,14 @@ public class PlayerFragment extends BaseFragment implements
     }
 
     @Override
-    public void shuffleChanged(@MusicService.ShuffleMode int shuffleMode) {
+    public void shuffleChanged(@QueueManager.ShuffleMode int shuffleMode) {
         if (shuffleButton != null) {
             shuffleButton.setShuffleMode(shuffleMode);
         }
     }
 
     @Override
-    public void repeatChanged(@MusicService.RepeatMode int repeatMode) {
+    public void repeatChanged(@QueueManager.RepeatMode int repeatMode) {
         if (repeatButton != null) {
             repeatButton.setRepeatMode(repeatMode);
         }

@@ -36,7 +36,6 @@ import android.os.PowerManager.WakeLock;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.media.MediaMetadataCompat;
@@ -68,8 +67,13 @@ import com.simplecity.amp_library.http.HttpServer;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.notifications.MusicNotificationHelper;
+import com.simplecity.amp_library.playback.constants.ExternalIntents;
+import com.simplecity.amp_library.playback.constants.InternalIntents;
+import com.simplecity.amp_library.playback.constants.MediaButtonCommand;
+import com.simplecity.amp_library.playback.constants.PlayerHandler;
+import com.simplecity.amp_library.playback.constants.ServiceCommand;
+import com.simplecity.amp_library.playback.constants.ShortcutCommands;
 import com.simplecity.amp_library.rx.UnsafeAction;
-import com.simplecity.amp_library.rx.UnsafeConsumer;
 import com.simplecity.amp_library.services.Equalizer;
 import com.simplecity.amp_library.ui.widgets.WidgetProviderExtraLarge;
 import com.simplecity.amp_library.ui.widgets.WidgetProviderLarge;
@@ -85,13 +89,8 @@ import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.SleepTimer;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.TreeMap;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
@@ -105,85 +104,6 @@ public class MusicService extends Service {
 
     private static final String TAG = "MusicService";
 
-    public @interface ShuffleMode {
-        int OFF = 0;
-        int ON = 1;
-    }
-
-    public @interface RepeatMode {
-        int OFF = 0;
-        int ONE = 1;
-        int ALL = 2;
-    }
-
-    public interface EnqueueAction {
-        int NOW = 1;
-        int NEXT = 2;
-        int LAST = 3;
-    }
-
-    public static final String INTERNAL_INTENT_PREFIX = "com.simplecity.shuttle";
-
-    public interface InternalIntents {
-        String PLAY_STATE_CHANGED = INTERNAL_INTENT_PREFIX + ".playstatechanged";
-        String POSITION_CHANGED = INTERNAL_INTENT_PREFIX + ".positionchanged";
-        String TRACK_ENDING = INTERNAL_INTENT_PREFIX + ".trackending";
-        String META_CHANGED = INTERNAL_INTENT_PREFIX + ".metachanged";
-        String QUEUE_CHANGED = INTERNAL_INTENT_PREFIX + ".queuechanged";
-        String SHUFFLE_CHANGED = INTERNAL_INTENT_PREFIX + ".shufflechanged";
-        String REPEAT_CHANGED = INTERNAL_INTENT_PREFIX + ".repeatchanged";
-        String FAVORITE_CHANGED = INTERNAL_INTENT_PREFIX + ".favoritechanged";
-        String SERVICE_CONNECTED = INTERNAL_INTENT_PREFIX + ".serviceconnected";
-    }
-
-    public interface MediaButtonCommand {
-        String CMD_NAME = "command";
-        String TOGGLE_PAUSE = "togglepause";
-        String STOP = "stop";
-        String PAUSE = "pause";
-        String PLAY = "play";
-        String PREVIOUS = "previous";
-        String NEXT = "next";
-        String TOGGLE_FAVORITE = "togglefavorite";
-        String FROM_MEDIA_BUTTON = "frommediabutton";
-    }
-
-    public static final String SERVICE_COMMAND_PREFIX = "com.simplecity.shuttle.music_service_command";
-
-    public interface ServiceCommand {
-        String SERVICE_COMMAND = SERVICE_COMMAND_PREFIX;
-        String TOGGLE_PAUSE_ACTION = SERVICE_COMMAND_PREFIX + ".togglepause";
-        String PAUSE_ACTION = SERVICE_COMMAND_PREFIX + ".pause";
-        String PREV_ACTION = SERVICE_COMMAND_PREFIX + ".prev";
-        String NEXT_ACTION = SERVICE_COMMAND_PREFIX + ".next";
-        String STOP_ACTION = SERVICE_COMMAND_PREFIX + ".stop";
-        String SHUFFLE_ACTION = SERVICE_COMMAND_PREFIX + ".shuffle";
-        String REPEAT_ACTION = SERVICE_COMMAND_PREFIX + ".repeat";
-        String SHUTDOWN = SERVICE_COMMAND_PREFIX + ".shutdown";
-        String TOGGLE_FAVORITE = SERVICE_COMMAND_PREFIX + ".togglefavorite";
-    }
-
-    public interface ExternalIntents {
-        String PLAY_STATUS_REQUEST = "com.android.music.playstatusrequest";
-        String PLAY_STATUS_RESPONSE = "com.android.music.playstatusresponse";
-
-        String AVRCP_PLAY_STATE_CHANGED = "com.android.music.playstatechanged";
-        String AVRCP_META_CHANGED = "com.android.music.metachanged";
-
-        String TASKER = "net.dinglisch.android.tasker.extras.VARIABLE_REPLACE_KEYS";
-
-        String SCROBBLER = "com.adam.aslfms.notify.playstatechanged";
-
-        String PEBBLE = "com.getpebble.action.NOW_PLAYING";
-    }
-
-    public interface ShortcutCommands {
-        String PLAY = "com.simplecity.amp_library.shortcuts.PLAY";
-        String SHUFFLE_ALL = "com.simplecity.amp_library.shortcuts.SHUFFLE";
-        String FOLDERS = "com.simplecity.amp_library.shortcuts.FOLDERS";
-        String PLAYLIST = "com.simplecity.amp_library.shortcuts.PLAYLIST";
-    }
-
     public static final String FROM_USER = "from_user";
 
     interface Status {
@@ -193,21 +113,9 @@ public class MusicService extends Service {
         int COMPLETE = 3;
     }
 
-    interface PlayerHandler {
-        int TRACK_ENDED = 1;
-        int RELEASE_WAKELOCK = 2;
-        int SERVER_DIED = 3;
-        int FOCUS_CHANGE = 4;
-        int FADE_DOWN = 5;
-        int FADE_UP = 6;
-        int TRACK_WENT_TO_NEXT = 7;
-        int FADE_DOWN_STOP = 9;
-        int GO_TO_NEXT = 10;
-        int GO_TO_PREV = 11;
-        int SHUFFLE_ALL = 12;
-    }
+    boolean playOnQueueLoad;
 
-    private static final Random shuffler = new Random();
+    QueueManager queueManager = new QueueManager(new QueueManagerCallbacks());
 
     private Equalizer equalizer;
 
@@ -231,22 +139,10 @@ public class MusicService extends Service {
     public static final int PAUSED = 1;
     public static final int STOPPED = 2;
 
-    private final IBinder mBinder = new LocalBinder(this);
+    private final IBinder binder = new LocalBinder(this);
 
     @Nullable
     MultiPlayer player;
-
-    int shuffleMode = ShuffleMode.OFF;
-    int repeatMode = RepeatMode.OFF;
-
-    List<Song> playlist = new ArrayList<>();
-    List<Song> shuffleList = new ArrayList<>();
-
-    @Nullable
-    Song currentSong;
-
-    int playPos = -1;
-    int nextPlayPos = -1;
 
     private BroadcastReceiver headsetReceiver;
     private BroadcastReceiver bluetoothReceiver;
@@ -286,8 +182,6 @@ public class MusicService extends Service {
     private static final int NOTIFY_MODE_FOREGROUND = 1;
     private static final int NOTIFY_MODE_BACKGROUND = 2;
 
-    boolean queueIsSaveable = true;
-
     SharedPreferences prefs;
     SharedPreferences servicePrefs;
 
@@ -319,8 +213,6 @@ public class MusicService extends Service {
 
     private boolean shutdownScheduled;
 
-    private boolean queueReloading;
-    private boolean playOnQueueLoad;
 
     private CompositeDisposable disposables = new CompositeDisposable();
 
@@ -348,7 +240,7 @@ public class MusicService extends Service {
     void loadRemoteMedia(MediaInfo selectedMedia, int position, boolean autoPlay, final Bitmap bitmap, final Drawable errorDrawable) {
         Completable.fromAction(() -> {
 
-            HttpServer.getInstance().serveAudio(currentSong.path);
+            HttpServer.getInstance().serveAudio(queueManager.currentSong.path);
 
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
@@ -373,11 +265,11 @@ public class MusicService extends Service {
 
     void prepareChromeCastLoad(int position, boolean autoPlay) {
 
-        if (currentSong == null) {
+        if (queueManager.currentSong == null) {
             return;
         }
 
-        if (TextUtils.isEmpty(currentSong.path)) {
+        if (TextUtils.isEmpty(queueManager.currentSong.path)) {
             return;
         }
 
@@ -482,8 +374,6 @@ public class MusicService extends Service {
     final WidgetProviderSmall mWidgetProviderSmall = WidgetProviderSmall.getInstance();
     final WidgetProviderLarge mWidgetProviderLarge = WidgetProviderLarge.getInstance();
     final WidgetProviderExtraLarge mWidgetProviderExtraLarge = WidgetProviderExtraLarge.getInstance();
-
-    private final char hexDigits[] = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
     private final BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
         @Override
@@ -640,18 +530,10 @@ public class MusicService extends Service {
                         if (SleepTimer.getInstance().playToEnd) {
                             pauseOnTrackFinish = true;
                         } else {
-                            playerHandler.sendEmptyMessage(MusicService.PlayerHandler.FADE_DOWN_STOP);
+                            playerHandler.sendEmptyMessage(PlayerHandler.FADE_DOWN_STOP);
                         }
                     }
                 }, throwable -> LogUtils.logException(TAG, "Error consuming SleepTimer observable", throwable)));
-    }
-
-    List<Song> getCurrentPlaylist() {
-        if (shuffleMode == ShuffleMode.OFF) {
-            return playlist;
-        } else {
-            return shuffleList;
-        }
     }
 
     private void setupMediaSession() {
@@ -959,7 +841,7 @@ public class MusicService extends Service {
                         play();
                         break;
                     case ShortcutCommands.SHUFFLE_ALL:
-                        makeShuffleList();
+                        queueManager.makeShuffleList();
                         playAutoShuffleList();
                         break;
                 }
@@ -997,7 +879,7 @@ public class MusicService extends Service {
         mediaSession.setActive(false);
 
         if (!serviceInUse) {
-            saveQueue(true);
+            saveState(true);
 
             //Shutdown the EQ
             Intent shutdownEqualizer = new Intent(MusicService.this, Equalizer.class);
@@ -1007,205 +889,12 @@ public class MusicService extends Service {
         }
     }
 
-    /**
-     * Method saveQueue.
-     *
-     * @param full boolean
-     */
-    void saveQueue(final boolean full) {
-
-        if (!queueIsSaveable) {
-            return;
-        }
-
-        final SharedPreferences.Editor editor = servicePrefs.edit();
-
-        if (full) {
-            editor.putString("queue", serializePlaylist(playlist));
-
-            if (shuffleMode == ShuffleMode.ON) {
-                editor.putString("shuffleList", serializePlaylist(shuffleList));
-            }
-        }
-
-        editor.putInt("curpos", playPos);
-        editor.putInt("repeatmode", repeatMode);
-        editor.putInt("shufflemode", shuffleMode);
-
-        if (player != null && player.isInitialized()) {
-            editor.putLong("seekpos", player.getPosition());
-        }
-
-        editor.apply();
-    }
-
-    /**
-     * Converts a playlist to a String which can be saved to SharedPrefs
-     */
-    private String serializePlaylist(List<Song> list) {
-
-        // The current playlist is saved as a list of "reverse hexadecimal"
-        // numbers, which we can generate faster than normal decimal or
-        // hexadecimal numbers, which in turn allows us to save the playlist
-        // more often without worrying too much about performance.
-
-        StringBuilder q = new StringBuilder();
-
-        int len = list.size();
-        for (int i = 0; i < len; i++) {
-            long n = list.get(i).id;
-            if (n >= 0) {
-                if (n == 0) {
-                    q.append("0;");
-                } else {
-                    while (n != 0) {
-                        final int digit = (int) (n & 0xf);
-                        n >>>= 4;
-                        q.append(hexDigits[digit]);
-                    }
-                    q.append(";");
-                }
-            }
-        }
-
-        return q.toString();
-    }
-
-    /**
-     * Converts a string representation of a playlist from SharedPrefs into a list of songs.
-     */
-    List<Song> deserializePlaylist(String listString, List<Song> allSongs) {
-        List<Long> ids = new ArrayList<>();
-        int n = 0;
-        int shift = 0;
-        for (int i = 0; i < listString.length(); i++) {
-            char c = listString.charAt(i);
-            if (c == ';') {
-                ids.add((long) n);
-                n = 0;
-                shift = 0;
-            } else {
-                if (c >= '0' && c <= '9') {
-                    n += ((c - '0') << shift);
-                } else if (c >= 'a' && c <= 'f') {
-                    n += ((10 + c - 'a') << shift);
-                } else {
-                    // bogus playlist data
-                    playlist.clear();
-                    break;
-                }
-                shift += 4;
-            }
-        }
-
-        Map<Integer, Song> map = new TreeMap<>();
-
-        for (Song song : allSongs) {
-            int index = ids.indexOf(song.id);
-            if (index != -1) {
-                map.put(index, song);
-            }
-        }
-        return new ArrayList<>(map.values());
-    }
-
-    synchronized void reloadQueue() {
-
-        queueReloading = true;
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-
-        shuffleMode = servicePrefs.getInt("shufflemode", ShuffleMode.OFF);
-        repeatMode = servicePrefs.getInt("repeatmode", RepeatMode.OFF);
-
-        DataManager.getInstance().getSongsRelay()
-                .first(Collections.emptyList())
-                .subscribe(new UnsafeConsumer<List<Song>>() {
-                    @Override
-                    public void accept(List<Song> songs) {
-                        String q = servicePrefs.getString("queue", "");
-
-                        int len = q.length();
-                        if (len > 1) {
-
-                            playlist = deserializePlaylist(q, songs);
-
-                            final int pos = servicePrefs.getInt("curpos", 0);
-                            if (pos < 0 || pos >= playlist.size()) {
-                                // The saved playlist is bogus, discard it
-                                playlist.clear();
-                                queueReloadComplete();
-                                return;
-                            }
-
-                            playPos = pos;
-
-                            if (repeatMode != RepeatMode.ALL && repeatMode != RepeatMode.ONE) {
-                                repeatMode = RepeatMode.OFF;
-                            }
-                            if (shuffleMode != ShuffleMode.ON) {
-                                shuffleMode = ShuffleMode.OFF;
-                            }
-                            if (shuffleMode == ShuffleMode.ON) {
-                                q = servicePrefs.getString("shuffleList", "");
-                                len = q.length();
-                                if (len > 1) {
-                                    shuffleList = deserializePlaylist(q, songs);
-
-                                    if (pos < 0 || pos >= shuffleList.size()) {
-                                        // The saved playlist is bogus, discard it
-                                        shuffleList.clear();
-                                        queueReloadComplete();
-                                        return;
-                                    }
-                                }
-                            }
-
-                            if (playPos >= 0 && playPos < getCurrentPlaylist().size()) {
-                                currentSong = getCurrentPlaylist().get(playPos);
-                            } else {
-                                playPos = 0;
-                            }
-
-                            synchronized (this) {
-                                openFailedCounter = 20;
-                                openCurrentAndNext();
-                            }
-
-                            if (player == null || !player.isInitialized()) {
-                                // couldn't restore the saved state
-                                queueReloadComplete();
-                                return;
-                            }
-
-                            final long seekPos = servicePrefs.getLong("seekpos", 0);
-                            seekTo(seekPos >= 0 && seekPos < getDuration() ? seekPos : 0);
-                        }
-
-                        queueReloadComplete();
-                    }
-                }, error -> LogUtils.logException(TAG, "Reloading queue", error));
-    }
-
-    void queueReloadComplete() {
-
-        notifyChange(InternalIntents.QUEUE_CHANGED);
-        notifyChange(InternalIntents.META_CHANGED);
-
-        queueReloading = false;
-        if (playOnQueueLoad) {
-            play();
-            playOnQueueLoad = false;
-        }
-    }
 
     @Override
     public IBinder onBind(final Intent intent) {
         cancelShutdown();
         serviceInUse = true;
-        return mBinder;
+        return binder;
     }
 
     @Override
@@ -1217,7 +906,7 @@ public class MusicService extends Service {
     @Override
     public boolean onUnbind(Intent intent) {
         serviceInUse = false;
-        saveQueue(true);
+        saveState(true);
 
         if (isSupposedToBePlaying || pausedByTransientLossOfFocus) {
             // Something is currently playing, or will be playing once
@@ -1229,7 +918,7 @@ public class MusicService extends Service {
             // before stopping the service, so that pause/resume isn't slow.
             // Also delay stopping the service if we're transitioning between
             // tracks.
-        } else if (playlist.size() > 0 || shuffleList.size() > 0 || playerHandler.hasMessages(PlayerHandler.TRACK_ENDED)) {
+        } else if (queueManager.playlist.size() > 0 || queueManager.shuffleList.size() > 0 || playerHandler.hasMessages(PlayerHandler.TRACK_ENDED)) {
             scheduleDelayedShutdown();
             return true;
         }
@@ -1263,11 +952,11 @@ public class MusicService extends Service {
                 public void onReceive(Context context, Intent intent) {
                     final String action = intent.getAction();
                     if (action.equals(Intent.ACTION_MEDIA_EJECT)) {
-                        saveQueue(true);
-                        queueIsSaveable = false;
+                        saveState(true);
+                        queueManager.queueIsSaveable = false;
                         closeExternalStorageFiles();
                     } else if (action.equals(Intent.ACTION_MEDIA_MOUNTED)) {
-                        queueIsSaveable = true;
+                        queueManager.queueIsSaveable = true;
                         reloadQueue();
                     }
                 }
@@ -1298,7 +987,7 @@ public class MusicService extends Service {
                     extras.putBoolean("isfavorite", isFavorite);
                     extras.putLong("duration", getDuration());
                     extras.putLong("position", getPosition());
-                    extras.putLong("ListSize", getCurrentPlaylist().size());
+                    extras.putLong("ListSize", queueManager.getCurrentPlaylist().size());
                     extras.putBoolean(FROM_USER, fromUser);
                     return Single.just(extras);
                 });
@@ -1307,7 +996,7 @@ public class MusicService extends Service {
     private void notifyChange(String what, boolean fromUser) {
         if (what.equals(InternalIntents.TRACK_ENDING)) {
             //We're just about to change tracks, so 'current song' is the song that just finished
-            Song finishedSong = currentSong;
+            Song finishedSong = queueManager.currentSong;
             if (finishedSong != null) {
                 if (finishedSong.hasPlayed()) {
                     Completable.fromAction(() -> ShuttleUtils.incrementPlayCount(this, finishedSong)).subscribeOn(Schedulers.io())
@@ -1364,22 +1053,22 @@ public class MusicService extends Service {
                     }, error -> LogUtils.logException(TAG, "Error sending bluetooth intent", error));
 
             if (isPlaying()) {
-                if (currentSong != null) {
-                    currentSong.setResumed();
+                if (queueManager.currentSong != null) {
+                    queueManager.currentSong.setResumed();
                 }
                 //Last.fm scrobbler intent
-                scrobbleBroadcast(Status.RESUME, currentSong);
+                scrobbleBroadcast(Status.RESUME, queueManager.currentSong);
                 //Tasker intent
                 taskerIntent.putExtra("%MTRACK", getSongName());
                 //Pebble intent
                 sendBroadcast(pebbleIntent);
 
             } else {
-                if (currentSong != null) {
-                    currentSong.setPaused();
+                if (queueManager.currentSong != null) {
+                    queueManager.currentSong.setPaused();
                 }
                 //Last.fm scrobbler intent
-                scrobbleBroadcast(Status.PAUSE, currentSong);
+                scrobbleBroadcast(Status.PAUSE, queueManager.currentSong);
                 //Tasker intent
                 taskerIntent.putExtra("%MTRACK", "");
             }
@@ -1388,8 +1077,8 @@ public class MusicService extends Service {
 
         } else if (what.equals(InternalIntents.META_CHANGED)) {
 
-            if (currentSong != null) {
-                currentSong.setStartTime();
+            if (queueManager.currentSong != null) {
+                queueManager.currentSong.setStartTime();
             }
 
             //Tasker intent
@@ -1409,17 +1098,11 @@ public class MusicService extends Service {
             sendBroadcast(pebbleIntent);
 
             //Last.fm scrobbler intent
-            scrobbleBroadcast(Status.START, currentSong);
+            scrobbleBroadcast(Status.START, queueManager.currentSong);
         }
 
-        if (what.equals(InternalIntents.QUEUE_CHANGED)) {
-            saveQueue(true);
-            if (isPlaying()) {
-                setNextTrack();
-            }
-
-        } else {
-            saveQueue(false);
+        if (!what.equals(InternalIntents.QUEUE_CHANGED)) {
+            saveState(false);
         }
 
         mWidgetProviderLarge.notifyChange(MusicService.this, what);
@@ -1429,158 +1112,34 @@ public class MusicService extends Service {
     }
 
     /**
+     * Save the current state of the player in preferences. This stores the player's seek position,
+     * and calls {@link QueueManager#saveQueue(boolean)} to save our current playback position,
+     * shuffle mode, etc.
+     *
+     * @param saveQueue whether to save the queue as well
+     */
+    void saveState(boolean saveQueue) {
+        if (player != null && player.isInitialized()) {
+            PlaybackSettingsManager.INSTANCE.setSeekPosition(player.getPosition());
+        }
+        queueManager.saveQueue(saveQueue);
+    }
+
+    /**
      * Queues a new list for playback
      *
      * @param songs  The list to queue
      * @param action The action to take
      */
-    public void enqueue(List<Song> songs, final int action) {
-        synchronized (this) {
-            if (action == EnqueueAction.NEXT && playPos + 1 < getCurrentPlaylist().size()) {
-                if (shuffleMode == ShuffleMode.ON) {
-                    // Insert the songs at our playPos, into the current list
-                    shuffleList.addAll(playPos + 1, songs);
-                    // Now insert them at the end of the other list
-                    playlist.addAll(songs);
-                } else {
-                    // Insert the songs at our playPos, into the current list
-                    playlist.addAll(playPos + 1, songs);
-                    // Now insert them at the end of the other list
-                    shuffleList.addAll(songs);
-                }
-                setNextTrack();
-                notifyChange(InternalIntents.QUEUE_CHANGED);
-            } else {
-                playlist.addAll(songs);
-                shuffleList.addAll(songs);
-                notifyChange(InternalIntents.QUEUE_CHANGED);
-                if (action == EnqueueAction.NOW) {
-                    playPos = getCurrentPlaylist().size() - songs.size();
+    public void enqueue(List<Song> songs, @QueueManager.EnqueueAction final int action) {
+        queueManager.enqueue(
+                songs,
+                action,
+                this::setNextTrack,
+                () -> {
                     openCurrentAndNext();
                     play();
-                    notifyChange(InternalIntents.META_CHANGED);
-                    return;
-                }
-            }
-            if (playPos < 0) {
-                playPos = 0;
-                openCurrentAndNext();
-                play();
-                notifyChange(InternalIntents.META_CHANGED);
-            }
-        }
-    }
-
-    /**
-     * Opens a list for playback
-     *
-     * @param songs    The list of tracks to open
-     * @param position The position to start playback at
-     */
-    public void open(List<Song> songs, final int position) {
-        synchronized (this) {
-
-            boolean notifyQueueChange = false;
-            boolean notifyMetaChange = false;
-
-            final long oldId = getSongId();
-            boolean newList = false;
-
-            if (!playlist.equals(songs)) {
-                newList = true;
-            }
-
-            if (newList) {
-                playlist.clear();
-                shuffleList.clear();
-                playlist.addAll(songs);
-                notifyQueueChange = true;
-            }
-
-            playPos = position;
-
-            if (shuffleMode == ShuffleMode.ON) {
-                makeShuffleList();
-                notifyQueueChange = true;
-                notifyMetaChange = true;
-            }
-
-            openCurrentAndNext();
-            if (oldId != getSongId()) {
-                notifyMetaChange = true;
-            }
-
-            if (notifyMetaChange) {
-                notifyChange(InternalIntents.META_CHANGED);
-            }
-
-            if (notifyQueueChange) {
-                notifyChange(InternalIntents.QUEUE_CHANGED);
-            }
-        }
-    }
-
-    /**
-     * Moves the item at index1 to index2.
-     *
-     * @param from
-     * @param to
-     */
-    public void moveQueueItem(int from, int to) {
-        synchronized (this) {
-
-            if (from >= getCurrentPlaylist().size()) {
-                from = getCurrentPlaylist().size() - 1;
-            }
-            if (to >= getCurrentPlaylist().size()) {
-                to = getCurrentPlaylist().size() - 1;
-            }
-
-            getCurrentPlaylist().add(to, getCurrentPlaylist().remove(from));
-
-            if (from < to) {
-                if (playPos == from) {
-                    playPos = to;
-                } else if (playPos >= from && playPos <= to) {
-                    playPos--;
-                }
-            } else if (to < from) {
-                if (playPos == from) {
-                    playPos = to;
-                } else if (playPos >= to && playPos <= from) {
-                    playPos++;
-                }
-            }
-            notifyChange(InternalIntents.QUEUE_CHANGED, true);
-        }
-    }
-
-    public List<Song> getQueue() {
-        synchronized (this) {
-            return getCurrentPlaylist();
-        }
-    }
-
-    public void makeShuffleList() {
-        synchronized (this) {
-
-            if (playlist == null || playlist.isEmpty()) {
-                return;
-            }
-
-            shuffleList = new ArrayList<>(playlist);
-            Song currentSong = null;
-            if (playPos >= 0 && playPos < shuffleList.size()) {
-                currentSong = shuffleList.remove(playPos);
-            }
-
-            Collections.shuffle(shuffleList);
-
-            if (currentSong != null) {
-                shuffleList.add(0, currentSong);
-            }
-            playPos = 0;
-        }
+                });
     }
 
     private void openCurrent() {
@@ -1596,21 +1155,21 @@ public class MusicService extends Service {
      */
     private void openCurrentAndMaybeNext(final boolean openNext) {
         synchronized (this) {
-            if (getCurrentPlaylist() == null || getCurrentPlaylist().isEmpty() || playPos < 0 || playPos >= getCurrentPlaylist().size()) {
+            if (queueManager.getCurrentPlaylist() == null || queueManager.getCurrentPlaylist().isEmpty() || queueManager.queuePosition < 0 || queueManager.queuePosition >= queueManager.getCurrentPlaylist().size()) {
                 return;
             }
             stop(false);
 
             boolean shutdown = false;
 
-            currentSong = getCurrentPlaylist().get(playPos);
+            queueManager.currentSong = queueManager.getCurrentPlaylist().get(queueManager.queuePosition);
 
             while (true) {
-                if (open(currentSong)) {
+                if (open(queueManager.currentSong)) {
                     break;
                 }
                 // If we get here then opening the file failed.
-                if (openFailedCounter++ < 10 && getCurrentPlaylist().size() > 1) {
+                if (openFailedCounter++ < 10 && queueManager.getCurrentPlaylist().size() > 1) {
                     final int pos = getNextPosition(false);
                     if (pos < 0) {
                         scheduleDelayedShutdown();
@@ -1620,11 +1179,11 @@ public class MusicService extends Service {
                         }
                         return;
                     }
-                    playPos = pos;
+                    queueManager.queuePosition = pos;
                     stop(false);
-                    playPos = pos;
+                    queueManager.queuePosition = pos;
 
-                    currentSong = getCurrentPlaylist().get(playPos);
+                    queueManager.currentSong = queueManager.getCurrentPlaylist().get(queueManager.queuePosition);
                 } else {
                     openFailedCounter = 0;
                     shutdown = true;
@@ -1657,12 +1216,12 @@ public class MusicService extends Service {
      * Sets the track to be played
      */
     protected void setNextTrack() {
-        nextPlayPos = getNextPosition(false);
-        if (nextPlayPos >= 0
-                && getCurrentPlaylist() != null
-                && !getCurrentPlaylist().isEmpty()
-                && nextPlayPos < getCurrentPlaylist().size()) {
-            final Song nextSong = getCurrentPlaylist().get(nextPlayPos);
+        queueManager.nextPlayPos = getNextPosition(false);
+        if (queueManager.nextPlayPos >= 0
+                && queueManager.getCurrentPlaylist() != null
+                && !queueManager.getCurrentPlaylist().isEmpty()
+                && queueManager.nextPlayPos < queueManager.getCurrentPlaylist().size()) {
+            final Song nextSong = queueManager.getCurrentPlaylist().get(queueManager.nextPlayPos);
             try {
                 if (player != null) {
                     player.setNextDataSource(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI + "/" + nextSong.id);
@@ -1686,7 +1245,7 @@ public class MusicService extends Service {
     public boolean open(Song song) {
         synchronized (this) {
 
-            currentSong = song;
+            queueManager.currentSong = song;
 
             if (player != null) {
                 player.setDataSource(song.path);
@@ -1737,8 +1296,8 @@ public class MusicService extends Service {
                     .firstOrError()
                     .subscribe(songs -> {
                         if (!songs.isEmpty()) {
-                            currentSong = songs.get(0);
-                            open(currentSong);
+                            queueManager.currentSong = songs.get(0);
+                            open(queueManager.currentSong);
                             if (completion != null) {
                                 completion.run();
                             }
@@ -1796,7 +1355,7 @@ public class MusicService extends Service {
                 if (player != null && player.isInitialized()) {
                     // if we are at the end of the song, go to the next song first
                     final long duration = player.getDuration();
-                    if (repeatMode != RepeatMode.ONE && duration > 2000
+                    if (queueManager.repeatMode != QueueManager.RepeatMode.ONE && duration > 2000
                             && player.getPosition() >= duration - 2000) {
                         gotoNext(true);
                     }
@@ -1810,11 +1369,11 @@ public class MusicService extends Service {
 
                     cancelShutdown();
                     updateNotification();
-                } else if (getCurrentPlaylist().size() == 0) {
+                } else if (queueManager.getCurrentPlaylist().size() == 0) {
                     // This is mostly so that if you press 'play' on a bluetooth headset
                     // without ever having played anything before, it will still play
                     // something.
-                    if (queueReloading) {
+                    if (queueManager.queueReloading) {
                         playOnQueueLoad = true;
                     } else {
                         playAutoShuffleList();
@@ -1825,7 +1384,7 @@ public class MusicService extends Service {
             case REMOTE: {
                 // if we are at the end of the song, go to the next song first
                 final long duration = player.getDuration();
-                if (repeatMode != RepeatMode.ONE && duration > 2000
+                if (queueManager.repeatMode != QueueManager.RepeatMode.ONE && duration > 2000
                         && player.getPosition() >= duration - 2000) {
                     gotoNext(true);
                 }
@@ -1852,7 +1411,6 @@ public class MusicService extends Service {
                         }
                         break;
                     }
-
                     case PAUSED: {
                         try {
                             castManager.checkConnectivity();
@@ -1868,12 +1426,12 @@ public class MusicService extends Service {
                     }
                 }
 
-                if (getCurrentPlaylist().size() == 0) {
+                if (queueManager.getCurrentPlaylist().size() == 0) {
                     // This is mostly so that if you press 'play' on a bluetooth headset
                     // without every having played anything before, it will still play
                     // something.
 
-                    if (queueReloading) {
+                    if (queueManager.queueReloading) {
                         playOnQueueLoad = true;
                     } else {
                         playAutoShuffleList();
@@ -1970,7 +1528,7 @@ public class MusicService extends Service {
                 break;
             case NOTIFY_MODE_BACKGROUND:
                 try {
-                    notificationHelper.notify(this, currentSong, isPlaying(), mediaSession);
+                    notificationHelper.notify(this, queueManager.currentSong, isPlaying(), mediaSession);
                 } catch (ConcurrentModificationException e) {
                     LogUtils.logException(TAG, "Exception while attempting to show notification", e);
                 }
@@ -2001,7 +1559,6 @@ public class MusicService extends Service {
     }
 
     private void stop(final boolean goToIdle) {
-
         switch (playbackLocation) {
             case LOCAL: {
                 if (player != null && player.isInitialized()) {
@@ -2166,11 +1723,7 @@ public class MusicService extends Service {
        */
     public void previous() {
         synchronized (this) {
-            if (playPos > 0) {
-                playPos--;
-            } else {
-                playPos = getCurrentPlaylist().size() - 1;
-            }
+            queueManager.previous();
             stop(false);
             openCurrent();
             play();
@@ -2184,21 +1737,7 @@ public class MusicService extends Service {
      * @return The next position to play.
      */
     private int getNextPosition(final boolean force) {
-        if (!force && repeatMode == RepeatMode.ONE) {
-            if (playPos < 0) {
-                return 0;
-            }
-            return playPos;
-        } else if (playPos >= getCurrentPlaylist().size() - 1) {
-            if (repeatMode == RepeatMode.OFF && !force) {
-                return -1;
-            } else if (repeatMode == RepeatMode.ALL || force) {
-                return 0;
-            }
-            return -1;
-        } else {
-            return playPos + 1;
-        }
+        return queueManager.getNextPosition(force);
     }
 
     public void next() {
@@ -2213,7 +1752,7 @@ public class MusicService extends Service {
 
             notifyChange(InternalIntents.TRACK_ENDING);
 
-            if (getCurrentPlaylist().size() == 0) {
+            if (queueManager.getCurrentPlaylist().size() == 0) {
                 scheduleDelayedShutdown();
                 return;
             }
@@ -2224,10 +1763,10 @@ public class MusicService extends Service {
                 return;
             }
 
-            playPos = pos;
+            queueManager.queuePosition = pos;
             saveBookmarkIfNeeded();
             stop(false);
-            playPos = pos;
+            queueManager.queuePosition = pos;
             openCurrentAndNext();
             play();
             notifyChange(InternalIntents.META_CHANGED);
@@ -2254,7 +1793,7 @@ public class MusicService extends Service {
                 // Write 'pos' to the bookmark field
                 ContentValues values = new ContentValues();
                 values.put(MediaStore.Audio.Media.BOOKMARK, pos);
-                Uri uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, currentSong.id);
+                Uri uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, queueManager.currentSong.id);
                 if (uri != null) {
                     getContentResolver().update(uri, values, null, null);
                 }
@@ -2269,129 +1808,32 @@ public class MusicService extends Service {
                     .firstOrError()
                     .subscribeOn(Schedulers.io())
                     .subscribe(songs -> {
-                        playlist = songs;
-                        playPos = -1;
-                        makeShuffleList();
-                        setShuffleMode(ShuffleMode.ON);
+                        queueManager.playlist = songs;
+                        queueManager.queuePosition = -1;
+                        queueManager.makeShuffleList();
+                        setShuffleMode(QueueManager.ShuffleMode.ON);
                         notifyChange(InternalIntents.QUEUE_CHANGED);
-                        playPos = 0;
+                        queueManager.queuePosition = 0;
                         openCurrentAndNext();
                         play();
                         notifyChange(InternalIntents.META_CHANGED);
-                        saveQueue(false);
+                        saveState(false);
                     }, error -> LogUtils.logException(TAG, "Error playing auto shuffle list", error));
 
         } else {
-            shuffleMode = ShuffleMode.OFF;
-            saveQueue(false);
+            queueManager.shuffleMode = QueueManager.ShuffleMode.OFF;
+            saveState(false);
         }
     }
 
-    public void clearQueue() {
-        playlist.clear();
-        shuffleList.clear();
-
-        stop(true);
-
-        playPos = -1;
-        nextPlayPos = -1;
-
-        if (!SettingsManager.getInstance().getRememberShuffle()) {
-            setShuffleMode(ShuffleMode.OFF);
-        }
-
-        notifyChange(InternalIntents.QUEUE_CHANGED);
-    }
-
-    /**
-     * Removes the first instance of the Song the playlist & shuffleList.
-     */
-    public void removeSong(int position) {
-        synchronized (this) {
-            List<Song> otherPlaylist = getCurrentPlaylist().equals(playlist) ? shuffleList : playlist;
-            Song song = getCurrentPlaylist().remove(position);
-            otherPlaylist.remove(song);
-
-            if (getQueuePosition() == position) {
-                removedCurrentSong();
-            } else {
-                playPos = getCurrentPlaylist().indexOf(currentSong);
-            }
-
-            notifyChange(InternalIntents.QUEUE_CHANGED);
-        }
-    }
-
-    /**
-     * Removes the range of Songs specified from the playlist & shuffleList. If a Song
-     * within the range is the file currently being played, playback will move
-     * to the next Song after the range.
-     *
-     * @param songsToRemove the Songs to remove
-     */
-    public void removeSongs(@NonNull List<Song> songsToRemove) {
-        synchronized (this) {
-
-            playlist.removeAll(songsToRemove);
-            shuffleList.removeAll(songsToRemove);
-
-            if (songsToRemove.contains(currentSong)) {
-                /*
-                 * If we remove a list of songs from the current queue, and that list contains our currently
-                 * playing song, we need to figure out which song should play next. We'll play the first song
-                 * that comes after the list of songs to be removed.
-                 *
-                 * In this example, let's say Song 7 is currently playing
-                 *
-                 * Playlist:                    [Song 3,    Song 4,     Song 5,     Song 6,     Song 7,     Song 8]
-                 * Indices:                     [0,         1,          2,          3,          4,          5]
-                 *
-                 * Remove;                                              [Song 5,     Song 6,     Song 7]
-                 *
-                 * First removed song:                                  Song 5
-                 * Index of first removed song:                         2
-                 *
-                 * Playlist after removal:      [Song 3,    Song 4,     Song 8]
-                 * Indices:                     [0,         1,          2]
-                 *
-                 *
-                 * So after the removal, we'll play index 2, which is Song 8.
-                 */
-                playPos = Collections.indexOfSubList(getCurrentPlaylist(), songsToRemove);
-                removedCurrentSong();
-            } else {
-                playPos = getCurrentPlaylist().indexOf(currentSong);
-            }
-
-            notifyChange(InternalIntents.QUEUE_CHANGED);
-        }
-    }
-
-    private void removedCurrentSong() {
-        if (getCurrentPlaylist().isEmpty()) {
-            stop(true);
-            playPos = -1;
-        } else {
-            if (playPos >= getCurrentPlaylist().size()) {
-                playPos = 0;
-            }
-            final boolean wasPlaying = isPlaying();
-            stop(false);
-            openCurrentAndNext();
-            if (wasPlaying) {
-                play();
-            }
-        }
-        notifyChange(InternalIntents.META_CHANGED);
-    }
 
     public void toggleFavorite() {
-        if (currentSong != null) {
-            PlaylistUtils.toggleFavorite(currentSong, isFavorite -> {
+        if (queueManager.currentSong != null) {
+            PlaylistUtils.toggleFavorite(queueManager.currentSong, isFavorite -> {
                 if (isFavorite) {
-                    Toast.makeText(MusicService.this, getString(R.string.song_to_favourites, currentSong.name), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MusicService.this, getString(R.string.song_to_favourites, queueManager.currentSong.name), Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(MusicService.this, getString(R.string.song_removed_from_favourites, currentSong.name), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MusicService.this, getString(R.string.song_removed_from_favourites, queueManager.currentSong.name), Toast.LENGTH_SHORT).show();
                 }
                 notifyChange(InternalIntents.FAVORITE_CHANGED);
             });
@@ -2399,30 +1841,24 @@ public class MusicService extends Service {
     }
 
     public int getShuffleMode() {
-        return shuffleMode;
+        return queueManager.shuffleMode;
     }
 
     public void setShuffleMode(int shufflemode) {
         synchronized (this) {
-            if (shuffleMode == shufflemode && !getCurrentPlaylist().isEmpty()) {
-                return;
-            }
-            shuffleMode = shufflemode;
-            notifyChange(InternalIntents.SHUFFLE_CHANGED);
-            saveQueue(false);
+            queueManager.setShuffleMode(shufflemode);
         }
     }
 
 
     public int getRepeatMode() {
-        return repeatMode;
+        return queueManager.repeatMode;
     }
 
     public void setRepeatMode(int repeatMode) {
         synchronized (this) {
-            this.repeatMode = repeatMode;
+            queueManager.setRepeatMode(repeatMode);
             setNextTrack();
-            saveQueue(false);
         }
     }
 
@@ -2432,153 +1868,99 @@ public class MusicService extends Service {
      */
     public String getPath() {
         synchronized (this) {
-            if (currentSong != null) {
-                return currentSong.path;
+            if (queueManager.currentSong != null) {
+                return queueManager.currentSong.path;
             }
             return null;
         }
     }
 
     /**
-     * Returns the rowid of the currently playing file, or -1 if no file is
-     * currently playing.
+     * Returns the id of the currently playing file, or -1 if no file is currently playing.
      */
     public long getSongId() {
         synchronized (this) {
-            if (player == null) {
+            if (player == null || !player.isInitialized()) {
                 return -1;
             }
-            if (getCurrentPlaylist() != null
-                    && !getCurrentPlaylist().isEmpty()
-                    && playPos >= 0
-                    && player.isInitialized()
-                    && playPos < getCurrentPlaylist().size()) {
-                return getCurrentPlaylist().get(playPos).id;
+
+            if (queueManager.currentSong != null) {
+                return queueManager.currentSong.id;
             }
         }
         return -1;
     }
 
-    /**
-     * Returns the position in the queue
-     *
-     * @return the position in the queue
-     */
-    public int getQueuePosition() {
-        synchronized (this) {
-            return playPos;
-        }
-    }
-
-    /**
-     * Starts playing the track at the given position in the queue.
-     *
-     * @param pos The position in the queue of the track that will be played.
-     */
-    public void setQueuePosition(int pos) {
-        synchronized (this) {
-            stop(false);
-            playPos = pos;
-            openCurrentAndNext();
-            play();
-            notifyChange(InternalIntents.META_CHANGED);
-        }
-    }
-
     public String getArtistName() {
         synchronized (this) {
-            if (currentSong == null) {
+            if (queueManager.currentSong == null) {
                 return null;
             }
-            return currentSong.artistName;
+            return queueManager.currentSong.artistName;
         }
     }
 
     public String getAlbumArtistName() {
         synchronized (this) {
-            if (currentSong == null) {
+            if (queueManager.currentSong == null) {
                 return null;
             }
-            return currentSong.albumArtistName;
+            return queueManager.currentSong.albumArtistName;
         }
     }
 
     public long getDuration() {
         synchronized (this) {
-            if (currentSong == null) {
+            if (queueManager.currentSong == null) {
                 return 0;
             }
-            return currentSong.duration;
-        }
-    }
-
-    public long getArtistId() {
-        synchronized (this) {
-            if (currentSong == null) {
-                return -1;
-            }
-            return currentSong.artistId;
+            return queueManager.currentSong.duration;
         }
     }
 
     public String getAlbumName() {
         synchronized (this) {
-            if (currentSong == null) {
+            if (queueManager.currentSong == null) {
                 return null;
             }
-            return currentSong.albumName;
-        }
-    }
-
-    public int getPlaybackLocation() {
-        synchronized (this) {
-            return playbackLocation;
-        }
-    }
-
-    public long getAlbumId() {
-        synchronized (this) {
-            if (currentSong == null) {
-                return -1;
-            }
-            return currentSong.albumId;
+            return queueManager.currentSong.albumName;
         }
     }
 
     public String getSongName() {
         synchronized (this) {
-            if (currentSong == null) {
+            if (queueManager.currentSong == null) {
                 return null;
             }
-            return currentSong.name;
+            return queueManager.currentSong.name;
         }
     }
 
     public Album getAlbum() {
-        if (currentSong != null) {
-            return currentSong.getAlbum();
+        if (queueManager.currentSong != null) {
+            return queueManager.currentSong.getAlbum();
         }
         return null;
     }
 
     @Nullable
     public Song getSong() {
-        return currentSong;
+        return queueManager.currentSong;
     }
 
     private boolean isPodcast() {
         synchronized (this) {
-            return currentSong != null && currentSong.isPodcast;
+            return queueManager.currentSong != null && queueManager.currentSong.isPodcast;
         }
     }
 
     private long getBookmark() {
         synchronized (this) {
-            if (currentSong == null) {
+            if (queueManager.currentSong == null) {
                 return 0;
             }
-            if (currentSong.isPodcast) {
-                return currentSong.bookMark;
+            if (queueManager.currentSong.isPodcast) {
+                return queueManager.currentSong.bookMark;
             }
             return 0;
         }
@@ -2658,45 +2040,50 @@ public class MusicService extends Service {
     }
 
     public Single<Boolean> isFavorite() {
-        return PlaylistUtils.isFavorite(currentSong).first(false);
+        return PlaylistUtils.isFavorite(queueManager.currentSong).first(false);
     }
 
     public void toggleShuffleMode() {
-        int shuffle = getShuffleMode();
-        if (shuffle == ShuffleMode.OFF) {
-            setShuffleMode(ShuffleMode.ON);
-            notifyChange(InternalIntents.SHUFFLE_CHANGED);
-            makeShuffleList();
-            notifyChange(InternalIntents.QUEUE_CHANGED);
-            if (getRepeatMode() == RepeatMode.ONE) {
-                setRepeatMode(RepeatMode.ALL);
-            }
-            showToast(R.string.shuffle_on_notif);
-        } else if (shuffle == ShuffleMode.ON) {
-            setShuffleMode(ShuffleMode.OFF);
-            notifyChange(InternalIntents.SHUFFLE_CHANGED);
-            if (this.playPos >= 0 && this.playPos < shuffleList.size()) {
-                int playPos = playlist.indexOf(shuffleList.get(this.playPos));
-                if (playPos != -1) {
-                    this.playPos = playPos;
+        switch (getShuffleMode()) {
+            case QueueManager.ShuffleMode.ON:
+                setShuffleMode(QueueManager.ShuffleMode.ON);
+                notifyChange(InternalIntents.SHUFFLE_CHANGED);
+                queueManager.makeShuffleList();
+                notifyChange(InternalIntents.QUEUE_CHANGED);
+                if (getRepeatMode() == QueueManager.RepeatMode.ONE) {
+                    setRepeatMode(QueueManager.RepeatMode.ALL);
                 }
-            }
-            notifyChange(InternalIntents.QUEUE_CHANGED);
-            showToast(R.string.shuffle_off_notif);
+                showToast(R.string.shuffle_on_notif);
+                break;
+            case QueueManager.ShuffleMode.OFF:
+                setShuffleMode(QueueManager.ShuffleMode.OFF);
+                notifyChange(InternalIntents.SHUFFLE_CHANGED);
+                if (this.queueManager.queuePosition >= 0 && this.queueManager.queuePosition < queueManager.shuffleList.size()) {
+                    int playPos = queueManager.playlist.indexOf(queueManager.shuffleList.get(this.queueManager.queuePosition));
+                    if (playPos != -1) {
+                        this.queueManager.queuePosition = playPos;
+                    }
+                }
+                notifyChange(InternalIntents.QUEUE_CHANGED);
+                showToast(R.string.shuffle_off_notif);
+                break;
         }
     }
 
     public void toggleRepeat() {
-        int mode = getRepeatMode();
-        if (mode == RepeatMode.OFF) {
-            setRepeatMode(RepeatMode.ALL);
-            showToast(R.string.repeat_all_notif);
-        } else if (mode == RepeatMode.ALL) {
-            setRepeatMode(RepeatMode.ONE);
-            showToast(R.string.repeat_current_notif);
-        } else {
-            setRepeatMode(RepeatMode.OFF);
-            showToast(R.string.repeat_off_notif);
+        switch (getRepeatMode()) {
+            case QueueManager.RepeatMode.OFF:
+                setRepeatMode(QueueManager.RepeatMode.ALL);
+                showToast(R.string.repeat_all_notif);
+                break;
+            case QueueManager.RepeatMode.ALL:
+                setRepeatMode(QueueManager.RepeatMode.ONE);
+                showToast(R.string.repeat_current_notif);
+                break;
+            case QueueManager.RepeatMode.ONE:
+                setRepeatMode(QueueManager.RepeatMode.OFF);
+                showToast(R.string.repeat_off_notif);
+                break;
         }
         notifyChange(InternalIntents.REPEAT_CHANGED);
     }
@@ -2763,8 +2150,7 @@ public class MusicService extends Service {
     }
 
     private void scheduleDelayedShutdown() {
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                SystemClock.elapsedRealtime() + IDLE_DELAY, shutdownIntent);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + IDLE_DELAY, shutdownIntent);
         shutdownScheduled = true;
     }
 
@@ -2791,7 +2177,7 @@ public class MusicService extends Service {
     private void startForegroundImpl() {
         try {
             notificationStateHandler.sendEmptyMessage(NotificationStateHandler.START_FOREGROUND);
-            notificationHelper.startForeground(this, currentSong, isPlaying(), mediaSession);
+            notificationHelper.startForeground(this, queueManager.currentSong, isPlaying(), mediaSession);
         } catch (NullPointerException | ConcurrentModificationException e) {
             Crashlytics.log("startForegroundImpl error: " + e.getMessage());
         }
@@ -2808,6 +2194,124 @@ public class MusicService extends Service {
             notificationStateHandler.sendEmptyMessageDelayed(NotificationStateHandler.STOP_FOREGROUND, 1500);
         } else {
             stopForeground(removeNotification);
+        }
+    }
+
+
+    // Queue related methods
+
+    /**
+     * Opens a list for playback
+     *
+     * @param songs    The list of tracks to open
+     * @param position The position to start playback at
+     */
+    public void open(List<Song> songs, final int position) {
+        synchronized (this) {
+            queueManager.open(songs, position, this::openCurrentAndNext);
+        }
+    }
+
+    public void clearQueue() {
+        stop(true);
+        queueManager.clearQueue();
+    }
+
+    void reloadQueue() {
+        if (ContextCompat.checkSelfPermission(MusicService.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        queueManager.reloadQueue(
+                () -> {
+                    if (playOnQueueLoad) {
+                        play();
+                        playOnQueueLoad = false;
+                    }
+                },
+                new UnsafeAction() {
+                    @Override
+                    public void run() {
+                        synchronized (this) {
+                            openFailedCounter = 20;
+                            openCurrentAndNext();
+                        }
+                    }
+                },
+                seekPos -> seekTo(seekPos < getDuration() ? seekPos : 0));
+    }
+
+    public List<Song> getQueue() {
+        synchronized (this) {
+            return queueManager.getCurrentPlaylist();
+        }
+    }
+
+    /**
+     * Returns the position in the queue
+     *
+     * @return the position in the queue
+     */
+    public int getQueuePosition() {
+        synchronized (this) {
+            return queueManager.queuePosition;
+        }
+    }
+
+    /**
+     * Starts playing the track at the given position in the queue.
+     *
+     * @param pos The position in the queue of the track that will be played.
+     */
+    public void setQueuePosition(int pos) {
+        synchronized (this) {
+            stop(false);
+            queueManager.queuePosition = pos;
+            openCurrentAndNext();
+            play();
+            notifyChange(InternalIntents.META_CHANGED);
+        }
+    }
+
+    UnsafeAction stop = () -> stop(true);
+
+    UnsafeAction moveToNextTrack = () -> {
+        final boolean wasPlaying = isPlaying();
+        stop(false);
+        openCurrentAndNext();
+        if (wasPlaying) {
+            play();
+        }
+    };
+
+    public void removeSongs(List<Song> songs) {
+        queueManager.removeSongs(songs, stop, moveToNextTrack);
+    }
+
+    public void removeSong(int position) {
+        queueManager.removeSong(position, stop, moveToNextTrack);
+    }
+
+    public void moveQueueItem(int from, int to) {
+        queueManager.moveQueueItem(from, to);
+    }
+
+    class QueueManagerCallbacks implements QueueManager.Callbacks {
+        @Override
+        public void onQueueChanged() {
+            if (isPlaying()) {
+                setNextTrack();
+            }
+            notifyChange(InternalIntents.QUEUE_CHANGED);
+        }
+
+        @Override
+        public void onShuffleChanged() {
+            notifyChange(InternalIntents.SHUFFLE_CHANGED);
+        }
+
+        @Override
+        public void onMetaChanged() {
+            notifyChange(InternalIntents.META_CHANGED);
         }
     }
 }

@@ -37,7 +37,8 @@ import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.playback.constants.MediaButtonCommand;
+import com.simplecity.amp_library.playback.constants.ServiceCommand;
 import com.simplecity.amp_library.ui.activities.BaseActivity;
 import com.simplecity.amp_library.ui.fragments.WidgetFragment;
 import com.simplecity.amp_library.ui.views.SizableSeekBar;
@@ -197,8 +198,8 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
 
             // Send broadcast intent to any running MediaPlaybackService so it can
             // wrap around with an immediate update.
-            Intent updateIntent = new Intent(MusicService.ServiceCommand.SERVICE_COMMAND);
-            updateIntent.putExtra(MusicService.MediaButtonCommand.CMD_NAME, getUpdateCommandString());
+            Intent updateIntent = new Intent(ServiceCommand.SERVICE_COMMAND);
+            updateIntent.putExtra(MediaButtonCommand.CMD_NAME, getUpdateCommandString());
             updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{appWidgetId});
             updateIntent.addFlags(Intent.FLAG_RECEIVER_REGISTERED_ONLY);
             sendBroadcast(updateIntent);

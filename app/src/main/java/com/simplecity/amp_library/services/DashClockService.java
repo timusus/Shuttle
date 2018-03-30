@@ -9,7 +9,7 @@ import android.os.Bundle;
 import com.google.android.apps.dashclock.api.DashClockExtension;
 import com.google.android.apps.dashclock.api.ExtensionData;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.ui.activities.MainActivity;
 
 /**
@@ -48,8 +48,8 @@ public class DashClockService extends DashClockExtension {
     public void onCreate() {
         super.onCreate();
         mIntent = new Intent(this, MainActivity.class);
-        mFilter.addAction(MusicService.InternalIntents.PLAY_STATE_CHANGED);
-        mFilter.addAction(MusicService.InternalIntents.META_CHANGED);
+        mFilter.addAction(InternalIntents.PLAY_STATE_CHANGED);
+        mFilter.addAction(InternalIntents.META_CHANGED);
         registerReceiver(mStatusListener, mFilter);
 
     }

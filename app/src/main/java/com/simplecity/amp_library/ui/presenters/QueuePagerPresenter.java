@@ -9,7 +9,7 @@ import com.annimon.stream.Stream;
 import com.bumptech.glide.RequestManager;
 import com.cantrowitz.rxbroadcast.RxBroadcast;
 import com.simplecity.amp_library.ShuttleApplication;
-import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.ui.modelviews.QueuePagerItemView;
 import com.simplecity.amp_library.ui.views.QueuePagerView;
 import com.simplecity.amp_library.utils.MusicUtils;
@@ -37,14 +37,14 @@ public class QueuePagerPresenter extends Presenter<QueuePagerView> {
         super.bindView(view);
 
         IntentFilter filter = new IntentFilter();
-        filter.addAction(MusicService.InternalIntents.META_CHANGED);
-        filter.addAction(MusicService.InternalIntents.REPEAT_CHANGED);
-        filter.addAction(MusicService.InternalIntents.SHUFFLE_CHANGED);
-        filter.addAction(MusicService.InternalIntents.QUEUE_CHANGED);
-        filter.addAction(MusicService.InternalIntents.SERVICE_CONNECTED);
+        filter.addAction(InternalIntents.META_CHANGED);
+        filter.addAction(InternalIntents.REPEAT_CHANGED);
+        filter.addAction(InternalIntents.SHUFFLE_CHANGED);
+        filter.addAction(InternalIntents.QUEUE_CHANGED);
+        filter.addAction(InternalIntents.SERVICE_CONNECTED);
 
         addDisposable(RxBroadcast.fromBroadcast(ShuttleApplication.getInstance(), filter)
-                .startWith(new Intent(MusicService.InternalIntents.QUEUE_CHANGED))
+                .startWith(new Intent(InternalIntents.QUEUE_CHANGED))
                 .toFlowable(BackpressureStrategy.LATEST)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(intent -> {
@@ -57,13 +57,13 @@ public class QueuePagerPresenter extends Presenter<QueuePagerView> {
 
                     if (action != null) {
                         switch (action) {
-                            case MusicService.InternalIntents.META_CHANGED:
+                            case InternalIntents.META_CHANGED:
                                 queuePagerView.updateQueuePosition(MusicUtils.getQueuePosition());
                                 break;
-                            case MusicService.InternalIntents.REPEAT_CHANGED:
-                            case MusicService.InternalIntents.SHUFFLE_CHANGED:
-                            case MusicService.InternalIntents.QUEUE_CHANGED:
-                            case MusicService.InternalIntents.SERVICE_CONNECTED:
+                            case InternalIntents.REPEAT_CHANGED:
+                            case InternalIntents.SHUFFLE_CHANGED:
+                            case InternalIntents.QUEUE_CHANGED:
+                            case InternalIntents.SERVICE_CONNECTED:
 
                                 List<ViewModel> items = Stream.of(MusicUtils.getQueue())
                                         .map(song -> new QueuePagerItemView(song, requestManager))

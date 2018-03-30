@@ -11,7 +11,7 @@ import com.cantrowitz.rxbroadcast.RxBroadcast;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Query;
 import com.simplecity.amp_library.model.Song;
-import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.sql.SqlUtils;
 import com.simplecity.amp_library.ui.presenters.Presenter;
 import com.simplecity.amp_library.utils.LogUtils;
@@ -42,7 +42,7 @@ class LyricsPresenter extends Presenter<LyricsView> {
 
         updateLyrics();
 
-        addDisposable(RxBroadcast.fromBroadcast(ShuttleApplication.getInstance(), new IntentFilter(MusicService.InternalIntents.META_CHANGED))
+        addDisposable(RxBroadcast.fromBroadcast(ShuttleApplication.getInstance(), new IntentFilter(InternalIntents.META_CHANGED))
                 .toFlowable(BackpressureStrategy.LATEST)
                 .subscribe(intent -> updateLyrics(), error -> LogUtils.logException(TAG, "Error receiving meta changed", error)));
     }

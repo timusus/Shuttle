@@ -17,7 +17,9 @@ import android.support.v4.content.WakefulBroadcastReceiver;
 import android.view.KeyEvent;
 
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.playback.constants.MediaButtonCommand;
 import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.playback.constants.ServiceCommand;
 import com.simplecity.amp_library.ui.activities.MainActivity;
 
 /**
@@ -71,7 +73,7 @@ public class MediaButtonIntentReceiver extends WakefulBroadcastReceiver {
             final String intentAction = intent.getAction();
 
             if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intentAction) && preferences.getBoolean("pref_headset_disconnect", true)) {
-                startService(context, MusicService.MediaButtonCommand.PAUSE);
+                startService(context, MediaButtonCommand.PAUSE);
 
             } else if (Intent.ACTION_MEDIA_BUTTON.equals(intentAction)) {
                 final KeyEvent event = intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
@@ -86,31 +88,31 @@ public class MediaButtonIntentReceiver extends WakefulBroadcastReceiver {
                 String command = null;
                 switch (keyCode) {
                     case KeyEvent.KEYCODE_MEDIA_STOP:
-                        command = MusicService.MediaButtonCommand.STOP;
+                        command = MediaButtonCommand.STOP;
                         break;
                     case KeyEvent.KEYCODE_HEADSETHOOK:
                     case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-                        command = MusicService.MediaButtonCommand.TOGGLE_PAUSE;
+                        command = MediaButtonCommand.TOGGLE_PAUSE;
                         break;
                     case KeyEvent.KEYCODE_MEDIA_NEXT:
-                        command = MusicService.MediaButtonCommand.NEXT;
+                        command = MediaButtonCommand.NEXT;
                         break;
                     case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-                        command = MusicService.MediaButtonCommand.PREVIOUS;
+                        command = MediaButtonCommand.PREVIOUS;
                         break;
                     case KeyEvent.KEYCODE_MEDIA_PAUSE:
-                        command = MusicService.MediaButtonCommand.PAUSE;
+                        command = MediaButtonCommand.PAUSE;
                         break;
                     case KeyEvent.KEYCODE_MEDIA_PLAY:
-                        command = MusicService.MediaButtonCommand.PLAY;
+                        command = MediaButtonCommand.PLAY;
                         break;
                 }
 
                 if (command != null) {
                     if (action == KeyEvent.ACTION_DOWN) {
                         if (down) {
-                            if ((MusicService.MediaButtonCommand.TOGGLE_PAUSE.equals(command) ||
-                                    MusicService.MediaButtonCommand.PLAY.equals(command))) {
+                            if ((MediaButtonCommand.TOGGLE_PAUSE.equals(command) ||
+                                    MediaButtonCommand.PLAY.equals(command))) {
                                 if (lastClickTime != 0 && eventTime - lastClickTime > LONG_PRESS_DELAY) {
                                     acquireWakeLockAndSendMessage(context,
                                             handler.obtainMessage(MSG_LONGPRESS_TIMEOUT, context), 0);
@@ -178,13 +180,13 @@ public class MediaButtonIntentReceiver extends WakefulBroadcastReceiver {
 
                     switch (clickCount) {
                         case 1:
-                            command = MusicService.MediaButtonCommand.TOGGLE_PAUSE;
+                            command = MediaButtonCommand.TOGGLE_PAUSE;
                             break;
                         case 2:
-                            command = MusicService.MediaButtonCommand.NEXT;
+                            command = MediaButtonCommand.NEXT;
                             break;
                         case 3:
-                            command = MusicService.MediaButtonCommand.PREVIOUS;
+                            command = MediaButtonCommand.PREVIOUS;
                             break;
                         default:
                             command = null;
@@ -193,7 +195,7 @@ public class MediaButtonIntentReceiver extends WakefulBroadcastReceiver {
 
                     if (command != null) {
                         final Context context = (Context) msg.obj;
-                        if (MusicService.MediaButtonCommand.NEXT.equals((command))) {
+                        if (MediaButtonCommand.NEXT.equals((command))) {
                             beep(context);
                         }
                         startService(context, command);
@@ -214,9 +216,9 @@ public class MediaButtonIntentReceiver extends WakefulBroadcastReceiver {
 
     static void startService(final Context context, final String command) {
         final Intent intent = new Intent(context, MusicService.class);
-        intent.setAction(MusicService.ServiceCommand.SERVICE_COMMAND);
-        intent.putExtra(MusicService.MediaButtonCommand.CMD_NAME, command);
-        intent.putExtra(MusicService.MediaButtonCommand.FROM_MEDIA_BUTTON, true);
+        intent.setAction(ServiceCommand.SERVICE_COMMAND);
+        intent.putExtra(MediaButtonCommand.CMD_NAME, command);
+        intent.putExtra(MediaButtonCommand.FROM_MEDIA_BUTTON, true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             context.startForegroundService(intent);
         } else {
