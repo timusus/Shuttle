@@ -330,9 +330,9 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
                 TextView text1 = widgetLayout.findViewById(R.id.text1);
                 TextView text2 = widgetLayout.findViewById(R.id.text2);
                 TextView text3 = widgetLayout.findViewById(R.id.text3);
-                String trackName = MusicUtils.getSongName();
-                String artistName = MusicUtils.getAlbumArtistName();
-                final String albumName = MusicUtils.getAlbumName();
+                String trackName = MusicUtils.getSong().name;
+                String artistName = MusicUtils.getSong().albumArtistName;
+                final String albumName = MusicUtils.getSong().albumName;
                 if (trackName != null && text1 != null) {
                     text1.setText(trackName);
                     text1.setTextColor(textColor);

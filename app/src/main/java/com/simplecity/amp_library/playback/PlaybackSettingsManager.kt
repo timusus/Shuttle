@@ -36,4 +36,20 @@ object PlaybackSettingsManager : BaseSettingsManager() {
     var shuffleList: String?
         get() = getString(KEY_SHUFFLE_LIST, null)
         set(shuffleList) = setString(KEY_SHUFFLE_LIST, shuffleList)
+
+    private const val KEY_HEADSET_DISCONNECT = "pref_headset_disconnect"
+    var pauseOnHeadsetDisconnect: Boolean
+        get() = getBool(KEY_HEADSET_DISCONNECT, true)
+        set(headsetDisconnect) = setBool(KEY_HEADSET_DISCONNECT, headsetDisconnect)
+
+    private const val KEY_HEADSET_CONNECT = "pref_headset_connect"
+    var playOnHeadsetConnect: Boolean
+        get() = getBool(KEY_HEADSET_CONNECT, false)
+        set(headsetConnect) = setBool(KEY_HEADSET_CONNECT, headsetConnect)
+
+    private const val KEY_LAST_FM_SCROBBLING = "pref_simple_lastfm_scrobbler"
+    var enableLastFmScrobbling: Boolean
+        get() = getBool(KEY_LAST_FM_SCROBBLING, false)
+        set(enableLastFmScrobbling) = setBool(KEY_LAST_FM_SCROBBLING, enableLastFmScrobbling)
+
 }

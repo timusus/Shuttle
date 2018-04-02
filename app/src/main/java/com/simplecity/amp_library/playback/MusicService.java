@@ -5,9 +5,6 @@ import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.appwidget.AppWidgetManager;
-import android.bluetooth.BluetoothA2dp;
-import android.bluetooth.BluetoothHeadset;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentUris;
@@ -15,7 +12,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
@@ -34,14 +30,13 @@ import android.os.Looper;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -51,20 +46,11 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
-import com.google.android.gms.cast.ApplicationMetadata;
-import com.google.android.gms.cast.MediaInfo;
-import com.google.android.gms.cast.MediaMetadata;
-import com.google.android.gms.cast.MediaStatus;
-import com.google.android.gms.common.images.WebImage;
-import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
-import com.google.android.libraries.cast.companionlibrary.cast.callbacks.VideoCastConsumerImpl;
 import com.google.android.libraries.cast.companionlibrary.cast.exceptions.CastException;
 import com.google.android.libraries.cast.companionlibrary.cast.exceptions.NoConnectionException;
 import com.google.android.libraries.cast.companionlibrary.cast.exceptions.TransientNetworkDisconnectionException;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.glide.utils.GlideUtils;
 import com.simplecity.amp_library.http.HttpServer;
-import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.notifications.MusicNotificationHelper;
 import com.simplecity.amp_library.playback.constants.ExternalIntents;
@@ -73,28 +59,21 @@ import com.simplecity.amp_library.playback.constants.MediaButtonCommand;
 import com.simplecity.amp_library.playback.constants.PlayerHandler;
 import com.simplecity.amp_library.playback.constants.ServiceCommand;
 import com.simplecity.amp_library.playback.constants.ShortcutCommands;
+import com.simplecity.amp_library.playback.constants.WidgetManager;
 import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.services.Equalizer;
-import com.simplecity.amp_library.ui.widgets.WidgetProviderExtraLarge;
-import com.simplecity.amp_library.ui.widgets.WidgetProviderLarge;
-import com.simplecity.amp_library.ui.widgets.WidgetProviderMedium;
-import com.simplecity.amp_library.ui.widgets.WidgetProviderSmall;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MediaButtonIntentReceiver;
-import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.SleepTimer;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 
 import io.reactivex.Completable;
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
@@ -104,36 +83,38 @@ public class MusicService extends Service {
 
     private static final String TAG = "MusicService";
 
-    public static final String FROM_USER = "from_user";
+    private MusicServiceCallbacks musicServiceCallbacks = new MusicServiceCallbacks();
 
-    interface Status {
-        int START = 0;
-        int RESUME = 1;
-        int PAUSE = 2;
-        int COMPLETE = 3;
-    }
+    QueueManager queueManager = new QueueManager(musicServiceCallbacks);
 
-    boolean playOnQueueLoad;
+    private BluetoothManager bluetoothManager = new BluetoothManager(musicServiceCallbacks);
 
-    QueueManager queueManager = new QueueManager(new QueueManagerCallbacks());
+    private HeadsetManager headsetManager = new HeadsetManager(musicServiceCallbacks);
+
+    private WidgetManager widgetManager = new WidgetManager();
+
+    private ScrobbleManager scrobbleManager = new ScrobbleManager();
+
+    private ChromecastManager chromecastManager = new ChromecastManager(this, queueManager, musicServiceCallbacks);
 
     private Equalizer equalizer;
+
+    boolean playOnQueueLoad;
 
     /**
      * Idle time before stopping the foreground notification (5 minutes)
      */
     private static final int IDLE_DELAY = 5 * 60 * 1000;
 
-    VideoCastManager castManager;
+    private int playbackState;
 
-    private VideoCastConsumerImpl castConsumer;
+    @interface PlaybackLocation {
+        int REMOTE = 0;
+        int LOCAL = 1;
+    }
 
-    int playbackLocation;
-
-    int playbackState;
-
-    public static final int REMOTE = 0;
-    public static final int LOCAL = 1;
+    @PlaybackLocation
+    private int playbackLocation = PlaybackLocation.LOCAL;
 
     public static final int PLAYING = 0;
     public static final int PAUSED = 1;
@@ -144,19 +125,12 @@ public class MusicService extends Service {
     @Nullable
     MultiPlayer player;
 
-    private BroadcastReceiver headsetReceiver;
-    private BroadcastReceiver bluetoothReceiver;
     private BroadcastReceiver unmountReceiver = null;
-    private BroadcastReceiver a2dpReceiver = null;
 
-    private boolean headsetReceiverIsRegistered;
-    private boolean bluetoothReceiverIsRegistered;
-
-    MediaSessionCompat mediaSession;
+    private MediaSessionCompat mediaSession;
 
     private ComponentName mediaButtonReceiverComponent;
 
-    int castMediaStatus = -1;
 
     //Todo:
     // Don't make this public. The MultiPlayer uses it. Just attach a listener to the MultiPlayer
@@ -167,9 +141,9 @@ public class MusicService extends Service {
 
     private boolean serviceInUse = false;
 
-    int openFailedCounter = 0;
+    private int openFailedCounter = 0;
 
-    boolean isSupposedToBePlaying = false;
+    private boolean isSupposedToBePlaying = false;
 
     /**
      * Gets the last played time to determine whether we still want notifications or not
@@ -182,10 +156,7 @@ public class MusicService extends Service {
     private static final int NOTIFY_MODE_FOREGROUND = 1;
     private static final int NOTIFY_MODE_BACKGROUND = 2;
 
-    SharedPreferences prefs;
-    SharedPreferences servicePrefs;
-
-    MediaPlayerHandler playerHandler;
+    private MediaPlayerHandler playerHandler;
 
     private HandlerThread handlerThread;
 
@@ -213,169 +184,12 @@ public class MusicService extends Service {
 
     private boolean shutdownScheduled;
 
-
     private CompositeDisposable disposables = new CompositeDisposable();
 
     boolean pauseOnTrackFinish = false;
 
-    void updatePlaybackLocation(int location) {
 
-        //If the location has changed and it's no longer ChromeCast
-        if (location == LOCAL && location != playbackLocation) {
-            try {
-                if (castManager != null && castManager.isConnected()) {
-                    if (player != null && player.isInitialized()) {
-                        player.seekTo(castManager.getCurrentMediaPosition());
-                    }
-                    castManager.stop();
-                }
-            } catch (CastException | NoConnectionException | TransientNetworkDisconnectionException | IllegalStateException e) {
-                Log.e(TAG, "updatePlaybackLocation error: " + e);
-            }
-        }
-
-        playbackLocation = location;
-    }
-
-    void loadRemoteMedia(MediaInfo selectedMedia, int position, boolean autoPlay, final Bitmap bitmap, final Drawable errorDrawable) {
-        Completable.fromAction(() -> {
-
-            HttpServer.getInstance().serveAudio(queueManager.currentSong.path);
-
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-
-            if (bitmap == null) {
-                GlideUtils.drawableToBitmap(errorDrawable).compress(Bitmap.CompressFormat.JPEG, 80, stream);
-            } else {
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
-            }
-
-            HttpServer.getInstance().serveImage(stream.toByteArray());
-        })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(() -> {
-                    try {
-                        castManager.loadMedia(selectedMedia, autoPlay, position);
-                    } catch (Exception e) {
-                        Log.e(TAG, "Failed to load media. " + e.toString());
-                    }
-                }, throwable -> LogUtils.logException(TAG, "Error loading remote media", throwable));
-    }
-
-    void prepareChromeCastLoad(int position, boolean autoPlay) {
-
-        if (queueManager.currentSong == null) {
-            return;
-        }
-
-        if (TextUtils.isEmpty(queueManager.currentSong.path)) {
-            return;
-        }
-
-        MediaMetadata metadata = new MediaMetadata(MediaMetadata.MEDIA_TYPE_MUSIC_TRACK);
-        metadata.putString(MediaMetadata.KEY_ALBUM_ARTIST, getAlbumArtistName());
-        metadata.putString(MediaMetadata.KEY_ALBUM_TITLE, getAlbumName());
-        metadata.putString(MediaMetadata.KEY_TITLE, getSongName());
-        metadata.addImage(new WebImage(Uri.parse("http://" + ShuttleUtils.getIpAddr() + ":5000" + "/image/" + getSongId())));
-
-        MediaInfo selectedMedia = new MediaInfo.Builder("http://" + ShuttleUtils.getIpAddr() + ":5000" + "/audio/" + getSongId())
-                .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
-                .setContentType("audio/*")
-                .setMetadata(metadata)
-                .build();
-
-        if (ShuttleUtils.isUpgraded() && castManager != null) {
-            doOnMainThread(() -> Glide.with(MusicService.this)
-                    .load(getSong())
-                    .asBitmap()
-                    .override(1024, 1024)
-                    .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(getSong().name, true))
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                            loadRemoteMedia(selectedMedia, position, autoPlay, resource, null);
-                        }
-
-                        @Override
-                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                            super.onLoadFailed(e, errorDrawable);
-                            loadRemoteMedia(selectedMedia, position, autoPlay, null, errorDrawable);
-                        }
-                    }));
-        }
-    }
-
-    private void setupCastListener() {
-
-        castConsumer = new VideoCastConsumerImpl() {
-
-            @Override
-            public void onApplicationConnected(ApplicationMetadata appMetadata, String sessionId, boolean wasLaunched) {
-
-                Log.d(TAG, "onApplicationLaunched()");
-
-                HttpServer.getInstance().start();
-
-                boolean wasPlaying = isSupposedToBePlaying;
-
-                //If music is playing on the phone, pause it
-                if (playbackLocation == LOCAL && isSupposedToBePlaying) {
-                    pause();
-                }
-
-                //Try to play from the same position, but on the ChromeCast
-                prepareChromeCastLoad((int) getPosition(), wasPlaying);
-                if (wasPlaying) {
-                    playbackState = PLAYING;
-                } else {
-                    playbackState = PAUSED;
-                }
-
-                updatePlaybackLocation(REMOTE);
-            }
-
-            @Override
-            public void onApplicationDisconnected(int errorCode) {
-                Log.d(TAG, "onApplicationDisconnected() is reached with errorCode: " + errorCode);
-                setIsSupposedToBePlaying(false, true);
-                playbackState = STOPPED;
-                updatePlaybackLocation(LOCAL);
-
-                HttpServer.getInstance().stop();
-            }
-
-            @Override
-            public void onDisconnected() {
-                Log.d(TAG, "onDisconnected() is reached");
-                setIsSupposedToBePlaying(false, true);
-                playbackState = STOPPED;
-                updatePlaybackLocation(LOCAL);
-
-                HttpServer.getInstance().stop();
-            }
-
-            @Override
-            public void onRemoteMediaPlayerStatusUpdated() {
-                //Only send a track finished message if the state has changed..
-                if (castManager.getPlaybackStatus() != castMediaStatus) {
-                    if (castManager.getPlaybackStatus() == MediaStatus.PLAYER_STATE_IDLE
-                            && castManager.getIdleReason() == MediaStatus.IDLE_REASON_FINISHED) {
-                        playerHandler.sendEmptyMessage(PlayerHandler.TRACK_ENDED);
-                    }
-                }
-
-                castMediaStatus = castManager.getPlaybackStatus();
-            }
-        };
-    }
-
-    final WidgetProviderMedium mWidgetProviderMedium = WidgetProviderMedium.getInstance();
-    final WidgetProviderSmall mWidgetProviderSmall = WidgetProviderSmall.getInstance();
-    final WidgetProviderLarge mWidgetProviderLarge = WidgetProviderLarge.getInstance();
-    final WidgetProviderExtraLarge mWidgetProviderExtraLarge = WidgetProviderExtraLarge.getInstance();
-
-    private final BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver intentReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(final Context context, final Intent intent) {
             final String action = intent.getAction();
@@ -413,27 +227,7 @@ public class MusicService extends Service {
                     } else if (MediaButtonCommand.TOGGLE_FAVORITE.equals(cmd)) {
                         toggleFavorite();
                     }
-                    if (WidgetProviderSmall.CMDAPPWIDGETUPDATE.equals(cmd)) {
-                        // Someone asked us to refresh a set of specific widgets,
-                        // probably because they were just added.
-                        int[] appWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
-                        mWidgetProviderSmall.update(MusicService.this, appWidgetIds, true);
-                    } else if (WidgetProviderMedium.CMDAPPWIDGETUPDATE.equals(cmd)) {
-                        // Someone asked us to refresh a set of specific widgets,
-                        // probably because they were just added.
-                        int[] appWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
-                        mWidgetProviderMedium.update(MusicService.this, appWidgetIds, true);
-                    } else if (WidgetProviderLarge.CMDAPPWIDGETUPDATE.equals(cmd)) {
-                        // Someone asked us to refresh a set of specific widgets,
-                        // probably because they were just added.
-                        int[] appWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
-                        mWidgetProviderLarge.update(MusicService.this, appWidgetIds, true);
-                    } else if (WidgetProviderExtraLarge.CMDAPPWIDGETUPDATE.equals(cmd)) {
-                        // Someone asked us to refresh a set of specific widgets,
-                        // probably because they were just added.
-                        int[] appWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
-                        mWidgetProviderExtraLarge.update(MusicService.this, appWidgetIds, true);
-                    }
+                    widgetManager.processCommand(MusicService.this, intent, cmd);
                 }
             }
         }
@@ -446,50 +240,32 @@ public class MusicService extends Service {
 
         notificationHelper = new MusicNotificationHelper(this);
 
-        servicePrefs = getSharedPreferences("Service", 0);
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-        // Start up the thread running the service. Note that we create a
-        // separate thread because the service normally runs in the process's
-        // main thread, which we don't want to block. We also make it
-        // background priority so CPU-intensive work will not disrupt the UI.
+        // Start up the thread running the service. Note that we create a separate thread because the service normally runs in the process's
+        // main thread, which we don't want to block. We also make it background priority so CPU-intensive work will not disrupt the UI.
         handlerThread = new HandlerThread("MusicPlayerHandler", android.os.Process.THREAD_PRIORITY_BACKGROUND);
         handlerThread.start();
 
         mainHandler = new Handler(Looper.getMainLooper());
 
-        // Initialize the handlers
         playerHandler = new MediaPlayerHandler(this, handlerThread.getLooper());
+
         notificationStateHandler = new NotificationStateHandler(this);
 
-        registerHeadsetPlugReceiver();
-        registerBluetoothReceiver();
+        headsetManager.registerHeadsetPlugReceiver(this);
+        bluetoothManager.registerBluetoothReceiver(this);
+        bluetoothManager.registerA2dpServiceListener(this);
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-        mediaButtonReceiverComponent = new ComponentName(getPackageName(),
-                MediaButtonIntentReceiver.class.getName());
+        mediaButtonReceiverComponent = new ComponentName(getPackageName(), MediaButtonIntentReceiver.class.getName());
 
         setupMediaSession();
 
-        playbackLocation = LOCAL;
-
-        if (ShuttleUtils.isUpgraded()) {
-            castManager = VideoCastManager.getInstance();
-            setupCastListener();
-            castManager.addVideoCastConsumer(castConsumer);
-        }
-
-        if (castManager != null && castManager.isConnected()) {
-            updatePlaybackLocation(REMOTE);
-        } else {
-            updatePlaybackLocation(LOCAL);
-        }
+        chromecastManager.init();
 
         playbackState = STOPPED;
 
         registerExternalStorageListener();
-        registerA2dpServiceListener();
 
         player = new MultiPlayer(this);
         player.setHandler(playerHandler);
@@ -506,14 +282,14 @@ public class MusicService extends Service {
         intentFilter.addAction(ServiceCommand.SHUFFLE_ACTION);
         intentFilter.addAction(ServiceCommand.REPEAT_ACTION);
         intentFilter.addAction(ExternalIntents.PLAY_STATUS_REQUEST);
-        registerReceiver(mIntentReceiver, intentFilter);
+        registerReceiver(intentReceiver, intentFilter);
 
-        final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName());
         wakeLock.setReferenceCounted(false);
 
         // Initialize the delayed shutdown intent
-        final Intent shutdownIntent = new Intent(this, MusicService.class);
+        Intent shutdownIntent = new Intent(this, MusicService.class);
         shutdownIntent.setAction(ServiceCommand.SHUTDOWN);
 
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -596,115 +372,6 @@ public class MusicService extends Service {
 
     }
 
-    private void registerHeadsetPlugReceiver() {
-
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_HEADSET_PLUG);
-
-        headsetReceiver = new BroadcastReceiver() {
-
-            @Override
-            public void onReceive(Context context, Intent intent) {
-
-                if (isInitialStickyBroadcast()) {
-                    return;
-                }
-
-                if (intent.hasExtra("state")) {
-                    if (intent.getIntExtra("state", 0) == 0) {
-                        if (prefs.getBoolean("pref_headset_disconnect", true)) {
-                            pause();
-                        }
-                    } else if (intent.getIntExtra("state", 0) == 1) {
-                        if (prefs.getBoolean("pref_headset_connect", false)) {
-                            play();
-                        }
-                    }
-                }
-            }
-        };
-
-        registerReceiver(headsetReceiver, filter);
-        headsetReceiverIsRegistered = true;
-    }
-
-    private void registerBluetoothReceiver() {
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED);
-        filter.addAction(BluetoothHeadset.ACTION_AUDIO_STATE_CHANGED);
-
-        bluetoothReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-
-                String action = intent.getAction();
-                if (action != null) {
-                    Bundle extras = intent.getExtras();
-                    if (SettingsManager.getInstance().getBluetoothPauseDisconnect()) {
-                        switch (action) {
-                            case BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED:
-                                if (extras != null) {
-                                    int state = extras.getInt(BluetoothA2dp.EXTRA_STATE);
-                                    int previousState = extras.getInt(BluetoothA2dp.EXTRA_PREVIOUS_STATE);
-                                    if ((state == BluetoothA2dp.STATE_DISCONNECTED || state == BluetoothA2dp.STATE_DISCONNECTING) && previousState == BluetoothA2dp.STATE_CONNECTED) {
-                                        pause();
-                                    }
-                                }
-                                break;
-                            case BluetoothHeadset.ACTION_AUDIO_STATE_CHANGED:
-                                if (extras != null) {
-                                    int state = extras.getInt(BluetoothHeadset.EXTRA_STATE);
-                                    int previousState = extras.getInt(BluetoothHeadset.EXTRA_PREVIOUS_STATE);
-                                    if (state == BluetoothHeadset.STATE_AUDIO_DISCONNECTED && previousState == BluetoothHeadset.STATE_AUDIO_CONNECTED) {
-                                        pause();
-                                    }
-                                }
-                                break;
-                        }
-                    }
-
-                    if (SettingsManager.getInstance().getBluetoothResumeConnect()) {
-                        switch (action) {
-                            case BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED:
-                                if (extras != null) {
-                                    int state = extras.getInt(BluetoothA2dp.EXTRA_STATE);
-                                    if (state == BluetoothA2dp.STATE_CONNECTED) {
-                                        play();
-                                    }
-                                }
-                                break;
-                            case BluetoothHeadset.ACTION_AUDIO_STATE_CHANGED:
-                                if (extras != null) {
-                                    int state = extras.getInt(BluetoothHeadset.EXTRA_STATE);
-                                    if (state == BluetoothHeadset.STATE_AUDIO_CONNECTED) {
-                                        play();
-                                    }
-                                }
-                                break;
-                        }
-                    }
-                }
-            }
-        };
-        registerReceiver(bluetoothReceiver, filter);
-        bluetoothReceiverIsRegistered = true;
-    }
-
-    private void unregisterBluetoothReceiver() {
-        if (bluetoothReceiverIsRegistered) {
-            unregisterReceiver(bluetoothReceiver);
-            bluetoothReceiverIsRegistered = false;
-        }
-    }
-
-    private void unregisterHeadsetPlugReceiver() {
-
-        if (headsetReceiverIsRegistered) {
-            unregisterReceiver(headsetReceiver);
-            headsetReceiverIsRegistered = false;
-        }
-    }
-
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         //If nothing is playing, and won't be playing any time soon, we can stop the service.
@@ -719,17 +386,9 @@ public class MusicService extends Service {
     @Override
     public void onDestroy() {
 
-        if (playbackState == PLAYING) {
-            try {
-                castManager.stop();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        saveState(true);
 
-        if (castManager != null) {
-            castManager.removeVideoCastConsumer(castConsumer);
-        }
+        chromecastManager.release();
 
         equalizer.releaseEffects();
         equalizer.closeEqualizerSessions(true, getAudioSessionId());
@@ -766,11 +425,11 @@ public class MusicService extends Service {
         }
         mediaSession.release();
 
-        unregisterHeadsetPlugReceiver();
-        unregisterBluetoothReceiver();
+        headsetManager.unregisterHeadsetPlugReceiver(this);
+        bluetoothManager.unregisterBluetoothReceiver(this);
+        bluetoothManager.unregisterA2dpServiceListener(this);
 
-        unregisterReceiver(mIntentReceiver);
-        unregisterReceiver(a2dpReceiver);
+        unregisterReceiver(intentReceiver);
         if (unmountReceiver != null) {
             unregisterReceiver(unmountReceiver);
             unmountReceiver = null;
@@ -922,7 +581,9 @@ public class MusicService extends Service {
             scheduleDelayedShutdown();
             return true;
         }
+
         stopSelf(serviceStartId);
+
         //Shutdown the EQ
         Intent shutdownEqualizer = new Intent(MusicService.this, Equalizer.class);
         stopService(shutdownEqualizer);
@@ -951,11 +612,11 @@ public class MusicService extends Service {
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     final String action = intent.getAction();
-                    if (action.equals(Intent.ACTION_MEDIA_EJECT)) {
+                    if (Intent.ACTION_MEDIA_EJECT.equals(action)) {
                         saveState(true);
                         queueManager.queueIsSaveable = false;
                         closeExternalStorageFiles();
-                    } else if (action.equals(Intent.ACTION_MEDIA_MOUNTED)) {
+                    } else if (Intent.ACTION_MEDIA_MOUNTED.equals(action)) {
                         queueManager.queueIsSaveable = true;
                         reloadQueue();
                     }
@@ -969,146 +630,129 @@ public class MusicService extends Service {
         }
     }
 
-    public void notifyChange(final String what) {
-        notifyChange(what, false);
+    private Bundle getExtras(@NonNull Song song) {
+        Bundle extras = new Bundle();
+        extras.putLong("id", song.id);
+        extras.putString("artist", song.artistName);
+        extras.putString("album", song.albumName);
+        extras.putString("track", song.name);
+        extras.putInt("shuffleMode", getShuffleMode());
+        extras.putInt("repeatMode", getRepeatMode());
+        extras.putBoolean("playing", isPlaying());
+        extras.putLong("duration", song.duration);
+        extras.putLong("position", getPosition());
+        extras.putLong("ListSize", queueManager.getCurrentPlaylist().size());
+        return extras;
     }
 
-    private Single<Bundle> getExtras(boolean fromUser) {
-        return isFavorite()
-                .flatMap(isFavorite -> {
-                    Bundle extras = new Bundle();
-                    extras.putLong("id", getSongId());
-                    extras.putString("artist", getArtistName());
-                    extras.putString("album", getAlbumName());
-                    extras.putString("track", getSongName());
-                    extras.putInt("shuffleMode", getShuffleMode());
-                    extras.putInt("repeatMode", getRepeatMode());
-                    extras.putBoolean("playing", isPlaying());
-                    extras.putBoolean("isfavorite", isFavorite);
-                    extras.putLong("duration", getDuration());
-                    extras.putLong("position", getPosition());
-                    extras.putLong("ListSize", queueManager.getCurrentPlaylist().size());
-                    extras.putBoolean(FROM_USER, fromUser);
-                    return Single.just(extras);
-                });
+    private Intent getTaskerIntent(@NonNull Song song) {
+        Intent intent = new Intent(ExternalIntents.TASKER);
+        intent.putExtra("%MTRACK", isPlaying() ? song.name : "");
+        return intent;
     }
 
-    private void notifyChange(String what, boolean fromUser) {
-        if (what.equals(InternalIntents.TRACK_ENDING)) {
-            //We're just about to change tracks, so 'current song' is the song that just finished
-            Song finishedSong = queueManager.currentSong;
-            if (finishedSong != null) {
-                if (finishedSong.hasPlayed()) {
-                    Completable.fromAction(() -> ShuttleUtils.incrementPlayCount(this, finishedSong)).subscribeOn(Schedulers.io())
-                            .subscribe(() -> {
-                                // Nothing to do
-                            }, error -> LogUtils.logException(TAG, "Error incrementing play count", error));
-                }
-                scrobbleBroadcast(Status.COMPLETE, finishedSong);
-            }
-            return;
+    private Intent getPebbleIntent(@NonNull Song song) {
+        Intent intent = new Intent(ExternalIntents.PEBBLE);
+        intent.putExtra("artist", song.artistName);
+        intent.putExtra("album", song.albumName);
+        intent.putExtra("track", song.name);
+        return intent;
+    }
+
+    void notifyChange(String action) {
+        switch (action) {
+            case InternalIntents.TRACK_ENDING:
+                onTrackEnded();
+                return;
+            case InternalIntents.POSITION_CHANGED:
+                updateMediaSession(action);
+                return;
+            case InternalIntents.FAVORITE_CHANGED:
+                updateNotification();
+                return;
+            case InternalIntents.PLAY_STATE_CHANGED:
+                onPlayStateChanged(action);
+                break;
+            case InternalIntents.META_CHANGED:
+                onMetaChanged(action);
+                break;
+            case InternalIntents.QUEUE_CHANGED:
+                onQueueChanged(action);
+                break;
         }
 
-        if (what.equals(InternalIntents.FAVORITE_CHANGED)) {
-            updateNotification();
-            Intent intent = new Intent(what);
+        if (queueManager.getCurrentSong() != null) {
+            Intent intent = new Intent(action);
+            intent.putExtras(getExtras(queueManager.getCurrentSong()));
             sendBroadcast(intent);
-            return;
         }
 
-        updateMediaSession(what);
+        widgetManager.notifyChange(this, action);
 
-        if (what.equals(InternalIntents.POSITION_CHANGED)) {
-            return;
+        saveState(false);
+    }
+
+    private void onQueueChanged(String action) {
+        if (isPlaying()) {
+            setNextTrack();
         }
+        updateMediaSession(action);
+    }
 
-        getExtras(fromUser)
-                .subscribeOn(Schedulers.io())
-                .subscribe(extras -> {
-                    final Intent intent = new Intent(what);
-                    intent.putExtras(extras);
-                    sendBroadcast(intent);
-                }, error -> LogUtils.logException(TAG, "Error sending broadcast", error));
+    private void onMetaChanged(String action) {
 
-        //Tasker intent
-        Intent taskerIntent = new Intent(ExternalIntents.TASKER);
+        updateMediaSession(action);
 
-        //Pebble intent
-        Intent pebbleIntent = new Intent(ExternalIntents.PEBBLE);
-        pebbleIntent.putExtra("artist", getArtistName());
-        pebbleIntent.putExtra("album", getAlbumName());
-        pebbleIntent.putExtra("track", getSongName());
+        if (queueManager.getCurrentSong() != null) {
+            queueManager.getCurrentSong().setStartTime();
 
-        if (what.equals(InternalIntents.PLAY_STATE_CHANGED)) {
+            sendBroadcast(getTaskerIntent(queueManager.getCurrentSong()));
 
-            updateNotification();
+            sendBroadcast(getPebbleIntent(queueManager.getCurrentSong()));
 
-            // Bluetooth intent
-            getExtras(fromUser)
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(extras -> {
-                        final Intent intent = new Intent(ExternalIntents.AVRCP_PLAY_STATE_CHANGED);
-                        intent.putExtras(extras);
-                        sendBroadcast(intent);
-                    }, error -> LogUtils.logException(TAG, "Error sending bluetooth intent", error));
+            bluetoothManager.sendMetaChangedIntent(this, getExtras(queueManager.getCurrentSong()));
+
+            scrobbleManager.scrobbleBroadcast(this, ScrobbleManager.ScrobbleStatus.START, queueManager.getCurrentSong());
+        }
+    }
+
+    private void onPlayStateChanged(String action) {
+        updateMediaSession(action);
+
+        updateNotification();
+
+        if (queueManager.getCurrentSong() != null) {
+
+            bluetoothManager.sendPlayStateChangedIntent(this, getExtras(queueManager.getCurrentSong()));
+
+            sendBroadcast(getTaskerIntent(queueManager.getCurrentSong()));
 
             if (isPlaying()) {
-                if (queueManager.currentSong != null) {
-                    queueManager.currentSong.setResumed();
-                }
-                //Last.fm scrobbler intent
-                scrobbleBroadcast(Status.RESUME, queueManager.currentSong);
-                //Tasker intent
-                taskerIntent.putExtra("%MTRACK", getSongName());
-                //Pebble intent
-                sendBroadcast(pebbleIntent);
-
+                queueManager.getCurrentSong().setResumed();
+                sendBroadcast(getPebbleIntent(queueManager.getCurrentSong()));
             } else {
-                if (queueManager.currentSong != null) {
-                    queueManager.currentSong.setPaused();
-                }
-                //Last.fm scrobbler intent
-                scrobbleBroadcast(Status.PAUSE, queueManager.currentSong);
-                //Tasker intent
-                taskerIntent.putExtra("%MTRACK", "");
+                queueManager.getCurrentSong().setPaused();
             }
+            scrobbleManager.scrobbleBroadcast(this, isPlaying() ? ScrobbleManager.ScrobbleStatus.RESUME : ScrobbleManager.ScrobbleStatus.PAUSE, queueManager.getCurrentSong());
 
-            sendBroadcast(taskerIntent);
+        }
+    }
 
-        } else if (what.equals(InternalIntents.META_CHANGED)) {
-
-            if (queueManager.currentSong != null) {
-                queueManager.currentSong.setStartTime();
+    private void onTrackEnded() {
+        //We're just about to change tracks, so 'current song' is the song that just finished
+        Song finishedSong = queueManager.getCurrentSong();
+        if (finishedSong != null) {
+            if (finishedSong.hasPlayed()) {
+                disposables.add(
+                        Completable.fromAction(() -> ShuttleUtils.incrementPlayCount(this, finishedSong))
+                                .subscribeOn(Schedulers.io())
+                                .subscribe(() -> {
+                                    // Nothing to do
+                                }, error -> LogUtils.logException(TAG, "Error incrementing play count", error))
+                );
             }
-
-            //Tasker intent
-            taskerIntent.putExtra("%MTRACK", getSongName());
-            sendBroadcast(taskerIntent);
-
-            //Bluetooth intent
-            getExtras(fromUser)
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(extras -> {
-                        final Intent intent = new Intent(ExternalIntents.AVRCP_META_CHANGED);
-                        intent.putExtras(extras);
-                        sendBroadcast(intent);
-                    }, error -> LogUtils.logException(TAG, "Error AVRCP meta changed event", error));
-
-            //Pebble intent
-            sendBroadcast(pebbleIntent);
-
-            //Last.fm scrobbler intent
-            scrobbleBroadcast(Status.START, queueManager.currentSong);
+            scrobbleManager.scrobbleBroadcast(this, ScrobbleManager.ScrobbleStatus.COMPLETE, finishedSong);
         }
-
-        if (!what.equals(InternalIntents.QUEUE_CHANGED)) {
-            saveState(false);
-        }
-
-        mWidgetProviderLarge.notifyChange(MusicService.this, what);
-        mWidgetProviderMedium.notifyChange(MusicService.this, what);
-        mWidgetProviderSmall.notifyChange(MusicService.this, what);
-        mWidgetProviderExtraLarge.notifyChange(MusicService.this, what);
     }
 
     /**
@@ -1158,14 +802,13 @@ public class MusicService extends Service {
             if (queueManager.getCurrentPlaylist() == null || queueManager.getCurrentPlaylist().isEmpty() || queueManager.queuePosition < 0 || queueManager.queuePosition >= queueManager.getCurrentPlaylist().size()) {
                 return;
             }
+
             stop(false);
 
             boolean shutdown = false;
 
-            queueManager.currentSong = queueManager.getCurrentPlaylist().get(queueManager.queuePosition);
-
             while (true) {
-                if (open(queueManager.currentSong)) {
+                if (queueManager.getCurrentSong() != null && open(queueManager.getCurrentSong())) {
                     break;
                 }
                 // If we get here then opening the file failed.
@@ -1182,8 +825,6 @@ public class MusicService extends Service {
                     queueManager.queuePosition = pos;
                     stop(false);
                     queueManager.queuePosition = pos;
-
-                    queueManager.currentSong = queueManager.getCurrentPlaylist().get(queueManager.queuePosition);
                 } else {
                     openFailedCounter = 0;
                     shutdown = true;
@@ -1191,8 +832,8 @@ public class MusicService extends Service {
                 }
             }
             // Go to bookmark if needed
-            if (isPodcast()) {
-                long bookmark = getBookmark();
+            if (queueManager.getCurrentSong() != null && queueManager.getCurrentSong().isPodcast) {
+                long bookmark = queueManager.getCurrentSong().bookMark;
                 // Start playing a little bit before the bookmark,
                 // so it's easier to get back in to the narrative.
                 seekTo(bookmark - 5000);
@@ -1242,11 +883,8 @@ public class MusicService extends Service {
         }
     }
 
-    public boolean open(Song song) {
+    public boolean open(@NonNull Song song) {
         synchronized (this) {
-
-            queueManager.currentSong = song;
-
             if (player != null) {
                 player.setDataSource(song.path);
                 if (player != null && player.isInitialized()) {
@@ -1292,17 +930,16 @@ public class MusicService extends Service {
                 predicate = song -> song.path.contains(finalPath);
             }
 
-            DataManager.getInstance().getSongsObservable(predicate)
+            disposables.add(DataManager.getInstance().getSongsObservable(predicate)
                     .firstOrError()
                     .subscribe(songs -> {
-                        if (!songs.isEmpty()) {
-                            queueManager.currentSong = songs.get(0);
-                            open(queueManager.currentSong);
+                        if (!songs.isEmpty() && queueManager.getCurrentSong() != null) {
+                            open(queueManager.getCurrentSong());
                             if (completion != null) {
                                 completion.run();
                             }
                         }
-                    }, error -> LogUtils.logException(TAG, "Error opening file", error));
+                    }, error -> LogUtils.logException(TAG, "Error opening file", error)));
         }
     }
 
@@ -1330,7 +967,7 @@ public class MusicService extends Service {
             return;
         }
 
-        if (playbackLocation == LOCAL) {
+        if (playbackLocation == PlaybackLocation.LOCAL) {
             if (SettingsManager.getInstance().getEqualizerEnabled()) {
                 //Shutdown any existing external audio sessions
                 equalizer.closeEqualizerSessions(false, getAudioSessionId());
@@ -1351,7 +988,7 @@ public class MusicService extends Service {
         }
 
         switch (playbackLocation) {
-            case LOCAL: {
+            case PlaybackLocation.LOCAL: {
                 if (player != null && player.isInitialized()) {
                     // if we are at the end of the song, go to the next song first
                     final long duration = player.getDuration();
@@ -1381,11 +1018,10 @@ public class MusicService extends Service {
                 }
                 break;
             }
-            case REMOTE: {
+            case PlaybackLocation.REMOTE: {
                 // if we are at the end of the song, go to the next song first
                 final long duration = player.getDuration();
-                if (queueManager.repeatMode != QueueManager.RepeatMode.ONE && duration > 2000
-                        && player.getPosition() >= duration - 2000) {
+                if (queueManager.repeatMode != QueueManager.RepeatMode.ONE && duration > 2000 && player.getPosition() >= duration - 2000) {
                     gotoNext(true);
                 }
 
@@ -1400,10 +1036,12 @@ public class MusicService extends Service {
                 switch (playbackState) {
                     case STOPPED: {
                         try {
-                            castManager.checkConnectivity();
-                            prepareChromeCastLoad(0, true);
-                            playbackState = PLAYING;
-                            updateNotification();
+                            if (queueManager.getCurrentSong() != null) {
+                                chromecastManager.castManager.checkConnectivity();
+                                chromecastManager.prepareChromeCastLoad(queueManager.getCurrentSong(), 0, true);
+                                playbackState = PLAYING;
+                                updateNotification();
+                            }
                         } catch (TransientNetworkDisconnectionException | NoConnectionException e) {
                             Log.e(TAG, "Play() called & failed. State: Stopped " + e.toString());
                             playbackState = STOPPED;
@@ -1413,8 +1051,8 @@ public class MusicService extends Service {
                     }
                     case PAUSED: {
                         try {
-                            castManager.checkConnectivity();
-                            castManager.play();
+                            chromecastManager.castManager.checkConnectivity();
+                            chromecastManager.castManager.play();
                             playbackState = PLAYING;
                             updateNotification();
                         } catch (TransientNetworkDisconnectionException | NoConnectionException | CastException e) {
@@ -1441,71 +1079,71 @@ public class MusicService extends Service {
         }
     }
 
-    private void updateMediaSession(final String what) {
+    private void updateMediaSession(final String action) {
 
-        int playState = isSupposedToBePlaying
-                ? PlaybackStateCompat.STATE_PLAYING
-                : PlaybackStateCompat.STATE_PAUSED;
+        int playState = isSupposedToBePlaying ? PlaybackStateCompat.STATE_PLAYING : PlaybackStateCompat.STATE_PAUSED;
 
         long playbackActions = getMediaSessionActions();
 
-        if (what.equals(InternalIntents.PLAY_STATE_CHANGED) || what.equals(InternalIntents.POSITION_CHANGED)) {
+        if (action.equals(InternalIntents.PLAY_STATE_CHANGED) || action.equals(InternalIntents.POSITION_CHANGED)) {
             //noinspection WrongConstant
             mediaSession.setPlaybackState(new PlaybackStateCompat.Builder()
                     .setActions(playbackActions)
                     .setState(playState, getPosition(), 1.0f)
                     .build());
-        } else if (what.equals(InternalIntents.META_CHANGED) || what.equals(InternalIntents.QUEUE_CHANGED)) {
+        } else if (action.equals(InternalIntents.META_CHANGED) || action.equals(InternalIntents.QUEUE_CHANGED)) {
 
-            MediaMetadataCompat.Builder metaData = new MediaMetadataCompat.Builder()
-                    .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, getArtistName())
-                    .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, getAlbumArtistName())
-                    .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, getAlbumName())
-                    .putString(MediaMetadataCompat.METADATA_KEY_TITLE, getSongName())
-                    .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, getDuration())
-                    .putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, (long) (getQueuePosition() + 1))
-                    //Getting the genre is expensive.. let's not bother for now.
-                    //.putString(MediaMetadataCompat.METADATA_KEY_GENRE, getGenreName())
-                    .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, null)
-                    .putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, (long) (getQueue().size()));
+            if (queueManager.getCurrentSong() != null) {
+                MediaMetadataCompat.Builder metaData = new MediaMetadataCompat.Builder()
+                        .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, queueManager.getCurrentSong().artistName)
+                        .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, queueManager.getCurrentSong().albumArtistName)
+                        .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, queueManager.getCurrentSong().albumName)
+                        .putString(MediaMetadataCompat.METADATA_KEY_TITLE, queueManager.getCurrentSong().name)
+                        .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, queueManager.getCurrentSong().duration)
+                        .putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, (long) (getQueuePosition() + 1))
+                        //Getting the genre is expensive.. let's not bother for now.
+                        //.putString(MediaMetadataCompat.METADATA_KEY_GENRE, getGenreName())
+                        .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, null)
+                        .putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, (long) (getQueue().size()));
 
-            if (SettingsManager.getInstance().showLockscreenArtwork()) {
-                //Glide has to be called from the main thread.
-                doOnMainThread(() -> Glide.with(MusicService.this)
-                        .load(getAlbum())
-                        .asBitmap()
-                        .override(1024, 1024)
-                        .into(new SimpleTarget<Bitmap>() {
-                            @Override
-                            public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-                                if (bitmap != null) {
-                                    metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap);
+                if (SettingsManager.getInstance().showLockscreenArtwork()) {
+                    //Glide has to be called from the main thread.
+                    doOnMainThread(() -> Glide.with(MusicService.this)
+                            .load(queueManager.getCurrentSong().getAlbum())
+                            .asBitmap()
+                            .override(1024, 1024)
+                            .into(new SimpleTarget<Bitmap>() {
+                                @Override
+                                public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+                                    if (bitmap != null) {
+                                        metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap);
+                                    }
+                                    try {
+                                        mediaSession.setMetadata(metaData.build());
+                                    } catch (NullPointerException e) {
+                                        metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, null);
+                                        mediaSession.setMetadata(metaData.build());
+                                    }
                                 }
-                                try {
-                                    mediaSession.setMetadata(metaData.build());
-                                } catch (NullPointerException e) {
-                                    metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, null);
+
+                                @Override
+                                public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                                    super.onLoadFailed(e, errorDrawable);
                                     mediaSession.setMetadata(metaData.build());
                                 }
-                            }
+                            }));
+                } else {
+                    mediaSession.setMetadata(metaData.build());
+                }
 
-                            @Override
-                            public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                                super.onLoadFailed(e, errorDrawable);
-                                mediaSession.setMetadata(metaData.build());
-                            }
-                        }));
-            } else {
-                mediaSession.setMetadata(metaData.build());
-            }
-
-            try {
-                mediaSession.setPlaybackState(new PlaybackStateCompat.Builder()
-                        .setActions(playbackActions)
-                        .setState(playState, getPosition(), 1.0f)
-                        .build());
-            } catch (IllegalStateException e) {
-                LogUtils.logException(TAG, "Error setting playback state", e);
+                try {
+                    mediaSession.setPlaybackState(new PlaybackStateCompat.Builder()
+                            .setActions(playbackActions)
+                            .setState(playState, getPosition(), 1.0f)
+                            .build());
+                } catch (IllegalStateException e) {
+                    LogUtils.logException(TAG, "Error setting playback state", e);
+                }
             }
         }
     }
@@ -1528,7 +1166,9 @@ public class MusicService extends Service {
                 break;
             case NOTIFY_MODE_BACKGROUND:
                 try {
-                    notificationHelper.notify(this, queueManager.currentSong, isPlaying(), mediaSession);
+                    if (queueManager.getCurrentSong() != null) {
+                        notificationHelper.notify(this, queueManager.getCurrentSong(), isPlaying(), mediaSession);
+                    }
                 } catch (ConcurrentModificationException e) {
                     LogUtils.logException(TAG, "Exception while attempting to show notification", e);
                 }
@@ -1560,7 +1200,7 @@ public class MusicService extends Service {
 
     private void stop(final boolean goToIdle) {
         switch (playbackLocation) {
-            case LOCAL: {
+            case PlaybackLocation.LOCAL: {
                 if (player != null && player.isInitialized()) {
                     player.stop();
                 }
@@ -1571,10 +1211,10 @@ public class MusicService extends Service {
                 }
                 break;
             }
-            case REMOTE: {
+            case PlaybackLocation.REMOTE: {
                 try {
                     if (player != null && player.isInitialized()) {
-                        player.seekTo(castManager.getCurrentMediaPosition());
+                        player.seekTo(chromecastManager.castManager.getCurrentMediaPosition());
                         player.stop();
                     }
                     playbackState = STOPPED;
@@ -1582,7 +1222,7 @@ public class MusicService extends Service {
                     Log.e(TAG, e.toString());
                 }
                 if (goToIdle) {
-                    if (ShuttleUtils.isUpgraded() && castManager != null) {
+                    if (ShuttleUtils.isUpgraded() && chromecastManager.castManager != null) {
                         HttpServer.getInstance().stop();
                     }
                     setIsSupposedToBePlaying(false, false);
@@ -1608,7 +1248,7 @@ public class MusicService extends Service {
         synchronized (this) {
 
             switch (playbackLocation) {
-                case LOCAL: {
+                case PlaybackLocation.LOCAL: {
                     playerHandler.removeMessages(PlayerHandler.FADE_UP);
                     if (isSupposedToBePlaying) {
                         equalizer.closeEqualizerSessions(false, getAudioSessionId());
@@ -1622,13 +1262,12 @@ public class MusicService extends Service {
                     break;
                 }
 
-                case REMOTE: {
-
+                case PlaybackLocation.REMOTE: {
                     try {
                         if (player != null) {
-                            player.seekTo(castManager.getCurrentMediaPosition());
+                            player.seekTo(chromecastManager.castManager.getCurrentMediaPosition());
                         }
-                        castManager.pause();
+                        chromecastManager.castManager.pause();
                         playbackState = PAUSED;
                         scheduleDelayedShutdown();
                         isSupposedToBePlaying = false;
@@ -1652,10 +1291,10 @@ public class MusicService extends Service {
     public boolean isPlaying() {
 
         switch (playbackLocation) {
-            case LOCAL: {
+            case PlaybackLocation.LOCAL: {
                 return isSupposedToBePlaying;
             }
-            case REMOTE: {
+            case PlaybackLocation.REMOTE: {
                 return playbackState == PLAYING;
             }
         }
@@ -1775,27 +1414,28 @@ public class MusicService extends Service {
 
     private void saveBookmarkIfNeeded() {
         try {
-            if (isPodcast()) {
-                long pos = getPosition();
-                long bookmark = getBookmark();
-                long duration = getDuration();
-                if ((pos < bookmark && (pos + 10000) > bookmark)
-                        || (pos > bookmark && (pos - 10000) < bookmark)) {
-                    // The existing bookmark is close to the current
-                    // position, so don't update it.
-                    return;
-                }
-                if (pos < 15000 || (pos + 10000) > duration) {
-                    // If we're near the start or end, clear the bookmark
-                    pos = 0;
-                }
+            if (queueManager.getCurrentSong() != null) {
+                if (queueManager.getCurrentSong().isPodcast) {
+                    long pos = getPosition();
+                    long bookmark = queueManager.getCurrentSong().bookMark;
+                    long duration = queueManager.getCurrentSong().duration;
+                    if ((pos < bookmark && (pos + 10000) > bookmark) || (pos > bookmark && (pos - 10000) < bookmark)) {
+                        // The existing bookmark is close to the current
+                        // position, so don't update it.
+                        return;
+                    }
+                    if (pos < 15000 || (pos + 10000) > duration) {
+                        // If we're near the start or end, clear the bookmark
+                        pos = 0;
+                    }
 
-                // Write 'pos' to the bookmark field
-                ContentValues values = new ContentValues();
-                values.put(MediaStore.Audio.Media.BOOKMARK, pos);
-                Uri uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, queueManager.currentSong.id);
-                if (uri != null) {
-                    getContentResolver().update(uri, values, null, null);
+                    // Write 'pos' to the bookmark field
+                    ContentValues values = new ContentValues();
+                    values.put(MediaStore.Audio.Media.BOOKMARK, pos);
+                    Uri uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, queueManager.getCurrentSong().id);
+                    if (uri != null) {
+                        getContentResolver().update(uri, values, null, null);
+                    }
                 }
             }
         } catch (SQLiteException ignored) {
@@ -1828,12 +1468,12 @@ public class MusicService extends Service {
 
 
     public void toggleFavorite() {
-        if (queueManager.currentSong != null) {
-            PlaylistUtils.toggleFavorite(queueManager.currentSong, isFavorite -> {
+        if (queueManager.getCurrentSong() != null) {
+            PlaylistUtils.toggleFavorite(queueManager.getCurrentSong(), isFavorite -> {
                 if (isFavorite) {
-                    Toast.makeText(MusicService.this, getString(R.string.song_to_favourites, queueManager.currentSong.name), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MusicService.this, getString(R.string.song_to_favourites, queueManager.getCurrentSong().name), Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(MusicService.this, getString(R.string.song_removed_from_favourites, queueManager.currentSong.name), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MusicService.this, getString(R.string.song_removed_from_favourites, queueManager.getCurrentSong().name), Toast.LENGTH_SHORT).show();
                 }
                 notifyChange(InternalIntents.FAVORITE_CHANGED);
             });
@@ -1850,7 +1490,6 @@ public class MusicService extends Service {
         }
     }
 
-
     public int getRepeatMode() {
         return queueManager.repeatMode;
     }
@@ -1862,108 +1501,9 @@ public class MusicService extends Service {
         }
     }
 
-    /**
-     * Returns the path of the currently playing file, or null if no file is
-     * currently playing.
-     */
-    public String getPath() {
-        synchronized (this) {
-            if (queueManager.currentSong != null) {
-                return queueManager.currentSong.path;
-            }
-            return null;
-        }
-    }
-
-    /**
-     * Returns the id of the currently playing file, or -1 if no file is currently playing.
-     */
-    public long getSongId() {
-        synchronized (this) {
-            if (player == null || !player.isInitialized()) {
-                return -1;
-            }
-
-            if (queueManager.currentSong != null) {
-                return queueManager.currentSong.id;
-            }
-        }
-        return -1;
-    }
-
-    public String getArtistName() {
-        synchronized (this) {
-            if (queueManager.currentSong == null) {
-                return null;
-            }
-            return queueManager.currentSong.artistName;
-        }
-    }
-
-    public String getAlbumArtistName() {
-        synchronized (this) {
-            if (queueManager.currentSong == null) {
-                return null;
-            }
-            return queueManager.currentSong.albumArtistName;
-        }
-    }
-
-    public long getDuration() {
-        synchronized (this) {
-            if (queueManager.currentSong == null) {
-                return 0;
-            }
-            return queueManager.currentSong.duration;
-        }
-    }
-
-    public String getAlbumName() {
-        synchronized (this) {
-            if (queueManager.currentSong == null) {
-                return null;
-            }
-            return queueManager.currentSong.albumName;
-        }
-    }
-
-    public String getSongName() {
-        synchronized (this) {
-            if (queueManager.currentSong == null) {
-                return null;
-            }
-            return queueManager.currentSong.name;
-        }
-    }
-
-    public Album getAlbum() {
-        if (queueManager.currentSong != null) {
-            return queueManager.currentSong.getAlbum();
-        }
-        return null;
-    }
-
     @Nullable
     public Song getSong() {
-        return queueManager.currentSong;
-    }
-
-    private boolean isPodcast() {
-        synchronized (this) {
-            return queueManager.currentSong != null && queueManager.currentSong.isPodcast;
-        }
-    }
-
-    private long getBookmark() {
-        synchronized (this) {
-            if (queueManager.currentSong == null) {
-                return 0;
-            }
-            if (queueManager.currentSong.isPodcast) {
-                return queueManager.currentSong.bookMark;
-            }
-            return 0;
-        }
+        return queueManager.getCurrentSong();
     }
 
     /**
@@ -1972,15 +1512,15 @@ public class MusicService extends Service {
     public long getPosition() {
         synchronized (this) {
             switch (playbackLocation) {
-                case LOCAL: {
+                case PlaybackLocation.LOCAL: {
                     if (player != null) {
                         return player.getPosition();
                     }
                     break;
                 }
-                case REMOTE: {
+                case PlaybackLocation.REMOTE: {
                     try {
-                        return (int) castManager.getCurrentMediaPosition();
+                        return (int) chromecastManager.castManager.getCurrentMediaPosition();
                     } catch (Exception e) {
                         Log.e(TAG, e.toString());
                         if (player != null) {
@@ -2011,9 +1551,9 @@ public class MusicService extends Service {
 
                 player.seekTo(position);
 
-                if (playbackLocation == REMOTE) {
+                if (playbackLocation == PlaybackLocation.REMOTE) {
                     try {
-                        castManager.seek((int) position);
+                        chromecastManager.castManager.seek((int) position);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -2037,10 +1577,6 @@ public class MusicService extends Service {
                 return 0;
             }
         }
-    }
-
-    public Single<Boolean> isFavorite() {
-        return PlaylistUtils.isFavorite(queueManager.currentSong).first(false);
     }
 
     public void toggleShuffleMode() {
@@ -2104,51 +1640,6 @@ public class MusicService extends Service {
         Toast.makeText(getBaseContext(), resId, Toast.LENGTH_SHORT).show();
     }
 
-    private void scrobbleBroadcast(int state, Song song) {
-
-        if (song == null) {
-            Log.e(TAG, "Failed to scrobble.. song null");
-            return;
-        }
-
-        boolean scrobbleSimple = prefs.getBoolean("pref_simple_lastfm_scrobbler", false);
-
-        //Check that state is a valid state
-        if (state != Status.START
-                && state != Status.RESUME
-                && state != Status.PAUSE
-                && state != Status.COMPLETE) {
-            return;
-        }
-
-        if (scrobbleSimple) {
-            Intent intent = new Intent(ExternalIntents.SCROBBLER);
-            intent.putExtra("state", state);
-            intent.putExtra("app-name", getString(R.string.app_name));
-            intent.putExtra("app-package", getPackageName());
-            intent.putExtra("artist", song.artistName);
-            intent.putExtra("album", song.albumName);
-            intent.putExtra("track", song.name);
-            intent.putExtra("duration", song.duration / 1000);
-            sendBroadcast(intent);
-        }
-    }
-
-    public void registerA2dpServiceListener() {
-        a2dpReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String action = intent.getAction();
-                if (action != null && action.equals(ExternalIntents.PLAY_STATUS_REQUEST)) {
-                    notifyChange(ExternalIntents.PLAY_STATUS_RESPONSE);
-                }
-            }
-        };
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(ExternalIntents.PLAY_STATUS_REQUEST);
-        registerReceiver(a2dpReceiver, intentFilter);
-    }
-
     private void scheduleDelayedShutdown() {
         alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + IDLE_DELAY, shutdownIntent);
         shutdownScheduled = true;
@@ -2177,7 +1668,10 @@ public class MusicService extends Service {
     private void startForegroundImpl() {
         try {
             notificationStateHandler.sendEmptyMessage(NotificationStateHandler.START_FOREGROUND);
-            notificationHelper.startForeground(this, queueManager.currentSong, isPlaying(), mediaSession);
+            Song song = queueManager.getCurrentSong();
+            if (song != null) {
+                notificationHelper.startForeground(this, queueManager.getCurrentSong(), isPlaying(), mediaSession);
+            }
         } catch (NullPointerException | ConcurrentModificationException e) {
             Crashlytics.log("startForegroundImpl error: " + e.getMessage());
         }
@@ -2237,7 +1731,11 @@ public class MusicService extends Service {
                         }
                     }
                 },
-                seekPos -> seekTo(seekPos < getDuration() ? seekPos : 0));
+                seekPos -> {
+                    if (queueManager.getCurrentSong() != null) {
+                        seekTo(seekPos < queueManager.getCurrentSong().duration ? seekPos : 0);
+                    }
+                });
     }
 
     public List<Song> getQueue() {
@@ -2295,23 +1793,88 @@ public class MusicService extends Service {
         queueManager.moveQueueItem(from, to);
     }
 
-    class QueueManagerCallbacks implements QueueManager.Callbacks {
+    public interface Callbacks {
+        void notifyChange(String what);
+
+        void pause();
+
+        void play();
+
+        void seekTo(long position);
+
+        long getPosition();
+
+        @PlaybackLocation
+        int getPlaybackLocation();
+
+        void setPlaybackLocation(@PlaybackLocation int location);
+
+        void setPlaybackState(int playbackState);
+
+        void setIsSupposedToBePlaying(boolean supposedToBePlaying, boolean notify);
+
+        boolean getIsSupposedToBePlaying();
+
+        void notifyTrackEnded();
+    }
+
+    class MusicServiceCallbacks implements Callbacks {
+
         @Override
-        public void onQueueChanged() {
-            if (isPlaying()) {
-                setNextTrack();
-            }
-            notifyChange(InternalIntents.QUEUE_CHANGED);
+        public void notifyChange(String what) {
+            MusicService.this.notifyChange(what);
         }
 
         @Override
-        public void onShuffleChanged() {
-            notifyChange(InternalIntents.SHUFFLE_CHANGED);
+        public void pause() {
+            MusicService.this.pause();
         }
 
         @Override
-        public void onMetaChanged() {
-            notifyChange(InternalIntents.META_CHANGED);
+        public void play() {
+            MusicService.this.play();
+        }
+
+        @Override
+        public void seekTo(long position) {
+            MusicService.this.seekTo(position);
+        }
+
+        @Override
+        public long getPosition() {
+            return MusicService.this.getPosition();
+        }
+
+        @Override
+        public int getPlaybackLocation() {
+            return MusicService.this.playbackLocation;
+        }
+
+        @Override
+        public void setPlaybackLocation(@PlaybackLocation int location) {
+            MusicService.this.playbackLocation = location;
+        }
+
+        @Override
+        public void setPlaybackState(int playbackState) {
+            MusicService.this.playbackState = playbackState;
+        }
+
+        @Override
+        public void setIsSupposedToBePlaying(boolean supposedToBePlaying, boolean notify) {
+            MusicService.this.setIsSupposedToBePlaying(supposedToBePlaying, notify);
+        }
+
+        @Override
+        public boolean getIsSupposedToBePlaying() {
+            return MusicService.this.isSupposedToBePlaying;
+        }
+
+        @Override
+        public void notifyTrackEnded() {
+            playerHandler.sendEmptyMessage(PlayerHandler.TRACK_ENDED);
         }
     }
+
+
 }

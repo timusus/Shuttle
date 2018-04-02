@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
@@ -268,8 +269,12 @@ public class QCircleActivity extends BaseActivity {
         if (textOne == null || textTwo == null) {
             return;
         }
-        textOne.setText(MusicUtils.getAlbumArtistName());
-        textTwo.setText(MusicUtils.getSongName());
+
+        Song song = MusicUtils.getSong();
+        if (song == null) return;
+
+        textOne.setText(song.albumArtistName);
+        textTwo.setText(song.name);
     }
 
     private BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {

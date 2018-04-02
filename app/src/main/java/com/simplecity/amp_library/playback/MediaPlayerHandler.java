@@ -15,40 +15,43 @@ final class MediaPlayerHandler extends Handler {
 
     private static final String TAG = "MediaPlayerHandler";
 
-    private final WeakReference<MusicService> mService;
-    private float mCurrentVolume = 1.0f;
+    private final WeakReference<MusicService> service;
+
+    private float currentVolume = 1.0f;
 
     MediaPlayerHandler(final MusicService service, final Looper looper) {
         super(looper);
-        mService = new WeakReference<>(service);
+        this.service = new WeakReference<>(service);
     }
 
     @Override
     public void handleMessage(Message msg) {
-        final MusicService service = mService.get();
+        final MusicService service = this.service.get();
         if (service == null) {
             return;
         }
 
         switch (msg.what) {
             case PlayerHandler.FADE_DOWN:
-                mCurrentVolume -= .05f;
-                if (mCurrentVolume > .2f) {
+                currentVolume -= .05f;
+                if (currentVolume > .2f) {
                     sendEmptyMessageDelayed(PlayerHandler.FADE_DOWN, 10);
                 } else {
-                    mCurrentVolume = .2f;
-                }
-                service.player.setVolume(mCurrentVolume);
-                break;
-            case PlayerHandler.FADE_UP:
-                mCurrentVolume += .01f;
-                if (mCurrentVolume < 1.0f) {
-                    sendEmptyMessageDelayed(PlayerHandler.FADE_UP, 10);
-                } else {
-                    mCurrentVolume = 1.0f;
+                    currentVolume = .2f;
                 }
                 if (service.player != null) {
-                    service.player.setVolume(mCurrentVolume);
+                    service.player.setVolume(currentVolume);
+                }
+                break;
+            case PlayerHandler.FADE_UP:
+                currentVolume += .01f;
+                if (currentVolume < 1.0f) {
+                    sendEmptyMessageDelayed(PlayerHandler.FADE_UP, 10);
+                } else {
+                    currentVolume = 1.0f;
+                }
+                if (service.player != null) {
+                    service.player.setVolume(currentVolume);
                 }
                 break;
             case PlayerHandler.SERVER_DIED:
@@ -61,9 +64,6 @@ final class MediaPlayerHandler extends Handler {
             case PlayerHandler.TRACK_WENT_TO_NEXT:
                 service.notifyChange(InternalIntents.TRACK_ENDING);
                 service.queueManager.queuePosition = service.queueManager.nextPlayPos;
-                if (service.queueManager.queuePosition >= 0 && !service.queueManager.getCurrentPlaylist().isEmpty() && service.queueManager.queuePosition < service.queueManager.getCurrentPlaylist().size()) {
-                    service.queueManager.currentSong = service.queueManager.getCurrentPlaylist().get(service.queueManager.queuePosition);
-                }
                 service.notifyChange(InternalIntents.META_CHANGED);
                 service.updateNotification();
                 service.setNextTrack();
@@ -110,8 +110,10 @@ final class MediaPlayerHandler extends Handler {
                         if (!service.isPlaying()
                                 && service.pausedByTransientLossOfFocus) {
                             service.pausedByTransientLossOfFocus = false;
-                            mCurrentVolume = 0f;
-                            service.player.setVolume(mCurrentVolume);
+                            currentVolume = 0f;
+                            if (service.player != null) {
+                                service.player.setVolume(currentVolume);
+                            }
                             service.play(); // also queues a fade-in
                         } else {
                             removeMessages(PlayerHandler.FADE_DOWN);
@@ -124,13 +126,15 @@ final class MediaPlayerHandler extends Handler {
                 break;
 
             case PlayerHandler.FADE_DOWN_STOP:
-                mCurrentVolume -= .05f;
-                if (mCurrentVolume > 0f) {
+                currentVolume -= .05f;
+                if (currentVolume > 0f) {
                     sendEmptyMessageDelayed(PlayerHandler.FADE_DOWN_STOP, 200);
                 } else {
                     service.pause();
                 }
-                service.player.setVolume(mCurrentVolume);
+                if (service.player != null) {
+                    service.player.setVolume(currentVolume);
+                }
                 break;
 
             case PlayerHandler.GO_TO_NEXT:

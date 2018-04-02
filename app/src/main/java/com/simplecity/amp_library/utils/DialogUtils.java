@@ -58,7 +58,7 @@ public class DialogUtils {
         numberPicker = view.findViewById(R.id.weeks);
         numberPicker.setMaxValue(12);
         numberPicker.setMinValue(1);
-        numberPicker.setValue(MusicUtils.getIntPref(context, "numweeks", 2));
+        numberPicker.setValue(SettingsManager.getInstance().getNumWeeks());
 
         getBuilder(context)
                 .title(R.string.week_selector)
@@ -68,7 +68,7 @@ public class DialogUtils {
                 .onPositive((materialDialog, dialogAction) -> {
                     int numweeks;
                     numweeks = numberPicker.getValue();
-                    MusicUtils.setIntPref(context, "numweeks", numweeks);
+                    SettingsManager.getInstance().setNumWeeks(numweeks);
                 })
                 .show();
     }

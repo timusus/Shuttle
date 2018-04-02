@@ -16,7 +16,6 @@ import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.constants.InternalIntents;
-import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.views.QueueView;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
@@ -38,7 +37,7 @@ public class QueuePresenter extends Presenter<QueueView> {
 
     private RequestManager requestManager;
 
-    ContextualToolbarHelper<Song> contextualToolbarHelper;
+    private ContextualToolbarHelper<Song> contextualToolbarHelper;
 
     public QueuePresenter(RequestManager requestManager, ContextualToolbarHelper<Song> contextualToolbarHelper) {
         this.requestManager = requestManager;
@@ -71,12 +70,6 @@ public class QueuePresenter extends Presenter<QueueView> {
         addDisposable(RxBroadcast.fromBroadcast(ShuttleApplication.getInstance(), filter)
                 .startWith(new Intent(InternalIntents.QUEUE_CHANGED))
                 .toFlowable(BackpressureStrategy.LATEST)
-                .filter(intent -> {
-                    if (InternalIntents.QUEUE_CHANGED.equals(intent.getAction()) && intent.getBooleanExtra(MusicService.FROM_USER, false)) {
-                        return false;
-                    }
-                    return true;
-                })
                 .debounce(150, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(intent -> loadData()));
@@ -103,7 +96,7 @@ public class QueuePresenter extends Presenter<QueueView> {
         MusicUtils.removeFromQueue(songs);
     }
 
-    public void removeFromQueue(int position, Song song) {
+    private void removeFromQueue(int position) {
         QueueView queueView = getView();
         if (queueView != null) {
             queueView.removeFromQueue(position);
@@ -111,7 +104,7 @@ public class QueuePresenter extends Presenter<QueueView> {
         MusicUtils.removeFromQueue(position);
     }
 
-    void playNext(int position) {
+    private void playNext(int position) {
         int newPosition = MusicUtils.getQueuePosition();
         if (MusicUtils.getQueuePosition() < position) {
             newPosition += 1;
@@ -189,7 +182,7 @@ public class QueuePresenter extends Presenter<QueueView> {
                             queueView.showDeleteDialog(deleteDialog);
                         }
                     },
-                    () -> removeFromQueue(position, song),
+                    () -> removeFromQueue(position),
                     () -> playNext(position), null));
             menu.show();
         }

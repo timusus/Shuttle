@@ -452,4 +452,18 @@ public class SettingsManager extends BaseSettingsManager {
         return getBool(KEY_UPGRADED, false);
     }
 
+
+    // Recently added
+
+    private static final String KEY_NUM_WEEKS = "numweeks";
+
+    public int getNumWeeks() {
+        return getInt(KEY_NUM_WEEKS, 2);
+    }
+
+    public void setNumWeeks(int weeks) {
+        setInt(KEY_NUM_WEEKS, weeks);
+    }
+
+
 }

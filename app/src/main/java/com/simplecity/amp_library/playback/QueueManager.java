@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.rx.UnsafeConsumer;
 import com.simplecity.amp_library.utils.DataManager;
@@ -37,14 +38,6 @@ public class QueueManager {
         int LAST = 1;
     }
 
-    public interface Callbacks {
-        void onQueueChanged();
-
-        void onShuffleChanged();
-
-        void onMetaChanged();
-    }
-
     private final char hexDigits[] = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
     @NonNull
@@ -63,29 +56,26 @@ public class QueueManager {
 
     boolean queueIsSaveable = true;
 
-    @Nullable
-    Song currentSong;
-
     int queuePosition = -1;
     int nextPlayPos = -1;
 
-    private Callbacks callbacks;
+    private MusicService.Callbacks callbacks;
 
-    public QueueManager(Callbacks callbacks) {
+    public QueueManager(MusicService.Callbacks callbacks) {
         this.callbacks = callbacks;
     }
 
     private void notifyQueueChanged() {
         saveQueue(true);
-        callbacks.onQueueChanged();
+        callbacks.notifyChange(InternalIntents.QUEUE_CHANGED);
     }
 
     private void notifyShuffleChanged() {
-        callbacks.onShuffleChanged();
+        callbacks.notifyChange(InternalIntents.SHUFFLE_CHANGED);
     }
 
     private void notifyMetaChanged() {
-        callbacks.onMetaChanged();
+        callbacks.notifyChange(InternalIntents.META_CHANGED);
     }
 
     public void setRepeatMode(int repeatMode) {
@@ -184,6 +174,15 @@ public class QueueManager {
         }
     }
 
+    @Nullable
+    Song getCurrentSong() {
+        if (queuePosition >= 0 && queuePosition < getCurrentPlaylist().size()) {
+            return getCurrentPlaylist().get(queuePosition);
+        }
+
+        return null;
+    }
+
     /**
      * @param force True to force the player onto the track next, false
      *              otherwise.
@@ -219,7 +218,7 @@ public class QueueManager {
             if (this.queuePosition == position) {
                 onCurrentSongRemoved(stop, moveToNextTrack);
             } else {
-                queuePosition = getCurrentPlaylist().indexOf(currentSong);
+                queuePosition = getCurrentPlaylist().indexOf(getCurrentSong());
             }
 
             notifyQueueChanged();
@@ -239,7 +238,7 @@ public class QueueManager {
             playlist.removeAll(songsToRemove);
             shuffleList.removeAll(songsToRemove);
 
-            if (songsToRemove.contains(currentSong)) {
+            if (songsToRemove.contains(getCurrentSong())) {
                 /*
                  * If we remove a list of songs from the current queue, and that list contains our currently
                  * playing song, we need to figure out which song should play next. We'll play the first song
@@ -264,7 +263,7 @@ public class QueueManager {
                 queuePosition = Collections.indexOfSubList(getCurrentPlaylist(), songsToRemove);
                 onCurrentSongRemoved(stop, moveToNextTrack);
             } else {
-                queuePosition = getCurrentPlaylist().indexOf(currentSong);
+                queuePosition = getCurrentPlaylist().indexOf(getCurrentSong());
             }
 
             notifyQueueChanged();
@@ -385,9 +384,7 @@ public class QueueManager {
                             }
                         }
 
-                        if (QueueManager.this.queuePosition >= 0 && QueueManager.this.queuePosition < getCurrentPlaylist().size()) {
-                            currentSong = getCurrentPlaylist().get(QueueManager.this.queuePosition);
-                        } else {
+                        if (QueueManager.this.queuePosition < 0 || QueueManager.this.queuePosition >= getCurrentPlaylist().size()) {
                             QueueManager.this.queuePosition = 0;
                         }
 
