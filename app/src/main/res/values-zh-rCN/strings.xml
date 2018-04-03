@@ -2,167 +2,167 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- ## Toast Messages ## -->
     <!-- Shown when a user attempts to edit tags, but they don't have a 'DocumentProvider' available to pick the directory of their music (and thus give permission to Shuttle)-->
-    <string name="R.string.toast_no_document_provider">没有可用文件提供处理许可请求</string>
+    <string name="R.string.toast_no_document_provider">找不到可处理这项权限要求的文件提供者</string>
     <!-- Displayed when an M3U playlist is being saved, but it already exists -->
     <!-- Displayed when an M3U playlist save fails -->
-    <string name="playlist_save_failed">无法保存播放列表</string>
+    <string name="playlist_save_failed">无法保存歌单</string>
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
-    <string name="playlist_saved">播放列表保存至<xliff:g id="path">%s</xliff:g></string>
+    <string name="playlist_saved">歌单已保存至「<xliff:g id="path">%s</xliff:g>」</string>
     <!-- Displayed after a blacklist is deleted -->
     <string name="blacklist_deleted">已清空黑名单</string>
     <!-- Displayed after a whitelist is deleted -->
     <string name="whitelist_deleted">已清空白名单</string>
     <!-- Displayed when a folder couldn't be deleted-->
-    <string name="delete_folder_failed">无法删除文件夹\n该文件夹可能写保护</string>
+    <string name="delete_folder_failed">无法删除文件夹。\n文件夹可能有写入保护</string>
     <!-- Displayed when a file couldn't be deleted -->
-    <string name="delete_file_failed">无法删除文件\n该文件可能写保护</string>
+    <string name="delete_file_failed">无法删除文件。\n文件可能有写入保护</string>
     <!-- Displayed when a folder couldn't be renamed-->
-    <string name="rename_folder_failed">无法重命名文件夹。\n\n该文件夹可能写保护或者已存在同名文件夹。</string>
+    <string name="rename_folder_failed">无法重命名文件夹。\n\n文件夹可能受保护，或是相同路径下已存在同名的文件夹</string>
     <!-- Displayed when a file couldn't be renamed-->
-    <string name="rename_file_failed">无法重命名文件夹。\n\n该文件夹可能被写保护或者已存在同名文件夹。</string>
+    <string name="rename_file_failed">无法重命名文件。\n\n文件可能受保护，或是相同路径下已存在同名的文件</string>
     <!-- Toast after turning shuffle on -->
-    <string name="shuffle_on_notif">已开启随机播放</string>
+    <string name="shuffle_on_notif">随机开启</string>
     <!-- Toast after turning shuffle off -->
-    <string name="shuffle_off_notif">已关闭随机播放</string>
+    <string name="shuffle_off_notif">随机关闭</string>
     <!-- Toast after turning repeat off -->
-    <string name="repeat_off_notif">已关闭重复播放</string>
+    <string name="repeat_off_notif">循环关闭</string>
     <!-- Toast after turning single repeat on -->
-    <string name="repeat_current_notif">重复播放当前歌曲</string>
+    <string name="repeat_current_notif">单曲循环</string>
     <!-- Toast after turning repeat all on -->
-    <string name="repeat_all_notif">重复播放所有歌曲</string>
+    <string name="repeat_all_notif">循环播放</string>
     <!-- Individual song context menu item -->
-    <string name="ringtone_menu">设为手机铃声</string>
+    <string name="ringtone_menu">设为铃声</string>
     <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\"已设为手机铃声</string>
+    <string name="ringtone_set">已将「<xliff:g example="Alarm Bell" id="name">%s</xliff:g>」设为铃声</string>
     <!-- Toast if setting ringtone fails -->
-    <string name="ringtone_set_failed">无法设置为铃声</string>
+    <string name="ringtone_set_failed">无法设定铃声</string>
     <!-- Toasts after adding song(s) to playlists -->
     <plurals name="NNNtrackstoplaylist">
-        <item quantity="other">已添加<xliff:g example="27" id="number">%d</xliff:g>首歌曲到播放列表</item>
+        <item quantity="other">已将<xliff:g example="27" id="number">%d</xliff:g>首歌曲添加至歌单</item>
     </plurals>
     <!-- Toast after selecting an empty playlist -->
-    <string name="emptyplaylist">您所选的播放列表为空</string>
+    <string name="emptyplaylist">选取的歌单是空的</string>
     <!-- -->
     <string name="initial_dir_set_message">" \u8bbe\u5b9a\u4e3a\u521d\u59cb\u76ee\u5f55"</string>
     <!-- Transient popup message shown after deleting a playlist -->
-    <string name="playlist_deleted_message">播放列表已删除</string>
+    <string name="playlist_deleted_message">已删除歌单</string>
     <!-- Transient popup message shown after renaming a playlist -->
-    <string name="playlist_renamed_message">已重命名播放列表</string>
+    <string name="playlist_renamed_message">已重命名歌单</string>
     <!-- Toast confirming that song(s) was/were deleted. -->
     <!-- -->
     <plurals name="NNNtrackstoqueue">
-        <item quantity="other">已添加<xliff:g example="27" id="number">%d</xliff:g>首歌曲到播放队列</item>
+        <item quantity="other">已将<xliff:g example="27" id="number">%d</xliff:g>首歌曲添加至播放队列</item>
     </plurals>
     <!-- Toasts after adding song(s) to playlists -->
-    <string name="song_to_favourites"><xliff:g id="song_name">%s</xliff:g>已添加到我的最爱</string>
-    <string name="song_removed_from_favourites"><xliff:g id="song_name">%s</xliff:g>已从我的最爱中移除</string>
+    <string name="song_to_favourites">已将「<xliff:g id="song_name">%s</xliff:g>」添加至到我的收藏</string>
+    <string name="song_removed_from_favourites">已将「<xliff:g id="song_name">%s</xliff:g>」从我的收藏中移除</string>
     <!-- ## Dialogs ## -->
     <!-- Restart now button -->
-    <string name="restart_button">立即重启</string>
+    <string name="restart_button">立即重新启动</string>
     <!-- Displays when picking a theme color -->
-    <string name="color_pick">取色器</string>
+    <string name="color_pick">选择颜色</string>
     <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
     <!-- Displays when sharing a file fails -->
-    <string name="share_failed">很抱歉,该文件无法分享</string>
+    <string name="share_failed">很抱歉,无法分享这个文件</string>
     <!-- Displays when you click 'share' -->
     <string name="share_dialog_title">您想要分享什么?</string>
     <!-- Option to share song info -->
-    <string name="share_option_song_info">正在播放信息</string>
+    <string name="share_option_song_info">播放信息</string>
     <!-- Option to share audio file -->
     <string name="share_option_audio_file">音频文件</string>
     <!-- Displays when you need to choose which app to share the song with -->
-    <string name="share_via">分享当前音乐,通过:</string>
+    <string name="share_via">分享歌曲通过:</string>
     <!-- Displayed when an M3U playlist is being saved-->
-    <string name="saving_playlist">正在保存播放列表</string>
+    <string name="saving_playlist">正在保存歌单...</string>
     <!-- Displayed when whitelisting a folder, as the app gathers the songs-->
-    <string name="gathering_songs">正在采集歌曲</string>
+    <string name="gathering_songs">正在采集歌曲...</string>
     <!-- -->
-    <string name="get_pro_title">升级到Shuttle+</string>
+    <string name="get_pro_title">升级</string>
     <!-- -->
-    <string name="get_pro_message">如果您喜欢Shuttle音乐播放器,请考虑升级
+    <string name="get_pro_message">若您喜欢 Shuttle 音乐播放器,请考虑升级为Shuttle+
 \n\n高级功能:
-\n\&#8226;- 大量额外主题
-\n\&#8226;- 歌曲信息编辑
-\n\&#8226;- 文件浏览器
-\n\&#8226;- 支持ChromeCast\n
-\n您的付费升级也是对我们开发者最大的支持!</string>
+\n\&#8226;- 额外主题
+\n\&#8226;- 标签编辑
+\n\&#8226;- 文件浏览
+\n\&#8226;- 支持ChromeCast
+\n这也有助于开发者持续增进产品功能与改善使用体验</string>
     <!-- -->
     <string name="upgraded_title">感谢您</string>
-    <string name="upgraded_message">您已成功升级至Shuttle+,非常感谢您的支持
-\n\n请重启应用以启用高级功能</string>
+    <string name="upgraded_message">您已成功升级至Shuttle+,非常感谢您的支持。
+\n\n请重新启动 Shuttle+ 以启用所有功能</string>
     <string name="upgrade_dialog_message">Shuttle升级后将会开放以下新功能: 
-\n\n- 大量额外主题
-\n- 编辑歌曲信息
-\n- 文件浏览器
+\n\n- 额外主题
+\n- 标签编辑
+\n- 文件浏览
 \n- 支持ChromeCast
-\n\n- 这也有助于变得更好
+\n\n- 这也有助于推进开发
 \n\n您的付费升级也是对我们开发者最大的支持! 如果您已购买Shuttle+便不需要购买本更新</string>
     <string name="upgrade_required_folders">升级到Shuttle+</string>
     <string name="btn_upgrade">升级</string>
     <!-- -->
-    <string name="get_pro_button_no">不,要</string>
+    <string name="get_pro_button_no">取消</string>
     <!-- Dialog 'close' button -->
     <string name="close">关闭</string>
     <!-- No internet connection warning -->
     <string name="connection_unavailable">无法接入网络</string>
     <!-- Prompt in dialog when creating a playlist. The user will enter the name of the playlist in a textfield underneath this prompt. -->
-    <string name="create_playlist_create_text_prompt">播放列表名称</string>
+    <string name="create_playlist_create_text_prompt">歌单名称</string>
     <!-- Text for the "cancel" button in the "delete" and "create playlist" confirmation dialogs -->
     <string name="cancel">取消</string>
     <!-- Delete confirmation dialog when deleting an entire artist -->
-    <string name="delete_album_artist_desc"><xliff:g id="album-artist">%s</xliff:g>的所有歌曲将被永久删除</string>
+    <string name="delete_album_artist_desc">将会永久删除「<xliff:g id="album-artist">%s</xliff:g>」中的所有歌曲</string>
     <!-- Delete confirmation dialog message when deleting artists -->
-    <string name="delete_album_artist_desc_multiple">以下专辑艺术家的所有歌曲:<xliff:g id="album-artist">%s</xliff:g>将被永久删除</string>
+    <string name="delete_album_artist_desc_multiple">将会永久删除来自下列歌手专辑「<xliff:g id="album-artist">%s</xliff:g>」的所有歌曲</string>
     <!-- Delete confirmation dialog when deleting an entire album -->
-    <string name="delete_album_desc">整张专辑<xliff:g id="album">%s</xliff:g>信息将被永久删除</string>
+    <string name="delete_album_desc">将会永久删除来自专辑「<xliff:g id="album">%s</xliff:g>」的所有歌曲</string>
     <!-- Delete confirmation dialog message when deleting albums -->
     <string name="get_pro_button_play_store">Play 商店</string>
     <string name="get_pro_button_amazon">亚马逊</string>
-    <string name="delete_album_desc_multiple">以下的专辑:<xliff:g id="album">%s</xliff:g>将被永久删除</string>
+    <string name="delete_album_desc_multiple">将会永久删除来自下列专辑「<xliff:g id="album">%s</xliff:g>」的所有歌曲</string>
     <!-- Delete confirmation dialog when deleting a single song -->
-    <string name="delete_song_desc"><xliff:g id="song">%s</xliff:g>将被永久删除</string>
+    <string name="delete_song_desc">将会永久删除歌曲「<xliff:g id="song">%s</xliff:g>」</string>
     <!-- Delete confirmation dialog message title when deleting songs -->
-    <string name="delete_song_desc_multiple">以下的歌曲:<xliff:g id="song">%s</xliff:g>将被永久删除</string>
+    <string name="delete_song_desc_multiple">将会永久删除下列歌曲「<xliff:g id="song">%s</xliff:g>」</string>
     <!-- Toast shown when songs are successfully deleted -->
     <string name="delete_songs_success_toast">已删除<xliff:g id="number">%d</xliff:g>首歌曲</string>
     <!-- Toast shown when failing to delete songs-->
     <string name="delete_songs_failure_toast">无法删除歌曲</string>
     <!-- Delete confirmation dialog, confirmation button text -->
-    <string name="button_ok">好</string>
+    <string name="button_ok">确定</string>
     <!-- -->
-    <string name="delete_folder_confirmation_dialog">您确定要永久性删除\"<xliff:g id="folder">%s</xliff:g>\"吗?该文件夹下所有条目均会被删除,包括那些在Shuttle文件浏览器中不可见的文件</string>
+    <string name="delete_folder_confirmation_dialog">您确定要永久删除「<xliff:g id="folder">%s</xliff:g>」吗?将会删除这个文件夹中的所有项目,包括Shuttle文件浏览模式中无法检视的隐藏项目</string>
     <!-- -->
-    <string name="delete_file_confirmation_dialog">您确定要永久性删除\"<xliff:g id="file">%s</xliff:g>\"吗?</string>
+    <string name="delete_file_confirmation_dialog">您确定要永久删除「<xliff:g id="file">%s</xliff:g>」吗?</string>
     <!-- Displayed when user presses 'delete artwork' -->
-    <string name="delete_artwork_confirmation_dialog">您确定要永久删除设备上的所有封面吗?</string>
+    <string name="delete_artwork_confirmation_dialog">您确定要永久删除装置中的所有专辑封面吗?</string>
     <!--"Set Ringtone" title -->
     <string name="dialog_title_set_ringtone">设为铃声</string>
     <!-- "Set Ringtone" message -->
-    <string name="dialog_message_set_ringtone">Shuttle需要权限\'写设置\'以设置铃声\n\n授予权限后尝试重新设置您的铃声.</string>
+    <string name="dialog_message_set_ringtone">Shuttle 需要权限「写入设定」权限才能设定铃声。\n\n请在您授予权限后再一次设定铃声</string>
     <!-- Message displayed in dialog when attempting to add duplicates to playlist -->
-    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%1$s</xliff:g>-<xliff:g id="song">%2$s</xliff:g>已存在这个播放列表,是否继续添加?</string>
+    <string name="dialog_message_playlist_add_duplicate">「<xliff:g id="artist">%1$s</xliff:g>-<xliff:g id="song">%2$s</xliff:g>」已存在这个歌单中。要继续添加吗？</string>
     <!-- Checkbox text 'apply to all' -->
-    <string name="dialog_checkbox_playlist_duplicate_apply_all"><xliff:g id="number">%d</xliff:g>应用所有</string>
+    <string name="dialog_checkbox_playlist_duplicate_apply_all">全部套用（<xliff:g id="number">%d</xliff:g>）</string>
     <!-- Title displayed in dialog when attempting to add duplicates to playlist -->
-    <string name="dialog_title_playlist_duplicates">发现重复</string>
+    <string name="dialog_title_playlist_duplicates">存在重复项目</string>
     <!-- Button displayed in dialog when attempting to add duplicates to playlist (Add) -->
     <string name="dialog_button_playlist_duplicate_add">添加</string>
     <!-- Button displayed in dialog when attempting to add duplicates to playlist (Skip) -->
-    <string name="dialog_button_playlist_duplicate_skip">跳过</string>
+    <string name="dialog_button_playlist_duplicate_skip">略过</string>
     <!-- Checkbox text 'always add duplicates' -->
-    <string name="dialog_checkbox_playlist_duplicate_always_add">允许添加重复</string>
+    <string name="dialog_checkbox_playlist_duplicate_always_add">一律加入重复项目</string>
     <!-- ## Widgets ## -->
     <!-- Checkbox text to invert colors of buttons & text -->
     <string name="widget_background_color">背景</string>
     <string name="widget_background_transparency">透明度</string>
-    <string name="widget_text_color">文本</string>
-    <string name="widget_invert_icons">反转图标</string>
+    <string name="widget_text_color">文字</string>
+    <string name="widget_invert_icons">反转图示颜色</string>
     <!-- Text shown on widget when first loaded -->
-    <string name="widget_initial_text">点击可选择音乐</string>
+    <string name="widget_initial_text">轻触选择音乐</string>
     <string name="widget_show_artwork">显示专辑封面</string>
     <!-- ## Menu Headings ## -->
     <!-- Context menu in navigation drawer - option to save playlist as M3U -->
-    <string name="export_playlist">保存播放列表</string>
+    <string name="export_playlist">导出</string>
     <!-- context menu item to remove the selected item from the playlist -->
     <!-- Menu option 'clear queue' -->
     <string name="clear_queue">清空队列</string>
@@ -171,28 +171,28 @@
     <!-- Context menu item -->
     <string name="play_selection">播放</string>
     <!-- Menu item-->
-    <string name="menu_add_to">添加到...</string>
+    <string name="menu_add_to">添加至...</string>
     <!-- Multi select menu item-->
-    <string name="menu_playlist">播放列表</string>
+    <string name="menu_playlist">歌单列表</string>
     <!-- Multi select menu item-->
-    <string name="menu_queue">队列</string>
+    <string name="menu_queue">播放队列</string>
     <!-- Artist overflow menu item-->
-    <string name="menu_album_shuffle">专辑随机播放</string>
+    <string name="menu_album_shuffle">专辑随机</string>
     <!-- Context menu item -->
-    <string name="new_playlist">新建播放列表</string>
+    <string name="new_playlist">新建歌单</string>
     <!-- menu item to save the current list as a new playlist -->
-    <string name="save_as_playlist">另存为播放列表</string>
+    <string name="save_as_playlist">另存歌单</string>
     <!-- Context menu item to remove the selected item from the playlist -->
     <!-- Context menu item to remove the selected item from the queue -->
     <string name="remove_from_queue">移除</string>
     <!-- Context menu item -->
-    <string name="play_next">播放下一首</string>
+    <string name="play_next">下首播放</string>
     <!-- Menu text for the settings item -->
     <string name="settings">设置</string>
     <!-- Playing screen, menu item -->
-    <string name="fav_title">我的最爱</string>
+    <string name="fav_title">我的收藏</string>
     <!-- -->
-    <string name="library_title">音乐库</string>
+    <string name="library_title">我的乐库</string>
     <!-- -->
     <!-- Library screen, menu item -->
     <string name="search_title">搜索</string>
@@ -206,56 +206,56 @@
     <!-- -->
     <string name="delete_item">删除</string>
     <!-- Menu item to play back all the songs in the currently showing list in shuffle mode -->
-    <string name="shuffle_all">全部随机播放</string>
+    <string name="shuffle_all">全部随机</string>
     <!-- title of the "current playlist" screen when not in party shuffle mode -->
     <string name="nowplaying_title">正在播放</string>
     <!-- -->
     <string name="up_next_title">播放队列</string>
     <!-- Popup menu item -->
-    <string name="go_to">跳转到</string>
+    <string name="go_to">跳转至...</string>
     <!-- 'More' button -->
     <string name="heading_more">更多</string>
     <!-- Share option-->
     <string name="share">分享</string>
     <!-- ## Navigation Drawer ## -->
     <!-- Accessibility description 'open navigation drawer'-->
-    <string name="navigation_drawer_open">打开导航抽屉</string>
+    <string name="navigation_drawer_open">开启侧边菜单</string>
     <!-- Accessibility description 'close navigation drawer'-->
-    <string name="navigation_drawer_close">关闭导航抽屉</string>
+    <string name="navigation_drawer_close">关闭侧边菜单</string>
     <!-- ## Preference Menu ## -->
     <!--Settings category for 'navigation' items -->
-    <string name="pref_category_navigation">导航</string>
+    <string name="pref_category_navigation">导览</string>
     <!--Settings category for 'other' items -->
     <string name="pref_category_other">其它</string>
     <!--Settings category for 'playback' items -->
     <string name="pref_category_playback">播放</string>
     <!--Settings title for opening the dialog to pick which categories are shown as tab headings -->
-    <string name="pref_title_choose_tabs">选择标签项</string>
+    <string name="pref_title_choose_tabs">选择分页标签</string>
     <!--Settings summary for opening the dialog to pick which categories are shown as tab headings -->
-    <string name="pref_summary_choose_tabs">选择&amp;排序屏幕顶部显示的标签</string>
+    <string name="pref_summary_choose_tabs">选择排序面板顶部显示标签</string>
     <!--Settings title for picking the primary theme color -->
-    <string name="pref_title_theme_pick_color">原色</string>
+    <string name="pref_title_theme_pick_color">主题颜色</string>
     <!--Settings summary for picking the primary theme color-->
-    <string name="pref_summary_theme_pick_color">选择主题的主要颜色</string>
+    <string name="pref_summary_theme_pick_color">选择主题颜色</string>
     <!--Settings title for for picking the accent theme color-->
-    <string name="pref_title_theme_pick_accent_color">进度颜色</string>
+    <string name="pref_title_theme_pick_accent_color">辅助颜色</string>
     <!--Settings summary for picking the accent theme color-->
-    <string name="pref_summary_theme_pick_accent_color">选择进度的颜色</string>
+    <string name="pref_summary_theme_pick_accent_color">主题辅助颜色</string>
     <!--Settings title for enabling the tinted navigation bar -->
-    <string name="pref_title_tinted_nav">着色虚拟按键</string>
+    <string name="pref_title_tinted_nav">导览变色</string>
     <!--Settings summary for enabling the tinted navigation bar -->
-    <string name="pref_summary_tinted_nav">启用/禁用虚拟按键色调</string>
+    <string name="pref_summary_tinted_nav">导览列变颜色</string>
     <!-- Settings title for the themes -->
     <string name="pref_string_title_themes">主题</string>
     <!--Settings titles for the themes -->
     <string name="pref_title_base_theme">基础主题</string>
-    <string name="pref_summary_base_theme">选择基础主题（明亮或深暗）</string>
+    <string name="pref_summary_base_theme">基础主题色调</string>
     <string name="pref_title_theme_dark">深暗</string>
     <string name="pref_title_theme_light">明亮</string>
     <string name="pref_title_theme_black">黑色</string>
-    <string name="pref_group_palette">调色板</string>
+    <string name="pref_group_palette">画板</string>
     <string name="pref_title_palette">使用封面颜色</string>
-    <string name="pref_summary_palette">开启后Shuttle会将封面中最突出的颜色设置为应用的主题颜色</string>
+    <string name="pref_summary_palette">启用后 Shuttle 将会侦测您的专辑封面影相中较为显眼的色彩，并将其设为应用程式界面主题的主要色彩</string>
     <string name="pref_title_palette_now_playing">仅在\"正在播放\"界面</string>
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">黑/白名单</string>
