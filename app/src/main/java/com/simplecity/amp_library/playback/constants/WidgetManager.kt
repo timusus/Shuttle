@@ -11,36 +11,36 @@ import com.simplecity.amp_library.ui.widgets.WidgetProviderSmall
 
 class WidgetManager {
 
-    private val mWidgetProviderMedium = WidgetProviderMedium.getInstance()
-    private val mWidgetProviderSmall = WidgetProviderSmall.getInstance()
-    private val mWidgetProviderLarge = WidgetProviderLarge.getInstance()
-    private val mWidgetProviderExtraLarge = WidgetProviderExtraLarge.getInstance()
+    private val widgetProviderMedium = WidgetProviderMedium.getInstance()
+    private val widgetProviderSmall = WidgetProviderSmall.getInstance()
+    private val widgetProviderLarge = WidgetProviderLarge.getInstance()
+    private val widgetProviderExtraLarge = WidgetProviderExtraLarge.getInstance()
 
     fun processCommand(musicService: MusicService, intent: Intent, command: String) {
         when (command) {
             WidgetProviderSmall.CMDAPPWIDGETUPDATE -> {
                 val appWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS)
-                mWidgetProviderSmall.update(musicService, appWidgetIds, true)
+                widgetProviderSmall.update(musicService, appWidgetIds, true)
             }
             WidgetProviderMedium.CMDAPPWIDGETUPDATE -> {
                 val appWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS)
-                mWidgetProviderMedium.update(musicService, appWidgetIds, true)
+                widgetProviderMedium.update(musicService, appWidgetIds, true)
             }
             WidgetProviderLarge.CMDAPPWIDGETUPDATE -> {
                 val appWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS)
-                mWidgetProviderLarge.update(musicService, appWidgetIds, true)
+                widgetProviderLarge.update(musicService, appWidgetIds, true)
             }
             WidgetProviderExtraLarge.CMDAPPWIDGETUPDATE -> {
                 val appWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS)
-                mWidgetProviderExtraLarge.update(musicService, appWidgetIds, true)
+                widgetProviderExtraLarge.update(musicService, appWidgetIds, true)
             }
         }
     }
 
     fun notifyChange(musicService: MusicService, what: String) {
-        mWidgetProviderLarge.notifyChange(musicService, what)
-        mWidgetProviderMedium.notifyChange(musicService, what)
-        mWidgetProviderSmall.notifyChange(musicService, what)
-        mWidgetProviderExtraLarge.notifyChange(musicService, what)
+        widgetProviderLarge.notifyChange(musicService, what)
+        widgetProviderMedium.notifyChange(musicService, what)
+        widgetProviderSmall.notifyChange(musicService, what)
+        widgetProviderExtraLarge.notifyChange(musicService, what)
     }
 }
