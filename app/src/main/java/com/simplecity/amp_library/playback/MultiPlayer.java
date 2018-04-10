@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.playback;
 
+import android.content.Context;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -8,37 +9,41 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.text.TextUtils;
 import android.util.Log;
-
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.simplecity.amp_library.playback.constants.PlayerHandler;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 
-import java.lang.ref.WeakReference;
-
-/**
- * Provides a unified interface for dealing with midi files and other media
- * files.
- */
-class MultiPlayer implements
-        MediaPlayer.OnErrorListener,
-        MediaPlayer.OnCompletionListener {
+class MultiPlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener {
 
     private static final String TAG = "MultiPlayer";
 
-    private final WeakReference<MusicService> mService;
-    private MediaPlayer mCurrentMediaPlayer = new MediaPlayer();
-    private MediaPlayer mNextMediaPlayer;
-    private Handler mHandler;
-    private boolean mIsInitialized = false;
+    private Context context;
 
-    MultiPlayer(final MusicService service) {
-        mService = new WeakReference<>(service);
-        mCurrentMediaPlayer.setWakeMode(mService.get(), PowerManager.PARTIAL_WAKE_LOCK);
+    private MediaPlayer currentMediaPlayer = new MediaPlayer();
+
+    private MediaPlayer nextMediaPlayer;
+
+    private Handler handler;
+
+    private boolean isInitialized = false;
+
+    private PowerManager.WakeLock wakeLock;
+
+    MultiPlayer(Context context) {
+        this.context = context.getApplicationContext();
+
+        currentMediaPlayer.setWakeMode(context, PowerManager.PARTIAL_WAKE_LOCK);
+
+        PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        if (powerManager != null) {
+            wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName());
+        }
+        wakeLock.setReferenceCounted(false);
     }
 
     void setDataSource(final String path) {
-        mIsInitialized = setDataSourceImpl(mCurrentMediaPlayer, path);
-        if (mIsInitialized) {
+        isInitialized = setDataSourceImpl(currentMediaPlayer, path);
+        if (isInitialized) {
             setNextDataSource(null);
         }
     }
@@ -52,7 +57,7 @@ class MultiPlayer implements
             mediaPlayer.setOnPreparedListener(null);
             if (path.startsWith("content://")) {
                 Uri uri = Uri.parse(path);
-                mediaPlayer.setDataSource(mService.get(), uri);
+                mediaPlayer.setDataSource(context, uri);
             } else {
                 mediaPlayer.setDataSource(path);
             }
@@ -78,7 +83,7 @@ class MultiPlayer implements
 
     void setNextDataSource(final String path) {
         try {
-            mCurrentMediaPlayer.setNextMediaPlayer(null);
+            currentMediaPlayer.setNextMediaPlayer(null);
         } catch (IllegalArgumentException e) {
             Log.e(TAG, "Next media player is current one, continuing");
         } catch (IllegalStateException e) {
@@ -86,44 +91,44 @@ class MultiPlayer implements
             CrashlyticsCore.getInstance().log("setNextDataSource failed for. Media player not intitialized.");
             return;
         }
-        if (mNextMediaPlayer != null) {
-            mNextMediaPlayer.release();
-            mNextMediaPlayer = null;
+        if (nextMediaPlayer != null) {
+            nextMediaPlayer.release();
+            nextMediaPlayer = null;
         }
         if (TextUtils.isEmpty(path)) {
             return;
         }
-        mNextMediaPlayer = new MediaPlayer();
-        mNextMediaPlayer.setWakeMode(mService.get(), PowerManager.PARTIAL_WAKE_LOCK);
-        mNextMediaPlayer.setAudioSessionId(getAudioSessionId());
-        if (setDataSourceImpl(mNextMediaPlayer, path)) {
+        nextMediaPlayer = new MediaPlayer();
+        nextMediaPlayer.setWakeMode(context, PowerManager.PARTIAL_WAKE_LOCK);
+        nextMediaPlayer.setAudioSessionId(getAudioSessionId());
+        if (setDataSourceImpl(nextMediaPlayer, path)) {
             try {
-                mCurrentMediaPlayer.setNextMediaPlayer(mNextMediaPlayer);
+                currentMediaPlayer.setNextMediaPlayer(nextMediaPlayer);
             } catch (Exception e) {
-                Log.e(TAG, "setNextDataSource failed - failed to call setNextMediaPlayer on mCurrentMediaPlayer. Error: " + e.getLocalizedMessage());
-                CrashlyticsCore.getInstance().log("setNextDataSource failed - failed to call setNextMediaPlayer on mCurrentMediaPlayer. Error: " + e.getLocalizedMessage());
-                if (mNextMediaPlayer != null) {
-                    mNextMediaPlayer.release();
-                    mNextMediaPlayer = null;
+                Log.e(TAG, "setNextDataSource failed - failed to call setNextMediaPlayer on currentMediaPlayer. Error: " + e.getLocalizedMessage());
+                CrashlyticsCore.getInstance().log("setNextDataSource failed - failed to call setNextMediaPlayer on currentMediaPlayer. Error: " + e.getLocalizedMessage());
+                if (nextMediaPlayer != null) {
+                    nextMediaPlayer.release();
+                    nextMediaPlayer = null;
                 }
             }
         } else {
             Log.e(TAG, "setDataSourceImpl failed for path: [" + path + "]. Setting next media player to null");
             CrashlyticsCore.getInstance().log("setDataSourceImpl failed for path: [" + path + "]. Setting next media player to null");
-            if (mNextMediaPlayer != null) {
-                mNextMediaPlayer.release();
-                mNextMediaPlayer = null;
+            if (nextMediaPlayer != null) {
+                nextMediaPlayer.release();
+                nextMediaPlayer = null;
             }
         }
     }
 
     boolean isInitialized() {
-        return mIsInitialized;
+        return isInitialized;
     }
 
     public void start() {
         try {
-            mCurrentMediaPlayer.start();
+            currentMediaPlayer.start();
         } catch (RuntimeException e) {
             CrashlyticsCore.getInstance().log("MusicService.start() failed. Exception: " + e.toString());
         }
@@ -131,12 +136,12 @@ class MultiPlayer implements
 
     public void stop() {
         try {
-            mCurrentMediaPlayer.reset();
+            currentMediaPlayer.reset();
         } catch (IllegalStateException e) {
             Log.e(TAG, "Error stopping MultiPlayer: " + e.getLocalizedMessage());
             CrashlyticsCore.getInstance().log("stop() failed. Error: " + e.getLocalizedMessage());
         }
-        mIsInitialized = false;
+        isInitialized = false;
     }
 
     /**
@@ -144,24 +149,24 @@ class MultiPlayer implements
      */
     public void release() {
         stop();
-        mCurrentMediaPlayer.release();
+        currentMediaPlayer.release();
     }
 
     public void pause() {
         try {
-            mCurrentMediaPlayer.pause();
+            currentMediaPlayer.pause();
         } catch (IllegalStateException e) {
             Log.e(TAG, "Error pausing MultiPlayer: " + e.getLocalizedMessage());
         }
     }
 
     public void setHandler(Handler handler) {
-        mHandler = handler;
+        this.handler = handler;
     }
 
     public long getDuration() {
         try {
-            return mCurrentMediaPlayer.getDuration();
+            return currentMediaPlayer.getDuration();
         } catch (IllegalStateException ignored) {
             return 0;
         }
@@ -169,7 +174,7 @@ class MultiPlayer implements
 
     public long getPosition() {
         try {
-            return mCurrentMediaPlayer.getCurrentPosition();
+            return currentMediaPlayer.getCurrentPosition();
         } catch (IllegalStateException ignored) {
             return 0;
         }
@@ -177,7 +182,7 @@ class MultiPlayer implements
 
     void seekTo(long whereto) {
         try {
-            mCurrentMediaPlayer.seekTo((int) whereto);
+            currentMediaPlayer.seekTo((int) whereto);
         } catch (IllegalStateException e) {
             Log.e(TAG, "Error seeking MultiPlayer: " + e.getLocalizedMessage());
         }
@@ -185,7 +190,7 @@ class MultiPlayer implements
 
     void setVolume(float vol) {
         try {
-            mCurrentMediaPlayer.setVolume(vol, vol);
+            currentMediaPlayer.setVolume(vol, vol);
         } catch (IllegalStateException e) {
             Log.e(TAG, "Error setting MultiPlayer volume: " + e.getLocalizedMessage());
         }
@@ -194,7 +199,7 @@ class MultiPlayer implements
     int getAudioSessionId() {
         int sessionId = 0;
         try {
-            sessionId = mCurrentMediaPlayer.getAudioSessionId();
+            sessionId = currentMediaPlayer.getAudioSessionId();
         } catch (IllegalStateException ignored) {
             //Nothing to do
         }
@@ -205,11 +210,11 @@ class MultiPlayer implements
     public boolean onError(final MediaPlayer mp, final int what, final int extra) {
         switch (what) {
             case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
-                mIsInitialized = false;
-                mCurrentMediaPlayer.release();
-                mCurrentMediaPlayer = new MediaPlayer();
-                mCurrentMediaPlayer.setWakeMode(mService.get(), PowerManager.PARTIAL_WAKE_LOCK);
-                mHandler.sendMessageDelayed(mHandler.obtainMessage(PlayerHandler.SERVER_DIED), 2000);
+                isInitialized = false;
+                currentMediaPlayer.release();
+                currentMediaPlayer = new MediaPlayer();
+                currentMediaPlayer.setWakeMode(context, PowerManager.PARTIAL_WAKE_LOCK);
+                handler.sendMessageDelayed(handler.obtainMessage(PlayerHandler.SERVER_DIED), 2000);
                 return true;
             default:
                 break;
@@ -219,15 +224,19 @@ class MultiPlayer implements
 
     @Override
     public void onCompletion(final MediaPlayer mp) {
-        if (mp == mCurrentMediaPlayer && mNextMediaPlayer != null) {
-            mCurrentMediaPlayer.release();
-            mCurrentMediaPlayer = mNextMediaPlayer;
-            mNextMediaPlayer = null;
-            mHandler.sendEmptyMessage(PlayerHandler.TRACK_WENT_TO_NEXT);
+        if (mp == currentMediaPlayer && nextMediaPlayer != null) {
+            currentMediaPlayer.release();
+            currentMediaPlayer = nextMediaPlayer;
+            nextMediaPlayer = null;
+            handler.sendEmptyMessage(PlayerHandler.TRACK_WENT_TO_NEXT);
         } else {
-            mService.get().wakeLock.acquire(30000);
-            mHandler.sendEmptyMessage(PlayerHandler.TRACK_ENDED);
-            mHandler.sendEmptyMessage(PlayerHandler.RELEASE_WAKELOCK);
+            wakeLock.acquire(30000);
+            handler.sendEmptyMessage(PlayerHandler.TRACK_ENDED);
+            handler.sendEmptyMessage(PlayerHandler.RELEASE_WAKELOCK);
         }
+    }
+
+    public void releaseWakelock() {
+        wakeLock.release();
     }
 }

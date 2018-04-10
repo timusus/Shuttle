@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 
-class HeadsetManager(private val callbacks: MusicService.Callbacks) {
+class HeadsetManager(private val playbackManager: PlaybackManager) {
 
     private var headsetReceiver: BroadcastReceiver? = null
 
@@ -27,11 +27,11 @@ class HeadsetManager(private val callbacks: MusicService.Callbacks) {
                 if (intent.hasExtra("state")) {
                     if (intent.getIntExtra("state", 0) == 0) {
                         if (PlaybackSettingsManager.pauseOnHeadsetDisconnect) {
-                            callbacks!!.pause()
+                            playbackManager.pause()
                         }
                     } else if (intent.getIntExtra("state", 0) == 1) {
                         if (PlaybackSettingsManager.playOnHeadsetConnect) {
-                            callbacks!!.play()
+                            playbackManager.play()
                         }
                     }
                 }

@@ -3,7 +3,6 @@ package com.simplecity.amp_library.playback;
 import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.rx.UnsafeAction;
@@ -12,11 +11,7 @@ import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class QueueManager {
 
@@ -59,26 +54,26 @@ public class QueueManager {
     int queuePosition = -1;
     int nextPlayPos = -1;
 
-    private MusicService.Callbacks callbacks;
+    private MusicService.Callbacks musicServiceCallbacks;
 
-    public QueueManager(MusicService.Callbacks callbacks) {
-        this.callbacks = callbacks;
+    public QueueManager(MusicService.Callbacks musicServiceCallbacks) {
+        this.musicServiceCallbacks = musicServiceCallbacks;
     }
 
     private void notifyQueueChanged() {
         saveQueue(true);
-        callbacks.notifyChange(InternalIntents.QUEUE_CHANGED);
+        musicServiceCallbacks.notifyChange(InternalIntents.QUEUE_CHANGED);
     }
 
     private void notifyShuffleChanged() {
-        callbacks.notifyChange(InternalIntents.SHUFFLE_CHANGED);
+        musicServiceCallbacks.notifyChange(InternalIntents.SHUFFLE_CHANGED);
     }
 
     private void notifyMetaChanged() {
-        callbacks.notifyChange(InternalIntents.META_CHANGED);
+        musicServiceCallbacks.notifyChange(InternalIntents.META_CHANGED);
     }
 
-    public void setRepeatMode(int repeatMode) {
+    public void setRepeatMode(@RepeatMode int repeatMode) {
         this.repeatMode = repeatMode;
         saveQueue(false);
     }
@@ -93,26 +88,23 @@ public class QueueManager {
     }
 
     public void open(List<Song> songs, final int position, UnsafeAction openCurrentAndNext) {
-        synchronized (this) {
+        if (!playlist.equals(songs)) {
+            playlist.clear();
+            shuffleList.clear();
 
-            if (!playlist.equals(songs)) {
-                playlist.clear();
-                shuffleList.clear();
-
-                playlist.addAll(songs);
-            }
-
-            queuePosition = position;
-
-            if (shuffleMode == QueueManager.ShuffleMode.ON) {
-                makeShuffleList();
-            }
-
-            openCurrentAndNext.run();
-
-            notifyMetaChanged();
-            notifyQueueChanged();
+            playlist.addAll(songs);
         }
+
+        queuePosition = position;
+
+        if (shuffleMode == QueueManager.ShuffleMode.ON) {
+            makeShuffleList();
+        }
+
+        openCurrentAndNext.run();
+
+        notifyMetaChanged();
+        notifyQueueChanged();
     }
 
     void previous() {
@@ -124,32 +116,30 @@ public class QueueManager {
     }
 
     void moveQueueItem(int from, int to) {
-        synchronized (this) {
 
-            if (from >= getCurrentPlaylist().size()) {
-                from = getCurrentPlaylist().size() - 1;
-            }
-            if (to >= getCurrentPlaylist().size()) {
-                to = getCurrentPlaylist().size() - 1;
-            }
-
-            getCurrentPlaylist().add(to, getCurrentPlaylist().remove(from));
-
-            if (from < to) {
-                if (queuePosition == from) {
-                    queuePosition = to;
-                } else if (queuePosition >= from && queuePosition <= to) {
-                    queuePosition--;
-                }
-            } else if (to < from) {
-                if (queuePosition == from) {
-                    queuePosition = to;
-                } else if (queuePosition >= to && queuePosition <= from) {
-                    queuePosition++;
-                }
-            }
-            notifyQueueChanged();
+        if (from >= getCurrentPlaylist().size()) {
+            from = getCurrentPlaylist().size() - 1;
         }
+        if (to >= getCurrentPlaylist().size()) {
+            to = getCurrentPlaylist().size() - 1;
+        }
+
+        getCurrentPlaylist().add(to, getCurrentPlaylist().remove(from));
+
+        if (from < to) {
+            if (queuePosition == from) {
+                queuePosition = to;
+            } else if (queuePosition >= from && queuePosition <= to) {
+                queuePosition--;
+            }
+        } else if (to < from) {
+            if (queuePosition == from) {
+                queuePosition = to;
+            } else if (queuePosition >= to && queuePosition <= from) {
+                queuePosition++;
+            }
+        }
+        notifyQueueChanged();
     }
 
     void clearQueue() {
@@ -166,6 +156,7 @@ public class QueueManager {
         notifyQueueChanged();
     }
 
+    @NonNull
     List<Song> getCurrentPlaylist() {
         if (shuffleMode == ShuffleMode.OFF) {
             return playlist;
@@ -210,19 +201,17 @@ public class QueueManager {
      * Removes the first instance of the Song the playlist & shuffleList.
      */
     void removeSong(int position, UnsafeAction stop, UnsafeAction moveToNextTrack) {
-        synchronized (this) {
-            List<Song> otherPlaylist = getCurrentPlaylist().equals(playlist) ? shuffleList : playlist;
-            Song song = getCurrentPlaylist().remove(position);
-            otherPlaylist.remove(song);
+        List<Song> otherPlaylist = getCurrentPlaylist().equals(playlist) ? shuffleList : playlist;
+        Song song = getCurrentPlaylist().remove(position);
+        otherPlaylist.remove(song);
 
-            if (this.queuePosition == position) {
-                onCurrentSongRemoved(stop, moveToNextTrack);
-            } else {
-                queuePosition = getCurrentPlaylist().indexOf(getCurrentSong());
-            }
-
-            notifyQueueChanged();
+        if (this.queuePosition == position) {
+            onCurrentSongRemoved(stop, moveToNextTrack);
+        } else {
+            queuePosition = getCurrentPlaylist().indexOf(getCurrentSong());
         }
+
+        notifyQueueChanged();
     }
 
     /**
@@ -233,41 +222,38 @@ public class QueueManager {
      * @param songsToRemove the Songs to remove
      */
     void removeSongs(@NonNull List<Song> songsToRemove, UnsafeAction stop, UnsafeAction moveToNextTrack) {
-        synchronized (this) {
+        playlist.removeAll(songsToRemove);
+        shuffleList.removeAll(songsToRemove);
 
-            playlist.removeAll(songsToRemove);
-            shuffleList.removeAll(songsToRemove);
-
-            if (songsToRemove.contains(getCurrentSong())) {
-                /*
-                 * If we remove a list of songs from the current queue, and that list contains our currently
-                 * playing song, we need to figure out which song should play next. We'll play the first song
-                 * that comes after the list of songs to be removed.
-                 *
-                 * In this example, let's say Song 7 is currently playing
-                 *
-                 * Playlist:                    [Song 3,    Song 4,     Song 5,     Song 6,     Song 7,     Song 8]
-                 * Indices:                     [0,         1,          2,          3,          4,          5]
-                 *
-                 * Remove;                                              [Song 5,     Song 6,     Song 7]
-                 *
-                 * First removed song:                                  Song 5
-                 * Index of first removed song:                         2
-                 *
-                 * Playlist after removal:      [Song 3,    Song 4,     Song 8]
-                 * Indices:                     [0,         1,          2]
-                 *
-                 *
-                 * So after the removal, we'll play index 2, which is Song 8.
-                 */
-                queuePosition = Collections.indexOfSubList(getCurrentPlaylist(), songsToRemove);
-                onCurrentSongRemoved(stop, moveToNextTrack);
-            } else {
-                queuePosition = getCurrentPlaylist().indexOf(getCurrentSong());
-            }
-
-            notifyQueueChanged();
+        if (songsToRemove.contains(getCurrentSong())) {
+            /*
+             * If we remove a list of songs from the current queue, and that list contains our currently
+             * playing song, we need to figure out which song should play next. We'll play the first song
+             * that comes after the list of songs to be removed.
+             *
+             * In this example, let's say Song 7 is currently playing
+             *
+             * Playlist:                    [Song 3,    Song 4,     Song 5,     Song 6,     Song 7,     Song 8]
+             * Indices:                     [0,         1,          2,          3,          4,          5]
+             *
+             * Remove;                                              [Song 5,     Song 6,     Song 7]
+             *
+             * First removed song:                                  Song 5
+             * Index of first removed song:                         2
+             *
+             * Playlist after removal:      [Song 3,    Song 4,     Song 8]
+             * Indices:                     [0,         1,          2]
+             *
+             *
+             * So after the removal, we'll play index 2, which is Song 8.
+             */
+            queuePosition = Collections.indexOfSubList(getCurrentPlaylist(), songsToRemove);
+            onCurrentSongRemoved(stop, moveToNextTrack);
+        } else {
+            queuePosition = getCurrentPlaylist().indexOf(getCurrentSong());
         }
+
+        notifyQueueChanged();
     }
 
     private void onCurrentSongRemoved(UnsafeAction stop, UnsafeAction moveToNextTrack) {
@@ -290,27 +276,25 @@ public class QueueManager {
      * @param action The action to take
      */
     public void enqueue(final List<Song> songs, @EnqueueAction final int action, UnsafeAction setNextTrack, UnsafeAction openCurrentAndNext) {
-        synchronized (this) {
-            switch (action) {
-                case EnqueueAction.NEXT:
-                    List<Song> otherList = getCurrentPlaylist() == playlist ? shuffleList : playlist;
-                    getCurrentPlaylist().addAll(queuePosition + 1, songs);
-                    otherList.addAll(songs);
+        switch (action) {
+            case EnqueueAction.NEXT:
+                List<Song> otherList = getCurrentPlaylist() == playlist ? shuffleList : playlist;
+                getCurrentPlaylist().addAll(queuePosition + 1, songs);
+                otherList.addAll(songs);
 
-                    setNextTrack.run();
-                    notifyQueueChanged();
-                    break;
-                case EnqueueAction.LAST:
-                    playlist.addAll(songs);
-                    shuffleList.addAll(songs);
-                    notifyQueueChanged();
-                    break;
-            }
-            if (queuePosition < 0) {
-                queuePosition = 0;
-                openCurrentAndNext.run();
-                notifyMetaChanged();
-            }
+                setNextTrack.run();
+                notifyQueueChanged();
+                break;
+            case EnqueueAction.LAST:
+                playlist.addAll(songs);
+                shuffleList.addAll(songs);
+                notifyQueueChanged();
+                break;
+        }
+        if (queuePosition < 0) {
+            queuePosition = 0;
+            openCurrentAndNext.run();
+            notifyMetaChanged();
         }
     }
 
@@ -339,7 +323,7 @@ public class QueueManager {
     }
 
     @SuppressLint("CheckResult")
-    synchronized void reloadQueue(UnsafeAction reloadComplete, UnsafeAction open, UnsafeConsumer<Long> seekTo) {
+    void reloadQueue(UnsafeAction reloadComplete, UnsafeAction open, UnsafeConsumer<Long> seekTo) {
         queueReloading = true;
 
         shuffleMode = PlaybackSettingsManager.INSTANCE.getShuffleMode();
@@ -475,24 +459,21 @@ public class QueueManager {
     }
 
     void makeShuffleList() {
-        synchronized (this) {
-
-            if (playlist.isEmpty()) {
-                return;
-            }
-
-            shuffleList = new ArrayList<>(playlist);
-            Song currentSong = null;
-            if (queuePosition >= 0 && queuePosition < shuffleList.size()) {
-                currentSong = shuffleList.remove(queuePosition);
-            }
-
-            Collections.shuffle(shuffleList);
-
-            if (currentSong != null) {
-                shuffleList.add(0, currentSong);
-            }
-            queuePosition = 0;
+        if (playlist.isEmpty()) {
+            return;
         }
+
+        shuffleList = new ArrayList<>(playlist);
+        Song currentSong = null;
+        if (queuePosition >= 0 && queuePosition < shuffleList.size()) {
+            currentSong = shuffleList.remove(queuePosition);
+        }
+
+        Collections.shuffle(shuffleList);
+
+        if (currentSong != null) {
+            shuffleList.add(0, currentSong);
+        }
+        queuePosition = 0;
     }
 }

@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -27,13 +26,12 @@ import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.ShuttleUtils;
-
-import java.io.ByteArrayOutputStream;
-
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+
+import java.io.ByteArrayOutputStream;
 
 class ChromecastManager {
 
@@ -41,7 +39,7 @@ class ChromecastManager {
 
     private Context context;
 
-    private MusicService.MusicServiceCallbacks callbacks;
+    private PlaybackManager playbackManager;
 
     VideoCastManager castManager;
 
@@ -53,10 +51,10 @@ class ChromecastManager {
 
     private QueueManager queueManager;
 
-    public ChromecastManager(Context context, QueueManager queueManager, MusicService.MusicServiceCallbacks callbacks) {
+    ChromecastManager(Context context, QueueManager queueManager, PlaybackManager playbackManager) {
         this.context = context;
         this.queueManager = queueManager;
-        this.callbacks = callbacks;
+        this.playbackManager = playbackManager;
     }
 
     void init() {
@@ -67,9 +65,9 @@ class ChromecastManager {
         }
 
         if (castManager != null && castManager.isConnected()) {
-            updatePlaybackLocation(MusicService.PlaybackLocation.REMOTE);
+            updatePlaybackLocation(PlaybackManager.PlaybackLocation.REMOTE);
         } else {
-            updatePlaybackLocation(MusicService.PlaybackLocation.LOCAL);
+            updatePlaybackLocation(PlaybackManager.PlaybackLocation.LOCAL);
         }
     }
 
@@ -86,13 +84,13 @@ class ChromecastManager {
         }
     }
 
-    void updatePlaybackLocation(@MusicService.PlaybackLocation int location) {
+    private void updatePlaybackLocation(@PlaybackManager.PlaybackLocation int location) {
 
         // If the location has changed and it's no longer ChromeCast
-        if (location == MusicService.PlaybackLocation.LOCAL && location != callbacks.getPlaybackLocation()) {
+        if (location == PlaybackManager.PlaybackLocation.LOCAL && location != playbackManager.getPlaybackLocation()) {
             try {
                 if (castManager != null && castManager.isConnected()) {
-                    callbacks.seekTo(castManager.getCurrentMediaPosition());
+                    playbackManager.seekTo(castManager.getCurrentMediaPosition());
                     castManager.stop();
                 }
             } catch (CastException | NoConnectionException | TransientNetworkDisconnectionException | IllegalStateException e) {
@@ -100,10 +98,10 @@ class ChromecastManager {
             }
         }
 
-        callbacks.setPlaybackLocation(location);
+        playbackManager.setPlaybackLocation(location);
     }
 
-    void loadRemoteMedia(@NonNull Song song, @NonNull MediaInfo selectedMedia, int position, boolean autoPlay, @Nullable Bitmap bitmap, Drawable errorDrawable) {
+    private void loadRemoteMedia(@NonNull Song song, @NonNull MediaInfo selectedMedia, int position, boolean autoPlay, @Nullable Bitmap bitmap, Drawable errorDrawable) {
         disposables.add(Completable.fromAction(() -> {
                     HttpServer.getInstance().serveAudio(song.path);
 
@@ -143,23 +141,24 @@ class ChromecastManager {
                 .setMetadata(metadata)
                 .build();
 
-        disposables.add(Completable.defer(() -> Completable.fromAction(() -> Glide.with(context)
-                .load(song)
-                .asBitmap()
-                .override(1024, 1024)
-                .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.name, true))
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        loadRemoteMedia(song, selectedMedia, position, autoPlay, resource, null);
-                    }
+        disposables.add(Completable.defer(() -> Completable.fromAction(() ->
+                Glide.with(context)
+                        .load(song)
+                        .asBitmap()
+                        .override(1024, 1024)
+                        .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.name, true))
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                loadRemoteMedia(song, selectedMedia, position, autoPlay, resource, null);
+                            }
 
-                    @Override
-                    public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                        super.onLoadFailed(e, errorDrawable);
-                        loadRemoteMedia(song, selectedMedia, position, autoPlay, null, errorDrawable);
-                    }
-                })))
+                            @Override
+                            public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                                super.onLoadFailed(e, errorDrawable);
+                                loadRemoteMedia(song, selectedMedia, position, autoPlay, null, errorDrawable);
+                            }
+                        })))
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe());
     }
@@ -175,32 +174,32 @@ class ChromecastManager {
 
                 HttpServer.getInstance().start();
 
-                boolean wasPlaying = callbacks.getIsSupposedToBePlaying();
+                boolean wasPlaying = playbackManager.getIsSupposedToBePlaying();
 
                 // If music is playing on the phone, pause it
-                if (callbacks.getPlaybackLocation() == MusicService.PlaybackLocation.LOCAL && wasPlaying) {
-                    callbacks.pause();
+                if (playbackManager.getPlaybackLocation() == PlaybackManager.PlaybackLocation.LOCAL && wasPlaying) {
+                    playbackManager.pause();
                 }
 
                 // Try to play from the same position, but on the ChromeCast
                 if (queueManager.getCurrentSong() != null) {
-                    prepareChromeCastLoad(queueManager.getCurrentSong(), (int) callbacks.getPosition(), wasPlaying);
+                    prepareChromeCastLoad(queueManager.getCurrentSong(), (int) playbackManager.getSeekPosition(), wasPlaying);
                     if (wasPlaying) {
-                        callbacks.setPlaybackState(MusicService.PLAYING);
+                        playbackManager.setPlaybackState(PlaybackManager.PlaybackState.PLAYING);
                     } else {
-                        callbacks.setPlaybackState(MusicService.PAUSED);
+                        playbackManager.setPlaybackState(PlaybackManager.PlaybackState.PAUSED);
                     }
                 }
 
-                updatePlaybackLocation(MusicService.PlaybackLocation.REMOTE);
+                updatePlaybackLocation(PlaybackManager.PlaybackLocation.REMOTE);
             }
 
             @Override
             public void onApplicationDisconnected(int errorCode) {
                 Log.d(TAG, "onApplicationDisconnected() is reached with errorCode: " + errorCode);
-                callbacks.setIsSupposedToBePlaying(false, true);
-                callbacks.setPlaybackState(MusicService.STOPPED);
-                updatePlaybackLocation(MusicService.PlaybackLocation.LOCAL);
+                playbackManager.setIsSupposedToBePlaying(false, true);
+                playbackManager.setPlaybackState(PlaybackManager.PlaybackState.STOPPED);
+                updatePlaybackLocation(PlaybackManager.PlaybackLocation.LOCAL);
 
                 HttpServer.getInstance().stop();
             }
@@ -208,9 +207,9 @@ class ChromecastManager {
             @Override
             public void onDisconnected() {
                 Log.d(TAG, "onDisconnected() is reached");
-                callbacks.setIsSupposedToBePlaying(false, true);
-                callbacks.setPlaybackState(MusicService.STOPPED);
-                updatePlaybackLocation(MusicService.PlaybackLocation.LOCAL);
+                playbackManager.setIsSupposedToBePlaying(false, true);
+                playbackManager.setPlaybackState(PlaybackManager.PlaybackState.STOPPED);
+                updatePlaybackLocation(PlaybackManager.PlaybackLocation.LOCAL);
 
                 HttpServer.getInstance().stop();
             }
@@ -220,10 +219,9 @@ class ChromecastManager {
                 // Only send a track finished message if the state has changed..
                 if (castManager.getPlaybackStatus() != castMediaStatus) {
                     if (castManager.getPlaybackStatus() == MediaStatus.PLAYER_STATE_IDLE && castManager.getIdleReason() == MediaStatus.IDLE_REASON_FINISHED) {
-                        callbacks.notifyTrackEnded();
+                        playbackManager.notifyTrackEnded();
                     }
                 }
-
                 castMediaStatus = castManager.getPlaybackStatus();
             }
         };
