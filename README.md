@@ -61,7 +61,7 @@ I've continued to work on Shuttle at times daily, at the least weekly, ever sinc
 
 Without open source, Shuttle wouldn't exist, and I probably wouldn't be an Android developer. One of my motivations for open sourcing this project is to 'give back'. Maybe Shuttle can be to someone else what Apollo Music Player was to me.
 
-Secondly, I don't feel like I'm able to dedicate as much time to the project as I have in the past. Each year that goes by, I feel like there's just more for me to do and less time do it. I'm hoping that there are some enthusiastic developers out there who like Shuttle, and would like to improve it in some way. Shuttle seems like it's slowly dying. The rate of installs has dropped back to what it was 2.5 years ago. I think this may be due to the rise of cloud players, but I'm really not sure. I'd like to see what can be done with it while it still has a heartbeat.
+Secondly, I don't feel like I'm able to dedicate as much time to the project as I have in the past. Each year that goes by, I feel like there's just more for me to do and less time do it. I'm hoping that there are some enthusiastic developers out there who like Shuttle, and would like to improve it in some way.
 
 
 #### License
