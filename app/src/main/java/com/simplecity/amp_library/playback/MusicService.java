@@ -4,7 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -12,23 +16,30 @@ import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
+
 import com.crashlytics.android.Crashlytics;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.notifications.MusicNotificationHelper;
-import com.simplecity.amp_library.playback.constants.*;
+import com.simplecity.amp_library.playback.constants.ExternalIntents;
+import com.simplecity.amp_library.playback.constants.InternalIntents;
+import com.simplecity.amp_library.playback.constants.MediaButtonCommand;
+import com.simplecity.amp_library.playback.constants.ServiceCommand;
+import com.simplecity.amp_library.playback.constants.ShortcutCommands;
+import com.simplecity.amp_library.playback.constants.WidgetManager;
 import com.simplecity.amp_library.services.Equalizer;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MediaButtonIntentReceiver;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
+
+import java.util.ConcurrentModificationException;
+import java.util.List;
+
 import io.reactivex.Completable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
-
-import java.util.ConcurrentModificationException;
-import java.util.List;
 
 @SuppressLint("InlinedApi")
 public class MusicService extends Service {
@@ -592,7 +603,7 @@ public class MusicService extends Service {
 
     public void toggleShuffleMode() {
         switch (getShuffleMode()) {
-            case QueueManager.ShuffleMode.ON:
+            case QueueManager.ShuffleMode.OFF:
                 setShuffleMode(QueueManager.ShuffleMode.ON);
                 notifyChange(InternalIntents.SHUFFLE_CHANGED);
                 queueManager.makeShuffleList();
@@ -602,7 +613,7 @@ public class MusicService extends Service {
                 }
                 showToast(R.string.shuffle_on_notif);
                 break;
-            case QueueManager.ShuffleMode.OFF:
+            case QueueManager.ShuffleMode.ON:
                 setShuffleMode(QueueManager.ShuffleMode.OFF);
                 notifyChange(InternalIntents.SHUFFLE_CHANGED);
                 if (this.queueManager.queuePosition >= 0 && this.queueManager.queuePosition < queueManager.shuffleList.size()) {
