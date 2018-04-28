@@ -170,7 +170,7 @@ public class SettingsPresenter extends PurchasePresenter<SettingsView> {
         SettingsView settingsView = getView();
         if (settingsView != null) {
             settingsView.showAccentColorDialog(
-                    new ColorChooserDialog.Builder(context, R.string.pref_title_theme_pick_color)
+                    new ColorChooserDialog.Builder(context, R.string.pref_title_theme_pick_accent_color)
                             .accentMode(true)
                             .allowUserColorInput(true)
                             .allowUserColorInputAlpha(false)
