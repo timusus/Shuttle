@@ -43,6 +43,7 @@ import com.simplecity.amp_library.model.BaseFileObject;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Query;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.rx.UnsafeConsumer;
 import com.simplecity.amp_library.sql.SqlUtils;
 import com.simplecity.amp_library.sql.providers.PlayCountTable;
@@ -259,7 +260,7 @@ public class PlaylistUtils {
     }
 
     @SuppressLint("CheckResult")
-    public static void addFileObjectsToPlaylist(Context context, Playlist playlist, List<BaseFileObject> fileObjects, Runnable insertCallback) {
+    public static void addFileObjectsToPlaylist(Context context, Playlist playlist, List<BaseFileObject> fileObjects, UnsafeAction insertCallback) {
 
         ProgressDialog progressDialog = ProgressDialog.show(context, "", context.getString(R.string.gathering_songs), false);
 
@@ -289,7 +290,7 @@ public class PlaylistUtils {
      * @return boolean true if the playlist addition was successful
      */
     @SuppressLint("CheckResult")
-    public static void addToPlaylist(Context context, Playlist playlist, List<Song> songs, Runnable insertCallback) {
+    public static void addToPlaylist(Context context, Playlist playlist, List<Song> songs, UnsafeAction insertCallback) {
 
         if (playlist == null || songs == null || songs.isEmpty()) {
             return;
@@ -375,7 +376,7 @@ public class PlaylistUtils {
     private static void insertPlaylistItems(@NonNull Context context,
                                             @NonNull Playlist playlist,
                                             @NonNull List<Song> songs, int songCount,
-                                            Runnable insertCallback) {
+                                            UnsafeAction insertCallback) {
 
         if (songs.isEmpty()) {
             return;
@@ -593,12 +594,12 @@ public class PlaylistUtils {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
-    public static void createPlaylistDialog(final Context context, List<Song> songs, Runnable insertCallback) {
+    public static void createPlaylistDialog(final Context context, List<Song> songs, UnsafeAction insertCallback) {
         createPlaylistDialog(context, playlistId ->
                 addToPlaylist(context, playlistId, songs, insertCallback));
     }
 
-    public static void createFileObjectPlaylistDialog(final Context context, List<BaseFileObject> fileObjects, Runnable insertCallback) {
+    public static void createFileObjectPlaylistDialog(final Context context, List<BaseFileObject> fileObjects, UnsafeAction insertCallback) {
         createPlaylistDialog(context, playlistId ->
                 addFileObjectsToPlaylist(context, playlistId, fileObjects, insertCallback));
     }

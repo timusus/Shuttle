@@ -247,7 +247,7 @@ public final class ShuttleUtils {
         return ShuttleApplication.getInstance().getResources().getBoolean(R.bool.isTablet);
     }
 
-    static Single<List<Song>> getSongsForFileObjects(List<BaseFileObject> fileObjects) {
+    public static Single<List<Song>> getSongsForFileObjects(List<BaseFileObject> fileObjects) {
 
         List<Single<List<Song>>> observables = Stream.of(fileObjects)
                 .map(fileObject -> FileHelper.getSongList(new File(fileObject.path), true, false))

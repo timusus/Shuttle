@@ -5,9 +5,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
@@ -20,31 +22,44 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.format.PrefixHighlighter;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
+import com.simplecity.amp_library.model.Header;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.tagger.TaggerDialog;
-import com.simplecity.amp_library.ui.detail.AlbumDetailFragment;
-import com.simplecity.amp_library.ui.detail.ArtistDetailFragment;
-import com.simplecity.amp_library.ui.detail.BaseDetailFragment;
+import com.simplecity.amp_library.ui.adapters.ViewType;
+import com.simplecity.amp_library.ui.detail.album.AlbumDetailFragment;
+import com.simplecity.amp_library.ui.detail.artist.ArtistDetailFragment;
 import com.simplecity.amp_library.ui.dialog.DeleteDialog;
 import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.ui.fragments.BaseFragment;
+import com.simplecity.amp_library.ui.modelviews.AlbumArtistView;
+import com.simplecity.amp_library.ui.modelviews.AlbumView;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.LoadingView;
+import com.simplecity.amp_library.ui.modelviews.SearchHeaderView;
 import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
+import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.ui.views.ContextualToolbarHost;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
-import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.Operators;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.ResourceUtils;
+import com.simplecity.amp_library.utils.menu.album.AlbumMenuFragmentHelper;
+import com.simplecity.amp_library.utils.menu.album.AlbumMenuUtils;
+import com.simplecity.amp_library.utils.menu.albumartist.AlbumArtistMenuFragmentHelper;
+import com.simplecity.amp_library.utils.menu.albumartist.AlbumArtistMenuUtils;
+import com.simplecity.amp_library.utils.menu.song.SongMenuFragmentHelper;
+import com.simplecity.amp_library.utils.menu.song.SongMenuUtils;
+import com.simplecityapps.recycler_adapter.adapter.CompletionListUpdateCallbackAdapter;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
@@ -69,7 +84,7 @@ public class SearchFragment extends BaseFragment implements
 
     public static final String ARG_QUERY = "query";
 
-    private String query;
+    private String query = "";
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -80,21 +95,35 @@ public class SearchFragment extends BaseFragment implements
     @BindView(R.id.recyclerView)
     FastScrollRecyclerView recyclerView;
 
-    ViewModelAdapter adapter;
+    private ViewModelAdapter adapter;
 
     private LoadingView loadingView;
 
-    private EmptyView emptyView;
-
     private CompositeDisposable disposables = new CompositeDisposable();
 
-    SearchPresenter searchPresenter;
+    private SearchPresenter searchPresenter;
 
-    View rootView;
+    private View rootView;
 
-    SearchView searchView;
+    private SearchView searchView;
 
     private ContextualToolbarHelper<Single<List<Song>>> contextualToolbarHelper;
+
+    private EmptyView emptyView = new EmptyView(R.string.empty_search);
+    private SearchHeaderView artistsHeader = new SearchHeaderView(new Header(ShuttleApplication.getInstance().getString(R.string.artists_title)));
+    private SearchHeaderView albumsHeader = new SearchHeaderView(new Header(ShuttleApplication.getInstance().getString(R.string.albums_title)));
+    private SearchHeaderView songsHeader = new SearchHeaderView(new Header(ShuttleApplication.getInstance().getString(R.string.tracks_title)));
+
+    private PrefixHighlighter prefixHighlighter;
+
+    private RequestManager requestManager;
+
+    private AlbumArtistMenuFragmentHelper albumArtistMenuFragmentHelper = new AlbumArtistMenuFragmentHelper(this, disposables);
+    private AlbumMenuFragmentHelper albumMenuFragmentHelper = new AlbumMenuFragmentHelper(this, disposables);
+    private SongMenuFragmentHelper songMenuFragmentHelper = new SongMenuFragmentHelper(this, disposables, null);
+
+    @Nullable
+    private Disposable setDataDisposable;
 
     public static SearchFragment newInstance(String query) {
         Bundle args = new Bundle();
@@ -109,13 +138,16 @@ public class SearchFragment extends BaseFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        searchPresenter = new SearchPresenter(new PrefixHighlighter(), Glide.with(this));
+        prefixHighlighter = new PrefixHighlighter();
+
+        requestManager = Glide.with(this);
+
+        searchPresenter = new SearchPresenter();
 
         query = getArguments().getString(ARG_QUERY);
 
         loadingView = new LoadingView();
 
-        emptyView = new EmptyView(R.string.empty_search);
         emptyView.setHeight(ResourceUtils.toPixels(96));
 
         adapter = new ViewModelAdapter();
@@ -123,7 +155,7 @@ public class SearchFragment extends BaseFragment implements
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.fragment_search, container, false);
 
@@ -212,15 +244,60 @@ public class SearchFragment extends BaseFragment implements
     }
 
     @Override
-    public void setEmpty(boolean empty) {
-        adapter.setItems(Collections.singletonList(emptyView));
-    }
+    public void setData(@NonNull SearchResult searchResult) {
 
-    @Override
-    public Disposable setItems(@NonNull List<ViewModel> items) {
-        Disposable disposable = adapter.setItems(items);
-        recyclerView.scrollToPosition(0);
-        return disposable;
+        if (setDataDisposable != null) {
+            setDataDisposable.dispose();
+        }
+
+        char[] prefix = query.toUpperCase().toCharArray();
+
+        List<ViewModel> viewModels = new ArrayList<>();
+
+        if (!searchResult.albumArtists.isEmpty()) {
+            viewModels.add(artistsHeader);
+            viewModels.addAll(Stream.of(searchResult.albumArtists)
+                    .map(albumArtist -> {
+                        AlbumArtistView albumArtistView = new AlbumArtistView(albumArtist, ViewType.ARTIST_LIST, requestManager);
+                        albumArtistView.setClickListener(albumArtistClickListener);
+                        albumArtistView.setPrefix(prefixHighlighter, prefix);
+                        return (ViewModel) albumArtistView;
+                    })
+                    .toList());
+        }
+
+        if (!searchResult.albums.isEmpty()) {
+            viewModels.add(albumsHeader);
+            viewModels.addAll(Stream.of(searchResult.albums).map(album -> {
+                AlbumView albumView = new AlbumView(album, ViewType.ALBUM_LIST, requestManager);
+                albumView.setClickListener(albumViewClickListener);
+                albumView.setPrefix(prefixHighlighter, prefix);
+                return albumView;
+            }).toList());
+        }
+
+        if (!searchResult.songs.isEmpty()) {
+            viewModels.add(songsHeader);
+            viewModels.addAll(Stream.of(searchResult.songs).map(song -> {
+                SongView songView = new SongView(song, requestManager);
+                songView.setClickListener(songViewClickListener);
+                songView.setPrefix(prefixHighlighter, prefix);
+                return songView;
+            }).toList());
+        }
+
+        if (viewModels.isEmpty()) {
+            viewModels.add(emptyView);
+        }
+
+        setDataDisposable = adapter.setItems(viewModels, new CompletionListUpdateCallbackAdapter() {
+            @Override
+            public void onComplete() {
+                super.onComplete();
+
+                recyclerView.scrollToPosition(0);
+            }
+        });
     }
 
     @Override
@@ -274,7 +351,7 @@ public class SearchFragment extends BaseFragment implements
         UpgradeDialog.getUpgradeDialog(getActivity()).show();
     }
 
-    void pushDetailFragment(BaseDetailFragment detailFragment, @Nullable View transitionView) {
+    void pushDetailFragment(Fragment fragment, @Nullable View transitionView) {
 
         List<Pair<View, String>> transitions = new ArrayList<>();
 
@@ -284,12 +361,12 @@ public class SearchFragment extends BaseFragment implements
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                 Transition moveTransition = TransitionInflater.from(getContext()).inflateTransition(R.transition.image_transition);
-                detailFragment.setSharedElementEnterTransition(moveTransition);
-                detailFragment.setSharedElementReturnTransition(moveTransition);
+                fragment.setSharedElementEnterTransition(moveTransition);
+                fragment.setSharedElementReturnTransition(moveTransition);
             }
         }
 
-        getNavigationController().pushViewController(detailFragment, "DetailFragment", transitions);
+        getNavigationController().pushViewController(fragment, "DetailFragment", transitions);
     }
 
     @Override
@@ -307,11 +384,11 @@ public class SearchFragment extends BaseFragment implements
             SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
             disposables.add(PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe());
 
-            contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(
+            contextualToolbar.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(
                     getContext(),
                     Single.defer(() -> Operators.reduceSongSingles(contextualToolbarHelper.getItems())),
-                    deleteDialog -> deleteDialog.show(getChildFragmentManager()),
-                    () -> contextualToolbarHelper.finish()));
+                    songMenuFragmentHelper.getSongMenuCallbacks()
+            ));
 
             contextualToolbarHelper = new ContextualToolbarHelper<Single<List<Song>>>(contextualToolbar, new ContextualToolbarHelper.Callback() {
 
@@ -340,7 +417,83 @@ public class SearchFragment extends BaseFragment implements
                     super.finish();
                 }
             };
-            searchPresenter.setContextualToolbarHelper(contextualToolbarHelper);
         }
     }
+
+    private SongView.ClickListener songViewClickListener = new SongView.ClickListener() {
+
+        @Override
+        public void onSongClick(int position, SongView songView) {
+            if (!contextualToolbarHelper.handleClick(position, songView, Single.just(Collections.singletonList(songView.song)))) {
+                searchPresenter.onSongClick(
+                        Stream.of(adapter.items)
+                                .filter(item -> item instanceof SongView)
+                                .map(item -> ((SongView) item).song).toList(),
+                        songView.song
+                );
+            }
+        }
+
+        @Override
+        public boolean onSongLongClick(int position, SongView songView) {
+            return contextualToolbarHelper.handleLongClick(position, songView, Single.just(Collections.singletonList(songView.song)));
+        }
+
+        @Override
+        public void onSongOverflowClick(int position, View v, Song song) {
+            PopupMenu menu = new PopupMenu(v.getContext(), v);
+            SongMenuUtils.setupSongMenu(menu, false);
+            menu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(v.getContext(), position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
+            menu.show();
+        }
+
+        @Override
+        public void onStartDrag(SongView.ViewHolder holder) {
+
+        }
+    };
+
+    private AlbumView.ClickListener albumViewClickListener = new AlbumView.ClickListener() {
+        @Override
+        public void onAlbumClick(int position, AlbumView albumView, AlbumView.ViewHolder viewHolder) {
+            if (!contextualToolbarHelper.handleClick(position, albumView, albumView.album.getSongsSingle())) {
+                searchPresenter.onAlbumClick(albumView, viewHolder);
+            }
+        }
+
+        @Override
+        public boolean onAlbumLongClick(int position, AlbumView albumView) {
+            return contextualToolbarHelper.handleLongClick(position, albumView, albumView.album.getSongsSingle());
+        }
+
+        @Override
+        public void onAlbumOverflowClicked(View v, Album album) {
+            PopupMenu menu = new PopupMenu(v.getContext(), v);
+            AlbumMenuUtils.setupAlbumMenu(menu);
+            menu.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(v.getContext(), album, albumMenuFragmentHelper.getCallbacks()));
+            menu.show();
+        }
+    };
+
+    private AlbumArtistView.ClickListener albumArtistClickListener = new AlbumArtistView.ClickListener() {
+        @Override
+        public void onAlbumArtistClick(int position, AlbumArtistView albumArtistView, AlbumArtistView.ViewHolder viewholder) {
+            if (!contextualToolbarHelper.handleClick(position, albumArtistView, albumArtistView.albumArtist.getSongsSingle())) {
+                searchPresenter.onArtistClicked(albumArtistView, viewholder);
+            }
+        }
+
+        @Override
+        public boolean onAlbumArtistLongClick(int position, AlbumArtistView albumArtistView) {
+            return contextualToolbarHelper.handleLongClick(position, albumArtistView, albumArtistView.albumArtist.getSongsSingle());
+        }
+
+        @Override
+        public void onAlbumArtistOverflowClicked(View v, AlbumArtist albumArtist) {
+            PopupMenu menu = new PopupMenu(v.getContext(), v);
+            menu.inflate(R.menu.menu_artist);
+            menu.setOnMenuItemClickListener(AlbumArtistMenuUtils.getAlbumArtistClickListener(v.getContext(), albumArtist, albumArtistMenuFragmentHelper.getCallbacks()));
+            menu.show();
+        }
+    };
 }

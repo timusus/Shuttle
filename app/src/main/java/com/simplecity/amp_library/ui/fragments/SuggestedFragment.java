@@ -3,6 +3,7 @@ package com.simplecity.amp_library.ui.fragments;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -24,8 +25,7 @@ import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.model.SuggestedHeader;
 import com.simplecity.amp_library.ui.adapters.ViewType;
-import com.simplecity.amp_library.ui.detail.PlaylistDetailFragment;
-import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
+import com.simplecity.amp_library.ui.detail.playlist.PlaylistDetailFragment;
 import com.simplecity.amp_library.ui.modelviews.AlbumView;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.HorizontalRecyclerView;
@@ -35,11 +35,14 @@ import com.simplecity.amp_library.ui.views.SuggestedDividerDecoration;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.Operators;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
+import com.simplecity.amp_library.utils.menu.album.AlbumMenuFragmentHelper;
+import com.simplecity.amp_library.utils.menu.album.AlbumMenuUtils;
+import com.simplecity.amp_library.utils.menu.song.SongMenuFragmentHelper;
+import com.simplecity.amp_library.utils.menu.song.SongMenuUtils;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
@@ -59,6 +62,11 @@ import io.reactivex.disposables.Disposable;
 public class SuggestedFragment extends BaseFragment implements
         SuggestedHeaderView.ClickListener,
         AlbumView.ClickListener {
+
+    private CompositeDisposable disposables = new CompositeDisposable();
+
+    private SongMenuFragmentHelper songMenuFragmentHelper = new SongMenuFragmentHelper(this, disposables, null);
+    private AlbumMenuFragmentHelper albumMenuFragmentHelper = new AlbumMenuFragmentHelper(this, disposables);
 
     public interface SuggestedClickListener {
 
@@ -81,28 +89,10 @@ public class SuggestedFragment extends BaseFragment implements
         }
 
         @Override
-        public boolean onSongLongClick(Song song) {
-            return false;
-        }
-
-        @Override
-        public void onSongOverflowClicked(View v, Song song) {
+        public void onSongOverflowClicked(View v, int position, Song song) {
             PopupMenu popupMenu = new PopupMenu(getContext(), v);
-            MenuUtils.setupSongMenu(popupMenu, false);
-            popupMenu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(
-                    getContext(),
-                    song,
-                    taggerDialog -> {
-                        if (!ShuttleUtils.isUpgraded()) {
-                            UpgradeDialog.getUpgradeDialog(getActivity()).show();
-                        } else {
-                            taggerDialog.show(getChildFragmentManager());
-                        }
-                    },
-                    deleteDialog -> deleteDialog.show(getChildFragmentManager()),
-                    null,
-                    null,
-                    null));
+            SongMenuUtils.setupSongMenu(popupMenu, false);
+            popupMenu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
             popupMenu.show();
         }
     }
@@ -170,7 +160,7 @@ public class SuggestedFragment extends BaseFragment implements
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         if (recyclerView == null) {
             recyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_suggested, container, false);
@@ -208,6 +198,18 @@ public class SuggestedFragment extends BaseFragment implements
         }
 
         return recyclerView;
+    }
+
+    @Override
+    public void onPause() {
+
+        disposables.clear();
+
+        if (refreshDisposables != null) {
+            refreshDisposables.clear();
+        }
+
+        super.onPause();
     }
 
     @Override
@@ -396,16 +398,6 @@ public class SuggestedFragment extends BaseFragment implements
     }
 
     @Override
-    public void onPause() {
-
-        if (refreshDisposables != null) {
-            refreshDisposables.clear();
-        }
-
-        super.onPause();
-    }
-
-    @Override
     public void onAlbumClick(int position, AlbumView albumView, AlbumView.ViewHolder viewHolder) {
         if (suggestedClickListener != null) {
             suggestedClickListener.onAlbumClicked(albumView.album, viewHolder.imageOne);
@@ -420,13 +412,8 @@ public class SuggestedFragment extends BaseFragment implements
     @Override
     public void onAlbumOverflowClicked(View v, Album album) {
         PopupMenu menu = new PopupMenu(getContext(), v);
-        MenuUtils.setupAlbumMenu(menu);
-        menu.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(getContext(), album,
-                taggerDialog -> taggerDialog.show(getChildFragmentManager()),
-                deleteDialog -> deleteDialog.show(getChildFragmentManager()),
-                () -> UpgradeDialog.getUpgradeDialog(getActivity()).show(),
-                null
-                ));
+        AlbumMenuUtils.setupAlbumMenu(menu);
+        menu.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(getContext(), album, albumMenuFragmentHelper.getCallbacks()));
         menu.show();
     }
 

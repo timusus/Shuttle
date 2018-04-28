@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
@@ -35,11 +36,10 @@ import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.search.SearchFragment;
 import com.simplecity.amp_library.ui.activities.ToolbarListener;
 import com.simplecity.amp_library.ui.adapters.PagerAdapter;
-import com.simplecity.amp_library.ui.detail.AlbumDetailFragment;
-import com.simplecity.amp_library.ui.detail.ArtistDetailFragment;
-import com.simplecity.amp_library.ui.detail.BaseDetailFragment;
-import com.simplecity.amp_library.ui.detail.GenreDetailFragment;
-import com.simplecity.amp_library.ui.detail.PlaylistDetailFragment;
+import com.simplecity.amp_library.ui.detail.album.AlbumDetailFragment;
+import com.simplecity.amp_library.ui.detail.artist.ArtistDetailFragment;
+import com.simplecity.amp_library.ui.detail.genre.GenreDetailFragment;
+import com.simplecity.amp_library.ui.detail.playlist.PlaylistDetailFragment;
 import com.simplecity.amp_library.ui.drawer.NavigationEventRelay;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.ui.views.ContextualToolbarHost;
@@ -270,7 +270,7 @@ public class LibraryController extends BaseFragment implements
         pushDetailFragment(PlaylistDetailFragment.newInstance(playlist), null);
     }
 
-    void pushDetailFragment(BaseDetailFragment detailFragment, @Nullable View transitionView) {
+    void pushDetailFragment(Fragment fragment, @Nullable View transitionView) {
 
         List<Pair<View, String>> transitions = new ArrayList<>();
 
@@ -281,12 +281,12 @@ public class LibraryController extends BaseFragment implements
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                 Transition moveTransition = TransitionInflater.from(getContext()).inflateTransition(R.transition.image_transition);
-                detailFragment.setSharedElementEnterTransition(moveTransition);
-                detailFragment.setSharedElementReturnTransition(moveTransition);
+                fragment.setSharedElementEnterTransition(moveTransition);
+                fragment.setSharedElementReturnTransition(moveTransition);
             }
         }
 
-        getNavigationController().pushViewController(detailFragment, "DetailFragment", transitions);
+        getNavigationController().pushViewController(fragment, "DetailFragment", transitions);
     }
 
     @Override

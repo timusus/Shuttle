@@ -1,7 +1,6 @@
 package com.simplecity.amp_library.model;
 
 import android.content.ContentUris;
-import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -166,11 +165,12 @@ public class Playlist implements Serializable {
                 .firstOrError();
     }
 
-    public void delete(Context context) {
+    public boolean delete() {
         Uri uri = ContentUris.withAppendedId(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, id);
         if (uri != null) {
-            context.getContentResolver().delete(uri, null, null);
+            return ShuttleApplication.getInstance().getContentResolver().delete(uri, null, null) > 0;
         }
+        return false;
     }
 
     public void removeSong(@NonNull Song song, @Nullable UnsafeConsumer<Boolean> success) {

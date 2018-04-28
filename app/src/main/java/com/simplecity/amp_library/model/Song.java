@@ -2,13 +2,11 @@ package com.simplecity.amp_library.model;
 
 import android.content.ContentUris;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 
 import com.simplecity.amp_library.R;
@@ -22,7 +20,6 @@ import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
 import com.simplecity.amp_library.utils.ArtworkUtils;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.FileHelper;
-import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.StringUtils;
 
 import java.io.File;
@@ -317,17 +314,6 @@ public class Song implements
                 .build();
     }
 
-    public void share(Context context) {
-        try {
-            final Intent intent = new Intent(Intent.ACTION_SEND).setType("audio/*");
-            Uri uri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", new File(path));
-            intent.putExtra(Intent.EXTRA_STREAM, uri);
-            context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_via)));
-        } catch (IllegalArgumentException e) {
-            LogUtils.logException(TAG, "Failed to share track", e);
-        }
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -415,17 +401,4 @@ public class Song implements
         return ComparisonUtils.compare(getSortKey(), song.getSortKey());
     }
 
-    public boolean delete() {
-
-        if (path == null) return false;
-
-        boolean success = false;
-
-        File file = new File(path);
-        if (file.exists()) {
-            success = file.delete();
-        }
-
-        return success;
-    }
 }

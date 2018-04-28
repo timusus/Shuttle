@@ -13,6 +13,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.utils.extensions.SongExtKt;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -38,16 +39,12 @@ public class ShareDialog {
                             shareSongInfo(context, song);
                             break;
                         case 1:
-                            shareSong(context, song);
+                            SongExtKt.share(song, context);
                             break;
                     }
                 })
                 .negativeText(R.string.close)
                 .build();
-    }
-
-    static void shareSong(Context context, Song song) {
-        song.share(context);
     }
 
     static void shareSongInfo(Context context, Song song) {

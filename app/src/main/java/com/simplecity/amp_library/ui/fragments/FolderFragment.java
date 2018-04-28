@@ -29,7 +29,8 @@ import com.simplecity.amp_library.interfaces.FileType;
 import com.simplecity.amp_library.model.BaseFileObject;
 import com.simplecity.amp_library.model.InclExclItem;
 import com.simplecity.amp_library.model.Song;
-import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
+import com.simplecity.amp_library.tagger.TaggerDialog;
+import com.simplecity.amp_library.ui.dialog.BiographyDialog;
 import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
 import com.simplecity.amp_library.ui.modelviews.BreadcrumbsView;
 import com.simplecity.amp_library.ui.modelviews.FolderView;
@@ -42,11 +43,12 @@ import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.FileBrowser;
 import com.simplecity.amp_library.utils.FileHelper;
 import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.SortManager;
+import com.simplecity.amp_library.utils.extensions.SongExtKt;
+import com.simplecity.amp_library.utils.menu.folder.FolderMenuUtils;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
@@ -193,12 +195,6 @@ public class FolderFragment extends BaseFragment implements
         recyclerView.setRecyclerListener(new RecyclerListener());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
-
-        Aesthetic.get(getContext())
-                .colorPrimary()
-                .take(1)
-                .subscribe(color -> ViewBackgroundAction.create(appBarLayout)
-                        .accept(color), onErrorLogAndRethrow());
 
         compositeDisposable.add(Aesthetic.get(getContext())
                 .colorPrimary()
@@ -451,24 +447,8 @@ public class FolderFragment extends BaseFragment implements
     @Override
     public void onFileObjectOverflowClick(View v, FolderView folderView) {
         PopupMenu menu = new PopupMenu(getActivity(), v);
-        MenuUtils.setupFolderMenu(menu, folderView.baseFileObject);
-        menu.setOnMenuItemClickListener(MenuUtils.getFolderMenuClickListener(
-                getContext(),
-                folderView.baseFileObject, taggerDialog -> {
-                    if (!ShuttleUtils.isUpgraded()) {
-                        UpgradeDialog.getUpgradeDialog(getActivity()).show();
-                    } else {
-                        taggerDialog.show(getFragmentManager());
-                    }
-                }, null,
-                () -> IntStream.range(0, adapter.getItemCount())
-                        .filter(i -> adapter.items.get(i) == folderView)
-                        .findFirst()
-                        .ifPresent(i -> adapter.notifyItemChanged(i)),
-                () -> IntStream.range(0, adapter.getItemCount())
-                        .filter(i -> adapter.items.get(i) == folderView)
-                        .findFirst()
-                        .ifPresent(i -> adapter.notifyItemRemoved(i))));
+        FolderMenuUtils.setupFolderMenu(menu, folderView.baseFileObject);
+        menu.setOnMenuItemClickListener(FolderMenuUtils.getFolderMenuClickListener(getContext(), folderView, callbacks));
         menu.show();
     }
 
@@ -641,4 +621,67 @@ public class FolderFragment extends BaseFragment implements
         }
         return false;
     }
+
+    FolderMenuUtils.Callbacks callbacks = new FolderMenuUtils.Callbacks() {
+        @Override
+        public void showToast(String message) {
+            Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void showToast(int messageResId) {
+            Toast.makeText(getContext(), messageResId, Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void shareSong(Song song) {
+            SongExtKt.share(song, getContext());
+        }
+
+        @Override
+        public void setRingtone(Song song) {
+            ShuttleUtils.setRingtone(getContext(), song);
+        }
+
+        @Override
+        public void showBiographyDialog(Song song) {
+            BiographyDialog.getSongInfoDialog(getContext(), song).show();
+        }
+
+        @Override
+        public void onPlaylistItemsInserted() {
+
+        }
+
+        @Override
+        public void onQueueItemsInserted(String message) {
+
+        }
+
+        @Override
+        public void showTagEditor(Song song) {
+            TaggerDialog.newInstance(song).show(getChildFragmentManager());
+        }
+
+        @Override
+        public void onFileNameChanged(FolderView folderView) {
+            IntStream.range(0, adapter.getItemCount())
+                    .filter(i -> adapter.items.get(i) == folderView)
+                    .findFirst()
+                    .ifPresent(i -> adapter.notifyItemChanged(i));
+        }
+
+        @Override
+        public void onFileDeleted(FolderView folderView) {
+            IntStream.range(0, adapter.getItemCount())
+                    .filter(i -> adapter.items.get(i) == folderView)
+                    .findFirst()
+                    .ifPresent(i -> adapter.notifyItemRemoved(i));
+        }
+
+        @Override
+        public void playNext(Single<List<Song>> songsSingle) {
+            MusicUtils.playNext(songsSingle, message -> Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show());
+        }
+    };
 }

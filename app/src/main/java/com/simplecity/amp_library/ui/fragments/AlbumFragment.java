@@ -3,6 +3,7 @@ package com.simplecity.amp_library.ui.fragments;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -25,7 +26,6 @@ import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.playback.QueueManager;
 import com.simplecity.amp_library.ui.adapters.SectionedAdapter;
 import com.simplecity.amp_library.ui.adapters.ViewType;
-import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.ui.modelviews.AlbumView;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
@@ -35,13 +35,14 @@ import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.Operators;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.SortManager;
+import com.simplecity.amp_library.utils.menu.album.AlbumMenuFragmentHelper;
+import com.simplecity.amp_library.utils.menu.album.AlbumMenuUtils;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import com.simplecityapps.recycler_adapter.recyclerview.SpanSizeLookup;
@@ -53,11 +54,12 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
 public class AlbumFragment extends BaseFragment implements
-        MusicUtils.Defs,
         AlbumView.ClickListener,
         ShuffleView.ShuffleClickListener {
 
@@ -98,6 +100,10 @@ public class AlbumFragment extends BaseFragment implements
     @Nullable
     private Disposable playlistMenuDisposable;
 
+    private CompositeDisposable menuDisposables = new CompositeDisposable();
+
+    private AlbumMenuFragmentHelper albumMenuFragmentHelper = new AlbumMenuFragmentHelper(this, menuDisposables);
+
     public AlbumFragment() {
 
     }
@@ -135,8 +141,7 @@ public class AlbumFragment extends BaseFragment implements
 
     @SuppressLint("NewApi")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (recyclerView == null) {
             int spanCount = SettingsManager.getInstance().getAlbumColumnCount(getResources());
             layoutManager = new GridLayoutManager(getContext(), spanCount);
@@ -170,6 +175,8 @@ public class AlbumFragment extends BaseFragment implements
         if (playlistMenuDisposable != null) {
             playlistMenuDisposable.dispose();
         }
+
+        menuDisposables.clear();
 
         super.onPause();
     }
@@ -412,19 +419,12 @@ public class AlbumFragment extends BaseFragment implements
     }
 
     @Override
-    public void onAlbumOverflowClicked(View v, Album album) {
-        PopupMenu menu = new PopupMenu(getContext(), v);
+    public void onAlbumOverflowClicked(View view, Album album) {
+        PopupMenu menu = new PopupMenu(getContext(), view);
         menu.inflate(R.menu.menu_album);
         SubMenu sub = menu.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
         PlaylistUtils.createPlaylistMenu(sub);
-        menu.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(
-                getContext(),
-                album,
-                taggerDialog -> taggerDialog.show(getChildFragmentManager()),
-                deleteDialog -> deleteDialog.show(getChildFragmentManager()),
-                () -> UpgradeDialog.getUpgradeDialog(getActivity()).show(),
-                null
-                ));
+        menu.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(getContext(), album, albumMenuFragmentHelper.getCallbacks()));
         menu.show();
     }
 
@@ -461,11 +461,8 @@ public class AlbumFragment extends BaseFragment implements
                 playlistMenuDisposable.dispose();
             }
             playlistMenuDisposable = PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe();
-            contextualToolbar.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(
-                    getContext(), () -> contextualToolbarHelper.getItems(),
-                    deleteDialog -> deleteDialog.show(getChildFragmentManager()),
-                    () -> contextualToolbarHelper.finish())
-            );
+
+            contextualToolbar.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(getContext(), Single.defer(() -> Single.just(contextualToolbarHelper.getItems())), albumMenuFragmentHelper.getCallbacks()));
 
             contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
 
@@ -481,6 +478,7 @@ public class AlbumFragment extends BaseFragment implements
             });
         }
     }
+
 
     @Override
     protected String screenName() {

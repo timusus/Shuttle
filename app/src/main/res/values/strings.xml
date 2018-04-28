@@ -169,6 +169,10 @@
     <!-- Checkbox text 'always add duplicates' -->
     <string name="dialog_checkbox_playlist_duplicate_always_add">Always add duplicates</string>
 
+    <string name="dialog_title_playlist_delete">Delete playlist?</string>
+    <string name="dialog_message_playlist_delete"><xliff:g id="playlist">%s</xliff:g> will be permanently deleted</string>
+    <string name="dialog_button_delete">Delete</string>
+
     <!-- ## Widgets ## -->
     <!-- Checkbox text to invert colors of buttons & text -->
     <string name="widget_background_color">Background</string>

@@ -28,6 +28,7 @@ import com.simplecity.amp_library.utils.CustomMediaScanner;
 import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
+import com.simplecity.amp_library.utils.extensions.SongExtKt;
 
 import java.io.File;
 import java.io.Serializable;
@@ -289,7 +290,7 @@ public class DeleteDialog extends DialogFragment implements SafManager.SafDialog
             }
 
             if (!songsForNormalDeletion.isEmpty()) {
-                deletedSongs += Stream.of(songsForNormalDeletion).filter(Song::delete).count();
+                deletedSongs += Stream.of(songsForNormalDeletion).filter(SongExtKt::delete).count();
                 tidyUp(songsForNormalDeletion);
                 songsForNormalDeletion.clear();
             }

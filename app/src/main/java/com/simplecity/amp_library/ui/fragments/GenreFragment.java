@@ -2,6 +2,7 @@ package com.simplecity.amp_library.ui.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -18,8 +19,9 @@ import com.simplecity.amp_library.ui.modelviews.GenreView;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
+import com.simplecity.amp_library.utils.menu.genre.GenreMenuFragmentHelper;
+import com.simplecity.amp_library.utils.menu.genre.GenreMenuUtils;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
@@ -28,10 +30,10 @@ import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
-public class GenreFragment extends BaseFragment implements
-        GenreView.ClickListener {
+public class GenreFragment extends BaseFragment implements GenreView.ClickListener {
 
     private static final String TAG = "GenreFragment";
 
@@ -49,7 +51,11 @@ public class GenreFragment extends BaseFragment implements
 
     private SectionedAdapter adapter;
 
-    private Disposable disposable;
+    private Disposable refreshDisposable;
+
+    private CompositeDisposable disposables = new CompositeDisposable();
+
+    private GenreMenuFragmentHelper genreMenuFragmentHelper = new GenreMenuFragmentHelper(this, disposables);
 
     public GenreFragment() {
 
@@ -80,7 +86,7 @@ public class GenreFragment extends BaseFragment implements
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (recyclerView == null) {
             recyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -96,9 +102,11 @@ public class GenreFragment extends BaseFragment implements
     @Override
     public void onPause() {
 
-        if (disposable != null) {
-            disposable.dispose();
+        if (refreshDisposable != null) {
+            refreshDisposable.dispose();
         }
+
+        disposables.clear();
 
         super.onPause();
     }
@@ -113,7 +121,7 @@ public class GenreFragment extends BaseFragment implements
     private void refreshAdapterItems(boolean force) {
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {
-                disposable = DataManager.getInstance().getGenresRelay()
+                refreshDisposable = DataManager.getInstance().getGenresRelay()
                         .skipWhile(genres -> !force && adapter.items.size() == genres.size())
                         .debounce(150, TimeUnit.MILLISECONDS)
                         .map(genres -> Stream.of(genres)
@@ -147,7 +155,7 @@ public class GenreFragment extends BaseFragment implements
     public void onOverflowClick(View v, Genre genre) {
         PopupMenu popupMenu = new PopupMenu(getContext(), v);
         popupMenu.inflate(R.menu.menu_genre);
-        popupMenu.setOnMenuItemClickListener(MenuUtils.getGenreClickListener(getContext(), genre, null));
+        popupMenu.setOnMenuItemClickListener(GenreMenuUtils.getGenreClickListener(getContext(), genre, genreMenuFragmentHelper.getCallbacks()));
         popupMenu.show();
     }
 

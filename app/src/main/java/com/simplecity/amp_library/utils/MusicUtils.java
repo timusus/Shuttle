@@ -3,6 +3,7 @@ package com.simplecity.amp_library.utils;
 import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Album;
@@ -11,12 +12,13 @@ import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.QueueManager;
 import com.simplecity.amp_library.rx.UnsafeConsumer;
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class MusicUtils {
 
@@ -64,7 +66,7 @@ public class MusicUtils {
     }
 
     /**
-     * Shuffles all songs in a given song list
+     * Shuffles all songs in the given song list
      */
     @SuppressLint("CheckResult")
     public static void shuffleAll(Single<List<Song>> songsSingle, UnsafeConsumer<String> onEmpty) {
@@ -73,11 +75,18 @@ public class MusicUtils {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         songs -> {
-                            if (!songs.isEmpty()) {
-                                playAll(songs, new Random().nextInt(songs.size()), false, onEmpty);
-                            }
+                            shuffleAll(songs, onEmpty);
                         },
                         e -> LogUtils.logException(TAG, "Shuffle all error", e));
+    }
+
+    /**
+     * Shuffles all songs in the given list
+     */
+    public static void shuffleAll(List<Song> songs, UnsafeConsumer<String> onEmpty) {
+        if (!songs.isEmpty()) {
+            playAll(songs, new Random().nextInt(songs.size()), false, onEmpty);
+        }
     }
 
     /**

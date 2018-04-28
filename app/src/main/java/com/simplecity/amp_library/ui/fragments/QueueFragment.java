@@ -4,10 +4,10 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.Util;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.annimon.stream.Stream;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
@@ -37,12 +38,13 @@ import com.simplecity.amp_library.ui.views.ThemedStatusBarView;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetSlideEventRelay;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper.Callback;
-import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.ResourceUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
+import com.simplecity.amp_library.utils.menu.song.SongMenuFragmentHelper;
+import com.simplecity.amp_library.utils.menu.song.SongMenuUtils;
 import com.simplecity.multisheetview.ui.view.MultiSheetView;
 import com.simplecityapps.recycler_adapter.adapter.CompletionListUpdateCallbackAdapter;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
@@ -66,6 +68,8 @@ public class QueueFragment extends BaseFragment implements QueueView {
     private static final String TAG = "QueueFragment";
 
     private final CompositeDisposable disposables = new CompositeDisposable();
+
+    private SongMenuFragmentHelper songMenuFragmentHelper;
 
     @BindView(R.id.statusBarView)
     ThemedStatusBarView statusBarView;
@@ -94,7 +98,7 @@ public class QueueFragment extends BaseFragment implements QueueView {
     @Inject
     PlayerPresenter playerPresenter;
 
-    QueuePresenter queuePresenter;
+    QueuePresenter queuePresenter = new QueuePresenter();
 
     ItemTouchHelper itemTouchHelper;
 
@@ -116,10 +120,15 @@ public class QueueFragment extends BaseFragment implements QueueView {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         ShuttleApplication.getInstance().getAppComponent()
                 .plus(new FragmentModule(this))
                 .inject(this);
+
         setHasOptionsMenu(true);
+
+        songMenuFragmentHelper = new SongMenuFragmentHelper(this, disposables, songMenuCallbacks);
+
         adapter = new ViewModelAdapter();
     }
 
@@ -172,7 +181,6 @@ public class QueueFragment extends BaseFragment implements QueueView {
         }
 
         setupContextualToolbar();
-        queuePresenter = new QueuePresenter(requestManager, cabHelper);
         return rootView;
     }
 
@@ -205,15 +213,9 @@ public class QueueFragment extends BaseFragment implements QueueView {
         cabToolbar.getMenu().clear();
         cabToolbar.inflateMenu(R.menu.context_menu_queue);
 
-        final SubMenu sub = cabToolbar.getMenu().findItem(R.id.queue_add_to_playlist).getSubMenu();
+        SubMenu sub = cabToolbar.getMenu().findItem(R.id.queue_add_to_playlist).getSubMenu();
         disposables.add(PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe());
-        cabToolbar.setOnMenuItemClickListener(MenuUtils.getQueueMenuClickListener(getContext(),
-                Single.fromCallable(() -> cabHelper.getItems()),
-                deleteDialog -> deleteDialog.show(getChildFragmentManager()), () -> {
-                    queuePresenter.removeFromQueue(cabHelper.getItems());
-                    cabHelper.finish();
-                },
-                () -> cabHelper.finish()));
+        cabToolbar.setOnMenuItemClickListener(SongMenuUtils.getQueueMenuClickListener(getContext(), Single.fromCallable(() -> cabHelper.getItems()), songMenuFragmentHelper.getSongMenuCallbacks()));
 
         cabHelper = new ContextualToolbarHelper<>(cabToolbar, new Callback() {
             @Override
@@ -234,13 +236,32 @@ public class QueueFragment extends BaseFragment implements QueueView {
     }
 
     @Override
-    public void loadData(List<ViewModel> items, int position) {
+    public void setData(List<Song> songs, int position) {
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {
                 if (loadDataDisposable != null) {
                     loadDataDisposable.dispose();
                 }
-                loadDataDisposable = adapter.setItems(items, new CompletionListUpdateCallbackAdapter() {
+
+                List<ViewModel> songViews = Stream.of(songs).map(song -> {
+                    SongView songView = new SongView(song, requestManager) {
+                        @Override
+                        public boolean equals(Object o) {
+                            // It's possible to have multiple SongViews with the same (duplicate) songs in the queue.
+                            // When that occurs, there's not currently a way to tell the two SongViews apart - which
+                            // can result in an adapter inconsistency. This fix just ensures no two SongViews in the queue
+                            // are considered to be the same. We lose some RV optimisations here, but at least we don't crash.
+                            return false;
+                        }
+                    };
+                    songView.setClickListener(songClickListener);
+                    songView.showAlbumArt(true);
+                    songView.setEditable(true);
+
+                    return (ViewModel) songView;
+                }).toList();
+
+                loadDataDisposable = adapter.setItems(songViews, new CompletionListUpdateCallbackAdapter() {
                     @Override
                     public void onComplete() {
                         updateQueuePosition(position, false);
@@ -253,16 +274,37 @@ public class QueueFragment extends BaseFragment implements QueueView {
         });
     }
 
+    private SongView.ClickListener songClickListener = new SongView.ClickListener() {
+        @Override
+        public void onSongClick(int position, SongView songView) {
+            if (!cabHelper.handleClick(position, songView, songView.song)) {
+                queuePresenter.onSongClick(position);
+            }
+        }
+
+        @Override
+        public boolean onSongLongClick(int position, SongView songView) {
+            return cabHelper.handleLongClick(position, songView, songView.song);
+        }
+
+        @Override
+        public void onSongOverflowClick(int position, View v, Song song) {
+            PopupMenu menu = new PopupMenu(v.getContext(), v);
+            SongMenuUtils.setupSongMenu(menu, true);
+            menu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(v.getContext(), position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
+            menu.show();
+        }
+
+        @Override
+        public void onStartDrag(SongView.ViewHolder holder) {
+            itemTouchHelper.startDrag(holder);
+        }
+    };
+
     @Override
     public void showToast(String message, int duration) {
         Toast.makeText(getContext(), message, duration).show();
     }
-
-    @Override
-    public void startDrag(SongView.ViewHolder holder) {
-        itemTouchHelper.startDrag(holder);
-    }
-
 
     @Override
     public void updateQueuePosition(int position, boolean fromUser) {
@@ -302,18 +344,8 @@ public class QueueFragment extends BaseFragment implements QueueView {
     }
 
     @Override
-    public void removeFromQueue(int position) {
+    public void onRemovedFromQueue(int position) {
         adapter.removeItem(position);
-    }
-
-    @Override
-    public void removeFromQueue(List<Song> songs) {
-        adapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void moveQueueItem(int from, int to) {
-        adapter.moveItem(from, to);
     }
 
     @Override
@@ -338,22 +370,27 @@ public class QueueFragment extends BaseFragment implements QueueView {
         }
     };
 
-    Toolbar.OnMenuItemClickListener toolbarListener = new Toolbar.OnMenuItemClickListener() {
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.menu_clear:
-                    queuePresenter.clearQueue();
-                    return true;
-                case MusicUtils.Defs.NEW_PLAYLIST:
-                    queuePresenter.saveQueue(getContext());
-                    return true;
-                case MusicUtils.Defs.PLAYLIST_SELECTED:
-                    queuePresenter.saveQueue(getContext(), item);
-                    return true;
-            }
-            return false;
+    Toolbar.OnMenuItemClickListener toolbarListener = item -> {
+        switch (item.getItemId()) {
+            case R.id.menu_clear:
+                queuePresenter.clearQueue();
+                return true;
+            case MusicUtils.Defs.NEW_PLAYLIST:
+                queuePresenter.saveQueue(getContext());
+                return true;
+            case MusicUtils.Defs.PLAYLIST_SELECTED:
+                queuePresenter.saveQueue(getContext(), item);
+                return true;
         }
+        return false;
     };
 
+    private final SongMenuUtils.CallbacksAdapter songMenuCallbacks = new SongMenuUtils.CallbacksAdapter() {
+        @Override
+        public void onSongRemoved(int position, Song song) {
+            super.onSongRemoved(position, song);
+
+            queuePresenter.removeFromQueue(position);
+        }
+    };
 }

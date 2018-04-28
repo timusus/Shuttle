@@ -1,6 +1,7 @@
 package com.simplecity.amp_library.ui.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -17,7 +18,6 @@ import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.ui.adapters.SectionedAdapter;
-import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
 import com.simplecity.amp_library.ui.modelviews.ShuffleView;
@@ -26,12 +26,12 @@ import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MenuUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
-import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.SortManager;
+import com.simplecity.amp_library.utils.menu.song.SongMenuFragmentHelper;
+import com.simplecity.amp_library.utils.menu.song.SongMenuUtils;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
@@ -43,10 +43,10 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
 public class SongFragment extends BaseFragment implements
-        MusicUtils.Defs,
         SongView.ClickListener,
         ShuffleView.ShuffleClickListener {
 
@@ -65,10 +65,14 @@ public class SongFragment extends BaseFragment implements
     private ContextualToolbarHelper<Song> contextualToolbarHelper;
 
     @Nullable
-    private Disposable disposable;
+    private Disposable refreshDisposable;
 
     @Nullable
     private Disposable playlistMenuDisposable;
+
+    private CompositeDisposable menuDisposables = new CompositeDisposable();
+
+    private SongMenuFragmentHelper songMenuFragmentHelper = new SongMenuFragmentHelper(this, menuDisposables, null);
 
     public SongFragment() {
 
@@ -95,7 +99,7 @@ public class SongFragment extends BaseFragment implements
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (recyclerView == null) {
             recyclerView = (FastScrollRecyclerView) inflater.inflate(R.layout.fragment_recycler, container, false);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -124,7 +128,7 @@ public class SongFragment extends BaseFragment implements
 
                         boolean ascending = SortManager.getInstance().getSongsAscending();
 
-                        disposable = DataManager.getInstance().getSongsRelay()
+                        refreshDisposable = DataManager.getInstance().getSongsRelay()
                                 .skipWhile(songs -> !force && Stream.of(adapter.items).filter(viewModel -> viewModel instanceof SongView).count() == songs.size())
                                 .debounce(150, TimeUnit.MILLISECONDS)
                                 .flatMapSingle(songs -> {
@@ -176,13 +180,15 @@ public class SongFragment extends BaseFragment implements
     @Override
     public void onPause() {
 
-        if (disposable != null) {
-            disposable.dispose();
+        if (refreshDisposable != null) {
+            refreshDisposable.dispose();
         }
 
         if (playlistMenuDisposable != null) {
             playlistMenuDisposable.dispose();
         }
+
+        menuDisposables.clear();
 
         super.onPause();
     }
@@ -294,23 +300,10 @@ public class SongFragment extends BaseFragment implements
     }
 
     @Override
-    public void onSongOverflowClick(int position, View v, Song song) {
-        PopupMenu menu = new PopupMenu(SongFragment.this.getActivity(), v);
-        MenuUtils.setupSongMenu(menu, false);
-        menu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(
-                getContext(),
-                song,
-                taggerDialog -> {
-                    if (!ShuttleUtils.isUpgraded()) {
-                        UpgradeDialog.getUpgradeDialog(getActivity()).show();
-                    } else {
-                        taggerDialog.show(getChildFragmentManager());
-                    }
-                },
-                deleteDialog -> deleteDialog.show(getChildFragmentManager()),
-                null,
-                null,
-                null));
+    public void onSongOverflowClick(int position, View view, Song song) {
+        PopupMenu menu = new PopupMenu(getContext(), view);
+        SongMenuUtils.setupSongMenu(menu, false);
+        menu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
         menu.show();
     }
 
@@ -365,11 +358,7 @@ public class SongFragment extends BaseFragment implements
                 }
             });
 
-
-            contextualToolbar.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(getContext(),
-                    Single.fromCallable(() -> contextualToolbarHelper.getItems()),
-                    deleteDialog -> deleteDialog.show(getChildFragmentManager()),
-                    () -> contextualToolbarHelper.finish()));
+            contextualToolbar.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), Single.defer(() -> Single.just(contextualToolbarHelper.getItems())), songMenuFragmentHelper.getSongMenuCallbacks()));
         }
     }
 
