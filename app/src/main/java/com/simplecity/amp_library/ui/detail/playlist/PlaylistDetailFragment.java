@@ -9,9 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CustomCollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.SharedElementCallback;
-import android.support.v4.util.Pair;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -19,7 +17,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.transition.Transition;
-import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -45,11 +42,9 @@ import com.simplecity.amp_library.model.ArtworkProvider;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.ui.detail.DetailSortHelper;
-import com.simplecity.amp_library.ui.detail.album.AlbumDetailFragment;
 import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
 import com.simplecity.amp_library.ui.fragments.BaseFragment;
 import com.simplecity.amp_library.ui.fragments.TransitionListenerAdapter;
-import com.simplecity.amp_library.ui.modelviews.AlbumView;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
 import com.simplecity.amp_library.ui.modelviews.SongView;
@@ -68,7 +63,6 @@ import com.simplecity.amp_library.utils.SortManager;
 import com.simplecity.amp_library.utils.StringUtils;
 import com.simplecity.amp_library.utils.TypefaceManager;
 import com.simplecity.amp_library.utils.menu.album.AlbumMenuFragmentHelper;
-import com.simplecity.amp_library.utils.menu.album.AlbumMenuUtils;
 import com.simplecity.amp_library.utils.menu.playlist.PlaylistMenuFragmentHelper;
 import com.simplecity.amp_library.utils.menu.playlist.PlaylistMenuUtils;
 import com.simplecity.amp_library.utils.menu.song.SongMenuFragmentHelper;
@@ -547,7 +541,6 @@ public class PlaylistDetailFragment extends BaseFragment implements
         }
     };
 
-
     ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(
             (fromPosition, toPosition) -> adapter.moveItem(fromPosition, toPosition),
             (fromPosition, toPosition) -> {
@@ -586,7 +579,6 @@ public class PlaylistDetailFragment extends BaseFragment implements
         }
     });
 
-
     @Override
     protected String screenName() {
         return "PlaylistDetailFragment";
@@ -619,48 +611,6 @@ public class PlaylistDetailFragment extends BaseFragment implements
             itemTouchHelper.startDrag(holder);
         }
     };
-
-    public AlbumView.ClickListener albumClickListener = new AlbumView.ClickListener() {
-
-        @Override
-        public void onAlbumClick(int position, AlbumView albumView, AlbumView.ViewHolder viewHolder) {
-            if (!contextualToolbarHelper.handleClick(position, albumView, albumView.album.getSongsSingle())) {
-                pushDetailFragment((AlbumDetailFragment.newInstance(albumView.album, ViewCompat.getTransitionName(viewHolder.imageOne))), viewHolder.imageOne);
-            }
-        }
-
-        @Override
-        public boolean onAlbumLongClick(int position, AlbumView albumView) {
-            return contextualToolbarHelper.handleLongClick(position, albumView, albumView.album.getSongsSingle());
-        }
-
-        @Override
-        public void onAlbumOverflowClicked(View v, Album album) {
-            PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
-            AlbumMenuUtils.setupAlbumMenu(popupMenu);
-            popupMenu.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(v.getContext(), album, albumMenuFragmentHelper.getCallbacks()));
-            popupMenu.show();
-        }
-    };
-
-    void pushDetailFragment(Fragment fragment, @Nullable View transitionView) {
-
-        List<Pair<View, String>> transitions = new ArrayList<>();
-
-        if (transitionView != null) {
-            String transitionName = ViewCompat.getTransitionName(transitionView);
-            transitions.add(new Pair<>(transitionView, transitionName));
-            //            transitions.add(new Pair<>(toolbar, "toolbar"));
-
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                Transition moveTransition = TransitionInflater.from(getContext()).inflateTransition(R.transition.image_transition);
-                fragment.setSharedElementEnterTransition(moveTransition);
-                fragment.setSharedElementReturnTransition(moveTransition);
-            }
-        }
-
-        getNavigationController().pushViewController(fragment, "DetailFragment", transitions);
-    }
 
     private PlaylistMenuUtils.CallbacksAdapter playlistMenuCallbacks = new PlaylistMenuUtils.CallbacksAdapter() {
         @Override
