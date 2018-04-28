@@ -1,6 +1,5 @@
 package com.simplecity.amp_library.ui.detail.playlist
 
-import android.support.v4.util.Pair
 import com.simplecity.amp_library.model.Album
 import com.simplecity.amp_library.model.Playlist
 import com.simplecity.amp_library.model.Song
@@ -45,34 +44,17 @@ class PlaylistDetailPresenter constructor(private val playlist: Playlist) : Pres
         }
     }
 
-    private fun sortAlbums(albums: MutableList<Album>) {
-        @SortManager.AlbumSort val albumSort = SortManager.getInstance().getPlaylistDetailAlbumsSortOrder(playlist)
-
-        val albumsAscending = SortManager.getInstance().getPlaylistDetailAlbumsAscending(playlist)
-
-        SortManager.getInstance().sortAlbums(albums, albumSort)
-        if (!albumsAscending) {
-            albums.reverse()
-        }
-    }
-
     fun loadData() {
         PermissionUtils.RequestStoragePermissions {
             addDisposable(
-                playlist.songsObservable.first(Collections.emptyList())
-                    .zipWith<MutableList<Album>, Pair<MutableList<Album>, MutableList<Song>>>(
-                        playlist.songsObservable.first(Collections.emptyList()).map { songs -> Operators.songsToAlbums(songs) },
-                        BiFunction { songs, albums -> Pair(albums, songs) }).subscribeOn(Schedulers.io())
-                    .doOnSuccess { pair ->
-                        sortAlbums(pair.first!!)
-                        sortSongs(pair.second!!)
-                    }
+                playlist.songsObservable
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { pair ->
+                    .doOnNext { songs -> sortSongs(songs) }
+                    .subscribe { songs ->
 
-                        this.songs = pair.second!!
+                        this.songs = songs
 
-                        view?.setData(pair)
+                        view?.setData(songs)
                     }
             )
         }

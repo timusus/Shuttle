@@ -31,7 +31,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.afollestad.aesthetic.Aesthetic;
-import com.annimon.stream.Collectors;
 import com.annimon.stream.IntStream;
 import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
@@ -52,8 +51,6 @@ import com.simplecity.amp_library.ui.fragments.BaseFragment;
 import com.simplecity.amp_library.ui.fragments.TransitionListenerAdapter;
 import com.simplecity.amp_library.ui.modelviews.AlbumView;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
-import com.simplecity.amp_library.ui.modelviews.HorizontalAlbumView;
-import com.simplecity.amp_library.ui.modelviews.HorizontalRecyclerView;
 import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
 import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.modelviews.SubheaderView;
@@ -130,11 +127,6 @@ public class PlaylistDetailFragment extends BaseFragment implements
     private ColorStateList collapsingToolbarSubTextColor;
 
     private EmptyView emptyView = new EmptyView(R.string.empty_songlist);
-
-    private HorizontalRecyclerView horizontalRecyclerView = new HorizontalRecyclerView("BaseDetail - horizontal");
-
-    @Nullable
-    private Disposable setHorizontalItemsDisposable = null;
 
     @Nullable
     private Disposable setItemsDisposable = null;
@@ -286,10 +278,6 @@ public class PlaylistDetailFragment extends BaseFragment implements
 
         if (setItemsDisposable != null) {
             setItemsDisposable.dispose();
-        }
-
-        if (setHorizontalItemsDisposable != null) {
-            setHorizontalItemsDisposable.dispose();
         }
 
         disposables.clear();
@@ -449,41 +437,19 @@ public class PlaylistDetailFragment extends BaseFragment implements
     }
 
     @Override
-    public void setData(Pair<List<Album>, List<Song>> data) {
+    public void setData(List<Song> data) {
         if (setItemsDisposable != null) {
             setItemsDisposable.dispose();
         }
 
         List<ViewModel> viewModels = new ArrayList<>();
 
-        if (!data.first.isEmpty()) {
-
+        if (!data.isEmpty()) {
             List<ViewModel> items = new ArrayList<>();
 
-            if (setHorizontalItemsDisposable != null) {
-                setHorizontalItemsDisposable.dispose();
-            }
-            setHorizontalItemsDisposable = horizontalRecyclerView.setItems(Stream.of(data.first)
-                    .map(album -> {
-                        HorizontalAlbumView horizontalAlbumView = new HorizontalAlbumView(album, requestManager);
-                        horizontalAlbumView.setClickListener(albumClickListener);
-                        horizontalAlbumView.showYear(true);
-                        return horizontalAlbumView;
-                    })
-                    .collect(Collectors.toList()));
+            items.add(new SubheaderView(StringUtils.makeSongsAndTimeLabel(ShuttleApplication.getInstance(), data.size(), Stream.of(data).mapToLong(song -> song.duration / 1000).sum())));
 
-            items.add(new SubheaderView(StringUtils.makeAlbumsLabel(ShuttleApplication.getInstance(), data.first.size())));
-            items.add(horizontalRecyclerView);
-
-            viewModels.addAll(items);
-        }
-
-        if (!data.second.isEmpty()) {
-            List<ViewModel> items = new ArrayList<>();
-
-            items.add(new SubheaderView(StringUtils.makeSongsLabel(ShuttleApplication.getInstance(), data.second.size())));
-
-            items.addAll(Stream.of(data.second)
+            items.addAll(Stream.of(data)
                     .map(song -> {
                         SongView songView = new SongView(song, requestManager);
                         songView.showPlayCount(playlist.type == Playlist.Type.MOST_PLAYED);
@@ -535,15 +501,12 @@ public class PlaylistDetailFragment extends BaseFragment implements
                 public void notifyItemChanged(int position, SelectableViewModel viewModel) {
                     if (adapter.items.contains(viewModel)) {
                         adapter.notifyItemChanged(position, 0);
-                    } else if (horizontalRecyclerView.viewModelAdapter.items.contains(viewModel)) {
-                        horizontalRecyclerView.viewModelAdapter.notifyItemChanged(position);
                     }
                 }
 
                 @Override
                 public void notifyDatasetChanged() {
                     adapter.notifyItemRangeChanged(0, adapter.items.size(), 0);
-                    horizontalRecyclerView.viewModelAdapter.notifyItemRangeChanged(0, horizontalRecyclerView.viewModelAdapter.items.size(), 0);
                 }
             }) {
                 @Override

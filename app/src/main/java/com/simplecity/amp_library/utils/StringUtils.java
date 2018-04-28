@@ -53,6 +53,7 @@ public class StringUtils {
 
     private static String makeTimeString(String formatString, long secs) {
         long absSeconds = Math.abs(secs);
+        sFormatBuilder.setLength(0);
         return sFormatter.format(formatString,
                 secs < 0 ? "- " : "",
                 absSeconds / 3600,
@@ -165,6 +166,10 @@ public class StringUtils {
         }
 
         return String.format("%s", year);
+    }
+
+    public static String makeSongsAndTimeLabel(Context context, int numSongs, long secs) {
+        return context.getResources().getString(R.string.songs_time_label, makeSongsLabel(context, numSongs), makeLongTimeString(context, secs));
     }
 
     /**
