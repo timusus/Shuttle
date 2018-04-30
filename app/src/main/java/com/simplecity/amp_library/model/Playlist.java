@@ -197,7 +197,9 @@ public class Playlist implements Serializable {
                     });
 
         } else if (id == PlaylistUtils.PlaylistIds.PODCASTS_PLAYLIST) {
-            return DataManager.getInstance().getSongsObservable(song -> song.isPodcast)
+            return DataManager.getInstance().getAllSongsRelay()
+                    .compose(DataManager.getInstance().getInclExclTransformer())
+                    .map(songs -> Stream.of(songs).filter(song -> song.isPodcast).toList())
                     .map(songs -> {
                         Collections.sort(songs, (a, b) -> ComparisonUtils.compareLong(a.playlistSongPlayOrder, b.playlistSongPlayOrder));
                         return songs;
