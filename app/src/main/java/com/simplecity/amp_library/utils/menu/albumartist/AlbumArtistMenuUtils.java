@@ -111,6 +111,7 @@ public class AlbumArtistMenuUtils {
                     return true;
                 case R.id.blacklist:
                     MenuUtils.blacklist(AlbumArtistExt.INSTANCE.getSongsForAlbumArtist(albumArtist));
+                    return true;
                 case R.id.delete:
                     callbacks.showDeleteDialog(albumArtist);
                     return true;
