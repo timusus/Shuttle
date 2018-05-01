@@ -69,7 +69,7 @@ public class DeleteDialog extends DialogFragment implements SafManager.SafDialog
     private int deleteMessageId;
 
     @Inject
-    MediaManager musicUtils;
+    MediaManager mediaManager;
 
     private List<AlbumArtist> artists;
     private List<Album> albums;
@@ -307,7 +307,7 @@ public class DeleteDialog extends DialogFragment implements SafManager.SafDialog
         }
 
         // Remove songs from current play queue
-        musicUtils.removeFromQueue(deletedSongs);
+        mediaManager.removeFromQueue(deletedSongs);
 
         // Remove songs from play count table
         ArrayList<ContentProviderOperation> operations = Stream.of(deletedSongs).map(song -> ContentProviderOperation

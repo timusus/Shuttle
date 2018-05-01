@@ -130,7 +130,7 @@ public class SearchFragment extends BaseFragment implements
 
         requestManager = Glide.with(this);
 
-        searchPresenter = new SearchPresenter(musicUtils);
+        searchPresenter = new SearchPresenter(mediaManager);
 
         query = getArguments().getString(ARG_QUERY, "");
 
@@ -374,7 +374,7 @@ public class SearchFragment extends BaseFragment implements
 
             contextualToolbar.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(
                     getContext(),
-                    musicUtils,
+                    mediaManager,
                     Single.defer(() -> Operators.reduceSongSingles(contextualToolbarHelper.getItems())),
                     songMenuFragmentHelper.getSongMenuCallbacks()
             ));
@@ -432,7 +432,7 @@ public class SearchFragment extends BaseFragment implements
         public void onSongOverflowClick(int position, View v, Song song) {
             PopupMenu menu = new PopupMenu(v.getContext(), v);
             SongMenuUtils.setupSongMenu(menu, false);
-            menu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(v.getContext(), musicUtils, position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
+            menu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(v.getContext(), mediaManager, position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
             menu.show();
         }
 
@@ -459,7 +459,7 @@ public class SearchFragment extends BaseFragment implements
         public void onAlbumOverflowClicked(View v, Album album) {
             PopupMenu menu = new PopupMenu(v.getContext(), v);
             AlbumMenuUtils.setupAlbumMenu(menu);
-            menu.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(v.getContext(), musicUtils, album, albumMenuFragmentHelper.getCallbacks()));
+            menu.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(v.getContext(), mediaManager, album, albumMenuFragmentHelper.getCallbacks()));
             menu.show();
         }
     };
@@ -481,7 +481,7 @@ public class SearchFragment extends BaseFragment implements
         public void onAlbumArtistOverflowClicked(View v, AlbumArtist albumArtist) {
             PopupMenu menu = new PopupMenu(v.getContext(), v);
             menu.inflate(R.menu.menu_artist);
-            menu.setOnMenuItemClickListener(AlbumArtistMenuUtils.getAlbumArtistClickListener(v.getContext(), musicUtils, albumArtist, albumArtistMenuFragmentHelper.getCallbacks()));
+            menu.setOnMenuItemClickListener(AlbumArtistMenuUtils.getAlbumArtistClickListener(v.getContext(), mediaManager, albumArtist, albumArtistMenuFragmentHelper.getCallbacks()));
             menu.show();
         }
     };

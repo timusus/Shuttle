@@ -176,7 +176,7 @@ public class DrawerFragment extends BaseFragment implements
                 .compose(Rx.distinctToMainThread())
                 .subscribe(color -> {
                     backgroundPlaceholder.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
-                    if (musicUtils.getSong() == null) {
+                    if (mediaManager.getSong() == null) {
                         backgroundImage.setImageDrawable(backgroundPlaceholder);
                     }
                 }));
@@ -267,7 +267,7 @@ public class DrawerFragment extends BaseFragment implements
                         public void onOverflowClick(View view, Playlist playlist) {
                             PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
                             PlaylistMenuUtils.setupPlaylistMenu(popupMenu, playlist);
-                            popupMenu.setOnMenuItemClickListener(PlaylistMenuUtils.getPlaylistPopupMenuClickListener(musicUtils, playlist, playlistMenuFragmentHelper.getCallbacks()));
+                            popupMenu.setOnMenuItemClickListener(PlaylistMenuUtils.getPlaylistPopupMenuClickListener(mediaManager, playlist, playlistMenuFragmentHelper.getCallbacks()));
                             popupMenu.show();
                         }
                     });

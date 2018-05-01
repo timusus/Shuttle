@@ -148,7 +148,7 @@ public class QueueFragment extends BaseFragment implements QueueView {
 
         itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(
                 (fromPosition, toPosition) ->
-                        adapter.moveItem(fromPosition, toPosition), musicUtils::moveQueueItem,
+                        adapter.moveItem(fromPosition, toPosition), mediaManager::moveQueueItem,
                 () -> {
                     // Nothing to do
                 }));
@@ -286,7 +286,7 @@ public class QueueFragment extends BaseFragment implements QueueView {
         public void onSongOverflowClick(int position, View v, Song song) {
             PopupMenu menu = new PopupMenu(v.getContext(), v);
             SongMenuUtils.setupSongMenu(menu, true);
-            menu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(v.getContext(), musicUtils, position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
+            menu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(v.getContext(), mediaManager, position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
             menu.show();
         }
 

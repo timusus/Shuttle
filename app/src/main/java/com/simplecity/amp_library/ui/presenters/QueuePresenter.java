@@ -22,11 +22,11 @@ public class QueuePresenter extends Presenter<QueueView> {
 
     private static final String TAG = "QueuePresenter";
 
-    MediaManager musicUtils;
+    MediaManager mediaManager;
 
     @Inject
-    public QueuePresenter(MediaManager musicUtils) {
-        this.musicUtils = musicUtils;
+    public QueuePresenter(MediaManager mediaManager) {
+        this.mediaManager = mediaManager;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class QueuePresenter extends Presenter<QueueView> {
                 .subscribe(intent -> {
                     QueueView queueView = getView();
                     if (queueView != null) {
-                        queueView.updateQueuePosition(musicUtils.getQueuePosition(), false);
+                        queueView.updateQueuePosition(mediaManager.getQueuePosition(), false);
                     }
                 }));
 
@@ -61,16 +61,16 @@ public class QueuePresenter extends Presenter<QueueView> {
     }
 
     public void saveQueue(Context context) {
-        PlaylistUtils.createPlaylistDialog(context, musicUtils.getQueue(), null);
+        PlaylistUtils.createPlaylistDialog(context, mediaManager.getQueue(), null);
     }
 
     public void saveQueue(Context context, MenuItem item) {
         Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(PlaylistUtils.ARG_PLAYLIST);
-        PlaylistUtils.addToPlaylist(context, playlist, musicUtils.getQueue(), null);
+        PlaylistUtils.addToPlaylist(context, playlist, mediaManager.getQueue(), null);
     }
 
     public void clearQueue() {
-        musicUtils.clearQueue();
+        mediaManager.clearQueue();
     }
 
     public void removeFromQueue(int position) {
@@ -78,18 +78,18 @@ public class QueuePresenter extends Presenter<QueueView> {
         if (queueView != null) {
             queueView.onRemovedFromQueue(position);
         }
-        musicUtils.removeFromQueue(position);
+        mediaManager.removeFromQueue(position);
     }
 
     private void loadData() {
         QueueView queueView = getView();
         if (queueView != null) {
-            queueView.setData(musicUtils.getQueue(), musicUtils.getQueuePosition());
+            queueView.setData(mediaManager.getQueue(), mediaManager.getQueuePosition());
         }
     }
 
     public void onSongClick(int position) {
-        musicUtils.setQueuePosition(position);
+        mediaManager.setQueuePosition(position);
         QueueView queueView = getView();
         if (queueView != null) {
             queueView.updateQueuePosition(position, true);

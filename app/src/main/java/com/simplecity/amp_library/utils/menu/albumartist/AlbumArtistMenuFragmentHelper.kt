@@ -25,7 +25,7 @@ class AlbumArtistMenuFragmentHelper(val fragment: BaseFragment, val disposables:
         }
 
         override fun playNext(songsSingle: Single<List<Song>>) {
-            fragment.musicUtils.playNext(songsSingle) { message -> Toast.makeText(fragment.context, message, Toast.LENGTH_LONG).show() }
+            fragment.mediaManager.playNext(songsSingle) { message -> Toast.makeText(fragment.context, message, Toast.LENGTH_LONG).show() }
         }
 
         override fun showTagEditor(albumArtist: AlbumArtist) {
@@ -41,8 +41,8 @@ class AlbumArtistMenuFragmentHelper(val fragment: BaseFragment, val disposables:
         }
 
         override fun showDeleteDialog(albumArtists: Single<MutableList<AlbumArtist>>) {
-            disposables.add(albumArtists.subscribe { albumArtists ->
-                DeleteDialog.newInstance(DeleteDialog.ListArtistsRef { albumArtists })
+            disposables.add(albumArtists.subscribe { albumArtistsList ->
+                DeleteDialog.newInstance(DeleteDialog.ListArtistsRef { albumArtistsList })
             })
         }
 

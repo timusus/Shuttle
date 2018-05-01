@@ -25,7 +25,7 @@ public class QueuePagerPresenter extends Presenter<QueuePagerView> {
     RequestManager requestManager;
 
     @Inject
-    MediaManager musicUtils;
+    MediaManager mediaManager;
 
     @Inject
     public QueuePagerPresenter() {
@@ -58,18 +58,18 @@ public class QueuePagerPresenter extends Presenter<QueuePagerView> {
                     if (action != null) {
                         switch (action) {
                             case InternalIntents.META_CHANGED:
-                                queuePagerView.updateQueuePosition(musicUtils.getQueuePosition());
+                                queuePagerView.updateQueuePosition(mediaManager.getQueuePosition());
                                 break;
                             case InternalIntents.REPEAT_CHANGED:
                             case InternalIntents.SHUFFLE_CHANGED:
                             case InternalIntents.QUEUE_CHANGED:
                             case InternalIntents.SERVICE_CONNECTED:
 
-                                List<ViewModel> items = Stream.of(musicUtils.getQueue())
+                                List<ViewModel> items = Stream.of(mediaManager.getQueue())
                                         .map(song -> new QueuePagerItemView(song, requestManager))
                                         .collect(Collectors.toList());
 
-                                queuePagerView.loadData(items, musicUtils.getQueuePosition());
+                                queuePagerView.loadData(items, mediaManager.getQueuePosition());
                                 break;
                         }
                     }

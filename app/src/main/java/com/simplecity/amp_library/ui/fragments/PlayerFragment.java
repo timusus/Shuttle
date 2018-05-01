@@ -585,7 +585,7 @@ public class PlayerFragment extends BaseFragment implements
 
     @SuppressLint("CheckResult")
     private void goToArtist() {
-        AlbumArtist currentAlbumArtist = musicUtils.getAlbumArtist();
+        AlbumArtist currentAlbumArtist = mediaManager.getAlbumArtist();
         // MusicUtils.getAlbumArtist() is only populate with the album the current Song belongs to.
         // Let's find the matching AlbumArtist in the DataManager.albumArtistRelay
         DataManager.getInstance().getAlbumArtistsRelay()
@@ -598,12 +598,12 @@ public class PlayerFragment extends BaseFragment implements
     }
 
     private void goToAlbum() {
-        navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_ALBUM, musicUtils.getAlbum(), true));
+        navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_ALBUM, mediaManager.getAlbum(), true));
     }
 
     @SuppressLint("CheckResult")
     private void goToGenre() {
-        musicUtils.getGenre()
+        mediaManager.getGenre()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(

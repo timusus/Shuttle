@@ -70,7 +70,7 @@ public class SuggestedFragment extends BaseFragment implements
 
         @Override
         public void onSongClick(Song song, SuggestedSongView.ViewHolder holder) {
-            musicUtils.playAll(songs, songs.indexOf(song), true, message -> {
+            mediaManager.playAll(songs, songs.indexOf(song), true, message -> {
                 Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                 return Unit.INSTANCE;
             });
@@ -80,7 +80,7 @@ public class SuggestedFragment extends BaseFragment implements
         public void onSongOverflowClicked(View v, int position, Song song) {
             PopupMenu popupMenu = new PopupMenu(getContext(), v);
             SongMenuUtils.setupSongMenu(popupMenu, false);
-            popupMenu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), musicUtils, position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
+            popupMenu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), mediaManager, position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
             popupMenu.show();
         }
     }
@@ -402,7 +402,7 @@ public class SuggestedFragment extends BaseFragment implements
     public void onAlbumOverflowClicked(View v, Album album) {
         PopupMenu menu = new PopupMenu(getContext(), v);
         AlbumMenuUtils.setupAlbumMenu(menu);
-        menu.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(getContext(), musicUtils, album, albumMenuFragmentHelper.getCallbacks()));
+        menu.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(getContext(), mediaManager, album, albumMenuFragmentHelper.getCallbacks()));
         menu.show();
     }
 

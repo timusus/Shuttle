@@ -416,7 +416,7 @@ public class FolderFragment extends BaseFragment implements
                                     break;
                                 }
                             }
-                            musicUtils.playAll(songs, index, true, message -> {
+                            mediaManager.playAll(songs, index, true, message -> {
                                 if (isAdded() && getContext() != null) {
                                     Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                                 }
@@ -435,7 +435,7 @@ public class FolderFragment extends BaseFragment implements
     public void onFileObjectOverflowClick(View v, FolderView folderView) {
         PopupMenu menu = new PopupMenu(getActivity(), v);
         FolderMenuUtils.setupFolderMenu(menu, folderView.baseFileObject);
-        menu.setOnMenuItemClickListener(FolderMenuUtils.getFolderMenuClickListener(getContext(), musicUtils, folderView, callbacks));
+        menu.setOnMenuItemClickListener(FolderMenuUtils.getFolderMenuClickListener(getContext(), mediaManager, folderView, callbacks));
         menu.show();
     }
 
@@ -668,7 +668,7 @@ public class FolderFragment extends BaseFragment implements
 
         @Override
         public void playNext(Single<List<Song>> songsSingle) {
-            musicUtils.playNext(songsSingle, message -> {
+            mediaManager.playNext(songsSingle, message -> {
                 Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
                 return Unit.INSTANCE;
             });

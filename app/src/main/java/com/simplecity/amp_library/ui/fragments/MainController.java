@@ -63,7 +63,7 @@ public class MainController extends BaseNavigationController implements BackPres
     MultiSheetEventRelay multiSheetEventRelay;
 
     @Inject
-    MediaManager musicUtils;
+    MediaManager mediaManager;
 
     @Inject
     PlayerPresenter playerPresenter;
@@ -217,7 +217,7 @@ public class MainController extends BaseNavigationController implements BackPres
      * Hide/show the bottom sheet, depending on whether the queue is empty.
      */
     private void toggleBottomSheetVisibility(boolean collapse, boolean animate) {
-        if (musicUtils.getQueue().isEmpty()) {
+        if (mediaManager.getQueue().isEmpty()) {
             multiSheetView.hide(collapse, false);
         } else if (MiniPlayerLockManager.getInstance().canShowMiniPlayer()) {
             multiSheetView.unhide(animate);

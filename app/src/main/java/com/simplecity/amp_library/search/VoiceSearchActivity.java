@@ -123,7 +123,7 @@ public class VoiceSearchActivity extends BaseActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(songs -> {
                     if (songs != null) {
-                        musicUtils.playAll(songs, position, true, message -> {
+                        mediaManager.playAll(songs, position, true, message -> {
                             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
                             return Unit.INSTANCE;
                         });

@@ -39,7 +39,7 @@ class PlaylistMenuFragmentHelper(val fragment: BaseFragment, val disposables: Co
         }
 
         override fun playNext(playlist: Playlist) {
-            fragment.musicUtils.playNext(playlist.songsObservable.first(emptyList<Song>())) { message -> Toast.makeText(fragment.context, message, Toast.LENGTH_LONG).show() }
+            fragment.mediaManager.playNext(playlist.songsObservable.first(emptyList<Song>())) { message -> Toast.makeText(fragment.context, message, Toast.LENGTH_LONG).show() }
             callbacks?.playNext(playlist)
         }
 

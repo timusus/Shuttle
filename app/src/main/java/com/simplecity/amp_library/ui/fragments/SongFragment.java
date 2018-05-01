@@ -281,7 +281,7 @@ public class SongFragment extends BaseFragment implements
                     .map(adaptableItem -> ((SongView) adaptableItem).song)
                     .toList();
 
-            musicUtils.playAll(songs, songs.indexOf(songView.song), true, message -> {
+            mediaManager.playAll(songs, songs.indexOf(songView.song), true, message -> {
                 Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                 return Unit.INSTANCE;
             });
@@ -292,7 +292,7 @@ public class SongFragment extends BaseFragment implements
     public void onSongOverflowClick(int position, View view, Song song) {
         PopupMenu menu = new PopupMenu(getContext(), view);
         SongMenuUtils.setupSongMenu(menu, false);
-        menu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), musicUtils, position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
+        menu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), mediaManager, position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
         menu.show();
     }
 
@@ -308,7 +308,7 @@ public class SongFragment extends BaseFragment implements
 
     @Override
     public void onShuffleItemClick() {
-        musicUtils.shuffleAll(DataManager.getInstance().getSongsRelay().firstOrError(), message -> {
+        mediaManager.shuffleAll(DataManager.getInstance().getSongsRelay().firstOrError(), message -> {
             Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
             return Unit.INSTANCE;
         });
@@ -350,7 +350,7 @@ public class SongFragment extends BaseFragment implements
                 }
             });
 
-            contextualToolbar.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), musicUtils, Single.defer(() -> Single.just(contextualToolbarHelper.getItems())), songMenuFragmentHelper.getSongMenuCallbacks()));
+            contextualToolbar.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), mediaManager, Single.defer(() -> Single.just(contextualToolbarHelper.getItems())), songMenuFragmentHelper.getSongMenuCallbacks()));
         }
     }
 

@@ -412,21 +412,21 @@ public class AlbumFragment extends BaseFragment implements
         menu.inflate(R.menu.menu_album);
         SubMenu sub = menu.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
         PlaylistUtils.createPlaylistMenu(sub);
-        menu.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(getContext(), musicUtils, album, albumMenuFragmentHelper.getCallbacks()));
+        menu.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(getContext(), mediaManager, album, albumMenuFragmentHelper.getCallbacks()));
         menu.show();
     }
 
     @Override
     public void onShuffleItemClick() {
         // Note: For album-shuffle mode, we don't actually turn shuffle on.
-        musicUtils.setShuffleMode(QueueManager.ShuffleMode.OFF);
+        mediaManager.setShuffleMode(QueueManager.ShuffleMode.OFF);
 
         Single<List<Song>> aa = DataManager.getInstance()
                 .getSongsRelay()
                 .firstOrError()
                 .map(Operators::albumShuffleSongs);
 
-        musicUtils.playAll(DataManager.getInstance()
+        mediaManager.playAll(DataManager.getInstance()
                         .getSongsRelay()
                         .firstOrError()
                         .map(Operators::albumShuffleSongs),
@@ -459,7 +459,7 @@ public class AlbumFragment extends BaseFragment implements
             }
             playlistMenuDisposable = PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe();
 
-            contextualToolbar.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(getContext(), musicUtils, Single.defer(() -> Single.just(contextualToolbarHelper.getItems())), albumMenuFragmentHelper.getCallbacks()));
+            contextualToolbar.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(getContext(), mediaManager, Single.defer(() -> Single.just(contextualToolbarHelper.getItems())), albumMenuFragmentHelper.getCallbacks()));
 
             contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
 

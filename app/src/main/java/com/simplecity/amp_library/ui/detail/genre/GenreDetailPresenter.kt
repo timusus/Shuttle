@@ -19,7 +19,7 @@ import io.reactivex.schedulers.Schedulers
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class GenreDetailPresenter constructor(private val musicUtils: MediaManager, private val genre: Genre) : Presenter<GenreDetailView>() {
+class GenreDetailPresenter constructor(private val mediaManager: MediaManager, private val genre: Genre) : Presenter<GenreDetailView>() {
 
     private var songs: MutableList<Song> = mutableListOf()
 
@@ -111,25 +111,25 @@ class GenreDetailPresenter constructor(private val musicUtils: MediaManager, pri
     }
 
     fun fabClicked() {
-        musicUtils.shuffleAll(songs) { message ->
+        mediaManager.shuffleAll(songs) { message ->
             view?.showToast(message)
         }
     }
 
     fun playAll() {
-        musicUtils.playAll(songs, 0, true) { message ->
+        mediaManager.playAll(songs, 0, true) { message ->
             view?.showToast(message)
         }
     }
 
     fun playNext() {
-        musicUtils.playNext(songs) { message ->
+        mediaManager.playNext(songs) { message ->
             view?.showToast(message)
         }
     }
 
     fun addToQueue() {
-        musicUtils.addToQueue(songs) { message ->
+        mediaManager.addToQueue(songs) { message ->
             view?.showToast(message)
         }
     }
@@ -144,7 +144,7 @@ class GenreDetailPresenter constructor(private val musicUtils: MediaManager, pri
     }
 
     fun songClicked(song: Song) {
-        musicUtils.playAll(songs, songs.indexOf(song), true) { message ->
+        mediaManager.playAll(songs, songs.indexOf(song), true) { message ->
             view?.showToast(message)
         }
     }

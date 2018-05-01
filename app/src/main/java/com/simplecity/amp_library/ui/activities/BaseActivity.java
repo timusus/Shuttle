@@ -41,7 +41,7 @@ public abstract class BaseActivity extends AestheticActivity implements ServiceC
     @Nullable
     private BillingManager billingManager;
 
-    protected MediaManager musicUtils = new MusicUtils();
+    protected MediaManager mediaManager = new MusicUtils();
 
     @CallSuper
     protected void onCreate(final Bundle savedInstanceState) {
@@ -184,6 +184,6 @@ public abstract class BaseActivity extends AestheticActivity implements ServiceC
     protected abstract String screenName();
 
     public MediaManager getMusicUtils() {
-        return musicUtils;
+        return mediaManager;
     }
 }

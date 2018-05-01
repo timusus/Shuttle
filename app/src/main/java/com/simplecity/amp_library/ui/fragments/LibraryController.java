@@ -154,7 +154,7 @@ public class LibraryController extends BaseFragment implements
     public void onResume() {
         super.onResume();
 
-        if (!musicUtils.getQueue().isEmpty()) {
+        if (!mediaManager.getQueue().isEmpty()) {
             multiSheetEventRelay.sendEvent(new MultiSheetEventRelay.MultiSheetEvent(MultiSheetEventRelay.MultiSheetEvent.Action.SHOW_IF_HIDDEN, MultiSheetView.Sheet.NONE));
         }
 

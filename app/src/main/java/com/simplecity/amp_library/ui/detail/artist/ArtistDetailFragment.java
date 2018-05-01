@@ -164,7 +164,7 @@ public class ArtistDetailFragment extends BaseFragment implements
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
-        presenter = new ArtistDetailPresenter(musicUtils, albumArtist);
+        presenter = new ArtistDetailPresenter(mediaManager, albumArtist);
 
         requestManager = Glide.with(this);
 
@@ -448,7 +448,7 @@ public class ArtistDetailFragment extends BaseFragment implements
             SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
             disposables.add(PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe());
 
-            contextualToolbar.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), musicUtils, Single.defer(() -> Operators.reduceSongSingles(contextualToolbarHelper.getItems())), songMenuFragmentHelper.getSongMenuCallbacks()));
+            contextualToolbar.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), mediaManager, Single.defer(() -> Operators.reduceSongSingles(contextualToolbarHelper.getItems())), songMenuFragmentHelper.getSongMenuCallbacks()));
 
             contextualToolbarHelper = new ContextualToolbarHelper<Single<List<Song>>>(contextualToolbar, new ContextualToolbarHelper.Callback() {
 
@@ -511,7 +511,7 @@ public class ArtistDetailFragment extends BaseFragment implements
         public void onSongOverflowClick(int position, View v, Song song) {
             PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
             SongMenuUtils.setupSongMenu(popupMenu, false);
-            popupMenu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(v.getContext(), musicUtils, position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
+            popupMenu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(v.getContext(), mediaManager, position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
             popupMenu.show();
         }
 
@@ -539,7 +539,7 @@ public class ArtistDetailFragment extends BaseFragment implements
         public void onAlbumOverflowClicked(View v, Album album) {
             PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
             AlbumMenuUtils.setupAlbumMenu(popupMenu);
-            popupMenu.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(v.getContext(), musicUtils, album, albumMenuFragmentHelper.getCallbacks()));
+            popupMenu.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(v.getContext(), mediaManager, album, albumMenuFragmentHelper.getCallbacks()));
             popupMenu.show();
         }
     };

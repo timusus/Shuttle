@@ -225,12 +225,12 @@ public class QCircleActivity extends BaseActivity {
         setPauseButtonImage();
 
 
-        prevBtn.setOnClickListener(v -> musicUtils.previous(true));
+        prevBtn.setOnClickListener(v -> mediaManager.previous(true));
 
-        skipBtn.setOnClickListener(v -> musicUtils.next());
+        skipBtn.setOnClickListener(v -> mediaManager.next());
 
         pauseBtn.setOnClickListener(v -> {
-            musicUtils.playOrPause();
+            mediaManager.playOrPause();
             setPauseButtonImage();
         });
 
@@ -246,7 +246,7 @@ public class QCircleActivity extends BaseActivity {
         if (pauseBtn == null) {
             return;
         }
-        if (MusicServiceConnectionUtils.serviceBinder != null && musicUtils.isPlaying()) {
+        if (MusicServiceConnectionUtils.serviceBinder != null && mediaManager.isPlaying()) {
 
         } else {
 
@@ -263,7 +263,7 @@ public class QCircleActivity extends BaseActivity {
             return;
         }
 
-        Song song = musicUtils.getSong();
+        Song song = mediaManager.getSong();
         if (song == null) return;
 
         textOne.setText(song.albumArtistName);

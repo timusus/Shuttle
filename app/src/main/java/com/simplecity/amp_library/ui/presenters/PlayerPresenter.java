@@ -40,13 +40,13 @@ public class PlayerPresenter extends Presenter<PlayerView> {
     private boolean currentPlaybackTimeVisible;
 
     private Disposable isFavoriteDisposable;
-    private MediaManager musicUtils;
+    private MediaManager mediaManager;
     private final PlaybackMonitor playbackMonitor;
 
     @Inject
-    public PlayerPresenter(MediaManager musicUtils) {
-        this.musicUtils = musicUtils;
-        this.playbackMonitor = new PlaybackMonitor(musicUtils);
+    public PlayerPresenter(MediaManager mediaManager) {
+        this.mediaManager = mediaManager;
+        this.playbackMonitor = new PlaybackMonitor(mediaManager);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class PlayerPresenter extends Presenter<PlayerView> {
         addDisposable(Flowable.interval(500, TimeUnit.MILLISECONDS)
                 .onBackpressureDrop()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(aLong -> setCurrentTimeVisibility(musicUtils.isPlaying() || !currentPlaybackTimeVisible),
+                .subscribe(aLong -> setCurrentTimeVisibility(mediaManager.isPlaying() || !currentPlaybackTimeVisible),
                         error -> LogUtils.logException(TAG, "PlayerPresenter: Error emitting current time", error)));
 
         final IntentFilter filter = new IntentFilter();
@@ -130,7 +130,7 @@ public class PlayerPresenter extends Presenter<PlayerView> {
             if (view != null) {
                 view.currentTimeChanged(playbackTime);
                 if (SettingsManager.getInstance().displayRemainingTime()) {
-                    view.totalTimeChanged(-(musicUtils.getDuration() / 1000 - playbackTime));
+                    view.totalTimeChanged(-(mediaManager.getDuration() / 1000 - playbackTime));
                 }
             }
         }
@@ -157,15 +157,15 @@ public class PlayerPresenter extends Presenter<PlayerView> {
     public void updateTrackInfo() {
         PlayerView view = getView();
         if (view != null) {
-            view.trackInfoChanged(musicUtils.getSong());
-            view.queueChanged(musicUtils.getQueuePosition() + 1, musicUtils.getQueue().size());
-            view.currentTimeChanged(musicUtils.getPosition() / 1000);
+            view.trackInfoChanged(mediaManager.getSong());
+            view.queueChanged(mediaManager.getQueuePosition() + 1, mediaManager.getQueue().size());
+            view.currentTimeChanged(mediaManager.getPosition() / 1000);
             updateRemainingTime();
 
             if (isFavoriteDisposable != null) {
                 isFavoriteDisposable.dispose();
             }
-            isFavoriteDisposable = PlaylistUtils.isFavorite(musicUtils.getSong())
+            isFavoriteDisposable = PlaylistUtils.isFavorite(mediaManager.getSong())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(isFavorite -> updateFavorite((isFavorite)));
@@ -177,59 +177,59 @@ public class PlayerPresenter extends Presenter<PlayerView> {
     private void updatePlaystate() {
         PlayerView view = getView();
         if (view != null) {
-            view.playbackChanged(musicUtils.isPlaying());
+            view.playbackChanged(mediaManager.isPlaying());
         }
     }
 
     private void updateShuffleMode() {
         PlayerView view = getView();
         if (view != null) {
-            view.repeatChanged(musicUtils.getRepeatMode());
-            view.shuffleChanged(musicUtils.getShuffleMode());
+            view.repeatChanged(mediaManager.getRepeatMode());
+            view.shuffleChanged(mediaManager.getShuffleMode());
         }
     }
 
     private void updateRepeatMode() {
         PlayerView view = getView();
         if (view != null) {
-            view.repeatChanged(musicUtils.getRepeatMode());
+            view.repeatChanged(mediaManager.getRepeatMode());
         }
     }
 
     public void togglePlayback() {
-        musicUtils.playOrPause();
+        mediaManager.playOrPause();
         updatePlaystate();
     }
 
     public void toggleFavorite() {
-        musicUtils.toggleFavorite();
+        mediaManager.toggleFavorite();
     }
 
     public void skip() {
-        musicUtils.next();
+        mediaManager.next();
     }
 
     public void prev(boolean allowTrackRestart) {
-        musicUtils.previous(allowTrackRestart);
+        mediaManager.previous(allowTrackRestart);
     }
 
     public void toggleShuffle() {
-        musicUtils.toggleShuffleMode();
+        mediaManager.toggleShuffleMode();
         updateShuffleMode();
     }
 
     public void toggleRepeat() {
-        musicUtils.cycleRepeat();
+        mediaManager.cycleRepeat();
         updateRepeatMode();
     }
 
     public void seekTo(int progress) {
-        musicUtils.seekTo(musicUtils.getDuration() * progress / 1000);
+        mediaManager.seekTo(mediaManager.getDuration() * progress / 1000);
     }
 
     public void scanForward(final int repeatCount, long delta) {
         if (repeatCount == 0) {
-            startSeekPos = musicUtils.getPosition();
+            startSeekPos = mediaManager.getPosition();
             lastSeekEventTime = 0;
         } else {
             if (delta < 5000) {
@@ -240,15 +240,15 @@ public class PlayerPresenter extends Presenter<PlayerView> {
                 delta = 50000 + (delta - 5000) * 40;
             }
             long newpos = startSeekPos + delta;
-            final long duration = musicUtils.getDuration();
+            final long duration = mediaManager.getDuration();
             if (newpos >= duration) {
                 // move to next track
-                musicUtils.next();
+                mediaManager.next();
                 startSeekPos -= duration; // is OK to go negative
                 newpos -= duration;
             }
             if (delta - lastSeekEventTime > 250 || repeatCount < 0) {
-                musicUtils.seekTo(newpos);
+                mediaManager.seekTo(newpos);
                 lastSeekEventTime = delta;
             }
         }
@@ -256,7 +256,7 @@ public class PlayerPresenter extends Presenter<PlayerView> {
 
     public void scanBackward(final int repeatCount, long delta) {
         if (repeatCount == 0) {
-            startSeekPos = musicUtils.getPosition();
+            startSeekPos = mediaManager.getPosition();
             lastSeekEventTime = 0;
         } else {
             if (delta < 5000) {
@@ -269,13 +269,13 @@ public class PlayerPresenter extends Presenter<PlayerView> {
             long newpos = startSeekPos - delta;
             if (newpos < 0) {
                 // move to previous track
-                musicUtils.previous(true);
-                final long duration = musicUtils.getDuration();
+                mediaManager.previous(true);
+                final long duration = mediaManager.getDuration();
                 startSeekPos += duration;
                 newpos += duration;
             }
             if (delta - lastSeekEventTime > 250 || repeatCount < 0) {
-                musicUtils.seekTo(newpos);
+                mediaManager.seekTo(newpos);
                 lastSeekEventTime = delta;
             }
         }
@@ -284,7 +284,7 @@ public class PlayerPresenter extends Presenter<PlayerView> {
     public void showLyrics(Context context) {
         PlayerView playerView = getView();
         if (playerView != null) {
-            playerView.showLyricsDialog(new LyricsDialog(musicUtils).getDialog(context));
+            playerView.showLyricsDialog(new LyricsDialog(mediaManager).getDialog(context));
         }
     }
 
@@ -294,7 +294,7 @@ public class PlayerPresenter extends Presenter<PlayerView> {
             if (!ShuttleUtils.isUpgraded()) {
                 playerView.showUpgradeDialog(UpgradeDialog.getUpgradeDialog(activity));
             } else {
-                playerView.showTaggerDialog(TaggerDialog.newInstance(musicUtils.getSong()));
+                playerView.showTaggerDialog(TaggerDialog.newInstance(mediaManager.getSong()));
             }
         }
     }
@@ -302,7 +302,7 @@ public class PlayerPresenter extends Presenter<PlayerView> {
     public void songInfoClicked(Context context) {
         PlayerView playerView = getView();
         if (playerView != null) {
-            Song song = musicUtils.getSong();
+            Song song = mediaManager.getSong();
             if (song != null) {
                 playerView.showSongInfoDialog(BiographyDialog.getSongInfoDialog(context, song));
             }
@@ -313,9 +313,9 @@ public class PlayerPresenter extends Presenter<PlayerView> {
         PlayerView playerView = getView();
         if (playerView != null) {
             if (SettingsManager.getInstance().displayRemainingTime()) {
-                playerView.totalTimeChanged(-((musicUtils.getDuration() - musicUtils.getPosition()) / 1000));
+                playerView.totalTimeChanged(-((mediaManager.getDuration() - mediaManager.getPosition()) / 1000));
             } else {
-                playerView.totalTimeChanged(musicUtils.getDuration() / 1000);
+                playerView.totalTimeChanged(mediaManager.getDuration() / 1000);
             }
         }
     }
@@ -323,7 +323,7 @@ public class PlayerPresenter extends Presenter<PlayerView> {
     public void shareClicked(Context context) {
         PlayerView playerView = getView();
         if (playerView != null) {
-            Song song = musicUtils.getSong();
+            Song song = mediaManager.getSong();
             if (song != null) {
                 ShareDialog.getDialog(context, song).show();
             }

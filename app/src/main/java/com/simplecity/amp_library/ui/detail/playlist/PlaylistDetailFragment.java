@@ -295,7 +295,7 @@ public class PlaylistDetailFragment extends BaseFragment implements
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         // Todo: Close this fragment when the playlist is deleted.
-        if (PlaylistMenuUtils.handleMenuItemClicks(item, musicUtils, playlist, playlistMenuFragmentHelper.getCallbacks())) {
+        if (PlaylistMenuUtils.handleMenuItemClicks(item, mediaManager, playlist, playlistMenuFragmentHelper.getCallbacks())) {
             return true;
         }
 
@@ -471,7 +471,7 @@ public class PlaylistDetailFragment extends BaseFragment implements
             SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
             disposables.add(PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe());
 
-            contextualToolbar.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), musicUtils, Single.defer(() -> Operators.reduceSongSingles(contextualToolbarHelper.getItems())), songMenuFragmentHelper.getSongMenuCallbacks()));
+            contextualToolbar.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), mediaManager, Single.defer(() -> Operators.reduceSongSingles(contextualToolbarHelper.getItems())), songMenuFragmentHelper.getSongMenuCallbacks()));
 
             contextualToolbarHelper = new ContextualToolbarHelper<Single<List<Song>>>(contextualToolbar, new ContextualToolbarHelper.Callback() {
 
@@ -586,7 +586,7 @@ public class PlaylistDetailFragment extends BaseFragment implements
         public void onSongOverflowClick(int position, View v, Song song) {
             PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
             SongMenuUtils.setupSongMenu(popupMenu, playlist.canEdit);
-            popupMenu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(v.getContext(), musicUtils, position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
+            popupMenu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(v.getContext(), mediaManager, position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
             popupMenu.show();
         }
 

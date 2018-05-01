@@ -21,7 +21,7 @@ class GenreMenuFragmentHelper(val fragment: BaseFragment, val disposables: Compo
         }
 
         override fun playNext(genre: Genre) {
-            fragment.musicUtils.playNext(genre.songsObservable) { message -> Toast.makeText(fragment.context, message, Toast.LENGTH_LONG).show() }
+            fragment.mediaManager.playNext(genre.songsObservable) { message -> Toast.makeText(fragment.context, message, Toast.LENGTH_LONG).show() }
         }
     }
 }

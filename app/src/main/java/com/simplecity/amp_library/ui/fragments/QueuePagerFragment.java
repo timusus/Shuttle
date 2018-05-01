@@ -105,8 +105,8 @@ public class QueuePagerFragment extends BaseFragment implements
 
                 if (snapPosition < viewModelAdapter.items.size()) {
                     Observable.defer(() -> {
-                        if (musicUtils.getQueuePosition() != snapPosition) {
-                            musicUtils.setQueuePosition(snapPosition);
+                        if (mediaManager.getQueuePosition() != snapPosition) {
+                            mediaManager.setQueuePosition(snapPosition);
                         }
                         return Observable.empty();
                     })

@@ -32,10 +32,10 @@ import java.io.IOException;
 class LyricsPresenter extends Presenter<LyricsView> {
 
     private static final String TAG = "LyricsPresenter";
-    private MediaManager musicUtils;
+    private MediaManager mediaManager;
 
-    public LyricsPresenter(MediaManager musicUtils) {
-        this.musicUtils = musicUtils;
+    public LyricsPresenter(MediaManager mediaManager) {
+        this.mediaManager = mediaManager;
     }
 
     @Override
@@ -53,7 +53,7 @@ class LyricsPresenter extends Presenter<LyricsView> {
         LyricsView lyricsView = getView();
         if (lyricsView != null) {
             if (QuickLyricUtils.isQLInstalled()) {
-                Song song = musicUtils.getSong();
+                Song song = mediaManager.getSong();
                 if (song != null) {
                     lyricsView.launchQuickLyric(song);
                 }
@@ -75,7 +75,7 @@ class LyricsPresenter extends Presenter<LyricsView> {
         addDisposable(Observable.fromCallable(() -> {
 
             String lyrics = "";
-            String path = musicUtils.getFilePath();
+            String path = mediaManager.getFilePath();
 
             if (TextUtils.isEmpty(path)) {
                 return lyrics;

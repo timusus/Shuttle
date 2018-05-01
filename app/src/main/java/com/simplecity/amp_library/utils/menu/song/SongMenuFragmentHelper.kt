@@ -35,7 +35,7 @@ class SongMenuFragmentHelper(val fragment: BaseFragment, val disposables: Compos
         }
 
         override fun playNext(songsSingle: Single<List<Song>>) {
-            fragment.musicUtils.playNext(songsSingle) { message -> Toast.makeText(fragment.context, message, Toast.LENGTH_LONG).show() }
+            fragment.mediaManager.playNext(songsSingle) { message -> Toast.makeText(fragment.context, message, Toast.LENGTH_LONG).show() }
             callbacks?.playNext(songsSingle)
         }
 

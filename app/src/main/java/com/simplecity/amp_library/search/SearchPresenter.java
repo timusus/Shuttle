@@ -35,11 +35,11 @@ public class SearchPresenter extends Presenter<SearchView> {
     private Disposable performSearchSubscription;
 
     private String query;
-    private MediaManager musicUtils;
+    private MediaManager mediaManager;
 
     @Inject
-    public SearchPresenter(@NonNull MediaManager musicUtils) {
-        this.musicUtils = musicUtils;
+    public SearchPresenter(@NonNull MediaManager mediaManager) {
+        this.mediaManager = mediaManager;
     }
 
     @Override
@@ -125,7 +125,7 @@ public class SearchPresenter extends Presenter<SearchView> {
     void onSongClick(List<Song> songs, Song song) {
         SearchView view = getView();
 
-        musicUtils.playAll(songs, songs.indexOf(song), true, message -> {
+        mediaManager.playAll(songs, songs.indexOf(song), true, message -> {
             if (view != null) {
                 view.showToast(message);
             }

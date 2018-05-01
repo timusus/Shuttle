@@ -10,7 +10,7 @@ import com.simplecity.amp_library.ui.presenters.Presenter
 import com.simplecity.amp_library.utils.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 
-class AlbumDetailPresenter @JvmOverloads constructor(private val musicUtils: MusicUtils = MusicUtils(), private val album: Album) : Presenter<AlbumDetailView>() {
+class AlbumDetailPresenter @JvmOverloads constructor(private val mediaManager: MusicUtils = MusicUtils(), private val album: Album) : Presenter<AlbumDetailView>() {
 
     private var songs: MutableList<Song> = mutableListOf()
 
@@ -44,21 +44,21 @@ class AlbumDetailPresenter @JvmOverloads constructor(private val musicUtils: Mus
     }
 
     fun fabClicked() {
-        musicUtils.shuffleAll(songs, { view?.showToast(it) })
+        mediaManager.shuffleAll(songs, { view?.showToast(it) })
     }
 
     fun playAll() {
-        musicUtils.playAll(songs, 0, true) { message ->
+        mediaManager.playAll(songs, 0, true) { message ->
             view?.showToast(message)
         }
     }
 
     fun playNext() {
-        musicUtils.playNext(songs) { view?.showToast(it) }
+        mediaManager.playNext(songs) { view?.showToast(it) }
     }
 
     fun addToQueue() {
-        musicUtils.addToQueue(songs) { view?.showToast(it) }
+        mediaManager.addToQueue(songs) { view?.showToast(it) }
     }
 
     fun editTags() {
@@ -87,6 +87,6 @@ class AlbumDetailPresenter @JvmOverloads constructor(private val musicUtils: Mus
     }
 
     fun songClicked(song: Song) {
-        musicUtils.playAll(songs, songs.indexOf(song), true) { view?.showToast(it) }
+        mediaManager.playAll(songs, songs.indexOf(song), true) { view?.showToast(it) }
     }
 }

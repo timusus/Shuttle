@@ -401,7 +401,7 @@ public class AlbumArtistFragment extends BaseFragment implements
         menu.inflate(R.menu.menu_artist);
         SubMenu sub = menu.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
         PlaylistUtils.createPlaylistMenu(sub);
-        menu.setOnMenuItemClickListener(AlbumArtistMenuUtils.getAlbumArtistClickListener(getContext(), musicUtils, albumArtist, albumArtistMenuFragmentHelper.getCallbacks()));
+        menu.setOnMenuItemClickListener(AlbumArtistMenuUtils.getAlbumArtistClickListener(getContext(), mediaManager, albumArtist, albumArtistMenuFragmentHelper.getCallbacks()));
         menu.show();
     }
 
@@ -428,7 +428,7 @@ public class AlbumArtistFragment extends BaseFragment implements
             }
             playlistMenuDisposable = PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe();
 
-            contextualToolbar.setOnMenuItemClickListener(AlbumArtistMenuUtils.getAlbumArtistMenuClickListener(getContext(), musicUtils, Single.defer(() -> Single.just(contextualToolbarHelper.getItems())), albumArtistMenuFragmentHelper.getCallbacks()));
+            contextualToolbar.setOnMenuItemClickListener(AlbumArtistMenuUtils.getAlbumArtistMenuClickListener(getContext(), mediaManager, Single.defer(() -> Single.just(contextualToolbarHelper.getItems())), albumArtistMenuFragmentHelper.getCallbacks()));
             contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
                 @Override
                 public void notifyItemChanged(int position, SelectableViewModel viewModel) {

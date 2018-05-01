@@ -39,7 +39,7 @@ public abstract class BaseFragment extends BaseController {
     MultiSheetEventRelay multiSheetEventRelay;
 
     @Inject
-    protected MediaManager musicUtils;
+    protected MediaManager mediaManager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -132,8 +132,8 @@ public abstract class BaseFragment extends BaseController {
         }
     }
 
-    public MediaManager getMusicUtils() {
-        return musicUtils;
+    public MediaManager getMediaManager() {
+        return mediaManager;
     }
 
     protected abstract String screenName();

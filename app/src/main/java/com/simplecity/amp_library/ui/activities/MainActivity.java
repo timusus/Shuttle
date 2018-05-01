@@ -175,7 +175,7 @@ public class MainActivity extends BaseCastActivity implements
         final String mimeType = intent.getType();
 
         if (uri != null && uri.toString().length() > 0) {
-            musicUtils.playFile(uri);
+            mediaManager.playFile(uri);
             // Make sure to process intent only once
             setIntent(new Intent());
         } else if (MediaStore.Audio.Playlists.CONTENT_TYPE.equals(mimeType)) {
@@ -187,7 +187,7 @@ public class MainActivity extends BaseCastActivity implements
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(playlist -> {
-                            musicUtils.playAll(playlist.getSongsObservable().first(new ArrayList<>()),
+                            mediaManager.playAll(playlist.getSongsObservable().first(new ArrayList<>()),
                                     message -> {
                                         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
                                         return Unit.INSTANCE;
