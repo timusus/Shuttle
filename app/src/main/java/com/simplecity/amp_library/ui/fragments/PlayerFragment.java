@@ -24,11 +24,13 @@ import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.Util;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.TransitionOptions;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 import com.f2prateek.rx.preferences2.RxSharedPreferences;
 import com.jakewharton.rxbinding2.widget.RxSeekBar;
 import com.jakewharton.rxbinding2.widget.SeekBarChangeEvent;
@@ -158,7 +160,7 @@ public class PlayerFragment extends BaseFragment implements
     int currentColor = Color.TRANSPARENT;
 
     @Nullable
-    private Target<GlideDrawable> target;
+    private Target<Drawable> target;
 
     private boolean isLandscape;
 
@@ -248,7 +250,7 @@ public class PlayerFragment extends BaseFragment implements
     @Override
     public void onDestroyView() {
         if (target != null) {
-            Glide.clear(target);
+            Glide.with(this).clear(target);
         }
         snowfallView.clear();
         presenter.unbindView(this);
@@ -433,16 +435,20 @@ public class PlayerFragment extends BaseFragment implements
             toolbar.setTitle(song.name);
             toolbar.setSubtitle(String.format("%s | %s", song.artistName, song.albumName));
 
+            RequestOptions thumbOptions = new RequestOptions()
+                    .transform(new BlurTransformation(getContext(), 15, 4));
+            RequestOptions options = new RequestOptions()
+                    .apply(thumbOptions)
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                    .error(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.name, true));
             target = Glide.with(this)
                     .load(song)
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .bitmapTransform(new BlurTransformation(getContext(), 15, 4))
-                    .error(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.name, true))
+                    .apply(options)
                     .thumbnail(Glide
                             .with(this)
                             .load(this.song)
-                            .bitmapTransform(new BlurTransformation(getContext(), 15, 4)))
-                    .crossFade(600)
+                            .apply(thumbOptions)
+                    .transition(DrawableTransitionOptions.withCrossFade(600)))
                     .into(backgroundView);
 
             this.song = song;
@@ -454,15 +460,18 @@ public class PlayerFragment extends BaseFragment implements
 
         if (SettingsManager.getInstance().getUsePalette()) {
             //noinspection unchecked
-            Glide.with(this)
-                    .load(song)
-                    .asBitmap()
-                    .transcode(new PaletteBitmapTranscoder(getContext()), PaletteBitmap.class)
+            RequestOptions options = new RequestOptions()
                     .override(250, 250)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .transform();
+            Glide.with(this)
+                    .asBitmap()
+                    .load(song)
+                    .apply(options)
+                    .transcode(new PaletteBitmapTranscoder(getContext()), PaletteBitmap.class)
                     .into(new SimpleTarget<PaletteBitmap>() {
                         @Override
-                        public void onResourceReady(PaletteBitmap resource, GlideAnimation<? super PaletteBitmap> glideAnimation) {
+                        public void onResourceReady(PaletteBitmap resource, Transition<? super PaletteBitmap> glideAnimation) {
 
                             if (!isAdded() || getContext() == null) {
                                 return;
@@ -504,8 +513,8 @@ public class PlayerFragment extends BaseFragment implements
                         }
 
                         @Override
-                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                            super.onLoadFailed(e, errorDrawable);
+                        public void onLoadFailed(Drawable errorDrawable) {
+                            super.onLoadFailed(errorDrawable);
                             Aesthetic.get(getContext())
                                     .colorPrimary()
                                     .take(1)

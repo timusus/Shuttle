@@ -2,7 +2,11 @@ package com.simplecity.amp_library.glide.fetcher;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.annotation.NonNull;
 
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.data.DataFetcher;
 import com.simplecity.amp_library.http.lastfm.LastFmResult;
 import com.simplecity.amp_library.model.ArtworkProvider;
 

@@ -15,6 +15,7 @@ import android.widget.RemoteViews;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.glide.utils.CustomAppWidgetTarget;
@@ -141,10 +142,12 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     }
 
     void loadArtwork(MusicService service, RemoteViews views, int size, CustomAppWidgetTarget.CustomErrorListener errorListener, int... appWidgetIds) {
+        RequestOptions options = new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.ALL);
         Glide.with(service)
-                .load(service.getSong())
                 .asBitmap()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .load(service.getSong())
+                .apply(options)
                 .into(new CustomAppWidgetTarget(service, views, R.id.album_art, size, size, errorListener, appWidgetIds));
     }
 

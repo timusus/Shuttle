@@ -31,6 +31,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.glide.utils.AlwaysCrossFade;
 import com.simplecity.amp_library.model.Album;
@@ -351,16 +353,18 @@ public class AlbumDetailFragment extends BaseFragment implements
         int width = ResourceUtils.getScreenSize().width + ResourceUtils.toPixels(60);
         int height = getResources().getDimensionPixelSize(R.dimen.header_view_height);
 
-        requestManager.load((ArtworkProvider) album)
-                // Need to override the height/width, as the shared element transition tricks Glide into thinking this ImageView has
-                // the same dimensions as the ImageView that the transition starts with.
-                // So we'll set it to screen width (plus a little extra, which might fix an issue on some devices..)
+        // Need to override the height/width, as the shared element transition tricks Glide into thinking this ImageView has
+        // the same dimensions as the ImageView that the transition starts with.
+        // So we'll set it to screen width (plus a little extra, which might fix an issue on some devices..)
+        RequestOptions options = new RequestOptions()
                 .override(width, height)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .priority(Priority.HIGH)
                 .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(album.name, true))
-                .centerCrop()
-                .animate(new AlwaysCrossFade(false))
+                .centerCrop();
+        requestManager.load((ArtworkProvider) album)
+                .apply(options)
+                .transition(DrawableTransitionOptions.withCrossFade())
                 .into(headerImageView);
     }
 

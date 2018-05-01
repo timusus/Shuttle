@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.ui.adapters.ViewType;
@@ -43,10 +44,12 @@ public class QueuePagerItemView extends BaseViewModel<QueuePagerItemView.ViewHol
     public void bindView(ViewHolder holder) {
         super.bindView(holder);
 
+        RequestOptions options = new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .error(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.name, true));
         requestManager
                 .load(song)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .error(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.name, true))
+                .apply(options)
                 .into(holder.imageView);
     }
 
@@ -65,7 +68,7 @@ public class QueuePagerItemView extends BaseViewModel<QueuePagerItemView.ViewHol
             super.recycle();
 
 
-            Glide.clear(imageView);
+            Glide.with(itemView).clear(imageView);
         }
     }
 

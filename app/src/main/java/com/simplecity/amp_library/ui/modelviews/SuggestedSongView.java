@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.ui.adapters.ViewType;
@@ -72,9 +73,11 @@ public class SuggestedSongView extends MultiItemView<SuggestedSongView.ViewHolde
             holder.trackCount.setVisibility(View.GONE);
         }
 
-        requestManager.load(song)
+        RequestOptions options = new RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.albumName, false))
+                .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.albumName, false));
+        requestManager.load(song)
+                .apply(options)
                 .into(holder.imageOne);
 
         holder.overflowButton.setContentDescription(holder.itemView.getResources().getString(R.string.btn_options, song.name));

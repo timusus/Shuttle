@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.ui.modelviews;
 
+import android.content.Context;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -107,12 +108,13 @@ public class ArtworkView extends BaseViewModel<ArtworkView.ViewHolder> {
         holder.progressBar.setVisibility(View.VISIBLE);
         holder.lineTwo.setText(null);
 
-        Glide.with(holder.itemView.getContext())
+        Context context = holder.itemView.getContext();
+        Glide.with(context)
                 .using(new TypeLoader(type, file), InputStream.class)
                 .from(ArtworkProvider.class)
                 .as(BitmapAndSize.class)
-                .sourceEncoder(new StreamEncoder())
-                .decoder(new BitmapAndSizeDecoder(holder.itemView.getContext()))
+                .sourceEncoder(new StreamEncoder(Glide.get(context).getArrayPool()))
+                .decoder(new BitmapAndSizeDecoder(context))
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .load(artworkProvider)
                 .listener(new RequestListener<ArtworkProvider, BitmapAndSize>() {
@@ -150,7 +152,7 @@ public class ArtworkView extends BaseViewModel<ArtworkView.ViewHolder> {
         }
 
         if (isCustom && file != null && file.getPath().contains("custom_artwork")) {
-            holder.lineOne.setText(holder.itemView.getContext().getString(R.string.artwork_type_custom));
+            holder.lineOne.setText(context.getString(R.string.artwork_type_custom));
         }
 
         holder.checkView.setVisibility(isSelected() ? View.VISIBLE : View.GONE);

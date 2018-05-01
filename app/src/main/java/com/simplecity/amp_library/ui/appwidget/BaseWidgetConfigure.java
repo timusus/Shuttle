@@ -36,6 +36,7 @@ import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.playback.constants.MediaButtonCommand;
 import com.simplecity.amp_library.playback.constants.ServiceCommand;
@@ -370,10 +371,12 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
                         }
                     }
 
+                    RequestOptions options = new RequestOptions()
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .placeholder(R.drawable.ic_placeholder_light_medium);
                     Glide.with(this)
                             .load(MusicUtils.getSong())
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .placeholder(R.drawable.ic_placeholder_light_medium)
+                            .apply(options)
                             .into(albumArt);
                 }
             }

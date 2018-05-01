@@ -1,8 +1,10 @@
 package com.simplecity.amp_library.glide.fetcher;
 
 import android.support.annotation.CallSuper;
+import android.support.annotation.NonNull;
 
 import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.data.DataFetcher;
 import com.simplecity.amp_library.model.ArtworkProvider;
 

@@ -7,8 +7,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.widget.RemoteViews;
 
-import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.simplecity.amp_library.R;
 
 /**
@@ -89,14 +89,14 @@ public class CustomAppWidgetTarget extends SimpleTarget<Bitmap> {
     }
 
     @Override
-    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
         this.remoteViews.setImageViewBitmap(this.viewId, resource);
         this.update();
     }
 
     @Override
-    public void onLoadFailed(Exception e, Drawable errorDrawable) {
-        super.onLoadFailed(e, errorDrawable);
+    public void onLoadFailed(Drawable errorDrawable) {
+        super.onLoadFailed(errorDrawable);
         this.remoteViews.setImageViewResource(R.id.album_art, R.drawable.ic_placeholder_light_medium);
         this.update();
     }

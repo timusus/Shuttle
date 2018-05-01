@@ -20,6 +20,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
@@ -245,11 +246,13 @@ public class MiniPlayerFragment extends BaseFragment {
             trackName.setText(song.name);
             artistName.setText(String.format("%s | %s", song.artistName, song.albumName));
 
-            Glide.with(getContext())
-                    .load(song)
+            RequestOptions options = new RequestOptions()
                     .priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.name, false))
+                    .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.name, false));
+            Glide.with(getContext())
+                    .load(song)
+                    .apply(options)
                     .into(miniArtwork);
 
             rootView.setContentDescription(getString(R.string.btn_now_playing, song.name, song.artistName));

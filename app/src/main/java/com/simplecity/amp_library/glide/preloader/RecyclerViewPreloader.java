@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.bumptech.glide.ListPreloader;
 import com.bumptech.glide.ListPreloader.*;
+import com.bumptech.glide.RequestManager;
 
 /**
  * Loads a few resources ahead in the direction of scrolling in any {@link RecyclerView} so that
@@ -32,10 +33,10 @@ public final class RecyclerViewPreloader<T> extends RecyclerView.OnScrollListene
      * @param preloadDimensionProvider Provides the dimensions of images to load.
      * @param maxPreload               Maximum number of items to preload.
      */
-    public RecyclerViewPreloader(PreloadModelProvider<T> preloadModelProvider,
+    public RecyclerViewPreloader(RequestManager requestManager, PreloadModelProvider<T> preloadModelProvider,
                                  PreloadSizeProvider<T> preloadDimensionProvider, int maxPreload) {
 
-        ListPreloader<T> listPreloader = new ListPreloader<>(preloadModelProvider,
+        ListPreloader<T> listPreloader = new ListPreloader<>(requestManager, preloadModelProvider,
                 preloadDimensionProvider, maxPreload);
         recyclerScrollListener = new RecyclerToListViewScrollListener(listPreloader);
     }

@@ -25,6 +25,7 @@ import com.bignerdranch.expandablerecyclerview.model.Parent;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.ActivityModule;
@@ -327,15 +328,16 @@ public class DrawerFragment extends BaseFragment implements
             artistNameView.setText(String.format("%s - %s", song.albumArtistName, song.albumName));
             placeholderText.setText(R.string.app_name);
 
+            RequestOptions shared = new RequestOptions()
+                    .autoClone()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL);
+
             requestManager.load(song)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .centerCrop()
-                    .error(backgroundPlaceholder)
+                    .apply(shared.centerCrop().error(backgroundPlaceholder))
                     .into(backgroundImage);
 
             requestManager.load(song.getAlbumArtist())
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .placeholder(PlaceholderProvider.getInstance().getMediumPlaceHolderResId())
+                    .apply(shared.placeholder(PlaceholderProvider.getInstance().getMediumPlaceHolderResId()))
                     .into(artistImage);
 
             if (song.name == null || (song.albumName == null && song.albumArtistName == null)) {

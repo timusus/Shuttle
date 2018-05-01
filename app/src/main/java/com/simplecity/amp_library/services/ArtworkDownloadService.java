@@ -114,7 +114,7 @@ public class ArtworkDownloadService extends Service {
                             } catch (InterruptedException | ExecutionException | TimeoutException e) {
                                 Log.e(TAG, "Error downloading artworkProvider: " + e);
                             }
-                            Glide.clear(futureTarget);
+                            Glide.with(ArtworkDownloadService.this).clear(futureTarget);
                             return artwork;
                         }))
                 .subscribeOn(Schedulers.computation())
