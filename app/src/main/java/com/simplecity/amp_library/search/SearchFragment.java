@@ -132,7 +132,7 @@ public class SearchFragment extends BaseFragment implements
 
         searchPresenter = new SearchPresenter(musicUtils);
 
-        query = getArguments().getString(ARG_QUERY);
+        query = getArguments().getString(ARG_QUERY, "");
 
         loadingView = new LoadingView();
 
