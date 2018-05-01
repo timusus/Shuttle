@@ -9,35 +9,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import com.bumptech.glide.GenericRequestBuilder;
 import com.bumptech.glide.ListPreloader;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.glide.preloader.RecyclerViewPreloader;
 import com.simplecity.amp_library.ui.modelviews.QueuePagerItemView;
 import com.simplecity.amp_library.ui.presenters.QueuePagerPresenter;
 import com.simplecity.amp_library.ui.views.QueuePagerView;
-import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 
+import javax.inject.Inject;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import javax.inject.Inject;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-import io.reactivex.Observable;
-import io.reactivex.schedulers.Schedulers;
 
 public class QueuePagerFragment extends BaseFragment implements
         RequestManagerProvider,
@@ -80,6 +77,7 @@ public class QueuePagerFragment extends BaseFragment implements
         viewModelAdapter = new ViewModelAdapter();
 
         ShuttleApplication.getInstance().getAppComponent()
+                .plus(new ActivityModule(getActivity()))
                 .plus(new FragmentModule(this))
                 .inject(this);
     }
@@ -107,8 +105,8 @@ public class QueuePagerFragment extends BaseFragment implements
 
                 if (snapPosition < viewModelAdapter.items.size()) {
                     Observable.defer(() -> {
-                        if (MusicUtils.getQueuePosition() != snapPosition) {
-                            MusicUtils.setQueuePosition(snapPosition);
+                        if (musicUtils.getQueuePosition() != snapPosition) {
+                            musicUtils.setQueuePosition(snapPosition);
                         }
                         return Observable.empty();
                     })

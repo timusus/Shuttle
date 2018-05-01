@@ -23,15 +23,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.RemoteViews;
-import android.widget.SeekBar;
-import android.widget.TextView;
-
+import android.widget.*;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.bumptech.glide.Glide;
@@ -44,7 +36,6 @@ import com.simplecity.amp_library.ui.fragments.WidgetFragment;
 import com.simplecity.amp_library.ui.views.SizableSeekBar;
 import com.simplecity.amp_library.ui.widgets.BaseWidgetProvider;
 import com.simplecity.amp_library.utils.ColorUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
 
 public abstract class BaseWidgetConfigure extends BaseActivity implements
         View.OnClickListener,
@@ -330,9 +321,9 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
                 TextView text1 = widgetLayout.findViewById(R.id.text1);
                 TextView text2 = widgetLayout.findViewById(R.id.text2);
                 TextView text3 = widgetLayout.findViewById(R.id.text3);
-                String trackName = MusicUtils.getSong().name;
-                String artistName = MusicUtils.getSong().albumArtistName;
-                final String albumName = MusicUtils.getSong().albumName;
+                String trackName = musicUtils.getSong().name;
+                String artistName = musicUtils.getSong().albumArtistName;
+                final String albumName = musicUtils.getSong().albumName;
                 if (trackName != null && text1 != null) {
                     text1.setText(trackName);
                     text1.setTextColor(textColor);
@@ -371,7 +362,7 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
                     }
 
                     Glide.with(this)
-                            .load(MusicUtils.getSong())
+                            .load(musicUtils.getSong())
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .placeholder(R.drawable.ic_placeholder_light_medium)
                             .into(albumArt);

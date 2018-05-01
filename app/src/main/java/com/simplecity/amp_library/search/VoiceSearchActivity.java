@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.widget.Toast;
-
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
@@ -15,13 +14,12 @@ import com.simplecity.amp_library.ui.activities.MainActivity;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import kotlin.Unit;
 
 import java.util.Collections;
 import java.util.Locale;
-
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 
 import static com.simplecity.amp_library.utils.StringUtils.containsIgnoreCase;
 
@@ -125,8 +123,10 @@ public class VoiceSearchActivity extends BaseActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(songs -> {
                     if (songs != null) {
-                        MusicUtils.playAll(songs, position, true, (String message) ->
-                                Toast.makeText(this, message, Toast.LENGTH_SHORT).show());
+                        musicUtils.playAll(songs, position, true, message -> {
+                            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                            return Unit.INSTANCE;
+                        });
                         startActivity(new Intent(this, MainActivity.class));
                     }
                     finish();

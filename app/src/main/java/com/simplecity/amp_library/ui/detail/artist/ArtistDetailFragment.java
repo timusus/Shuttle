@@ -19,15 +19,14 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.SubMenu;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
 import com.afollestad.aesthetic.Aesthetic;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
@@ -51,27 +50,10 @@ import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
 import com.simplecity.amp_library.ui.fragments.BaseFragment;
 import com.simplecity.amp_library.ui.fragments.TransitionListenerAdapter;
-import com.simplecity.amp_library.ui.modelviews.AlbumView;
-import com.simplecity.amp_library.ui.modelviews.EmptyView;
-import com.simplecity.amp_library.ui.modelviews.HorizontalAlbumView;
-import com.simplecity.amp_library.ui.modelviews.HorizontalRecyclerView;
-import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
-import com.simplecity.amp_library.ui.modelviews.SongView;
-import com.simplecity.amp_library.ui.modelviews.SubheaderView;
+import com.simplecity.amp_library.ui.modelviews.*;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.ui.views.ContextualToolbarHost;
-import com.simplecity.amp_library.utils.ActionBarUtils;
-import com.simplecity.amp_library.utils.ArtworkDialog;
-import com.simplecity.amp_library.utils.ContextualToolbarHelper;
-import com.simplecity.amp_library.utils.MusicUtils;
-import com.simplecity.amp_library.utils.Operators;
-import com.simplecity.amp_library.utils.PlaceholderProvider;
-import com.simplecity.amp_library.utils.PlaylistUtils;
-import com.simplecity.amp_library.utils.ResourceUtils;
-import com.simplecity.amp_library.utils.ShuttleUtils;
-import com.simplecity.amp_library.utils.SortManager;
-import com.simplecity.amp_library.utils.StringUtils;
-import com.simplecity.amp_library.utils.TypefaceManager;
+import com.simplecity.amp_library.utils.*;
 import com.simplecity.amp_library.utils.menu.album.AlbumMenuFragmentHelper;
 import com.simplecity.amp_library.utils.menu.album.AlbumMenuUtils;
 import com.simplecity.amp_library.utils.menu.song.SongMenuFragmentHelper;
@@ -80,18 +62,13 @@ import com.simplecityapps.recycler_adapter.adapter.CompletionListUpdateCallbackA
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
+import io.reactivex.Single;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.Unbinder;
-import io.reactivex.Single;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 
 import static com.afollestad.aesthetic.Rx.distinctToMainThread;
 
@@ -187,7 +164,7 @@ public class ArtistDetailFragment extends BaseFragment implements
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
-        presenter = new ArtistDetailPresenter(albumArtist);
+        presenter = new ArtistDetailPresenter(musicUtils, albumArtist);
 
         requestManager = Glide.with(this);
 
@@ -471,7 +448,7 @@ public class ArtistDetailFragment extends BaseFragment implements
             SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
             disposables.add(PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe());
 
-            contextualToolbar.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), Single.defer(() -> Operators.reduceSongSingles(contextualToolbarHelper.getItems())), songMenuFragmentHelper.getSongMenuCallbacks()));
+            contextualToolbar.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), musicUtils, Single.defer(() -> Operators.reduceSongSingles(contextualToolbarHelper.getItems())), songMenuFragmentHelper.getSongMenuCallbacks()));
 
             contextualToolbarHelper = new ContextualToolbarHelper<Single<List<Song>>>(contextualToolbar, new ContextualToolbarHelper.Callback() {
 
@@ -534,7 +511,7 @@ public class ArtistDetailFragment extends BaseFragment implements
         public void onSongOverflowClick(int position, View v, Song song) {
             PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
             SongMenuUtils.setupSongMenu(popupMenu, false);
-            popupMenu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(v.getContext(), position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
+            popupMenu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(v.getContext(), musicUtils, position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
             popupMenu.show();
         }
 
@@ -562,7 +539,7 @@ public class ArtistDetailFragment extends BaseFragment implements
         public void onAlbumOverflowClicked(View v, Album album) {
             PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
             AlbumMenuUtils.setupAlbumMenu(popupMenu);
-            popupMenu.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(v.getContext(), album, albumMenuFragmentHelper.getCallbacks()));
+            popupMenu.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(v.getContext(), musicUtils, album, albumMenuFragmentHelper.getCallbacks()));
             popupMenu.show();
         }
     };

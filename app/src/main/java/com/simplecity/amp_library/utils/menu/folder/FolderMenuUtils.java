@@ -10,7 +10,6 @@ import android.view.SubMenu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.interfaces.FileType;
@@ -18,22 +17,17 @@ import com.simplecity.amp_library.model.BaseFileObject;
 import com.simplecity.amp_library.model.FileObject;
 import com.simplecity.amp_library.model.FolderObject;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.ui.modelviews.FolderView;
-import com.simplecity.amp_library.utils.CustomMediaScanner;
-import com.simplecity.amp_library.utils.DialogUtils;
-import com.simplecity.amp_library.utils.FileHelper;
-import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
-import com.simplecity.amp_library.utils.PlaylistUtils;
+import com.simplecity.amp_library.utils.*;
 import com.simplecity.amp_library.utils.menu.MenuUtils;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
-
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 
 public class FolderMenuUtils {
 
@@ -172,22 +166,22 @@ public class FolderMenuUtils {
     }
 
     @Nullable
-    public static PopupMenu.OnMenuItemClickListener getFolderMenuClickListener(Context context, FolderView folderView, Callbacks callbacks) {
+    public static PopupMenu.OnMenuItemClickListener getFolderMenuClickListener(Context context, MediaManager mediaManager, FolderView folderView, Callbacks callbacks) {
         switch (folderView.baseFileObject.fileType) {
             case FileType.FILE:
-                return getFileMenuClickListener(context, folderView, (FileObject) folderView.baseFileObject, callbacks);
+                return getFileMenuClickListener(context, mediaManager, folderView, (FileObject) folderView.baseFileObject, callbacks);
             case FileType.FOLDER:
-                return getFolderMenuClickListener(context, folderView, (FolderObject) folderView.baseFileObject, callbacks);
+                return getFolderMenuClickListener(context, mediaManager, folderView, (FolderObject) folderView.baseFileObject, callbacks);
         }
         return null;
     }
 
-    private static PopupMenu.OnMenuItemClickListener getFolderMenuClickListener(Context context, FolderView folderView, FolderObject folderObject, Callbacks callbacks) {
+    private static PopupMenu.OnMenuItemClickListener getFolderMenuClickListener(Context context, MediaManager mediaManager, FolderView folderView, FolderObject folderObject, Callbacks callbacks) {
 
         return menuItem -> {
             switch (menuItem.getItemId()) {
                 case R.id.play:
-                    MenuUtils.play(getSongsForFolderObject(folderObject), callbacks::showToast);
+                    MenuUtils.play(mediaManager, getSongsForFolderObject(folderObject), callbacks::showToast);
                     return true;
                 case R.id.playNext:
                     callbacks.playNext(getSongsForFolderObject(folderObject));
@@ -199,7 +193,7 @@ public class FolderMenuUtils {
                     MenuUtils.addToPlaylist(context, menuItem, getSongsForFolderObject(folderObject), callbacks::onPlaylistItemsInserted);
                     return true;
                 case R.id.addToQueue:
-                    MenuUtils.addToQueue(getSongsForFolderObject(folderObject), callbacks::onQueueItemsInserted);
+                    MenuUtils.addToQueue(mediaManager, getSongsForFolderObject(folderObject), callbacks::onQueueItemsInserted);
                     return true;
                 case R.id.scan:
                     scanFolder(context, folderObject);
@@ -220,7 +214,7 @@ public class FolderMenuUtils {
         };
     }
 
-    private static PopupMenu.OnMenuItemClickListener getFileMenuClickListener(Context context, FolderView folderView, FileObject fileObject, Callbacks callbacks) {
+    private static PopupMenu.OnMenuItemClickListener getFileMenuClickListener(Context context, MediaManager mediaManager, FolderView folderView, FileObject fileObject, Callbacks callbacks) {
         return menuItem -> {
 
             Consumer<Throwable> errorHandler = e -> LogUtils.logException(TAG, "getFileMenuClickListener threw error", e);
@@ -228,7 +222,7 @@ public class FolderMenuUtils {
             switch (menuItem.getItemId()) {
                 case R.id.playNext:
                     getSongForFile(fileObject).subscribe(song ->
-                            MenuUtils.playNext(song, callbacks::showToast), errorHandler);
+                            MenuUtils.playNext(mediaManager, song, callbacks::showToast), errorHandler);
                     return true;
                 case MusicUtils.Defs.NEW_PLAYLIST:
                     getSongForFile(fileObject).subscribe(song ->
@@ -240,7 +234,7 @@ public class FolderMenuUtils {
                     return true;
                 case R.id.addToQueue:
                     getSongForFile(fileObject).subscribe(song ->
-                            MenuUtils.addToQueue(Collections.singletonList(song), callbacks::onQueueItemsInserted), errorHandler);
+                            MenuUtils.addToQueue(mediaManager, Collections.singletonList(song), callbacks::onQueueItemsInserted), errorHandler);
                     return true;
                 case R.id.scan:
                     scanFile(fileObject, callbacks);

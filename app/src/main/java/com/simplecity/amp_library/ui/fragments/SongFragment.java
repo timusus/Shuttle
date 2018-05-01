@@ -5,15 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.SubMenu;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.Toast;
-
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Song;
@@ -23,28 +16,22 @@ import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
 import com.simplecity.amp_library.ui.modelviews.ShuffleView;
 import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
-import com.simplecity.amp_library.utils.ContextualToolbarHelper;
-import com.simplecity.amp_library.utils.DataManager;
-import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
-import com.simplecity.amp_library.utils.PermissionUtils;
-import com.simplecity.amp_library.utils.PlaylistUtils;
-import com.simplecity.amp_library.utils.SortManager;
+import com.simplecity.amp_library.utils.*;
 import com.simplecity.amp_library.utils.menu.song.SongMenuFragmentHelper;
 import com.simplecity.amp_library.utils.menu.song.SongMenuUtils;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import kotlin.Unit;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class SongFragment extends BaseFragment implements
         SongView.ClickListener,
@@ -294,8 +281,10 @@ public class SongFragment extends BaseFragment implements
                     .map(adaptableItem -> ((SongView) adaptableItem).song)
                     .toList();
 
-            MusicUtils.playAll(songs, songs.indexOf(songView.song), true, (String message) ->
-                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show());
+            musicUtils.playAll(songs, songs.indexOf(songView.song), true, message -> {
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                return Unit.INSTANCE;
+            });
         }
     }
 
@@ -303,7 +292,7 @@ public class SongFragment extends BaseFragment implements
     public void onSongOverflowClick(int position, View view, Song song) {
         PopupMenu menu = new PopupMenu(getContext(), view);
         SongMenuUtils.setupSongMenu(menu, false);
-        menu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
+        menu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), musicUtils, position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
         menu.show();
     }
 
@@ -319,7 +308,10 @@ public class SongFragment extends BaseFragment implements
 
     @Override
     public void onShuffleItemClick() {
-        MusicUtils.shuffleAll(DataManager.getInstance().getSongsRelay().firstOrError(), message -> Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show());
+        musicUtils.shuffleAll(DataManager.getInstance().getSongsRelay().firstOrError(), message -> {
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            return Unit.INSTANCE;
+        });
     }
 
     @Override
@@ -358,7 +350,7 @@ public class SongFragment extends BaseFragment implements
                 }
             });
 
-            contextualToolbar.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), Single.defer(() -> Single.just(contextualToolbarHelper.getItems())), songMenuFragmentHelper.getSongMenuCallbacks()));
+            contextualToolbar.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), musicUtils, Single.defer(() -> Single.just(contextualToolbarHelper.getItems())), songMenuFragmentHelper.getSongMenuCallbacks()));
         }
     }
 

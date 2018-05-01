@@ -7,6 +7,7 @@ import android.view.MenuItem;
 
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Playlist;
+import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.menu.MenuUtils;
@@ -104,14 +105,14 @@ public class PlaylistMenuUtils {
         }
     }
 
-    public static PopupMenu.OnMenuItemClickListener getPlaylistPopupMenuClickListener(Playlist playlist, Callbacks callbacks) {
-        return item -> handleMenuItemClicks(item, playlist, callbacks);
+    public static PopupMenu.OnMenuItemClickListener getPlaylistPopupMenuClickListener(MediaManager mediaManager, Playlist playlist, Callbacks callbacks) {
+        return item -> handleMenuItemClicks(item, mediaManager, playlist, callbacks);
     }
 
-    public static boolean handleMenuItemClicks(MenuItem menuItem, Playlist playlist, Callbacks callbacks) {
+    public static boolean handleMenuItemClicks(MenuItem menuItem, MediaManager mediaManager, Playlist playlist, Callbacks callbacks) {
         switch (menuItem.getItemId()) {
             case R.id.playPlaylist:
-                MenuUtils.play(playlist.getSongsObservable().first(Collections.emptyList()), callbacks::showToast);
+                MenuUtils.play(mediaManager, playlist.getSongsObservable().first(Collections.emptyList()), callbacks::showToast);
                 return true;
             case R.id.playNext:
                 callbacks.playNext(playlist);

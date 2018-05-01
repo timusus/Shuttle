@@ -14,7 +14,6 @@ import android.support.annotation.Nullable;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.widget.Toast;
-
 import com.afollestad.aesthetic.AestheticActivity;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.Purchase;
@@ -23,9 +22,11 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.billing.BillingManager;
 import com.simplecity.amp_library.constants.Config;
+import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
+import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 
 import java.util.List;
@@ -39,6 +40,8 @@ public abstract class BaseActivity extends AestheticActivity implements ServiceC
 
     @Nullable
     private BillingManager billingManager;
+
+    protected MediaManager musicUtils = new MusicUtils();
 
     @CallSuper
     protected void onCreate(final Bundle savedInstanceState) {
@@ -180,4 +183,7 @@ public abstract class BaseActivity extends AestheticActivity implements ServiceC
 
     protected abstract String screenName();
 
+    public MediaManager getMusicUtils() {
+        return musicUtils;
+    }
 }

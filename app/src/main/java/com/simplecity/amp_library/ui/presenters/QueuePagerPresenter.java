@@ -3,29 +3,29 @@ package com.simplecity.amp_library.ui.presenters;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.annotation.NonNull;
-
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.bumptech.glide.RequestManager;
 import com.cantrowitz.rxbroadcast.RxBroadcast;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.ui.modelviews.QueuePagerItemView;
 import com.simplecity.amp_library.ui.views.QueuePagerView;
-import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
-
-import java.util.List;
-
-import javax.inject.Inject;
-
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+
+import javax.inject.Inject;
+import java.util.List;
 
 public class QueuePagerPresenter extends Presenter<QueuePagerView> {
 
     @Inject
     RequestManager requestManager;
+
+    @Inject
+    MediaManager musicUtils;
 
     @Inject
     public QueuePagerPresenter() {
@@ -58,18 +58,18 @@ public class QueuePagerPresenter extends Presenter<QueuePagerView> {
                     if (action != null) {
                         switch (action) {
                             case InternalIntents.META_CHANGED:
-                                queuePagerView.updateQueuePosition(MusicUtils.getQueuePosition());
+                                queuePagerView.updateQueuePosition(musicUtils.getQueuePosition());
                                 break;
                             case InternalIntents.REPEAT_CHANGED:
                             case InternalIntents.SHUFFLE_CHANGED:
                             case InternalIntents.QUEUE_CHANGED:
                             case InternalIntents.SERVICE_CONNECTED:
 
-                                List<ViewModel> items = Stream.of(MusicUtils.getQueue())
+                                List<ViewModel> items = Stream.of(musicUtils.getQueue())
                                         .map(song -> new QueuePagerItemView(song, requestManager))
                                         .collect(Collectors.toList());
 
-                                queuePagerView.loadData(items, MusicUtils.getQueuePosition());
+                                queuePagerView.loadData(items, musicUtils.getQueuePosition());
                                 break;
                         }
                     }

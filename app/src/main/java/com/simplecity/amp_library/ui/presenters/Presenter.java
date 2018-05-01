@@ -49,5 +49,4 @@ public class Presenter<V> {
         // Unsubscribe all disposables that need to be unsubscribed in this lifecycle state.
         disposables.clear();
     }
-
 }

@@ -14,7 +14,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.provider.DocumentFile;
 import android.widget.Toast;
-
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.annimon.stream.function.Supplier;
@@ -22,26 +21,26 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.saf.SafManager;
 import com.simplecity.amp_library.sql.providers.PlayCountTable;
 import com.simplecity.amp_library.utils.CustomMediaScanner;
 import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.extensions.SongExtKt;
-
-import java.io.File;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+
+import javax.inject.Inject;
+import java.io.File;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class DeleteDialog extends DialogFragment implements SafManager.SafDialog.SafResultListener {
 
@@ -68,6 +67,9 @@ public class DeleteDialog extends DialogFragment implements SafManager.SafDialog
 
     @StringRes
     private int deleteMessageId;
+
+    @Inject
+    MediaManager musicUtils;
 
     private List<AlbumArtist> artists;
     private List<Album> albums;
@@ -305,7 +307,7 @@ public class DeleteDialog extends DialogFragment implements SafManager.SafDialog
         }
 
         // Remove songs from current play queue
-        MusicUtils.removeFromQueue(deletedSongs);
+        musicUtils.removeFromQueue(deletedSongs);
 
         // Remove songs from play count table
         ArrayList<ContentProviderOperation> operations = Stream.of(deletedSongs).map(song -> ContentProviderOperation

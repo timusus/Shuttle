@@ -1,13 +1,11 @@
 package com.simplecity.amp_library.dagger.module;
 
 import android.content.Context;
-
 import com.simplecity.amp_library.ShuttleApplication;
-
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
+
+import javax.inject.Singleton;
 
 @Module
 public class AppModule {

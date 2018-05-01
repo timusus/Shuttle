@@ -13,7 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.Util;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -21,6 +23,7 @@ import com.annimon.stream.Stream;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.tagger.TaggerDialog;
@@ -36,13 +39,8 @@ import com.simplecity.amp_library.ui.views.PlayerViewAdapter;
 import com.simplecity.amp_library.ui.views.QueueView;
 import com.simplecity.amp_library.ui.views.ThemedStatusBarView;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetSlideEventRelay;
-import com.simplecity.amp_library.utils.ContextualToolbarHelper;
+import com.simplecity.amp_library.utils.*;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper.Callback;
-import com.simplecity.amp_library.utils.MusicUtils;
-import com.simplecity.amp_library.utils.PermissionUtils;
-import com.simplecity.amp_library.utils.PlaylistUtils;
-import com.simplecity.amp_library.utils.ResourceUtils;
-import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.menu.song.SongMenuFragmentHelper;
 import com.simplecity.amp_library.utils.menu.song.SongMenuUtils;
 import com.simplecity.multisheetview.ui.view.MultiSheetView;
@@ -51,17 +49,12 @@ import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
-
-import java.util.List;
-
-import javax.inject.Inject;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+
+import javax.inject.Inject;
+import java.util.List;
 
 public class QueueFragment extends BaseFragment implements QueueView {
 
@@ -98,7 +91,8 @@ public class QueueFragment extends BaseFragment implements QueueView {
     @Inject
     PlayerPresenter playerPresenter;
 
-    QueuePresenter queuePresenter = new QueuePresenter();
+    @Inject
+    QueuePresenter queuePresenter;
 
     ItemTouchHelper itemTouchHelper;
 
@@ -122,6 +116,7 @@ public class QueueFragment extends BaseFragment implements QueueView {
         super.onCreate(savedInstanceState);
 
         ShuttleApplication.getInstance().getAppComponent()
+                .plus(new ActivityModule(getActivity()))
                 .plus(new FragmentModule(this))
                 .inject(this);
 
@@ -153,7 +148,7 @@ public class QueueFragment extends BaseFragment implements QueueView {
 
         itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(
                 (fromPosition, toPosition) ->
-                        adapter.moveItem(fromPosition, toPosition), MusicUtils::moveQueueItem,
+                        adapter.moveItem(fromPosition, toPosition), musicUtils::moveQueueItem,
                 () -> {
                     // Nothing to do
                 }));
@@ -291,7 +286,7 @@ public class QueueFragment extends BaseFragment implements QueueView {
         public void onSongOverflowClick(int position, View v, Song song) {
             PopupMenu menu = new PopupMenu(v.getContext(), v);
             SongMenuUtils.setupSongMenu(menu, true);
-            menu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(v.getContext(), position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
+            menu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(v.getContext(), musicUtils, position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
             menu.show();
         }
 

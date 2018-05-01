@@ -2,30 +2,31 @@ package com.simplecity.amp_library.ui.fragments;
 
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-
 import com.google.android.libraries.cast.companionlibrary.cast.BaseCastManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
+import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.ui.activities.BaseCastActivity;
 import com.simplecity.amp_library.ui.views.CustomMediaRouteActionProvider;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
 import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.squareup.leakcanary.RefWatcher;
-
-import java.lang.reflect.Field;
+import test.com.androidnavigation.fragment.BaseController;
 
 import javax.inject.Inject;
-
-import test.com.androidnavigation.fragment.BaseController;
+import java.lang.reflect.Field;
 
 public abstract class BaseFragment extends BaseController {
 
@@ -37,13 +38,23 @@ public abstract class BaseFragment extends BaseController {
     @Inject
     MultiSheetEventRelay multiSheetEventRelay;
 
+    @Inject
+    protected MediaManager musicUtils;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         ShuttleApplication.getInstance().getAppComponent()
+                .plus(new ActivityModule(getActivity()))
                 .plus(new FragmentModule(this))
                 .inject(this);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
     }
 
     @Override
@@ -119,6 +130,10 @@ public abstract class BaseFragment extends BaseController {
             MenuItem mediaRouteMenuItem = menu.findItem(R.id.media_route_menu_item);
             ((CustomMediaRouteActionProvider) MenuItemCompat.getActionProvider(mediaRouteMenuItem)).setActivity(getActivity());
         }
+    }
+
+    public MediaManager getMusicUtils() {
+        return musicUtils;
     }
 
     protected abstract String screenName();

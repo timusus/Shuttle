@@ -4,17 +4,16 @@ import android.content.Context;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.view.SubMenu;
-
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.menu.MenuUtils;
+import io.reactivex.Single;
 
 import java.util.Collections;
 import java.util.List;
-
-import io.reactivex.Single;
 
 public class SongMenuUtils {
 
@@ -77,7 +76,7 @@ public class SongMenuUtils {
         };
     }
 
-    public static Toolbar.OnMenuItemClickListener getSongMenuClickListener(Context context, Single<List<Song>> songsSingle, Callbacks callbacks) {
+    public static Toolbar.OnMenuItemClickListener getSongMenuClickListener(Context context, MediaManager mediaManager, Single<List<Song>> songsSingle, Callbacks callbacks) {
         return item -> {
             switch (item.getItemId()) {
                 case MusicUtils.Defs.NEW_PLAYLIST:
@@ -90,7 +89,7 @@ public class SongMenuUtils {
                     callbacks.playNext(songsSingle);
                     return true;
                 case R.id.addToQueue:
-                    MenuUtils.addToQueue(songsSingle, callbacks::showToast);
+                    MenuUtils.addToQueue(mediaManager, songsSingle, callbacks::showToast);
                     return true;
                 case R.id.blacklist:
                     MenuUtils.blacklist(songsSingle);
@@ -103,11 +102,11 @@ public class SongMenuUtils {
         };
     }
 
-    public static PopupMenu.OnMenuItemClickListener getSongMenuClickListener(Context context, int position, Song song, Callbacks callbacks) {
+    public static PopupMenu.OnMenuItemClickListener getSongMenuClickListener(Context context, MediaManager mediaManager, int position, Song song, Callbacks callbacks) {
         return item -> {
             switch (item.getItemId()) {
                 case R.id.playNext:
-                    MenuUtils.playNext(song, callbacks::showToast);
+                    MenuUtils.playNext(mediaManager, song, callbacks::showToast);
                     return true;
                 case MusicUtils.Defs.NEW_PLAYLIST:
                     MenuUtils.newPlaylist(context, Collections.singletonList(song), callbacks::onPlaylistItemsInserted);
@@ -116,7 +115,7 @@ public class SongMenuUtils {
                     MenuUtils.addToPlaylist(context, item, Collections.singletonList(song), callbacks::onPlaylistItemsInserted);
                     return true;
                 case R.id.addToQueue:
-                    MenuUtils.addToQueue(Collections.singletonList(song), callbacks::onQueueItemInserted);
+                    MenuUtils.addToQueue(mediaManager, Collections.singletonList(song), callbacks::onQueueItemInserted);
                     return true;
                 case R.id.editTags:
                     callbacks.showTagEditor(song);

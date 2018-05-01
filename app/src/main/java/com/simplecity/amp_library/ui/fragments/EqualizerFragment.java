@@ -16,12 +16,10 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.CompoundButton;
-import android.widget.SeekBar;
-import android.widget.Spinner;
-import android.widget.TextView;
-
+import android.widget.*;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.constants.OpenSLESConstants;
@@ -30,15 +28,10 @@ import com.simplecity.amp_library.ui.adapters.RobotoSpinnerAdapter;
 import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
 import com.simplecity.amp_library.ui.drawer.MiniPlayerLockManager;
 import com.simplecity.amp_library.ui.views.SizableSeekBar;
-import com.simplecity.amp_library.utils.MusicUtils;
 
 import java.util.Formatter;
 import java.util.Locale;
 import java.util.UUID;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 public class EqualizerFragment extends BaseFragment implements
         Toolbar.OnMenuItemClickListener,
@@ -143,13 +136,13 @@ public class EqualizerFragment extends BaseFragment implements
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        MusicUtils.closeEqualizerSessions(!isChecked, MusicUtils.getAudioSessionId());
+        musicUtils.closeEqualizerSessions(!isChecked, musicUtils.getAudioSessionId());
 
-        MusicUtils.openEqualizerSession(isChecked, MusicUtils.getAudioSessionId());
+        musicUtils.openEqualizerSession(isChecked, musicUtils.getAudioSessionId());
 
         // set parameter and state
         prefs.edit().putBoolean("audiofx.global.enable", isChecked).apply();
-        MusicUtils.updateEqualizer();
+        musicUtils.updateEqualizer();
     }
 
     public static EqualizerFragment newInstance() {
@@ -290,7 +283,7 @@ public class EqualizerFragment extends BaseFragment implements
 
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {
-                    MusicUtils.updateEqualizer();
+                    musicUtils.updateEqualizer();
                 }
             });
         }
@@ -310,7 +303,7 @@ public class EqualizerFragment extends BaseFragment implements
                     if (fromUser) {
                         prefs.edit().putBoolean("audiofx.bass.enable", true).apply();
                         prefs.edit().putString("audiofx.bass.strength", String.valueOf(progress)).apply();
-                        MusicUtils.updateEqualizer();
+                        musicUtils.updateEqualizer();
                     }
                 }
 
@@ -319,7 +312,7 @@ public class EqualizerFragment extends BaseFragment implements
                 public void onStartTrackingTouch(final SeekBar seekBar) {
                     if (seekBar.getProgress() == 0) {
                         prefs.edit().putBoolean("audiofx.bass.enable", true).apply();
-                        MusicUtils.updateEqualizer();
+                        musicUtils.updateEqualizer();
                     }
                 }
 
@@ -329,7 +322,7 @@ public class EqualizerFragment extends BaseFragment implements
                     if (seekBar.getProgress() == 0) {
                         // disable
                         prefs.edit().putBoolean("audiofx.bass.enable", false).apply();
-                        MusicUtils.updateEqualizer();
+                        musicUtils.updateEqualizer();
                     }
                 }
             });
@@ -349,7 +342,7 @@ public class EqualizerFragment extends BaseFragment implements
                     if (fromUser) {
                         prefs.edit().putBoolean("audiofx.virtualizer.enable", true).apply();
                         prefs.edit().putString("audiofx.virtualizer.strength", String.valueOf(progress)).apply();
-                        MusicUtils.updateEqualizer();
+                        musicUtils.updateEqualizer();
                     }
                 }
 
@@ -358,7 +351,7 @@ public class EqualizerFragment extends BaseFragment implements
                 public void onStartTrackingTouch(final SeekBar seekBar) {
                     if (seekBar.getProgress() == 0) {
                         prefs.edit().putBoolean("audiofx.virtualizer.enable", true).apply();
-                        MusicUtils.updateEqualizer();
+                        musicUtils.updateEqualizer();
                     }
                 }
 
@@ -368,7 +361,7 @@ public class EqualizerFragment extends BaseFragment implements
                     if (seekBar.getProgress() == 0) {
                         // disable
                         prefs.edit().putBoolean("audiofx.virtualizer.enable", false).apply();
-                        MusicUtils.updateEqualizer();
+                        musicUtils.updateEqualizer();
                     }
                 }
             });
@@ -420,7 +413,7 @@ public class EqualizerFragment extends BaseFragment implements
         prefs.edit().putString("audiofx.eq.bandlevels", newLevels).apply();
         updateUI();
 
-        MusicUtils.updateEqualizer();
+        musicUtils.updateEqualizer();
     }
 
     void updateUI() {
@@ -495,7 +488,7 @@ public class EqualizerFragment extends BaseFragment implements
         prefs.edit().putString("audiofx.eq.bandlevels", builder.toString()).apply();
         prefs.edit().putString("audiofx.eq.bandlevels.custom", builder.toString()).apply();
 
-        MusicUtils.updateEqualizer();
+        musicUtils.updateEqualizer();
     }
 
     /**

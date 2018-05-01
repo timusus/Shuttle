@@ -15,24 +15,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-
+import android.view.*;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.ViewBackgroundAction;
 import com.annimon.stream.Stream;
 import com.cantrowitz.rxbroadcast.RxBroadcast;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
-import com.simplecity.amp_library.model.Album;
-import com.simplecity.amp_library.model.AlbumArtist;
-import com.simplecity.amp_library.model.CategoryItem;
-import com.simplecity.amp_library.model.Genre;
-import com.simplecity.amp_library.model.Playlist;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
+import com.simplecity.amp_library.dagger.module.FragmentModule;
+import com.simplecity.amp_library.model.*;
 import com.simplecity.amp_library.search.SearchFragment;
 import com.simplecity.amp_library.ui.activities.ToolbarListener;
 import com.simplecity.amp_library.ui.adapters.PagerAdapter;
@@ -45,21 +40,15 @@ import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.ui.views.ContextualToolbarHost;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
 import com.simplecity.amp_library.utils.DialogUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.multisheetview.ui.view.MultiSheetView;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import test.com.androidnavigation.fragment.FragmentInfo;
+
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.afollestad.aesthetic.Rx.distinctToMainThread;
 import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
@@ -117,6 +106,8 @@ public class LibraryController extends BaseFragment implements
         super.onCreate(savedInstanceState);
 
         ShuttleApplication.getInstance().getAppComponent()
+                .plus(new ActivityModule(getActivity()))
+                .plus(new FragmentModule(this))
                 .inject(this);
 
         setHasOptionsMenu(true);
@@ -163,7 +154,7 @@ public class LibraryController extends BaseFragment implements
     public void onResume() {
         super.onResume();
 
-        if (!MusicUtils.getQueue().isEmpty()) {
+        if (!musicUtils.getQueue().isEmpty()) {
             multiSheetEventRelay.sendEvent(new MultiSheetEventRelay.MultiSheetEvent(MultiSheetEventRelay.MultiSheetEvent.Action.SHOW_IF_HIDDEN, MultiSheetView.Sheet.NONE));
         }
 

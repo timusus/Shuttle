@@ -12,33 +12,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
 import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
-import com.simplecity.amp_library.model.Album;
-import com.simplecity.amp_library.model.AlbumArtist;
-import com.simplecity.amp_library.model.Playlist;
-import com.simplecity.amp_library.model.Song;
-import com.simplecity.amp_library.model.SuggestedHeader;
+import com.simplecity.amp_library.model.*;
 import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.ui.detail.playlist.PlaylistDetailFragment;
-import com.simplecity.amp_library.ui.modelviews.AlbumView;
-import com.simplecity.amp_library.ui.modelviews.EmptyView;
-import com.simplecity.amp_library.ui.modelviews.HorizontalRecyclerView;
-import com.simplecity.amp_library.ui.modelviews.SuggestedHeaderView;
-import com.simplecity.amp_library.ui.modelviews.SuggestedSongView;
+import com.simplecity.amp_library.ui.modelviews.*;
 import com.simplecity.amp_library.ui.views.SuggestedDividerDecoration;
-import com.simplecity.amp_library.utils.ComparisonUtils;
-import com.simplecity.amp_library.utils.DataManager;
-import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
-import com.simplecity.amp_library.utils.Operators;
-import com.simplecity.amp_library.utils.PermissionUtils;
-import com.simplecity.amp_library.utils.ShuttleUtils;
+import com.simplecity.amp_library.utils.*;
 import com.simplecity.amp_library.utils.menu.album.AlbumMenuFragmentHelper;
 import com.simplecity.amp_library.utils.menu.album.AlbumMenuUtils;
 import com.simplecity.amp_library.utils.menu.song.SongMenuFragmentHelper;
@@ -46,18 +32,17 @@ import com.simplecity.amp_library.utils.menu.song.SongMenuUtils;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import javax.inject.Inject;
-
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import kotlin.Unit;
+
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class SuggestedFragment extends BaseFragment implements
         SuggestedHeaderView.ClickListener,
@@ -79,20 +64,23 @@ public class SuggestedFragment extends BaseFragment implements
 
         List<Song> songs;
 
-        public SongClickListener(List<Song> songs) {
+        public SongClickListener( List<Song> songs) {
             this.songs = songs;
         }
 
         @Override
         public void onSongClick(Song song, SuggestedSongView.ViewHolder holder) {
-            MusicUtils.playAll(songs, songs.indexOf(song), true, (String message) -> Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show());
+            musicUtils.playAll(songs, songs.indexOf(song), true, message -> {
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                return Unit.INSTANCE;
+            });
         }
 
         @Override
         public void onSongOverflowClicked(View v, int position, Song song) {
             PopupMenu popupMenu = new PopupMenu(getContext(), v);
             SongMenuUtils.setupSongMenu(popupMenu, false);
-            popupMenu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
+            popupMenu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), musicUtils, position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
             popupMenu.show();
         }
     }
@@ -151,6 +139,7 @@ public class SuggestedFragment extends BaseFragment implements
         super.onCreate(savedInstanceState);
 
         ShuttleApplication.getInstance().getAppComponent()
+                .plus(new ActivityModule(getActivity()))
                 .plus(new FragmentModule(this))
                 .inject(this);
 
@@ -413,7 +402,7 @@ public class SuggestedFragment extends BaseFragment implements
     public void onAlbumOverflowClicked(View v, Album album) {
         PopupMenu menu = new PopupMenu(getContext(), v);
         AlbumMenuUtils.setupAlbumMenu(menu);
-        menu.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(getContext(), album, albumMenuFragmentHelper.getCallbacks()));
+        menu.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(getContext(), musicUtils, album, albumMenuFragmentHelper.getCallbacks()));
         menu.show();
     }
 

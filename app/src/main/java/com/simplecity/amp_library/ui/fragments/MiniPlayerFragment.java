@@ -4,15 +4,13 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.GestureDetector;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.Util;
 import com.afollestad.aesthetic.ViewBackgroundAction;
@@ -22,6 +20,7 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
@@ -29,13 +28,9 @@ import com.simplecity.amp_library.ui.views.PlayPauseView;
 import com.simplecity.amp_library.ui.views.PlayerViewAdapter;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.multisheetview.ui.view.MultiSheetView;
+import io.reactivex.disposables.CompositeDisposable;
 
 import javax.inject.Inject;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-import io.reactivex.disposables.CompositeDisposable;
 
 import static com.afollestad.aesthetic.Rx.distinctToMainThread;
 import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
@@ -84,6 +79,7 @@ public class MiniPlayerFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
 
         ShuttleApplication.getInstance().getAppComponent()
+                .plus(new ActivityModule(getActivity()))
                 .plus(new FragmentModule(this))
                 .inject(this);
     }

@@ -7,6 +7,7 @@ import com.simplecity.amp_library.model.Album
 import com.simplecity.amp_library.model.Genre
 import com.simplecity.amp_library.model.Playlist
 import com.simplecity.amp_library.model.Song
+import com.simplecity.amp_library.playback.MediaManager
 import com.simplecity.amp_library.rx.UnsafeAction
 import com.simplecity.amp_library.ui.detail.playlist.PlaylistDetailPresenter
 import com.simplecity.amp_library.ui.presenters.Presenter
@@ -18,7 +19,7 @@ import io.reactivex.schedulers.Schedulers
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class GenreDetailPresenter constructor(private val genre: Genre) : Presenter<GenreDetailView>() {
+class GenreDetailPresenter constructor(private val musicUtils: MediaManager, private val genre: Genre) : Presenter<GenreDetailView>() {
 
     private var songs: MutableList<Song> = mutableListOf()
 
@@ -84,7 +85,7 @@ class GenreDetailPresenter constructor(private val genre: Genre) : Presenter<Gen
             .delay(if (currentSlideShowAlbum == null) 0L else 8L, TimeUnit.SECONDS)
 
         addDisposable(Observable
-            .combineLatest(a, b, BiFunction { albums: List<Album>, aLong: Long -> albums })
+            .combineLatest(a, b, BiFunction { albums: List<Album>, _: Long -> albums })
             .map { albums ->
                 if (albums.isEmpty()) {
                     currentSlideShowAlbum
@@ -110,25 +111,25 @@ class GenreDetailPresenter constructor(private val genre: Genre) : Presenter<Gen
     }
 
     fun fabClicked() {
-        MusicUtils.shuffleAll(songs) { message ->
+        musicUtils.shuffleAll(songs) { message ->
             view?.showToast(message)
         }
     }
 
     fun playAll() {
-        MusicUtils.playAll(songs, 0, true) { message ->
+        musicUtils.playAll(songs, 0, true) { message ->
             view?.showToast(message)
         }
     }
 
     fun playNext() {
-        MusicUtils.playNext(songs) { message ->
+        musicUtils.playNext(songs) { message ->
             view?.showToast(message)
         }
     }
 
     fun addToQueue() {
-        MusicUtils.addToQueue(songs) { message ->
+        musicUtils.addToQueue(songs) { message ->
             view?.showToast(message)
         }
     }
@@ -143,7 +144,7 @@ class GenreDetailPresenter constructor(private val genre: Genre) : Presenter<Gen
     }
 
     fun songClicked(song: Song) {
-        MusicUtils.playAll(songs, songs.indexOf(song), true) { message ->
+        musicUtils.playAll(songs, songs.indexOf(song), true) { message ->
             view?.showToast(message)
         }
     }

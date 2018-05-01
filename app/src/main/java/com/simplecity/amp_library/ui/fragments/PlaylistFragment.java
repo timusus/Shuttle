@@ -9,7 +9,6 @@ import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Playlist;
@@ -25,17 +24,16 @@ import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class PlaylistFragment extends BaseFragment {
 
@@ -167,7 +165,7 @@ public class PlaylistFragment extends BaseFragment {
                                 public void onPlaylistOverflowClick(int position, View view, Playlist playlist) {
                                     PopupMenu menu = new PopupMenu(getContext(), view);
                                     PlaylistMenuUtils.setupPlaylistMenu(menu, playlist);
-                                    menu.setOnMenuItemClickListener(PlaylistMenuUtils.getPlaylistPopupMenuClickListener(playlist, playlistMenuFragmentHelper.getCallbacks()));
+                                    menu.setOnMenuItemClickListener(PlaylistMenuUtils.getPlaylistPopupMenuClickListener(musicUtils, playlist, playlistMenuFragmentHelper.getCallbacks()));
                                     menu.show();
                                 }
                             };

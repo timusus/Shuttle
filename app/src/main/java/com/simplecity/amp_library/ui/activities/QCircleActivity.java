@@ -1,12 +1,7 @@
 package com.simplecity.amp_library.ui.activities;
 
 import android.annotation.TargetApi;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.ContentResolver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.*;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -18,12 +13,10 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
 
 
 //Todo: Reapply themes
@@ -232,12 +225,12 @@ public class QCircleActivity extends BaseActivity {
         setPauseButtonImage();
 
 
-        prevBtn.setOnClickListener(v -> MusicUtils.previous(true));
+        prevBtn.setOnClickListener(v -> musicUtils.previous(true));
 
-        skipBtn.setOnClickListener(v -> MusicUtils.next());
+        skipBtn.setOnClickListener(v -> musicUtils.next());
 
         pauseBtn.setOnClickListener(v -> {
-            MusicUtils.playOrPause();
+            musicUtils.playOrPause();
             setPauseButtonImage();
         });
 
@@ -253,7 +246,7 @@ public class QCircleActivity extends BaseActivity {
         if (pauseBtn == null) {
             return;
         }
-        if (MusicServiceConnectionUtils.serviceBinder != null && MusicUtils.isPlaying()) {
+        if (MusicServiceConnectionUtils.serviceBinder != null && musicUtils.isPlaying()) {
 
         } else {
 
@@ -270,7 +263,7 @@ public class QCircleActivity extends BaseActivity {
             return;
         }
 
-        Song song = MusicUtils.getSong();
+        Song song = musicUtils.getSong();
         if (song == null) return;
 
         textOne.setText(song.albumArtistName);

@@ -5,6 +5,7 @@ import android.support.v7.widget.PopupMenu;
 
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Genre;
+import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.extensions.GenreExt;
 import com.simplecity.amp_library.utils.menu.MenuUtils;
@@ -22,11 +23,11 @@ public class GenreMenuUtils {
         void playNext(Genre genre);
     }
 
-    public static PopupMenu.OnMenuItemClickListener getGenreClickListener(Context context, Genre genre, Callbacks callbacks) {
+    public static PopupMenu.OnMenuItemClickListener getGenreClickListener(Context context, MediaManager mediaManager, Genre genre, Callbacks callbacks) {
         return item -> {
             switch (item.getItemId()) {
                 case R.id.play:
-                    MenuUtils.play(GenreExt.INSTANCE.getSongs(genre), callbacks::showToast);
+                    MenuUtils.play(mediaManager, GenreExt.INSTANCE.getSongs(genre), callbacks::showToast);
                     return true;
                 case R.id.playNext:
                     callbacks.playNext(genre);
@@ -38,7 +39,7 @@ public class GenreMenuUtils {
                     MenuUtils.addToPlaylist(context, item, GenreExt.INSTANCE.getSongs(genre), callbacks::onPlaylistItemsInserted);
                     return true;
                 case R.id.addToQueue:
-                    MenuUtils.addToQueue(GenreExt.INSTANCE.getSongs(genre), callbacks::onQueueItemsInserted);
+                    MenuUtils.addToQueue(mediaManager, GenreExt.INSTANCE.getSongs(genre), callbacks::onQueueItemsInserted);
                     return true;
             }
             return false;

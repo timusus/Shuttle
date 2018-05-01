@@ -9,38 +9,28 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.LightDarkColorState;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.jakewharton.rxbinding2.widget.RxSeekBar;
-import com.jakewharton.rxbinding2.widget.SeekBarChangeEvent;
-import com.jakewharton.rxbinding2.widget.SeekBarProgressChangeEvent;
-import com.jakewharton.rxbinding2.widget.SeekBarStartChangeEvent;
-import com.jakewharton.rxbinding2.widget.SeekBarStopChangeEvent;
+import com.jakewharton.rxbinding2.widget.*;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
-
-import java.util.concurrent.TimeUnit;
-
-import javax.inject.Inject;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
+import java.util.concurrent.TimeUnit;
+
 public class UpNextView extends LinearLayout {
 
     private static final String TAG = "UpNextView";
 
-    @Inject
     PlayerPresenter playerPresenter;
 
     @BindView(R.id.arrow)
@@ -90,15 +80,21 @@ public class UpNextView extends LinearLayout {
 
     private CompositeDisposable disposables = new CompositeDisposable();
 
-    public UpNextView(Context context) {
+    public static UpNextView newInstance(Context context, PlayerPresenter playerPresenter){
+        UpNextView upNextView = new UpNextView(context);
+        upNextView.playerPresenter = playerPresenter;
+        return upNextView;
+    }
+
+    private UpNextView(Context context) {
         this(context, null);
     }
 
-    public UpNextView(Context context, @Nullable AttributeSet attrs) {
+    private UpNextView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public UpNextView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    private UpNextView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         setOrientation(HORIZONTAL);
@@ -142,8 +138,6 @@ public class UpNextView extends LinearLayout {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-
-        ShuttleApplication.getInstance().getAppComponent().inject(this);
 
         playerPresenter.bindView(playerViewAdapter);
 

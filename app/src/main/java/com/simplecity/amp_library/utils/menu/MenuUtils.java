@@ -4,23 +4,22 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.MenuItem;
-
 import com.simplecity.amp_library.model.InclExclItem;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.rx.UnsafeConsumer;
 import com.simplecity.amp_library.sql.databases.InclExclHelper;
 import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
-
-import java.util.Collections;
-import java.util.List;
-
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import kotlin.Unit;
+
+import java.util.Collections;
+import java.util.List;
 
 public class MenuUtils {
 
@@ -30,12 +29,18 @@ public class MenuUtils {
         //no instance
     }
 
-    public static void playNext(Song song, UnsafeConsumer<String> showToast) {
-        MusicUtils.playNext(Collections.singletonList(song), showToast);
+    public static void playNext(MediaManager mediaManager, Song song, UnsafeConsumer<String> showToast) {
+        mediaManager.playNext(Collections.singletonList(song), s -> {
+            showToast.accept(s);
+            return Unit.INSTANCE;
+        });
     }
 
-    public static void playNext(List<Song> songs, UnsafeConsumer<String> showToast) {
-        MusicUtils.playNext(songs, showToast);
+    public static void playNext(MediaManager mediaManager, List<Song> songs, UnsafeConsumer<String> showToast) {
+        mediaManager.playNext(songs, s -> {
+            showToast.accept(s);
+            return Unit.INSTANCE;
+        });
     }
 
     // Todo: Remove context requirement
@@ -49,8 +54,11 @@ public class MenuUtils {
         PlaylistUtils.addToPlaylist(context, playlist, songs, insertCallback);
     }
 
-    public static void addToQueue(List<Song> songs, @NonNull UnsafeConsumer<String> onComplete) {
-        MusicUtils.addToQueue(songs, onComplete);
+    public static void addToQueue(MediaManager mediaManager, List<Song> songs, @NonNull UnsafeConsumer<String> onComplete) {
+        mediaManager.addToQueue(songs, s -> {
+            onComplete.accept(s);
+            return Unit.INSTANCE;
+        });
     }
 
     public static void whitelist(Song song) {
@@ -69,8 +77,11 @@ public class MenuUtils {
         InclExclHelper.addToInclExcl(songs, InclExclItem.Type.EXCLUDE);
     }
 
-    public static void play(Single<List<Song>> observable, UnsafeConsumer<String> showToast) {
-        MusicUtils.playAll(observable, showToast);
+    public static void play(MediaManager mediaManager, Single<List<Song>> observable, UnsafeConsumer<String> showToast) {
+        mediaManager.playAll(observable, s -> {
+            showToast.accept(s);
+            return Unit.INSTANCE;
+        });
     }
 
     @SuppressLint("CheckResult")
@@ -133,10 +144,13 @@ public class MenuUtils {
      * @param single     the songs to be added to the queue.
      * @param onComplete the consumer to consume the toast message
      */
-    public static Disposable addToQueue(Single<List<Song>> single, @NonNull UnsafeConsumer<String> onComplete) {
+    public static Disposable addToQueue(MediaManager mediaManager, Single<List<Song>> single, @NonNull UnsafeConsumer<String> onComplete) {
         return single.observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        songs -> MusicUtils.addToQueue(songs, onComplete),
+                        songs -> mediaManager.addToQueue(songs, s -> {
+                            onComplete.accept(s);
+                            return Unit.INSTANCE;
+                        }),
                         throwable -> LogUtils.logException(TAG, "Error adding to queue", throwable)
                 );
     }

@@ -8,21 +8,16 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.SubMenu;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.Toast;
-
 import com.annimon.stream.Stream;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.Album;
+import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.QueueManager;
 import com.simplecity.amp_library.ui.adapters.SectionedAdapter;
 import com.simplecity.amp_library.ui.adapters.ViewType;
@@ -32,32 +27,24 @@ import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
 import com.simplecity.amp_library.ui.modelviews.ShuffleView;
 import com.simplecity.amp_library.ui.recyclerview.GridDividerDecoration;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
-import com.simplecity.amp_library.utils.ContextualToolbarHelper;
-import com.simplecity.amp_library.utils.DataManager;
-import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
-import com.simplecity.amp_library.utils.Operators;
-import com.simplecity.amp_library.utils.PermissionUtils;
-import com.simplecity.amp_library.utils.PlaylistUtils;
-import com.simplecity.amp_library.utils.SettingsManager;
-import com.simplecity.amp_library.utils.SortManager;
+import com.simplecity.amp_library.utils.*;
 import com.simplecity.amp_library.utils.menu.album.AlbumMenuFragmentHelper;
 import com.simplecity.amp_library.utils.menu.album.AlbumMenuUtils;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import com.simplecityapps.recycler_adapter.recyclerview.SpanSizeLookup;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
-
-import java.util.Collections;
-import java.util.concurrent.TimeUnit;
-
-import javax.inject.Inject;
-
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import kotlin.Unit;
+
+import javax.inject.Inject;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class AlbumFragment extends BaseFragment implements
         AlbumView.ClickListener,
@@ -131,6 +118,7 @@ public class AlbumFragment extends BaseFragment implements
         super.onCreate(savedInstanceState);
 
         ShuttleApplication.getInstance().getAppComponent()
+                .plus(new ActivityModule(getActivity()))
                 .plus(new FragmentModule(this))
                 .inject(this);
 
@@ -424,19 +412,28 @@ public class AlbumFragment extends BaseFragment implements
         menu.inflate(R.menu.menu_album);
         SubMenu sub = menu.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
         PlaylistUtils.createPlaylistMenu(sub);
-        menu.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(getContext(), album, albumMenuFragmentHelper.getCallbacks()));
+        menu.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(getContext(), musicUtils, album, albumMenuFragmentHelper.getCallbacks()));
         menu.show();
     }
 
     @Override
     public void onShuffleItemClick() {
         // Note: For album-shuffle mode, we don't actually turn shuffle on.
-        MusicUtils.setShuffleMode(QueueManager.ShuffleMode.OFF);
-        MusicUtils.playAll(DataManager.getInstance()
+        musicUtils.setShuffleMode(QueueManager.ShuffleMode.OFF);
+
+        Single<List<Song>> aa = DataManager.getInstance()
+                .getSongsRelay()
+                .firstOrError()
+                .map(Operators::albumShuffleSongs);
+
+        musicUtils.playAll(DataManager.getInstance()
                         .getSongsRelay()
                         .firstOrError()
                         .map(Operators::albumShuffleSongs),
-                message -> Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show());
+                        message -> {
+                            Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+                            return Unit.INSTANCE;
+        }               );
     }
 
     @Override
@@ -462,7 +459,7 @@ public class AlbumFragment extends BaseFragment implements
             }
             playlistMenuDisposable = PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe();
 
-            contextualToolbar.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(getContext(), Single.defer(() -> Single.just(contextualToolbarHelper.getItems())), albumMenuFragmentHelper.getCallbacks()));
+            contextualToolbar.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(getContext(), musicUtils, Single.defer(() -> Single.just(contextualToolbarHelper.getItems())), albumMenuFragmentHelper.getCallbacks()));
 
             contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
 

@@ -19,7 +19,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.Util;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -30,14 +32,11 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.f2prateek.rx.preferences2.RxSharedPreferences;
-import com.jakewharton.rxbinding2.widget.RxSeekBar;
-import com.jakewharton.rxbinding2.widget.SeekBarChangeEvent;
-import com.jakewharton.rxbinding2.widget.SeekBarProgressChangeEvent;
-import com.jakewharton.rxbinding2.widget.SeekBarStartChangeEvent;
-import com.jakewharton.rxbinding2.widget.SeekBarStopChangeEvent;
+import com.jakewharton.rxbinding2.widget.*;
 import com.jp.wasabeef.glide.transformations.BlurTransformation;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.glide.palette.PaletteBitmap;
 import com.simplecity.amp_library.glide.palette.PaletteBitmapTranscoder;
@@ -49,37 +48,19 @@ import com.simplecity.amp_library.rx.UnsafeConsumer;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.drawer.NavigationEventRelay;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
-import com.simplecity.amp_library.ui.views.FavoriteActionBarView;
-import com.simplecity.amp_library.ui.views.PlayPauseView;
-import com.simplecity.amp_library.ui.views.PlayerView;
-import com.simplecity.amp_library.ui.views.RepeatButton;
-import com.simplecity.amp_library.ui.views.RepeatingImageButton;
-import com.simplecity.amp_library.ui.views.ShuffleButton;
-import com.simplecity.amp_library.ui.views.SizableSeekBar;
-import com.simplecity.amp_library.ui.views.SnowfallView;
+import com.simplecity.amp_library.ui.views.*;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetSlideEventRelay;
-import com.simplecity.amp_library.utils.DataManager;
-import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
-import com.simplecity.amp_library.utils.PlaceholderProvider;
-import com.simplecity.amp_library.utils.SettingsManager;
-import com.simplecity.amp_library.utils.ShuttleUtils;
-import com.simplecity.amp_library.utils.StringUtils;
-
-import java.util.Collections;
-import java.util.concurrent.TimeUnit;
-
-import javax.inject.Inject;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
+import com.simplecity.amp_library.utils.*;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+
+import javax.inject.Inject;
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 public class PlayerFragment extends BaseFragment implements
         PlayerView,
@@ -179,6 +160,7 @@ public class PlayerFragment extends BaseFragment implements
         super.onCreate(savedInstanceState);
 
         ShuttleApplication.getInstance().getAppComponent()
+                .plus(new ActivityModule(getActivity()))
                 .plus(new FragmentModule(this))
                 .inject(this);
     }
@@ -603,7 +585,7 @@ public class PlayerFragment extends BaseFragment implements
 
     @SuppressLint("CheckResult")
     private void goToArtist() {
-        AlbumArtist currentAlbumArtist = MusicUtils.getAlbumArtist();
+        AlbumArtist currentAlbumArtist = musicUtils.getAlbumArtist();
         // MusicUtils.getAlbumArtist() is only populate with the album the current Song belongs to.
         // Let's find the matching AlbumArtist in the DataManager.albumArtistRelay
         DataManager.getInstance().getAlbumArtistsRelay()
@@ -616,12 +598,12 @@ public class PlayerFragment extends BaseFragment implements
     }
 
     private void goToAlbum() {
-        navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_ALBUM, MusicUtils.getAlbum(), true));
+        navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_ALBUM, musicUtils.getAlbum(), true));
     }
 
     @SuppressLint("CheckResult")
     private void goToGenre() {
-        MusicUtils.getGenre()
+        musicUtils.getGenre()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
