@@ -1,8 +1,18 @@
 ### Contributing
 
-Thank you for visiting this page. Contributions is one of the main reasons Shuttle was open-sourced, so I'm happy to have you here!
+Thank you for visiting this page. Contributions is one of the main reasons Shuttle was open-sourced, so I'm happy to have you here!  
 
 The following is a set of guidelines for contributing to Shuttle. These are just guidelines, not rules. Use your best judgement, and feel free to propose changes to this document in a pull request.
+
+
+#### Contributing Code
+
+There are a couple of important things to know:
+
+  1. You must be aware of the GPL v3 license, and agree to the [Contributors License Agreement](https://cla-assistant.io/timusus/Shuttle). 
+  2. Not all proposed contributions can be accepted. The more effort you invest, the better you should clarify in advance whether the contribution fits: the best way would be to just open an issue to discuss the feature you plan to implement (make it clear you intend to contribute).
+  
+When you contribute (code, documentation, or anything else), you have to be aware that your contribution is covered by the same GPLv3 License that is applied to Shuttle Music Player itself. In particular you need to agree to the Individual Contributor License Agreement, which can be found [here](https://cla-assistant.io/timusus/Shuttle). (This applies to all contributors, including those contributing on behalf of a company). If you agree to its content, you simply have to click on the link posted by the CLA assistant as a comment to the pull request. Click it to check the CLA, then accept it on the following screen if you agree to it. CLA assistant will save this decision for upcoming contributions and will notify you if there is any change to the CLA in the meantime.
 
 
 #### Development
