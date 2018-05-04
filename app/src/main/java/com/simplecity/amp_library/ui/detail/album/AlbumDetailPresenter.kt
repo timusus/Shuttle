@@ -5,12 +5,16 @@ import android.view.MenuItem
 import com.simplecity.amp_library.model.Album
 import com.simplecity.amp_library.model.Playlist
 import com.simplecity.amp_library.model.Song
+import com.simplecity.amp_library.playback.MediaManager
 import com.simplecity.amp_library.rx.UnsafeAction
 import com.simplecity.amp_library.ui.presenters.Presenter
-import com.simplecity.amp_library.utils.*
+import com.simplecity.amp_library.utils.PermissionUtils
+import com.simplecity.amp_library.utils.PlaylistUtils
+import com.simplecity.amp_library.utils.ShuttleUtils
+import com.simplecity.amp_library.utils.SortManager
 import io.reactivex.android.schedulers.AndroidSchedulers
 
-class AlbumDetailPresenter @JvmOverloads constructor(private val mediaManager: MusicUtils = MusicUtils(), private val album: Album) : Presenter<AlbumDetailView>() {
+class AlbumDetailPresenter constructor(private val mediaManager: MediaManager, private val album: Album) : Presenter<AlbumDetailView>() {
 
     private var songs: MutableList<Song> = mutableListOf()
 

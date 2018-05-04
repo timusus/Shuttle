@@ -13,7 +13,7 @@ import io.reactivex.schedulers.Schedulers
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class PlaylistDetailPresenter @JvmOverloads constructor(private val playlist: Playlist, val mediaManager: MediaManager = MusicUtils()) : Presenter<PlaylistDetailView>() {
+class PlaylistDetailPresenter @JvmOverloads constructor(private val mediaManager: MediaManager, private val playlist: Playlist) : Presenter<PlaylistDetailView>() {
 
     private var songs: MutableList<Song> = mutableListOf()
 

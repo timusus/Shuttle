@@ -148,7 +148,7 @@ public class AlbumDetailFragment extends BaseFragment implements
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
-        presenter = new AlbumDetailPresenter(album);
+        presenter = new AlbumDetailPresenter(mediaManager, album);
 
         requestManager = Glide.with(this);
 

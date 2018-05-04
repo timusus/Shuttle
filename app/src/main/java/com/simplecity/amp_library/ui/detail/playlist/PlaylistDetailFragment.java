@@ -162,7 +162,7 @@ public class PlaylistDetailFragment extends BaseFragment implements
         playlistMenuFragmentHelper = new PlaylistMenuFragmentHelper(this, disposables, playlistMenuCallbacks);
         songMenuFragmentHelper = new SongMenuFragmentHelper(this, disposables, songMenuCallbacks);
 
-        presenter = new PlaylistDetailPresenter(playlist);
+        presenter = new PlaylistDetailPresenter(mediaManager, playlist);
 
         requestManager = Glide.with(this);
 
