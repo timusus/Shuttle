@@ -17,7 +17,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.transition.Transition;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -566,7 +565,6 @@ public class PlaylistDetailFragment extends BaseFragment implements
 
                 if (adjustedFrom != -1 && adjustedTo != -1) {
                     boolean songMoved = playlist.moveSong(adjustedFrom, adjustedTo);
-                    Log.i(TAG, "song moved: " + songMoved);
                 }
             },
             () -> {
