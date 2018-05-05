@@ -30,7 +30,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.annimon.stream.Optional;
@@ -48,7 +47,11 @@ import com.simplecity.amp_library.rx.UnsafeConsumer;
 import com.simplecity.amp_library.sql.SqlUtils;
 import com.simplecity.amp_library.sql.providers.PlayCountTable;
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
-
+import io.reactivex.Completable;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -56,12 +59,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import io.reactivex.Completable;
-import io.reactivex.Observable;
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 public class PlaylistUtils {
 
@@ -81,7 +78,7 @@ public class PlaylistUtils {
 
         Query query = new Query.Builder()
                 .uri(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI)
-                .projection(new String[]{MediaStore.Audio.Playlists.NAME})
+                .projection(new String[] { MediaStore.Audio.Playlists.NAME })
                 .sort(MediaStore.Audio.Playlists.NAME)
                 .build();
 
@@ -120,7 +117,7 @@ public class PlaylistUtils {
     public static Single<Integer> idForPlaylistObservable(Context context, String name) {
         Query query = new Query.Builder()
                 .uri(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI)
-                .projection(new String[]{MediaStore.Audio.Playlists._ID})
+                .projection(new String[] { MediaStore.Audio.Playlists._ID })
                 .selection(MediaStore.Audio.Playlists.NAME + "='" + name.replaceAll("'", "\''") + "'")
                 .sort(MediaStore.Audio.Playlists.NAME)
                 .build();
@@ -188,7 +185,6 @@ public class PlaylistUtils {
                                 fileWriter.append(body);
                                 fileWriter.flush();
                                 fileWriter.close();
-
                             } catch (IOException e) {
                                 Log.e(TAG, "Failed to write file: " + e);
                             }
@@ -286,7 +282,7 @@ public class PlaylistUtils {
      * Method addToPlaylist.
      *
      * @param playlist Playlist
-     * @param songs    List<Song>
+     * @param songs List<Song>
      * @return boolean true if the playlist addition was successful
      */
     @SuppressLint("CheckResult")
@@ -374,9 +370,9 @@ public class PlaylistUtils {
     }
 
     private static void insertPlaylistItems(@NonNull Context context,
-                                            @NonNull Playlist playlist,
-                                            @NonNull List<Song> songs, int songCount,
-                                            UnsafeAction insertCallback) {
+            @NonNull Playlist playlist,
+            @NonNull List<Song> songs, int songCount,
+            UnsafeAction insertCallback) {
 
         if (songs.isEmpty()) {
             return;
@@ -429,7 +425,7 @@ public class PlaylistUtils {
         if (!TextUtils.isEmpty(name)) {
             Query query = new Query.Builder()
                     .uri(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI)
-                    .projection(new String[]{MediaStore.Audio.PlaylistsColumns.NAME})
+                    .projection(new String[] { MediaStore.Audio.PlaylistsColumns.NAME })
                     .selection(MediaStore.Audio.PlaylistsColumns.NAME + " = '" + name + "'")
                     .build();
 
@@ -563,7 +559,6 @@ public class PlaylistUtils {
                 .subscribe(
                         playlist -> removeFromPlaylist(playlist, song, success),
                         error -> LogUtils.logException(TAG, "PlaylistUtils: Error Removing from favorites", error));
-
     }
 
     @SuppressLint("CheckResult")
@@ -587,7 +582,6 @@ public class PlaylistUtils {
                         },
                         error -> LogUtils.logException(TAG, "PlaylistUtils: Error Removing from favorites", error));
     }
-
 
     public static void showPlaylistToast(Context context, int numTracksAdded) {
         final String message = context.getResources().getQuantityString(R.plurals.NNNtrackstoplaylist, numTracksAdded, numTracksAdded);
@@ -715,7 +709,7 @@ public class PlaylistUtils {
                         resolver.update(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
                                 values,
                                 MediaStore.Audio.Playlists._ID + "=?",
-                                new String[]{Long.valueOf(playlist.id).toString()}
+                                new String[] { Long.valueOf(playlist.id).toString() }
                         );
                         playlist.name = name;
                         Toast.makeText(context, R.string.playlist_renamed_message, Toast.LENGTH_SHORT).show();

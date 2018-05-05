@@ -1,18 +1,15 @@
 package com.simplecity.amp_library.sql.sqlbrite;
 
 import android.database.Cursor;
-
 import com.squareup.sqlbrite2.SqlBrite;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import io.reactivex.ObservableOperator;
 import io.reactivex.Observer;
 import io.reactivex.exceptions.Exceptions;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.plugins.RxJavaPlugins;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class QueryToListOperator<T> implements ObservableOperator<List<T>, SqlBrite.Query> {
     private final Function<Cursor, T> mapper;

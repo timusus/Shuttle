@@ -1,7 +1,6 @@
 package com.simplecity.amp_library.glide.fetcher;
 
 import com.simplecity.amp_library.model.ArtworkProvider;
-
 import java.io.InputStream;
 
 public class MediaStoreFetcher extends BaseFetcher {

@@ -21,7 +21,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
@@ -63,18 +64,14 @@ import com.simplecityapps.recycler_adapter.adapter.CompletionListUpdateCallbackA
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class SearchFragment extends BaseFragment implements
         com.simplecity.amp_library.search.SearchView,
@@ -144,7 +141,7 @@ public class SearchFragment extends BaseFragment implements
 
         searchPresenter = new SearchPresenter();
 
-        query = getArguments().getString(ARG_QUERY);
+        query = getArguments().getString(ARG_QUERY, "");
 
         loadingView = new LoadingView();
 

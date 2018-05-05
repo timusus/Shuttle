@@ -6,16 +6,14 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.InclExclItem;
 import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.ui.views.OverflowButton;
 import com.simplecityapps.recycler_adapter.model.BaseViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class InclExclView extends BaseViewModel<InclExclView.ViewHolder> {
 
@@ -29,7 +27,8 @@ public class InclExclView extends BaseViewModel<InclExclView.ViewHolder> {
         this.inclExclItem = inclExclItem;
     }
 
-    @Nullable ClickListener listener;
+    @Nullable
+    ClickListener listener;
 
     public void setClickListener(@Nullable ClickListener listener) {
         this.listener = listener;

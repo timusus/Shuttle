@@ -4,11 +4,9 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
-
 import com.simplecity.amp_library.BuildConfig;
 
 public class CustomArtworkTable extends SQLiteOpenHelper {
-
 
     public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".custom_artwork.contentprovider";
     public static final Uri URI = Uri.parse("content://" + AUTHORITY + "/" + "custom_artwork");

@@ -4,12 +4,17 @@ import com.simplecity.amp_library.model.Album
 import com.simplecity.amp_library.model.Playlist
 import com.simplecity.amp_library.model.Song
 import com.simplecity.amp_library.ui.presenters.Presenter
-import com.simplecity.amp_library.utils.*
+import com.simplecity.amp_library.utils.ComparisonUtils
+import com.simplecity.amp_library.utils.LogUtils
+import com.simplecity.amp_library.utils.MusicUtils
+import com.simplecity.amp_library.utils.Operators
+import com.simplecity.amp_library.utils.PermissionUtils
+import com.simplecity.amp_library.utils.SortManager
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
-import java.util.*
+import java.util.Random
 import java.util.concurrent.TimeUnit
 
 class PlaylistDetailPresenter constructor(private val playlist: Playlist) : Presenter<PlaylistDetailView>() {

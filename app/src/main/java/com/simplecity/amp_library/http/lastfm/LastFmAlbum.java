@@ -1,7 +1,6 @@
 package com.simplecity.amp_library.http.lastfm;
 
 import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
 import java.util.List;
 

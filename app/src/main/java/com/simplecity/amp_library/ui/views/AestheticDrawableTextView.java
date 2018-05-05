@@ -5,11 +5,9 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
-
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.Rx;
 import com.afollestad.aesthetic.ViewUtil;
-
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 

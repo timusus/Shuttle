@@ -10,11 +10,9 @@ import android.media.audiofx.BassBoost;
 import android.media.audiofx.Virtualizer;
 import android.preference.PreferenceManager;
 import android.util.Log;
-
 import com.annimon.stream.Stream;
 import com.crashlytics.android.Crashlytics;
 import com.simplecity.amp_library.utils.SettingsManager;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -86,7 +84,7 @@ public class Equalizer {
          */
         private Virtualizer virtualizer;
 
-//        private final PresetReverb mPresetReverb;
+        //        private final PresetReverb mPresetReverb;
 
         private short mEqNumPresets = -1;
         private short mEqNumBands = -1;
@@ -95,7 +93,7 @@ public class Equalizer {
             equalizer = new android.media.audiofx.Equalizer(1, sessionId);
             bassBoost = new BassBoost(1, sessionId);
             virtualizer = new Virtualizer(1, sessionId);
-//            mPresetReverb = new PresetReverb(0, sessionId);
+            //            mPresetReverb = new PresetReverb(0, sessionId);
         }
 
         /*
@@ -173,26 +171,26 @@ public class Equalizer {
             }
         }
 
-//        public void enableReverb(boolean enable) {
-//            if (enable != mPresetReverb.getEnabled()) {
-//                if (!enable) {
-//                    mPresetReverb.setPreset((short) 0);
-//                }
-//                mPresetReverb.setEnabled(enable);
-//            }
-//        }
+        //        public void enableReverb(boolean enable) {
+        //            if (enable != mPresetReverb.getEnabled()) {
+        //                if (!enable) {
+        //                    mPresetReverb.setPreset((short) 0);
+        //                }
+        //                mPresetReverb.setEnabled(enable);
+        //            }
+        //        }
 
-//        public void setReverbPreset(short preset) {
-//            if (mPresetReverb.getEnabled() && mPresetReverb.getPreset() != preset) {
-//                mPresetReverb.setPreset(preset);
-//            }
-//        }
+        //        public void setReverbPreset(short preset) {
+        //            if (mPresetReverb.getEnabled() && mPresetReverb.getPreset() != preset) {
+        //                mPresetReverb.setPreset(preset);
+        //            }
+        //        }
 
         public void release() {
             equalizer.release();
             bassBoost.release();
             virtualizer.release();
-//            mPresetReverb.release();
+            //            mPresetReverb.release();
         }
     }
 
@@ -219,7 +217,6 @@ public class Equalizer {
                     } catch (Exception | ExceptionInInitializerError e) {
                         Log.e(TAG, "Failed to open EQ session.. EffectSet error " + e);
                     }
-
                 }
             }
             if (action.equals(ACTION_CLOSE_EQUALIZER_SESSION)) {
@@ -250,7 +247,6 @@ public class Equalizer {
         // range
         short[] rangeShortArr = temp.equalizer.getBandLevelRange();
 
-
         editor.putString("equalizer.band_level_range", rangeShortArr[0] + ";" + rangeShortArr[1]).apply();
 
         // center freqs
@@ -259,7 +255,6 @@ public class Equalizer {
         for (short i = 0; i < numBands; i++) {
             centerFreqs.append(temp.equalizer.getCenterFreq(i));
             centerFreqs.append(";");
-
         }
         centerFreqs.deleteCharAt(centerFreqs.length() - 1);
         editor.putString("equalizer.center_freqs", centerFreqs.toString()).apply();
@@ -313,19 +308,18 @@ public class Equalizer {
         try {
             session.enableBassBoost(globalEnabled && mPrefs.getBoolean("audiofx.bass.enable", false));
             session.setBassBoostStrength(Short.valueOf(mPrefs.getString("audiofx.bass.strength", "0")));
-
         } catch (Exception e) {
             Log.e(TAG, "Error enabling bass boost!", e);
         }
 
-//        try {
-//            short preset = Short.decode(mPrefs.getString("audiofx.reverb.preset", String.valueOf(PresetReverb.PRESET_NONE)));
-//            session.enableReverb(globalEnabled && (preset > 0));
-//            session.setReverbPreset(preset);
-//
-//        } catch (Exception e) {
-//            Log.e(TAG, "Error enabling reverb preset", e);
-//        }
+        //        try {
+        //            short preset = Short.decode(mPrefs.getString("audiofx.reverb.preset", String.valueOf(PresetReverb.PRESET_NONE)));
+        //            session.enableReverb(globalEnabled && (preset > 0));
+        //            session.setReverbPreset(preset);
+        //
+        //        } catch (Exception e) {
+        //            Log.e(TAG, "Error enabling reverb preset", e);
+        //        }
 
         try {
             session.enableEqualizer(globalEnabled);
@@ -351,7 +345,6 @@ public class Equalizer {
             }
 
             session.setEqualizerLevels(equalizerLevels);
-
         } catch (Exception e) {
             Log.e(TAG, "Error enabling equalizer!", e);
         }
@@ -359,7 +352,6 @@ public class Equalizer {
         try {
             session.enableVirtualizer(globalEnabled && mPrefs.getBoolean("audiofx.virtualizer.enable", false));
             session.setVirtualizerStrength(Short.valueOf(mPrefs.getString("audiofx.virtualizer.strength", "0")));
-
         } catch (Exception e) {
             Log.e(TAG, "Error enabling virtualizer!");
         }

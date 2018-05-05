@@ -9,9 +9,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-
 import com.simplecity.amp_library.BuildConfig;
-
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -45,7 +43,7 @@ public class PlayCountContentProvider extends ContentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
-                        String[] selectionArgs, String sortOrder) {
+            String[] selectionArgs, String sortOrder) {
 
         // Using SQLiteQueryBuilder instead of query() method
         SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
@@ -187,5 +185,4 @@ public class PlayCountContentProvider extends ContentProvider {
             }
         }
     }
-
 }

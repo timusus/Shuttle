@@ -7,11 +7,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
-
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.Util;
 import com.simplecity.amp_library.R;
-
 import io.reactivex.disposables.Disposable;
 
 public class PlayCountView extends AppCompatTextView {

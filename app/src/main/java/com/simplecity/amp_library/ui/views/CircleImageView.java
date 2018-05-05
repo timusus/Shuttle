@@ -18,10 +18,8 @@ import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-
 import com.afollestad.aesthetic.Aesthetic;
 import com.simplecity.amp_library.R;
-
 import io.reactivex.disposables.Disposable;
 
 public class CircleImageView extends AppCompatImageView {
@@ -119,7 +117,6 @@ public class CircleImageView extends AppCompatImageView {
             canvas.drawCircle(getWidth() / 2, getHeight() / 2, mBorderRadius, mBorderPaint);
         }
         canvas.drawCircle(getWidth() / 2, getHeight() / 2, mDrawableRadius, mBitmapPaint);
-
     }
 
     @Override

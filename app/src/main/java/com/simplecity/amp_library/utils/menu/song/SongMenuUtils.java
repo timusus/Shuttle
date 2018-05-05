@@ -4,17 +4,14 @@ import android.content.Context;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.view.SubMenu;
-
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.menu.MenuUtils;
-
+import io.reactivex.Single;
 import java.util.Collections;
 import java.util.List;
-
-import io.reactivex.Single;
 
 public class SongMenuUtils {
 

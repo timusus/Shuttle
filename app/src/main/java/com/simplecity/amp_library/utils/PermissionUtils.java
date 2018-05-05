@@ -1,7 +1,6 @@
 package com.simplecity.amp_library.utils;
 
 import android.Manifest;
-
 import com.greysonparrelli.permiso.Permiso;
 
 public class PermissionUtils {
@@ -33,5 +32,4 @@ public class PermissionUtils {
     public static void RequestStoragePermissions(final PermissionCallback callback) {
         simplePermissionRequest(callback, Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
-
 }

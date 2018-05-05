@@ -8,11 +8,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
-
 import com.afollestad.aesthetic.Aesthetic;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.playback.QueueManager;
-
 import io.reactivex.disposables.Disposable;
 
 public class RepeatButton extends android.support.v7.widget.AppCompatImageButton {
@@ -24,9 +22,12 @@ public class RepeatButton extends android.support.v7.widget.AppCompatImageButton
 
     int selectedColor = Color.WHITE;
 
-    @NonNull Drawable offDrawable;
-    @NonNull Drawable oneDrawable;
-    @NonNull Drawable allDrawable;
+    @NonNull
+    Drawable offDrawable;
+    @NonNull
+    Drawable oneDrawable;
+    @NonNull
+    Drawable allDrawable;
 
     public RepeatButton(Context context) {
         this(context, null);

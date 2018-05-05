@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -20,7 +19,11 @@ import com.simplecity.amp_library.notifications.NotificationHelper;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
-
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Collections;
@@ -28,12 +31,6 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
-import io.reactivex.Observable;
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * A service which will download all artist & album artworkProvider, via an AsyncTask, and display the progress in a notification.
@@ -99,7 +96,6 @@ public class ArtworkDownloadService extends Service {
                     max = list.size();
                     updateProgress();
                 }, error -> LogUtils.logException(TAG, "Error determining max", error)));
-
 
         disposables.add(sharedItemsSingle.flatMapObservable(Observable::fromIterable)
                 .flatMap(artworkProvider -> Observable.just(artworkProvider)
@@ -169,7 +165,6 @@ public class ArtworkDownloadService extends Service {
                 notificationHelper.cancel(NOTIFICATION_ID);
                 stopSelf();
             }
-
         }
         return super.onStartCommand(intent, flags, startId);
     }

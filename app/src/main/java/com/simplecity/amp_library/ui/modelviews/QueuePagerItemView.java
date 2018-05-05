@@ -3,7 +3,6 @@ package com.simplecity.amp_library.ui.modelviews;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -66,7 +65,6 @@ public class QueuePagerItemView extends BaseViewModel<QueuePagerItemView.ViewHol
         @Override
         public void recycle() {
             super.recycle();
-
 
             Glide.with(itemView).clear(imageView);
         }

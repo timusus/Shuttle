@@ -27,11 +27,14 @@ import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.playback.constants.PlayerHandler;
 import com.simplecity.amp_library.services.Equalizer;
-import com.simplecity.amp_library.utils.*;
+import com.simplecity.amp_library.utils.DataManager;
+import com.simplecity.amp_library.utils.LogUtils;
+import com.simplecity.amp_library.utils.SettingsManager;
+import com.simplecity.amp_library.utils.ShuttleUtils;
+import com.simplecity.amp_library.utils.SleepTimer;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
-
 import java.util.List;
 
 public class PlaybackManager {
@@ -228,7 +231,6 @@ public class PlaybackManager {
                         notifyChange(InternalIntents.META_CHANGED);
                         queueManager.saveQueue(false);
                     }, error -> LogUtils.logException(TAG, "Error playing auto shuffle list", error)));
-
         } else {
             queueManager.shuffleMode = QueueManager.ShuffleMode.OFF;
             queueManager.saveQueue(false);
@@ -343,7 +345,6 @@ public class PlaybackManager {
                 isSupposedToBePlaying = false;
                 notifyChange(InternalIntents.PLAY_STATE_CHANGED);
             }
-
         }
         if (openNext) {
             setNextTrack();
@@ -550,7 +551,6 @@ public class PlaybackManager {
         return 0;
     }
 
-
     @PlaybackLocation
     int getPlaybackLocation() {
         return playbackLocation;
@@ -678,7 +678,7 @@ public class PlaybackManager {
      * Helper function to wrap the logic around isSupposedToBePlaying for consistency
      *
      * @param supposedToBePlaying to set isSupposedToBePlaying to
-     * @param notify              whether we want to fire PLAY_STATE_CHANGED event
+     * @param notify whether we want to fire PLAY_STATE_CHANGED event
      */
     void setIsSupposedToBePlaying(boolean supposedToBePlaying, boolean notify) {
         if (isSupposedToBePlaying != supposedToBePlaying) {

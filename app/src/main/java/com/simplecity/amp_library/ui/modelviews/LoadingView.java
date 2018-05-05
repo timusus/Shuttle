@@ -2,7 +2,6 @@ package com.simplecity.amp_library.ui.modelviews;
 
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.simplecityapps.recycler_adapter.model.BaseViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 

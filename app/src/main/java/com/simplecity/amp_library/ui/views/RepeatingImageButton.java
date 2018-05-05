@@ -120,11 +120,11 @@ public class RepeatingImageButton extends android.support.v7.widget.AppCompatIma
          * specified in setRepeatListener(), for as long as the button
          * is pressed.
          *
-         * @param v           The button as a View.
-         * @param duration    The number of milliseconds the button has been pressed so far.
+         * @param v The button as a View.
+         * @param duration The number of milliseconds the button has been pressed so far.
          * @param repeatCount The number of previous calls in this sequence.
-         *                    If this is going to be the last call in this sequence (i.e. the user
-         *                    just stopped pressing the button), the value will be -1.
+         * If this is going to be the last call in this sequence (i.e. the user
+         * just stopped pressing the button), the value will be -1.
          */
         void onRepeat(View v, long duration, int repeatCount);
     }

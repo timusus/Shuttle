@@ -8,7 +8,7 @@ public class LastFmUtils {
     private static final String TAG = "LastFmUtils";
 
     public static String getBestImageUrl(List<LastFmImage> images) {
-        String[] sizes = new String[]{
+        String[] sizes = new String[] {
                 "mega", "extralarge", "large", "medium"
         };
 

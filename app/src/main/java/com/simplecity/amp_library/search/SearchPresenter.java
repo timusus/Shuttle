@@ -3,7 +3,6 @@ package com.simplecity.amp_library.search;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
@@ -16,17 +15,14 @@ import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.StringUtils;
-
-import java.util.Collections;
-import java.util.List;
-
-import javax.inject.Inject;
-
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.SingleOperator;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import java.util.Collections;
+import java.util.List;
+import javax.inject.Inject;
 
 public class SearchPresenter extends Presenter<SearchView> {
 
@@ -147,7 +143,6 @@ public class SearchPresenter extends Presenter<SearchView> {
         }
     }
 
-
     private class SongFilterOperator implements SingleOperator<List<Song>, List<Song>> {
 
         String filterString;
@@ -255,7 +250,8 @@ public class SearchPresenter extends Presenter<SearchView> {
                 public void onSuccess(List<AlbumArtist> albumArtists) {
                     Collections.sort(albumArtists, AlbumArtist::compareTo);
                     Stream<AlbumArtist> albumArtistStream = Stream.of(albumArtists).filter(albumArtist -> albumArtist.name != null);
-                    Stream<AlbumArtist> filteredStream = SettingsManager.getInstance().getSearchFuzzy() ? applyJaroWinklerAlbumArtistFilter(albumArtistStream) : applyAlbumArtistFilter(albumArtistStream);
+                    Stream<AlbumArtist> filteredStream =
+                            SettingsManager.getInstance().getSearchFuzzy() ? applyJaroWinklerAlbumArtistFilter(albumArtistStream) : applyAlbumArtistFilter(albumArtistStream);
                     observer.onSuccess(filteredStream.toList());
                 }
 

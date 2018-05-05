@@ -5,9 +5,7 @@ import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-
 import com.simplecity.amp_library.R;
-
 import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.Formatter;
@@ -34,7 +32,7 @@ public class StringUtils {
      * Todo: Move to StringUtils or somewhere else
      *
      * @param context Context
-     * @param secs    long
+     * @param secs long
      * @return String
      */
     public static String makeTimeString(@NonNull Context context, long secs) {
@@ -67,9 +65,9 @@ public class StringUtils {
     /**
      * Method makeSubfoldersLabel.
      *
-     * @param context       context
+     * @param context context
      * @param numSubfolders the number of subFolders for this folder
-     * @param numSubfiles   the number of subFiles for this folder
+     * @param numSubfiles the number of subFiles for this folder
      * @return a label in the vein of "5 folders | 3 files"
      */
     public static String makeSubfoldersLabel(Context context, int numSubfolders, int numSubfiles) {
@@ -246,7 +244,7 @@ public class StringUtils {
      * from <a href="http://en.wikipedia.org/wiki/Jaro%E2%80%93Winkler_distance">http://en.wikipedia.org/wiki/Jaro%E2%80%93Winkler_distance</a>.</p>
      * <p>
      *
-     * @param first  the first String, must not be null
+     * @param first the first String, must not be null
      * @param second the second String, must not be null
      * @return result similarity
      */
@@ -322,7 +320,7 @@ public class StringUtils {
                 break;
             }
         }
-        return new int[]{matches, transpositions / 2, prefix, max.length()};
+        return new int[] { matches, transpositions / 2, prefix, max.length() };
     }
 
     public static int parseInt(@Nullable String string) {

@@ -4,7 +4,6 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.interfaces.BreadcrumbListener;
 import com.simplecity.amp_library.ui.adapters.ViewType;
@@ -12,7 +11,6 @@ import com.simplecity.amp_library.ui.views.BreadcrumbItem;
 import com.simplecity.amp_library.ui.views.BreadcrumbView;
 import com.simplecityapps.recycler_adapter.model.BaseViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
-
 import java.util.List;
 
 public class BreadcrumbsView extends BaseViewModel<BreadcrumbsView.ViewHolder> {

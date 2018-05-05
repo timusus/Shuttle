@@ -13,13 +13,13 @@ import com.simplecity.amp_library.ui.fragments.QueueFragment;
 import com.simplecity.amp_library.ui.fragments.QueuePagerFragment;
 import com.simplecity.amp_library.ui.fragments.SuggestedFragment;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
-
 import dagger.Subcomponent;
 
 @FragmentScope
 @Subcomponent(modules = {
         FragmentModule.class,
-        PresenterModule.class})
+        PresenterModule.class
+})
 
 public interface FragmentComponent {
 

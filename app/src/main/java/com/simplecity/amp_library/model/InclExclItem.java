@@ -1,10 +1,7 @@
 package com.simplecity.amp_library.model;
 
-
 import android.database.Cursor;
-
 import com.simplecity.amp_library.sql.databases.InclExclDbOpenHelper;
-
 import io.reactivex.annotations.NonNull;
 
 public class InclExclItem {
@@ -15,8 +12,10 @@ public class InclExclItem {
     }
 
     public long id;
-    @NonNull public String path;
-    @Type public int type;
+    @NonNull
+    public String path;
+    @Type
+    public int type;
 
     public InclExclItem(Cursor cursor) {
         this.id = cursor.getLong(cursor.getColumnIndex(InclExclDbOpenHelper.COLUMN_ID));

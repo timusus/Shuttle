@@ -9,7 +9,7 @@ public class WidgetConfigureMedium extends BaseWidgetConfigure {
 
     @Override
     int[] getWidgetLayouts() {
-        return new int[]{R.layout.widget_layout_medium, R.layout.widget_layout_medium_alt};
+        return new int[] { R.layout.widget_layout_medium, R.layout.widget_layout_medium_alt };
     }
 
     @Override

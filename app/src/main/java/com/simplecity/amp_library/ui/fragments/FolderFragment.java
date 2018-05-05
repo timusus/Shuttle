@@ -16,7 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.Toast;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.ViewBackgroundAction;
 import com.annimon.stream.Collectors;
@@ -52,15 +54,6 @@ import com.simplecity.amp_library.utils.menu.folder.FolderMenuUtils;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -69,6 +62,10 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import test.com.androidnavigation.fragment.BackPressListener;
 
 import static com.afollestad.aesthetic.Rx.distinctToMainThread;
@@ -492,7 +489,6 @@ public class FolderFragment extends BaseFragment implements
                 public void notifyDatasetChanged() {
                     adapter.notifyItemRangeChanged(0, adapter.items.size(), 0);
                 }
-
             });
 
             contextualToolbarHelper.setCanChangeTitle(false);
@@ -617,7 +613,6 @@ public class FolderFragment extends BaseFragment implements
                 adapter.notifyItemRangeChanged(0, adapter.getItemCount(), 0);
                 updateMenuItems();
                 return true;
-
         }
         return false;
     }

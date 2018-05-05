@@ -10,7 +10,6 @@ import android.view.SubMenu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.interfaces.FileType;
@@ -26,14 +25,12 @@ import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.menu.MenuUtils;
-
-import java.io.File;
-import java.util.Collections;
-import java.util.List;
-
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
+import java.io.File;
+import java.util.Collections;
+import java.util.List;
 
 public class FolderMenuUtils {
 

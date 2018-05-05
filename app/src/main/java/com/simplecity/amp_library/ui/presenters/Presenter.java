@@ -3,7 +3,6 @@ package com.simplecity.amp_library.ui.presenters;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
@@ -49,5 +48,4 @@ public class Presenter<V> {
         // Unsubscribe all disposables that need to be unsubscribed in this lifecycle state.
         disposables.clear();
     }
-
 }

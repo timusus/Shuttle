@@ -4,18 +4,15 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.bumptech.glide.Glide;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.ui.views.NonScrollImageButton;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
-
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public abstract class MultiItemView<VH extends MultiItemView.ViewHolder, T> extends BaseSelectableViewModel<VH> {
 
@@ -53,10 +50,12 @@ public abstract class MultiItemView<VH extends MultiItemView.ViewHolder, T> exte
         @BindView(R.id.line_two)
         public TextView lineTwo;
 
-        @Nullable @BindView(R.id.albumCount)
+        @Nullable
+        @BindView(R.id.albumCount)
         public TextView albumCount;
 
-        @Nullable @BindView(R.id.trackCount)
+        @Nullable
+        @BindView(R.id.trackCount)
         public TextView trackCount;
 
         @BindView(R.id.image)
@@ -65,10 +64,12 @@ public abstract class MultiItemView<VH extends MultiItemView.ViewHolder, T> exte
         @BindView(R.id.btn_overflow)
         public NonScrollImageButton overflowButton;
 
-        @Nullable @BindView(R.id.bottom_container)
+        @Nullable
+        @BindView(R.id.bottom_container)
         View bottomContainer;
 
-        @Nullable @BindView(R.id.tickImage)
+        @Nullable
+        @BindView(R.id.tickImage)
         ImageView tickImageView;
 
         public ViewHolder(View itemView) {

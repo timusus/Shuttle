@@ -6,7 +6,6 @@ import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.RemoteViews;
-
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
@@ -129,7 +128,6 @@ public class WidgetProviderExtraLarge extends BaseWidgetProvider {
                 // Show error state to user
                 views.setViewVisibility(R.id.text1, View.GONE);
                 views.setTextViewText(R.id.text2, errorState);
-
             } else {
                 // No error, so show normal titles
                 views.setViewVisibility(R.id.text1, View.VISIBLE);
@@ -190,5 +188,4 @@ public class WidgetProviderExtraLarge extends BaseWidgetProvider {
             }
         }
     }
-
 }

@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
-
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.utils.ResourceUtils;
 

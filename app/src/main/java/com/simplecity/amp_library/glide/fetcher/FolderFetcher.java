@@ -2,7 +2,6 @@ package com.simplecity.amp_library.glide.fetcher;
 
 import com.simplecity.amp_library.model.ArtworkProvider;
 import com.simplecity.amp_library.utils.ArtworkUtils;
-
 import java.io.File;
 import java.io.InputStream;
 

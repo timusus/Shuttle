@@ -2,7 +2,6 @@ package com.simplecity.amp_library.utils;
 
 import android.support.annotation.Nullable;
 import android.util.Log;
-
 import com.crashlytics.android.Crashlytics;
 import com.simplecity.amp_library.BuildConfig;
 

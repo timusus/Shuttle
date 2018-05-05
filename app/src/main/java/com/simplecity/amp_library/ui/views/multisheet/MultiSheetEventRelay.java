@@ -1,12 +1,9 @@
 package com.simplecity.amp_library.ui.views.multisheet;
 
-
 import com.jakewharton.rxrelay2.PublishRelay;
 import com.simplecity.multisheetview.ui.view.MultiSheetView;
-
-import javax.inject.Inject;
-
 import io.reactivex.Observable;
+import javax.inject.Inject;
 
 public class MultiSheetEventRelay {
 

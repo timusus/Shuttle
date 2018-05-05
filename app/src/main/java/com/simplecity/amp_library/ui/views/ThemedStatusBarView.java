@@ -3,15 +3,12 @@ package com.simplecity.amp_library.ui.views;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.Rx;
 import com.afollestad.aesthetic.ViewBackgroundAction;
-
 import io.reactivex.disposables.Disposable;
 
 import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
-
 
 public class ThemedStatusBarView extends StatusBarView {
 

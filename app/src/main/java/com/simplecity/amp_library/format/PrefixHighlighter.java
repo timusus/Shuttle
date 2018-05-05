@@ -4,10 +4,8 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.widget.TextView;
-
 import com.afollestad.aesthetic.Aesthetic;
 import com.simplecity.amp_library.ShuttleApplication;
-
 import javax.inject.Inject;
 
 /**
@@ -28,7 +26,7 @@ public class PrefixHighlighter {
      * Sets the text on the given {@link TextView}, highlighting the word that
      * matches the given prefix
      *
-     * @param view   The {@link TextView} on which to set the text
+     * @param view The {@link TextView} on which to set the text
      * @param prefix The prefix to look for
      */
     public void setText(TextView view, char[] prefix) {
@@ -39,8 +37,8 @@ public class PrefixHighlighter {
      * Sets the text on the given {@link TextView}, highlighting the word that
      * matches the given prefix
      *
-     * @param view   The {@link TextView} on which to set the text
-     * @param text   The string to use as the text
+     * @param view The {@link TextView} on which to set the text
+     * @param text The string to use as the text
      * @param prefix The prefix to look for
      */
     public void setText(TextView view, String text, char[] prefix) {
@@ -58,7 +56,7 @@ public class PrefixHighlighter {
      * Returns a {@link CharSequence} which highlights the given prefix if found
      * in the given text
      *
-     * @param text   the text to which to apply the highlight
+     * @param text the text to which to apply the highlight
      * @param prefix the prefix to look for
      */
     private CharSequence apply(CharSequence text, char[] prefix) {
@@ -79,7 +77,7 @@ public class PrefixHighlighter {
      * Finds the index of the first word that starts with the given prefix. If
      * not found, returns -1
      *
-     * @param text   the text in which to search for the prefix
+     * @param text the text in which to search for the prefix
      * @param prefix the text to find, in upper case letters
      */
     private static int indexOfWordPrefix(CharSequence text, char[] prefix) {
@@ -123,5 +121,4 @@ public class PrefixHighlighter {
         }
         return -1;
     }
-
 }

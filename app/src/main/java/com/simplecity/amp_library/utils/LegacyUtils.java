@@ -1,14 +1,10 @@
 package com.simplecity.amp_library.utils;
 
-
 import android.os.Environment;
 import android.support.annotation.NonNull;
-
 import com.simplecity.amp_library.ShuttleApplication;
-
-import java.io.File;
-
 import io.reactivex.Completable;
+import java.io.File;
 
 public class LegacyUtils {
 

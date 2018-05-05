@@ -14,7 +14,7 @@
         <com.simplecity.amp_library.ui.views.ThemedStatusBarView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark" />
+            android:background="@color/colorPrimaryDark"/>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -25,11 +25,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?colorPrimary"
-                app:contentInsetStartWithNavigation="0dp" />
+                app:contentInsetStartWithNavigation="0dp"/>
 
             <include
                 android:id="@+id/contextualToolbar"
-                layout="@layout/contextual_toolbar" />
+                layout="@layout/contextual_toolbar"/>
 
         </FrameLayout>
 
@@ -42,7 +42,7 @@
             android:paddingRight="8dp"
             app:fastScrollAutoHide="true"
             app:fastScrollAutoHideDelay="1500"
-            tools:listitem="@layout/list_item_image" />
+            tools:listitem="@layout/list_item_image"/>
     </LinearLayout>
 
     <ViewStub
@@ -50,6 +50,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout="@layout/empty_view" />
+        android:layout="@layout/empty_view"/>
 
 </FrameLayout>

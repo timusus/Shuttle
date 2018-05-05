@@ -16,7 +16,6 @@ import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
 import com.annimon.stream.Stream;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
@@ -47,17 +46,14 @@ import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import com.simplecityapps.recycler_adapter.recyclerview.SpanSizeLookup;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
-
-import java.util.Collections;
-import java.util.concurrent.TimeUnit;
-
-import javax.inject.Inject;
-
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
+import javax.inject.Inject;
 
 public class AlbumFragment extends BaseFragment implements
         AlbumView.ClickListener,
@@ -462,7 +458,12 @@ public class AlbumFragment extends BaseFragment implements
             }
             playlistMenuDisposable = PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe();
 
-            contextualToolbar.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(getContext(), Single.defer(() -> Single.just(contextualToolbarHelper.getItems())), albumMenuFragmentHelper.getCallbacks()));
+            contextualToolbar.setOnMenuItemClickListener(
+                    AlbumMenuUtils.getAlbumMenuClickListener(
+                            getContext(),
+                            Single.defer(() -> Single.just(contextualToolbarHelper.getItems())),
+                            albumMenuFragmentHelper.getCallbacks())
+            );
 
             contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
 
@@ -478,7 +479,6 @@ public class AlbumFragment extends BaseFragment implements
             });
         }
     }
-
 
     @Override
     protected String screenName() {

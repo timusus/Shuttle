@@ -10,12 +10,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextPaint;
 import android.text.TextUtils;
-
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.Rx;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
-
 
 public class PlaceholderProvider {
 

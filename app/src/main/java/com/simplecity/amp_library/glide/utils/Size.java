@@ -20,7 +20,6 @@ public class Size {
         Size size = (Size) o;
 
         return width == size.width && height == size.height;
-
     }
 
     @Override

@@ -16,7 +16,6 @@ import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
-
 import com.crashlytics.android.Crashlytics;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Song;
@@ -32,14 +31,12 @@ import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MediaButtonIntentReceiver;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
-
-import java.util.ConcurrentModificationException;
-import java.util.List;
-
 import io.reactivex.Completable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
+import java.util.ConcurrentModificationException;
+import java.util.List;
 
 @SuppressLint("InlinedApi")
 public class MusicService extends Service {
@@ -222,7 +219,6 @@ public class MusicService extends Service {
 
             if (MediaButtonCommand.NEXT.equals(cmd) || ServiceCommand.NEXT_ACTION.equals(action)) {
                 gotoNext(true);
-
             } else if (MediaButtonCommand.PREVIOUS.equals(cmd) || ServiceCommand.PREV_ACTION.equals(action)) {
                 if (getSeekPosition() < 2000) {
                     previous();
@@ -395,7 +391,7 @@ public class MusicService extends Service {
     /**
      * Queues a new list for playback
      *
-     * @param songs  The list to queue
+     * @param songs The list to queue
      * @param action The action to take
      */
     public void enqueue(List<Song> songs, @QueueManager.EnqueueAction final int action) {
@@ -416,7 +412,7 @@ public class MusicService extends Service {
     /**
      * Opens a list of songs for playback
      *
-     * @param songs    The list of songs to open
+     * @param songs The list of songs to open
      * @param position The position to start playback at
      */
     public void open(@NonNull List<Song> songs, final int position) {
@@ -702,7 +698,6 @@ public class MusicService extends Service {
         }
     }
 
-
     // EQ
 
     public void closeEqualizerSessions(boolean internal, int audioSessionId) {
@@ -717,7 +712,6 @@ public class MusicService extends Service {
         playbackManager.updateEqualizer();
     }
 
-
     private void scheduleDelayedShutdown() {
         alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 5 * 60 * 1000 /* 5 mins */, shutdownIntent);
         shutdownScheduled = true;
@@ -729,7 +723,6 @@ public class MusicService extends Service {
             shutdownScheduled = false;
         }
     }
-
 
     // Notifications
 
@@ -798,7 +791,7 @@ public class MusicService extends Service {
      * Stops the foreground notification
      *
      * @param removeNotification true to remove the notification as well as stop the service running in the foreground
-     * @param withDelay          true to delay the stop call by 1.5 seconds, allowing subsequent start calls to cancel this call
+     * @param withDelay true to delay the stop call by 1.5 seconds, allowing subsequent start calls to cancel this call
      */
     void stopForegroundImpl(boolean removeNotification, boolean withDelay) {
         if (withDelay) {
@@ -807,7 +800,6 @@ public class MusicService extends Service {
             stopForeground(removeNotification);
         }
     }
-
 
     // Event management
 

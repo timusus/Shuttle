@@ -10,6 +10,6 @@
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:background="?attr/listDividerColor"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription"/>
 
 </FrameLayout>

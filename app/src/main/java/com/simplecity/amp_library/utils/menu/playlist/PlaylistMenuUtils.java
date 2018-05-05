@@ -4,13 +4,11 @@ import android.support.annotation.StringRes;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.menu.MenuUtils;
-
 import java.util.Collections;
 
 public class PlaylistMenuUtils {

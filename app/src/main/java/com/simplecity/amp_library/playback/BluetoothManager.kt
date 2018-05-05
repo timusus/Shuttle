@@ -11,8 +11,8 @@ import com.simplecity.amp_library.playback.constants.ExternalIntents
 import com.simplecity.amp_library.utils.SettingsManager
 
 class BluetoothManager(
-        private val playbackManager: PlaybackManager,
-        private val musicServiceCallbacks: MusicService.Callbacks
+    private val playbackManager: PlaybackManager,
+    private val musicServiceCallbacks: MusicService.Callbacks
 ) {
 
     private var bluetoothReceiver: BroadcastReceiver? = null

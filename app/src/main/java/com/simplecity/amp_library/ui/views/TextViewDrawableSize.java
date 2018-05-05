@@ -5,7 +5,6 @@ import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-
 import com.simplecity.amp_library.R;
 
 public class TextViewDrawableSize extends AestheticDrawableTextView {

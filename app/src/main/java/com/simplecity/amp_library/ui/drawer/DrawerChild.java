@@ -6,13 +6,11 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.bignerdranch.expandablerecyclerview.ChildViewHolder;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Playlist;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class DrawerChild {
 

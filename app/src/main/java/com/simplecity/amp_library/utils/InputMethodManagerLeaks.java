@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -36,7 +35,7 @@ public class InputMethodManagerLeaks {
         private final Method finishInputLockedMethod;
 
         ReferenceCleaner(InputMethodManager inputMethodManager, Field mHField, Field mServedViewField,
-                         Method finishInputLockedMethod) {
+                Method finishInputLockedMethod) {
             this.inputMethodManager = inputMethodManager;
             this.mHField = mHField;
             this.mServedViewField = mServedViewField;

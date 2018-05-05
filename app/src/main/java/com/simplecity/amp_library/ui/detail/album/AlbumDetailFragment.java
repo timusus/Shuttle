@@ -24,7 +24,10 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
 import com.afollestad.aesthetic.Aesthetic;
 import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
@@ -71,18 +74,12 @@ import com.simplecityapps.recycler_adapter.adapter.CompletionListUpdateCallbackA
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.Unbinder;
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static com.afollestad.aesthetic.Rx.distinctToMainThread;
 
@@ -490,7 +487,12 @@ public class AlbumDetailFragment extends BaseFragment implements
             SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
             disposables.add(PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe());
 
-            contextualToolbar.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), Single.defer(() -> Operators.reduceSongSingles(contextualToolbarHelper.getItems())), songMenuFragmentHelper.getSongMenuCallbacks()));
+            contextualToolbar.setOnMenuItemClickListener(
+                    SongMenuUtils.getSongMenuClickListener(
+                            getContext(),
+                            Single.defer(() -> Operators.reduceSongSingles(contextualToolbarHelper.getItems())),
+                            songMenuFragmentHelper.getSongMenuCallbacks())
+            );
 
             contextualToolbarHelper = new ContextualToolbarHelper<Single<List<Song>>>(contextualToolbar, new ContextualToolbarHelper.Callback() {
 
@@ -533,12 +535,10 @@ public class AlbumDetailFragment extends BaseFragment implements
         }
     }
 
-
     @Override
     public String screenName() {
         return "AlbumDetailFragment";
     }
-
 
     private SharedElementCallback enterSharedElementCallback = new SharedElementCallback() {
         @Override
@@ -577,7 +577,6 @@ public class AlbumDetailFragment extends BaseFragment implements
 
         }
     };
-
 
     // AlbumDetailView implementation
 
@@ -622,5 +621,4 @@ public class AlbumDetailFragment extends BaseFragment implements
             contextualToolbarHelper.finish();
         }
     }
-
 }

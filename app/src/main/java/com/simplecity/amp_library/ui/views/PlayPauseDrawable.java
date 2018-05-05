@@ -15,7 +15,6 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.util.Property;
-
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.utils.ResourceUtils;
 
@@ -105,7 +104,6 @@ public class PlayPauseDrawable extends Drawable {
         // Translate the play button a tiny bit to the right so it looks more centered.
         canvas.translate(lerp(0, ResourceUtils.toPixels(4), mProgress), 0);
 
-
         // (1) Pause --> Play: rotate 0 to 90 degrees clockwise.
         // (2) Play --> Pause: rotate 90 to 180 degrees clockwise.
         final float rotationProgress = mIsPlay ? mProgress : 1 - mProgress;
@@ -130,7 +128,6 @@ public class PlayPauseDrawable extends Drawable {
             public void onAnimationStart(Animator animation) {
                 mIsPlay = !mIsPlay;
             }
-
         });
         return anim;
     }
