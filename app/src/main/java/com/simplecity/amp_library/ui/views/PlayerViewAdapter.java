@@ -1,8 +1,6 @@
 package com.simplecity.amp_library.ui.views;
 
-
 import android.support.annotation.Nullable;
-
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.tagger.TaggerDialog;
@@ -25,7 +23,7 @@ public abstract class PlayerViewAdapter implements PlayerView {
     }
 
     @Override
-    public void totalTimeChanged(long seconds){
+    public void totalTimeChanged(long seconds) {
 
     }
 
@@ -78,5 +76,4 @@ public abstract class PlayerViewAdapter implements PlayerView {
     public void showSongInfoDialog(MaterialDialog dialog) {
 
     }
-
 }

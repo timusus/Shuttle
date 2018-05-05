@@ -3,7 +3,6 @@ package com.simplecity.amp_library.ui.modelviews;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.simplecity.amp_library.R;

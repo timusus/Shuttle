@@ -10,8 +10,11 @@ import com.simplecity.amp_library.rx.UnsafeConsumer;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class QueueManager {
 
@@ -33,7 +36,7 @@ public class QueueManager {
         int LAST = 1;
     }
 
-    private final char hexDigits[] = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+    private final char hexDigits[] = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
     @NonNull
     List<Song> playlist = new ArrayList<>();
@@ -176,7 +179,7 @@ public class QueueManager {
 
     /**
      * @param force True to force the player onto the track next, false
-     *              otherwise.
+     * otherwise.
      * @return The next position to play.
      */
     int getNextPosition(final boolean force) {
@@ -272,7 +275,7 @@ public class QueueManager {
     /**
      * Queues a new list for playback
      *
-     * @param songs  The list to queue
+     * @param songs The list to queue
      * @param action The action to take
      */
     public void enqueue(final List<Song> songs, @EnqueueAction final int action, UnsafeAction setNextTrack, UnsafeAction openCurrentAndNext) {
@@ -302,7 +305,7 @@ public class QueueManager {
      * Saves our state to preferences, including the queue position, repeat mode & shuffle mode.
      *
      * @param saveQueue boolean whether to serialize the playlist/shuffleList and store those in preferences
-     *                  as well.
+     * as well.
      */
     void saveQueue(final boolean saveQueue) {
 
@@ -364,7 +367,6 @@ public class QueueManager {
                                     onQueueReloadComplete(reloadComplete);
                                     return;
                                 }
-
                             }
                         }
 

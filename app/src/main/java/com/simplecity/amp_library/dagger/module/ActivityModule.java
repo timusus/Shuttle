@@ -1,9 +1,7 @@
 package com.simplecity.amp_library.dagger.module;
 
 import android.app.Activity;
-
 import com.simplecity.amp_library.dagger.scope.ActivityScope;
-
 import dagger.Module;
 import dagger.Provides;
 

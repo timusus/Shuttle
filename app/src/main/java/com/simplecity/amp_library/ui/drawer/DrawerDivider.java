@@ -2,10 +2,8 @@ package com.simplecity.amp_library.ui.drawer;
 
 import android.support.annotation.NonNull;
 import android.view.View;
-
 import com.bignerdranch.expandablerecyclerview.ParentViewHolder;
 import com.bignerdranch.expandablerecyclerview.model.Parent;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -29,7 +27,6 @@ public class DrawerDivider implements Parent<DrawerChild> {
 
         DividerHolder(@NonNull View itemView) {
             super(itemView);
-
         }
     }
 }

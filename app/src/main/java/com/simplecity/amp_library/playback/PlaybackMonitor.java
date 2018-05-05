@@ -2,12 +2,10 @@ package com.simplecity.amp_library.playback;
 
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
-
-import java.util.concurrent.TimeUnit;
-
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import java.util.concurrent.TimeUnit;
 
 public class PlaybackMonitor {
 
@@ -55,5 +53,4 @@ public class PlaybackMonitor {
     public Flowable<Long> getCurrentTimeObservable() {
         return currentTimeObservable;
     }
-
 }

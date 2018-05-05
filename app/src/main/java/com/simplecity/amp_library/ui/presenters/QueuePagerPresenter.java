@@ -3,7 +3,6 @@ package com.simplecity.amp_library.ui.presenters;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.annotation.NonNull;
-
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.bumptech.glide.RequestManager;
@@ -14,13 +13,10 @@ import com.simplecity.amp_library.ui.modelviews.QueuePagerItemView;
 import com.simplecity.amp_library.ui.views.QueuePagerView;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
-
-import java.util.List;
-
-import javax.inject.Inject;
-
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import java.util.List;
+import javax.inject.Inject;
 
 public class QueuePagerPresenter extends Presenter<QueuePagerView> {
 

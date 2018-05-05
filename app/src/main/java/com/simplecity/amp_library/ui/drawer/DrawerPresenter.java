@@ -2,21 +2,17 @@ package com.simplecity.amp_library.ui.drawer;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
-
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.PlaylistsModel;
 import com.simplecity.amp_library.ui.presenters.PurchasePresenter;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
-
-import java.util.Collections;
-import java.util.concurrent.TimeUnit;
-
-import javax.inject.Inject;
-
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
+import javax.inject.Inject;
 
 public class DrawerPresenter extends PurchasePresenter<DrawerView> {
 

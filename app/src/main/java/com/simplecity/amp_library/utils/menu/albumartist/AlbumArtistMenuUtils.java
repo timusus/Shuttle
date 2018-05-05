@@ -3,7 +3,6 @@ package com.simplecity.amp_library.utils.menu.albumartist;
 import android.content.Context;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
-
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Song;
@@ -12,11 +11,9 @@ import com.simplecity.amp_library.utils.Operators;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.extensions.AlbumArtistExt;
 import com.simplecity.amp_library.utils.menu.MenuUtils;
-
-import java.util.List;
-
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import java.util.List;
 
 public class AlbumArtistMenuUtils {
 

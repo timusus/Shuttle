@@ -8,5 +8,4 @@ public interface Sortable {
     String getSortKey();
 
     void setSortKey();
-
 }

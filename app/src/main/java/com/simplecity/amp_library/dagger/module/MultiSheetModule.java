@@ -2,11 +2,9 @@ package com.simplecity.amp_library.dagger.module;
 
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetSlideEventRelay;
-
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
+import javax.inject.Singleton;
 
 @Module
 public class MultiSheetModule {
@@ -22,5 +20,4 @@ public class MultiSheetModule {
     MultiSheetSlideEventRelay provideMultiSheetSlideEventRelay() {
         return new MultiSheetSlideEventRelay();
     }
-
 }

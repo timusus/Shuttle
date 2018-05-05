@@ -6,7 +6,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.widget.RemoteViews;
-
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.simplecity.amp_library.R;
@@ -37,18 +36,17 @@ public class CustomAppWidgetTarget extends SimpleTarget<Bitmap> {
     /**
      * Constructor using an int array of widgetIds to get a handle on the Widget in order to update it.
      *
-     * @param context       Context to use in the AppWidgetManager initialization.
-     * @param remoteViews   RemoteViews object which contains the ImageView that will load the bitmap.
-     * @param viewId        The id of the ImageView view that will load the image.
-     * @param width         Desired width in pixels of the bitmap that will be loaded. (Needs to be manually set
-     *                      because of RemoteViews limitations.)
-     * @param height        Desired height in pixels of the bitmap that will be loaded. (Needs to be manually set
-     *                      because of RemoteViews limitations.)
-     * @param errorListener
-     * @param widgetIds     The int[] that contains the widget ids of an application.
+     * @param context Context to use in the AppWidgetManager initialization.
+     * @param remoteViews RemoteViews object which contains the ImageView that will load the bitmap.
+     * @param viewId The id of the ImageView view that will load the image.
+     * @param width Desired width in pixels of the bitmap that will be loaded. (Needs to be manually set
+     * because of RemoteViews limitations.)
+     * @param height Desired height in pixels of the bitmap that will be loaded. (Needs to be manually set
+     * because of RemoteViews limitations.)
+     * @param widgetIds The int[] that contains the widget ids of an application.
      */
     public CustomAppWidgetTarget(Context context, RemoteViews remoteViews, int viewId, int width, int height,
-                                 CustomErrorListener errorListener, int... widgetIds) {
+            CustomErrorListener errorListener, int... widgetIds) {
         super(width, height);
         if (context == null) {
             throw new NullPointerException("Context can not be null!");

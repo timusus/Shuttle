@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
 import android.view.View;
-
 import com.afollestad.aesthetic.AestheticToolbar;
 
 public class ContextualToolbar extends AestheticToolbar {

@@ -2,7 +2,6 @@ package com.simplecity.amp_library.search;
 
 import android.support.annotation.NonNull;
 import android.view.View;
-
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.tagger.TaggerDialog;

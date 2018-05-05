@@ -7,7 +7,6 @@ import android.os.Message;
 import android.util.Log;
 import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.playback.constants.PlayerHandler;
-
 import java.lang.ref.WeakReference;
 
 final class MediaPlayerHandler extends Handler {

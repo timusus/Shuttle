@@ -2,7 +2,6 @@ package com.simplecity.amp_library.glide.utils;
 
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
-
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.DrawableCrossFadeFactory;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -13,8 +12,8 @@ public class AlwaysCrossFade extends DrawableCrossFadeFactory<GlideDrawable> {
 
     /**
      * @param transparentImagesPossible used to signal that are no transparent images possible with this load.
-     *                                  When cross-fading between opaque images a better-looking cross-fade is possible
-     *                                  via {@link TransitionDrawable#setCrossFadeEnabled(boolean)}.
+     * When cross-fading between opaque images a better-looking cross-fade is possible
+     * via {@link TransitionDrawable#setCrossFadeEnabled(boolean)}.
      * @see <a href="https://github.com/bumptech/glide/issues/943">#943</a>
      */
     public AlwaysCrossFade(boolean transparentImagesPossible) {

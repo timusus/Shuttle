@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
-
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ui.fragments.AlbumArtistFragment;
 import com.simplecity.amp_library.ui.fragments.AlbumFragment;
@@ -14,7 +13,6 @@ import com.simplecity.amp_library.ui.fragments.PlaylistFragment;
 import com.simplecity.amp_library.ui.fragments.SongFragment;
 import com.simplecity.amp_library.ui.fragments.SuggestedFragment;
 import com.simplecity.amp_library.utils.ComparisonUtils;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +29,8 @@ public class CategoryItem {
         int FOLDERS = 6;
     }
 
-    @Type public int type;
+    @Type
+    public int type;
 
     public int sortOrder;
 

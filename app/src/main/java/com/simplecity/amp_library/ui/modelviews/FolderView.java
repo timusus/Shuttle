@@ -10,7 +10,8 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.afollestad.aesthetic.Aesthetic;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.interfaces.FileType;
@@ -24,12 +25,8 @@ import com.simplecity.amp_library.ui.views.CircleImageView;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.StringUtils;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
-
 import java.lang.ref.WeakReference;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class FolderView extends BaseSelectableViewModel<FolderView.ViewHolder> {
 
@@ -126,7 +123,7 @@ public class FolderView extends BaseSelectableViewModel<FolderView.ViewHolder> {
             InclExclHelper.deleteInclExclItem(inclExclItem);
         }
     }
-    
+
     @Override
     public int getViewType() {
         return ViewType.FOLDER;

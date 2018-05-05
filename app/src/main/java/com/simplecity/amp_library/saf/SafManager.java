@@ -17,13 +17,11 @@ import android.support.v4.provider.DocumentFile;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.Crashlytics;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.utils.SettingsManager;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -167,8 +165,9 @@ public class SafManager {
         String treeUri = SettingsManager.getInstance().getDocumentTreeUri();
         List<UriPermission> perms = ShuttleApplication.getInstance().getContentResolver().getPersistedUriPermissions();
         for (UriPermission perm : perms) {
-            if (perm.getUri().toString().equals(treeUri) && perm.isWritePermission())
+            if (perm.getUri().toString().equals(treeUri) && perm.isWritePermission()) {
                 return treeUri;
+            }
         }
         return null;
     }

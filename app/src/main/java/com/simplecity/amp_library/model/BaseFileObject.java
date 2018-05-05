@@ -2,7 +2,6 @@ package com.simplecity.amp_library.model;
 
 import com.simplecity.amp_library.interfaces.FileType;
 import com.simplecity.amp_library.utils.FileHelper;
-
 import java.io.File;
 import java.io.Serializable;
 
@@ -44,7 +43,6 @@ public class BaseFileObject implements Serializable {
         if (fileType != that.fileType) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         return path != null ? path.equals(that.path) : that.path == null;
-
     }
 
     @Override

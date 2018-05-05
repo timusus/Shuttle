@@ -14,7 +14,6 @@ object PlaybackSettingsManager : BaseSettingsManager() {
         get() = getInt(KEY_QUEUE_POSITION, 0)
         set(queuePosition) = setInt(KEY_QUEUE_POSITION, queuePosition)
 
-
     private const val KEY_REPEAT_MODE = "repeat_mode"
     @QueueManager.RepeatMode()
     var repeatMode: Int

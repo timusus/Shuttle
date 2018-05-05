@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Pair;
-
 import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
@@ -18,17 +17,15 @@ import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
-
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.annotations.Nullable;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import io.reactivex.Observable;
-import io.reactivex.Single;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.annotations.Nullable;
 
 public class Playlist implements Serializable {
 
@@ -55,7 +52,7 @@ public class Playlist implements Serializable {
     public boolean canSort = true;
 
     // These are the Playlist rows that we will retrieve.
-    public static final String[] PROJECTION = new String[]{
+    public static final String[] PROJECTION = new String[] {
             MediaStore.Audio.Playlists._ID,
             MediaStore.Audio.Playlists.NAME
     };
@@ -112,7 +109,7 @@ public class Playlist implements Serializable {
         // Check if there are any podcasts
         Query query = new Query.Builder()
                 .uri(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)
-                .projection(new String[]{"count(*)", "is_podcast=1"})
+                .projection(new String[] { "count(*)", "is_podcast=1" })
                 .build();
 
         return SqlUtils.createSingleQuery(ShuttleApplication.getInstance(), cursor -> new Playlist(
@@ -195,7 +192,6 @@ public class Playlist implements Serializable {
                         Collections.sort(songs, (a, b) -> ComparisonUtils.compareLong(b.dateAdded, a.dateAdded));
                         return songs;
                     });
-
         } else if (id == PlaylistUtils.PlaylistIds.PODCASTS_PLAYLIST) {
             return DataManager.getInstance().getAllSongsRelay()
                     .compose(DataManager.getInstance().getInclExclTransformer())
@@ -207,7 +203,7 @@ public class Playlist implements Serializable {
         } else if (id == PlaylistUtils.PlaylistIds.MOST_PLAYED_PLAYLIST) {
             Query query = new Query.Builder()
                     .uri(PlayCountTable.URI)
-                    .projection(new String[]{PlayCountTable.COLUMN_ID, PlayCountTable.COLUMN_PLAY_COUNT})
+                    .projection(new String[] { PlayCountTable.COLUMN_ID, PlayCountTable.COLUMN_PLAY_COUNT })
                     .sort(PlayCountTable.COLUMN_PLAY_COUNT + " DESC")
                     .build();
 
@@ -228,12 +224,10 @@ public class Playlist implements Serializable {
                                 Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(b.playCount, a.playCount));
                                 return songs;
                             }));
-
-
         } else if (id == PlaylistUtils.PlaylistIds.RECENTLY_PLAYED_PLAYLIST) {
             Query query = new Query.Builder()
                     .uri(PlayCountTable.URI)
-                    .projection(new String[]{PlayCountTable.COLUMN_ID, PlayCountTable.COLUMN_TIME_PLAYED})
+                    .projection(new String[] { PlayCountTable.COLUMN_ID, PlayCountTable.COLUMN_TIME_PLAYED })
                     .sort(PlayCountTable.COLUMN_TIME_PLAYED + " DESC")
                     .build();
 

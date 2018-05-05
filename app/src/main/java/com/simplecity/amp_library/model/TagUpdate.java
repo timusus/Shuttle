@@ -1,6 +1,5 @@
 package com.simplecity.amp_library.model;
 
-
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 

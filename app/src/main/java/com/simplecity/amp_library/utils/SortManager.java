@@ -2,13 +2,11 @@ package com.simplecity.amp_library.utils;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -84,7 +82,6 @@ public class SortManager {
     public boolean getSongsAscending() {
         return mPrefs.getBoolean(Key.SONGS_ASC, true);
     }
-
 
     //Detail Fragment:
 
@@ -207,7 +204,6 @@ public class SortManager {
     public boolean getGenreDetailAlbumsAscending() {
         return mPrefs.getBoolean(Key.GENRE_DETAIL_ALBUMS_ASC, true);
     }
-
 
     static int PREF_VERSION = 0;
 

@@ -3,7 +3,6 @@ package com.simplecity.amp_library.utils;
 import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.support.annotation.Nullable;
-
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Album;
@@ -12,13 +11,11 @@ import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.QueueManager;
 import com.simplecity.amp_library.rx.UnsafeConsumer;
-
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class MusicUtils {
 

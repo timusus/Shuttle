@@ -4,13 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.support.annotation.NonNull;
-
 import com.cantrowitz.rxbroadcast.RxBroadcast;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.lyrics.LyricsDialog;
 import com.simplecity.amp_library.model.Song;
-import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.playback.PlaybackMonitor;
+import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.dialog.BiographyDialog;
 import com.simplecity.amp_library.ui.dialog.ShareDialog;
@@ -21,16 +20,13 @@ import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
-
-import java.util.concurrent.TimeUnit;
-
-import javax.inject.Inject;
-
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import java.util.concurrent.TimeUnit;
+import javax.inject.Inject;
 
 public class PlayerPresenter extends Presenter<PlayerView> {
 
@@ -121,7 +117,6 @@ public class PlayerPresenter extends Presenter<PlayerView> {
                     }
                 }, error -> LogUtils.logException(TAG, "PlayerPresenter: Error sending broadcast", error)));
     }
-
 
     private void refreshTimeText(long playbackTime) {
         if (playbackTime != currentPlaybackTime) {

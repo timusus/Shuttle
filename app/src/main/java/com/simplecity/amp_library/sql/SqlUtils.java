@@ -4,17 +4,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
-
 import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.model.Query;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.ThreadUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SqlUtils {
 

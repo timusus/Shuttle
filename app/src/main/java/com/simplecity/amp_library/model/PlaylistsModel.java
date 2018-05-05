@@ -2,15 +2,12 @@ package com.simplecity.amp_library.model;
 
 import com.annimon.stream.Optional;
 import com.simplecity.amp_library.utils.DataManager;
-
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import javax.inject.Inject;
-
-import io.reactivex.Observable;
-import io.reactivex.schedulers.Schedulers;
 
 public class PlaylistsModel {
 
@@ -37,7 +34,6 @@ public class PlaylistsModel {
                 }).subscribeOn(Schedulers.io());
 
         Observable<List<Playlist>> playlistsObservable = DataManager.getInstance().getPlaylistsRelay();
-
 
         return Observable.combineLatest(
                 defaultPlaylistsObservable, playlistsObservable, (defaultPlaylists, playlists1) -> {

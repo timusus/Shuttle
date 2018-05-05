@@ -11,5 +11,4 @@ public interface SupportView {
     void showHelp(Intent intent);
 
     void showRate(Intent intent);
-
 }

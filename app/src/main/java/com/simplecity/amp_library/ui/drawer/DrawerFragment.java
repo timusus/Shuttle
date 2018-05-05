@@ -16,7 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.Rx;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -40,16 +41,11 @@ import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.SleepTimer;
 import com.simplecity.amp_library.utils.menu.playlist.PlaylistMenuFragmentHelper;
 import com.simplecity.amp_library.utils.menu.playlist.PlaylistMenuUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import java.util.ArrayList;
+import java.util.List;
+import javax.inject.Inject;
 
 public class DrawerFragment extends BaseFragment implements
         DrawerView,

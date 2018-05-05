@@ -1,12 +1,10 @@
 package com.simplecity.amp_library.dagger.module;
 
 import android.support.v4.app.Fragment;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.dagger.scope.FragmentScope;
 import com.simplecity.amp_library.format.PrefixHighlighter;
-
 import dagger.Module;
 import dagger.Provides;
 

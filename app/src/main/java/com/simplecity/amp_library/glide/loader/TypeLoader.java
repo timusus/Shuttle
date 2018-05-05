@@ -4,7 +4,6 @@ import com.bumptech.glide.load.data.DataFetcher;
 import com.bumptech.glide.load.model.ModelLoader;
 import com.simplecity.amp_library.glide.fetcher.TypeFetcher;
 import com.simplecity.amp_library.model.ArtworkProvider;
-
 import java.io.File;
 import java.io.InputStream;
 

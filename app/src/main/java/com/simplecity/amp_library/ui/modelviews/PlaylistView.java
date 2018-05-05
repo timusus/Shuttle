@@ -4,7 +4,6 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.ui.views.NonScrollImageButton;
 import com.simplecityapps.recycler_adapter.model.BaseViewModel;
@@ -104,7 +103,6 @@ public class PlaylistView extends BaseViewModel<PlaylistView.ViewHolder> {
         PlaylistView that = (PlaylistView) o;
 
         return playlist != null ? playlist.equals(that.playlist) : that.playlist == null;
-
     }
 
     @Override

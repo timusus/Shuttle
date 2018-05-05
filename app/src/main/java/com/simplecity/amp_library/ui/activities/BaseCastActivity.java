@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.KeyEvent;
-
 import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
 import com.google.android.libraries.cast.companionlibrary.cast.callbacks.VideoCastConsumer;
 import com.google.android.libraries.cast.companionlibrary.cast.callbacks.VideoCastConsumerImpl;
@@ -59,5 +58,4 @@ public abstract class BaseCastActivity extends BaseActivity {
         return castManager.onDispatchVolumeKeyEvent(event, ShuttleApplication.VOLUME_INCREMENT)
                 || super.dispatchKeyEvent(event);
     }
-
 }

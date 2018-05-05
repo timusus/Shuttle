@@ -8,11 +8,9 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-
-import com.simplecity.amp_library.R;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.simplecity.amp_library.R;
 
 public class FavoriteActionBarView extends FrameLayout {
 

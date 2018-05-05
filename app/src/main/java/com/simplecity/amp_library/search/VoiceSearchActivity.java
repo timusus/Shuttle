@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.widget.Toast;
-
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
@@ -16,12 +15,10 @@ import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
-
-import java.util.Collections;
-import java.util.Locale;
-
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import java.util.Collections;
+import java.util.Locale;
 
 import static com.simplecity.amp_library.utils.StringUtils.containsIgnoreCase;
 
@@ -70,7 +67,6 @@ public class VoiceSearchActivity extends BaseActivity {
                     Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(a.discNumber, b.discNumber));
                     return songs;
                 });
-
 
         //Search for album-artists, albums & songs matching our filter. Then, create an Observable emitting List<Song> for each type of result.
         //Then we concat the results, and return the first one which is non-empty. Order is important here, we want album-artist first, if it's

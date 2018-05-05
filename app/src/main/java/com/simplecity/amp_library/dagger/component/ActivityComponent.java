@@ -5,13 +5,13 @@ import com.simplecity.amp_library.dagger.module.PresenterModule;
 import com.simplecity.amp_library.dagger.scope.ActivityScope;
 import com.simplecity.amp_library.ui.drawer.DrawerFragment;
 import com.simplecity.amp_library.ui.settings.SettingsParentFragment;
-
 import dagger.Subcomponent;
 
 @ActivityScope
 @Subcomponent(modules = {
         ActivityModule.class,
-        PresenterModule.class})
+        PresenterModule.class
+})
 
 public interface ActivityComponent {
 

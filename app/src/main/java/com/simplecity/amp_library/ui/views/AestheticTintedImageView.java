@@ -6,9 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-
 import com.afollestad.aesthetic.Aesthetic;
-
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 

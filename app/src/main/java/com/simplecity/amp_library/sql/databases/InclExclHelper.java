@@ -1,13 +1,11 @@
 package com.simplecity.amp_library.sql.databases;
 
 import android.content.ContentValues;
-
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.model.InclExclItem;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.utils.DataManager;
 import com.squareup.sqlbrite2.BriteDatabase;
-
 import java.util.List;
 
 public class InclExclHelper {

@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.MediaRouteButton;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
-
 import com.afollestad.aesthetic.Aesthetic;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ui.dialog.UpgradeDialog;

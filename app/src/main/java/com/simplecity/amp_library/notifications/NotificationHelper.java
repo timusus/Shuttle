@@ -5,7 +5,6 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
-
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.utils.LogUtils;
 

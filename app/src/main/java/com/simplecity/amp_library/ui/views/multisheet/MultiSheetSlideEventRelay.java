@@ -1,13 +1,10 @@
 package com.simplecity.amp_library.ui.views.multisheet;
 
 import android.support.design.widget.BottomSheetBehavior;
-
 import com.jakewharton.rxrelay2.BehaviorRelay;
 import com.simplecity.multisheetview.ui.view.MultiSheetView.Sheet;
-
-import javax.inject.Inject;
-
 import io.reactivex.Observable;
+import javax.inject.Inject;
 
 public class MultiSheetSlideEventRelay {
 
@@ -54,7 +51,5 @@ public class MultiSheetSlideEventRelay {
         public boolean nowPlayingCollapsed() {
             return sheet == Sheet.FIRST && state == BottomSheetBehavior.STATE_COLLAPSED;
         }
-
     }
-
 }

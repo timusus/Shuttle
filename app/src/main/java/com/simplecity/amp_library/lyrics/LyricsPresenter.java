@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-
 import com.cantrowitz.rxbroadcast.RxBroadcast;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Query;
@@ -16,7 +15,10 @@ import com.simplecity.amp_library.sql.SqlUtils;
 import com.simplecity.amp_library.ui.presenters.Presenter;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
-
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Observable;
+import java.io.File;
+import java.io.IOException;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
@@ -25,12 +27,6 @@ import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
-
-import java.io.File;
-import java.io.IOException;
-
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Observable;
 
 class LyricsPresenter extends Presenter<LyricsView> {
 
@@ -82,7 +78,7 @@ class LyricsPresenter extends Presenter<LyricsView> {
             if (path.startsWith("content://")) {
                 Query query = new Query.Builder()
                         .uri(Uri.parse(path))
-                        .projection(new String[]{MediaStore.Audio.Media.DATA})
+                        .projection(new String[] { MediaStore.Audio.Media.DATA })
                         .build();
 
                 Cursor cursor = SqlUtils.createQuery(ShuttleApplication.getInstance(), query);

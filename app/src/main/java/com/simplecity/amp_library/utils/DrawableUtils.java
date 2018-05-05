@@ -7,7 +7,6 @@ import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
-
 import com.afollestad.aesthetic.Aesthetic;
 import com.simplecity.amp_library.R;
 

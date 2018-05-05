@@ -7,14 +7,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.provider.DocumentFile;
 import android.util.Log;
-
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.Crashlytics;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -31,16 +29,16 @@ public class TaggerUtils {
     private TaggerUtils() {
 
     }
-	
-	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
-	public static String getDocumentTree() {
-		String treeUri = SettingsManager.getInstance().getDocumentTreeUri();
-		List<UriPermission> perms = ShuttleApplication.getInstance().getContentResolver().getPersistedUriPermissions();
-		for (UriPermission perm : perms) {
-			if (perm.getUri().toString().equals(treeUri) && perm.isWritePermission()) return treeUri;
-		}
-		return null;
-	}
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public static String getDocumentTree() {
+        String treeUri = SettingsManager.getInstance().getDocumentTreeUri();
+        List<UriPermission> perms = ShuttleApplication.getInstance().getContentResolver().getPersistedUriPermissions();
+        for (UriPermission perm : perms) {
+            if (perm.getUri().toString().equals(treeUri) && perm.isWritePermission()) return treeUri;
+        }
+        return null;
+    }
 
     /**
      * Checks the passed in paths to see whether the file at the given path is available in our
@@ -48,7 +46,7 @@ public class TaggerUtils {
      * passed in list of document files.
      *
      * @param documentFiles a list of document files to be populated
-     * @param paths         a list of paths
+     * @param paths a list of paths
      * @return true if we have permission for all files at the passed in paths
      */
     static boolean hasDocumentTreePermission(List<DocumentFile> documentFiles, List<String> paths) {
@@ -172,8 +170,9 @@ public class TaggerUtils {
     }
 
     static void copyFile(File sourceFile, File destFile) throws IOException {
-        if (!destFile.getParentFile().exists())
+        if (!destFile.getParentFile().exists()) {
             destFile.getParentFile().mkdirs();
+        }
 
         if (!destFile.exists()) {
             destFile.createNewFile();

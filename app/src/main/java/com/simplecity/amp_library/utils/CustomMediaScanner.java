@@ -10,19 +10,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
-
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.FolderObject;
 import com.simplecity.amp_library.rx.UnsafeConsumer;
-
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
 public class CustomMediaScanner implements MediaScannerConnection.MediaScannerConnectionClient {

@@ -3,12 +3,10 @@ package com.simplecity.amp_library.ui.modelviews;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.simplecityapps.recycler_adapter.model.BaseViewModel;
-import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.simplecityapps.recycler_adapter.model.BaseViewModel;
+import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 
 import static com.simplecity.amp_library.R.id;
 import static com.simplecity.amp_library.R.layout.list_item_subheader;

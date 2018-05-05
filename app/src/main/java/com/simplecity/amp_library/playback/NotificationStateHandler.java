@@ -2,7 +2,6 @@ package com.simplecity.amp_library.playback;
 
 import android.os.Handler;
 import android.os.Message;
-
 import java.lang.ref.WeakReference;
 
 /**
