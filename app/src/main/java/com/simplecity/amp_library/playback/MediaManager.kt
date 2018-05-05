@@ -7,10 +7,6 @@ import com.simplecity.amp_library.model.Genre
 import com.simplecity.amp_library.model.Song
 import io.reactivex.Single
 
-/**
- * Created by fxsalazar
- * 01/05/2018.
- */
 interface MediaManager {
 
     companion object Defs {
