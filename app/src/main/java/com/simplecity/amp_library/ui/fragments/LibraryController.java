@@ -4,6 +4,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
@@ -121,7 +122,7 @@ public class LibraryController extends BaseFragment implements
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_library, container, false);
 
         unbinder = ButterKnife.bind(this, rootView);
@@ -129,12 +130,6 @@ public class LibraryController extends BaseFragment implements
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         setupViewPager();
-
-        Aesthetic.get(getContext())
-                .colorPrimary()
-                .take(1)
-                .subscribe(color -> ViewBackgroundAction.create(appBarLayout)
-                        .accept(color), onErrorLogAndRethrow());
 
         compositeDisposable.add(Aesthetic.get(getContext())
                 .colorPrimary()

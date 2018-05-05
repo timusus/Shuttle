@@ -422,12 +422,12 @@ public class PlayerFragment extends BaseFragment implements
             track.setSelected(true);
         }
         if (album != null) {
-            album.setText(String.format("%s | %s", song.artistName, song.albumName));
+            album.setText(String.format("%s • %s", song.artistName, song.albumName));
         }
 
         if (isLandscape) {
             toolbar.setTitle(song.name);
-            toolbar.setSubtitle(String.format("%s | %s", song.artistName, song.albumName));
+            toolbar.setSubtitle(String.format("%s • %s", song.artistName, song.albumName));
 
             target = Glide.with(this)
                     .load(song)

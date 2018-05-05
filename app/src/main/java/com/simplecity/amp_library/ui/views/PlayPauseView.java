@@ -8,6 +8,7 @@ import android.graphics.Outline;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewOutlineProvider;
@@ -70,8 +71,13 @@ public class PlayPauseView extends FrameLayout {
         return backgroundColor;
     }
 
+    public void setDrawableColor(int color) {
+        drawable.setColor(color);
+        invalidate();
+    }
+
     @Override
-    protected boolean verifyDrawable(Drawable who) {
+    protected boolean verifyDrawable(@NonNull Drawable who) {
         return who == drawable || super.verifyDrawable(who);
     }
 

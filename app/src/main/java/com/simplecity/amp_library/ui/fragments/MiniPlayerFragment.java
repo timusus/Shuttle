@@ -1,8 +1,8 @@
 package com.simplecity.amp_library.ui.fragments;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -16,8 +16,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.afollestad.aesthetic.Aesthetic;
-import com.afollestad.aesthetic.Util;
-import com.afollestad.aesthetic.ViewBackgroundAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
@@ -34,9 +32,6 @@ import com.simplecity.multisheetview.ui.view.MultiSheetView;
 import io.reactivex.disposables.CompositeDisposable;
 import javax.inject.Inject;
 
-import static com.afollestad.aesthetic.Rx.distinctToMainThread;
-import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
-
 public class MiniPlayerFragment extends BaseFragment {
 
     private static final String TAG = "MiniPlayerFragment";
@@ -49,19 +44,16 @@ public class MiniPlayerFragment extends BaseFragment {
     @BindView(R.id.progressbar)
     ProgressBar progressBar;
 
-    @BindView(R.id.track_name)
-    TextView trackName;
+    @BindView(R.id.titleTextView)
+    TextView titleTextView;
 
-    @BindView(R.id.artist_name)
-    TextView artistName;
-
-    @BindView(R.id.mini_album_artwork)
+    @BindView(R.id.artworkImageView)
     ImageView miniArtwork;
 
     @Inject
     PlayerPresenter presenter;
 
-    private CompositeDisposable disposable = new CompositeDisposable();
+    private CompositeDisposable disposables = new CompositeDisposable();
 
     private Unbinder unbinder;
 
@@ -86,7 +78,7 @@ public class MiniPlayerFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_mini_player, container, false);
 
         unbinder = ButterKnife.bind(this, rootView);
@@ -106,21 +98,18 @@ public class MiniPlayerFragment extends BaseFragment {
 
         progressBar.setMax(1000);
 
-        disposable.add(Aesthetic.get(getContext())
-                .colorPrimary()
-                .compose(distinctToMainThread())
-                .subscribe(color -> {
-                    boolean isDark = !Util.isColorLight(color);
-                    trackName.setTextColor(isDark ? Color.WHITE : Color.BLACK);
-                    artistName.setTextColor(isDark ? Color.WHITE : Color.BLACK);
-                    ViewBackgroundAction.create(rootView).accept(color);
-                }, onErrorLogAndRethrow()));
+        disposables.add(Aesthetic.get(getContext()).isDark()
+                .subscribe(isDark -> {
+                    int color = isDark ? getContext().getResources().getColor(android.R.color.primary_text_dark) : getContext().getResources().getColor(android.R.color.primary_text_light);
+                    titleTextView.setTextColor(color);
+                    playPauseView.setDrawableColor(color);
+                }));
 
         return rootView;
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         presenter.bindView(playerViewAdapter);
@@ -138,7 +127,7 @@ public class MiniPlayerFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         presenter.unbindView(playerViewAdapter);
-        disposable.clear();
+        disposables.clear();
         unbinder.unbind();
         super.onDestroyView();
     }
@@ -239,8 +228,7 @@ public class MiniPlayerFragment extends BaseFragment {
 
             if (song == null) return;
 
-            trackName.setText(song.name);
-            artistName.setText(String.format("%s | %s", song.artistName, song.albumName));
+            titleTextView.setText(String.format("%s • %s", song.name, song.artistName));
 
             Glide.with(getContext())
                     .load(song)

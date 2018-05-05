@@ -1,96 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?colorPrimary"
+    android:background="?android:windowBackground"
     android:elevation="4dp"
     android:foreground="?attr/list_selector"
-    tools:layout_height="64dp">
+    tools:layout_height="48dp">
 
     <ImageView
+        android:id="@+id/artworkImageView"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/progressbar"
+        tools:src="@color/white"/>
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:lines="1"
+        android:tag=":aesthetic_ignore"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/mini_play"
+        app:layout_constraintStart_toEndOf="@+id/artworkImageView"
+        app:layout_constraintTop_toTopOf="@id/progressbar"
+        tools:text="Artist - Album"/>
+
+    <com.simplecity.amp_library.ui.views.PlayPauseView
+        android:id="@+id/mini_play"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginEnd="16dp"
+        android:background="?attr/circular_ripple"
+        android:contentDescription="@string/btn_play"
+        android:scaleX="0.8"
+        android:scaleY="0.8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+        android:id="@+id/progressbar"
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:alpha="0.15"
-        android:src="@color/white"/>
+        android:background="#20000000"
+        android:indeterminate="false"
+        app:mpb_progressStyle="horizontal"
+        app:mpb_showProgressBackground="false"
+        app:mpb_useIntrinsicPadding="false"
+        tools:progress="50"
+        style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <me.zhanghai.android.materialprogressbar.MaterialProgressBar
-            android:id="@+id/progressbar"
-            style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:layout_toEndOf="@+id/mini_album_artwork"
-            android:layout_toRightOf="@+id/mini_album_artwork"
-            android:background="#20000000"
-            android:indeterminate="false"
-            app:mpb_progressStyle="horizontal"
-            app:mpb_showProgressBackground="false"
-            app:mpb_useIntrinsicPadding="false"
-            tools:progress="50"/>
-
-        <com.simplecity.amp_library.ui.views.SquareHeightImageView
-            android:id="@+id/mini_album_artwork"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:scaleType="centerCrop"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
-            android:layout_toLeftOf="@+id/mini_play"
-            android:layout_toRightOf="@+id/mini_album_artwork"
-            android:orientation="vertical"
-            android:paddingBottom="6dp"
-            android:paddingTop="6dp">
-
-            <TextView
-                android:id="@+id/track_name"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:lines="1"
-                android:tag=":aesthetic_ignore"
-                android:textColor="?android:textColorPrimary"
-                android:textSize="16sp"
-                tools:text="Track name"/>
-
-            <TextView
-                android:id="@+id/artist_name"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:lines="1"
-                android:tag=":aesthetic_ignore"
-                android:textColor="?android:textColorSecondary"
-                android:textSize="14sp"
-                tools:text="Artist - Album"/>
-        </LinearLayout>
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_alignParentTop="true"
-            android:src="@drawable/card_shadow"/>
-
-        <com.simplecity.amp_library.ui.views.PlayPauseView
-            android:id="@+id/mini_play"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="4dp"
-            android:background="?attr/circular_ripple"
-            android:contentDescription="@string/btn_play"
-            android:padding="40dp"/>
-    </RelativeLayout>
-</FrameLayout>
+</android.support.constraint.ConstraintLayout>
