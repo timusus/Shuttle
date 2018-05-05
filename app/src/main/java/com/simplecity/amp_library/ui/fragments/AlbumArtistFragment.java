@@ -33,7 +33,7 @@ import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
-import com.simplecity.amp_library.utils.SortManager;
+import com.simplecity.amp_library.utils.sorting.SortManager;
 import com.simplecity.amp_library.utils.menu.albumartist.AlbumArtistMenuFragmentHelper;
 import com.simplecity.amp_library.utils.menu.albumartist.AlbumArtistMenuUtils;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
@@ -255,7 +255,7 @@ public class AlbumArtistFragment extends BaseFragment implements
 
         switch (sortOrder) {
             case SortManager.ArtistSort.DEFAULT:
-                MenuItem sortDefault = menu.findItem(R.id.sort_default);
+                MenuItem sortDefault = menu.findItem(R.id.sort_artist_default);
                 if (sortDefault != null) {
                     sortDefault.setChecked(true);
                 }
@@ -268,7 +268,7 @@ public class AlbumArtistFragment extends BaseFragment implements
                 break;
         }
 
-        MenuItem sortAscending = menu.findItem(R.id.sort_ascending);
+        MenuItem sortAscending = menu.findItem(R.id.sort_artist_ascending);
         if (sortAscending != null) {
             sortAscending.setChecked(SortManager.getInstance().getArtistsAscending());
         }
@@ -318,7 +318,7 @@ public class AlbumArtistFragment extends BaseFragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.sort_default:
+            case R.id.sort_artist_default:
                 SortManager.getInstance().setArtistsSortOrder(SortManager.ArtistSort.DEFAULT);
                 sortOrderChanged = true;
                 refreshAdapterItems(true);
@@ -328,7 +328,7 @@ public class AlbumArtistFragment extends BaseFragment implements
                 sortOrderChanged = true;
                 refreshAdapterItems(true);
                 break;
-            case R.id.sort_ascending:
+            case R.id.sort_artist_ascending:
                 SortManager.getInstance().setArtistsAscending(!item.isChecked());
                 sortOrderChanged = true;
                 refreshAdapterItems(true);

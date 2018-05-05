@@ -14,7 +14,7 @@ import com.simplecity.amp_library.utils.Operators
 import com.simplecity.amp_library.utils.PermissionUtils
 import com.simplecity.amp_library.utils.PlaylistUtils
 import com.simplecity.amp_library.utils.ShuttleUtils
-import com.simplecity.amp_library.utils.SortManager
+import com.simplecity.amp_library.utils.sorting.SortManager
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers

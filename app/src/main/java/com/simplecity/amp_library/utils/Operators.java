@@ -5,6 +5,7 @@ import com.annimon.stream.Stream;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.utils.sorting.SortManager;
 import io.reactivex.Single;
 import java.util.ArrayList;
 import java.util.Collections;

@@ -28,9 +28,10 @@ import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
-import com.simplecity.amp_library.utils.SortManager;
 import com.simplecity.amp_library.utils.menu.song.SongMenuFragmentHelper;
 import com.simplecity.amp_library.utils.menu.song.SongMenuUtils;
+import com.simplecity.amp_library.utils.sorting.SongSortHelper;
+import com.simplecity.amp_library.utils.sorting.SortManager;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
@@ -201,81 +202,20 @@ public class SongFragment extends BaseFragment implements
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
-        int sortOrder = SortManager.getInstance().getSongsSortOrder();
-
-        switch (sortOrder) {
-            case SortManager.SongSort.DEFAULT:
-                menu.findItem(R.id.sort_default).setChecked(true);
-                break;
-            case SortManager.SongSort.NAME:
-                menu.findItem(R.id.sort_song_name).setChecked(true);
-                break;
-            case SortManager.SongSort.TRACK_NUMBER:
-                menu.findItem(R.id.sort_song_track_number).setChecked(true);
-                break;
-            case SortManager.SongSort.DURATION:
-                menu.findItem(R.id.sort_song_duration).setChecked(true);
-                break;
-            case SortManager.SongSort.DATE:
-                menu.findItem(R.id.sort_song_date).setChecked(true);
-                break;
-            case SortManager.SongSort.YEAR:
-                menu.findItem(R.id.sort_song_year).setChecked(true);
-                break;
-            case SortManager.SongSort.ALBUM_NAME:
-                menu.findItem(R.id.sort_song_album_name).setChecked(true);
-                break;
-            case SortManager.SongSort.ARTIST_NAME:
-                menu.findItem(R.id.sort_song_artist_name).setChecked(true);
-                break;
-        }
-
-        menu.findItem(R.id.sort_ascending).setChecked(SortManager.getInstance().getSongsAscending());
+        SongSortHelper.updateSongSortMenuItems(menu, SortManager.getInstance().getSongsSortOrder(), SortManager.getInstance().getSongsAscending());
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.sort_default:
-                SortManager.getInstance().setSongsSortOrder(SortManager.SongSort.DEFAULT);
-                sortOrderChanged = true;
-                break;
-            case R.id.sort_song_name:
-                SortManager.getInstance().setSongsSortOrder(SortManager.SongSort.NAME);
-                sortOrderChanged = true;
-                break;
-            case R.id.sort_song_track_number:
-                SortManager.getInstance().setSongsSortOrder(SortManager.SongSort.TRACK_NUMBER);
-                sortOrderChanged = true;
-                break;
-            case R.id.sort_song_duration:
-                SortManager.getInstance().setSongsSortOrder(SortManager.SongSort.DURATION);
-                sortOrderChanged = true;
-                break;
-            case R.id.sort_song_year:
-                SortManager.getInstance().setSongsSortOrder(SortManager.SongSort.YEAR);
-                sortOrderChanged = true;
-                break;
-            case R.id.sort_song_date:
-                SortManager.getInstance().setSongsSortOrder(SortManager.SongSort.DATE);
-                sortOrderChanged = true;
-                break;
-            case R.id.sort_song_album_name:
-                SortManager.getInstance().setSongsSortOrder(SortManager.SongSort.ALBUM_NAME);
-                sortOrderChanged = true;
-                break;
-            case R.id.sort_song_artist_name:
-                SortManager.getInstance().setSongsSortOrder(SortManager.SongSort.ARTIST_NAME);
-                sortOrderChanged = true;
-                break;
-            case R.id.sort_ascending:
-                SortManager.getInstance().setSongsAscending(!item.isChecked());
-                sortOrderChanged = true;
-                break;
+        Integer songSortOder = SongSortHelper.handleSongMenuSortOrderClicks(item);
+        if (songSortOder != null) {
+            SortManager.getInstance().setSongsSortOrder(songSortOder);
+            refreshAdapterItems(true);
+            getActivity().invalidateOptionsMenu();
         }
-
-        if (sortOrderChanged) {
+        Boolean songsAsc = SongSortHelper.handleSongDetailMenuSortOrderAscClicks(item);
+        if (songsAsc != null) {
+            SortManager.getInstance().setSongsAscending(songsAsc);
             refreshAdapterItems(true);
             getActivity().invalidateOptionsMenu();
         }

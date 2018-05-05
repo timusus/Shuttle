@@ -45,7 +45,8 @@ import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.ArtworkProvider;
 import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Song;
-import com.simplecity.amp_library.ui.detail.DetailSortHelper;
+import com.simplecity.amp_library.utils.sorting.AlbumSortHelper;
+import com.simplecity.amp_library.utils.sorting.SongSortHelper;
 import com.simplecity.amp_library.ui.detail.album.AlbumDetailFragment;
 import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
 import com.simplecity.amp_library.ui.fragments.BaseFragment;
@@ -67,7 +68,7 @@ import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.ResourceUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
-import com.simplecity.amp_library.utils.SortManager;
+import com.simplecity.amp_library.utils.sorting.SortManager;
 import com.simplecity.amp_library.utils.StringUtils;
 import com.simplecity.amp_library.utils.TypefaceManager;
 import com.simplecity.amp_library.utils.menu.album.AlbumMenuFragmentHelper;
@@ -304,8 +305,8 @@ public class GenreDetailFragment extends BaseFragment implements
         getActivity().getMenuInflater().inflate(R.menu.menu_detail_sort_albums, item.getSubMenu());
         getActivity().getMenuInflater().inflate(R.menu.menu_detail_sort_songs, item.getSubMenu());
 
-        DetailSortHelper.updateAlbumSortMenuItems(toolbar, SortManager.getInstance().getGenreDetailAlbumsSortOrder(), SortManager.getInstance().getGenreDetailAlbumsAscending());
-        DetailSortHelper.updateSongSortMenuItems(toolbar, SortManager.getInstance().getGenreDetailSongsSortOrder(), SortManager.getInstance().getGenreDetailSongsAscending());
+        AlbumSortHelper.updateAlbumSortMenuItems(toolbar.getMenu(), SortManager.getInstance().getGenreDetailAlbumsSortOrder(), SortManager.getInstance().getGenreDetailAlbumsAscending());
+        SongSortHelper.updateSongSortMenuItems(toolbar.getMenu(), SortManager.getInstance().getGenreDetailSongsSortOrder(), SortManager.getInstance().getGenreDetailSongsAscending());
     }
 
     @Override
@@ -329,29 +330,29 @@ public class GenreDetailFragment extends BaseFragment implements
                 return true;
         }
 
-        Integer albumSortOrder = DetailSortHelper.handleAlbumMenuSortOrderClicks(item);
+        Integer albumSortOrder = AlbumSortHelper.handleAlbumDetailMenuSortOrderClicks(item);
         if (albumSortOrder != null) {
             SortManager.getInstance().setGenreDetailAlbumsSortOrder(albumSortOrder);
             presenter.loadData();
         }
-        Boolean albumsAsc = DetailSortHelper.handleAlbumMenuSortOrderAscClicks(item);
+        Boolean albumsAsc = AlbumSortHelper.handleAlbumDetailMenuSortOrderAscClicks(item);
         if (albumsAsc != null) {
             SortManager.getInstance().setGenreDetailAlbumsAscending(albumsAsc);
             presenter.loadData();
         }
-        Integer songSortOrder = DetailSortHelper.handleSongMenuSortOrderClicks(item);
+        Integer songSortOrder = SongSortHelper.handleSongMenuSortOrderClicks(item);
         if (songSortOrder != null) {
             SortManager.getInstance().setGenreDetailSongsSortOrder(songSortOrder);
             presenter.loadData();
         }
-        Boolean songsAsc = DetailSortHelper.handleSongMenuSortOrderAscClicks(item);
+        Boolean songsAsc = SongSortHelper.handleSongDetailMenuSortOrderAscClicks(item);
         if (songsAsc != null) {
             SortManager.getInstance().setGenreDetailSongsAscending(songsAsc);
             presenter.loadData();
         }
 
-        DetailSortHelper.updateAlbumSortMenuItems(toolbar, SortManager.getInstance().getGenreDetailAlbumsSortOrder(), SortManager.getInstance().getGenreDetailAlbumsAscending());
-        DetailSortHelper.updateSongSortMenuItems(toolbar, SortManager.getInstance().getGenreDetailSongsSortOrder(), SortManager.getInstance().getGenreDetailSongsAscending());
+        AlbumSortHelper.updateAlbumSortMenuItems(toolbar.getMenu(), SortManager.getInstance().getGenreDetailAlbumsSortOrder(), SortManager.getInstance().getGenreDetailAlbumsAscending());
+        SongSortHelper.updateSongSortMenuItems(toolbar.getMenu(), SortManager.getInstance().getGenreDetailSongsSortOrder(), SortManager.getInstance().getGenreDetailSongsAscending());
 
         return super.onOptionsItemSelected(item);
     }

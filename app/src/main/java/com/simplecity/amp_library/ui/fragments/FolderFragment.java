@@ -48,7 +48,7 @@ import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
-import com.simplecity.amp_library.utils.SortManager;
+import com.simplecity.amp_library.utils.sorting.SortManager;
 import com.simplecity.amp_library.utils.extensions.SongExtKt;
 import com.simplecity.amp_library.utils.menu.folder.FolderMenuUtils;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;

@@ -9,6 +9,7 @@ import com.simplecity.amp_library.model.BaseFileObject;
 import com.simplecity.amp_library.model.FileObject;
 import com.simplecity.amp_library.model.FolderObject;
 import com.simplecity.amp_library.model.TagInfo;
+import com.simplecity.amp_library.utils.sorting.SortManager;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;

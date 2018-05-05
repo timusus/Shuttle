@@ -14,7 +14,7 @@ import com.simplecity.amp_library.format.PrefixHighlighter;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
-import com.simplecity.amp_library.utils.SortManager;
+import com.simplecity.amp_library.utils.sorting.SortManager;
 import com.simplecity.amp_library.utils.StringUtils;
 import java.util.Arrays;
 import java.util.List;

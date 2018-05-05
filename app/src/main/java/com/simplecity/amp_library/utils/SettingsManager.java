@@ -5,6 +5,7 @@ import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.CategoryItem;
 import com.simplecity.amp_library.ui.adapters.ViewType;
+import com.simplecity.amp_library.utils.sorting.SortManager;
 
 public class SettingsManager extends BaseSettingsManager {
 

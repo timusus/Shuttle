@@ -20,7 +20,7 @@ import com.simplecity.amp_library.ui.views.NonScrollImageButton;
 import com.simplecity.amp_library.ui.views.PlayCountView;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.SettingsManager;
-import com.simplecity.amp_library.utils.SortManager;
+import com.simplecity.amp_library.utils.sorting.SortManager;
 import com.simplecity.amp_library.utils.StringUtils;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 import java.util.Arrays;

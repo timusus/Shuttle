@@ -11,7 +11,7 @@ import com.simplecity.amp_library.utils.MusicUtils
 import com.simplecity.amp_library.utils.PermissionUtils
 import com.simplecity.amp_library.utils.PlaylistUtils
 import com.simplecity.amp_library.utils.ShuttleUtils
-import com.simplecity.amp_library.utils.SortManager
+import com.simplecity.amp_library.utils.sorting.SortManager
 import io.reactivex.android.schedulers.AndroidSchedulers
 
 class AlbumDetailPresenter constructor(private val album: Album) : Presenter<AlbumDetailView>() {

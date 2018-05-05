@@ -1,4 +1,4 @@
-package com.simplecity.amp_library.utils;
+package com.simplecity.amp_library.utils.sorting;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -7,6 +7,7 @@ import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.utils.ComparisonUtils;
 import java.util.Collections;
 import java.util.List;
 
