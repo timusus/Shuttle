@@ -4,7 +4,6 @@ import android.content.Context;
 import com.simplecity.amp_library.ShuttleApplication;
 import dagger.Module;
 import dagger.Provides;
-
 import javax.inject.Singleton;
 
 @Module
@@ -21,5 +20,4 @@ public class AppModule {
     public Context provideContext() {
         return application;
     }
-
 }

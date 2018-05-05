@@ -32,7 +32,11 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.f2prateek.rx.preferences2.RxSharedPreferences;
-import com.jakewharton.rxbinding2.widget.*;
+import com.jakewharton.rxbinding2.widget.RxSeekBar;
+import com.jakewharton.rxbinding2.widget.SeekBarChangeEvent;
+import com.jakewharton.rxbinding2.widget.SeekBarProgressChangeEvent;
+import com.jakewharton.rxbinding2.widget.SeekBarStartChangeEvent;
+import com.jakewharton.rxbinding2.widget.SeekBarStopChangeEvent;
 import com.jp.wasabeef.glide.transformations.BlurTransformation;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
@@ -48,19 +52,30 @@ import com.simplecity.amp_library.rx.UnsafeConsumer;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.drawer.NavigationEventRelay;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
-import com.simplecity.amp_library.ui.views.*;
+import com.simplecity.amp_library.ui.views.FavoriteActionBarView;
+import com.simplecity.amp_library.ui.views.PlayPauseView;
+import com.simplecity.amp_library.ui.views.PlayerView;
+import com.simplecity.amp_library.ui.views.RepeatButton;
+import com.simplecity.amp_library.ui.views.RepeatingImageButton;
+import com.simplecity.amp_library.ui.views.ShuffleButton;
+import com.simplecity.amp_library.ui.views.SizableSeekBar;
+import com.simplecity.amp_library.ui.views.SnowfallView;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetSlideEventRelay;
-import com.simplecity.amp_library.utils.*;
+import com.simplecity.amp_library.utils.DataManager;
+import com.simplecity.amp_library.utils.LogUtils;
+import com.simplecity.amp_library.utils.PlaceholderProvider;
+import com.simplecity.amp_library.utils.SettingsManager;
+import com.simplecity.amp_library.utils.ShuttleUtils;
+import com.simplecity.amp_library.utils.StringUtils;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-
-import javax.inject.Inject;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
+import javax.inject.Inject;
 
 public class PlayerFragment extends BaseFragment implements
         PlayerView,
@@ -618,5 +633,4 @@ public class PlayerFragment extends BaseFragment implements
         valueAnimator.addUpdateListener(animator -> consumer.accept((Integer) animator.getAnimatedValue()));
         valueAnimator.start();
     }
-
 }

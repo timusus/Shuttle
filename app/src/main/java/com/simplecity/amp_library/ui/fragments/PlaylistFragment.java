@@ -29,7 +29,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -119,7 +118,6 @@ public class PlaylistFragment extends BaseFragment {
 
         refreshAdapterItems();
     }
-
 
     private void refreshAdapterItems() {
         PermissionUtils.RequestStoragePermissions(() -> {

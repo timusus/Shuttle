@@ -20,11 +20,10 @@ import io.reactivex.SingleObserver;
 import io.reactivex.SingleOperator;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import kotlin.Unit;
-
-import javax.inject.Inject;
 import java.util.Collections;
 import java.util.List;
+import javax.inject.Inject;
+import kotlin.Unit;
 
 public class SearchPresenter extends Presenter<SearchView> {
 
@@ -147,7 +146,6 @@ public class SearchPresenter extends Presenter<SearchView> {
         }
     }
 
-
     private class SongFilterOperator implements SingleOperator<List<Song>, List<Song>> {
 
         String filterString;
@@ -255,7 +253,8 @@ public class SearchPresenter extends Presenter<SearchView> {
                 public void onSuccess(List<AlbumArtist> albumArtists) {
                     Collections.sort(albumArtists, AlbumArtist::compareTo);
                     Stream<AlbumArtist> albumArtistStream = Stream.of(albumArtists).filter(albumArtist -> albumArtist.name != null);
-                    Stream<AlbumArtist> filteredStream = SettingsManager.getInstance().getSearchFuzzy() ? applyJaroWinklerAlbumArtistFilter(albumArtistStream) : applyAlbumArtistFilter(albumArtistStream);
+                    Stream<AlbumArtist> filteredStream =
+                            SettingsManager.getInstance().getSearchFuzzy() ? applyJaroWinklerAlbumArtistFilter(albumArtistStream) : applyAlbumArtistFilter(albumArtistStream);
                     observer.onSuccess(filteredStream.toList());
                 }
 

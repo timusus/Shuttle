@@ -1,7 +1,12 @@
 package com.simplecity.amp_library.ui.activities;
 
 import android.annotation.TargetApi;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -17,7 +22,6 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
-
 
 //Todo: Reapply themes
 public class QCircleActivity extends BaseActivity {
@@ -93,7 +97,6 @@ public class QCircleActivity extends BaseActivity {
 
         //Crops a layout for the QuickCircle window
         setCircleLayoutParam(circlemainView);
-
     }
 
     @Override
@@ -104,7 +107,6 @@ public class QCircleActivity extends BaseActivity {
         filter.addAction(InternalIntents.PLAY_STATE_CHANGED);
         filter.addAction(InternalIntents.META_CHANGED);
         registerReceiver(mStatusListener, new IntentFilter(filter));
-
     }
 
     @Override
@@ -127,7 +129,6 @@ public class QCircleActivity extends BaseActivity {
         filter.addAction(ACTION_ACCESSORY_COVER_EVENT);
         // Register a broadcast receiver with the system
         mContext.registerReceiver(mIntentReceiver, filter);
-
     }
 
     void setQuickCircleWindowParam() {
@@ -178,7 +179,6 @@ public class QCircleActivity extends BaseActivity {
             Log.d(TAG, "quickCircleEnabled:" + quickCircleEnabled);
         }
 
-
         //[START] Get the QuickCircle window information
         int id = getResources().getIdentifier("config_circle_window_width", "dimen",
                 "com.lge.internal");
@@ -216,14 +216,12 @@ public class QCircleActivity extends BaseActivity {
         //[END]
     }
 
-
     private void initButtons() {
 
         prevBtn = findViewById(R.id.btn_prev);
         skipBtn = findViewById(R.id.btn_skip);
         pauseBtn = findViewById(R.id.btn_pause);
         setPauseButtonImage();
-
 
         prevBtn.setOnClickListener(v -> mediaManager.previous(true));
 
@@ -233,7 +231,6 @@ public class QCircleActivity extends BaseActivity {
             mediaManager.playOrPause();
             setPauseButtonImage();
         });
-
     }
 
     public void initTextViews() {
@@ -273,7 +270,6 @@ public class QCircleActivity extends BaseActivity {
     private BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-
 
             String action = intent.getAction();
             if (action == null) {

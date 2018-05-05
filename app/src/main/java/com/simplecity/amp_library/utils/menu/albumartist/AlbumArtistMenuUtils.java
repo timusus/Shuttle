@@ -14,7 +14,6 @@ import com.simplecity.amp_library.utils.extensions.AlbumArtistExt;
 import com.simplecity.amp_library.utils.menu.MenuUtils;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-
 import java.util.List;
 
 public class AlbumArtistMenuUtils {

@@ -14,7 +14,11 @@ import butterknife.ButterKnife;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.LightDarkColorState;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.jakewharton.rxbinding2.widget.*;
+import com.jakewharton.rxbinding2.widget.RxSeekBar;
+import com.jakewharton.rxbinding2.widget.SeekBarChangeEvent;
+import com.jakewharton.rxbinding2.widget.SeekBarProgressChangeEvent;
+import com.jakewharton.rxbinding2.widget.SeekBarStartChangeEvent;
+import com.jakewharton.rxbinding2.widget.SeekBarStopChangeEvent;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.utils.LogUtils;
@@ -24,7 +28,6 @@ import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-
 import java.util.concurrent.TimeUnit;
 
 public class UpNextView extends LinearLayout {
@@ -80,7 +83,7 @@ public class UpNextView extends LinearLayout {
 
     private CompositeDisposable disposables = new CompositeDisposable();
 
-    public static UpNextView newInstance(Context context, PlayerPresenter playerPresenter){
+    public static UpNextView newInstance(Context context, PlayerPresenter playerPresenter) {
         UpNextView upNextView = new UpNextView(context);
         upNextView.playerPresenter = playerPresenter;
         return upNextView;

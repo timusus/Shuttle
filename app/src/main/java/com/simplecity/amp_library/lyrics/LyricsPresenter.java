@@ -17,6 +17,8 @@ import com.simplecity.amp_library.ui.presenters.Presenter;
 import com.simplecity.amp_library.utils.LogUtils;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Observable;
+import java.io.File;
+import java.io.IOException;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
@@ -25,9 +27,6 @@ import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
-
-import java.io.File;
-import java.io.IOException;
 
 class LyricsPresenter extends Presenter<LyricsView> {
 
@@ -84,7 +83,7 @@ class LyricsPresenter extends Presenter<LyricsView> {
             if (path.startsWith("content://")) {
                 Query query = new Query.Builder()
                         .uri(Uri.parse(path))
-                        .projection(new String[]{MediaStore.Audio.Media.DATA})
+                        .projection(new String[] { MediaStore.Audio.Media.DATA })
                         .build();
 
                 Cursor cursor = SqlUtils.createQuery(ShuttleApplication.getInstance(), query);

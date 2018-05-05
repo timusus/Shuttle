@@ -34,13 +34,12 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-
-import javax.inject.Inject;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.inject.Inject;
 
 public class DeleteDialog extends DialogFragment implements SafManager.SafDialog.SafResultListener {
 
@@ -298,7 +297,6 @@ public class DeleteDialog extends DialogFragment implements SafManager.SafDialog
             }
             return deletedSongs;
         });
-
     }
 
     void tidyUp(@NonNull List<Song> deletedSongs) {
@@ -344,8 +342,6 @@ public class DeleteDialog extends DialogFragment implements SafManager.SafDialog
                         }
                         dismiss();
                     }, error -> LogUtils.logException(TAG, "Failed to delete songs", error)));
-
-
         } else {
             Toast.makeText(getContext(), R.string.delete_songs_failure_toast, Toast.LENGTH_LONG).show();
             dismiss();

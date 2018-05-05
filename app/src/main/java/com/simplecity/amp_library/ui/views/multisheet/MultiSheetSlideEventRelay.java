@@ -49,7 +49,5 @@ public class MultiSheetSlideEventRelay {
         public boolean nowPlayingCollapsed() {
             return sheet == Sheet.FIRST && state == BottomSheetBehavior.STATE_COLLAPSED;
         }
-
     }
-
 }

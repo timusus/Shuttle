@@ -19,12 +19,16 @@ import com.simplecity.amp_library.model.FolderObject;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.ui.modelviews.FolderView;
-import com.simplecity.amp_library.utils.*;
+import com.simplecity.amp_library.utils.CustomMediaScanner;
+import com.simplecity.amp_library.utils.DialogUtils;
+import com.simplecity.amp_library.utils.FileHelper;
+import com.simplecity.amp_library.utils.LogUtils;
+import com.simplecity.amp_library.utils.MusicUtils;
+import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.menu.MenuUtils;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
-
 import java.io.File;
 import java.util.Collections;
 import java.util.List;

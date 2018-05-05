@@ -14,7 +14,6 @@ import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.extensions.AlbumExt;
 import com.simplecity.amp_library.utils.menu.MenuUtils;
 import io.reactivex.Single;
-
 import java.util.List;
 
 public class AlbumMenuUtils {

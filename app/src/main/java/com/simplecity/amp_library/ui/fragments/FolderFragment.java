@@ -8,7 +8,12 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.Toast;
 import butterknife.BindView;
@@ -35,7 +40,14 @@ import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
 import com.simplecity.amp_library.ui.views.BreadcrumbItem;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.ui.views.ThemedStatusBarView;
-import com.simplecity.amp_library.utils.*;
+import com.simplecity.amp_library.utils.ContextualToolbarHelper;
+import com.simplecity.amp_library.utils.DataManager;
+import com.simplecity.amp_library.utils.FileBrowser;
+import com.simplecity.amp_library.utils.FileHelper;
+import com.simplecity.amp_library.utils.LogUtils;
+import com.simplecity.amp_library.utils.SettingsManager;
+import com.simplecity.amp_library.utils.ShuttleUtils;
+import com.simplecity.amp_library.utils.SortManager;
 import com.simplecity.amp_library.utils.extensions.SongExtKt;
 import com.simplecity.amp_library.utils.menu.folder.FolderMenuUtils;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
@@ -49,13 +61,12 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
-import kotlin.Unit;
-import test.com.androidnavigation.fragment.BackPressListener;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import kotlin.Unit;
+import test.com.androidnavigation.fragment.BackPressListener;
 
 import static com.afollestad.aesthetic.Rx.distinctToMainThread;
 import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
@@ -479,7 +490,6 @@ public class FolderFragment extends BaseFragment implements
                 public void notifyDatasetChanged() {
                     adapter.notifyItemRangeChanged(0, adapter.items.size(), 0);
                 }
-
             });
 
             contextualToolbarHelper.setCanChangeTitle(false);
@@ -604,7 +614,6 @@ public class FolderFragment extends BaseFragment implements
                 adapter.notifyItemRangeChanged(0, adapter.getItemCount(), 0);
                 updateMenuItems();
                 return true;
-
         }
         return false;
     }

@@ -30,11 +30,10 @@ import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
-
-import javax.inject.Inject;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import javax.inject.Inject;
 
 public class QueuePagerFragment extends BaseFragment implements
         RequestManagerProvider,
@@ -141,7 +140,7 @@ public class QueuePagerFragment extends BaseFragment implements
             public boolean onPreDraw() {
                 // This null check doesn't make sense to me, but there was an NPE here..
                 if (recyclerView != null) {
-                    imageSize = new int[]{recyclerView.getWidth(), recyclerView.getHeight()};
+                    imageSize = new int[] { recyclerView.getWidth(), recyclerView.getHeight() };
                     recyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
                 }
                 return false;

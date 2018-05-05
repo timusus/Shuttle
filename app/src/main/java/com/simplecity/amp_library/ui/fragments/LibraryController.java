@@ -15,7 +15,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -27,7 +32,11 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
-import com.simplecity.amp_library.model.*;
+import com.simplecity.amp_library.model.Album;
+import com.simplecity.amp_library.model.AlbumArtist;
+import com.simplecity.amp_library.model.CategoryItem;
+import com.simplecity.amp_library.model.Genre;
+import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.search.SearchFragment;
 import com.simplecity.amp_library.ui.activities.ToolbarListener;
 import com.simplecity.amp_library.ui.adapters.PagerAdapter;
@@ -44,15 +53,13 @@ import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.multisheetview.ui.view.MultiSheetView;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import test.com.androidnavigation.fragment.FragmentInfo;
-
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
+import test.com.androidnavigation.fragment.FragmentInfo;
 
 import static com.afollestad.aesthetic.Rx.distinctToMainThread;
 import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
-
 
 public class LibraryController extends BaseFragment implements
         AlbumArtistFragment.AlbumArtistClickListener,

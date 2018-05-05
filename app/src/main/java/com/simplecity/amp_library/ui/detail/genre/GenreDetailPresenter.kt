@@ -11,12 +11,16 @@ import com.simplecity.amp_library.playback.MediaManager
 import com.simplecity.amp_library.rx.UnsafeAction
 import com.simplecity.amp_library.ui.detail.playlist.PlaylistDetailPresenter
 import com.simplecity.amp_library.ui.presenters.Presenter
-import com.simplecity.amp_library.utils.*
+import com.simplecity.amp_library.utils.LogUtils
+import com.simplecity.amp_library.utils.Operators
+import com.simplecity.amp_library.utils.PermissionUtils
+import com.simplecity.amp_library.utils.PlaylistUtils
+import com.simplecity.amp_library.utils.SortManager
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
-import java.util.*
+import java.util.Random
 import java.util.concurrent.TimeUnit
 
 class GenreDetailPresenter constructor(private val mediaManager: MediaManager, private val genre: Genre) : Presenter<GenreDetailView>() {

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.view.MenuItem;
-
 import com.cantrowitz.rxbroadcast.RxBroadcast;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Playlist;
@@ -13,13 +12,10 @@ import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.ui.views.QueueView;
 import com.simplecity.amp_library.utils.PlaylistUtils;
-
-import java.util.concurrent.TimeUnit;
-
-import javax.inject.Inject;
-
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import java.util.concurrent.TimeUnit;
+import javax.inject.Inject;
 
 public class QueuePresenter extends Presenter<QueueView> {
 

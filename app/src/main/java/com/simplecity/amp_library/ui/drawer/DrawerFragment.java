@@ -43,10 +43,9 @@ import com.simplecity.amp_library.utils.menu.playlist.PlaylistMenuFragmentHelper
 import com.simplecity.amp_library.utils.menu.playlist.PlaylistMenuUtils;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
 
 public class DrawerFragment extends BaseFragment implements
         DrawerView,

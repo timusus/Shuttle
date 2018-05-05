@@ -10,7 +10,11 @@ import com.simplecity.amp_library.model.Song
 import com.simplecity.amp_library.playback.MediaManager
 import com.simplecity.amp_library.rx.UnsafeAction
 import com.simplecity.amp_library.ui.presenters.Presenter
-import com.simplecity.amp_library.utils.*
+import com.simplecity.amp_library.utils.Operators
+import com.simplecity.amp_library.utils.PermissionUtils
+import com.simplecity.amp_library.utils.PlaylistUtils
+import com.simplecity.amp_library.utils.ShuttleUtils
+import com.simplecity.amp_library.utils.SortManager
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
@@ -45,7 +49,9 @@ class ArtistDetailPresenter constructor(private val mediaManager: MediaManager, 
         PermissionUtils.RequestStoragePermissions {
             addDisposable(
                 albumArtist.songsSingle
-                    .zipWith<MutableList<Album>, Pair<MutableList<Album>, MutableList<Song>>>(albumArtist.songsSingle.map { songs -> Operators.songsToAlbums(songs) }, BiFunction { songs, albums -> Pair(albums, songs) }).subscribeOn(Schedulers.io())
+                    .zipWith<MutableList<Album>, Pair<MutableList<Album>, MutableList<Song>>>(
+                        albumArtist.songsSingle.map { songs -> Operators.songsToAlbums(songs) },
+                        BiFunction { songs, albums -> Pair(albums, songs) }).subscribeOn(Schedulers.io())
                     .doOnSuccess { pair ->
                         sortAlbums(pair.first!!)
                         sortSongs(pair.second!!)

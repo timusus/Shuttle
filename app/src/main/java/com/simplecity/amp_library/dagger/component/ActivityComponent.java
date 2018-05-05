@@ -11,7 +11,8 @@ import dagger.Subcomponent;
 @ActivityScope
 @Subcomponent(modules = {
         ActivityModule.class,
-        PresenterModule.class})
+        PresenterModule.class
+})
 
 public interface ActivityComponent {
 

@@ -23,7 +23,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RemoteViews;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.bumptech.glide.Glide;
@@ -164,7 +171,6 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
         if (compoundButton.getId() == R.id.checkBox1) {
             showAlbumArt = checked;
             prefs.edit().putBoolean(BaseWidgetProvider.ARG_WIDGET_SHOW_ARTWORK + appWidgetId, showAlbumArt).apply();
-
         }
         if (compoundButton.getId() == R.id.checkBox2) {
             invertIcons = checked;
@@ -191,7 +197,7 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
             // wrap around with an immediate update.
             Intent updateIntent = new Intent(ServiceCommand.SERVICE_COMMAND);
             updateIntent.putExtra(MediaButtonCommand.CMD_NAME, getUpdateCommandString());
-            updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{appWidgetId});
+            updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[] { appWidgetId });
             updateIntent.addFlags(Intent.FLAG_RECEIVER_REGISTERED_ONLY);
             sendBroadcast(updateIntent);
 
@@ -420,5 +426,4 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
     public String key() {
         return "widget_activity";
     }
-
 }

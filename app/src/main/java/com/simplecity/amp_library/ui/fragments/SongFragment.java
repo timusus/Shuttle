@@ -5,7 +5,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.SubMenu;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
@@ -16,7 +22,12 @@ import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
 import com.simplecity.amp_library.ui.modelviews.ShuffleView;
 import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
-import com.simplecity.amp_library.utils.*;
+import com.simplecity.amp_library.utils.ContextualToolbarHelper;
+import com.simplecity.amp_library.utils.DataManager;
+import com.simplecity.amp_library.utils.LogUtils;
+import com.simplecity.amp_library.utils.PermissionUtils;
+import com.simplecity.amp_library.utils.PlaylistUtils;
+import com.simplecity.amp_library.utils.SortManager;
 import com.simplecity.amp_library.utils.menu.song.SongMenuFragmentHelper;
 import com.simplecity.amp_library.utils.menu.song.SongMenuUtils;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
@@ -27,11 +38,10 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import kotlin.Unit;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import kotlin.Unit;
 
 public class SongFragment extends BaseFragment implements
         SongView.ClickListener,
@@ -350,7 +360,8 @@ public class SongFragment extends BaseFragment implements
                 }
             });
 
-            contextualToolbar.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), mediaManager, Single.defer(() -> Single.just(contextualToolbarHelper.getItems())), songMenuFragmentHelper.getSongMenuCallbacks()));
+            contextualToolbar.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), mediaManager, Single.defer(() -> Single.just(contextualToolbarHelper.getItems())),
+                    songMenuFragmentHelper.getSongMenuCallbacks()));
         }
     }
 

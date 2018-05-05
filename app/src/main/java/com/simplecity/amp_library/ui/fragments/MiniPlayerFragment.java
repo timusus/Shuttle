@@ -4,7 +4,11 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.*;
+import android.view.GestureDetector;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -29,7 +33,6 @@ import com.simplecity.amp_library.ui.views.PlayerViewAdapter;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.multisheetview.ui.view.MultiSheetView;
 import io.reactivex.disposables.CompositeDisposable;
-
 import javax.inject.Inject;
 
 import static com.afollestad.aesthetic.Rx.distinctToMainThread;
@@ -196,10 +199,11 @@ public class MiniPlayerFragment extends BaseFragment {
                 float distanceX = e2.getX() - e1.getX();
                 float distanceY = e2.getY() - e1.getY();
                 if (Math.abs(distanceX) > Math.abs(distanceY) && Math.abs(distanceX) > SWIPE_DISTANCE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                    if (distanceX > 0)
+                    if (distanceX > 0) {
                         onSwipeRight();
-                    else
+                    } else {
                         onSwipeLeft();
+                    }
                     return true;
                 }
                 return false;
@@ -218,7 +222,6 @@ public class MiniPlayerFragment extends BaseFragment {
         public void setSeekProgress(int progress) {
             progressBar.setProgress(progress);
         }
-
 
         @Override
         public void playbackChanged(boolean isPlaying) {
@@ -249,7 +252,6 @@ public class MiniPlayerFragment extends BaseFragment {
                     .into(miniArtwork);
 
             rootView.setContentDescription(getString(R.string.btn_now_playing, song.name, song.artistName));
-
         }
 
         @Override

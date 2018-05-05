@@ -28,7 +28,6 @@ import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
-
 import java.util.List;
 
 import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
@@ -87,7 +86,6 @@ public abstract class BaseActivity extends AestheticActivity implements ServiceC
                 ShuttleApplication.getInstance().setIsUpgraded(true);
                 Toast.makeText(BaseActivity.this, R.string.iab_purchase_restored, Toast.LENGTH_SHORT).show();
             }
-
         });
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);

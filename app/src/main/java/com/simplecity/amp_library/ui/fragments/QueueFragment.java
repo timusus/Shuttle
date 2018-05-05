@@ -39,8 +39,13 @@ import com.simplecity.amp_library.ui.views.PlayerViewAdapter;
 import com.simplecity.amp_library.ui.views.QueueView;
 import com.simplecity.amp_library.ui.views.ThemedStatusBarView;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetSlideEventRelay;
-import com.simplecity.amp_library.utils.*;
+import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper.Callback;
+import com.simplecity.amp_library.utils.MusicUtils;
+import com.simplecity.amp_library.utils.PermissionUtils;
+import com.simplecity.amp_library.utils.PlaylistUtils;
+import com.simplecity.amp_library.utils.ResourceUtils;
+import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.menu.song.SongMenuFragmentHelper;
 import com.simplecity.amp_library.utils.menu.song.SongMenuUtils;
 import com.simplecity.multisheetview.ui.view.MultiSheetView;
@@ -52,9 +57,8 @@ import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-
-import javax.inject.Inject;
 import java.util.List;
+import javax.inject.Inject;
 
 public class QueueFragment extends BaseFragment implements QueueView {
 

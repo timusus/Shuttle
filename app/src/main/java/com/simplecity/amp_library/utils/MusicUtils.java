@@ -3,7 +3,6 @@ package com.simplecity.amp_library.utils;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Album;
@@ -12,17 +11,14 @@ import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.playback.QueueManager;
-
-import org.jetbrains.annotations.NotNull;
-
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
+import org.jetbrains.annotations.NotNull;
 
 public class MusicUtils implements MediaManager {
 
@@ -73,9 +69,6 @@ public class MusicUtils implements MediaManager {
 
     /**
      * {@inheritDoc}
-     *
-     * @param songs
-     * @param onEmpty
      */
     public void shuffleAll(@NotNull List<Song> songs, @NotNull Function1<? super String, Unit> onEmpty) {
         if (!songs.isEmpty()) {
@@ -117,7 +110,8 @@ public class MusicUtils implements MediaManager {
     }
 
     public boolean isPlaying() {
-        return MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null && MusicServiceConnectionUtils.serviceBinder.getService().isPlaying();
+        return MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null && MusicServiceConnectionUtils.serviceBinder.getService()
+                .isPlaying();
     }
 
     public int getShuffleMode() {

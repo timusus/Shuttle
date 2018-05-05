@@ -7,7 +7,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.SubMenu;
+import android.view.View;
+import android.view.ViewGroup;
 import com.annimon.stream.Stream;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
@@ -22,7 +28,13 @@ import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
 import com.simplecity.amp_library.ui.recyclerview.GridDividerDecoration;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
-import com.simplecity.amp_library.utils.*;
+import com.simplecity.amp_library.utils.ContextualToolbarHelper;
+import com.simplecity.amp_library.utils.DataManager;
+import com.simplecity.amp_library.utils.MusicUtils;
+import com.simplecity.amp_library.utils.PermissionUtils;
+import com.simplecity.amp_library.utils.PlaylistUtils;
+import com.simplecity.amp_library.utils.SettingsManager;
+import com.simplecity.amp_library.utils.SortManager;
 import com.simplecity.amp_library.utils.menu.albumartist.AlbumArtistMenuFragmentHelper;
 import com.simplecity.amp_library.utils.menu.albumartist.AlbumArtistMenuUtils;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
@@ -34,10 +46,9 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-
-import javax.inject.Inject;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
+import javax.inject.Inject;
 
 public class AlbumArtistFragment extends BaseFragment implements
         MusicUtils.Defs,
@@ -428,7 +439,9 @@ public class AlbumArtistFragment extends BaseFragment implements
             }
             playlistMenuDisposable = PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe();
 
-            contextualToolbar.setOnMenuItemClickListener(AlbumArtistMenuUtils.getAlbumArtistMenuClickListener(getContext(), mediaManager, Single.defer(() -> Single.just(contextualToolbarHelper.getItems())), albumArtistMenuFragmentHelper.getCallbacks()));
+            contextualToolbar.setOnMenuItemClickListener(
+                    AlbumArtistMenuUtils.getAlbumArtistMenuClickListener(getContext(), mediaManager, Single.defer(() -> Single.just(contextualToolbarHelper.getItems())),
+                            albumArtistMenuFragmentHelper.getCallbacks()));
             contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
                 @Override
                 public void notifyItemChanged(int position, SelectableViewModel viewModel) {
