@@ -869,6 +869,8 @@ public class MusicService extends Service {
     }
 
     private void onMetaChanged() {
+        updateNotification();
+
         if (queueManager.getCurrentSong() != null) {
             queueManager.getCurrentSong().setStartTime();
 
