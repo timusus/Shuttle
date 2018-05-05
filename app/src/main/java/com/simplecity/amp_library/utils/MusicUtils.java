@@ -24,12 +24,6 @@ public class MusicUtils implements MediaManager {
 
     private static final String TAG = "MusicUtils";
 
-    public interface Defs {
-        int ADD_TO_PLAYLIST = 0;
-        int PLAYLIST_SELECTED = 1;
-        int NEW_PLAYLIST = 2;
-    }
-
     public void playAll(@NonNull Single<List<Song>> songsSingle, @NotNull Function1<? super String, Unit> onEmpty) {
         songsSingle
                 .observeOn(AndroidSchedulers.mainThread())

@@ -45,6 +45,7 @@ import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.ArtworkProvider;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.detail.DetailSortHelper;
 import com.simplecity.amp_library.ui.detail.album.AlbumDetailFragment;
@@ -86,6 +87,7 @@ import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -331,10 +333,10 @@ public class ArtistDetailFragment extends BaseFragment implements
             case R.id.addToQueue:
                 presenter.addToQueue();
                 return true;
-            case MusicUtils.Defs.NEW_PLAYLIST:
+            case MediaManager.NEW_PLAYLIST:
                 presenter.newPlaylist();
                 return true;
-            case MusicUtils.Defs.PLAYLIST_SELECTED:
+            case MediaManager.PLAYLIST_SELECTED:
                 presenter.playlistSelected(getContext(), item, () -> presenter.closeContextualToolbar());
                 return true;
             case R.id.editTags:

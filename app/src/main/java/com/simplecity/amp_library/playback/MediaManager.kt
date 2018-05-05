@@ -13,12 +13,10 @@ import io.reactivex.Single
  */
 interface MediaManager {
 
-    interface Defs {
-        companion object {
-            val ADD_TO_PLAYLIST = 0
-            val PLAYLIST_SELECTED = 1
-            val NEW_PLAYLIST = 2
-        }
+    companion object Defs {
+        const val ADD_TO_PLAYLIST = 0
+        const val PLAYLIST_SELECTED = 1
+        const val NEW_PLAYLIST = 2
     }
 
     /**

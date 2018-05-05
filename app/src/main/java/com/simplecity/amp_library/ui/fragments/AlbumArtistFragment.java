@@ -51,7 +51,6 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 public class AlbumArtistFragment extends BaseFragment implements
-        MusicUtils.Defs,
         AlbumArtistView.ClickListener {
 
     interface AlbumArtistClickListener {

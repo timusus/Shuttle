@@ -190,10 +190,10 @@ public class FolderMenuUtils {
                 case R.id.playNext:
                     callbacks.playNext(getSongsForFolderObject(folderObject));
                     return true;
-                case MusicUtils.Defs.NEW_PLAYLIST:
+                case MediaManager.NEW_PLAYLIST:
                     MenuUtils.newPlaylist(context, getSongsForFolderObject(folderObject), callbacks::onPlaylistItemsInserted);
                     return true;
-                case MusicUtils.Defs.PLAYLIST_SELECTED:
+                case MediaManager.PLAYLIST_SELECTED:
                     MenuUtils.addToPlaylist(context, menuItem, getSongsForFolderObject(folderObject), callbacks::onPlaylistItemsInserted);
                     return true;
                 case R.id.addToQueue:
@@ -228,11 +228,11 @@ public class FolderMenuUtils {
                     getSongForFile(fileObject).subscribe(song ->
                             MenuUtils.playNext(mediaManager, song, callbacks::showToast), errorHandler);
                     return true;
-                case MusicUtils.Defs.NEW_PLAYLIST:
+                case MediaManager.NEW_PLAYLIST:
                     getSongForFile(fileObject).subscribe(song ->
                             MenuUtils.newPlaylist(context, Collections.singletonList(song), callbacks::onPlaylistItemsInserted), errorHandler);
                     return true;
-                case MusicUtils.Defs.PLAYLIST_SELECTED:
+                case MediaManager.PLAYLIST_SELECTED:
                     getSongForFile(fileObject).subscribe(song ->
                             MenuUtils.addToPlaylist(context, menuItem, Collections.singletonList(song), callbacks::onPlaylistItemsInserted), errorHandler);
                     return true;

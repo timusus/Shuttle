@@ -39,6 +39,7 @@ import com.simplecity.amp_library.glide.utils.AlwaysCrossFade;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.ArtworkProvider;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.detail.DetailSortHelper;
 import com.simplecity.amp_library.ui.dialog.BiographyDialog;
@@ -57,7 +58,6 @@ import com.simplecity.amp_library.ui.views.ContextualToolbarHost;
 import com.simplecity.amp_library.utils.ActionBarUtils;
 import com.simplecity.amp_library.utils.ArtworkDialog;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
-import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.Operators;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.PlaylistUtils;
@@ -75,6 +75,7 @@ import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -306,10 +307,10 @@ public class AlbumDetailFragment extends BaseFragment implements
             case R.id.addToQueue:
                 presenter.addToQueue();
                 return true;
-            case MusicUtils.Defs.NEW_PLAYLIST:
+            case MediaManager.ADD_TO_PLAYLIST:
                 presenter.newPlaylist();
                 return true;
-            case MusicUtils.Defs.PLAYLIST_SELECTED:
+            case MediaManager.PLAYLIST_SELECTED:
                 presenter.playlistSelected(getContext(), item, () -> presenter.closeContextualToolbar());
                 return true;
             case R.id.editTags:

@@ -50,10 +50,10 @@ public class AlbumArtistMenuUtils {
     public static Toolbar.OnMenuItemClickListener getAlbumArtistMenuClickListener(Context context, MediaManager mediaManager, Single<List<AlbumArtist>> selectedAlbumArtists, Callbacks callbacks) {
         return item -> {
             switch (item.getItemId()) {
-                case MusicUtils.Defs.NEW_PLAYLIST:
+                case MediaManager.NEW_PLAYLIST:
                     MenuUtils.newPlaylist(context, AlbumArtistExt.INSTANCE.getSongsForAlbumArtists(selectedAlbumArtists), callbacks::onPlaylistItemsInserted);
                     return true;
-                case MusicUtils.Defs.PLAYLIST_SELECTED:
+                case MediaManager.PLAYLIST_SELECTED:
                     MenuUtils.addToPlaylist(context, item, AlbumArtistExt.INSTANCE.getSongsForAlbumArtists(selectedAlbumArtists), callbacks::onPlaylistItemsInserted);
                     return true;
                 case R.id.playNext:
@@ -85,10 +85,10 @@ public class AlbumArtistMenuUtils {
                 case R.id.albumShuffle:
                     MenuUtils.play(mediaManager, AlbumArtistExt.INSTANCE.getSongsForAlbumArtist(albumArtist).map(Operators::albumShuffleSongs), callbacks::showToast);
                     return true;
-                case MusicUtils.Defs.NEW_PLAYLIST:
+                case MediaManager.NEW_PLAYLIST:
                     MenuUtils.newPlaylist(context, AlbumArtistExt.INSTANCE.getSongsForAlbumArtist(albumArtist), callbacks::onPlaylistItemsInserted);
                     return true;
-                case MusicUtils.Defs.PLAYLIST_SELECTED:
+                case MediaManager.PLAYLIST_SELECTED:
                     MenuUtils.addToPlaylist(context, item, AlbumArtistExt.INSTANCE.getSongsForAlbumArtist(albumArtist), callbacks::onPlaylistItemsInserted);
                     return true;
                 case R.id.addToQueue:

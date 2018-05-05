@@ -31,10 +31,10 @@ public class GenreMenuUtils {
                 case R.id.playNext:
                     callbacks.playNext(genre);
                     return true;
-                case MusicUtils.Defs.NEW_PLAYLIST:
+                case MediaManager.NEW_PLAYLIST:
                     MenuUtils.newPlaylist(context, GenreExt.INSTANCE.getSongs(genre), callbacks::onPlaylistItemsInserted);
                     return true;
-                case MusicUtils.Defs.PLAYLIST_SELECTED:
+                case MediaManager.PLAYLIST_SELECTED:
                     MenuUtils.addToPlaylist(context, item, GenreExt.INSTANCE.getSongs(genre), callbacks::onPlaylistItemsInserted);
                     return true;
                 case R.id.addToQueue:

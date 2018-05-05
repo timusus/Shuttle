@@ -26,6 +26,7 @@ import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.dialog.DeleteDialog;
 import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
@@ -141,7 +142,7 @@ public class QueueFragment extends BaseFragment implements QueueView {
         toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
         toolbar.inflateMenu(R.menu.menu_queue);
 
-        SubMenu sub = toolbar.getMenu().addSubMenu(0, MusicUtils.Defs.ADD_TO_PLAYLIST, 1, R.string.save_as_playlist);
+        SubMenu sub = toolbar.getMenu().addSubMenu(0, MediaManager.ADD_TO_PLAYLIST, 1, R.string.save_as_playlist);
         disposables.add(PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe());
 
         toolbar.setOnMenuItemClickListener(toolbarListener);
@@ -374,10 +375,10 @@ public class QueueFragment extends BaseFragment implements QueueView {
             case R.id.menu_clear:
                 queuePresenter.clearQueue();
                 return true;
-            case MusicUtils.Defs.NEW_PLAYLIST:
+            case MediaManager.NEW_PLAYLIST:
                 queuePresenter.saveQueue(getContext());
                 return true;
-            case MusicUtils.Defs.PLAYLIST_SELECTED:
+            case MediaManager.PLAYLIST_SELECTED:
                 queuePresenter.saveQueue(getContext(), item);
                 return true;
         }

@@ -58,10 +58,10 @@ public class AlbumMenuUtils {
     public static Toolbar.OnMenuItemClickListener getAlbumMenuClickListener(Context context, MediaManager mediaManager, Single<List<Album>> selectedAlbums, Callbacks callbacks) {
         return item -> {
             switch (item.getItemId()) {
-                case MusicUtils.Defs.NEW_PLAYLIST:
+                case MediaManager.NEW_PLAYLIST:
                     MenuUtils.newPlaylist(context, AlbumExt.INSTANCE.getSongsForAlbums(selectedAlbums), callbacks::onPlaylistItemsInserted);
                     return true;
-                case MusicUtils.Defs.PLAYLIST_SELECTED:
+                case MediaManager.PLAYLIST_SELECTED:
                     MenuUtils.addToPlaylist(context, item, AlbumExt.INSTANCE.getSongsForAlbums(selectedAlbums), callbacks::onPlaylistItemsInserted);
                     return true;
                 case R.id.playNext:
@@ -87,10 +87,10 @@ public class AlbumMenuUtils {
                 case R.id.playNext:
                     callbacks.playNext(AlbumExt.INSTANCE.getSongsForAlbum(album));
                     return true;
-                case MusicUtils.Defs.NEW_PLAYLIST:
+                case MediaManager.NEW_PLAYLIST:
                     MenuUtils.newPlaylist(context, AlbumExt.INSTANCE.getSongsForAlbum(album), callbacks::onPlaylistItemsInserted);
                     return true;
-                case MusicUtils.Defs.PLAYLIST_SELECTED:
+                case MediaManager.PLAYLIST_SELECTED:
                     MenuUtils.addToPlaylist(context, item, AlbumExt.INSTANCE.getSongsForAlbum(album), callbacks::onPlaylistItemsInserted);
                     return true;
                 case R.id.addToQueue:
