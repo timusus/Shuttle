@@ -48,7 +48,9 @@ class AlbumDetailPresenter constructor(private val mediaManager: MediaManager, p
     }
 
     fun fabClicked() {
-        mediaManager.shuffleAll(songs, { view?.showToast(it) })
+        mediaManager.shuffleAll(songs) {
+            message -> view?.showToast(message)
+        }
     }
 
     fun playAll() {
@@ -58,11 +60,15 @@ class AlbumDetailPresenter constructor(private val mediaManager: MediaManager, p
     }
 
     fun playNext() {
-        mediaManager.playNext(songs) { view?.showToast(it) }
+        mediaManager.playNext(songs) {
+            message -> view?.showToast(message)
+        }
     }
 
     fun addToQueue() {
-        mediaManager.addToQueue(songs) { view?.showToast(it) }
+        mediaManager.addToQueue(songs) {
+            message -> view?.showToast(message)
+        }
     }
 
     fun editTags() {
