@@ -2,10 +2,8 @@ package com.simplecity.amp_library.glide.fetcher;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-
 import com.simplecity.amp_library.http.lastfm.LastFmResult;
 import com.simplecity.amp_library.model.ArtworkProvider;
-
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -46,14 +44,14 @@ class LastFmFetcher extends BaseRemoteFetcher {
         //of data and reset the stream when we've finished. 100kb should be enough to allow for the case where
         //thumbnail data is stored before EXIF data in JPEG images.
         inputStream.mark(100 * 1024);
-        
+
         BitmapFactory.Options opt = new BitmapFactory.Options();
         opt.inJustDecodeBounds = true;
         BitmapFactory.decodeStream(inputStream, null, opt);
         inputStream.reset();
 
         opt.inSampleSize = Math.max(1, Integer.highestOneBit(Math.max(opt.outWidth, opt.outHeight) / 1024));
-        
+
         //If we don't need to do any sampling, just return the input stream.
         if (opt.inSampleSize == 1) return inputStream;
 

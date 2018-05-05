@@ -1,7 +1,6 @@
 package com.simplecity.amp_library.utils;
 
 import android.support.annotation.Nullable;
-
 import java.text.Collator;
 import java.util.Locale;
 

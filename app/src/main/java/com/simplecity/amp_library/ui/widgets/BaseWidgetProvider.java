@@ -12,16 +12,15 @@ import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.annotation.LayoutRes;
 import android.widget.RemoteViews;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.glide.utils.CustomAppWidgetTarget;
-import com.simplecity.amp_library.playback.constants.InternalIntents;
-import com.simplecity.amp_library.playback.constants.MediaButtonCommand;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.playback.QueueManager;
+import com.simplecity.amp_library.playback.constants.InternalIntents;
+import com.simplecity.amp_library.playback.constants.MediaButtonCommand;
 import com.simplecity.amp_library.playback.constants.ServiceCommand;
 import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.ui.activities.MainActivity;

@@ -9,7 +9,6 @@ import android.support.v7.app.MediaRouteButton;
 import android.support.v7.media.MediaRouteSelector;
 import android.util.Log;
 import android.view.ViewGroup;
-
 import com.simplecity.amp_library.utils.ShuttleUtils;
 
 public class CustomMediaRouteActionProvider extends MediaRouteActionProvider {
@@ -58,5 +57,4 @@ public class CustomMediaRouteActionProvider extends MediaRouteActionProvider {
                 ViewGroup.LayoutParams.FILL_PARENT));
         return customMediaRouteButton;
     }
-
 }

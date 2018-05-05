@@ -2,7 +2,6 @@ package com.simplecity.amp_library.utils;
 
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
-
 import com.simplecity.amp_library.glide.utils.Size;
 
 public class ResourceUtils {

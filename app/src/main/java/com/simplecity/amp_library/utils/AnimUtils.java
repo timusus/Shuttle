@@ -17,5 +17,4 @@ public final class AnimUtils {
     private AnimUtils() {
         throw new IllegalStateException("no instances");
     }
-
 }

@@ -27,5 +27,4 @@ public interface Breadcrumb {
     void removeBreadcrumbListener(BreadcrumbListener listener);
 
     void setTextColor(int textColor);
-
 }

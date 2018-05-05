@@ -9,7 +9,7 @@ public class WidgetConfigureLarge extends BaseWidgetConfigure {
 
     @Override
     int[] getWidgetLayouts() {
-        return new int[]{R.layout.widget_layout_large, R.layout.widget_layout_large_alt};
+        return new int[] { R.layout.widget_layout_large, R.layout.widget_layout_large_alt };
     }
 
     @Override

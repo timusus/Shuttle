@@ -21,7 +21,6 @@ fun Song.share(context: Context) {
     }
 }
 
-
 fun Song.delete(): Boolean {
 
     if (path == null) return false

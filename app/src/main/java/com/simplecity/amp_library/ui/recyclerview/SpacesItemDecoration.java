@@ -3,7 +3,6 @@ package com.simplecity.amp_library.ui.recyclerview;
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-
 import com.simplecity.amp_library.utils.ResourceUtils;
 
 public class SpacesItemDecoration extends RecyclerView.ItemDecoration {

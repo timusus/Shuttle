@@ -8,7 +8,6 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.http.HttpClient;
@@ -21,13 +20,11 @@ import com.simplecity.amp_library.utils.ArtworkUtils;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.FileHelper;
 import com.simplecity.amp_library.utils.StringUtils;
-
+import io.reactivex.Single;
 import java.io.File;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.List;
-
-import io.reactivex.Single;
 import retrofit2.Call;
 
 public class Song implements
@@ -76,7 +73,7 @@ public class Song implements
     private String sortKey;
 
     public static String[] getProjection() {
-        return new String[]{
+        return new String[] {
                 MediaStore.Audio.Media._ID,
                 MediaStore.Audio.Media.DATA,
                 MediaStore.Audio.Media.TITLE,
@@ -167,7 +164,7 @@ public class Song implements
 
             Query query = new Query.Builder()
                     .uri(appendedUri)
-                    .projection(new String[]{PlayCountTable.COLUMN_ID, PlayCountTable.COLUMN_PLAY_COUNT})
+                    .projection(new String[] { PlayCountTable.COLUMN_ID, PlayCountTable.COLUMN_PLAY_COUNT })
                     .build();
 
             playCount = SqlUtils.createSingleQuery(context, cursor ->
@@ -400,5 +397,4 @@ public class Song implements
     public int compareTo(@NonNull Song song) {
         return ComparisonUtils.compare(getSortKey(), song.getSortKey());
     }
-
 }

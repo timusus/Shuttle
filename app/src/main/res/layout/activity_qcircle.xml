@@ -1,12 +1,13 @@
 <?xml version="1.0"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="top|center_horizontal"
-                android:background="#000000"
-                tools:context=".ui.activities.QCircleActivity">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="top|center_horizontal"
+    android:background="#000000"
+    tools:context=".ui.activities.QCircleActivity">
 
     <RelativeLayout
         android:id="@+id/cover_main_view"
@@ -25,7 +26,7 @@
             android:gravity="center"
             android:maxLines="1"
             android:paddingLeft="64dp"
-            android:paddingRight="64dp" />
+            android:paddingRight="64dp"/>
 
         <TextView
             android:id="@+id/text2"

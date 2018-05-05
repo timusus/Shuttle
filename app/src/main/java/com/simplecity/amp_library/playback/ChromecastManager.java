@@ -30,7 +30,6 @@ import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-
 import java.io.ByteArrayOutputStream;
 
 class ChromecastManager {

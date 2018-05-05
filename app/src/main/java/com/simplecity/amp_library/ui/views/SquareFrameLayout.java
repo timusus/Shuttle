@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
-
 import com.simplecity.amp_library.R;
 
 /**
@@ -18,7 +17,7 @@ public class SquareFrameLayout extends FrameLayout {
      * Constructor for <code>SquareFrameLayout</code>
      *
      * @param context The {@link android.content.Context} to use
-     * @param attrs   The attributes of the XML tag that is inflating the view
+     * @param attrs The attributes of the XML tag that is inflating the view
      */
     public SquareFrameLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -41,5 +40,4 @@ public class SquareFrameLayout extends FrameLayout {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         setMeasuredDimension(widthDominant ? getMeasuredWidth() : getMeasuredHeight(), widthDominant ? getMeasuredWidth() : getMeasuredHeight());
     }
-
 }

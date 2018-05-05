@@ -15,15 +15,13 @@ import com.simplecity.amp_library.sql.databases.InclExclDbOpenHelper;
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
 import com.squareup.sqlbrite2.BriteDatabase;
 import com.squareup.sqlbrite2.SqlBrite;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import io.reactivex.Observable;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class DataManager {
 
@@ -73,7 +71,8 @@ public class DataManager {
 
     public Observable<List<Song>> getAllSongsRelay() {
         if (allSongsSubscription == null || allSongsSubscription.isDisposed()) {
-            allSongsSubscription = SqlBriteUtils.createObservableList(ShuttleApplication.getInstance(), Song::new, Song.getQuery()).subscribe(allSongsRelay, error -> LogUtils.logException(TAG, "getAllSongsRelay threw error", error));
+            allSongsSubscription = SqlBriteUtils.createObservableList(ShuttleApplication.getInstance(), Song::new, Song.getQuery())
+                    .subscribe(allSongsRelay, error -> LogUtils.logException(TAG, "getAllSongsRelay threw error", error));
         }
         return allSongsRelay
                 .subscribeOn(Schedulers.io())

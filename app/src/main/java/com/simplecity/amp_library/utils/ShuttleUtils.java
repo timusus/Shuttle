@@ -24,7 +24,6 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.R;
@@ -35,15 +34,13 @@ import com.simplecity.amp_library.model.Query;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.sql.SqlUtils;
 import com.simplecity.amp_library.sql.providers.PlayCountTable;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class ShuttleUtils {
 
@@ -89,7 +86,7 @@ public final class ShuttleUtils {
      * Method setRingtone.
      *
      * @param context context
-     * @param song    Song
+     * @param song Song
      */
     public static void setRingtone(final Context context, final Song song) {
 
@@ -132,7 +129,7 @@ public final class ShuttleUtils {
 
                     Query query = new Query.Builder()
                             .uri(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)
-                            .projection(new String[]{
+                            .projection(new String[] {
                                     BaseColumns._ID,
                                     MediaStore.MediaColumns.DATA, MediaStore.MediaColumns.TITLE
                             })
@@ -162,7 +159,6 @@ public final class ShuttleUtils {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(message -> Toast.makeText(context, message,
                         Toast.LENGTH_SHORT).show(), error -> LogUtils.logException(TAG, "Error setting ringtone", error));
-
     }
 
     /**
@@ -195,7 +191,6 @@ public final class ShuttleUtils {
         //Check other networks
         final NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting() && !wifiOnly;
-
     }
 
     public static boolean isUpgraded() {

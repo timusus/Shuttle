@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v4.content.FileProvider;
-
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
@@ -14,13 +13,11 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.utils.extensions.SongExtKt;
-
+import io.reactivex.annotations.NonNull;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
-import io.reactivex.annotations.NonNull;
 
 public class ShareDialog {
 

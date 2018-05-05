@@ -1,7 +1,6 @@
 package com.simplecity.amp_library.playback;
 
 import android.os.Binder;
-
 import java.lang.ref.WeakReference;
 
 /**

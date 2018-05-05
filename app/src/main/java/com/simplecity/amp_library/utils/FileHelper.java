@@ -7,12 +7,13 @@ import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
-
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.model.BaseFileObject;
 import com.simplecity.amp_library.model.FileObject;
 import com.simplecity.amp_library.model.Song;
-
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.schedulers.Schedulers;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
@@ -21,10 +22,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
-
-import io.reactivex.Observable;
-import io.reactivex.Single;
-import io.reactivex.schedulers.Schedulers;
 
 public class FileHelper {
 
@@ -175,7 +172,7 @@ public class FileHelper {
         if (size <= 0) {
             return "0";
         }
-        final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
+        final String[] units = new String[] { "B", "KB", "MB", "GB", "TB" };
         int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
         return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
     }
@@ -200,7 +197,7 @@ public class FileHelper {
      * Recursively collects all the files for the given directory and
      * all of its sub-directories. Must be called Asynchronously.
      *
-     * @param file      the File to retrieve the song Id's from
+     * @param file the File to retrieve the song Id's from
      * @param recursive whether to recursively check the sub-directories for song Id's
      * @return long[] a list of the songId's for the given fileObject's directory & sub-directories
      */
@@ -214,7 +211,7 @@ public class FileHelper {
      * Recursively collects all the songs for the given directory and
      * all of its sub-directories. Must be called Asynchronously.
      *
-     * @param file      the File to retrieve the song Id's from
+     * @param file the File to retrieve the song Id's from
      * @param recursive whether to recursively check the sub-directories for song Id's
      * @return List<Song> a list of the songs for the given fileObject's directory & sub-directories
      */
@@ -247,8 +244,8 @@ public class FileHelper {
     /**
      * Recursively 'walks' the files subdirectories, gathering a list of paths.
      *
-     * @param root      the root file to walk
-     * @param paths     the paths will be added to this List
+     * @param root the root file to walk
+     * @param paths the paths will be added to this List
      * @param recursive whether to recursively walk subdirectories
      * @param inSameDir whether files in the same dir as root should be included
      * @return a List of paths
@@ -313,10 +310,9 @@ public class FileHelper {
     /**
      * Renames an {@link FileObject} to the passed in newName
      *
-     * @param context        Context
+     * @param context Context
      * @param baseFileObject the FileObject representation of the file to rename
-     * @param newName        the new name of the file
-     * @return
+     * @param newName the new name of the file
      */
     public static boolean renameFile(Context context, BaseFileObject baseFileObject, String newName) {
         if (newName == null) {
@@ -343,7 +339,7 @@ public class FileHelper {
     /**
      * An array of accepted/supported audio extensions.
      */
-    public static String[] sExtensions = new String[]{
+    public static String[] sExtensions = new String[] {
             "mp3", "3gp", "mp4", "m4a",
             "aac", "ts", "flac", "mid",
             "xmf", "mxmf", "midi", "rtttl",

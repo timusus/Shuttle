@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
-
 import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.ShuttleApplication;
 
@@ -79,9 +78,30 @@ public class PlayCountTable extends SQLiteOpenHelper {
 
                 //Now we have to begin a new transaction
                 db.beginTransaction();
-                db.execSQL("INSERT OR REPLACE INTO " + TABLE_PLAY_COUNT
-                        + "(" + COLUMN_ID + ", " + COLUMN_PLAY_COUNT + ", " + COLUMN_TIME_PLAYED + ") "
-                        + "SELECT " + COUNT_INFO_COLUMN_ID + "," + "(SELECT " + COLUMN_PLAY_COUNT + " FROM " + TABLE_PLAY_COUNT + " WHERE _id = " + COLUMN_ID + ")" + "," + COUNT_INFO_COLUMN_TIME_PLAYED + " FROM " + TABLE_COUNT_INFO + ";");
+                db.execSQL("INSERT OR REPLACE INTO "
+                        + TABLE_PLAY_COUNT
+                        + "("
+                        + COLUMN_ID
+                        + ", "
+                        + COLUMN_PLAY_COUNT
+                        + ", "
+                        + COLUMN_TIME_PLAYED
+                        + ") "
+                        + "SELECT "
+                        + COUNT_INFO_COLUMN_ID
+                        + ","
+                        + "(SELECT "
+                        + COLUMN_PLAY_COUNT
+                        + " FROM "
+                        + TABLE_PLAY_COUNT
+                        + " WHERE _id = "
+                        + COLUMN_ID
+                        + ")"
+                        + ","
+                        + COUNT_INFO_COLUMN_TIME_PLAYED
+                        + " FROM "
+                        + TABLE_COUNT_INFO
+                        + ";");
             } catch (SQLiteException ignored) {
                 // The count info table probably doesn't exist (it wasn't created in the previous version of the app)
                 //  Nothing to do
@@ -89,5 +109,4 @@ public class PlayCountTable extends SQLiteOpenHelper {
             //SQLiteOpenHelper will automatically setTransactionSuccessful & endTransaction for us.
         }
     }
-
 }

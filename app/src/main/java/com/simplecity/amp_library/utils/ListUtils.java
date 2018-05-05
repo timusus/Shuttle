@@ -13,5 +13,4 @@ public final class ListUtils {
     private ListUtils() {
         throw new IllegalStateException("no instances");
     }
-
 }

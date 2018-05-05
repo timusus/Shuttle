@@ -3,13 +3,11 @@ package com.simplecity.amp_library.glide.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.ResourceDecoder;
 import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.StreamBitmapDecoder;
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;

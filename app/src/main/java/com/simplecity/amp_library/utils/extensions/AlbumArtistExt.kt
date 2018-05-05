@@ -7,7 +7,8 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import java.util.*
+import java.util.ArrayList
+import java.util.Comparator
 
 object AlbumArtistExt {
 

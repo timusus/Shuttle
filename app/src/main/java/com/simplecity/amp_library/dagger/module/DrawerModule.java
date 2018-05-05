@@ -1,11 +1,9 @@
 package com.simplecity.amp_library.dagger.module;
 
 import com.simplecity.amp_library.ui.drawer.NavigationEventRelay;
-
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
+import javax.inject.Singleton;
 
 @Module
 public class DrawerModule {
@@ -15,5 +13,4 @@ public class DrawerModule {
     NavigationEventRelay provideDrawerEventRelay() {
         return new NavigationEventRelay();
     }
-
 }

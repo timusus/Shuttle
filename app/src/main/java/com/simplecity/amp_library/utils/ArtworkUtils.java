@@ -8,20 +8,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
-
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.Song;
-
-import org.jaudiotagger.audio.AudioFile;
-import org.jaudiotagger.audio.AudioFileIO;
-import org.jaudiotagger.audio.exceptions.CannotReadException;
-import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
-import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
-import org.jaudiotagger.tag.Tag;
-import org.jaudiotagger.tag.TagException;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,6 +22,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.regex.Pattern;
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.Tag;
+import org.jaudiotagger.tag.TagException;
 
 public class ArtworkUtils {
 
@@ -109,7 +106,7 @@ public class ArtworkUtils {
 
         Cursor cursor = ShuttleApplication.getInstance()
                 .getContentResolver()
-                .query(contentUri, new String[]{MediaStore.Audio.Albums.ALBUM_ART}, null, null, null);
+                .query(contentUri, new String[] { MediaStore.Audio.Albums.ALBUM_ART }, null, null, null);
 
         if (cursor != null) {
             try {
@@ -128,7 +125,6 @@ public class ArtworkUtils {
             } finally {
                 cursor.close();
             }
-
         }
 
         return fileInputStream;

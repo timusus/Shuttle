@@ -4,7 +4,7 @@ import com.simplecity.amp_library.model.Genre
 import com.simplecity.amp_library.model.Song
 import com.simplecity.amp_library.utils.ComparisonUtils
 import io.reactivex.Single
-import java.util.*
+import java.util.Comparator
 
 object GenreExt {
 

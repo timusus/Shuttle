@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.support.annotation.Nullable;
 import android.util.Log;
-
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
@@ -13,7 +12,6 @@ import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.simplecity.amp_library.constants.Config;
 import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.utils.LogUtils;
-
 import java.util.List;
 
 public class BillingManager implements PurchasesUpdatedListener {

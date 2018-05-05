@@ -15,10 +15,10 @@ public class SearchUtils {
          * Calculate the highest Jaro-Winkler score, for the passed in filter string & fields.
          * The object param is just a holder.
          *
-         * @param object       a holder for the object which owns the fields being compared.
+         * @param object a holder for the object which owns the fields being compared.
          * @param filterString the string to match fields against
-         * @param fields       the fields to match the filter string against. Order matters here: subsequent fields
-         *                     have a small amount shaved off in order to weight results in favour of earlier fields.
+         * @param fields the fields to match the filter string against. Order matters here: subsequent fields
+         * have a small amount shaved off in order to weight results in favour of earlier fields.
          */
         public JaroWinklerObject(T object, String filterString, String... fields) {
             this.object = object;

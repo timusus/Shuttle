@@ -1,7 +1,6 @@
 package com.simplecity.amp_library.utils;
 
 import android.content.res.Resources;
-
 import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.CategoryItem;
@@ -165,7 +164,6 @@ public class SettingsManager extends BaseSettingsManager {
     public boolean getEqualizerEnabled() {
         return getBool("audiofx.global.enable", false);
     }
-
 
     private static final String DOCUMENT_TREE_URI = "document_tree_uri";
 
@@ -398,7 +396,6 @@ public class SettingsManager extends BaseSettingsManager {
         return getBool(KEY_SEARCH_ALBUMS, true);
     }
 
-
     // Changelog
 
     private static final String KEY_VERSION_CODE = "version_code";
@@ -444,14 +441,12 @@ public class SettingsManager extends BaseSettingsManager {
         setInt(KEY_DEFAULT_PAGE, type);
     }
 
-
     // Legacy Upgrade Preference
     private static final String KEY_UPGRADED = "pref_theme_gold";
 
     public boolean getIsLegacyUpgraded() {
         return getBool(KEY_UPGRADED, false);
     }
-
 
     // Recently added
 
@@ -464,6 +459,4 @@ public class SettingsManager extends BaseSettingsManager {
     public void setNumWeeks(int weeks) {
         setInt(KEY_NUM_WEEKS, weeks);
     }
-
-
 }

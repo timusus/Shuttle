@@ -1,13 +1,11 @@
 package com.simplecity.amp_library.utils;
 
 import android.support.annotation.NonNull;
-
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -17,6 +15,7 @@ public class ContextualToolbarHelper<T> {
 
     public interface Callback {
         void notifyItemChanged(int position, SelectableViewModel viewModel);
+
         void notifyDatasetChanged();
     }
 
@@ -102,5 +101,4 @@ public class ContextualToolbarHelper<T> {
     public List<T> getItems() {
         return new ArrayList<>(map.values());
     }
-
 }

@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class WhitelistDbOpenHelper extends SQLiteOpenHelper {
 
-
     public static final String TABLE_FOLDERS = "folders";
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_FOLDER = "folder";

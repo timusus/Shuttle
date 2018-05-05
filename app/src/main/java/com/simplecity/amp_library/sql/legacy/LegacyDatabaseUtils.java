@@ -3,12 +3,10 @@ package com.simplecity.amp_library.sql.legacy;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.squareup.sqlbrite2.BriteDatabase;
 import com.squareup.sqlbrite2.SqlBrite;
-
-import java.util.Collections;
-import java.util.List;
-
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
+import java.util.Collections;
+import java.util.List;
 
 public class LegacyDatabaseUtils {
 

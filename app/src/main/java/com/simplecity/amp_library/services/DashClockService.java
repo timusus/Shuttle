@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-
 import com.google.android.apps.dashclock.api.DashClockExtension;
 import com.google.android.apps.dashclock.api.ExtensionData;
 import com.simplecity.amp_library.R;
@@ -51,7 +50,6 @@ public class DashClockService extends DashClockExtension {
         mFilter.addAction(InternalIntents.PLAY_STATE_CHANGED);
         mFilter.addAction(InternalIntents.META_CHANGED);
         registerReceiver(mStatusListener, mFilter);
-
     }
 
     @Override
@@ -111,5 +109,4 @@ public class DashClockService extends DashClockExtension {
     protected void onUpdateData(int reason) {
         // Nothing to do
     }
-
 }

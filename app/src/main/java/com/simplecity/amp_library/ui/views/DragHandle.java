@@ -2,9 +2,7 @@ package com.simplecity.amp_library.ui.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
-
 import com.afollestad.aesthetic.Aesthetic;
-
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 

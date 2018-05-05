@@ -440,8 +440,13 @@ public class AlbumArtistFragment extends BaseFragment implements
             playlistMenuDisposable = PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe();
 
             contextualToolbar.setOnMenuItemClickListener(
-                    AlbumArtistMenuUtils.getAlbumArtistMenuClickListener(getContext(), mediaManager, Single.defer(() -> Single.just(contextualToolbarHelper.getItems())),
-                            albumArtistMenuFragmentHelper.getCallbacks()));
+                    AlbumArtistMenuUtils.getAlbumArtistMenuClickListener(
+                            getContext(),
+                            mediaManager,
+                            Single.defer(() -> Single.just(contextualToolbarHelper.getItems())),
+                            albumArtistMenuFragmentHelper.getCallbacks()
+                    ));
+
             contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
                 @Override
                 public void notifyItemChanged(int position, SelectableViewModel viewModel) {

@@ -30,7 +30,6 @@ import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-
 import java.util.ConcurrentModificationException;
 
 public class MusicNotificationHelper extends NotificationHelper {
@@ -53,7 +52,8 @@ public class MusicNotificationHelper extends NotificationHelper {
         handler = new Handler(Looper.getMainLooper());
     }
 
-    public NotificationCompat.Builder getBuilder(Context context, @NonNull Song song, @NonNull MediaSessionCompat.Token mediaSessionToken, @Nullable Bitmap bitmap, boolean isPlaying, boolean isFavorite) {
+    public NotificationCompat.Builder getBuilder(Context context, @NonNull Song song, @NonNull MediaSessionCompat.Token mediaSessionToken, @Nullable Bitmap bitmap, boolean isPlaying,
+            boolean isFavorite) {
 
         Intent intent = new Intent(BuildConfig.APPLICATION_ID + ".PLAYBACK_VIEWER");
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

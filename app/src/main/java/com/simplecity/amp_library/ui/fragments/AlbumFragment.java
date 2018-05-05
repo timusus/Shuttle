@@ -472,7 +472,12 @@ public class AlbumFragment extends BaseFragment implements
             playlistMenuDisposable = PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe();
 
             contextualToolbar.setOnMenuItemClickListener(
-                    AlbumMenuUtils.getAlbumMenuClickListener(getContext(), mediaManager, Single.defer(() -> Single.just(contextualToolbarHelper.getItems())), albumMenuFragmentHelper.getCallbacks()));
+                    AlbumMenuUtils.getAlbumMenuClickListener(
+                            getContext(),
+                            mediaManager,
+                            Single.defer(() -> Single.just(contextualToolbarHelper.getItems())),
+                            albumMenuFragmentHelper.getCallbacks())
+            );
 
             contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
 

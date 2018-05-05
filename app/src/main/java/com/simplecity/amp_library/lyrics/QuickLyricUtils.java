@@ -8,7 +8,6 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.TypefaceSpan;
-
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Song;
@@ -35,7 +34,7 @@ public class QuickLyricUtils {
 
     static void getLyricsFor(Context context, Song song) {
         Intent intent = new Intent("com.geecko.QuickLyric.getLyrics");
-        intent.putExtra("TAGS", new String[]{song.artistName, song.name});
+        intent.putExtra("TAGS", new String[] { song.artistName, song.name });
         if (intent.resolveActivity(ShuttleApplication.getInstance().getPackageManager()) != null) {
             context.startActivity(intent);
         }

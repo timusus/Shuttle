@@ -13,8 +13,6 @@ public class BreadcrumbItem extends AppCompatTextView {
 
     /**
      * Constructor of <code>BreadcrumbItem</code>
-     *
-     * @param context
      */
     public BreadcrumbItem(Context context) {
         super(context);
@@ -23,8 +21,7 @@ public class BreadcrumbItem extends AppCompatTextView {
     /**
      * Constructor of <code>BreadcrumbItem</code>
      *
-     * @param context
-     * @param attrs   The attributes of the XML tag that is inflating the view
+     * @param attrs The attributes of the XML tag that is inflating the view
      */
     public BreadcrumbItem(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -33,12 +30,12 @@ public class BreadcrumbItem extends AppCompatTextView {
     /**
      * Constructor of <code>BreadcrumbItem</code>
      *
-     * @param context  The current context
-     * @param attrs    The attributes of the XML tag that is inflating the view.
+     * @param context The current context
+     * @param attrs The attributes of the XML tag that is inflating the view.
      * @param defStyle The default style to apply to this view. If 0, no style
-     *                 will be applied (beyond what is included in the theme). This may
-     *                 either be an attribute resource, whose value will be retrieved
-     *                 from the current theme, or an explicit style resource.
+     * will be applied (beyond what is included in the theme). This may
+     * either be an attribute resource, whose value will be retrieved
+     * from the current theme, or an explicit style resource.
      */
     public BreadcrumbItem(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -61,5 +58,4 @@ public class BreadcrumbItem extends AppCompatTextView {
     protected void setItemPath(String itemPath) {
         this.mItemPath = itemPath;
     }
-
 }

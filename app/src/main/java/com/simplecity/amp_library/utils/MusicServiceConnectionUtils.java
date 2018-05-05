@@ -7,10 +7,8 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-
 import com.simplecity.amp_library.playback.LocalBinder;
 import com.simplecity.amp_library.playback.MusicService;
-
 import java.util.WeakHashMap;
 
 public class MusicServiceConnectionUtils {
@@ -24,7 +22,7 @@ public class MusicServiceConnectionUtils {
     }
 
     /**
-     * @param context  The {@link Context} to use
+     * @param context The {@link Context} to use
      * @param callback The {@link ServiceConnection} to use
      * @return The new instance of {@link ServiceToken}
      */

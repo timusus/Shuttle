@@ -1,7 +1,6 @@
 package com.simplecity.amp_library.model;
 
 import android.net.Uri;
-
 import java.util.Arrays;
 
 public class Query {

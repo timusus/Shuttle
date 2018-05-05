@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ui.appwidget.WidgetConfigureExtraLarge;
 import com.simplecity.amp_library.ui.appwidget.WidgetConfigureLarge;

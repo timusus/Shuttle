@@ -2,7 +2,6 @@ package com.simplecity.amp_library.glide.fetcher;
 
 import com.simplecity.amp_library.http.itunes.ItunesResult;
 import com.simplecity.amp_library.model.ArtworkProvider;
-
 import java.io.IOException;
 
 class ItunesFetcher extends BaseRemoteFetcher {

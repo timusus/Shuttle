@@ -3,20 +3,17 @@ package com.simplecity.amp_library.sql.sqlbrite;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
-
 import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.model.Query;
 import com.squareup.sqlbrite2.BriteContentResolver;
 import com.squareup.sqlbrite2.SqlBrite;
-
-import java.util.Collections;
-import java.util.List;
-
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import java.util.Collections;
+import java.util.List;
 
 public final class SqlBriteUtils {
 

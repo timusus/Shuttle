@@ -5,7 +5,6 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
-
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.billingclient.api.BillingClient;
 import com.simplecity.amp_library.R;

@@ -484,8 +484,12 @@ public class AlbumDetailFragment extends BaseFragment implements
             disposables.add(PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe());
 
             contextualToolbar.setOnMenuItemClickListener(
-                    SongMenuUtils.getSongMenuClickListener(getContext(), mediaManager, Single.defer(() -> Operators.reduceSongSingles(contextualToolbarHelper.getItems())),
-                            songMenuFragmentHelper.getSongMenuCallbacks()));
+                    SongMenuUtils.getSongMenuClickListener(
+                            getContext(),
+                            mediaManager,
+                            Single.defer(() -> Operators.reduceSongSingles(contextualToolbarHelper.getItems())),
+                            songMenuFragmentHelper.getSongMenuCallbacks())
+            );
 
             contextualToolbarHelper = new ContextualToolbarHelper<Single<List<Song>>>(contextualToolbar, new ContextualToolbarHelper.Callback() {
 

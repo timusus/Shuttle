@@ -8,10 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
-
 import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.sql.databases.CustomArtworkTable;
-
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -43,7 +41,7 @@ public class CustomArtworkContentProvider extends ContentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
-                        String[] selectionArgs, String sortOrder) {
+            String[] selectionArgs, String sortOrder) {
 
         // Using SQLiteQueryBuilder instead of query() method
         SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
@@ -176,5 +174,4 @@ public class CustomArtworkContentProvider extends ContentProvider {
             }
         }
     }
-
 }

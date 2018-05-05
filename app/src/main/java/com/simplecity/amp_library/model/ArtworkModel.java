@@ -2,7 +2,6 @@ package com.simplecity.amp_library.model;
 
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
-
 import java.io.File;
 
 public class ArtworkModel {
@@ -44,7 +43,6 @@ public class ArtworkModel {
 
         if (type != that.type) return false;
         return file != null ? file.equals(that.file) : that.file == null;
-
     }
 
     @Override

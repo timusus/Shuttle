@@ -1,11 +1,9 @@
 package com.simplecity.amp_library.glide.utils;
 
 import android.graphics.Bitmap;
-
 import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.util.Util;
-
 
 public class BitmapAndSizeResource implements Resource<BitmapAndSize> {
 
@@ -19,7 +17,7 @@ public class BitmapAndSizeResource implements Resource<BitmapAndSize> {
      * Returns a new {@link BitmapAndSizeResource} wrapping the given {@link Bitmap} if the Bitmap is non-null or null if the
      * given Bitmap is null.
      *
-     * @param bitmap     A Bitmap.
+     * @param bitmap A Bitmap.
      * @param bitmapPool A non-null {@link BitmapPool}.
      */
     public static BitmapAndSizeResource obtain(Bitmap bitmap, Size size, BitmapPool bitmapPool) {
