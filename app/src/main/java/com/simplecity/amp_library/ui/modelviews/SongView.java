@@ -20,8 +20,8 @@ import com.simplecity.amp_library.ui.views.NonScrollImageButton;
 import com.simplecity.amp_library.ui.views.PlayCountView;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.SettingsManager;
-import com.simplecity.amp_library.utils.sorting.SortManager;
 import com.simplecity.amp_library.utils.StringUtils;
+import com.simplecity.amp_library.utils.sorting.SortManager;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 import java.util.Arrays;
 import java.util.List;
@@ -83,6 +83,10 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder> imple
 
     public void showAlbumArt(boolean showAlbumArt) {
         this.showAlbumArt = showAlbumArt;
+    }
+
+    public boolean getShowAlbumArt() {
+        return showAlbumArt;
     }
 
     public void showPlayCount(boolean showPlayCount) {

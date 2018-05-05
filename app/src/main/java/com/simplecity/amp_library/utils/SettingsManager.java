@@ -60,6 +60,9 @@ public class SettingsManager extends BaseSettingsManager {
     // Whether the 'rate' snackbar has been seen during this session
     public boolean hasSeenRateSnackbar = false;
 
+    // Whether to display artwork in the songs list
+    //public static String KEY_SHOW_
+
     private SettingsManager() {
 
     }
@@ -313,6 +316,7 @@ public class SettingsManager extends BaseSettingsManager {
     private static final String KEY_DOWNLOAD_AUTOMATICALLY = "pref_download_artwork_auto";
     private static final String KEY_USE_GMAIL_PLACEHOLDERS = "pref_placeholders";
     private static final String KEY_QUEUE_ARTWORK = "pref_artwork_queue";
+    private static final String KEY_SONG_LIST_ARTWORK = "pref_artwork_song_list";
     private static final String KEY_CROP_ARTWORK = "pref_crop_artwork";
     public static final String KEY_IGNORE_MEDIASTORE_ART = "pref_ignore_mediastore_artwork";
     public static final String KEY_IGNORE_EMBEDDED_ARTWORK = "pref_ignore_embedded_artwork";
@@ -459,5 +463,17 @@ public class SettingsManager extends BaseSettingsManager {
 
     public void setNumWeeks(int weeks) {
         setInt(KEY_NUM_WEEKS, weeks);
+    }
+
+
+
+    // Song List
+
+    public boolean showArtworkInSongList() {
+        return getBool(KEY_SONG_LIST_ARTWORK, true);
+    }
+
+    public void setShowArtworkInSongList(boolean showArtworkInSongList){
+        setBool(KEY_SONG_LIST_ARTWORK, showArtworkInSongList);
     }
 }

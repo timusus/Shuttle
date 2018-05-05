@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import com.annimon.stream.Stream;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.ui.adapters.SectionedAdapter;
@@ -28,6 +30,7 @@ import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
+import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.menu.song.SongMenuFragmentHelper;
 import com.simplecity.amp_library.utils.menu.song.SongMenuUtils;
 import com.simplecity.amp_library.utils.sorting.SongSortHelper;
@@ -72,6 +75,8 @@ public class SongFragment extends BaseFragment implements
 
     private SongMenuFragmentHelper songMenuFragmentHelper = new SongMenuFragmentHelper(this, menuDisposables, null);
 
+    private RequestManager requestManager;
+
     public SongFragment() {
 
     }
@@ -94,6 +99,8 @@ public class SongFragment extends BaseFragment implements
 
         shuffleView = new ShuffleView();
         shuffleView.setClickListener(this);
+
+        requestManager = Glide.with(this);
     }
 
     @Override
@@ -125,6 +132,7 @@ public class SongFragment extends BaseFragment implements
                     if (getActivity() != null && isAdded()) {
 
                         boolean ascending = SortManager.getInstance().getSongsAscending();
+                        boolean showArtwork = SettingsManager.getInstance().showArtworkInSongList();
 
                         refreshDisposable = DataManager.getInstance().getSongsRelay()
                                 .skipWhile(songs -> !force && Stream.of(adapter.items).filter(viewModel -> viewModel instanceof SongView).count() == songs.size())
@@ -140,14 +148,17 @@ public class SongFragment extends BaseFragment implements
                                             .map(song -> {
                                                 // Look for an existing SongView wrapping the song, we'll reuse it if it exists.
                                                 SongView songView = (SongView) Stream.of(adapter.items)
-                                                        .filter(viewModel -> viewModel instanceof SongView && (((SongView) viewModel).song.equals(song)))
+                                                        .filter(viewModel -> viewModel instanceof SongView
+                                                                && (((SongView) viewModel).song.equals(song))
+                                                                && ((SongView) viewModel).getShowAlbumArt() == showArtwork)
                                                         .findFirst()
                                                         .orElse(null);
 
                                                 if (songView == null) {
-                                                    songView = new SongView(song, null);
+                                                    songView = new SongView(song, requestManager);
                                                     songView.setClickListener(this);
                                                 }
+                                                songView.showAlbumArt(showArtwork);
 
                                                 return (ViewModel) songView;
                                             })
@@ -203,6 +214,8 @@ public class SongFragment extends BaseFragment implements
         super.onPrepareOptionsMenu(menu);
 
         SongSortHelper.updateSongSortMenuItems(menu, SortManager.getInstance().getSongsSortOrder(), SortManager.getInstance().getSongsAscending());
+
+        menu.findItem(R.id.showArtwork).setChecked(SettingsManager.getInstance().showArtworkInSongList());
     }
 
     @Override
@@ -212,10 +225,18 @@ public class SongFragment extends BaseFragment implements
             SortManager.getInstance().setSongsSortOrder(songSortOder);
             refreshAdapterItems(true);
             getActivity().invalidateOptionsMenu();
+            return true;
         }
         Boolean songsAsc = SongSortHelper.handleSongDetailMenuSortOrderAscClicks(item);
         if (songsAsc != null) {
             SortManager.getInstance().setSongsAscending(songsAsc);
+            refreshAdapterItems(true);
+            getActivity().invalidateOptionsMenu();
+            return true;
+        }
+
+        if (item.getItemId() == R.id.showArtwork) {
+            SettingsManager.getInstance().setShowArtworkInSongList(!item.isChecked());
             refreshAdapterItems(true);
             getActivity().invalidateOptionsMenu();
         }
