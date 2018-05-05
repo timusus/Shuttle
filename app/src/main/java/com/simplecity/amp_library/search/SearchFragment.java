@@ -14,11 +14,14 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.SubMenu;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
@@ -37,7 +40,13 @@ import com.simplecity.amp_library.ui.detail.artist.ArtistDetailFragment;
 import com.simplecity.amp_library.ui.dialog.DeleteDialog;
 import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.ui.fragments.BaseFragment;
-import com.simplecity.amp_library.ui.modelviews.*;
+import com.simplecity.amp_library.ui.modelviews.AlbumArtistView;
+import com.simplecity.amp_library.ui.modelviews.AlbumView;
+import com.simplecity.amp_library.ui.modelviews.EmptyView;
+import com.simplecity.amp_library.ui.modelviews.LoadingView;
+import com.simplecity.amp_library.ui.modelviews.SearchHeaderView;
+import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
+import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.ui.views.ContextualToolbarHost;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
@@ -54,15 +63,18 @@ import com.simplecityapps.recycler_adapter.adapter.CompletionListUpdateCallbackA
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Single;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Single;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 public class SearchFragment extends BaseFragment implements
         com.simplecity.amp_library.search.SearchView,

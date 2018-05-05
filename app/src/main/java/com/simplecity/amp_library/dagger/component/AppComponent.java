@@ -1,10 +1,15 @@
 package com.simplecity.amp_library.dagger.component;
 
 
-import com.simplecity.amp_library.dagger.module.*;
-import dagger.Component;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
+import com.simplecity.amp_library.dagger.module.AppModule;
+import com.simplecity.amp_library.dagger.module.DrawerModule;
+import com.simplecity.amp_library.dagger.module.ModelsModule;
+import com.simplecity.amp_library.dagger.module.MultiSheetModule;
 
 import javax.inject.Singleton;
+
+import dagger.Component;
 
 @Singleton
 @Component(modules = {

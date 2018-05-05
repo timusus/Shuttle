@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.MenuItem;
+
 import com.simplecity.amp_library.model.InclExclItem;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
@@ -13,13 +14,14 @@ import com.simplecity.amp_library.rx.UnsafeConsumer;
 import com.simplecity.amp_library.sql.databases.InclExclHelper;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
+
+import java.util.Collections;
+import java.util.List;
+
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import kotlin.Unit;
-
-import java.util.Collections;
-import java.util.List;
 
 public class MenuUtils {
 
