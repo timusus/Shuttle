@@ -43,6 +43,7 @@ import com.simplecity.amp_library.utils.LegacyUtils;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.StringUtils;
+import com.simplecity.amp_library.utils.sorting.SortManager;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import io.fabric.sdk.android.Fabric;
@@ -108,6 +109,14 @@ public class ShuttleApplication extends Application {
             // Traceur.enableLogging();
 
             // enableStrictMode();
+        }
+
+        // Todo: Remove after 2.0.5-beta2
+        if (BuildConfig.VERSION_NAME.equals("2.0.5-beta2")) {
+            int genreDetailSongsSortOrder = SortManager.getInstance().getGenreDetailSongsSortOrder();
+            if (genreDetailSongsSortOrder == SortManager.SongSort.DEFAULT) {
+                SortManager.getInstance().setGenreDetailSongsSortOrder(SortManager.SongSort.DETAIL_DEFAULT);
+            }
         }
 
         appComponent = initDagger(this);

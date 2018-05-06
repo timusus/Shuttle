@@ -117,7 +117,7 @@ public class SortManager {
     }
 
     public int getGenreDetailSongsSortOrder() {
-        return mPrefs.getInt(Key.GENRE_DETAIL_SONGS, SongSort.DEFAULT);
+        return mPrefs.getInt(Key.GENRE_DETAIL_SONGS, SongSort.DETAIL_DEFAULT);
     }
 
     // Albums sort order
