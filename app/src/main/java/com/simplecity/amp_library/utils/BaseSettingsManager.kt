@@ -8,7 +8,7 @@ open class BaseSettingsManager {
     private val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ShuttleApplication.getInstance())
 
     @JvmOverloads
-    fun getString(key: String, defaultValue: String? = null): String {
+    fun getString(key: String, defaultValue: String? = null): String? {
         return sharedPreferences.getString(key, defaultValue)
     }
 

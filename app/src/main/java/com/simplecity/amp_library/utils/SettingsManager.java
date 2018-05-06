@@ -1,6 +1,7 @@
 package com.simplecity.amp_library.utils;
 
 import android.content.res.Resources;
+import android.support.annotation.Nullable;
 import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.CategoryItem;
@@ -175,6 +176,7 @@ public class SettingsManager extends BaseSettingsManager {
         setString(DOCUMENT_TREE_URI, documentTreeUri);
     }
 
+    @Nullable
     public String getDocumentTreeUri() {
         return getString(DOCUMENT_TREE_URI);
     }
