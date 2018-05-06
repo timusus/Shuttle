@@ -16,21 +16,20 @@ package com.jp.wasabeef.glide.transformations;
  * limitations under the License.
  */
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.support.annotation.NonNull;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.Transformation;
-import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.resource.bitmap.BitmapResource;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 
-public class RoundedCornersTransformation implements Transformation<Bitmap> {
+import java.security.MessageDigest;
+
+public class RoundedCornersTransformation extends BitmapTransformation {
 
     public enum CornerType {
         ALL,
@@ -40,28 +39,17 @@ public class RoundedCornersTransformation implements Transformation<Bitmap> {
         DIAGONAL_FROM_TOP_LEFT, DIAGONAL_FROM_TOP_RIGHT
     }
 
-    private BitmapPool mBitmapPool;
     private int mRadius;
     private int mDiameter;
     private int mMargin;
     private CornerType mCornerType;
 
-    public RoundedCornersTransformation(Context context, int radius, int margin) {
-        this(context, radius, margin, CornerType.ALL);
+    public RoundedCornersTransformation(int radius, int margin) {
+        this(radius, margin, CornerType.ALL);
     }
 
-    public RoundedCornersTransformation(BitmapPool pool, int radius, int margin) {
-        this(pool, radius, margin, CornerType.ALL);
-    }
-
-    public RoundedCornersTransformation(Context context, int radius, int margin,
+    public RoundedCornersTransformation(int radius, int margin,
                                         CornerType cornerType) {
-        this(Glide.get(context).getBitmapPool(), radius, margin, cornerType);
-    }
-
-    public RoundedCornersTransformation(BitmapPool pool, int radius, int margin,
-                                        CornerType cornerType) {
-        mBitmapPool = pool;
         mRadius = radius;
         mDiameter = mRadius * 2;
         mMargin = margin;
@@ -69,13 +57,11 @@ public class RoundedCornersTransformation implements Transformation<Bitmap> {
     }
 
     @Override
-    public Resource<Bitmap> transform(Resource<Bitmap> resource, int outWidth, int outHeight) {
-        Bitmap source = resource.get();
-
+    protected Bitmap transform(@NonNull BitmapPool pool, @NonNull Bitmap source, int outWidth, int outHeight) {
         int width = source.getWidth();
         int height = source.getHeight();
 
-        Bitmap bitmap = mBitmapPool.get(width, height, Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = pool.get(width, height, Bitmap.Config.ARGB_8888);
         if (bitmap == null) {
             bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         }
@@ -85,7 +71,13 @@ public class RoundedCornersTransformation implements Transformation<Bitmap> {
         paint.setAntiAlias(true);
         paint.setShader(new BitmapShader(source, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
         drawRoundRect(canvas, paint, width, height);
-        return BitmapResource.obtain(bitmap, mBitmapPool);
+        return bitmap;
+    }
+
+    @Override
+    public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
+        messageDigest.update(("RoundedTransformation(radius=" + mRadius + ", margin=" + mMargin + ", diameter="
+                + mDiameter + ", cornerType=" + mCornerType.name() + ")").getBytes());
     }
 
     private void drawRoundRect(Canvas canvas, Paint paint, float width, float height) {
@@ -247,11 +239,5 @@ public class RoundedCornersTransformation implements Transformation<Bitmap> {
                 mRadius, mRadius, paint);
         canvas.drawRect(new RectF(mMargin, mMargin, right - mRadius, bottom - mRadius), paint);
         canvas.drawRect(new RectF(mMargin + mRadius, mMargin + mRadius, right, bottom), paint);
-    }
-
-    @Override
-    public String getId() {
-        return "RoundedTransformation(radius=" + mRadius + ", margin=" + mMargin + ", diameter="
-                + mDiameter + ", cornerType=" + mCornerType.name() + ")";
     }
 }

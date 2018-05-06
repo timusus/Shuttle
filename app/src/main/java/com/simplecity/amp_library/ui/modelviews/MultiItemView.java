@@ -87,7 +87,7 @@ public abstract class MultiItemView<VH extends MultiItemView.ViewHolder, T> exte
         public void recycle() {
             super.recycle();
 
-            Glide.clear(imageOne);
+            Glide.with(itemView).clear(imageOne);
         }
     }
 

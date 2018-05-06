@@ -1,17 +1,19 @@
 package com.github.florent37.glidepalette;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
 
-import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
-public class GlidePalette<ModelType, TranscodeType> extends BitmapPalette implements RequestListener<ModelType, TranscodeType> {
+public class GlidePalette<ModelType, TranscodeType> extends BitmapPalette implements RequestListener<ModelType> {
 
-    protected RequestListener<ModelType, TranscodeType> callback;
+    protected RequestListener<ModelType> callback;
 
     protected GlidePalette() {
     }
@@ -37,10 +39,6 @@ public class GlidePalette<ModelType, TranscodeType> extends BitmapPalette implem
         return this;
     }
 
-    public GlidePalette<ModelType, TranscodeType> intoTextColor(TextView textView) {
-        return this.intoTextColor(textView, Swatch.TITLE_TEXT_COLOR);
-    }
-
     @Override
     public GlidePalette<ModelType, TranscodeType> intoTextColor(TextView textView, @Swatch int paletteSwatch) {
         super.intoTextColor(textView, paletteSwatch);
@@ -56,11 +54,6 @@ public class GlidePalette<ModelType, TranscodeType> extends BitmapPalette implem
     @Override
     public GlidePalette<ModelType, TranscodeType> crossfade(boolean crossfade, int crossfadeSpeed) {
         super.crossfade(crossfade, crossfadeSpeed);
-        return this;
-    }
-
-    public GlidePalette<ModelType, TranscodeType> setGlideListener(RequestListener<ModelType, TranscodeType> listener) {
-        this.callback = listener;
         return this;
     }
 
@@ -83,19 +76,19 @@ public class GlidePalette<ModelType, TranscodeType> extends BitmapPalette implem
     }
 
     @Override
-    public boolean onException(Exception e, ModelType model, Target<TranscodeType> target, boolean isFirstResource) {
-        return this.callback != null && this.callback.onException(e, model, target, isFirstResource);
+    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<ModelType> target, boolean isFirstResource) {
+        return this.callback != null && this.callback.onLoadFailed(e, model, target, isFirstResource);
     }
 
     @Override
-    public boolean onResourceReady(TranscodeType resource, ModelType model, Target<TranscodeType> target, boolean isFromMemoryCache, boolean isFirstResource) {
-        boolean callbackResult = this.callback != null && this.callback.onResourceReady(resource, model, target, isFromMemoryCache, isFirstResource);
+    public boolean onResourceReady(ModelType resource, Object model, Target<ModelType> target, DataSource dataSource, boolean isFirstResource) {
+        boolean callbackResult = this.callback != null && this.callback.onResourceReady(resource, model, target, dataSource, isFirstResource);
 
         Bitmap b = null;
         if (resource instanceof Bitmap) {
             b = (Bitmap) resource;
-        } else if (resource instanceof GlideBitmapDrawable) {
-            b = ((GlideBitmapDrawable) resource).getBitmap();
+        } else if (resource instanceof BitmapDrawable) {
+            b = ((BitmapDrawable) resource).getBitmap();
         } else if (target instanceof BitmapHolder) {
             b = ((BitmapHolder) target).getBitmap();
         }

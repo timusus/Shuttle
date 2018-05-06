@@ -17,8 +17,9 @@ import android.support.v4.media.session.MediaSessionCompat;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.glide.utils.GlideUtils;
@@ -114,37 +115,41 @@ public class MusicNotificationHelper extends NotificationHelper {
                     notify(notification);
                 });
 
-        handler.post(() -> Glide.with(context)
-                .load(song)
-                .asBitmap()
-                .priority(Priority.IMMEDIATE)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .override(600, 600)
-                .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.albumName, false))
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        MusicNotificationHelper.this.bitmap = resource;
-                        try {
-                            notification = getBuilder(context, song, mediaSessionToken, bitmap, isPlaying, isFavorite).build();
-                            MusicNotificationHelper.this.notify(notification);
-                        } catch (NullPointerException | ConcurrentModificationException e) {
-                            LogUtils.logException(TAG, "Exception while attempting to update notification with glide image.", e);
+        handler.post(() -> {
+            RequestOptions options = new RequestOptions()
+                    .priority(Priority.IMMEDIATE)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .override(600, 600)
+                    .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.albumName, false));
+            Glide.with(context)
+                    .asBitmap()
+                    .apply(options)
+                    .load(song)
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> glideAnimation) {
+                            MusicNotificationHelper.this.bitmap = resource;
+                            try {
+                                notification = getBuilder(context, song, mediaSessionToken, bitmap, isPlaying, isFavorite).build();
+                                MusicNotificationHelper.this.notify(notification);
+                            } catch (NullPointerException | ConcurrentModificationException e) {
+                                LogUtils.logException(TAG, "Exception while attempting to update notification with glide image.", e);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                        MusicNotificationHelper.this.bitmap = GlideUtils.drawableToBitmap(errorDrawable);
-                        super.onLoadFailed(e, errorDrawable);
-                        try {
-                            notification = getBuilder(context, song, mediaSessionToken, bitmap, isPlaying, isFavorite).build();
-                            MusicNotificationHelper.this.notify(NOTIFICATION_ID, notification);
-                        } catch (IllegalArgumentException error) {
-                            LogUtils.logException(TAG, "Exception while attempting to update notification with error image", error);
+                        @Override
+                        public void onLoadFailed(Drawable errorDrawable) {
+                            MusicNotificationHelper.this.bitmap = GlideUtils.drawableToBitmap(errorDrawable);
+                            super.onLoadFailed(errorDrawable);
+                            try {
+                                notification = getBuilder(context, song, mediaSessionToken, bitmap, isPlaying, isFavorite).build();
+                                MusicNotificationHelper.this.notify(NOTIFICATION_ID, notification);
+                            } catch (IllegalArgumentException error) {
+                                LogUtils.logException(TAG, "Exception while attempting to update notification with error image", error);
+                            }
                         }
-                    }
-                }));
+                    });
+        });
     }
 
     public void startForeground(Service service, @NonNull Song song, boolean isPlaying, @NonNull MediaSessionCompat.Token mediaSessionToken) {

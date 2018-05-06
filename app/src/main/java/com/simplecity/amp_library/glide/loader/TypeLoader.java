@@ -1,5 +1,9 @@
 package com.simplecity.amp_library.glide.loader;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import com.bumptech.glide.load.Options;
 import com.bumptech.glide.load.data.DataFetcher;
 import com.bumptech.glide.load.model.ModelLoader;
 import com.simplecity.amp_library.glide.fetcher.TypeFetcher;

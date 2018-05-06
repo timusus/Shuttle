@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.github.florent37.glidepalette.BitmapPalette;
 import com.github.florent37.glidepalette.GlidePalette;
 import com.simplecity.amp_library.R;
@@ -112,14 +113,16 @@ public class AlbumArtistView extends MultiItemView<AlbumArtistView.ViewHolder, A
             }
         }
 
+        RequestOptions options = new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(albumArtist.name, false));
         requestManager.load(albumArtist)
                 .listener(getViewType() == ViewType.ARTIST_PALETTE ? GlidePalette.with(albumArtist.getArtworkKey())
                         .use(BitmapPalette.Profile.MUTED_DARK)
                         .intoBackground(holder.bottomContainer)
                         .crossfade(true)
                         : null)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(albumArtist.name, false))
+                .apply(options)
                 .into(holder.imageOne);
 
         holder.overflowButton.setContentDescription(holder.itemView.getResources().getString(R.string.btn_options, albumArtist.name));

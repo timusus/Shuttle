@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.ui.fragments;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
@@ -12,10 +13,12 @@ import android.view.ViewTreeObserver;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import com.bumptech.glide.GenericRequestBuilder;
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.ListPreloader;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
@@ -118,7 +121,7 @@ public class QueuePagerFragment extends BaseFragment implements
         };
         snapHelper.attachToRecyclerView(recyclerView);
 
-        recyclerView.addOnScrollListener(new RecyclerViewPreloader<>(new ListPreloader.PreloadModelProvider<QueuePagerItemView>() {
+        recyclerView.addOnScrollListener(new RecyclerViewPreloader<>(Glide.with(recyclerView), new ListPreloader.PreloadModelProvider<QueuePagerItemView>() {
             @Override
             public List<QueuePagerItemView> getPreloadItems(int position) {
                 QueuePagerItemView queuePagerItemView = (QueuePagerItemView) viewModelAdapter.items.get(position);
@@ -126,11 +129,13 @@ public class QueuePagerFragment extends BaseFragment implements
             }
 
             @Override
-            public GenericRequestBuilder getPreloadRequestBuilder(QueuePagerItemView item) {
+            public RequestBuilder<Drawable> getPreloadRequestBuilder(QueuePagerItemView item) {
+                RequestOptions options = new RequestOptions()
+                        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                        .error(PlaceholderProvider.getInstance().getPlaceHolderDrawable(item.song.name, true));
                 return requestManager
                         .load(item.song)
-                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                        .error(PlaceholderProvider.getInstance().getPlaceHolderDrawable(item.song.name, true));
+                        .apply(options);
             }
         }, (item, adapterPosition, perItemPosition) -> imageSize, 3));
 

@@ -3,7 +3,10 @@ package com.simplecity.amp_library.glide.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.Options;
 import com.bumptech.glide.load.ResourceDecoder;
 import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
@@ -18,7 +21,7 @@ public class BitmapAndSizeDecoder implements ResourceDecoder<InputStream, Bitmap
     private BitmapPool pool;
 
     public BitmapAndSizeDecoder(Context context) {
-        this(context, new StreamBitmapDecoder(context));
+        this(context, new StreamBitmapDecoder(sampler, Glide.get(context).getArrayPool()));
     }
 
     public BitmapAndSizeDecoder(Context context, ResourceDecoder<InputStream, Bitmap> bitmapDecoder) {
@@ -27,7 +30,13 @@ public class BitmapAndSizeDecoder implements ResourceDecoder<InputStream, Bitmap
     }
 
     @Override
-    public Resource<BitmapAndSize> decode(InputStream source, int width, int height) throws IOException {
+    public boolean handles(@NonNull InputStream source, @NonNull Options options) throws IOException {
+        return true;
+    }
+
+    @Nullable
+    @Override
+    public Resource<BitmapAndSize> decode(@NonNull InputStream source, int width, int height, @NonNull Options options) throws IOException {
         if (!source.markSupported()) {
             source = new BufferedInputStream(source);
         }

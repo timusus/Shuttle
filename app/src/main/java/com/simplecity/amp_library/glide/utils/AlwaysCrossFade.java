@@ -2,12 +2,11 @@ package com.simplecity.amp_library.glide.utils;
 
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.DrawableCrossFadeFactory;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.animation.GlideAnimation.ViewAdapter;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.request.transition.DrawableCrossFadeFactory;
+import com.bumptech.glide.request.transition.Transition;
 
-public class AlwaysCrossFade extends DrawableCrossFadeFactory<GlideDrawable> {
+public class AlwaysCrossFade extends DrawableCrossFadeFactory {
     private final boolean transparentImagesPossible;
 
     /**
@@ -17,35 +16,35 @@ public class AlwaysCrossFade extends DrawableCrossFadeFactory<GlideDrawable> {
      * @see <a href="https://github.com/bumptech/glide/issues/943">#943</a>
      */
     public AlwaysCrossFade(boolean transparentImagesPossible) {
-        super(600);
+        super(600, true);
         this.transparentImagesPossible = transparentImagesPossible;
     }
 
     @Override
-    public GlideAnimation<GlideDrawable> build(boolean isFromMemoryCache, boolean isFirstResource) {
+    public Transition<Drawable> build(DataSource dataSource, boolean isFirstResource) {
         // passing isFirstResource instead of isFromMemoryCache achieves the result we want
-        GlideAnimation<GlideDrawable> animation = super.build(isFirstResource, isFirstResource);
+        Transition<Drawable> transition = super.build(dataSource, isFirstResource);
         if (!transparentImagesPossible) {
-            animation = new RealCrossFadeAnimation(animation);
+            transition = new RealCrossFadeAnimation(transition);
         }
-        return animation;
+        return transition;
     }
 
-    private static class RealCrossFadeAnimation implements GlideAnimation<GlideDrawable> {
-        private final GlideAnimation<GlideDrawable> animation;
+    private static class RealCrossFadeAnimation implements Transition<Drawable> {
+        private final Transition<Drawable> transition;
 
-        public RealCrossFadeAnimation(GlideAnimation<GlideDrawable> animation) {
-            this.animation = animation;
+        public RealCrossFadeAnimation(Transition<Drawable> animation) {
+            this.transition = animation;
         }
 
         @Override
-        public boolean animate(GlideDrawable current, final ViewAdapter adapter) {
-            return animation.animate(current, new CrossFadeDisablingViewAdapter(adapter));
+        public boolean transition(Drawable current, ViewAdapter adapter) {
+            return transition.transition(current, new CrossFadeDisablingViewAdapter(adapter));
         }
     }
 
     private static class CrossFadeDisablingViewAdapter extends WrappingViewAdapter {
-        public CrossFadeDisablingViewAdapter(ViewAdapter adapter) {
+        public CrossFadeDisablingViewAdapter(Transition.ViewAdapter adapter) {
             super(adapter);
         }
 

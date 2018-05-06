@@ -8,8 +8,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.cast.ApplicationMetadata;
 import com.google.android.gms.cast.MediaInfo;
 import com.google.android.gms.cast.MediaMetadata;
@@ -140,24 +141,25 @@ class ChromecastManager {
                 .setMetadata(metadata)
                 .build();
 
-        disposables.add(Completable.defer(() -> Completable.fromAction(() ->
-                Glide.with(context)
-                        .load(song)
-                        .asBitmap()
-                        .override(1024, 1024)
-                        .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.name, true))
-                        .into(new SimpleTarget<Bitmap>() {
-                            @Override
-                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                                loadRemoteMedia(song, selectedMedia, position, autoPlay, resource, null);
-                            }
+        disposables.add(Completable.defer(() -> Completable.fromAction(() -> {
+            RequestOptions options = new RequestOptions().override(1024, 1024).placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.name, true));
+            Glide.with(context)
+                    .asBitmap()
+                    .apply(options)
+                    .load(song)
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            loadRemoteMedia(song, selectedMedia, position, autoPlay, resource, null);
+                        }
 
-                            @Override
-                            public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                                super.onLoadFailed(e, errorDrawable);
-                                loadRemoteMedia(song, selectedMedia, position, autoPlay, null, errorDrawable);
-                            }
-                        })))
+                        @Override
+                        public void onLoadFailed(Drawable errorDrawable) {
+                            super.onLoadFailed(errorDrawable);
+                            loadRemoteMedia(song, selectedMedia, position, autoPlay, null, errorDrawable);
+                        }
+                    });
+        }))
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe());
     }

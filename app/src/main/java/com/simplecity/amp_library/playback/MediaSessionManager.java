@@ -12,8 +12,9 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.cantrowitz.rxbroadcast.RxBroadcast;
 import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.utils.LogUtils;
@@ -144,12 +145,12 @@ public class MediaSessionManager {
                     disposables.add(
                             Completable.defer(() -> Completable.fromAction(() ->
                                     Glide.with(context)
-                                            .load(queueManager.getCurrentSong().getAlbum())
                                             .asBitmap()
-                                            .override(1024, 1024)
+                                            .apply(new RequestOptions().override(1024, 1024))
+                                            .load(queueManager.getCurrentSong().getAlbum())
                                             .into(new SimpleTarget<Bitmap>() {
                                                 @Override
-                                                public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+                                                public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
                                                     if (bitmap != null) {
                                                         metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap);
                                                     }
@@ -162,8 +163,8 @@ public class MediaSessionManager {
                                                 }
 
                                                 @Override
-                                                public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                                                    super.onLoadFailed(e, errorDrawable);
+                                                public void onLoadFailed(Drawable errorDrawable) {
+                                                    super.onLoadFailed(errorDrawable);
                                                     mediaSession.setMetadata(metaData.build());
                                                 }
                                             })

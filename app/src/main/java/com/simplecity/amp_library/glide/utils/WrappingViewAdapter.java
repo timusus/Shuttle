@@ -3,7 +3,7 @@ package com.simplecity.amp_library.glide.utils;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.view.View;
-import com.bumptech.glide.request.animation.GlideAnimation.ViewAdapter;
+import com.bumptech.glide.request.transition.Transition.ViewAdapter;
 
 public class WrappingViewAdapter implements ViewAdapter {
     protected final ViewAdapter adapter;

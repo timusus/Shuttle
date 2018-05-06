@@ -1,5 +1,7 @@
 package com.simplecity.amp_library.glide.fetcher;
 
+import android.support.annotation.NonNull;
+
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.data.DataFetcher;
 import com.simplecity.amp_library.ShuttleApplication;
@@ -25,10 +27,11 @@ public class MultiFetcher implements DataFetcher<InputStream> {
         this.allowOfflineDownload = allowOfflineDownload;
     }
 
-    private InputStream loadData(DataFetcher<InputStream> dataFetcher, Priority priority) {
+
+    private InputStream loadData(DataFetcher<InputStream> dataFetcher, Priority priority, DataCallback<? super InputStream> callback) {
         InputStream inputStream;
         try {
-            inputStream = dataFetcher.loadData(priority);
+            inputStream = dataFetcher.loadData(priority, callback);
         } catch (Exception e) {
             if (dataFetcher != null) {
                 dataFetcher.cleanup();
@@ -39,7 +42,7 @@ public class MultiFetcher implements DataFetcher<InputStream> {
     }
 
     @Override
-    public InputStream loadData(Priority priority) throws Exception {
+    public void loadData(@NonNull Priority priority, @NonNull DataCallback<? super InputStream> callback) {
 
         InputStream inputStream = null;
 
@@ -63,7 +66,7 @@ public class MultiFetcher implements DataFetcher<InputStream> {
                     dataFetcher = new ItunesFetcher(artworkProvider);
                     break;
             }
-            inputStream = loadData(dataFetcher, priority);
+            inputStream = loadData(dataFetcher, priority, callback);
         }
 
         //No user selected artwork. Check local then remote sources, according to user's preferences.
@@ -115,7 +118,6 @@ public class MultiFetcher implements DataFetcher<InputStream> {
                 }
             }
         }
-        return inputStream;
     }
 
     @Override
@@ -140,7 +142,6 @@ public class MultiFetcher implements DataFetcher<InputStream> {
         return "";
     }
 
-    @Override
     public String getId() {
         return artworkProvider.getArtworkKey() + getCustomArtworkSuffix();
     }
