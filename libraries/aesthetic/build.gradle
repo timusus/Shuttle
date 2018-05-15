@@ -33,6 +33,7 @@ dependencies {
 
     implementation Dependencies.Google.appcompat
     implementation Dependencies.Google.cardView
+    implementation Dependencies.Google.chromecast
 
     implementation Dependencies.Google.design
     implementation Dependencies.Google.recyclerView

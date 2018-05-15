@@ -1,6 +1,7 @@
 package com.simplecity.amp_library.ui.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
@@ -82,7 +83,7 @@ public class QueuePagerFragment extends BaseFragment implements
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_queue_pager, container, false);
 
         unbinder = ButterKnife.bind(this, rootView);
@@ -109,7 +110,7 @@ public class QueuePagerFragment extends BaseFragment implements
                         }
                         return Observable.empty();
                     })
-                            .delaySubscription(150, TimeUnit.MILLISECONDS)
+                            .delaySubscription(200, TimeUnit.MILLISECONDS)
                             .subscribeOn(Schedulers.io())
                             .subscribe();
                 }

@@ -1,7 +1,6 @@
 package com.simplecity.amp_library.ui.drawer;
 
 import android.animation.ObjectAnimator;
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -128,12 +127,6 @@ public class DrawerParent implements Parent<DrawerChild> {
         }
     }
 
-    Drawable getDrawable(Context context) {
-        Drawable drawable = DrawableCompat.wrap(ContextCompat.getDrawable(context, iconResId));
-        DrawableCompat.setTint(drawable, isSelected ? Aesthetic.get(context).colorPrimary().blockingFirst() : Aesthetic.get(context).textColorPrimary().blockingFirst());
-        return drawable;
-    }
-
     public void bindView(ParentHolder holder) {
 
         holder.bind(this);
@@ -144,7 +137,7 @@ public class DrawerParent implements Parent<DrawerChild> {
 
         holder.expandableIcon.setVisibility(getChildList().isEmpty() ? View.GONE : View.VISIBLE);
 
-        holder.icon.setImageDrawable(getDrawable(holder.itemView.getContext()));
+        holder.icon.setImageResource(iconResId);
         if (iconResId != -1) {
             holder.icon.setVisibility(View.VISIBLE);
         } else {
