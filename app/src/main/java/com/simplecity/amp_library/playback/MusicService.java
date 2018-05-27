@@ -851,11 +851,12 @@ public class MusicService extends Service {
                 break;
         }
 
-        if (queueManager.getCurrentSong() != null) {
-            Intent intent = new Intent(action);
-            intent.putExtras(getExtras(queueManager.getCurrentSong()));
-            sendBroadcast(intent);
+        Intent intent = new Intent(action);
+        Song currentSong = queueManager.getCurrentSong();
+        if (currentSong != null) {
+            intent.putExtras(getExtras(currentSong));
         }
+        sendBroadcast(intent);
 
         widgetManager.notifyChange(this, action);
 

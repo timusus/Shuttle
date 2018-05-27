@@ -56,7 +56,6 @@ public class MusicUtils implements MediaManager {
 
     @NonNull
     public Disposable shuffleAll(@NonNull Single<List<Song>> songsSingle, @NotNull Function1<? super String, Unit> onEmpty) {
-        setShuffleMode(QueueManager.ShuffleMode.ON);
         return songsSingle
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -68,6 +67,7 @@ public class MusicUtils implements MediaManager {
      * {@inheritDoc}
      */
     public void shuffleAll(@NotNull List<Song> songs, @NotNull Function1<? super String, Unit> onEmpty) {
+        setShuffleMode(QueueManager.ShuffleMode.ON);
         if (!songs.isEmpty()) {
             playAll(songs, new Random().nextInt(songs.size()), false, onEmpty);
         }
