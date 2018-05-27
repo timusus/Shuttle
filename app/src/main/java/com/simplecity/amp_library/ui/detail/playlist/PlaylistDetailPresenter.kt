@@ -66,17 +66,17 @@ class PlaylistDetailPresenter constructor(private val mediaManager: MediaManager
     }
 
     private fun startSlideShow() {
-        val a: Observable<List<Album>> = playlist.songsObservable
+        val albumsObservable: Observable<List<Album>> = playlist.songsObservable
             .map { songs -> Operators.songsToAlbums(songs) }
 
-        val b: Observable<Long> = io.reactivex.Observable.interval(8, TimeUnit.SECONDS)
+        val timer: Observable<Long> = io.reactivex.Observable.interval(8, TimeUnit.SECONDS)
             // Load an image straight away
             .startWith(0L)
             // If we have a 'current slideshowAlbum' then we're coming back from onResume. Don't load a new one immediately.
             .delay(if (currentSlideShowAlbum == null) 0L else 8L, TimeUnit.SECONDS)
 
         addDisposable(Observable
-            .combineLatest(a, b, BiFunction { albums: List<Album>, _: Long -> albums })
+            .combineLatest(albumsObservable, timer, BiFunction { albums: List<Album>, _: Long -> albums })
             .map { albums ->
                 if (albums.isEmpty()) {
                     currentSlideShowAlbum
@@ -86,15 +86,15 @@ class PlaylistDetailPresenter constructor(private val mediaManager: MediaManager
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnError { error ->
-                LogUtils.logException(TAG, "startSlideShow threw error", error)
-            }
-            .subscribe { newAlbum ->
+            .subscribe({ newAlbum ->
                 newAlbum?.let {
                     view?.fadeInSlideShowAlbum(currentSlideShowAlbum, newAlbum)
                     currentSlideShowAlbum = newAlbum
                 }
+            }, { error ->
+                LogUtils.logException(TAG, "startSlideShow threw error", error)
             })
+        )
     }
 
     fun closeContextualToolbar() {
@@ -136,6 +136,6 @@ class PlaylistDetailPresenter constructor(private val mediaManager: MediaManager
     }
 
     companion object {
-        const val TAG = "PlaylistDetailFragment"
+        const val TAG = "PlaylistDetailPresenter"
     }
 }

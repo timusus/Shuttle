@@ -9,7 +9,6 @@ import com.simplecity.amp_library.model.Playlist
 import com.simplecity.amp_library.model.Song
 import com.simplecity.amp_library.playback.MediaManager
 import com.simplecity.amp_library.rx.UnsafeAction
-import com.simplecity.amp_library.ui.detail.playlist.PlaylistDetailPresenter
 import com.simplecity.amp_library.ui.presenters.Presenter
 import com.simplecity.amp_library.utils.LogUtils
 import com.simplecity.amp_library.utils.Operators
@@ -79,17 +78,17 @@ class GenreDetailPresenter constructor(private val mediaManager: MediaManager, p
     }
 
     private fun startSlideShow() {
-        val a: Observable<List<Album>> = genre.songsObservable.toObservable()
+        val albumsObservable: Observable<List<Album>> = genre.songsObservable.toObservable()
             .map { songs -> Operators.songsToAlbums(songs) }
 
-        val b: Observable<Long> = io.reactivex.Observable.interval(8, TimeUnit.SECONDS)
+        val timer: Observable<Long> = io.reactivex.Observable.interval(8, TimeUnit.SECONDS)
             // Load an image straight away
             .startWith(0L)
             // If we have a 'current slideshowAlbum' then we're coming back from onResume. Don't load a new one immediately.
             .delay(if (currentSlideShowAlbum == null) 0L else 8L, TimeUnit.SECONDS)
 
         addDisposable(Observable
-            .combineLatest(a, b, BiFunction { albums: List<Album>, aLong: Long -> albums })
+            .combineLatest(albumsObservable, timer, BiFunction { albums: List<Album>, aLong: Long -> albums })
             .map { albums ->
                 if (albums.isEmpty()) {
                     currentSlideShowAlbum
@@ -99,15 +98,15 @@ class GenreDetailPresenter constructor(private val mediaManager: MediaManager, p
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnError { error ->
-                LogUtils.logException(PlaylistDetailPresenter.TAG, "startSlideShow threw error", error)
-            }
-            .subscribe { newAlbum ->
+            .subscribe({ newAlbum ->
                 newAlbum?.let {
                     view?.fadeInSlideShowAlbum(currentSlideShowAlbum, newAlbum)
                     currentSlideShowAlbum = newAlbum
                 }
+            }, { error ->
+                LogUtils.logException(TAG, "startSlideShow threw error", error)
             })
+        )
     }
 
     fun closeContextualToolbar() {
@@ -151,5 +150,9 @@ class GenreDetailPresenter constructor(private val mediaManager: MediaManager, p
         mediaManager.playAll(songs, songs.indexOf(song), true) { message ->
             view?.showToast(message)
         }
+    }
+
+    companion object {
+        const val TAG = "GenreDetailPresenter"
     }
 }
