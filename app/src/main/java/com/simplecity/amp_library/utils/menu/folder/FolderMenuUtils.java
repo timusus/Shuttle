@@ -23,7 +23,6 @@ import com.simplecity.amp_library.utils.CustomMediaScanner;
 import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.FileHelper;
 import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.menu.MenuUtils;
 import io.reactivex.Single;
@@ -204,6 +203,7 @@ public class FolderMenuUtils {
                     return true;
                 case R.id.whitelist:
                     MenuUtils.whitelist(getSongsForFolderObject(folderObject));
+                    return true;
                 case R.id.blacklist:
                     MenuUtils.blacklist(getSongsForFolderObject(folderObject));
                     return true;
@@ -257,6 +257,7 @@ public class FolderMenuUtils {
                     return true;
                 case R.id.blacklist:
                     getSongForFile(fileObject).subscribe(MenuUtils::blacklist, errorHandler);
+                    return true;
                 case R.id.whitelist:
                     getSongForFile(fileObject).subscribe(MenuUtils::whitelist, errorHandler);
                     return true;
