@@ -3,7 +3,6 @@ package com.simplecity.amp_library.utils;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.AsyncPlayer;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
@@ -17,6 +16,7 @@ import android.support.v4.content.WakefulBroadcastReceiver;
 import android.view.KeyEvent;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.playback.PlaybackSettingsManager;
 import com.simplecity.amp_library.playback.constants.MediaButtonCommand;
 import com.simplecity.amp_library.playback.constants.ServiceCommand;
 import com.simplecity.amp_library.ui.activities.MainActivity;
@@ -67,11 +67,10 @@ public class MediaButtonIntentReceiver extends WakefulBroadcastReceiver {
 
     public static class MediaButtonReceiverHelper {
         public static void onReceive(Context context, Intent intent) {
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
             final String intentAction = intent.getAction();
 
-            if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intentAction) && preferences.getBoolean("pref_headset_disconnect", true)) {
+            if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intentAction) && PlaybackSettingsManager.INSTANCE.getPauseOnHeadsetDisconnect()) {
                 startService(context, MediaButtonCommand.PAUSE);
             } else if (Intent.ACTION_MEDIA_BUTTON.equals(intentAction)) {
                 final KeyEvent event = intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);

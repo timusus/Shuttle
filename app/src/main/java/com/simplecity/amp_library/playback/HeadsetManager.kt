@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.media.AudioManager
 
 class HeadsetManager(private val playbackManager: PlaybackManager) {
 
@@ -14,7 +15,7 @@ class HeadsetManager(private val playbackManager: PlaybackManager) {
     fun registerHeadsetPlugReceiver(context: Context) {
 
         val filter = IntentFilter()
-        filter.addAction(Intent.ACTION_HEADSET_PLUG)
+        filter.addAction(AudioManager.ACTION_HEADSET_PLUG)
 
         headsetReceiver = object : BroadcastReceiver() {
 
