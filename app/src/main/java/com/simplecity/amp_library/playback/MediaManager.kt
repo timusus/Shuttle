@@ -6,6 +6,7 @@ import com.simplecity.amp_library.model.AlbumArtist
 import com.simplecity.amp_library.model.Genre
 import com.simplecity.amp_library.model.Song
 import io.reactivex.Single
+import io.reactivex.disposables.Disposable
 
 interface MediaManager {
 
@@ -18,7 +19,7 @@ interface MediaManager {
     /**
      * Sends a list of songs to the MusicService for playback
      */
-    fun playAll(songsSingle: Single<MutableList<Song>>, onEmpty: (String) -> Unit)
+    fun playAll(songsSingle: Single<MutableList<Song>>, onEmpty: (String) -> Unit) : Disposable
 
     /**
      * Sends a list of songs to the MusicService for playback
@@ -28,7 +29,7 @@ interface MediaManager {
     /**
      * Shuffles all songs in the given song list
      */
-    fun shuffleAll(songsSingle: Single<List<Song>>, onEmpty: (String) -> Unit)
+    fun shuffleAll(songsSingle: Single<List<Song>>, onEmpty: (String) -> Unit): Disposable
 
     /**
      * Shuffles all songs in the given list
@@ -132,7 +133,7 @@ interface MediaManager {
 
     fun addToQueue(songs: MutableList<Song>, onAdded: (String) -> Unit)
 
-    fun playNext(songsSingle: Single<List<Song>>, onAdded: (String) -> Unit)
+    fun playNext(songsSingle: Single<List<Song>>, onAdded: (String) -> Unit): Disposable?
 
     fun playNext(songs: MutableList<Song>, onAdded: (String) -> Unit)
 

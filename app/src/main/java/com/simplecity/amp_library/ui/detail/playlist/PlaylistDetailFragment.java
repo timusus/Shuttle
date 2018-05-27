@@ -62,7 +62,6 @@ import com.simplecity.amp_library.utils.ResourceUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.StringUtils;
 import com.simplecity.amp_library.utils.TypefaceManager;
-import com.simplecity.amp_library.utils.menu.album.AlbumMenuFragmentHelper;
 import com.simplecity.amp_library.utils.menu.playlist.PlaylistMenuFragmentHelper;
 import com.simplecity.amp_library.utils.menu.playlist.PlaylistMenuUtils;
 import com.simplecity.amp_library.utils.menu.song.SongMenuFragmentHelper;
@@ -107,8 +106,6 @@ public class PlaylistDetailFragment extends BaseFragment implements
     protected CompositeDisposable disposables = new CompositeDisposable();
 
     private PlaylistMenuFragmentHelper playlistMenuFragmentHelper;
-
-    private AlbumMenuFragmentHelper albumMenuFragmentHelper = new AlbumMenuFragmentHelper(this, disposables);
 
     private SongMenuFragmentHelper songMenuFragmentHelper;
 
@@ -431,7 +428,7 @@ public class PlaylistDetailFragment extends BaseFragment implements
     }
 
     @Override
-    public void setData(List<Song> data) {
+    public void setData(@NonNull List<Song> data) {
         if (setItemsDisposable != null) {
             setItemsDisposable.dispose();
         }

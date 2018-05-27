@@ -13,6 +13,7 @@ import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.playback.QueueManager;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -24,8 +25,9 @@ public class MusicUtils implements MediaManager {
 
     private static final String TAG = "MusicUtils";
 
-    public void playAll(@NonNull Single<List<Song>> songsSingle, @NotNull Function1<? super String, Unit> onEmpty) {
-        songsSingle
+    @NonNull
+    public Disposable playAll(@NonNull Single<List<Song>> songsSingle, @NotNull Function1<? super String, Unit> onEmpty) {
+        return songsSingle
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(songs -> playAll(songs, 0, true, onEmpty));
     }
@@ -52,9 +54,10 @@ public class MusicUtils implements MediaManager {
         MusicServiceConnectionUtils.serviceBinder.getService().play();
     }
 
-    public void shuffleAll(@NonNull Single<List<Song>> songsSingle, @NotNull Function1<? super String, Unit> onEmpty) {
+    @NonNull
+    public Disposable shuffleAll(@NonNull Single<List<Song>> songsSingle, @NotNull Function1<? super String, Unit> onEmpty) {
         setShuffleMode(QueueManager.ShuffleMode.ON);
-        songsSingle
+        return songsSingle
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         songs -> shuffleAll(songs, onEmpty),
@@ -291,11 +294,12 @@ public class MusicUtils implements MediaManager {
         onAdded.invoke(ShuttleApplication.getInstance().getResources().getQuantityString(R.plurals.NNNtrackstoqueue, songs.size(), songs.size()));
     }
 
-    public void playNext(@NonNull Single<List<Song>> songsSingle, @NotNull Function1<? super String, Unit> onAdded) {
+    @Nullable
+    public Disposable playNext(@NonNull Single<List<Song>> songsSingle, @NotNull Function1<? super String, Unit> onAdded) {
         if (MusicServiceConnectionUtils.serviceBinder.getService() == null) {
-            return;
+            return null;
         }
-        songsSingle
+        return songsSingle
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(songs -> playNext(songs, onAdded));
     }
