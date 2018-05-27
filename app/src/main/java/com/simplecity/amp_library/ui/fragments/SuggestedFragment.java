@@ -339,7 +339,7 @@ public class SuggestedFragment extends BaseFragment implements
                 .getSongsObservable()
                 .flatMap(songs -> Observable.just(Operators.songsToAlbums(songs)))
                 .flatMapSingle(source -> Observable.fromIterable(source)
-                        .sorted((a, b) -> ComparisonUtils.compareLong(b.songPlayCount, a.songPlayCount))
+                        .sorted((a, b) -> ComparisonUtils.compareLong(b.dateAdded, a.dateAdded))
                         .take(20)
                         .toList())
                 .map(albums -> {
