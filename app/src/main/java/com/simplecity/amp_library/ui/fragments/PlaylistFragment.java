@@ -163,7 +163,7 @@ public class PlaylistFragment extends BaseFragment {
                                 public void onPlaylistOverflowClick(int position, View view, Playlist playlist) {
                                     PopupMenu menu = new PopupMenu(getContext(), view);
                                     PlaylistMenuUtils.setupPlaylistMenu(menu, playlist);
-                                    menu.setOnMenuItemClickListener(PlaylistMenuUtils.getPlaylistPopupMenuClickListener(playlist, playlistMenuFragmentHelper.getCallbacks()));
+                                    menu.setOnMenuItemClickListener(PlaylistMenuUtils.getPlaylistPopupMenuClickListener(mediaManager, playlist, playlistMenuFragmentHelper.getCallbacks()));
                                     menu.show();
                                 }
                             };

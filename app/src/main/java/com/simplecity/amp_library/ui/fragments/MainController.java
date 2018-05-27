@@ -18,10 +18,13 @@ import butterknife.ButterKnife;
 import com.cantrowitz.rxbroadcast.RxBroadcast;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
+import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Playlist;
+import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.ui.detail.album.AlbumDetailFragment;
@@ -33,12 +36,12 @@ import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
 import com.simplecity.amp_library.ui.drawer.DrawerProvider;
 import com.simplecity.amp_library.ui.drawer.MiniPlayerLockManager;
 import com.simplecity.amp_library.ui.drawer.NavigationEventRelay;
+import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.ui.settings.SettingsParentFragment;
 import com.simplecity.amp_library.ui.views.UpNextView;
 import com.simplecity.amp_library.ui.views.multisheet.CustomMultiSheetView;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
 import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.SleepTimer;
 import com.simplecity.multisheetview.ui.view.MultiSheetView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -61,6 +64,12 @@ public class MainController extends BaseNavigationController implements BackPres
 
     @Inject
     MultiSheetEventRelay multiSheetEventRelay;
+
+    @Inject
+    MediaManager mediaManager;
+
+    @Inject
+    PlayerPresenter playerPresenter;
 
     private Handler delayHandler;
 
@@ -88,7 +97,10 @@ public class MainController extends BaseNavigationController implements BackPres
 
         ButterKnife.bind(this, rootView);
 
-        ShuttleApplication.getInstance().getAppComponent().inject(this);
+        ShuttleApplication.getInstance().getAppComponent()
+                .plus(new ActivityModule(getActivity()))
+                .plus(new FragmentModule(this))
+                .inject(this);
 
         if (savedInstanceState == null) {
             getChildFragmentManager()
@@ -101,7 +113,7 @@ public class MainController extends BaseNavigationController implements BackPres
             multiSheetView.restoreSheet(savedInstanceState.getInt(STATE_CURRENT_SHEET));
         }
 
-        ((ViewGroup) multiSheetView.findViewById(multiSheetView.getSheetPeekViewResId(MultiSheetView.Sheet.SECOND))).addView(new UpNextView(getContext()));
+        ((ViewGroup) multiSheetView.findViewById(multiSheetView.getSheetPeekViewResId(MultiSheetView.Sheet.SECOND))).addView(UpNextView.newInstance(getContext(), playerPresenter));
 
         toggleBottomSheetVisibility(false, false);
 
@@ -210,7 +222,7 @@ public class MainController extends BaseNavigationController implements BackPres
      * Hide/show the bottom sheet, depending on whether the queue is empty.
      */
     private void toggleBottomSheetVisibility(boolean collapse, boolean animate) {
-        if (MusicUtils.getQueue().isEmpty()) {
+        if (mediaManager.getQueue().isEmpty()) {
             multiSheetView.hide(collapse, false);
         } else if (MiniPlayerLockManager.getInstance().canShowMiniPlayer()) {
             multiSheetView.unhide(animate);

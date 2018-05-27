@@ -1,17 +1,16 @@
 package com.simplecity.amp_library.utils.menu.playlist
 
-import android.support.v4.app.Fragment
 import android.widget.Toast
 import com.simplecity.amp_library.R
 import com.simplecity.amp_library.model.Playlist
 import com.simplecity.amp_library.model.Song
 import com.simplecity.amp_library.rx.UnsafeAction
+import com.simplecity.amp_library.ui.fragments.BaseFragment
 import com.simplecity.amp_library.utils.DialogUtils
-import com.simplecity.amp_library.utils.MusicUtils
 import com.simplecity.amp_library.utils.PlaylistUtils
 import io.reactivex.disposables.CompositeDisposable
 
-class PlaylistMenuFragmentHelper(val fragment: Fragment, val disposables: CompositeDisposable, callbacks: PlaylistMenuUtils.Callbacks? = null) {
+class PlaylistMenuFragmentHelper(val fragment: BaseFragment, val disposables: CompositeDisposable, callbacks: PlaylistMenuUtils.Callbacks? = null) {
 
     val callbacks: PlaylistMenuUtils.Callbacks = object : PlaylistMenuUtils.Callbacks {
         override fun showToast(message: String) {
@@ -40,7 +39,7 @@ class PlaylistMenuFragmentHelper(val fragment: Fragment, val disposables: Compos
         }
 
         override fun playNext(playlist: Playlist) {
-            MusicUtils.playNext(playlist.songsObservable.first(emptyList<Song>())) { message -> Toast.makeText(fragment.context, message, Toast.LENGTH_LONG).show() }
+            fragment.mediaManager.playNext(playlist.songsObservable.first(emptyList<Song>())) { message -> Toast.makeText(fragment.context, message, Toast.LENGTH_LONG).show() }
             callbacks?.playNext(playlist)
         }
 

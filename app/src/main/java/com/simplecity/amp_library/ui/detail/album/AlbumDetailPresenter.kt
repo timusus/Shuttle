@@ -5,16 +5,16 @@ import android.view.MenuItem
 import com.simplecity.amp_library.model.Album
 import com.simplecity.amp_library.model.Playlist
 import com.simplecity.amp_library.model.Song
+import com.simplecity.amp_library.playback.MediaManager
 import com.simplecity.amp_library.rx.UnsafeAction
 import com.simplecity.amp_library.ui.presenters.Presenter
-import com.simplecity.amp_library.utils.MusicUtils
 import com.simplecity.amp_library.utils.PermissionUtils
 import com.simplecity.amp_library.utils.PlaylistUtils
 import com.simplecity.amp_library.utils.ShuttleUtils
 import com.simplecity.amp_library.utils.sorting.SortManager
 import io.reactivex.android.schedulers.AndroidSchedulers
 
-class AlbumDetailPresenter constructor(private val album: Album) : Presenter<AlbumDetailView>() {
+class AlbumDetailPresenter constructor(private val mediaManager: MediaManager, private val album: Album) : Presenter<AlbumDetailView>() {
 
     private var songs: MutableList<Song> = mutableListOf()
 
@@ -48,25 +48,25 @@ class AlbumDetailPresenter constructor(private val album: Album) : Presenter<Alb
     }
 
     fun fabClicked() {
-        MusicUtils.shuffleAll(songs) { message ->
+        mediaManager.shuffleAll(songs) { message ->
             view?.showToast(message)
         }
     }
 
     fun playAll() {
-        MusicUtils.playAll(songs, 0, true) { message ->
+        mediaManager.playAll(songs, 0, true) { message ->
             view?.showToast(message)
         }
     }
 
     fun playNext() {
-        MusicUtils.playNext(songs) { message ->
+        mediaManager.playNext(songs) { message ->
             view?.showToast(message)
         }
     }
 
     fun addToQueue() {
-        MusicUtils.addToQueue(songs) { message ->
+        mediaManager.addToQueue(songs) { message ->
             view?.showToast(message)
         }
     }
@@ -97,8 +97,6 @@ class AlbumDetailPresenter constructor(private val album: Album) : Presenter<Alb
     }
 
     fun songClicked(song: Song) {
-        MusicUtils.playAll(songs, songs.indexOf(song), true) { message ->
-            view?.showToast(message)
-        }
+        mediaManager.playAll(songs, songs.indexOf(song), true) { view?.showToast(it) }
     }
 }

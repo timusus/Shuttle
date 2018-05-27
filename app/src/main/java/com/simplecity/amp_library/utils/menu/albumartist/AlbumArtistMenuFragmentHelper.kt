@@ -1,6 +1,5 @@
 package com.simplecity.amp_library.utils.menu.albumartist
 
-import android.support.v4.app.Fragment
 import android.widget.Toast
 import com.simplecity.amp_library.model.AlbumArtist
 import com.simplecity.amp_library.model.Song
@@ -8,12 +7,12 @@ import com.simplecity.amp_library.tagger.TaggerDialog
 import com.simplecity.amp_library.ui.dialog.BiographyDialog
 import com.simplecity.amp_library.ui.dialog.DeleteDialog
 import com.simplecity.amp_library.ui.dialog.UpgradeDialog
+import com.simplecity.amp_library.ui.fragments.BaseFragment
 import com.simplecity.amp_library.utils.ArtworkDialog
-import com.simplecity.amp_library.utils.MusicUtils
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 
-class AlbumArtistMenuFragmentHelper(val fragment: Fragment, val disposables: CompositeDisposable) {
+class AlbumArtistMenuFragmentHelper(val fragment: BaseFragment, val disposables: CompositeDisposable) {
 
     val callbacks: AlbumArtistMenuUtils.Callbacks = object : AlbumArtistMenuUtils.Callbacks {
 
@@ -26,7 +25,7 @@ class AlbumArtistMenuFragmentHelper(val fragment: Fragment, val disposables: Com
         }
 
         override fun playNext(songsSingle: Single<List<Song>>) {
-            MusicUtils.playNext(songsSingle) { message -> Toast.makeText(fragment.context, message, Toast.LENGTH_LONG).show() }
+            fragment.mediaManager.playNext(songsSingle) { message -> Toast.makeText(fragment.context, message, Toast.LENGTH_LONG).show() }
         }
 
         override fun showTagEditor(albumArtist: AlbumArtist) {
@@ -42,8 +41,8 @@ class AlbumArtistMenuFragmentHelper(val fragment: Fragment, val disposables: Com
         }
 
         override fun showDeleteDialog(albumArtists: Single<MutableList<AlbumArtist>>) {
-            disposables.add(albumArtists.subscribe { albumArtists ->
-                DeleteDialog.newInstance(DeleteDialog.ListArtistsRef { albumArtists })
+            disposables.add(albumArtists.subscribe { albumArtistsList ->
+                DeleteDialog.newInstance(DeleteDialog.ListArtistsRef { albumArtistsList })
             })
         }
 

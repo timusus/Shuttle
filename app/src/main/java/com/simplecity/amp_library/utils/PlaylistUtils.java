@@ -42,6 +42,7 @@ import com.simplecity.amp_library.model.BaseFileObject;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Query;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.rx.UnsafeConsumer;
 import com.simplecity.amp_library.sql.SqlUtils;
@@ -230,11 +231,11 @@ public class PlaylistUtils {
                 .take(autoUpdate ? Long.MAX_VALUE : 1)
                 .doOnNext(playlists -> {
                     subMenu.clear();
-                    subMenu.add(0, MusicUtils.Defs.NEW_PLAYLIST, 0, R.string.new_playlist);
+                    subMenu.add(0, MediaManager.NEW_PLAYLIST, 0, R.string.new_playlist);
                     for (Playlist playlist : playlists) {
                         final Intent intent = new Intent();
                         intent.putExtra(ARG_PLAYLIST, playlist);
-                        subMenu.add(0, MusicUtils.Defs.PLAYLIST_SELECTED, 0, playlist.name).setIntent(intent);
+                        subMenu.add(0, MediaManager.PLAYLIST_SELECTED, 0, playlist.name).setIntent(intent);
                     }
                 })
                 .ignoreElements()

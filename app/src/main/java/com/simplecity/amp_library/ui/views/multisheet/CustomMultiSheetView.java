@@ -10,6 +10,7 @@ import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetSlideEventRelay.SlideEvent;
 import com.simplecity.multisheetview.ui.view.MultiSheetView;
 import io.reactivex.disposables.CompositeDisposable;
+
 import javax.inject.Inject;
 
 /**

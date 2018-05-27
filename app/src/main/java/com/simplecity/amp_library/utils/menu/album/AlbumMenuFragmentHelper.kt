@@ -1,6 +1,5 @@
 package com.simplecity.amp_library.utils.menu.album
 
-import android.support.v4.app.Fragment
 import android.widget.Toast
 import com.simplecity.amp_library.model.Album
 import com.simplecity.amp_library.model.Song
@@ -8,12 +7,12 @@ import com.simplecity.amp_library.tagger.TaggerDialog
 import com.simplecity.amp_library.ui.dialog.BiographyDialog
 import com.simplecity.amp_library.ui.dialog.DeleteDialog
 import com.simplecity.amp_library.ui.dialog.UpgradeDialog
+import com.simplecity.amp_library.ui.fragments.BaseFragment
 import com.simplecity.amp_library.utils.ArtworkDialog
-import com.simplecity.amp_library.utils.MusicUtils
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 
-class AlbumMenuFragmentHelper(val fragment: Fragment, val disposables: CompositeDisposable) {
+class AlbumMenuFragmentHelper(val fragment: BaseFragment, val disposables: CompositeDisposable) {
 
     val callbacks: AlbumMenuUtils.Callbacks = object : AlbumMenuUtils.Callbacks {
 
@@ -26,7 +25,7 @@ class AlbumMenuFragmentHelper(val fragment: Fragment, val disposables: Composite
         }
 
         override fun playNext(songsSingle: Single<List<Song>>) {
-            MusicUtils.playNext(songsSingle) { message -> Toast.makeText(fragment.context, message, Toast.LENGTH_LONG).show() }
+            fragment.mediaManager.playNext(songsSingle) { message -> Toast.makeText(fragment.context, message, Toast.LENGTH_LONG).show() }
         }
 
         override fun showTagEditor(album: Album) {
@@ -42,8 +41,8 @@ class AlbumMenuFragmentHelper(val fragment: Fragment, val disposables: Composite
         }
 
         override fun showDeleteDialog(albums: Single<MutableList<Album>>) {
-            disposables.add(albums.subscribe { albums ->
-                DeleteDialog.newInstance(DeleteDialog.ListAlbumsRef { albums }).show(fragment.childFragmentManager)
+            disposables.add(albums.subscribe { albumsList ->
+                DeleteDialog.newInstance(DeleteDialog.ListAlbumsRef { albumsList }).show(fragment.childFragmentManager)
             })
         }
 

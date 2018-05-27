@@ -4,8 +4,11 @@ import android.support.design.widget.BottomSheetBehavior;
 import com.jakewharton.rxrelay2.BehaviorRelay;
 import com.simplecity.multisheetview.ui.view.MultiSheetView.Sheet;
 import io.reactivex.Observable;
-import javax.inject.Inject;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class MultiSheetSlideEventRelay {
 
     private final BehaviorRelay<SlideEvent> eventRelay = BehaviorRelay.create();

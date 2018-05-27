@@ -17,6 +17,7 @@ import com.annimon.stream.Stream;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
@@ -34,7 +35,6 @@ import com.simplecity.amp_library.ui.views.SuggestedDividerDecoration;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.Operators;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
@@ -54,6 +54,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
+import kotlin.Unit;
 
 public class SuggestedFragment extends BaseFragment implements
         SuggestedHeaderView.ClickListener,
@@ -81,14 +82,17 @@ public class SuggestedFragment extends BaseFragment implements
 
         @Override
         public void onSongClick(Song song, SuggestedSongView.ViewHolder holder) {
-            MusicUtils.playAll(songs, songs.indexOf(song), true, (String message) -> Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show());
+            mediaManager.playAll(songs, songs.indexOf(song), true, message -> {
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                return Unit.INSTANCE;
+            });
         }
 
         @Override
         public void onSongOverflowClicked(View v, int position, Song song) {
             PopupMenu popupMenu = new PopupMenu(getContext(), v);
             SongMenuUtils.setupSongMenu(popupMenu, false);
-            popupMenu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
+            popupMenu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), mediaManager, position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
             popupMenu.show();
         }
     }
@@ -147,6 +151,7 @@ public class SuggestedFragment extends BaseFragment implements
         super.onCreate(savedInstanceState);
 
         ShuttleApplication.getInstance().getAppComponent()
+                .plus(new ActivityModule(getActivity()))
                 .plus(new FragmentModule(this))
                 .inject(this);
 
@@ -411,7 +416,7 @@ public class SuggestedFragment extends BaseFragment implements
     public void onAlbumOverflowClicked(View v, Album album) {
         PopupMenu menu = new PopupMenu(getContext(), v);
         AlbumMenuUtils.setupAlbumMenu(menu);
-        menu.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(getContext(), album, albumMenuFragmentHelper.getCallbacks()));
+        menu.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(getContext(), mediaManager, album, albumMenuFragmentHelper.getCallbacks()));
         menu.show();
     }
 

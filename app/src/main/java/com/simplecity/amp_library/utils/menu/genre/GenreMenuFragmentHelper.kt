@@ -1,12 +1,11 @@
 package com.simplecity.amp_library.utils.menu.genre
 
-import android.support.v4.app.Fragment
 import android.widget.Toast
 import com.simplecity.amp_library.model.Genre
-import com.simplecity.amp_library.utils.MusicUtils
+import com.simplecity.amp_library.ui.fragments.BaseFragment
 import io.reactivex.disposables.CompositeDisposable
 
-class GenreMenuFragmentHelper(val fragment: Fragment, val disposables: CompositeDisposable) {
+class GenreMenuFragmentHelper(val fragment: BaseFragment, val disposables: CompositeDisposable) {
 
     val callbacks = object : GenreMenuUtils.Callbacks {
         override fun showToast(message: String) {
@@ -22,7 +21,7 @@ class GenreMenuFragmentHelper(val fragment: Fragment, val disposables: Composite
         }
 
         override fun playNext(genre: Genre) {
-            MusicUtils.playNext(genre.songsObservable) { message -> Toast.makeText(fragment.context, message, Toast.LENGTH_LONG).show() }
+            fragment.mediaManager.playNext(genre.songsObservable) { message -> Toast.makeText(fragment.context, message, Toast.LENGTH_LONG).show() }
         }
     }
 }

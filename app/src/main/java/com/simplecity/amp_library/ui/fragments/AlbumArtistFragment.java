@@ -18,6 +18,7 @@ import com.annimon.stream.Stream;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.ui.adapters.SectionedAdapter;
@@ -29,13 +30,12 @@ import com.simplecity.amp_library.ui.recyclerview.GridDividerDecoration;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.DataManager;
-import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
-import com.simplecity.amp_library.utils.sorting.SortManager;
 import com.simplecity.amp_library.utils.menu.albumartist.AlbumArtistMenuFragmentHelper;
 import com.simplecity.amp_library.utils.menu.albumartist.AlbumArtistMenuUtils;
+import com.simplecity.amp_library.utils.sorting.SortManager;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
 import com.simplecityapps.recycler_adapter.recyclerview.SpanSizeLookup;
@@ -50,7 +50,6 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 public class AlbumArtistFragment extends BaseFragment implements
-        MusicUtils.Defs,
         AlbumArtistView.ClickListener {
 
     interface AlbumArtistClickListener {
@@ -115,6 +114,7 @@ public class AlbumArtistFragment extends BaseFragment implements
         super.onCreate(savedInstanceState);
 
         ShuttleApplication.getInstance().getAppComponent()
+                .plus(new ActivityModule(getActivity()))
                 .plus(new FragmentModule(this))
                 .inject(this);
 
@@ -410,7 +410,7 @@ public class AlbumArtistFragment extends BaseFragment implements
         menu.inflate(R.menu.menu_artist);
         SubMenu sub = menu.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
         PlaylistUtils.createPlaylistMenu(sub);
-        menu.setOnMenuItemClickListener(AlbumArtistMenuUtils.getAlbumArtistClickListener(getContext(), albumArtist, albumArtistMenuFragmentHelper.getCallbacks()));
+        menu.setOnMenuItemClickListener(AlbumArtistMenuUtils.getAlbumArtistClickListener(getContext(), mediaManager, albumArtist, albumArtistMenuFragmentHelper.getCallbacks()));
         menu.show();
     }
 
@@ -440,6 +440,7 @@ public class AlbumArtistFragment extends BaseFragment implements
             contextualToolbar.setOnMenuItemClickListener(
                     AlbumArtistMenuUtils.getAlbumArtistMenuClickListener(
                             getContext(),
+                            mediaManager,
                             Single.defer(() -> Single.just(contextualToolbarHelper.getItems())),
                             albumArtistMenuFragmentHelper.getCallbacks()
                     ));

@@ -27,7 +27,6 @@ import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
@@ -46,6 +45,7 @@ import io.reactivex.disposables.Disposable;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import kotlin.Unit;
 
 public class SongFragment extends BaseFragment implements
         SongView.ClickListener,
@@ -252,8 +252,10 @@ public class SongFragment extends BaseFragment implements
                     .map(adaptableItem -> ((SongView) adaptableItem).song)
                     .toList();
 
-            MusicUtils.playAll(songs, songs.indexOf(songView.song), true, (String message) ->
-                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show());
+            mediaManager.playAll(songs, songs.indexOf(songView.song), true, message -> {
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                return Unit.INSTANCE;
+            });
         }
     }
 
@@ -261,7 +263,7 @@ public class SongFragment extends BaseFragment implements
     public void onSongOverflowClick(int position, View view, Song song) {
         PopupMenu menu = new PopupMenu(getContext(), view);
         SongMenuUtils.setupSongMenu(menu, false);
-        menu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
+        menu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), mediaManager, position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
         menu.show();
     }
 
@@ -277,7 +279,10 @@ public class SongFragment extends BaseFragment implements
 
     @Override
     public void onShuffleItemClick() {
-        MusicUtils.shuffleAll(DataManager.getInstance().getSongsRelay().firstOrError(), message -> Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show());
+        mediaManager.shuffleAll(DataManager.getInstance().getSongsRelay().firstOrError(), message -> {
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            return Unit.INSTANCE;
+        });
     }
 
     @Override
@@ -316,8 +321,8 @@ public class SongFragment extends BaseFragment implements
                 }
             });
 
-            contextualToolbar.setOnMenuItemClickListener(
-                    SongMenuUtils.getSongMenuClickListener(getContext(), Single.defer(() -> Single.just(contextualToolbarHelper.getItems())), songMenuFragmentHelper.getSongMenuCallbacks()));
+            contextualToolbar.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), mediaManager, Single.defer(() -> Single.just(contextualToolbarHelper.getItems())),
+                    songMenuFragmentHelper.getSongMenuCallbacks()));
         }
     }
 

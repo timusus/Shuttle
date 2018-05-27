@@ -8,17 +8,25 @@ import android.view.MenuItem;
 import com.cantrowitz.rxbroadcast.RxBroadcast;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Playlist;
+import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.ui.views.QueueView;
-import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import java.util.concurrent.TimeUnit;
+import javax.inject.Inject;
 
 public class QueuePresenter extends Presenter<QueueView> {
 
     private static final String TAG = "QueuePresenter";
+
+    MediaManager mediaManager;
+
+    @Inject
+    public QueuePresenter(MediaManager mediaManager) {
+        this.mediaManager = mediaManager;
+    }
 
     @Override
     public void bindView(@NonNull QueueView view) {
@@ -34,7 +42,7 @@ public class QueuePresenter extends Presenter<QueueView> {
                 .subscribe(intent -> {
                     QueueView queueView = getView();
                     if (queueView != null) {
-                        queueView.updateQueuePosition(MusicUtils.getQueuePosition(), false);
+                        queueView.updateQueuePosition(mediaManager.getQueuePosition(), false);
                     }
                 }));
 
@@ -52,16 +60,16 @@ public class QueuePresenter extends Presenter<QueueView> {
     }
 
     public void saveQueue(Context context) {
-        PlaylistUtils.createPlaylistDialog(context, MusicUtils.getQueue(), null);
+        PlaylistUtils.createPlaylistDialog(context, mediaManager.getQueue(), null);
     }
 
     public void saveQueue(Context context, MenuItem item) {
         Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(PlaylistUtils.ARG_PLAYLIST);
-        PlaylistUtils.addToPlaylist(context, playlist, MusicUtils.getQueue(), null);
+        PlaylistUtils.addToPlaylist(context, playlist, mediaManager.getQueue(), null);
     }
 
     public void clearQueue() {
-        MusicUtils.clearQueue();
+        mediaManager.clearQueue();
     }
 
     public void removeFromQueue(int position) {
@@ -69,18 +77,18 @@ public class QueuePresenter extends Presenter<QueueView> {
         if (queueView != null) {
             queueView.onRemovedFromQueue(position);
         }
-        MusicUtils.removeFromQueue(position);
+        mediaManager.removeFromQueue(position);
     }
 
     private void loadData() {
         QueueView queueView = getView();
         if (queueView != null) {
-            queueView.setData(MusicUtils.getQueue(), MusicUtils.getQueuePosition());
+            queueView.setData(mediaManager.getQueue(), mediaManager.getQueuePosition());
         }
     }
 
     public void onSongClick(int position) {
-        MusicUtils.setQueuePosition(position);
+        mediaManager.setQueuePosition(position);
         QueueView queueView = getView();
         if (queueView != null) {
             queueView.updateQueuePosition(position, true);

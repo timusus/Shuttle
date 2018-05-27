@@ -7,12 +7,12 @@ import com.annimon.stream.Stream;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.ui.modelviews.AlbumArtistView;
 import com.simplecity.amp_library.ui.modelviews.AlbumView;
 import com.simplecity.amp_library.ui.presenters.Presenter;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.StringUtils;
 import io.reactivex.Single;
@@ -23,6 +23,7 @@ import io.reactivex.disposables.Disposable;
 import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
+import kotlin.Unit;
 
 public class SearchPresenter extends Presenter<SearchView> {
 
@@ -33,10 +34,11 @@ public class SearchPresenter extends Presenter<SearchView> {
     private Disposable performSearchSubscription;
 
     private String query;
+    private MediaManager mediaManager;
 
     @Inject
-    public SearchPresenter() {
-
+    public SearchPresenter(@NonNull MediaManager mediaManager) {
+        this.mediaManager = mediaManager;
     }
 
     @Override
@@ -122,10 +124,11 @@ public class SearchPresenter extends Presenter<SearchView> {
     void onSongClick(List<Song> songs, Song song) {
         SearchView view = getView();
 
-        MusicUtils.playAll(songs, songs.indexOf(song), true, (String message) -> {
+        mediaManager.playAll(songs, songs.indexOf(song), true, message -> {
             if (view != null) {
                 view.showToast(message);
             }
+            return Unit.INSTANCE;
         });
     }
 

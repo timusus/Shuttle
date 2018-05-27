@@ -31,6 +31,8 @@ import com.annimon.stream.Stream;
 import com.cantrowitz.rxbroadcast.RxBroadcast;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
+import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.CategoryItem;
@@ -48,7 +50,6 @@ import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.ui.views.ContextualToolbarHost;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
 import com.simplecity.amp_library.utils.DialogUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.multisheetview.ui.view.MultiSheetView;
 import io.reactivex.disposables.CompositeDisposable;
@@ -113,6 +114,8 @@ public class LibraryController extends BaseFragment implements
         super.onCreate(savedInstanceState);
 
         ShuttleApplication.getInstance().getAppComponent()
+                .plus(new ActivityModule(getActivity()))
+                .plus(new FragmentModule(this))
                 .inject(this);
 
         setHasOptionsMenu(true);
@@ -153,7 +156,7 @@ public class LibraryController extends BaseFragment implements
     public void onResume() {
         super.onResume();
 
-        if (!MusicUtils.getQueue().isEmpty()) {
+        if (!mediaManager.getQueue().isEmpty()) {
             multiSheetEventRelay.sendEvent(new MultiSheetEventRelay.MultiSheetEvent(MultiSheetEventRelay.MultiSheetEvent.Action.SHOW_IF_HIDDEN, MultiSheetView.Sheet.NONE));
         }
 

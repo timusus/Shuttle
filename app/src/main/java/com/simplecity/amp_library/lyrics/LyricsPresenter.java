@@ -10,11 +10,11 @@ import com.cantrowitz.rxbroadcast.RxBroadcast;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Query;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.sql.SqlUtils;
 import com.simplecity.amp_library.ui.presenters.Presenter;
 import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Observable;
 import java.io.File;
@@ -31,6 +31,11 @@ import org.jaudiotagger.tag.TagException;
 class LyricsPresenter extends Presenter<LyricsView> {
 
     private static final String TAG = "LyricsPresenter";
+    private MediaManager mediaManager;
+
+    public LyricsPresenter(MediaManager mediaManager) {
+        this.mediaManager = mediaManager;
+    }
 
     @Override
     public void bindView(@NonNull LyricsView view) {
@@ -47,7 +52,7 @@ class LyricsPresenter extends Presenter<LyricsView> {
         LyricsView lyricsView = getView();
         if (lyricsView != null) {
             if (QuickLyricUtils.isQLInstalled()) {
-                Song song = MusicUtils.getSong();
+                Song song = mediaManager.getSong();
                 if (song != null) {
                     lyricsView.launchQuickLyric(song);
                 }
@@ -69,7 +74,7 @@ class LyricsPresenter extends Presenter<LyricsView> {
         addDisposable(Observable.fromCallable(() -> {
 
             String lyrics = "";
-            String path = MusicUtils.getFilePath();
+            String path = mediaManager.getFilePath();
 
             if (TextUtils.isEmpty(path)) {
                 return lyrics;

@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.SubMenu;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.menu.MenuUtils;
@@ -57,10 +58,10 @@ public class SongMenuUtils {
     public static Toolbar.OnMenuItemClickListener getQueueMenuClickListener(Context context, Single<List<Song>> songsSingle, Callbacks callbacks) {
         return item -> {
             switch (item.getItemId()) {
-                case MusicUtils.Defs.NEW_PLAYLIST:
+                case MediaManager.NEW_PLAYLIST:
                     MenuUtils.newPlaylist(context, songsSingle, callbacks::onPlaylistItemsInserted);
                     return true;
-                case MusicUtils.Defs.PLAYLIST_SELECTED:
+                case MediaManager.PLAYLIST_SELECTED:
                     MenuUtils.addToPlaylist(context, item, songsSingle, callbacks::onPlaylistItemsInserted);
                     return true;
                 case R.id.delete:
@@ -74,20 +75,20 @@ public class SongMenuUtils {
         };
     }
 
-    public static Toolbar.OnMenuItemClickListener getSongMenuClickListener(Context context, Single<List<Song>> songsSingle, Callbacks callbacks) {
+    public static Toolbar.OnMenuItemClickListener getSongMenuClickListener(Context context, MediaManager mediaManager, Single<List<Song>> songsSingle, Callbacks callbacks) {
         return item -> {
             switch (item.getItemId()) {
-                case MusicUtils.Defs.NEW_PLAYLIST:
+                case MediaManager.NEW_PLAYLIST:
                     MenuUtils.newPlaylist(context, songsSingle, callbacks::onPlaylistItemsInserted);
                     return true;
-                case MusicUtils.Defs.PLAYLIST_SELECTED:
+                case MediaManager.PLAYLIST_SELECTED:
                     MenuUtils.addToPlaylist(context, item, songsSingle, callbacks::onPlaylistItemsInserted);
                     return true;
                 case R.id.playNext:
                     callbacks.playNext(songsSingle);
                     return true;
                 case R.id.addToQueue:
-                    MenuUtils.addToQueue(songsSingle, callbacks::showToast);
+                    MenuUtils.addToQueue(mediaManager, songsSingle, callbacks::showToast);
                     return true;
                 case R.id.blacklist:
                     MenuUtils.blacklist(songsSingle);
@@ -100,20 +101,20 @@ public class SongMenuUtils {
         };
     }
 
-    public static PopupMenu.OnMenuItemClickListener getSongMenuClickListener(Context context, int position, Song song, Callbacks callbacks) {
+    public static PopupMenu.OnMenuItemClickListener getSongMenuClickListener(Context context, MediaManager mediaManager, int position, Song song, Callbacks callbacks) {
         return item -> {
             switch (item.getItemId()) {
                 case R.id.playNext:
-                    MenuUtils.playNext(song, callbacks::showToast);
+                    MenuUtils.playNext(mediaManager, song, callbacks::showToast);
                     return true;
-                case MusicUtils.Defs.NEW_PLAYLIST:
+                case MediaManager.NEW_PLAYLIST:
                     MenuUtils.newPlaylist(context, Collections.singletonList(song), callbacks::onPlaylistItemsInserted);
                     return true;
-                case MusicUtils.Defs.PLAYLIST_SELECTED:
+                case MediaManager.PLAYLIST_SELECTED:
                     MenuUtils.addToPlaylist(context, item, Collections.singletonList(song), callbacks::onPlaylistItemsInserted);
                     return true;
                 case R.id.addToQueue:
-                    MenuUtils.addToQueue(Collections.singletonList(song), callbacks::onQueueItemInserted);
+                    MenuUtils.addToQueue(mediaManager, Collections.singletonList(song), callbacks::onQueueItemInserted);
                     return true;
                 case R.id.editTags:
                     callbacks.showTagEditor(song);

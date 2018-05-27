@@ -39,6 +39,7 @@ import com.simplecity.amp_library.glide.utils.AlwaysCrossFade;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.ArtworkProvider;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.dialog.BiographyDialog;
 import com.simplecity.amp_library.ui.dialog.DeleteDialog;
@@ -56,7 +57,6 @@ import com.simplecity.amp_library.ui.views.ContextualToolbarHost;
 import com.simplecity.amp_library.utils.ActionBarUtils;
 import com.simplecity.amp_library.utils.ArtworkDialog;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
-import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.Operators;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.PlaylistUtils;
@@ -167,7 +167,7 @@ public class AlbumDetailFragment extends BaseFragment implements
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
-        presenter = new AlbumDetailPresenter(album);
+        presenter = new AlbumDetailPresenter(mediaManager, album);
 
         requestManager = Glide.with(this);
 
@@ -307,10 +307,10 @@ public class AlbumDetailFragment extends BaseFragment implements
             case R.id.addToQueue:
                 presenter.addToQueue();
                 return true;
-            case MusicUtils.Defs.NEW_PLAYLIST:
+            case MediaManager.ADD_TO_PLAYLIST:
                 presenter.newPlaylist();
                 return true;
-            case MusicUtils.Defs.PLAYLIST_SELECTED:
+            case MediaManager.PLAYLIST_SELECTED:
                 presenter.playlistSelected(getContext(), item, () -> presenter.closeContextualToolbar());
                 return true;
             case R.id.editTags:
@@ -487,6 +487,7 @@ public class AlbumDetailFragment extends BaseFragment implements
             contextualToolbar.setOnMenuItemClickListener(
                     SongMenuUtils.getSongMenuClickListener(
                             getContext(),
+                            mediaManager,
                             Single.defer(() -> Operators.reduceSongSingles(contextualToolbarHelper.getItems())),
                             songMenuFragmentHelper.getSongMenuCallbacks())
             );
@@ -565,7 +566,7 @@ public class AlbumDetailFragment extends BaseFragment implements
         public void onSongOverflowClick(int position, View v, Song song) {
             PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
             SongMenuUtils.setupSongMenu(popupMenu, false);
-            popupMenu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(v.getContext(), position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
+            popupMenu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(v.getContext(), mediaManager, position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
             popupMenu.show();
         }
 

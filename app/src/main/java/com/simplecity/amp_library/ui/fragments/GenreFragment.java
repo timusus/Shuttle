@@ -152,7 +152,7 @@ public class GenreFragment extends BaseFragment implements GenreView.ClickListen
     public void onOverflowClick(View v, Genre genre) {
         PopupMenu popupMenu = new PopupMenu(getContext(), v);
         popupMenu.inflate(R.menu.menu_genre);
-        popupMenu.setOnMenuItemClickListener(GenreMenuUtils.getGenreClickListener(getContext(), genre, genreMenuFragmentHelper.getCallbacks()));
+        popupMenu.setOnMenuItemClickListener(GenreMenuUtils.getGenreClickListener(getContext(), mediaManager, genre, genreMenuFragmentHelper.getCallbacks()));
         popupMenu.show();
     }
 

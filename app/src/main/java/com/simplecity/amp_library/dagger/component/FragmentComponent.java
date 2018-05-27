@@ -4,15 +4,19 @@ import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.dagger.module.PresenterModule;
 import com.simplecity.amp_library.dagger.scope.FragmentScope;
 import com.simplecity.amp_library.search.SearchFragment;
+import com.simplecity.amp_library.ui.drawer.DrawerFragment;
 import com.simplecity.amp_library.ui.fragments.AlbumArtistFragment;
 import com.simplecity.amp_library.ui.fragments.AlbumFragment;
 import com.simplecity.amp_library.ui.fragments.BaseFragment;
+import com.simplecity.amp_library.ui.fragments.LibraryController;
+import com.simplecity.amp_library.ui.fragments.MainController;
 import com.simplecity.amp_library.ui.fragments.MiniPlayerFragment;
 import com.simplecity.amp_library.ui.fragments.PlayerFragment;
 import com.simplecity.amp_library.ui.fragments.QueueFragment;
 import com.simplecity.amp_library.ui.fragments.QueuePagerFragment;
 import com.simplecity.amp_library.ui.fragments.SuggestedFragment;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
+import com.simplecity.amp_library.ui.views.multisheet.CustomMultiSheetView;
 import dagger.Subcomponent;
 
 @FragmentScope
@@ -42,4 +46,12 @@ public interface FragmentComponent {
     void inject(SuggestedFragment target);
 
     void inject(SearchFragment target);
+
+    void inject(LibraryController target);
+
+    void inject(CustomMultiSheetView target);
+
+    void inject(DrawerFragment target);
+
+    void inject(MainController target);
 }

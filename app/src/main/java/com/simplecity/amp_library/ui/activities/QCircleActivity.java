@@ -22,7 +22,6 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
 
 //Todo: Reapply themes
 public class QCircleActivity extends BaseActivity {
@@ -224,12 +223,12 @@ public class QCircleActivity extends BaseActivity {
         pauseBtn = findViewById(R.id.btn_pause);
         setPauseButtonImage();
 
-        prevBtn.setOnClickListener(v -> MusicUtils.previous(true));
+        prevBtn.setOnClickListener(v -> mediaManager.previous(true));
 
-        skipBtn.setOnClickListener(v -> MusicUtils.next());
+        skipBtn.setOnClickListener(v -> mediaManager.next());
 
         pauseBtn.setOnClickListener(v -> {
-            MusicUtils.playOrPause();
+            mediaManager.playOrPause();
             setPauseButtonImage();
         });
     }
@@ -244,7 +243,7 @@ public class QCircleActivity extends BaseActivity {
         if (pauseBtn == null) {
             return;
         }
-        if (MusicServiceConnectionUtils.serviceBinder != null && MusicUtils.isPlaying()) {
+        if (MusicServiceConnectionUtils.serviceBinder != null && mediaManager.isPlaying()) {
 
         } else {
 
@@ -261,7 +260,7 @@ public class QCircleActivity extends BaseActivity {
             return;
         }
 
-        Song song = MusicUtils.getSong();
+        Song song = mediaManager.getSong();
         if (song == null) return;
 
         textOne.setText(song.albumArtistName);

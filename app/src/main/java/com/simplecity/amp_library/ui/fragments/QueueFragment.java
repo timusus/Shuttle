@@ -23,8 +23,10 @@ import com.annimon.stream.Stream;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.dialog.DeleteDialog;
 import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
@@ -94,7 +96,8 @@ public class QueueFragment extends BaseFragment implements QueueView {
     @Inject
     PlayerPresenter playerPresenter;
 
-    QueuePresenter queuePresenter = new QueuePresenter();
+    @Inject
+    QueuePresenter queuePresenter;
 
     ItemTouchHelper itemTouchHelper;
 
@@ -118,6 +121,7 @@ public class QueueFragment extends BaseFragment implements QueueView {
         super.onCreate(savedInstanceState);
 
         ShuttleApplication.getInstance().getAppComponent()
+                .plus(new ActivityModule(getActivity()))
                 .plus(new FragmentModule(this))
                 .inject(this);
 
@@ -138,7 +142,7 @@ public class QueueFragment extends BaseFragment implements QueueView {
         toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
         toolbar.inflateMenu(R.menu.menu_queue);
 
-        SubMenu sub = toolbar.getMenu().addSubMenu(0, MusicUtils.Defs.ADD_TO_PLAYLIST, 1, R.string.save_as_playlist);
+        SubMenu sub = toolbar.getMenu().addSubMenu(0, MediaManager.ADD_TO_PLAYLIST, 1, R.string.save_as_playlist);
         disposables.add(PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe());
 
         toolbar.setOnMenuItemClickListener(toolbarListener);
@@ -149,7 +153,7 @@ public class QueueFragment extends BaseFragment implements QueueView {
 
         itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(
                 (fromPosition, toPosition) ->
-                        adapter.moveItem(fromPosition, toPosition), MusicUtils::moveQueueItem,
+                        adapter.moveItem(fromPosition, toPosition), mediaManager::moveQueueItem,
                 () -> {
                     // Nothing to do
                 }));
@@ -287,7 +291,7 @@ public class QueueFragment extends BaseFragment implements QueueView {
         public void onSongOverflowClick(int position, View v, Song song) {
             PopupMenu menu = new PopupMenu(v.getContext(), v);
             SongMenuUtils.setupSongMenu(menu, true);
-            menu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(v.getContext(), position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
+            menu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(v.getContext(), mediaManager, position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
             menu.show();
         }
 
@@ -371,10 +375,10 @@ public class QueueFragment extends BaseFragment implements QueueView {
             case R.id.menu_clear:
                 queuePresenter.clearQueue();
                 return true;
-            case MusicUtils.Defs.NEW_PLAYLIST:
+            case MediaManager.NEW_PLAYLIST:
                 queuePresenter.saveQueue(getContext());
                 return true;
-            case MusicUtils.Defs.PLAYLIST_SELECTED:
+            case MediaManager.PLAYLIST_SELECTED:
                 queuePresenter.saveQueue(getContext(), item);
                 return true;
         }

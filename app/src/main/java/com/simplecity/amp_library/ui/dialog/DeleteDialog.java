@@ -21,12 +21,12 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.saf.SafManager;
 import com.simplecity.amp_library.sql.providers.PlayCountTable;
 import com.simplecity.amp_library.utils.CustomMediaScanner;
 import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.extensions.SongExtKt;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
@@ -39,6 +39,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.inject.Inject;
 
 public class DeleteDialog extends DialogFragment implements SafManager.SafDialog.SafResultListener {
 
@@ -65,6 +66,9 @@ public class DeleteDialog extends DialogFragment implements SafManager.SafDialog
 
     @StringRes
     private int deleteMessageId;
+
+    @Inject
+    MediaManager mediaManager;
 
     private List<AlbumArtist> artists;
     private List<Album> albums;
@@ -301,7 +305,7 @@ public class DeleteDialog extends DialogFragment implements SafManager.SafDialog
         }
 
         // Remove songs from current play queue
-        MusicUtils.removeFromQueue(deletedSongs);
+        mediaManager.removeFromQueue(deletedSongs);
 
         // Remove songs from play count table
         ArrayList<ContentProviderOperation> operations = Stream.of(deletedSongs).map(song -> ContentProviderOperation

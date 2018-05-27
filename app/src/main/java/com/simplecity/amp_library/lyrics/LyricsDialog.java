@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.ViewUtils;
 
@@ -21,7 +22,7 @@ public class LyricsDialog implements LyricsView {
 
     private Context context;
 
-    private LyricsPresenter lyricsPresenter = new LyricsPresenter();
+    private LyricsPresenter lyricsPresenter;
 
     private TextView lyricsTextView;
 
@@ -29,7 +30,8 @@ public class LyricsDialog implements LyricsView {
 
     private View quickLyricInfo;
 
-    public LyricsDialog() {
+    public LyricsDialog(MediaManager mediaManager) {
+        lyricsPresenter = new LyricsPresenter(mediaManager);
     }
 
     public MaterialDialog getDialog(Context context) {

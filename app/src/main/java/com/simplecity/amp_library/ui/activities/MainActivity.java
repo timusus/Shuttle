@@ -22,6 +22,7 @@ import com.greysonparrelli.permiso.Permiso;
 import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Query;
 import com.simplecity.amp_library.playback.constants.ShortcutCommands;
@@ -33,7 +34,6 @@ import com.simplecity.amp_library.ui.fragments.MainController;
 import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ThemeUtils;
@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
+import kotlin.Unit;
 import test.com.androidnavigation.fragment.BackPressHandler;
 import test.com.androidnavigation.fragment.BackPressListener;
 
@@ -69,7 +70,7 @@ public class MainActivity extends BaseCastActivity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ShuttleApplication.getInstance().getAppComponent().inject(this);
+        ShuttleApplication.getInstance().getAppComponent().plus(new ActivityModule(this)).inject(this);
 
         // If we haven't set any defaults, do that now
         if (Aesthetic.isFirstTime(this)) {
@@ -178,7 +179,7 @@ public class MainActivity extends BaseCastActivity implements
         final String mimeType = intent.getType();
 
         if (uri != null && uri.toString().length() > 0) {
-            MusicUtils.playFile(uri);
+            mediaManager.playFile(uri);
             // Make sure to process intent only once
             setIntent(new Intent());
         } else if (MediaStore.Audio.Playlists.CONTENT_TYPE.equals(mimeType)) {
@@ -190,8 +191,11 @@ public class MainActivity extends BaseCastActivity implements
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(playlist -> {
-                            MusicUtils.playAll(playlist.getSongsObservable().first(new ArrayList<>()),
-                                    message -> Toast.makeText(this, message, Toast.LENGTH_SHORT).show());
+                            mediaManager.playAll(playlist.getSongsObservable().first(new ArrayList<>()),
+                                    message -> {
+                                        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                                        return Unit.INSTANCE;
+                                    });
                             // Make sure to process intent only once
                             setIntent(new Intent());
                         }, error -> LogUtils.logException(TAG, "Error handling playback request", error));

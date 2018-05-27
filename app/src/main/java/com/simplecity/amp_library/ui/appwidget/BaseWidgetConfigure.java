@@ -44,7 +44,6 @@ import com.simplecity.amp_library.ui.fragments.WidgetFragment;
 import com.simplecity.amp_library.ui.views.SizableSeekBar;
 import com.simplecity.amp_library.ui.widgets.BaseWidgetProvider;
 import com.simplecity.amp_library.utils.ColorUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
 
 public abstract class BaseWidgetConfigure extends BaseActivity implements
         View.OnClickListener,
@@ -329,7 +328,7 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
                 TextView text1 = widgetLayout.findViewById(R.id.text1);
                 TextView text2 = widgetLayout.findViewById(R.id.text2);
                 TextView text3 = widgetLayout.findViewById(R.id.text3);
-                Song song = MusicUtils.getSong();
+                Song song = mediaManager.getSong();
 
                 String trackName = null;
                 String artistName = null;
@@ -377,7 +376,7 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
                     }
 
                     Glide.with(this)
-                            .load(MusicUtils.getSong())
+                            .load(mediaManager.getSong())
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .placeholder(R.drawable.ic_placeholder_light_medium)
                             .into(albumArt);

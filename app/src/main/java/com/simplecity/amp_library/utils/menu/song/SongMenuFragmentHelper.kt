@@ -1,12 +1,11 @@
 package com.simplecity.amp_library.utils.menu.song
 
-import android.support.v4.app.Fragment
 import android.widget.Toast
 import com.simplecity.amp_library.model.Song
 import com.simplecity.amp_library.tagger.TaggerDialog
 import com.simplecity.amp_library.ui.dialog.BiographyDialog
 import com.simplecity.amp_library.ui.dialog.DeleteDialog
-import com.simplecity.amp_library.utils.MusicUtils
+import com.simplecity.amp_library.ui.fragments.BaseFragment
 import com.simplecity.amp_library.utils.ShuttleUtils
 import com.simplecity.amp_library.utils.extensions.share
 import io.reactivex.Single
@@ -14,7 +13,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-class SongMenuFragmentHelper(val fragment: Fragment, val disposables: CompositeDisposable, callbacks: SongMenuUtils.Callbacks? = null) {
+class SongMenuFragmentHelper(val fragment: BaseFragment, val disposables: CompositeDisposable, callbacks: SongMenuUtils.Callbacks? = null) {
 
     val songMenuCallbacks: SongMenuUtils.Callbacks = object : SongMenuUtils.Callbacks {
 
@@ -36,7 +35,7 @@ class SongMenuFragmentHelper(val fragment: Fragment, val disposables: CompositeD
         }
 
         override fun playNext(songsSingle: Single<List<Song>>) {
-            MusicUtils.playNext(songsSingle) { message -> Toast.makeText(fragment.context, message, Toast.LENGTH_LONG).show() }
+            fragment.mediaManager.playNext(songsSingle) { message -> Toast.makeText(fragment.context, message, Toast.LENGTH_LONG).show() }
             callbacks?.playNext(songsSingle)
         }
 

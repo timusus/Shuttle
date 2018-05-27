@@ -40,6 +40,7 @@ import com.jakewharton.rxbinding2.widget.SeekBarStopChangeEvent;
 import com.jp.wasabeef.glide.transformations.BlurTransformation;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.glide.palette.PaletteBitmap;
 import com.simplecity.amp_library.glide.palette.PaletteBitmapTranscoder;
@@ -62,7 +63,6 @@ import com.simplecity.amp_library.ui.views.SnowfallView;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetSlideEventRelay;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
@@ -175,6 +175,7 @@ public class PlayerFragment extends BaseFragment implements
         super.onCreate(savedInstanceState);
 
         ShuttleApplication.getInstance().getAppComponent()
+                .plus(new ActivityModule(getActivity()))
                 .plus(new FragmentModule(this))
                 .inject(this);
     }
@@ -599,7 +600,7 @@ public class PlayerFragment extends BaseFragment implements
 
     @SuppressLint("CheckResult")
     private void goToArtist() {
-        AlbumArtist currentAlbumArtist = MusicUtils.getAlbumArtist();
+        AlbumArtist currentAlbumArtist = mediaManager.getAlbumArtist();
         // MusicUtils.getAlbumArtist() is only populate with the album the current Song belongs to.
         // Let's find the matching AlbumArtist in the DataManager.albumArtistRelay
         DataManager.getInstance().getAlbumArtistsRelay()
@@ -612,12 +613,12 @@ public class PlayerFragment extends BaseFragment implements
     }
 
     private void goToAlbum() {
-        navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_ALBUM, MusicUtils.getAlbum(), true));
+        navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_ALBUM, mediaManager.getAlbum(), true));
     }
 
     @SuppressLint("CheckResult")
     private void goToGenre() {
-        MusicUtils.getGenre()
+        mediaManager.getGenre()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
