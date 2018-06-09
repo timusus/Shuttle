@@ -6,18 +6,15 @@ import android.support.v7.util.ListUpdateCallback;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ViewGroup;
-
 import com.simplecityapps.recycler_adapter.BuildConfig;
 import com.simplecityapps.recycler_adapter.model.ContentsComparator;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A custom RecyclerView.Adapter used for adapting {@link ViewModel}'s.
@@ -84,7 +81,7 @@ public class ViewModelAdapter extends RecyclerView.Adapter {
      * This method is used to transform the current dataset ({@link #items}) into the passed in list of items, performing
      * logic to remove, add and rearrange items in a way that allows the RecyclerView to animate properly.
      *
-     * @param items    the new dataset ({@link List<ViewModel>})
+     * @param items the new dataset ({@link List<ViewModel>})
      * @param callback an optional {@link ListUpdateCallback}
      */
     @Nullable
@@ -148,7 +145,7 @@ public class ViewModelAdapter extends RecyclerView.Adapter {
      * Add a single item to the dataset ({@link #items}), notifying the adapter of the insert
      *
      * @param position int
-     * @param item     the {@link ViewModel} to add
+     * @param item the {@link ViewModel} to add
      */
     public void addItem(int position, ViewModel item) {
         items.add(position, item);
@@ -210,7 +207,7 @@ public class ViewModelAdapter extends RecyclerView.Adapter {
      * Moves an item from {@param fromPosition} to {@param toPosition}
      *
      * @param fromPosition int
-     * @param toPosition   int
+     * @param toPosition int
      */
     public void moveItem(int fromPosition, int toPosition) {
         final ViewModel model = items.remove(fromPosition);

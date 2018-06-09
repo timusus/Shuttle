@@ -65,7 +65,7 @@ public class QueuePagerPresenter extends Presenter<QueuePagerView> {
                             case InternalIntents.SERVICE_CONNECTED:
 
                                 List<ViewModel> items = Stream.of(mediaManager.getQueue())
-                                        .map(song -> new QueuePagerItemView(song, requestManager))
+                                        .map(queueItem -> new QueuePagerItemView(queueItem.getSong(), requestManager))
                                         .collect(Collectors.toList());
 
                                 queuePagerView.loadData(items, mediaManager.getQueuePosition());

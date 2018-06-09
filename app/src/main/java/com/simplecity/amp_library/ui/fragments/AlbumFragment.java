@@ -40,7 +40,7 @@ import com.simplecity.amp_library.utils.Operators;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
-import com.simplecity.amp_library.utils.menu.album.AlbumMenuFragmentHelper;
+import com.simplecity.amp_library.utils.menu.album.AlbumMenuCallbacksAdapter;
 import com.simplecity.amp_library.utils.menu.album.AlbumMenuUtils;
 import com.simplecity.amp_library.utils.sorting.SortManager;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
@@ -101,7 +101,7 @@ public class AlbumFragment extends BaseFragment implements
 
     private CompositeDisposable menuDisposables = new CompositeDisposable();
 
-    private AlbumMenuFragmentHelper albumMenuFragmentHelper = new AlbumMenuFragmentHelper(this, menuDisposables);
+    private AlbumMenuCallbacksAdapter albumMenuCallbacksAdapter = new AlbumMenuCallbacksAdapter(this, menuDisposables);
 
     public AlbumFragment() {
 
@@ -406,7 +406,7 @@ public class AlbumFragment extends BaseFragment implements
 
     @Override
     public void onAlbumClick(int position, AlbumView albumView, AlbumView.ViewHolder viewHolder) {
-        if (!contextualToolbarHelper.handleClick(position, albumView, albumView.album)) {
+        if (!contextualToolbarHelper.handleClick(albumView, albumView.album)) {
             if (albumClickListener != null) {
                 albumClickListener.onAlbumClicked(albumView.album, viewHolder.imageOne);
             }
@@ -415,7 +415,7 @@ public class AlbumFragment extends BaseFragment implements
 
     @Override
     public boolean onAlbumLongClick(int position, AlbumView albumView) {
-        return contextualToolbarHelper.handleLongClick(position, albumView, albumView.album);
+        return contextualToolbarHelper.handleLongClick(albumView, albumView.album);
     }
 
     @Override
@@ -424,7 +424,7 @@ public class AlbumFragment extends BaseFragment implements
         menu.inflate(R.menu.menu_album);
         SubMenu sub = menu.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
         PlaylistUtils.createPlaylistMenu(sub);
-        menu.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(getContext(), mediaManager, album, albumMenuFragmentHelper.getCallbacks()));
+        menu.setOnMenuItemClickListener(AlbumMenuUtils.INSTANCE.getAlbumMenuClickListener(getContext(), mediaManager, album, albumMenuCallbacksAdapter));
         menu.show();
     }
 
@@ -472,18 +472,21 @@ public class AlbumFragment extends BaseFragment implements
             playlistMenuDisposable = PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe();
 
             contextualToolbar.setOnMenuItemClickListener(
-                    AlbumMenuUtils.getAlbumMenuClickListener(
+                    AlbumMenuUtils.INSTANCE.getAlbumMenuClickListener(
                             getContext(),
                             mediaManager,
                             Single.defer(() -> Single.just(contextualToolbarHelper.getItems())),
-                            albumMenuFragmentHelper.getCallbacks())
+                            albumMenuCallbacksAdapter)
             );
 
             contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
 
                 @Override
-                public void notifyItemChanged(int position, SelectableViewModel viewModel) {
-                    adapter.notifyItemChanged(position, 0);
+                public void notifyItemChanged(SelectableViewModel viewModel) {
+                    int index = adapter.items.indexOf(viewModel);
+                    if (index >= 0) {
+                        adapter.notifyItemChanged(index, 0);
+                    }
                 }
 
                 @Override

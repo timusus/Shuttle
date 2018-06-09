@@ -39,7 +39,7 @@ import com.simplecity.amp_library.ui.views.PlayerViewAdapter;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.SleepTimer;
-import com.simplecity.amp_library.utils.menu.playlist.PlaylistMenuFragmentHelper;
+import com.simplecity.amp_library.utils.menu.playlist.PlaylistMenuCallbacksAdapter;
 import com.simplecity.amp_library.utils.menu.playlist.PlaylistMenuUtils;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -101,7 +101,7 @@ public class DrawerFragment extends BaseFragment implements
 
     private List<Parent<DrawerChild>> drawerParents;
 
-    private PlaylistMenuFragmentHelper playlistMenuFragmentHelper = new PlaylistMenuFragmentHelper(this, disposables, null);
+    private PlaylistMenuCallbacksAdapter playlistMenuCallbacksAdapter = new PlaylistMenuCallbacksAdapter(this, disposables);
 
     public DrawerFragment() {
     }
@@ -265,8 +265,8 @@ public class DrawerFragment extends BaseFragment implements
                         @Override
                         public void onOverflowClick(View view, Playlist playlist) {
                             PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
-                            PlaylistMenuUtils.setupPlaylistMenu(popupMenu, playlist);
-                            popupMenu.setOnMenuItemClickListener(PlaylistMenuUtils.getPlaylistPopupMenuClickListener(mediaManager, playlist, playlistMenuFragmentHelper.getCallbacks()));
+                            PlaylistMenuUtils.INSTANCE.setupPlaylistMenu(popupMenu, playlist);
+                            popupMenu.setOnMenuItemClickListener(PlaylistMenuUtils.INSTANCE.getPlaylistPopupMenuClickListener(mediaManager, playlist, playlistMenuCallbacksAdapter));
                             popupMenu.show();
                         }
                     });

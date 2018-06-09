@@ -147,6 +147,10 @@ public class Song implements
         setArtworkKey();
     }
 
+    public Song(){
+
+    }
+
     public Single<Genre> getGenre() {
         Query query = Genre.getQuery();
         query.uri = MediaStore.Audio.Genres.getContentUriForAudioId("external", (int) id);

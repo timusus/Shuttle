@@ -38,9 +38,9 @@ import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.Operators;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
-import com.simplecity.amp_library.utils.menu.album.AlbumMenuFragmentHelper;
+import com.simplecity.amp_library.utils.menu.album.AlbumMenuCallbacksAdapter;
 import com.simplecity.amp_library.utils.menu.album.AlbumMenuUtils;
-import com.simplecity.amp_library.utils.menu.song.SongMenuFragmentHelper;
+import com.simplecity.amp_library.utils.menu.song.SongMenuCallbacksAdapter;
 import com.simplecity.amp_library.utils.menu.song.SongMenuUtils;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
@@ -62,8 +62,8 @@ public class SuggestedFragment extends BaseFragment implements
 
     private CompositeDisposable disposables = new CompositeDisposable();
 
-    private SongMenuFragmentHelper songMenuFragmentHelper = new SongMenuFragmentHelper(this, disposables, null);
-    private AlbumMenuFragmentHelper albumMenuFragmentHelper = new AlbumMenuFragmentHelper(this, disposables);
+    private SongMenuCallbacksAdapter songMenuCallbacksAdapter = new SongMenuCallbacksAdapter(this, disposables);
+    private AlbumMenuCallbacksAdapter albumMenuCallbacksAdapter = new AlbumMenuCallbacksAdapter(this, disposables);
 
     public interface SuggestedClickListener {
 
@@ -91,8 +91,8 @@ public class SuggestedFragment extends BaseFragment implements
         @Override
         public void onSongOverflowClicked(View v, int position, Song song) {
             PopupMenu popupMenu = new PopupMenu(getContext(), v);
-            SongMenuUtils.setupSongMenu(popupMenu, false);
-            popupMenu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), mediaManager, position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
+            SongMenuUtils.INSTANCE.setupSongMenu(popupMenu, false);
+            popupMenu.setOnMenuItemClickListener(SongMenuUtils.INSTANCE.getSongMenuClickListener(song, songMenuCallbacksAdapter));
             popupMenu.show();
         }
     }
@@ -415,8 +415,8 @@ public class SuggestedFragment extends BaseFragment implements
     @Override
     public void onAlbumOverflowClicked(View v, Album album) {
         PopupMenu menu = new PopupMenu(getContext(), v);
-        AlbumMenuUtils.setupAlbumMenu(menu);
-        menu.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(getContext(), mediaManager, album, albumMenuFragmentHelper.getCallbacks()));
+        AlbumMenuUtils.INSTANCE.setupAlbumMenu(menu);
+        menu.setOnMenuItemClickListener(AlbumMenuUtils.INSTANCE.getAlbumMenuClickListener(getContext(), mediaManager, album, albumMenuCallbacksAdapter));
         menu.show();
     }
 

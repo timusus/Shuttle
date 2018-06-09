@@ -5,6 +5,7 @@ import com.simplecity.amp_library.model.Album
 import com.simplecity.amp_library.model.AlbumArtist
 import com.simplecity.amp_library.model.Genre
 import com.simplecity.amp_library.model.Song
+import com.simplecity.amp_library.ui.queue.QueueItem
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 
@@ -107,21 +108,21 @@ interface MediaManager {
     /**
      * Method getPosition.
      *
-     * @return [long]
+     * @return [Long]
      */
     fun getPosition(): Long
 
     /**
      * Method duration.
      *
-     * @return [long]
+     * @return [Long]
      */
     fun getDuration(): Long
 
     /**
      * Method seekTo.
      *
-     * @param position the [long] position to seek to
+     * @param position the [Long] position to seek to
      */
     fun seekTo(position: Long)
 
@@ -137,17 +138,21 @@ interface MediaManager {
 
     fun playNext(songs: MutableList<Song>, onAdded: (String) -> Unit)
 
+    fun moveToNext(queueItem: QueueItem)
+
     fun setQueuePosition(position: Int)
 
     fun clearQueue()
 
-    fun getQueue(): MutableList<Song>
+    fun getQueue(): MutableList<QueueItem>
 
     fun getQueuePosition(): Int
 
-    fun removeFromQueue(position: Int)
+    fun removeFromQueue(queueItem: QueueItem)
 
-    fun removeFromQueue(songs: MutableList<Song>)
+    fun removeFromQueue(queueItems: List<QueueItem>)
+
+    fun removeSongsFromQueue(songs: MutableList<Song>)
 
     fun toggleFavorite()
 

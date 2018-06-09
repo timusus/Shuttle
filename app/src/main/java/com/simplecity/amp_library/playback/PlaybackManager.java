@@ -27,6 +27,8 @@ import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.playback.constants.PlayerHandler;
 import com.simplecity.amp_library.services.Equalizer;
+import com.simplecity.amp_library.ui.queue.QueueItem;
+import com.simplecity.amp_library.ui.queue.QueueItemKt;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
@@ -178,6 +180,17 @@ public class PlaybackManager {
                 });
     }
 
+    public void removeQueueItems(List<QueueItem> queueItems) {
+        queueManager.removeQueueItems(queueItems, () -> stop(true), () -> {
+            final boolean wasPlaying = isPlaying();
+            stop(false);
+            openCurrentAndNext();
+            if (wasPlaying) {
+                play();
+            }
+        });
+    }
+
     public void removeSongs(List<Song> songs) {
         queueManager.removeSongs(songs, () -> stop(true), () -> {
             final boolean wasPlaying = isPlaying();
@@ -189,8 +202,8 @@ public class PlaybackManager {
         });
     }
 
-    public void removeSong(int position) {
-        queueManager.removeSong(position, () -> stop(true), () -> {
+    public void removeQueueItem(QueueItem queueItem) {
+        queueManager.removeQueueItem(queueItem, () -> stop(true), () -> {
             final boolean wasPlaying = isPlaying();
             stop(false);
             openCurrentAndNext();
@@ -220,7 +233,7 @@ public class PlaybackManager {
                     .firstOrError()
                     .subscribeOn(Schedulers.io())
                     .subscribe(songs -> {
-                        queueManager.playlist = songs;
+                        queueManager.playlist = QueueItemKt.toQueueItems(songs);
                         queueManager.queuePosition = -1;
                         queueManager.makeShuffleList();
                         queueManager.setShuffleMode(QueueManager.ShuffleMode.ON);
@@ -406,7 +419,7 @@ public class PlaybackManager {
         if (queueManager.nextPlayPos >= 0
                 && !queueManager.getCurrentPlaylist().isEmpty()
                 && queueManager.nextPlayPos < queueManager.getCurrentPlaylist().size()) {
-            final Song nextSong = queueManager.getCurrentPlaylist().get(queueManager.nextPlayPos);
+            final Song nextSong = queueManager.getCurrentPlaylist().get(queueManager.nextPlayPos).getSong();
             try {
                 if (player != null) {
                     player.setNextDataSource(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI + "/" + nextSong.id);

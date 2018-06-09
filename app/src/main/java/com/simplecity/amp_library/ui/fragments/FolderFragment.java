@@ -414,7 +414,7 @@ public class FolderFragment extends BaseFragment implements
     @SuppressLint("CheckResult")
     @Override
     public void onFileObjectClick(int position, FolderView folderView) {
-        if (contextualToolbarHelper != null && !contextualToolbarHelper.handleClick(position, folderView, folderView.baseFileObject)) {
+        if (contextualToolbarHelper != null && !contextualToolbarHelper.handleClick(folderView, folderView.baseFileObject)) {
             if (folderView.baseFileObject.fileType == FileType.FILE) {
                 FileHelper.getSongList(new File(folderView.baseFileObject.path), false, true)
                         .observeOn(AndroidSchedulers.mainThread())
@@ -445,8 +445,8 @@ public class FolderFragment extends BaseFragment implements
     @Override
     public void onFileObjectOverflowClick(View v, FolderView folderView) {
         PopupMenu menu = new PopupMenu(getActivity(), v);
-        FolderMenuUtils.setupFolderMenu(menu, folderView.baseFileObject);
-        menu.setOnMenuItemClickListener(FolderMenuUtils.getFolderMenuClickListener(getContext(), mediaManager, folderView, callbacks));
+        FolderMenuUtils.INSTANCE.setupFolderMenu(menu, folderView.baseFileObject);
+        menu.setOnMenuItemClickListener(FolderMenuUtils.INSTANCE.getFolderMenuClickListener(getContext(), mediaManager, folderView, callbacks));
         menu.show();
     }
 
@@ -482,8 +482,11 @@ public class FolderFragment extends BaseFragment implements
 
             contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
                 @Override
-                public void notifyItemChanged(int position, SelectableViewModel viewModel) {
-                    adapter.notifyItemChanged(position, 0);
+                public void notifyItemChanged(SelectableViewModel viewModel) {
+                    int index = adapter.items.indexOf(viewModel);
+                    if (index >= 0) {
+                        adapter.notifyItemChanged(index, 0);
+                    }
                 }
 
                 @Override

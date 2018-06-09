@@ -54,11 +54,11 @@ import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.Operators;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.ResourceUtils;
-import com.simplecity.amp_library.utils.menu.album.AlbumMenuFragmentHelper;
+import com.simplecity.amp_library.utils.menu.album.AlbumMenuCallbacksAdapter;
 import com.simplecity.amp_library.utils.menu.album.AlbumMenuUtils;
-import com.simplecity.amp_library.utils.menu.albumartist.AlbumArtistMenuFragmentHelper;
+import com.simplecity.amp_library.utils.menu.albumartist.AlbumArtistMenuCallbacksAdapter;
 import com.simplecity.amp_library.utils.menu.albumartist.AlbumArtistMenuUtils;
-import com.simplecity.amp_library.utils.menu.song.SongMenuFragmentHelper;
+import com.simplecity.amp_library.utils.menu.song.SongMenuCallbacksAdapter;
 import com.simplecity.amp_library.utils.menu.song.SongMenuUtils;
 import com.simplecityapps.recycler_adapter.adapter.CompletionListUpdateCallbackAdapter;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
@@ -115,9 +115,9 @@ public class SearchFragment extends BaseFragment implements
 
     private RequestManager requestManager;
 
-    private AlbumArtistMenuFragmentHelper albumArtistMenuFragmentHelper = new AlbumArtistMenuFragmentHelper(this, disposables);
-    private AlbumMenuFragmentHelper albumMenuFragmentHelper = new AlbumMenuFragmentHelper(this, disposables);
-    private SongMenuFragmentHelper songMenuFragmentHelper = new SongMenuFragmentHelper(this, disposables, null);
+    private AlbumArtistMenuCallbacksAdapter albumArtistMenuCallbacksAdapter = new AlbumArtistMenuCallbacksAdapter(this, disposables);
+    private AlbumMenuCallbacksAdapter albumMenuCallbacksAdapter = new AlbumMenuCallbacksAdapter(this, disposables);
+    private SongMenuCallbacksAdapter songMenuCallbacksAdapter = new SongMenuCallbacksAdapter(this, disposables);
 
     @Nullable
     private Disposable setDataDisposable;
@@ -381,18 +381,18 @@ public class SearchFragment extends BaseFragment implements
             SubMenu sub = contextualToolbar.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
             disposables.add(PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe());
 
-            contextualToolbar.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(
-                    getContext(),
-                    mediaManager,
-                    Single.defer(() -> Operators.reduceSongSingles(contextualToolbarHelper.getItems())),
-                    songMenuFragmentHelper.getSongMenuCallbacks()
+            contextualToolbar.setOnMenuItemClickListener(SongMenuUtils.INSTANCE.getSongMenuClickListener(
+                    Single.defer(() -> Operators.reduceSongSingles(contextualToolbarHelper.getItems())), songMenuCallbacksAdapter
             ));
 
             contextualToolbarHelper = new ContextualToolbarHelper<Single<List<Song>>>(contextualToolbar, new ContextualToolbarHelper.Callback() {
 
                 @Override
-                public void notifyItemChanged(int position, SelectableViewModel viewModel) {
-                    adapter.notifyItemChanged(position, 0);
+                public void notifyItemChanged(SelectableViewModel viewModel) {
+                    int index = adapter.items.indexOf(viewModel);
+                    if (index >= 0) {
+                        adapter.notifyItemChanged(index, 0);
+                    }
                 }
 
                 @Override
@@ -422,7 +422,7 @@ public class SearchFragment extends BaseFragment implements
 
         @Override
         public void onSongClick(int position, SongView songView) {
-            if (!contextualToolbarHelper.handleClick(position, songView, Single.just(Collections.singletonList(songView.song)))) {
+            if (!contextualToolbarHelper.handleClick(songView, Single.just(Collections.singletonList(songView.song)))) {
                 searchPresenter.onSongClick(
                         Stream.of(adapter.items)
                                 .filter(item -> item instanceof SongView)
@@ -434,14 +434,14 @@ public class SearchFragment extends BaseFragment implements
 
         @Override
         public boolean onSongLongClick(int position, SongView songView) {
-            return contextualToolbarHelper.handleLongClick(position, songView, Single.just(Collections.singletonList(songView.song)));
+            return contextualToolbarHelper.handleLongClick(songView, Single.just(Collections.singletonList(songView.song)));
         }
 
         @Override
         public void onSongOverflowClick(int position, View v, Song song) {
             PopupMenu menu = new PopupMenu(v.getContext(), v);
-            SongMenuUtils.setupSongMenu(menu, false);
-            menu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(v.getContext(), mediaManager, position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
+            SongMenuUtils.INSTANCE.setupSongMenu(menu, false);
+            menu.setOnMenuItemClickListener(SongMenuUtils.INSTANCE.getSongMenuClickListener(song, songMenuCallbacksAdapter));
             menu.show();
         }
 
@@ -454,21 +454,21 @@ public class SearchFragment extends BaseFragment implements
     private AlbumView.ClickListener albumViewClickListener = new AlbumView.ClickListener() {
         @Override
         public void onAlbumClick(int position, AlbumView albumView, AlbumView.ViewHolder viewHolder) {
-            if (!contextualToolbarHelper.handleClick(position, albumView, albumView.album.getSongsSingle())) {
+            if (!contextualToolbarHelper.handleClick(albumView, albumView.album.getSongsSingle())) {
                 searchPresenter.onAlbumClick(albumView, viewHolder);
             }
         }
 
         @Override
         public boolean onAlbumLongClick(int position, AlbumView albumView) {
-            return contextualToolbarHelper.handleLongClick(position, albumView, albumView.album.getSongsSingle());
+            return contextualToolbarHelper.handleLongClick(albumView, albumView.album.getSongsSingle());
         }
 
         @Override
         public void onAlbumOverflowClicked(View v, Album album) {
             PopupMenu menu = new PopupMenu(v.getContext(), v);
-            AlbumMenuUtils.setupAlbumMenu(menu);
-            menu.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(v.getContext(), mediaManager, album, albumMenuFragmentHelper.getCallbacks()));
+            AlbumMenuUtils.INSTANCE.setupAlbumMenu(menu);
+            menu.setOnMenuItemClickListener(AlbumMenuUtils.INSTANCE.getAlbumMenuClickListener(v.getContext(), mediaManager, album, albumMenuCallbacksAdapter));
             menu.show();
         }
     };
@@ -476,21 +476,21 @@ public class SearchFragment extends BaseFragment implements
     private AlbumArtistView.ClickListener albumArtistClickListener = new AlbumArtistView.ClickListener() {
         @Override
         public void onAlbumArtistClick(int position, AlbumArtistView albumArtistView, AlbumArtistView.ViewHolder viewholder) {
-            if (!contextualToolbarHelper.handleClick(position, albumArtistView, albumArtistView.albumArtist.getSongsSingle())) {
+            if (!contextualToolbarHelper.handleClick(albumArtistView, albumArtistView.albumArtist.getSongsSingle())) {
                 searchPresenter.onArtistClicked(albumArtistView, viewholder);
             }
         }
 
         @Override
         public boolean onAlbumArtistLongClick(int position, AlbumArtistView albumArtistView) {
-            return contextualToolbarHelper.handleLongClick(position, albumArtistView, albumArtistView.albumArtist.getSongsSingle());
+            return contextualToolbarHelper.handleLongClick(albumArtistView, albumArtistView.albumArtist.getSongsSingle());
         }
 
         @Override
         public void onAlbumArtistOverflowClicked(View v, AlbumArtist albumArtist) {
             PopupMenu menu = new PopupMenu(v.getContext(), v);
             menu.inflate(R.menu.menu_artist);
-            menu.setOnMenuItemClickListener(AlbumArtistMenuUtils.getAlbumArtistClickListener(v.getContext(), mediaManager, albumArtist, albumArtistMenuFragmentHelper.getCallbacks()));
+            menu.setOnMenuItemClickListener(AlbumArtistMenuUtils.INSTANCE.getAlbumArtistClickListener(v.getContext(), mediaManager, albumArtist, albumArtistMenuCallbacksAdapter));
             menu.show();
         }
     };

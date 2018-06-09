@@ -18,7 +18,7 @@ import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
-import com.simplecity.amp_library.utils.menu.playlist.PlaylistMenuFragmentHelper;
+import com.simplecity.amp_library.utils.menu.playlist.PlaylistMenuCallbacksAdapter;
 import com.simplecity.amp_library.utils.menu.playlist.PlaylistMenuUtils;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
@@ -54,7 +54,7 @@ public class PlaylistFragment extends BaseFragment {
 
     private CompositeDisposable disposables = new CompositeDisposable();
 
-    private PlaylistMenuFragmentHelper playlistMenuFragmentHelper = new PlaylistMenuFragmentHelper(this, disposables, null);
+    private PlaylistMenuCallbacksAdapter playlistMenuCallbacksAdapter = new PlaylistMenuCallbacksAdapter(this, disposables);
 
     public PlaylistFragment() {
 
@@ -162,8 +162,8 @@ public class PlaylistFragment extends BaseFragment {
                                 @Override
                                 public void onPlaylistOverflowClick(int position, View view, Playlist playlist) {
                                     PopupMenu menu = new PopupMenu(getContext(), view);
-                                    PlaylistMenuUtils.setupPlaylistMenu(menu, playlist);
-                                    menu.setOnMenuItemClickListener(PlaylistMenuUtils.getPlaylistPopupMenuClickListener(mediaManager, playlist, playlistMenuFragmentHelper.getCallbacks()));
+                                    PlaylistMenuUtils.INSTANCE.setupPlaylistMenu(menu, playlist);
+                                    menu.setOnMenuItemClickListener(PlaylistMenuUtils.INSTANCE.getPlaylistPopupMenuClickListener(mediaManager, playlist, playlistMenuCallbacksAdapter));
                                     menu.show();
                                 }
                             };

@@ -62,9 +62,9 @@ import com.simplecity.amp_library.utils.ResourceUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.StringUtils;
 import com.simplecity.amp_library.utils.TypefaceManager;
-import com.simplecity.amp_library.utils.menu.playlist.PlaylistMenuFragmentHelper;
+import com.simplecity.amp_library.utils.menu.playlist.PlaylistMenuCallbacksAdapter;
 import com.simplecity.amp_library.utils.menu.playlist.PlaylistMenuUtils;
-import com.simplecity.amp_library.utils.menu.song.SongMenuFragmentHelper;
+import com.simplecity.amp_library.utils.menu.song.SongMenuCallbacksAdapter;
 import com.simplecity.amp_library.utils.menu.song.SongMenuUtils;
 import com.simplecity.amp_library.utils.sorting.AlbumSortHelper;
 import com.simplecity.amp_library.utils.sorting.SongSortHelper;
@@ -105,9 +105,9 @@ public class PlaylistDetailFragment extends BaseFragment implements
 
     protected CompositeDisposable disposables = new CompositeDisposable();
 
-    private PlaylistMenuFragmentHelper playlistMenuFragmentHelper;
+    private PlaylistMenuCallbacksAdapter playlistMenuCallbacksAdapter;
 
-    private SongMenuFragmentHelper songMenuFragmentHelper;
+    private SongMenuCallbacksAdapter songMenuCallbacksAdapter;
 
     private ColorStateList collapsingToolbarTextColor;
 
@@ -148,6 +148,10 @@ public class PlaylistDetailFragment extends BaseFragment implements
 
     private boolean isFirstLoad = true;
 
+    public PlaylistDetailFragment() {
+
+    }
+
     public static PlaylistDetailFragment newInstance(Playlist playlist) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_PLAYLIST, playlist);
@@ -168,9 +172,6 @@ public class PlaylistDetailFragment extends BaseFragment implements
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
-        playlistMenuFragmentHelper = new PlaylistMenuFragmentHelper(this, disposables, playlistMenuCallbacks);
-        songMenuFragmentHelper = new SongMenuFragmentHelper(this, disposables, songMenuCallbacks);
-
         presenter = new PlaylistDetailPresenter(mediaManager, playlist);
 
         requestManager = Glide.with(this);
@@ -180,6 +181,31 @@ public class PlaylistDetailFragment extends BaseFragment implements
         setEnterSharedElementCallback(enterSharedElementCallback);
 
         isFirstLoad = true;
+
+        playlistMenuCallbacksAdapter = new PlaylistMenuCallbacksAdapter(this, disposables) {
+            @Override
+            public void onPlaylistDeleted() {
+                super.onPlaylistDeleted();
+
+                Toast.makeText(getContext(), R.string.playlist_deleted_message, Toast.LENGTH_SHORT).show();
+                getNavigationController().popViewController();
+            }
+        };
+
+        songMenuCallbacksAdapter = new SongMenuCallbacksAdapter(this, disposables) {
+
+            @Override
+            public void removeSong(@NotNull Song song) {
+                ViewModel songView = Stream.of(adapter.items).filter(value -> value instanceof SongView && ((SongView) value).song == song).findFirst().orElse(null);
+                int index = adapter.items.indexOf(songView);
+                playlist.removeSong(song, success -> {
+                    if (!success) {
+                        // Playlist removal failed, re-insert adapter item
+                        adapter.addItem(index, songView);
+                    }
+                });
+            }
+        };
     }
 
     @Override
@@ -290,7 +316,7 @@ public class PlaylistDetailFragment extends BaseFragment implements
         getActivity().getMenuInflater().inflate(R.menu.menu_detail_sort_albums, item.getSubMenu());
         getActivity().getMenuInflater().inflate(R.menu.menu_detail_sort_songs, item.getSubMenu());
 
-        PlaylistMenuUtils.setupPlaylistMenu(toolbar, playlist);
+        PlaylistMenuUtils.INSTANCE.setupPlaylistMenu(toolbar, playlist);
 
         toolbar.getMenu().findItem(R.id.editTags).setVisible(true);
         toolbar.getMenu().findItem(R.id.info).setVisible(true);
@@ -305,8 +331,7 @@ public class PlaylistDetailFragment extends BaseFragment implements
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        // Todo: Close this fragment when the playlist is deleted.
-        if (PlaylistMenuUtils.handleMenuItemClicks(item, mediaManager, playlist, playlistMenuFragmentHelper.getCallbacks())) {
+        if (PlaylistMenuUtils.INSTANCE.handleMenuItemClicks(item, mediaManager, playlist, playlistMenuCallbacksAdapter)) {
             return true;
         }
 
@@ -485,15 +510,16 @@ public class PlaylistDetailFragment extends BaseFragment implements
             disposables.add(PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe());
 
             contextualToolbar.setOnMenuItemClickListener(
-                    SongMenuUtils.getSongMenuClickListener(getContext(), mediaManager, Single.defer(() -> Operators.reduceSongSingles(contextualToolbarHelper.getItems())),
-                            songMenuFragmentHelper.getSongMenuCallbacks()));
+                    SongMenuUtils.INSTANCE.getSongMenuClickListener(Single.defer(() -> Operators.reduceSongSingles(contextualToolbarHelper.getItems())), songMenuCallbacksAdapter)
+            );
 
             contextualToolbarHelper = new ContextualToolbarHelper<Single<List<Song>>>(contextualToolbar, new ContextualToolbarHelper.Callback() {
 
                 @Override
-                public void notifyItemChanged(int position, SelectableViewModel viewModel) {
-                    if (adapter.items.contains(viewModel)) {
-                        adapter.notifyItemChanged(position, 0);
+                public void notifyItemChanged(SelectableViewModel viewModel) {
+                    int index = adapter.items.indexOf(viewModel);
+                    if (index >= 0) {
+                        adapter.notifyItemChanged(index, 0);
                     }
                 }
 
@@ -562,7 +588,7 @@ public class PlaylistDetailFragment extends BaseFragment implements
                         .orElse(-1);
 
                 if (adjustedFrom != -1 && adjustedTo != -1) {
-                    boolean songMoved = playlist.moveSong(adjustedFrom, adjustedTo);
+                    playlist.moveSong(adjustedFrom, adjustedTo);
                 }
             },
             () -> {
@@ -585,52 +611,27 @@ public class PlaylistDetailFragment extends BaseFragment implements
     public SongView.ClickListener songClickListener = new SongView.ClickListener() {
         @Override
         public void onSongClick(int position, SongView songView) {
-            if (!contextualToolbarHelper.handleClick(position, songView, Single.just(Collections.singletonList(songView.song)))) {
+            if (!contextualToolbarHelper.handleClick(songView, Single.just(Collections.singletonList(songView.song)))) {
                 presenter.songClicked(songView.song);
             }
         }
 
         @Override
         public boolean onSongLongClick(int position, SongView songView) {
-            return contextualToolbarHelper.handleLongClick(position, songView, Single.just(Collections.singletonList(songView.song)));
+            return contextualToolbarHelper.handleLongClick(songView, Single.just(Collections.singletonList(songView.song)));
         }
 
         @Override
         public void onSongOverflowClick(int position, View v, Song song) {
             PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
-            SongMenuUtils.setupSongMenu(popupMenu, playlist.canEdit);
-            popupMenu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(v.getContext(), mediaManager, position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
+            SongMenuUtils.INSTANCE.setupSongMenu(popupMenu, playlist.canEdit);
+            popupMenu.setOnMenuItemClickListener(SongMenuUtils.INSTANCE.getSongMenuClickListener(song, songMenuCallbacksAdapter));
             popupMenu.show();
         }
 
         @Override
         public void onStartDrag(SongView.ViewHolder holder) {
             itemTouchHelper.startDrag(holder);
-        }
-    };
-
-    private PlaylistMenuUtils.CallbacksAdapter playlistMenuCallbacks = new PlaylistMenuUtils.CallbacksAdapter() {
-        @Override
-        public void onPlaylistDeleted() {
-            Toast.makeText(getContext(), R.string.playlist_deleted_message, Toast.LENGTH_SHORT).show();
-            getNavigationController().popViewController();
-        }
-    };
-
-    private SongMenuUtils.CallbacksAdapter songMenuCallbacks = new SongMenuUtils.CallbacksAdapter() {
-
-        @Override
-        public void onSongRemoved(int position, Song song) {
-            super.onSongRemoved(position, song);
-
-            SongView songView = (SongView) adapter.removeItem(position);
-
-            playlist.removeSong(song, success -> {
-                if (!success) {
-                    // Playlist removal failed, re-insert adapter item
-                    adapter.addItem(position, songView);
-                }
-            });
         }
     };
 

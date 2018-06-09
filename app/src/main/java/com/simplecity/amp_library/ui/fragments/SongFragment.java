@@ -30,7 +30,7 @@ import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
-import com.simplecity.amp_library.utils.menu.song.SongMenuFragmentHelper;
+import com.simplecity.amp_library.utils.menu.song.SongMenuCallbacksAdapter;
 import com.simplecity.amp_library.utils.menu.song.SongMenuUtils;
 import com.simplecity.amp_library.utils.sorting.SongSortHelper;
 import com.simplecity.amp_library.utils.sorting.SortManager;
@@ -73,9 +73,9 @@ public class SongFragment extends BaseFragment implements
 
     private CompositeDisposable menuDisposables = new CompositeDisposable();
 
-    private SongMenuFragmentHelper songMenuFragmentHelper = new SongMenuFragmentHelper(this, menuDisposables, null);
-
     private RequestManager requestManager;
+
+    private SongMenuCallbacksAdapter songMenuCallbacksAdapter = new SongMenuCallbacksAdapter(this, menuDisposables);
 
     public SongFragment() {
 
@@ -246,7 +246,7 @@ public class SongFragment extends BaseFragment implements
 
     @Override
     public void onSongClick(int position, SongView songView) {
-        if (!contextualToolbarHelper.handleClick(position, songView, songView.song)) {
+        if (!contextualToolbarHelper.handleClick(songView, songView.song)) {
             List<Song> songs = Stream.of(adapter.items)
                     .filter(adaptableItem -> adaptableItem instanceof SongView)
                     .map(adaptableItem -> ((SongView) adaptableItem).song)
@@ -262,14 +262,14 @@ public class SongFragment extends BaseFragment implements
     @Override
     public void onSongOverflowClick(int position, View view, Song song) {
         PopupMenu menu = new PopupMenu(getContext(), view);
-        SongMenuUtils.setupSongMenu(menu, false);
-        menu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), mediaManager, position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
+        SongMenuUtils.INSTANCE.setupSongMenu(menu, false);
+        menu.setOnMenuItemClickListener(SongMenuUtils.INSTANCE.getSongMenuClickListener(song, songMenuCallbacksAdapter));
         menu.show();
     }
 
     @Override
     public boolean onSongLongClick(int position, SongView songView) {
-        return contextualToolbarHelper.handleLongClick(position, songView, songView.song);
+        return contextualToolbarHelper.handleLongClick(songView, songView.song);
     }
 
     @Override
@@ -311,8 +311,11 @@ public class SongFragment extends BaseFragment implements
 
             contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
                 @Override
-                public void notifyItemChanged(int position, SelectableViewModel viewModel) {
-                    adapter.notifyItemChanged(position, 0);
+                public void notifyItemChanged(SelectableViewModel viewModel) {
+                    int index = adapter.items.indexOf(viewModel);
+                    if (index >= 0) {
+                        adapter.notifyItemChanged(index, 0);
+                    }
                 }
 
                 @Override
@@ -321,8 +324,8 @@ public class SongFragment extends BaseFragment implements
                 }
             });
 
-            contextualToolbar.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(getContext(), mediaManager, Single.defer(() -> Single.just(contextualToolbarHelper.getItems())),
-                    songMenuFragmentHelper.getSongMenuCallbacks()));
+            contextualToolbar.setOnMenuItemClickListener(
+                    SongMenuUtils.INSTANCE.getSongMenuClickListener(Single.defer(() -> Single.just(contextualToolbarHelper.getItems())), songMenuCallbacksAdapter));
         }
     }
 

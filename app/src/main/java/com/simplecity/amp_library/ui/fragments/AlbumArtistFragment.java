@@ -33,7 +33,7 @@ import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
-import com.simplecity.amp_library.utils.menu.albumartist.AlbumArtistMenuFragmentHelper;
+import com.simplecity.amp_library.utils.menu.albumartist.AlbumArtistMenuCallbacksAdapter;
 import com.simplecity.amp_library.utils.menu.albumartist.AlbumArtistMenuUtils;
 import com.simplecity.amp_library.utils.sorting.SortManager;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
@@ -89,7 +89,7 @@ public class AlbumArtistFragment extends BaseFragment implements
 
     private CompositeDisposable menuDisposable = new CompositeDisposable();
 
-    private AlbumArtistMenuFragmentHelper albumArtistMenuFragmentHelper = new AlbumArtistMenuFragmentHelper(this, menuDisposable);
+    private AlbumArtistMenuCallbacksAdapter albumArtistMenuCallbacksAdapter = new AlbumArtistMenuCallbacksAdapter(this, menuDisposable);
 
     public static AlbumArtistFragment newInstance(String pageTitle) {
         Bundle args = new Bundle();
@@ -392,7 +392,7 @@ public class AlbumArtistFragment extends BaseFragment implements
 
     @Override
     public void onAlbumArtistClick(int position, AlbumArtistView albumArtistView, AlbumArtistView.ViewHolder viewholder) {
-        if (!contextualToolbarHelper.handleClick(position, albumArtistView, albumArtistView.albumArtist)) {
+        if (!contextualToolbarHelper.handleClick(albumArtistView, albumArtistView.albumArtist)) {
             if (albumArtistClickListener != null) {
                 albumArtistClickListener.onAlbumArtistClicked(albumArtistView.albumArtist, viewholder.imageOne);
             }
@@ -401,7 +401,7 @@ public class AlbumArtistFragment extends BaseFragment implements
 
     @Override
     public boolean onAlbumArtistLongClick(int position, AlbumArtistView albumArtistView) {
-        return contextualToolbarHelper.handleLongClick(position, albumArtistView, albumArtistView.albumArtist);
+        return contextualToolbarHelper.handleLongClick(albumArtistView, albumArtistView.albumArtist);
     }
 
     @Override
@@ -410,7 +410,7 @@ public class AlbumArtistFragment extends BaseFragment implements
         menu.inflate(R.menu.menu_artist);
         SubMenu sub = menu.getMenu().findItem(R.id.addToPlaylist).getSubMenu();
         PlaylistUtils.createPlaylistMenu(sub);
-        menu.setOnMenuItemClickListener(AlbumArtistMenuUtils.getAlbumArtistClickListener(getContext(), mediaManager, albumArtist, albumArtistMenuFragmentHelper.getCallbacks()));
+        menu.setOnMenuItemClickListener(AlbumArtistMenuUtils.INSTANCE.getAlbumArtistClickListener(getContext(), mediaManager, albumArtist, albumArtistMenuCallbacksAdapter));
         menu.show();
     }
 
@@ -438,17 +438,20 @@ public class AlbumArtistFragment extends BaseFragment implements
             playlistMenuDisposable = PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe();
 
             contextualToolbar.setOnMenuItemClickListener(
-                    AlbumArtistMenuUtils.getAlbumArtistMenuClickListener(
+                    AlbumArtistMenuUtils.INSTANCE.getAlbumArtistMenuClickListener(
                             getContext(),
                             mediaManager,
                             Single.defer(() -> Single.just(contextualToolbarHelper.getItems())),
-                            albumArtistMenuFragmentHelper.getCallbacks()
+                            albumArtistMenuCallbacksAdapter
                     ));
 
             contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
                 @Override
-                public void notifyItemChanged(int position, SelectableViewModel viewModel) {
-                    adapter.notifyItemChanged(position, 0);
+                public void notifyItemChanged(SelectableViewModel viewModel) {
+                    int index = adapter.items.indexOf(viewModel);
+                    if (index >= 0) {
+                        adapter.notifyItemChanged(index, 0);
+                    }
                 }
 
                 @Override

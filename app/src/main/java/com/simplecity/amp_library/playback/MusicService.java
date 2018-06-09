@@ -27,6 +27,7 @@ import com.simplecity.amp_library.playback.constants.ServiceCommand;
 import com.simplecity.amp_library.playback.constants.ShortcutCommands;
 import com.simplecity.amp_library.playback.constants.WidgetManager;
 import com.simplecity.amp_library.services.Equalizer;
+import com.simplecity.amp_library.ui.queue.QueueItem;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MediaButtonIntentReceiver;
 import com.simplecity.amp_library.utils.PlaylistUtils;
@@ -400,6 +401,20 @@ public class MusicService extends Service {
         }
     }
 
+    public void moveToNext(QueueItem queueItem) {
+        synchronized (this) {
+            List<QueueItem> playlist = queueManager.getCurrentPlaylist();
+            int fromIndex = playlist.indexOf(queueItem);
+
+            QueueItem currentQueueItem = queueManager.getCurrentQueueItem();
+            int toIndex = playlist.indexOf(currentQueueItem) + 1;
+
+            if (fromIndex != toIndex) {
+                playbackManager.moveQueueItem(fromIndex, toIndex);
+            }
+        }
+    }
+
     /**
      * Sets the track to be played
      */
@@ -654,7 +669,7 @@ public class MusicService extends Service {
         }
     }
 
-    public List<Song> getQueue() {
+    public List<QueueItem> getQueue() {
         synchronized (this) {
             return queueManager.getCurrentPlaylist();
         }
@@ -680,15 +695,21 @@ public class MusicService extends Service {
         }
     }
 
+    public void removeQueueItems(List<QueueItem> queueItems) {
+        synchronized (this) {
+            playbackManager.removeQueueItems(queueItems);
+        }
+    }
+
     public void removeSongs(List<Song> songs) {
         synchronized (this) {
             playbackManager.removeSongs(songs);
         }
     }
 
-    public void removeSong(int position) {
+    public void removeQueueItem(QueueItem queueItem) {
         synchronized (this) {
-            playbackManager.removeSong(position);
+            playbackManager.removeQueueItem(queueItem);
         }
     }
 

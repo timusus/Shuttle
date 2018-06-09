@@ -11,6 +11,7 @@ import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.playback.QueueManager;
+import com.simplecity.amp_library.ui.queue.QueueItem;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -312,6 +313,14 @@ public class MusicUtils implements MediaManager {
         onAdded.invoke(ShuttleApplication.getInstance().getResources().getQuantityString(R.plurals.NNNtrackstoqueue, songs.size(), songs.size()));
     }
 
+    @Override
+    public void moveToNext(@NotNull QueueItem queueItem) {
+        if (MusicServiceConnectionUtils.serviceBinder.getService() == null) {
+            return;
+        }
+        MusicServiceConnectionUtils.serviceBinder.getService().moveToNext(queueItem);
+    }
+
     public void setQueuePosition(final int position) {
         if (MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null) {
             MusicServiceConnectionUtils.serviceBinder.getService().setQueuePosition(position);
@@ -323,7 +332,7 @@ public class MusicUtils implements MediaManager {
     }
 
     @NonNull
-    public List<Song> getQueue() {
+    public List<QueueItem> getQueue() {
         if (MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null) {
             return MusicServiceConnectionUtils.serviceBinder.getService().getQueue();
         }
@@ -337,13 +346,20 @@ public class MusicUtils implements MediaManager {
         return 0;
     }
 
-    public void removeFromQueue(int position) {
+    public void removeFromQueue(@NonNull QueueItem queueItem) {
         if (MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null) {
-            MusicServiceConnectionUtils.serviceBinder.getService().removeSong(position);
+            MusicServiceConnectionUtils.serviceBinder.getService().removeQueueItem(queueItem);
         }
     }
 
-    public void removeFromQueue(@NonNull final List<Song> songs) {
+    public void removeFromQueue(@NonNull List<QueueItem> queueItems) {
+        if (MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null) {
+            MusicServiceConnectionUtils.serviceBinder.getService().removeQueueItems(queueItems);
+        }
+    }
+
+    @Override
+    public void removeSongsFromQueue(@NotNull List<Song> songs) {
         if (MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null) {
             MusicServiceConnectionUtils.serviceBinder.getService().removeSongs(songs);
         }

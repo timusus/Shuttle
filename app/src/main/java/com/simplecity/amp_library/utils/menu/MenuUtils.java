@@ -48,8 +48,7 @@ public class MenuUtils {
     }
 
     // Todo: Remove context requirement
-    public static void addToPlaylist(Context context, MenuItem item, List<Song> songs, UnsafeAction insertCallback) {
-        Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(PlaylistUtils.ARG_PLAYLIST);
+    public static void addToPlaylist(Context context, Playlist playlist, List<Song> songs, UnsafeAction insertCallback) {
         PlaylistUtils.addToPlaylist(context, playlist, songs, insertCallback);
     }
 
@@ -121,15 +120,14 @@ public class MenuUtils {
      * <p>
      * Adds the passed in songs to the playlist. The playlist is included in the data of {@link MenuItem#getIntent()}
      *
-     * @param item the menu item containing the intent which holds the Playlist
+     * @param playlist the playlist to add the songs to
      * @param single the songs to be added to the playlist
      * @param insertCallback called once the items have been successfully inserted into the playlist
      */
-    public static Disposable addToPlaylist(Context context, MenuItem item, Single<List<Song>> single, UnsafeAction insertCallback) {
+    public static Disposable addToPlaylist(Context context, Playlist playlist, Single<List<Song>> single, UnsafeAction insertCallback) {
         return single.observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         songs -> {
-                            Playlist playlist = (Playlist) item.getIntent().getSerializableExtra(PlaylistUtils.ARG_PLAYLIST);
                             PlaylistUtils.addToPlaylist(context, playlist, songs, insertCallback);
                         },
                         throwable -> LogUtils.logException(TAG, "Error adding to playlist", throwable)

@@ -19,6 +19,8 @@ buildscript {
 
 apply plugin: Dependencies.BuildPlugins.androidApplication
 apply plugin: Dependencies.BuildPlugins.kotlin
+apply plugin: Dependencies.BuildPlugins.kotlinAndroidExtensions
+apply plugin: Dependencies.BuildPlugins.kapt
 apply plugin: Dependencies.BuildPlugins.dexCount
 apply plugin: Dependencies.BuildPlugins.fabric
 apply plugin: Dependencies.BuildPlugins.playPublisher
@@ -267,10 +269,10 @@ dependencies {
     implementation Dependencies.billing
 
     implementation Dependencies.butterknife
-    annotationProcessor Dependencies.butterknifeAnnotationProcessor
+    kapt Dependencies.butterknifeAnnotationProcessor
 
     implementation Dependencies.dagger
-    annotationProcessor Dependencies.daggerAnnotationProcessor
+    kapt Dependencies.daggerAnnotationProcessor
 
     implementation(Dependencies.crashlytics) {
         transitive = true

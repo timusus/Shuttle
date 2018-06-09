@@ -37,6 +37,7 @@ import com.simplecity.amp_library.ui.drawer.DrawerProvider;
 import com.simplecity.amp_library.ui.drawer.MiniPlayerLockManager;
 import com.simplecity.amp_library.ui.drawer.NavigationEventRelay;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
+import com.simplecity.amp_library.ui.queue.QueueFragment;
 import com.simplecity.amp_library.ui.settings.SettingsParentFragment;
 import com.simplecity.amp_library.ui.views.UpNextView;
 import com.simplecity.amp_library.ui.views.multisheet.CustomMultiSheetView;
@@ -107,7 +108,7 @@ public class MainController extends BaseNavigationController implements BackPres
                     .beginTransaction()
                     .add(multiSheetView.getSheetContainerViewResId(MultiSheetView.Sheet.FIRST), PlayerFragment.newInstance())
                     .add(multiSheetView.getSheetPeekViewResId(MultiSheetView.Sheet.FIRST), MiniPlayerFragment.newInstance())
-                    .add(multiSheetView.getSheetContainerViewResId(MultiSheetView.Sheet.SECOND), QueueFragment.newInstance())
+                    .add(multiSheetView.getSheetContainerViewResId(MultiSheetView.Sheet.SECOND), QueueFragment.Companion.newInstance())
                     .commit();
         } else {
             multiSheetView.restoreSheet(savedInstanceState.getInt(STATE_CURRENT_SHEET));

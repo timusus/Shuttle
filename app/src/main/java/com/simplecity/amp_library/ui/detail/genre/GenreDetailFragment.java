@@ -68,9 +68,9 @@ import com.simplecity.amp_library.utils.ResourceUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.StringUtils;
 import com.simplecity.amp_library.utils.TypefaceManager;
-import com.simplecity.amp_library.utils.menu.album.AlbumMenuFragmentHelper;
+import com.simplecity.amp_library.utils.menu.album.AlbumMenuCallbacksAdapter;
 import com.simplecity.amp_library.utils.menu.album.AlbumMenuUtils;
-import com.simplecity.amp_library.utils.menu.song.SongMenuFragmentHelper;
+import com.simplecity.amp_library.utils.menu.song.SongMenuCallbacksAdapter;
 import com.simplecity.amp_library.utils.menu.song.SongMenuUtils;
 import com.simplecity.amp_library.utils.sorting.AlbumSortHelper;
 import com.simplecity.amp_library.utils.sorting.SongSortHelper;
@@ -111,9 +111,9 @@ public class GenreDetailFragment extends BaseFragment implements
 
     private CompositeDisposable disposables = new CompositeDisposable();
 
-    private AlbumMenuFragmentHelper albumMenuFragmentHelper = new AlbumMenuFragmentHelper(this, disposables);
+    private AlbumMenuCallbacksAdapter albumMenuCallbacksAdapter = new AlbumMenuCallbacksAdapter(this, disposables);
 
-    private SongMenuFragmentHelper songMenuFragmentHelper = new SongMenuFragmentHelper(this, disposables, null);
+    private SongMenuCallbacksAdapter songMenuCallbacksAdapter = new SongMenuCallbacksAdapter(this, disposables);
 
     private ColorStateList collapsingToolbarTextColor;
 
@@ -478,7 +478,7 @@ public class GenreDetailFragment extends BaseFragment implements
         if (!data.second.isEmpty()) {
             List<ViewModel> items = new ArrayList<>();
 
-            items.add(new SubheaderView(StringUtils.makeSongsLabel(ShuttleApplication.getInstance(), data.second.size())));
+            items.add(new SubheaderView(StringUtils.makeSongsAndTimeLabel(getContext(), data.second.size(),  Stream.of(data.second).mapToLong(song -> song.duration / 1000).sum())));
 
             items.addAll(Stream.of(data.second)
                     .map(song -> {
@@ -521,21 +521,23 @@ public class GenreDetailFragment extends BaseFragment implements
             disposables.add(PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe());
 
             contextualToolbar.setOnMenuItemClickListener(
-                    SongMenuUtils.getSongMenuClickListener(
-                            getContext(),
-                            mediaManager,
-                            Single.defer(() -> Operators.reduceSongSingles(contextualToolbarHelper.getItems())),
-                            songMenuFragmentHelper.getSongMenuCallbacks())
+                    SongMenuUtils.INSTANCE.getSongMenuClickListener(Single.defer(() -> Operators.reduceSongSingles(contextualToolbarHelper.getItems())), songMenuCallbacksAdapter)
             );
 
             contextualToolbarHelper = new ContextualToolbarHelper<Single<List<Song>>>(contextualToolbar, new ContextualToolbarHelper.Callback() {
 
                 @Override
-                public void notifyItemChanged(int position, SelectableViewModel viewModel) {
+                public void notifyItemChanged(SelectableViewModel viewModel) {
                     if (adapter.items.contains(viewModel)) {
-                        adapter.notifyItemChanged(position, 0);
+                        int index = adapter.items.indexOf(viewModel);
+                        if (index >= 0) {
+                            adapter.notifyItemChanged(index, 0);
+                        }
                     } else if (horizontalRecyclerView.viewModelAdapter.items.contains(viewModel)) {
-                        horizontalRecyclerView.viewModelAdapter.notifyItemChanged(position);
+                        int index = horizontalRecyclerView.viewModelAdapter.items.indexOf(viewModel);
+                        if (index >= 0) {
+                            horizontalRecyclerView.viewModelAdapter.notifyItemChanged(index, 0);
+                        }
                     }
                 }
 
@@ -591,21 +593,21 @@ public class GenreDetailFragment extends BaseFragment implements
     public SongView.ClickListener songClickListener = new SongView.ClickListener() {
         @Override
         public void onSongClick(int position, SongView songView) {
-            if (!contextualToolbarHelper.handleClick(position, songView, Single.just(Collections.singletonList(songView.song)))) {
+            if (!contextualToolbarHelper.handleClick(songView, Single.just(Collections.singletonList(songView.song)))) {
                 presenter.songClicked(songView.song);
             }
         }
 
         @Override
         public boolean onSongLongClick(int position, SongView songView) {
-            return contextualToolbarHelper.handleLongClick(position, songView, Single.just(Collections.singletonList(songView.song)));
+            return contextualToolbarHelper.handleLongClick(songView, Single.just(Collections.singletonList(songView.song)));
         }
 
         @Override
         public void onSongOverflowClick(int position, View v, Song song) {
             PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
-            SongMenuUtils.setupSongMenu(popupMenu, false);
-            popupMenu.setOnMenuItemClickListener(SongMenuUtils.getSongMenuClickListener(v.getContext(), mediaManager, position, song, songMenuFragmentHelper.getSongMenuCallbacks()));
+            SongMenuUtils.INSTANCE.setupSongMenu(popupMenu, false);
+            popupMenu.setOnMenuItemClickListener(SongMenuUtils.INSTANCE.getSongMenuClickListener(song, songMenuCallbacksAdapter));
             popupMenu.show();
         }
 
@@ -619,21 +621,21 @@ public class GenreDetailFragment extends BaseFragment implements
 
         @Override
         public void onAlbumClick(int position, AlbumView albumView, AlbumView.ViewHolder viewHolder) {
-            if (!contextualToolbarHelper.handleClick(position, albumView, albumView.album.getSongsSingle())) {
+            if (!contextualToolbarHelper.handleClick(albumView, albumView.album.getSongsSingle())) {
                 pushDetailFragment(AlbumDetailFragment.newInstance(albumView.album, ViewCompat.getTransitionName(viewHolder.imageOne)), viewHolder.imageOne);
             }
         }
 
         @Override
         public boolean onAlbumLongClick(int position, AlbumView albumView) {
-            return contextualToolbarHelper.handleLongClick(position, albumView, albumView.album.getSongsSingle());
+            return contextualToolbarHelper.handleLongClick(albumView, albumView.album.getSongsSingle());
         }
 
         @Override
         public void onAlbumOverflowClicked(View v, Album album) {
             PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
-            AlbumMenuUtils.setupAlbumMenu(popupMenu);
-            popupMenu.setOnMenuItemClickListener(AlbumMenuUtils.getAlbumMenuClickListener(v.getContext(), mediaManager, album, albumMenuFragmentHelper.getCallbacks()));
+            AlbumMenuUtils.INSTANCE.setupAlbumMenu(popupMenu);
+            popupMenu.setOnMenuItemClickListener(AlbumMenuUtils.INSTANCE.getAlbumMenuClickListener(v.getContext(), mediaManager, album, albumMenuCallbacksAdapter));
             popupMenu.show();
         }
     };

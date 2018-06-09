@@ -1,15 +1,18 @@
 package com.simplecity.amp_library.playback;
 
-import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.annimon.stream.Stream;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.rx.UnsafeConsumer;
+import com.simplecity.amp_library.ui.queue.QueueItem;
+import com.simplecity.amp_library.ui.queue.QueueItemKt;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
+import io.reactivex.disposables.Disposable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -39,10 +42,10 @@ public class QueueManager {
     private final char hexDigits[] = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
     @NonNull
-    List<Song> playlist = new ArrayList<>();
+    List<QueueItem> playlist = new ArrayList<>();
 
     @NonNull
-    List<Song> shuffleList = new ArrayList<>();
+    List<QueueItem> shuffleList = new ArrayList<>();
 
     @ShuffleMode
     int shuffleMode = ShuffleMode.OFF;
@@ -91,11 +94,15 @@ public class QueueManager {
     }
 
     public void open(List<Song> songs, final int position, UnsafeAction openCurrentAndNext) {
-        if (!playlist.equals(songs)) {
+
+        List<QueueItem> queueItems = QueueItemKt.toQueueItems(songs);
+
+        if (!playlist.equals(queueItems)) {
             playlist.clear();
             shuffleList.clear();
 
-            playlist.addAll(songs);
+            playlist.addAll(queueItems);
+            QueueItemKt.updateOccurrence(playlist);
         }
 
         queuePosition = position;
@@ -142,6 +149,9 @@ public class QueueManager {
                 queuePosition++;
             }
         }
+
+        QueueItemKt.updateOccurrence(getCurrentPlaylist());
+
         notifyQueueChanged();
     }
 
@@ -160,7 +170,7 @@ public class QueueManager {
     }
 
     @NonNull
-    List<Song> getCurrentPlaylist() {
+    List<QueueItem> getCurrentPlaylist() {
         if (shuffleMode == ShuffleMode.OFF) {
             return playlist;
         } else {
@@ -169,12 +179,22 @@ public class QueueManager {
     }
 
     @Nullable
-    Song getCurrentSong() {
+    QueueItem getCurrentQueueItem() {
         if (queuePosition >= 0 && queuePosition < getCurrentPlaylist().size()) {
             return getCurrentPlaylist().get(queuePosition);
         }
 
         return null;
+    }
+
+    @Nullable
+    Song getCurrentSong() {
+        QueueItem currentQueueItem = getCurrentQueueItem();
+        if (currentQueueItem != null) {
+            return currentQueueItem.getSong();
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -203,16 +223,20 @@ public class QueueManager {
     /**
      * Removes the first instance of the Song the playlist & shuffleList.
      */
-    void removeSong(int position, UnsafeAction stop, UnsafeAction moveToNextTrack) {
-        List<Song> otherPlaylist = getCurrentPlaylist().equals(playlist) ? shuffleList : playlist;
-        Song song = getCurrentPlaylist().remove(position);
-        otherPlaylist.remove(song);
+    void removeQueueItem(QueueItem queueItem, UnsafeAction stop, UnsafeAction moveToNextTrack) {
 
-        if (this.queuePosition == position) {
+        QueueItem currentQueueItem = getCurrentQueueItem();
+
+        playlist.remove(queueItem);
+        shuffleList.remove(queueItem);
+
+        if (queueItem == currentQueueItem) {
             onCurrentSongRemoved(stop, moveToNextTrack);
         } else {
-            queuePosition = getCurrentPlaylist().indexOf(getCurrentSong());
+            queuePosition = getCurrentPlaylist().indexOf(currentQueueItem);
         }
+
+        QueueItemKt.updateOccurrence(getCurrentPlaylist());
 
         notifyQueueChanged();
     }
@@ -222,13 +246,16 @@ public class QueueManager {
      * within the range is the file currently being played, playback will move
      * to the next Song after the range.
      *
-     * @param songsToRemove the Songs to remove
+     * @param queueItems the QueueItems to remove
      */
-    void removeSongs(@NonNull List<Song> songsToRemove, UnsafeAction stop, UnsafeAction moveToNextTrack) {
-        playlist.removeAll(songsToRemove);
-        shuffleList.removeAll(songsToRemove);
+    void removeQueueItems(@NonNull List<QueueItem> queueItems, UnsafeAction stop, UnsafeAction moveToNextTrack) {
 
-        if (songsToRemove.contains(getCurrentSong())) {
+        playlist.removeAll(queueItems);
+        shuffleList.removeAll(queueItems);
+
+        QueueItemKt.updateOccurrence(getCurrentPlaylist());
+
+        if (queueItems.contains(getCurrentQueueItem())) {
             /*
              * If we remove a list of songs from the current queue, and that list contains our currently
              * playing song, we need to figure out which song should play next. We'll play the first song
@@ -250,13 +277,18 @@ public class QueueManager {
              *
              * So after the removal, we'll play index 2, which is Song 8.
              */
-            queuePosition = Collections.indexOfSubList(getCurrentPlaylist(), songsToRemove);
+            queuePosition = Collections.indexOfSubList(getCurrentPlaylist(), queueItems);
             onCurrentSongRemoved(stop, moveToNextTrack);
         } else {
-            queuePosition = getCurrentPlaylist().indexOf(getCurrentSong());
+            queuePosition = getCurrentPlaylist().indexOf(getCurrentQueueItem());
         }
 
         notifyQueueChanged();
+    }
+
+    void removeSongs(@NonNull List<Song> songs, UnsafeAction stop, UnsafeAction moveToNextTrack) {
+        List<QueueItem> queueItems = Stream.of(playlist).filter(value -> songs.contains(value.getSong())).toList();
+        removeQueueItems(queueItems, stop, moveToNextTrack);
     }
 
     private void onCurrentSongRemoved(UnsafeAction stop, UnsafeAction moveToNextTrack) {
@@ -278,19 +310,27 @@ public class QueueManager {
      * @param songs The list to queue
      * @param action The action to take
      */
-    public void enqueue(final List<Song> songs, @EnqueueAction final int action, UnsafeAction setNextTrack, UnsafeAction openCurrentAndNext) {
+    public void enqueue(List<Song> songs, @EnqueueAction int action, UnsafeAction setNextTrack, UnsafeAction openCurrentAndNext) {
+
+        List<QueueItem> queueItems = QueueItemKt.toQueueItems(songs);
+
         switch (action) {
             case EnqueueAction.NEXT:
-                List<Song> otherList = getCurrentPlaylist() == playlist ? shuffleList : playlist;
-                getCurrentPlaylist().addAll(queuePosition + 1, songs);
-                otherList.addAll(songs);
+                List<QueueItem> otherList = getCurrentPlaylist() == playlist ? shuffleList : playlist;
+                getCurrentPlaylist().addAll(queuePosition + 1, queueItems);
+                otherList.addAll(queueItems);
+
+                QueueItemKt.updateOccurrence(getCurrentPlaylist());
 
                 setNextTrack.run();
                 notifyQueueChanged();
                 break;
             case EnqueueAction.LAST:
-                playlist.addAll(songs);
-                shuffleList.addAll(songs);
+                playlist.addAll(queueItems);
+                shuffleList.addAll(queueItems);
+
+                QueueItemKt.updateOccurrence(getCurrentPlaylist());
+
                 notifyQueueChanged();
                 break;
         }
@@ -307,7 +347,7 @@ public class QueueManager {
      * @param saveQueue boolean whether to serialize the playlist/shuffleList and store those in preferences
      * as well.
      */
-    void saveQueue(final boolean saveQueue) {
+    void saveQueue(boolean saveQueue) {
 
         if (!queueIsSaveable) {
             return;
@@ -325,19 +365,19 @@ public class QueueManager {
         PlaybackSettingsManager.INSTANCE.setShuffleMode(shuffleMode);
     }
 
-    @SuppressLint("CheckResult")
-    void reloadQueue(UnsafeAction reloadComplete, UnsafeAction open, UnsafeConsumer<Long> seekTo) {
+    Disposable reloadQueue(UnsafeAction reloadComplete, UnsafeAction open, UnsafeConsumer<Long> seekTo) {
         queueReloading = true;
 
         shuffleMode = PlaybackSettingsManager.INSTANCE.getShuffleMode();
         repeatMode = PlaybackSettingsManager.INSTANCE.getRepeatMode();
 
-        DataManager.getInstance().getSongsRelay()
+        return DataManager.getInstance().getSongsRelay()
                 .first(Collections.emptyList())
-                .subscribe((UnsafeConsumer<List<Song>>) songs -> {
+                .map(QueueItemKt::toQueueItems)
+                .subscribe((UnsafeConsumer<List<QueueItem>>) queueItems -> {
                     String queueList = PlaybackSettingsManager.INSTANCE.getQueueList();
                     if (queueList != null) {
-                        playlist = deserializePlaylist(queueList, songs);
+                        playlist = deserializePlaylist(queueList, queueItems);
 
                         final int queuePosition = PlaybackSettingsManager.INSTANCE.getQueuePosition();
 
@@ -359,7 +399,7 @@ public class QueueManager {
                         if (shuffleMode == ShuffleMode.ON) {
                             queueList = PlaybackSettingsManager.INSTANCE.getShuffleList();
                             if (queueList != null) {
-                                shuffleList = deserializePlaylist(queueList, songs);
+                                shuffleList = deserializePlaylist(queueList, queueItems);
 
                                 if (queuePosition >= shuffleList.size()) {
                                     // The saved playlist is bogus, discard it
@@ -393,7 +433,7 @@ public class QueueManager {
     /**
      * Converts a playlist to a String which can be saved to SharedPrefs
      */
-    private String serializePlaylist(List<Song> list) {
+    private String serializePlaylist(List<QueueItem> queueItems) {
 
         // The current playlist is saved as a list of "reverse hexadecimal"
         // numbers, which we can generate faster than normal decimal or
@@ -402,9 +442,10 @@ public class QueueManager {
 
         StringBuilder q = new StringBuilder();
 
-        int len = list.size();
+        List<Song> songs = Stream.of(queueItems).map(QueueItem::getSong).toList();
+        int len = songs.size();
         for (int i = 0; i < len; i++) {
-            long n = list.get(i).id;
+            long n = songs.get(i).id;
             if (n >= 0) {
                 if (n == 0) {
                     q.append("0;");
@@ -425,7 +466,7 @@ public class QueueManager {
     /**
      * Converts a string representation of a playlist from SharedPrefs into a list of songs.
      */
-    private List<Song> deserializePlaylist(String listString, List<Song> allSongs) {
+    private List<QueueItem> deserializePlaylist(String listString, List<QueueItem> queueItems) {
         List<Long> ids = new ArrayList<>();
         int n = 0;
         int shift = 0;
@@ -451,13 +492,14 @@ public class QueueManager {
 
         Map<Integer, Song> map = new TreeMap<>();
 
-        for (Song song : allSongs) {
+        Stream.of(queueItems).map(QueueItem::getSong).forEach(song -> {
             int index = ids.indexOf(song.id);
             if (index != -1) {
                 map.put(index, song);
             }
-        }
-        return new ArrayList<>(map.values());
+        });
+
+        return QueueItemKt.toQueueItems(new ArrayList<>(map.values()));
     }
 
     void makeShuffleList() {
@@ -466,7 +508,7 @@ public class QueueManager {
         }
 
         shuffleList = new ArrayList<>(playlist);
-        Song currentSong = null;
+        QueueItem currentSong = null;
         if (queuePosition >= 0 && queuePosition < shuffleList.size()) {
             currentSong = shuffleList.remove(queuePosition);
         }
@@ -477,5 +519,7 @@ public class QueueManager {
             shuffleList.add(0, currentSong);
         }
         queuePosition = 0;
+
+        QueueItemKt.updateOccurrence(shuffleList);
     }
 }

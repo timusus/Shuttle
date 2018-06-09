@@ -12,7 +12,7 @@ import com.simplecity.amp_library.ui.fragments.LibraryController;
 import com.simplecity.amp_library.ui.fragments.MainController;
 import com.simplecity.amp_library.ui.fragments.MiniPlayerFragment;
 import com.simplecity.amp_library.ui.fragments.PlayerFragment;
-import com.simplecity.amp_library.ui.fragments.QueueFragment;
+import com.simplecity.amp_library.ui.queue.QueueFragment;
 import com.simplecity.amp_library.ui.fragments.QueuePagerFragment;
 import com.simplecity.amp_library.ui.fragments.SuggestedFragment;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
