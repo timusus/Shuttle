@@ -39,7 +39,7 @@ public class NotificationHelper {
     public void notify(int notificationId, Notification notification) {
         try {
             notificationManager.notify(notificationId, notification);
-        } catch (RuntimeException e) {
+        }  catch (RuntimeException e) {
             LogUtils.logException(TAG, "Error posting notification", e);
         }
     }

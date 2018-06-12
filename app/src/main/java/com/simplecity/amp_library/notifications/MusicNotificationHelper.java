@@ -149,7 +149,11 @@ public class MusicNotificationHelper extends NotificationHelper {
 
     public void startForeground(Service service, @NonNull Song song, boolean isPlaying, @NonNull MediaSessionCompat.Token mediaSessionToken) {
         notify(service, song, isPlaying, mediaSessionToken);
-        service.startForeground(NOTIFICATION_ID, notification);
+        try {
+            service.startForeground(NOTIFICATION_ID, notification);
+        } catch (RuntimeException e) {
+            LogUtils.logException(TAG, "Error starting foreground notification", e);
+        }
     }
 
     public void notify(Notification notification) {
