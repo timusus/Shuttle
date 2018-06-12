@@ -18,8 +18,10 @@ public class ShuffleButton extends android.support.v7.widget.AppCompatImageButto
     @QueueManager.ShuffleMode
     private int shuffleMode;
 
+    @Nullable
     private Disposable aestheticDisposable;
 
+    int normalColor = Color.WHITE;
     int selectedColor = Color.WHITE;
 
     @NonNull
@@ -38,7 +40,7 @@ public class ShuffleButton extends android.support.v7.widget.AppCompatImageButto
     public ShuffleButton(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        shuffleOff = ContextCompat.getDrawable(context, R.drawable.ic_shuffle_24dp_scaled);
+        shuffleOff = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.ic_shuffle_24dp_scaled).mutate());
         shuffleTracks = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.ic_shuffle_24dp_scaled).mutate());
 
         setShuffleMode(QueueManager.ShuffleMode.OFF);
@@ -48,7 +50,7 @@ public class ShuffleButton extends android.support.v7.widget.AppCompatImageButto
         if (this.shuffleMode != shuffleMode) {
             this.shuffleMode = shuffleMode;
 
-            invalidateColors(selectedColor);
+            invalidateColors(normalColor, selectedColor);
 
             switch (shuffleMode) {
                 case QueueManager.ShuffleMode.OFF:
@@ -71,20 +73,29 @@ public class ShuffleButton extends android.support.v7.widget.AppCompatImageButto
             return;
         }
 
-        aestheticDisposable = Aesthetic.get(getContext()).colorAccent()
-                .subscribe(colorAccent -> {
-                    selectedColor = colorAccent;
-                    invalidateColors(selectedColor);
-                });
+        if (!":aesthetic_ignore".equals(getTag())) {
+            aestheticDisposable = Aesthetic.get(getContext()).colorAccent()
+                    .subscribe(colorAccent -> {
+                        selectedColor = colorAccent;
+                        invalidateColors(Color.WHITE, selectedColor);
+                    });
+        }
     }
 
     @Override
     protected void onDetachedFromWindow() {
-        aestheticDisposable.dispose();
+        if (aestheticDisposable != null) {
+            aestheticDisposable.dispose();
+        }
         super.onDetachedFromWindow();
     }
 
-    private void invalidateColors(int selectedColor) {
-        DrawableCompat.setTint(shuffleTracks, selectedColor);
+    public void invalidateColors(int normal, int selected) {
+
+        this.normalColor = normal;
+        this.selectedColor = selected;
+
+        DrawableCompat.setTint(shuffleOff, normal);
+        DrawableCompat.setTint(shuffleTracks, selected);
     }
 }

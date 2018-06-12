@@ -18,14 +18,18 @@ public class RepeatButton extends android.support.v7.widget.AppCompatImageButton
     @QueueManager.RepeatMode
     private int repeatMode;
 
+    @Nullable
     private Disposable aestheticDisposable;
 
+    int normalColor = Color.WHITE;
     int selectedColor = Color.WHITE;
 
     @NonNull
     Drawable offDrawable;
+
     @NonNull
     Drawable oneDrawable;
+
     @NonNull
     Drawable allDrawable;
 
@@ -40,11 +44,12 @@ public class RepeatButton extends android.support.v7.widget.AppCompatImageButton
     public RepeatButton(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        offDrawable = ContextCompat.getDrawable(context, R.drawable.ic_repeat_24dp_scaled);
+        offDrawable = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.ic_repeat_24dp_scaled).mutate());
         oneDrawable = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.ic_repeat_one_24dp_scaled));
-        allDrawable = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.ic_repeat_24dp_scaled)).mutate();
+        allDrawable = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.ic_repeat_24dp_scaled).mutate());
 
         setRepeatMode(QueueManager.RepeatMode.OFF);
+        setImageDrawable(offDrawable);
     }
 
     public void setRepeatMode(@QueueManager.RepeatMode int repeatMode) {
@@ -52,7 +57,7 @@ public class RepeatButton extends android.support.v7.widget.AppCompatImageButton
         if (repeatMode != this.repeatMode) {
             this.repeatMode = repeatMode;
 
-            invalidateColors(selectedColor);
+            invalidateColors(normalColor, selectedColor);
 
             switch (repeatMode) {
                 case QueueManager.RepeatMode.ALL:
@@ -79,21 +84,30 @@ public class RepeatButton extends android.support.v7.widget.AppCompatImageButton
             return;
         }
 
-        aestheticDisposable = Aesthetic.get(getContext()).colorAccent()
-                .subscribe(colorAccent -> {
-                    selectedColor = colorAccent;
-                    invalidateColors(selectedColor);
-                });
+        if (!":aesthetic_ignore".equals(getTag())) {
+            aestheticDisposable = Aesthetic.get(getContext()).colorAccent()
+                    .subscribe(colorAccent -> {
+                        selectedColor = colorAccent;
+                        invalidateColors(Color.WHITE, selectedColor);
+                    });
+        }
     }
 
     @Override
     protected void onDetachedFromWindow() {
-        aestheticDisposable.dispose();
+        if (aestheticDisposable != null) {
+            aestheticDisposable.dispose();
+        }
         super.onDetachedFromWindow();
     }
 
-    private void invalidateColors(int selectedColor) {
-        DrawableCompat.setTint(oneDrawable, selectedColor);
-        DrawableCompat.setTint(allDrawable, selectedColor);
+    public void invalidateColors(int normal, int selected) {
+
+        this.normalColor = normal;
+        this.selectedColor = selected;
+
+        DrawableCompat.setTint(offDrawable, normal);
+        DrawableCompat.setTint(oneDrawable, selected);
+        DrawableCompat.setTint(allDrawable, selected);
     }
 }

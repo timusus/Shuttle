@@ -193,10 +193,12 @@ public class SettingsPresenter extends PurchasePresenter<SettingsView> {
     public void usePaletteClicked(Context context, boolean usePalette) {
         // If we're not using palette any more, set the primary color back to default
         if (!usePalette) {
-            int storedColor = SettingsManager.getInstance().getPrimaryColor();
+            int storedPrimaryColor = SettingsManager.getInstance().getPrimaryColor();
+            int storedAccentColor = SettingsManager.getInstance().getAccentColor();
 
             Aesthetic.get(context)
-                    .colorPrimary(storedColor == -1 ? ContextCompat.getColor(context, R.color.md_blue_500) : storedColor)
+                    .colorPrimary(storedPrimaryColor == -1 ? ContextCompat.getColor(context, R.color.md_blue_500) : storedPrimaryColor)
+                    .colorAccent(storedAccentColor == -1 ? ContextCompat.getColor(context, R.color.md_amber_300) : storedAccentColor)
                     .colorStatusBarAuto()
                     .colorNavigationBarAuto(SettingsManager.getInstance().getTintNavBar())
                     .apply();
@@ -206,10 +208,12 @@ public class SettingsPresenter extends PurchasePresenter<SettingsView> {
     public void usePaletteNowPlayingOnlyClicked(Context context, boolean usePaletteNowPlayingOnly) {
         // If we're only using palette for 'now playing', set the primary color back to default
         if (usePaletteNowPlayingOnly) {
-            int storedColor = SettingsManager.getInstance().getPrimaryColor();
+            int storedPrimaryColor = SettingsManager.getInstance().getPrimaryColor();
+            int storedAccentColor = SettingsManager.getInstance().getAccentColor();
 
             Aesthetic.get(context)
-                    .colorPrimary(storedColor == -1 ? ContextCompat.getColor(context, R.color.md_blue_500) : storedColor)
+                    .colorPrimary(storedPrimaryColor == -1 ? ContextCompat.getColor(context, R.color.md_blue_500) : storedPrimaryColor)
+                    .colorAccent(storedAccentColor == -1 ? ContextCompat.getColor(context, R.color.md_amber_300) : storedAccentColor)
                     .colorStatusBarAuto()
                     .colorNavigationBarAuto(SettingsManager.getInstance().getTintNavBar())
                     .apply();
