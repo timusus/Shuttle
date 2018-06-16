@@ -112,6 +112,8 @@ public class MusicNotificationHelper extends NotificationHelper {
                     this.isFavorite = isFavorite;
                     notification = getBuilder(context, song, mediaSessionToken, MusicNotificationHelper.this.bitmap, isPlaying, isFavorite).build();
                     notify(notification);
+                }, error -> {
+                    LogUtils.logException(TAG, "MusicNotificationHelper failed to present notification", error);
                 });
 
         handler.post(() -> Glide.with(context)
