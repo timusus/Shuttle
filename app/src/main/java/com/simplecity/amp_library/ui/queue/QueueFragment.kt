@@ -31,7 +31,6 @@ import com.simplecity.amp_library.ui.presenters.PlayerPresenter
 import com.simplecity.amp_library.ui.recyclerview.ItemTouchHelperCallback
 import com.simplecity.amp_library.ui.views.ContextualToolbar
 import com.simplecity.amp_library.ui.views.PlayerViewAdapter
-import com.simplecity.amp_library.ui.views.ThemedStatusBarView
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetSlideEventRelay
 import com.simplecity.amp_library.utils.ContextualToolbarHelper
 import com.simplecity.amp_library.utils.ContextualToolbarHelper.Callback
@@ -55,6 +54,7 @@ import kotlinx.android.synthetic.main.fragment_queue.contextualToolbar
 import kotlinx.android.synthetic.main.fragment_queue.line1
 import kotlinx.android.synthetic.main.fragment_queue.line2
 import kotlinx.android.synthetic.main.fragment_queue.recyclerView
+import kotlinx.android.synthetic.main.fragment_queue.statusBarView
 import kotlinx.android.synthetic.main.fragment_queue.toolbar
 import java.util.ArrayList
 import javax.inject.Inject
@@ -78,8 +78,6 @@ class QueueFragment : BaseFragment(), QueueContract.View {
     private val disposables = CompositeDisposable()
 
     private lateinit var songMenuCallbacksAdapter: SongMenuCallbacksAdapter
-
-    private var statusBarView: ThemedStatusBarView? = null
 
     private var adapter = ViewModelAdapter()
 
@@ -173,12 +171,12 @@ class QueueFragment : BaseFragment(), QueueContract.View {
 
         // In landscape, we need to adjust the status bar's translation depending on the slide offset of the sheet
         if (ShuttleUtils.isLandscape()) {
-            statusBarView!!.translationY = ResourceUtils.toPixels(16f).toFloat()
+            statusBarView.translationY = ResourceUtils.toPixels(16f).toFloat()
 
             disposables.add(multiSheetSlideEventRelay.events
                 .filter { multiSheetEvent -> multiSheetEvent.sheet == MultiSheetView.Sheet.SECOND }
                 .filter { multiSheetEvent -> multiSheetEvent.slideOffset >= 0 }
-                .subscribe { multiSheetEvent -> statusBarView!!.translationY = (1 - multiSheetEvent.slideOffset) * ResourceUtils.toPixels(16f) })
+                .subscribe { multiSheetEvent -> statusBarView.translationY = (1 - multiSheetEvent.slideOffset) * ResourceUtils.toPixels(16f) })
         }
 
         setupContextualToolbar()
