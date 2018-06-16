@@ -46,10 +46,37 @@ class ColorSet(
         }
 
         /**
-         * @return an approximate byte size for this object. Currently based on 4 integers @ 4 bytes each.
+         * @return an approximate byte size for this object. Currently based on 6 integers @ 4 bytes each and a safety factor of 5
          */
         fun estimatedSize(): Int {
-            return 4 * 4
+            return 6 * 4 * 5
         }
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ColorSet
+
+        if (primaryColor != other.primaryColor) return false
+        if (accentColor != other.accentColor) return false
+        if (primaryTextColorTinted != other.primaryTextColorTinted) return false
+        if (secondaryTextColorTinted != other.secondaryTextColorTinted) return false
+        if (primaryTextColor != other.primaryTextColor) return false
+        if (secondaryTextColor != other.secondaryTextColor) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = primaryColor
+        result = 31 * result + accentColor
+        result = 31 * result + primaryTextColorTinted
+        result = 31 * result + secondaryTextColorTinted
+        result = 31 * result + primaryTextColor
+        result = 31 * result + secondaryTextColor
+        return result
+    }
+
 }
