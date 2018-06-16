@@ -39,7 +39,7 @@ import com.simplecity.amp_library.ui.drawer.NavigationEventRelay;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.ui.queue.QueueFragment;
 import com.simplecity.amp_library.ui.settings.SettingsParentFragment;
-import com.simplecity.amp_library.ui.views.UpNextView;
+import com.simplecity.amp_library.ui.upnext.UpNextView;
 import com.simplecity.amp_library.ui.views.multisheet.CustomMultiSheetView;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
 import com.simplecity.amp_library.utils.LogUtils;
@@ -114,7 +114,7 @@ public class MainController extends BaseNavigationController implements BackPres
             multiSheetView.restoreSheet(savedInstanceState.getInt(STATE_CURRENT_SHEET));
         }
 
-        ((ViewGroup) multiSheetView.findViewById(multiSheetView.getSheetPeekViewResId(MultiSheetView.Sheet.SECOND))).addView(UpNextView.newInstance(getContext(), playerPresenter));
+        ((ViewGroup) multiSheetView.findViewById(multiSheetView.getSheetPeekViewResId(MultiSheetView.Sheet.SECOND))).addView(UpNextView.Companion.newInstance(getContext(), playerPresenter));
 
         toggleBottomSheetVisibility(false, false);
 

@@ -23,6 +23,7 @@ class ColorSet(
 
         @WorkerThread
         fun fromBitmap(context: Context, bitmap: Bitmap): ColorSet {
+
             val colors = bitmapPaletteProcessor.processBitmap(bitmap)
             val tintedTextColors = colorHelper.ensureColors(context, true, colors.first!!, colors.second!!)
 
@@ -33,6 +34,7 @@ class ColorSet(
         }
 
         fun fromPrimaryAccentColors(context: Context, primaryColor: Int, accentColor: Int): ColorSet {
+
             val tintedTextColor = colorHelper.ensureColors(context, true, primaryColor, accentColor)
 
             val primaryTextColor = ColorHelper.resolvePrimaryColor(context, primaryColor)

@@ -23,70 +23,73 @@
             android:layout_weight="1">
 
             <include
-                android:id="@+id/shuffle"
                 layout="@layout/shuffle_button"
+                android:id="@+id/shuffleButton"
                 android:layout_width="44dp"
                 android:layout_height="44dp"
                 android:layout_marginLeft="16dp"
-                android:layout_marginTop="8dp"
+                android:tag=":aesthetic_ignore"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <com.simplecity.amp_library.ui.views.RepeatingImageButton
-                android:id="@+id/prev"
+                android:id="@+id/prevButton"
                 android:layout_width="44dp"
                 android:layout_height="44dp"
                 android:background="@drawable/ripple_circular_dark"
                 android:contentDescription="@string/btn_prev"
                 android:padding="8dp"
                 android:scaleType="centerCrop"
-                app:layout_constraintTop_toTopOf="parent"
                 android:src="@drawable/ic_skip_previous_24dp"
+                android:tag=":aesthetic_ignore"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/shuffle"
-                app:layout_constraintRight_toLeftOf="@+id/play"
-                app:layout_constraintTop_toBottomOf="parent"/>
+                app:layout_constraintLeft_toRightOf="@+id/shuffleButton"
+                app:layout_constraintRight_toLeftOf="@+id/playPauseView"
+                app:layout_constraintTop_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <com.simplecity.amp_library.ui.views.RepeatingImageButton
-                android:id="@+id/next"
+                android:id="@+id/nextButton"
                 android:layout_width="44dp"
                 android:layout_height="44dp"
                 android:background="@drawable/ripple_circular_dark"
                 android:contentDescription="@string/btn_skip"
                 android:padding="8dp"
                 android:scaleType="centerCrop"
-                app:layout_constraintTop_toTopOf="parent"
                 android:src="@drawable/ic_skip_next_24dp"
+                android:tag=":aesthetic_ignore"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/play"
-                app:layout_constraintRight_toLeftOf="@+id/repeat"
-                app:layout_constraintTop_toBottomOf="parent"/>
+                app:layout_constraintLeft_toRightOf="@+id/playPauseView"
+                app:layout_constraintRight_toLeftOf="@+id/repeatButton"
+                app:layout_constraintTop_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <include
-                android:id="@+id/repeat"
                 layout="@layout/repeat_button"
-                app:layout_constraintTop_toTopOf="parent"
+                android:id="@+id/repeatButton"
                 android:layout_width="44dp"
                 android:layout_height="44dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
+                android:tag=":aesthetic_ignore"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="parent"/>
+                app:layout_constraintTop_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <com.simplecity.amp_library.ui.views.PlayPauseView
-                android:id="@+id/play"
+                android:id="@+id/playPauseView"
                 android:layout_width="44dp"
                 android:layout_height="44dp"
                 android:background="@drawable/ripple_circular_dark"
-                app:layout_constraintTop_toTopOf="parent"
                 android:contentDescription="@string/btn_play"
+                android:tag=":aesthetic_ignore"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="parent"/>
-
+                app:layout_constraintTop_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
         </android.support.constraint.ConstraintLayout>
 
@@ -116,7 +119,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/queueText"
+                    android:id="@+id/queueTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
@@ -132,7 +135,7 @@
                     android:layout_height="3dp"/>
 
                 <TextView
-                    android:id="@+id/queuePosition"
+                    android:id="@+id/queuePositionTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
@@ -147,7 +150,7 @@
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/arrow"
+                android:id="@+id/arrowImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="end"
@@ -159,13 +162,14 @@
     </LinearLayout>
 
     <com.simplecity.amp_library.ui.views.SizableSeekBar
-        android:id="@+id/seekbar"
-        style="@style/SeekBar.NoBackground"
+        android:id="@+id/seekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:indeterminate="false"
         android:paddingEnd="0dp"
         android:paddingStart="0dp"
+        android:tag=":aesthetic_ignore"
         tools:max="100"
-        tools:progress="60"/>
+        tools:progress="60"
+        style="@style/SeekBar.NoBackground"/>
 </FrameLayout>

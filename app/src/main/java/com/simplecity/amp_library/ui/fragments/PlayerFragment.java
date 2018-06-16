@@ -505,11 +505,11 @@ public class PlayerFragment extends BaseFragment implements
             backgroundView.setBackgroundColor(colorSet.getPrimaryColor());
         }
 
-        if (currentTime != null) {
+        if (!isLandscape && currentTime != null) {
             currentTime.setTextColor(colorSet.getPrimaryTextColor());
         }
 
-        if (totalTime != null) {
+        if (!isLandscape && totalTime != null) {
             totalTime.setTextColor(colorSet.getPrimaryTextColor());
         }
 

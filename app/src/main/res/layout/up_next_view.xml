@@ -15,7 +15,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/queueText"
+            android:id="@+id/queueTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
@@ -31,7 +31,7 @@
             android:layout_height="3dp"/>
 
         <TextView
-            android:id="@+id/queuePosition"
+            android:id="@+id/queuePositionTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
@@ -46,7 +46,7 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/arrow"
+        android:id="@+id/arrowImageView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="end"

@@ -56,6 +56,7 @@ public class AestheticToolbar extends Toolbar {
       setBackgroundColor(state.bgColor());
     }
     setTitleTextColor(state.iconTitleColor().activeColor());
+    setSubtitleTextColor(state.iconTitleColor().activeColor());
     setOverflowButtonColor(this, state.iconTitleColor().activeColor());
     if (getNavigationIcon() != null) {
       setNavigationIcon(getNavigationIcon());

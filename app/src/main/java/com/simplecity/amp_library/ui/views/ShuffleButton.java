@@ -40,8 +40,8 @@ public class ShuffleButton extends android.support.v7.widget.AppCompatImageButto
     public ShuffleButton(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        shuffleOff = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.ic_shuffle_24dp_scaled).mutate());
-        shuffleTracks = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.ic_shuffle_24dp_scaled).mutate());
+        shuffleOff = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.ic_shuffle_24dp_scaled)).mutate();
+        shuffleTracks = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.ic_shuffle_24dp_scaled)).mutate();
 
         setShuffleMode(QueueManager.ShuffleMode.OFF);
     }
