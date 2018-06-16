@@ -508,7 +508,7 @@ public class PlayerFragment extends BaseFragment implements
         }
 
         if (seekBar != null) {
-            seekBar.invalidateColors(new ColorIsDarkState(ignorePalette ? colorSet.getAccentColor() :  colorSet.getPrimaryTextColorTinted(), false));
+            seekBar.invalidateColors(new ColorIsDarkState(ignorePalette ? colorSet.getAccentColor() : colorSet.getPrimaryTextColorTinted(), false));
         }
 
         if (shuffleButton != null) {
@@ -655,25 +655,36 @@ public class PlayerFragment extends BaseFragment implements
                 return;
             }
 
-            ColorSet currentColorSet = colorSet;
+            if (colorSet == newColorSet) {
+                return;
+            }
+
+            ColorSet oldColorSet = colorSet;
 
             animateColors(
-                    currentColorSet,
+                    oldColorSet,
                     newColorSet,
                     800,
-                    intermediateColorSet -> invalidateColors(intermediateColorSet),
+                    intermediateColorSet -> {
+                        // Update all the colours related to the now playing screen first
+                        invalidateColors(intermediateColorSet);
+
+                        // We need to update the nav bar colour at the same time, since it's visible as well.
+                        if (SettingsManager.getInstance().getTintNavBar()) {
+                            Aesthetic.get(getContext()).colorNavigationBar(intermediateColorSet.getPrimaryColor()).apply();
+                        }
+                    },
                     () -> {
+                        // Wait until the first set of color change animations is complete, before updating Aesthetic.
+                        // This allows our invalidateColors() animation to run smoothly, as the Aesthetic color change
+                        // introduces some jank.
                         if (!SettingsManager.getInstance().getUsePaletteNowPlayingOnly()) {
 
-                            animateColors(currentColorSet, newColorSet, 450, intermediateColorSet -> {
+                            animateColors(oldColorSet, newColorSet, 450, intermediateColorSet -> {
                                 Aesthetic aesthetic = Aesthetic.get(getContext())
                                         .colorPrimary(intermediateColorSet.getPrimaryColor())
                                         .colorAccent(intermediateColorSet.getAccentColor())
                                         .colorStatusBarAuto();
-
-                                if (SettingsManager.getInstance().getTintNavBar()) {
-                                    aesthetic = aesthetic.colorNavigationBar(intermediateColorSet.getPrimaryColor());
-                                }
 
                                 aesthetic.apply();
                             }, null);
