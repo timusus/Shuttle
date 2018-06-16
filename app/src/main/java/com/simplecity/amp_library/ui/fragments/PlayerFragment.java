@@ -165,6 +165,9 @@ public class PlayerFragment extends BaseFragment implements
 
     private boolean isExpanded;
 
+    @Nullable
+    private ValueAnimator colorAnimator;
+
     public PlayerFragment() {
     }
 
@@ -244,6 +247,15 @@ public class PlayerFragment extends BaseFragment implements
                     .commit();
         }
 
+        getAestheticColorSetDisposable()
+                .take(1)
+                .subscribe(
+                        this::invalidateColors,
+                        error -> {
+                            // Nothing to do
+                        }
+                );
+
         presenter.bindView(this);
     }
 
@@ -253,6 +265,11 @@ public class PlayerFragment extends BaseFragment implements
             Glide.clear(target);
         }
         snowfallView.clear();
+
+        if (colorAnimator != null) {
+            colorAnimator.cancel();
+        }
+
         presenter.unbindView(this);
         unbinder.unbind();
         super.onDestroyView();
@@ -268,11 +285,14 @@ public class PlayerFragment extends BaseFragment implements
     public void onResume() {
         super.onResume();
 
-        disposables.add(getAestheticColorSetDisposable().subscribe(
-                colorSet -> animateColors(PlayerFragment.this.colorSet, colorSet, 800, this::invalidateColors, null),
-                error -> {
-                    // Nothing ot do
-                }));
+        if (!SettingsManager.getInstance().getUsePalette() && !SettingsManager.getInstance().getUsePaletteNowPlayingOnly()) {
+            disposables.add(getAestheticColorSetDisposable().subscribe(
+                    colorSet -> animateColors(PlayerFragment.this.colorSet, colorSet, 800, this::invalidateColors, null),
+                    error -> {
+                        // Nothing to do
+                    })
+            );
+        }
 
         if (seekBar != null) {
             Flowable<SeekBarChangeEvent> sharedSeekBarEvents = RxSeekBar.changeEvents(seekBar)
@@ -327,9 +347,7 @@ public class PlayerFragment extends BaseFragment implements
         return TAG;
     }
 
-    ////////////////////////////////////////////////////////////////////
     // View implementation
-    ////////////////////////////////////////////////////////////////////
 
     @Override
     public void setSeekProgress(int progress) {
@@ -620,11 +638,11 @@ public class PlayerFragment extends BaseFragment implements
     }
 
     void animateColors(@NonNull ColorSet from, @NonNull ColorSet to, int duration, @NonNull UnsafeConsumer<ColorSet> consumer, @Nullable UnsafeAction onComplete) {
-        ValueAnimator valueAnimator = ValueAnimator.ofFloat(1, 0);
-        valueAnimator.setDuration(duration);
-        valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        colorAnimator = ValueAnimator.ofFloat(1, 0);
+        colorAnimator.setDuration(duration);
+        colorAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         ArgbEvaluator argbEvaluator = ArgbEvaluator.getInstance();
-        valueAnimator.addUpdateListener(animator -> {
+        colorAnimator.addUpdateListener(animator -> {
             ColorSet colorSet = new ColorSet(
                     (int) argbEvaluator.evaluate(animator.getAnimatedFraction(), from.getPrimaryColor(), to.getPrimaryColor()),
                     (int) argbEvaluator.evaluate(animator.getAnimatedFraction(), from.getAccentColor(), to.getAccentColor()),
@@ -635,7 +653,7 @@ public class PlayerFragment extends BaseFragment implements
             );
             consumer.accept(colorSet);
         });
-        valueAnimator.addListener(new AnimatorListenerAdapter() {
+        colorAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 animation.removeAllListeners();
@@ -644,7 +662,7 @@ public class PlayerFragment extends BaseFragment implements
                 }
             }
         });
-        valueAnimator.start();
+        colorAnimator.start();
     }
 
     private SimpleTarget<ColorSet> paletteTarget = new SimpleTarget<ColorSet>() {
