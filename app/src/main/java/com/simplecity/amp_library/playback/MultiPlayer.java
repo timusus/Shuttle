@@ -42,121 +42,140 @@ class MultiPlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnCompleti
     }
 
     void setDataSource(final String path) {
-        isInitialized = setDataSourceImpl(currentMediaPlayer, path);
-        if (isInitialized) {
-            setNextDataSource(null);
+        synchronized (this) {
+            isInitialized = setDataSourceImpl(currentMediaPlayer, path);
+
+            if (isInitialized) {
+                setNextDataSource(null);
+            }
         }
     }
 
     private boolean setDataSourceImpl(final MediaPlayer mediaPlayer, final String path) {
-        if (TextUtils.isEmpty(path) || mediaPlayer == null) {
-            return false;
-        }
-        try {
-            mediaPlayer.reset();
-            mediaPlayer.setOnPreparedListener(null);
-            if (path.startsWith("content://")) {
-                Uri uri = Uri.parse(path);
-                mediaPlayer.setDataSource(context, uri);
-            } else {
-                mediaPlayer.setDataSource(path);
+        synchronized (this) {
+            if (TextUtils.isEmpty(path) || mediaPlayer == null) {
+                return false;
             }
-            if (ShuttleUtils.hasOreo()) {
-                mediaPlayer.setAudioAttributes(new AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_MEDIA)
-                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                        .build());
-            } else {
-                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            }
-            mediaPlayer.prepare();
-        } catch (final Exception e) {
-            Log.e(TAG, "setDataSource failed: " + e.getLocalizedMessage());
-            CrashlyticsCore.getInstance().log("setDataSourceImpl failed. Path: [" + path + "] error: " + e.getLocalizedMessage());
-            return false;
-        }
-        mediaPlayer.setOnCompletionListener(this);
-        mediaPlayer.setOnErrorListener(this);
+            try {
+                mediaPlayer.reset();
+                mediaPlayer.setOnPreparedListener(null);
+                if (path.startsWith("content://")) {
+                    Uri uri = Uri.parse(path);
+                    mediaPlayer.setDataSource(context, uri);
+                } else {
+                    mediaPlayer.setDataSource(path);
+                }
+                if (ShuttleUtils.hasOreo()) {
 
-        return true;
+                    mediaPlayer.setAudioAttributes(new AudioAttributes.Builder()
+                            .setUsage(AudioAttributes.USAGE_MEDIA)
+                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                            .build());
+                } else {
+                    mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                }
+
+                mediaPlayer.prepare();
+            } catch (final Exception e) {
+                Log.e(TAG, "setDataSource failed: " + e.getLocalizedMessage());
+                CrashlyticsCore.getInstance().log("setDataSourceImpl failed. Path: [" + path + "] error: " + e.getLocalizedMessage());
+                return false;
+            }
+            mediaPlayer.setOnCompletionListener(this);
+            mediaPlayer.setOnErrorListener(this);
+
+            return true;
+        }
     }
 
     void setNextDataSource(final String path) {
-        try {
-            currentMediaPlayer.setNextMediaPlayer(null);
-        } catch (IllegalArgumentException e) {
-            Log.e(TAG, "Next media player is current one, continuing");
-        } catch (IllegalStateException e) {
-            Log.e(TAG, "Media player not initialized!");
-            CrashlyticsCore.getInstance().log("setNextDataSource failed for. Media player not intitialized.");
-            return;
-        }
-        if (nextMediaPlayer != null) {
-            nextMediaPlayer.release();
-            nextMediaPlayer = null;
-        }
-        if (TextUtils.isEmpty(path)) {
-            return;
-        }
-        nextMediaPlayer = new MediaPlayer();
-        nextMediaPlayer.setWakeMode(context, PowerManager.PARTIAL_WAKE_LOCK);
-        nextMediaPlayer.setAudioSessionId(getAudioSessionId());
-        if (setDataSourceImpl(nextMediaPlayer, path)) {
+        synchronized (this) {
             try {
-                currentMediaPlayer.setNextMediaPlayer(nextMediaPlayer);
-            } catch (Exception e) {
-                Log.e(TAG, "setNextDataSource failed - failed to call setNextMediaPlayer on currentMediaPlayer. Error: " + e.getLocalizedMessage());
-                CrashlyticsCore.getInstance().log("setNextDataSource failed - failed to call setNextMediaPlayer on currentMediaPlayer. Error: " + e.getLocalizedMessage());
+                currentMediaPlayer.setNextMediaPlayer(null);
+            } catch (IllegalArgumentException e) {
+                Log.e(TAG, "Next media player is current one, continuing");
+            } catch (IllegalStateException e) {
+                Log.e(TAG, "Media player not initialized!");
+                CrashlyticsCore.getInstance().log("setNextDataSource failed for. Media player not intitialized.");
+                return;
+            }
+            if (nextMediaPlayer != null) {
+                nextMediaPlayer.release();
+                nextMediaPlayer = null;
+            }
+            if (TextUtils.isEmpty(path)) {
+                return;
+            }
+            nextMediaPlayer = new MediaPlayer();
+            nextMediaPlayer.setWakeMode(context, PowerManager.PARTIAL_WAKE_LOCK);
+            nextMediaPlayer.setAudioSessionId(getAudioSessionId());
+            if (setDataSourceImpl(nextMediaPlayer, path)) {
+                try {
+                    currentMediaPlayer.setNextMediaPlayer(nextMediaPlayer);
+                } catch (Exception e) {
+                    Log.e(TAG, "setNextDataSource failed - failed to call setNextMediaPlayer on currentMediaPlayer. Error: " + e.getLocalizedMessage());
+                    CrashlyticsCore.getInstance().log("setNextDataSource failed - failed to call setNextMediaPlayer on currentMediaPlayer. Error: " + e.getLocalizedMessage());
+                    if (nextMediaPlayer != null) {
+                        nextMediaPlayer.release();
+                        nextMediaPlayer = null;
+                    }
+                }
+            } else {
+                Log.e(TAG, "setDataSourceImpl failed for path: [" + path + "]. Setting next media player to null");
+                CrashlyticsCore.getInstance().log("setDataSourceImpl failed for path: [" + path + "]. Setting next media player to null");
                 if (nextMediaPlayer != null) {
                     nextMediaPlayer.release();
                     nextMediaPlayer = null;
                 }
             }
-        } else {
-            Log.e(TAG, "setDataSourceImpl failed for path: [" + path + "]. Setting next media player to null");
-            CrashlyticsCore.getInstance().log("setDataSourceImpl failed for path: [" + path + "]. Setting next media player to null");
-            if (nextMediaPlayer != null) {
-                nextMediaPlayer.release();
-                nextMediaPlayer = null;
-            }
         }
     }
 
     boolean isInitialized() {
-        return isInitialized;
+        synchronized (this) {
+            return isInitialized;
+        }
     }
 
     public void start() {
-        try {
-            currentMediaPlayer.start();
-        } catch (RuntimeException e) {
-            CrashlyticsCore.getInstance().log("MusicService.start() failed. Exception: " + e.toString());
+        synchronized (this) {
+            try {
+                currentMediaPlayer.start();
+            } catch (RuntimeException e) {
+                CrashlyticsCore.getInstance().log("MusicService.start() failed. Exception: " + e.toString());
+            }
         }
     }
 
     public void stop() {
-        try {
-            currentMediaPlayer.reset();
-        } catch (IllegalStateException e) {
-            Log.e(TAG, "Error stopping MultiPlayer: " + e.getLocalizedMessage());
-            CrashlyticsCore.getInstance().log("stop() failed. Error: " + e.getLocalizedMessage());
+        synchronized (this) {
+            try {
+                currentMediaPlayer.reset();
+            } catch (IllegalStateException e) {
+                Log.e(TAG, "Error stopping MultiPlayer: " + e.getLocalizedMessage());
+                CrashlyticsCore.getInstance().log("stop() failed. Error: " + e.getLocalizedMessage());
+            }
+            isInitialized = false;
         }
-        isInitialized = false;
     }
 
     /**
      * You CANNOT use this player anymore after calling release()
      */
     public void release() {
-        stop();
-        currentMediaPlayer.release();
+        synchronized (this) {
+            stop();
+            currentMediaPlayer.release();
+        }
     }
 
     public void pause() {
-        try {
-            currentMediaPlayer.pause();
-        } catch (IllegalStateException e) {
-            Log.e(TAG, "Error pausing MultiPlayer: " + e.getLocalizedMessage());
+        synchronized (this) {
+            try {
+                currentMediaPlayer.pause();
+            } catch (IllegalStateException e) {
+                Log.e(TAG, "Error pausing MultiPlayer: " + e.getLocalizedMessage());
+            }
         }
     }
 
@@ -165,45 +184,65 @@ class MultiPlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnCompleti
     }
 
     public long getDuration() {
-        try {
-            return currentMediaPlayer.getDuration();
-        } catch (IllegalStateException ignored) {
+        synchronized (this) {
+            if (isInitialized) {
+                try {
+                    return currentMediaPlayer.getDuration();
+                } catch (IllegalStateException ignored) {
+                }
+            }
             return 0;
         }
     }
 
     public long getPosition() {
-        try {
-            return currentMediaPlayer.getCurrentPosition();
-        } catch (IllegalStateException ignored) {
+        synchronized (this) {
+            if (isInitialized) {
+                try {
+                    return currentMediaPlayer.getCurrentPosition();
+                } catch (IllegalStateException ignored) {
+                }
+            }
             return 0;
         }
     }
 
     void seekTo(long whereto) {
-        try {
-            currentMediaPlayer.seekTo((int) whereto);
-        } catch (IllegalStateException e) {
-            Log.e(TAG, "Error seeking MultiPlayer: " + e.getLocalizedMessage());
+        synchronized (this) {
+            if (isInitialized) {
+                try {
+                    currentMediaPlayer.seekTo((int) whereto);
+                } catch (IllegalStateException e) {
+                    Log.e(TAG, "Error seeking MultiPlayer: " + e.getLocalizedMessage());
+                }
+            }
         }
     }
 
     void setVolume(float vol) {
-        try {
-            currentMediaPlayer.setVolume(vol, vol);
-        } catch (IllegalStateException e) {
-            Log.e(TAG, "Error setting MultiPlayer volume: " + e.getLocalizedMessage());
+        synchronized (this) {
+            if (isInitialized) {
+                try {
+                    currentMediaPlayer.setVolume(vol, vol);
+                } catch (IllegalStateException e) {
+                    Log.e(TAG, "Error setting MultiPlayer volume: " + e.getLocalizedMessage());
+                }
+            }
         }
     }
 
     int getAudioSessionId() {
-        int sessionId = 0;
-        try {
-            sessionId = currentMediaPlayer.getAudioSessionId();
-        } catch (IllegalStateException ignored) {
-            //Nothing to do
+        synchronized (this) {
+            int sessionId = 0;
+            if (isInitialized) {
+                try {
+                    sessionId = currentMediaPlayer.getAudioSessionId();
+                } catch (IllegalStateException ignored) {
+                    //Nothing to do
+                }
+            }
+            return sessionId;
         }
-        return sessionId;
     }
 
     @Override
