@@ -3,7 +3,6 @@ package com.simplecity.amp_library.playback;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -15,9 +14,14 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.MediaBrowserServiceCompat;
+import android.util.Log;
 import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.androidauto.MediaIdHelper;
+import com.simplecity.amp_library.androidauto.PackageValidator;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.notifications.MusicNotificationHelper;
 import com.simplecity.amp_library.playback.constants.ExternalIntents;
@@ -36,11 +40,13 @@ import io.reactivex.Completable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
+import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
+import kotlin.Unit;
 
 @SuppressLint("InlinedApi")
-public class MusicService extends Service {
+public class MusicService extends MediaBrowserServiceCompat {
 
     @interface NotifyMode {
         int NONE = 0;
@@ -84,14 +90,19 @@ public class MusicService extends Service {
 
     private CompositeDisposable disposables = new CompositeDisposable();
 
+    private PackageValidator mPackageValidator;
+
     @SuppressLint("InlinedApi")
     @Override
     public void onCreate() {
         super.onCreate();
 
+        mPackageValidator = new PackageValidator(this);
+
         queueManager = new QueueManager(musicServiceCallbacks);
 
         playbackManager = new PlaybackManager(this, queueManager, musicServiceCallbacks);
+        setSessionToken(playbackManager.getMediaSessionToken());
 
         bluetoothManager = new BluetoothManager(playbackManager, musicServiceCallbacks);
 
@@ -134,9 +145,45 @@ public class MusicService extends Service {
 
     @Override
     public IBinder onBind(final Intent intent) {
+
         cancelShutdown();
         serviceInUse = true;
+
+        // For Android auto, need to call super, or onGetRoot won't be called.
+        if (intent != null && "android.media.browse.MediaBrowserService".equals(intent.getAction())) {
+            return super.onBind(intent);
+        }
+
         return binder;
+    }
+
+    @Nullable
+    @Override
+    public BrowserRoot onGetRoot(@NonNull String clientPackageName, int clientUid, @Nullable Bundle rootHints) {
+        // To ensure you are not allowing any arbitrary app to browse your app's contents, you
+        // need to check the origin:
+        if (!mPackageValidator.isCallerAllowed(this, clientPackageName, clientUid)) {
+            // If the request comes from an untrusted package, return an empty browser root.
+            // If you return null, then the media browser will not be able to connect and
+            // no further calls will be made to other media browsing methods.
+            Log.i(TAG, String.format("OnGetRoot: Browsing NOT ALLOWED for unknown caller. Returning empty browser root so all apps can use MediaController.%s", clientPackageName));
+            return new MediaBrowserServiceCompat.BrowserRoot("EMPTY_ROOT", null);
+        }
+        return new BrowserRoot("media:/root/", null);
+    }
+
+    @Override
+    public void onLoadChildren(@NonNull String parentMediaId, @NonNull Result<List<MediaBrowserCompat.MediaItem>> result) {
+        if ("EMPTY_ROOT".equals(parentMediaId)) {
+            result.sendResult(new ArrayList<>());
+        } else {
+            result.detach();
+            // if music library is ready, return immediately
+            new MediaIdHelper().getChildren(parentMediaId, mediaItems -> {
+                result.sendResult(mediaItems);
+                return Unit.INSTANCE;
+            });
+        }
     }
 
     @Override

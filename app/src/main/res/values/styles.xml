@@ -27,6 +27,12 @@
         <item name="circular_ripple">@drawable/ripple_circular_light</item>
     </style>
 
+    <style name="CarTheme" parent="AppTheme">
+        <item name="colorPrimaryDark">#039BE5</item>
+        <item name="colorPrimary">#039BE5</item>
+        <item name="colorAccent">#E53935</item>
+    </style>
+
     <style name="AppTheme.Black" parent="AppTheme">
         <item name="android:windowBackground">@color/black</item>
     </style>

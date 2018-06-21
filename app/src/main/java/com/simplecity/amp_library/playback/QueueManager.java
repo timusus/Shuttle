@@ -88,6 +88,10 @@ public class QueueManager {
         if (this.shuffleMode == shuffleMode && !getCurrentPlaylist().isEmpty()) {
             return;
         }
+        if (shuffleMode == ShuffleMode.ON && shuffleList.isEmpty()) {
+            makeShuffleList();
+        }
+
         this.shuffleMode = shuffleMode;
         notifyShuffleChanged();
         saveQueue(false);

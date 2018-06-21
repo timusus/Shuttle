@@ -1,5 +1,7 @@
 package com.simplecity.amp_library.ui.queue
 
+import android.support.v4.media.MediaDescriptionCompat
+import android.support.v4.media.session.MediaSessionCompat
 import com.simplecity.amp_library.model.Song
 
 class QueueItem(var song: Song, var occurrence: Int) {
@@ -41,4 +43,17 @@ fun List<QueueItem>.updateOccurrence() {
 
 fun List<QueueItem>.toSongs(): List<Song> {
     return map { queueItem -> queueItem.song }
+}
+
+fun QueueItem.toMediaSessionQueueItem(): MediaSessionCompat.QueueItem {
+    val mediaDescription = MediaDescriptionCompat.Builder()
+        .setMediaId(song.id.toString())
+        .setTitle(song.name)
+        .setSubtitle(song.artistName)
+        .build()
+    return MediaSessionCompat.QueueItem(mediaDescription, hashCode().toLong())
+}
+
+fun List<QueueItem>.toMediaSessionQueueItems(): List<MediaSessionCompat.QueueItem> {
+    return map { queueItem -> queueItem.toMediaSessionQueueItem() }
 }
