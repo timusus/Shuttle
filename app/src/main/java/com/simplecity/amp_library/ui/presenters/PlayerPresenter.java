@@ -40,12 +40,12 @@ public class PlayerPresenter extends Presenter<PlayerView> {
 
     private Disposable isFavoriteDisposable;
     private MediaManager mediaManager;
-    private final PlaybackMonitor playbackMonitor;
+    private PlaybackMonitor playbackMonitor;
 
     @Inject
-    public PlayerPresenter(MediaManager mediaManager) {
+    public PlayerPresenter(MediaManager mediaManager, PlaybackMonitor playbackMonitor) {
         this.mediaManager = mediaManager;
-        this.playbackMonitor = new PlaybackMonitor(mediaManager);
+        this.playbackMonitor = playbackMonitor;
     }
 
     @Override

@@ -4,7 +4,10 @@ import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.dagger.module.PresenterModule;
 import com.simplecity.amp_library.dagger.scope.ActivityScope;
+import com.simplecity.amp_library.search.VoiceSearchActivity;
 import com.simplecity.amp_library.ui.activities.MainActivity;
+import com.simplecity.amp_library.ui.activities.QCircleActivity;
+import com.simplecity.amp_library.ui.appwidget.BaseWidgetConfigure;
 import com.simplecity.amp_library.ui.settings.SettingsParentFragment;
 import dagger.Subcomponent;
 
@@ -19,6 +22,12 @@ public interface ActivityComponent {
     FragmentComponent plus(FragmentModule module);
 
     void inject(MainActivity target);
+
+    void inject(BaseWidgetConfigure target);
+
+    void inject(QCircleActivity target);
+
+    void inject(VoiceSearchActivity target);
 
     void inject(SettingsParentFragment.SettingsFragment target);
 }

@@ -27,3 +27,4 @@ public abstract class PresenterModule {
     @Binds
     abstract Presenter<SearchView> bindSearchPresenter(SearchPresenter queuePresenter);
 }
+

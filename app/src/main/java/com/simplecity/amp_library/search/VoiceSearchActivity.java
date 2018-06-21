@@ -7,8 +7,11 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.widget.Toast;
 import com.annimon.stream.Stream;
+import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
+import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.ui.activities.BaseActivity;
 import com.simplecity.amp_library.ui.activities.MainActivity;
 import com.simplecity.amp_library.utils.ComparisonUtils;
@@ -18,6 +21,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import java.util.Collections;
 import java.util.Locale;
+import javax.inject.Inject;
 import kotlin.Unit;
 
 import static com.simplecity.amp_library.utils.StringUtils.containsIgnoreCase;
@@ -32,9 +36,14 @@ public class VoiceSearchActivity extends BaseActivity {
 
     private int position = -1;
 
+    @Inject
+    MediaManager mediaManager;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ShuttleApplication.getInstance().getAppComponent().plus(new ActivityModule(this)).inject(this);
 
         intent = getIntent();
 

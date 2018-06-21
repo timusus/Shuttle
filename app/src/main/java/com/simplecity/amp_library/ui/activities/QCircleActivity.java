@@ -19,9 +19,13 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
+import javax.inject.Inject;
 
 //Todo: Reapply themes
 public class QCircleActivity extends BaseActivity {
@@ -63,8 +67,13 @@ public class QCircleActivity extends BaseActivity {
     TextView textOne;
     TextView textTwo;
 
+    @Inject
+    MediaManager mediaManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        ShuttleApplication.getInstance().getAppComponent().plus(new ActivityModule(this)).inject(this);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qcircle);

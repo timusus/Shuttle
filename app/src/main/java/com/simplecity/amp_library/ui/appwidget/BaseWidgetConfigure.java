@@ -36,7 +36,10 @@ import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.playback.constants.MediaButtonCommand;
 import com.simplecity.amp_library.playback.constants.ServiceCommand;
 import com.simplecity.amp_library.ui.activities.BaseActivity;
@@ -44,6 +47,7 @@ import com.simplecity.amp_library.ui.fragments.WidgetFragment;
 import com.simplecity.amp_library.ui.views.SizableSeekBar;
 import com.simplecity.amp_library.ui.widgets.BaseWidgetProvider;
 import com.simplecity.amp_library.utils.ColorUtils;
+import javax.inject.Inject;
 
 public abstract class BaseWidgetConfigure extends BaseActivity implements
         View.OnClickListener,
@@ -89,9 +93,15 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
 
     SparseArray<Fragment> registeredFragments = new SparseArray<>();
 
+    @Inject
+    MediaManager mediaManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ShuttleApplication.getInstance().getAppComponent().plus(new ActivityModule(this)).inject(this);
+
 
         if (Aesthetic.isFirstTime(this)) {
             Aesthetic.get(this)

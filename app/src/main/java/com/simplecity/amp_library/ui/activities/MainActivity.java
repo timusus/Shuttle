@@ -25,6 +25,7 @@ import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Query;
+import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.playback.constants.ShortcutCommands;
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
 import com.simplecity.amp_library.ui.dialog.ChangelogDialog;
@@ -65,6 +66,9 @@ public class MainActivity extends BaseCastActivity implements
 
     @Inject
     NavigationEventRelay navigationEventRelay;
+
+    @Inject
+    MediaManager mediaManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

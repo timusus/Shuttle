@@ -5,7 +5,10 @@ import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import java.util.concurrent.TimeUnit;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class PlaybackMonitor {
 
     private static final String TAG = "PlaybackMonitor";
@@ -13,6 +16,7 @@ public class PlaybackMonitor {
     private Flowable<Float> progressObservable;
     private Flowable<Long> currentTimeObservable;
 
+    @Inject
     public PlaybackMonitor(MediaManager mediaManager) {
         progressObservable = Flowable.defer(() -> Observable.interval(32, TimeUnit.MILLISECONDS)
                 .filter(aLong -> {

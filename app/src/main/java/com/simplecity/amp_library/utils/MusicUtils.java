@@ -18,11 +18,17 @@ import io.reactivex.disposables.Disposable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import javax.inject.Inject;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import org.jetbrains.annotations.NotNull;
 
 public class MusicUtils implements MediaManager {
+
+    @Inject
+    public MusicUtils() {
+
+    }
 
     private static final String TAG = "MusicUtils";
 
