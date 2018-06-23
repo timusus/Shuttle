@@ -684,6 +684,9 @@ public class PlayerFragment extends BaseFragment implements
                     newColorSet,
                     800,
                     intermediateColorSet -> {
+
+                        if (!isAdded() || getContext() == null) return;
+
                         // Update all the colours related to the now playing screen first
                         invalidateColors(intermediateColorSet);
 
@@ -693,18 +696,21 @@ public class PlayerFragment extends BaseFragment implements
                         }
                     },
                     () -> {
+                        if (!isAdded() || getContext() == null) return;
+
                         // Wait until the first set of color change animations is complete, before updating Aesthetic.
                         // This allows our invalidateColors() animation to run smoothly, as the Aesthetic color change
                         // introduces some jank.
                         if (!SettingsManager.getInstance().getUsePaletteNowPlayingOnly()) {
 
                             animateColors(oldColorSet, newColorSet, 450, intermediateColorSet -> {
-                                Aesthetic aesthetic = Aesthetic.get(getContext())
+
+                                if (!isAdded() || getContext() == null) return;
+
+                                Aesthetic.get(getContext())
                                         .colorPrimary(intermediateColorSet.getPrimaryColor())
                                         .colorAccent(intermediateColorSet.getAccentColor())
-                                        .colorStatusBarAuto();
-
-                                aesthetic.apply();
+                                        .colorStatusBarAuto().apply();
                             }, null);
                         }
                     }
