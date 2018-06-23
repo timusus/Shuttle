@@ -125,7 +125,7 @@ public class AnalyticsManager {
 
     public static void dropBreadcrumb(String tag, String breadCrumb) {
 
-        Log.i(tag, breadCrumb);
+        Log.d(tag, breadCrumb);
 
         if (!analyticsEnabled()) {
             return;

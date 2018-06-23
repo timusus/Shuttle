@@ -84,9 +84,10 @@ class UpNextView constructor(context: Context, attrs: AttributeSet? = null, defS
         arrowDrawable = DrawableCompat.wrap(arrowImageView.drawable)
         arrowImageView.setImageDrawable(arrowDrawable)
 
-        playPauseView?.setOnClickListener {
-            playPauseView?.toggle()
-            playPauseView?.postDelayed({ playerPresenter.togglePlayback() }, 200)
+        playPauseView?.setOnClickListener { v ->
+            playPauseView?.toggle {
+                playerPresenter.togglePlayback()
+            }
         }
 
         repeatButton?.setOnClickListener { playerPresenter.toggleRepeat() }
@@ -98,7 +99,7 @@ class UpNextView constructor(context: Context, attrs: AttributeSet? = null, defS
         nextButton?.setOnClickListener { playerPresenter.skip() }
         nextButton?.setRepeatListener { _, duration, repeatCount -> playerPresenter.scanForward(repeatCount, duration) }
 
-        prevButton?.setOnClickListener { playerPresenter.prev(true) }
+        prevButton?.setOnClickListener { playerPresenter.prev(false) }
         prevButton?.setRepeatListener { _, duration, repeatCount -> playerPresenter.scanBackward(repeatCount, duration) }
 
         seekBar?.max = 1000
@@ -115,12 +116,12 @@ class UpNextView constructor(context: Context, attrs: AttributeSet? = null, defS
                 playPauseView?.let { playPauseView ->
                     if (isPlaying) {
                         if (playPauseView.isPlay) {
-                            playPauseView.toggle()
+                            playPauseView.toggle(null)
                             playPauseView.contentDescription = getContext().getString(R.string.btn_pause)
                         }
                     } else {
                         if (!playPauseView.isPlay) {
-                            playPauseView.toggle()
+                            playPauseView.toggle(null)
                             playPauseView.contentDescription = getContext().getString(R.string.btn_play)
                         }
                     }

@@ -65,7 +65,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         }
 
         // Send broadcast intent to any running MusicService so it can wrap around with an immediate update.
-        Intent updateIntent = new Intent(ServiceCommand.SERVICE_COMMAND);
+        Intent updateIntent = new Intent(ServiceCommand.COMMAND);
         updateIntent.putExtra(MediaButtonCommand.CMD_NAME, getUpdateCommandString());
         updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
         updateIntent.addFlags(Intent.FLAG_RECEIVER_REGISTERED_ONLY);
@@ -104,19 +104,19 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), 0);
         views.setOnClickPendingIntent(rootViewId, pendingIntent);
 
-        pendingIntent = getPendingIntent(context, appWidgetId, new Intent(ServiceCommand.TOGGLE_PAUSE_ACTION));
+        pendingIntent = getPendingIntent(context, appWidgetId, new Intent(ServiceCommand.TOGGLE_PLAYBACK));
         views.setOnClickPendingIntent(R.id.play_button, pendingIntent);
 
-        pendingIntent = getPendingIntent(context, appWidgetId, new Intent(ServiceCommand.NEXT_ACTION));
+        pendingIntent = getPendingIntent(context, appWidgetId, new Intent(ServiceCommand.NEXT));
         views.setOnClickPendingIntent(R.id.next_button, pendingIntent);
 
-        pendingIntent = getPendingIntent(context, appWidgetId, new Intent(ServiceCommand.PREV_ACTION));
+        pendingIntent = getPendingIntent(context, appWidgetId, new Intent(ServiceCommand.PREV));
         views.setOnClickPendingIntent(R.id.prev_button, pendingIntent);
 
-        pendingIntent = getPendingIntent(context, appWidgetId, new Intent(ServiceCommand.SHUFFLE_ACTION));
+        pendingIntent = getPendingIntent(context, appWidgetId, new Intent(ServiceCommand.SHUFFLE));
         views.setOnClickPendingIntent(R.id.shuffle_button, pendingIntent);
 
-        pendingIntent = getPendingIntent(context, appWidgetId, new Intent(ServiceCommand.REPEAT_ACTION));
+        pendingIntent = getPendingIntent(context, appWidgetId, new Intent(ServiceCommand.REPEAT));
         views.setOnClickPendingIntent(R.id.repeat_button, pendingIntent);
     }
 

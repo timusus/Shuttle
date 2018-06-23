@@ -10,4 +10,6 @@ public interface MediaButtonCommand {
     String NEXT = "next";
     String TOGGLE_FAVORITE = "togglefavorite";
     String FROM_MEDIA_BUTTON = "frommediabutton";
+
+    String FORCE_PREVIOUS = "force";
 }

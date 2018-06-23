@@ -62,7 +62,7 @@ public class PlayerPresenter extends Presenter<PlayerView> {
         updateRepeatMode();
 
         addDisposable(playbackMonitor.getProgressObservable()
-                .subscribeOn(Schedulers.io())
+                //.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         progress -> view.setSeekProgress((int) (progress * 1000)),
@@ -70,7 +70,7 @@ public class PlayerPresenter extends Presenter<PlayerView> {
         );
 
         addDisposable(playbackMonitor.getCurrentTimeObservable()
-                .subscribeOn(Schedulers.io())
+                //.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         pos -> refreshTimeText(pos / 1000),
@@ -207,8 +207,7 @@ public class PlayerPresenter extends Presenter<PlayerView> {
     }
 
     public void togglePlayback() {
-        mediaManager.playOrPause();
-        updatePlaystate();
+        mediaManager.togglePlayback();
     }
 
     public void toggleFavorite() {
@@ -219,8 +218,8 @@ public class PlayerPresenter extends Presenter<PlayerView> {
         mediaManager.next();
     }
 
-    public void prev(boolean allowTrackRestart) {
-        mediaManager.previous(allowTrackRestart);
+    public void prev(boolean force) {
+        mediaManager.previous(force);
     }
 
     public void toggleShuffle() {

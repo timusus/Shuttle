@@ -22,14 +22,14 @@
 # see https://code.google.com/p/android/issues/detail?id=78377
 -keep class !android.support.v7.internal.view.menu.**,android.support.** {*;}
 
-# Custom MediaRouteActionProvider, referenced via menu action view class
--keep class com.simplecity.amp_library.ui.views.CustomMediaRouteActionProvider { *; }
-
 # Custom Switch, referenced via menu action view class
 -keep class com.simplecity.amp_library.ui.views.CustomSwitch { *; }
 
 # Another Switch, referenced via menu action view class
 -keep class com.afollestad.aesthetic.AestheticSwitchCompat { *; }
+
+# ChromeCast options provider, only referenced via manifest.
+-keep class com.simplecity.amp_library.cast.CastOptionsProvider { *; }
 
 # Glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
@@ -110,3 +110,7 @@
 
 # Keep MaterialDialogs ThemeSingleton, so we can access it via reflection, from Aesthetic
 -keep class com.afollestad.materialdialogs.internal.** { *; }
+
+# Custom Cast Media Button, only referenced via menu
+-keep class com.simplecity.amp_library.ui.views.CustomMediaRouteActionProvider.CustomMediaRouteButton { *; }
+-keep class com.simplecity.amp_library.ui.views.CustomMediaRouteActionProvider { *; }

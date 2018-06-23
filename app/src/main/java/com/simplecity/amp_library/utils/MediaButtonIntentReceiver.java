@@ -225,9 +225,13 @@ public class MediaButtonIntentReceiver extends WakefulBroadcastReceiver {
         }
 
         final Intent intent = new Intent(context, MusicService.class);
-        intent.setAction(ServiceCommand.SERVICE_COMMAND);
+        intent.setAction(ServiceCommand.COMMAND);
         intent.putExtra(MediaButtonCommand.CMD_NAME, command);
         intent.putExtra(MediaButtonCommand.FROM_MEDIA_BUTTON, true);
+
+        if (MediaButtonCommand.PREVIOUS.equals(command)) {
+            intent.putExtra(MediaButtonCommand.FORCE_PREVIOUS, true);
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             AnalyticsManager.dropBreadcrumb(TAG, "Service started. (foreground) Command: " + command);

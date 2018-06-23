@@ -18,6 +18,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
 
 public class QueueManager {
 
@@ -97,7 +99,7 @@ public class QueueManager {
         saveQueue(false);
     }
 
-    public void open(List<Song> songs, final int position, UnsafeAction openCurrentAndNext) {
+    public void load(@NonNull List<Song> songs, final int position, @NonNull UnsafeAction openCurrentAndNext) {
 
         List<QueueItem> queueItems = QueueItemKt.toQueueItems(songs);
 
@@ -202,25 +204,24 @@ public class QueueManager {
     }
 
     /**
-     * @param force True to force the player onto the track next, false
-     * otherwise.
-     * @return The next position to play.
+     * @return The next position to play, ot -1 if playback should complete.
      */
-    int getNextPosition(final boolean force) {
-        if (!force && repeatMode == RepeatMode.ONE) {
-            if (queuePosition < 0) {
-                return 0;
-            }
-            return queuePosition;
-        } else if (queuePosition >= getCurrentPlaylist().size() - 1) {
-            if (repeatMode == RepeatMode.OFF && !force) {
-                return -1;
-            } else if (repeatMode == RepeatMode.ALL || force) {
-                return 0;
-            }
-            return -1;
+    int getNextPosition(boolean ignoreRepeatMode) {
+        boolean queueComplete = queuePosition >= getCurrentPlaylist().size() - 1;
+
+        if (ignoreRepeatMode) {
+            return queueComplete ? 0 : queuePosition + 1;
         } else {
-            return queuePosition + 1;
+            switch (repeatMode) {
+                case RepeatMode.ONE:
+                    return queuePosition < 0 ? 0 : queuePosition;
+                case RepeatMode.OFF:
+                    return queueComplete ? -1 : queuePosition + 1;
+                case RepeatMode.ALL:
+                    return queueComplete ? 0 : queuePosition + 1;
+                default:
+                    return -1;
+            }
         }
     }
 
@@ -369,7 +370,7 @@ public class QueueManager {
         PlaybackSettingsManager.INSTANCE.setShuffleMode(shuffleMode);
     }
 
-    Disposable reloadQueue(UnsafeAction reloadComplete, UnsafeAction open, UnsafeConsumer<Long> seekTo) {
+    Disposable reloadQueue(@NonNull Function0<Unit> onComplete) {
         queueReloading = true;
 
         shuffleMode = PlaybackSettingsManager.INSTANCE.getShuffleMode();
@@ -388,7 +389,7 @@ public class QueueManager {
                         if (queuePosition < 0 || queuePosition >= playlist.size()) {
                             // The saved playlist is bogus, discard it
                             playlist.clear();
-                            onQueueReloadComplete(reloadComplete);
+                            onComplete.invoke();
                             return;
                         }
 
@@ -408,7 +409,7 @@ public class QueueManager {
                                 if (queuePosition >= shuffleList.size()) {
                                     // The saved playlist is bogus, discard it
                                     shuffleList.clear();
-                                    onQueueReloadComplete(reloadComplete);
+                                    onComplete.invoke();
                                     return;
                                 }
                             }
@@ -417,15 +418,12 @@ public class QueueManager {
                         if (QueueManager.this.queuePosition < 0 || QueueManager.this.queuePosition >= getCurrentPlaylist().size()) {
                             QueueManager.this.queuePosition = 0;
                         }
-
-                        open.run();
-
-                        final long seekPos = PlaybackSettingsManager.INSTANCE.getSeekPosition();
-                        seekTo.accept(seekPos > 0 ? seekPos : 0);
                     }
-
-                    onQueueReloadComplete(reloadComplete);
-                }, error -> LogUtils.logException(TAG, "Reloading queue", error));
+                    onComplete.invoke();
+                }, error -> {
+                    onComplete.invoke();
+                    LogUtils.logException(TAG, "Reloading queue", error);
+                });
     }
 
     private void onQueueReloadComplete(UnsafeAction completion) {

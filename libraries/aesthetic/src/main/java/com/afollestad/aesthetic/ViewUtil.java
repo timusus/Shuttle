@@ -5,8 +5,6 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.app.MediaRouteButton;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -70,9 +68,6 @@ public final class ViewUtil {
       if (item.getActionView() instanceof SearchView) {
         themeSearchView(titleIconColors, (SearchView) item.getActionView());
       }
-      if(item.getActionView() instanceof MediaRouteButton){
-        themeMediaRouteButton(titleIconColors, (MediaRouteButton) item.getActionView());
-      }
     }
   }
 
@@ -106,20 +101,6 @@ public final class ViewUtil {
       field = cls.getDeclaredField("mSearchHintIcon");
       field.setAccessible(true);
       field.set(view, createTintedDrawable((Drawable) field.get(view), tintColors.toEnabledSl()));
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
-  private static void themeMediaRouteButton(ActiveInactiveColors tintColors, MediaRouteButton mediaRouteButton){
-    // Theme MediaRouteButton
-    try {
-      final Field field = android.support.v7.app.MediaRouteButton.class.getDeclaredField("mRemoteIndicator");
-      field.setAccessible(true);
-      Drawable indicator = (Drawable) field.get(mediaRouteButton);
-      if (indicator!=null) {
-        DrawableCompat.setTint(indicator, tintColors.activeColor());
-      }
     } catch (Exception e) {
       e.printStackTrace();
     }

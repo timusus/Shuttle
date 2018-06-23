@@ -49,7 +49,7 @@ import kotlin.Unit;
 import test.com.androidnavigation.fragment.BackPressHandler;
 import test.com.androidnavigation.fragment.BackPressListener;
 
-public class MainActivity extends BaseCastActivity implements
+public class MainActivity extends BaseActivity implements
         ToolbarListener,
         BackPressHandler,
         DrawerProvider {

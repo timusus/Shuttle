@@ -3,6 +3,7 @@ package com.simplecity.amp_library.playback;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Album;
@@ -69,8 +70,7 @@ public class MediaManager {
             position = 0;
         }
 
-        MusicServiceConnectionUtils.serviceBinder.getService().open(songs, position);
-        MusicServiceConnectionUtils.serviceBinder.getService().play();
+        MusicServiceConnectionUtils.serviceBinder.getService().open(songs, position, true);
     }
 
     @NonNull
@@ -109,8 +109,7 @@ public class MediaManager {
         }
 
         MusicServiceConnectionUtils.serviceBinder.getService().stop();
-        MusicServiceConnectionUtils.serviceBinder.getService().openFile(filename, () ->
-                MusicServiceConnectionUtils.serviceBinder.getService().play());
+        MusicServiceConnectionUtils.serviceBinder.getService().openFile(filename, true);
     }
 
     @Nullable
@@ -165,34 +164,23 @@ public class MediaManager {
     /**
      * Changes to the previous track
      *
-     * @param allowTrackRestart if true, the track will restart if the track position is > 2 seconds
+     * @param force if true, forces the player to move to the previous position
      */
-    public void previous(boolean allowTrackRestart) {
+    public void previous(boolean force) {
         AnalyticsManager.dropBreadcrumb(TAG, "previous()");
-        if (allowTrackRestart && getPosition() > 2000) {
-            seekTo(0);
-            if (MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null) {
-                MusicServiceConnectionUtils.serviceBinder.getService().play();
-            }
-        } else {
-            if (MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null) {
-                MusicServiceConnectionUtils.serviceBinder.getService().previous();
-            }
+        if (MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null) {
+            MusicServiceConnectionUtils.serviceBinder.getService().previous(force);
         }
     }
 
     /**
-     * Plays or pauses the music depending on the current state.
+     * Play or pause the music depending on the current state.
      */
-    public void playOrPause() {
+    public void togglePlayback() {
         AnalyticsManager.dropBreadcrumb(TAG, "playOrPause()");
         try {
             if (MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null) {
-                if (MusicServiceConnectionUtils.serviceBinder.getService().isPlaying()) {
-                    MusicServiceConnectionUtils.serviceBinder.getService().pause();
-                } else {
-                    MusicServiceConnectionUtils.serviceBinder.getService().play();
-                }
+                MusicServiceConnectionUtils.serviceBinder.getService().togglePlayback();
             }
         } catch (final Exception ignored) {
         }
@@ -255,7 +243,8 @@ public class MediaManager {
         if (MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null) {
             try {
                 return MusicServiceConnectionUtils.serviceBinder.getService().getSeekPosition();
-            } catch (final Exception ignored) {
+            } catch (final Exception e) {
+                Log.e(TAG, "getPosition() returned error: " + e.toString());
             }
         }
         return 0;

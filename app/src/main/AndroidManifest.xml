@@ -39,8 +39,6 @@
             android:name="com.simplecity.amp_library.glide.utils.CustomGlideModule"
             android:value="GlideModule"/>
 
-        <activity android:name="com.google.android.libraries.cast.companionlibrary.cast.player.VideoCastControllerActivity"/>
-
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
@@ -333,5 +331,10 @@
         <meta-data
             android:name="com.google.android.gms.car.application.theme"
             android:resource="@style/CarTheme" />
+
+        <!-- ChromeCast -->
+        <meta-data
+            android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
+            android:value="com.simplecity.amp_library.cast.CastOptionsProvider" />
     </application>
 </manifest>

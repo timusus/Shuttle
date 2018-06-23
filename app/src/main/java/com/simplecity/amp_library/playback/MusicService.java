@@ -22,6 +22,7 @@ import com.crashlytics.android.Crashlytics;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.androidauto.MediaIdHelper;
 import com.simplecity.amp_library.androidauto.PackageValidator;
+import com.simplecity.amp_library.cast.CastManager;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.notifications.MusicNotificationHelper;
 import com.simplecity.amp_library.playback.constants.ExternalIntents;
@@ -39,7 +40,6 @@ import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import io.reactivex.Completable;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
@@ -62,6 +62,8 @@ public class MusicService extends MediaBrowserServiceCompat {
     private QueueManager queueManager;
 
     private PlaybackManager playbackManager;
+
+    private CastManager castManager;
 
     private BluetoothManager bluetoothManager;
 
@@ -107,6 +109,8 @@ public class MusicService extends MediaBrowserServiceCompat {
         playbackManager = new PlaybackManager(this, queueManager, musicServiceCallbacks);
         setSessionToken(playbackManager.getMediaSessionToken());
 
+        castManager = new CastManager(this, playbackManager);
+
         bluetoothManager = new BluetoothManager(playbackManager, musicServiceCallbacks);
 
         headsetManager = new HeadsetManager(playbackManager);
@@ -122,14 +126,14 @@ public class MusicService extends MediaBrowserServiceCompat {
         registerExternalStorageListener();
 
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(ServiceCommand.SERVICE_COMMAND);
-        intentFilter.addAction(ServiceCommand.TOGGLE_PAUSE_ACTION);
-        intentFilter.addAction(ServiceCommand.PAUSE_ACTION);
-        intentFilter.addAction(ServiceCommand.NEXT_ACTION);
-        intentFilter.addAction(ServiceCommand.PREV_ACTION);
-        intentFilter.addAction(ServiceCommand.STOP_ACTION);
-        intentFilter.addAction(ServiceCommand.SHUFFLE_ACTION);
-        intentFilter.addAction(ServiceCommand.REPEAT_ACTION);
+        intentFilter.addAction(ServiceCommand.COMMAND);
+        intentFilter.addAction(ServiceCommand.TOGGLE_PLAYBACK);
+        intentFilter.addAction(ServiceCommand.PAUSE);
+        intentFilter.addAction(ServiceCommand.NEXT);
+        intentFilter.addAction(ServiceCommand.PREV);
+        intentFilter.addAction(ServiceCommand.STOP);
+        intentFilter.addAction(ServiceCommand.SHUFFLE);
+        intentFilter.addAction(ServiceCommand.REPEAT);
         intentFilter.addAction(ExternalIntents.PLAY_STATUS_REQUEST);
         registerReceiver(intentReceiver, intentFilter);
 
@@ -205,17 +209,14 @@ public class MusicService extends MediaBrowserServiceCompat {
         serviceInUse = false;
         saveState(true);
 
-        if (playbackManager.getIsSupposedToBePlaying() || playbackManager.pausedByTransientLossOfFocus) {
+        if (playbackManager.isPlaying() || playbackManager.willResumePlayback()) {
             // Something is currently playing, or will be playing once an in-progress action requesting audio focus ends, so don't stop the service now.
             return true;
 
             // If there is a playlist but playback is paused, then wait a while before stopping the service, so that pause/resume isn't slow.
             // Also delay stopping the service if we're transitioning between tracks.
-        } else if (queueManager.playlist.size() > 0 || queueManager.shuffleList.size() > 0 || playbackManager.hasTrackEndedMessage()) {
-            AnalyticsManager.dropBreadcrumb(TAG, String.format("onUnbind() scheduling delayed shutdown. Playlist size: %d queue size: %d has track ended message: %s",
-                    queueManager.playlist.size(), queueManager.shuffleList.size(), playbackManager.hasTrackEndedMessage())
-            );
-
+        } else if (!queueManager.getCurrentPlaylist().isEmpty()) {
+            AnalyticsManager.dropBreadcrumb(TAG, String.format("onUnbind() scheduling delayed shutdown. Playlist size: %d queue size: %d has track ended message: %s"));
             scheduleDelayedShutdown();
             return true;
         }
@@ -223,9 +224,6 @@ public class MusicService extends MediaBrowserServiceCompat {
         AnalyticsManager.dropBreadcrumb(TAG, "stopSelf() called");
         stopSelf(serviceStartId);
 
-        // Shutdown the EQ
-        Intent shutdownEqualizer = new Intent(MusicService.this, Equalizer.class);
-        stopService(shutdownEqualizer);
         return true;
     }
 
@@ -233,9 +231,7 @@ public class MusicService extends MediaBrowserServiceCompat {
     public void onTaskRemoved(Intent rootIntent) {
         AnalyticsManager.dropBreadcrumb(TAG, "onTaskRemoved()");
 
-        //If nothing is playing, and won't be playing any time soon, we can stop the service.
-        //Presumably this is what the user wanted.
-        if (!isPlaying() && !playbackManager.pausedByTransientLossOfFocus) {
+        if (!isPlaying() && !playbackManager.willResumePlayback()) {
             AnalyticsManager.dropBreadcrumb(TAG, "stopSelf() called");
             stopSelf();
         }
@@ -244,16 +240,8 @@ public class MusicService extends MediaBrowserServiceCompat {
     }
 
     @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-
-        AnalyticsManager.dropBreadcrumb(TAG, "onLowMemory()");
-    }
-
-    @Override
     public void onDestroy() {
         AnalyticsManager.dropBreadcrumb(TAG, "onDestroy()");
-        Log.i(TAG, "onDestroy()");
 
         saveState(true);
 
@@ -265,6 +253,8 @@ public class MusicService extends MediaBrowserServiceCompat {
 
         // Remove any callbacks from the handlers
         notificationStateHandler.removeCallbacksAndMessages(null);
+
+        castManager.destroy();
 
         headsetManager.unregisterHeadsetPlugReceiver(this);
         bluetoothManager.unregisterBluetoothReceiver(this);
@@ -288,56 +278,57 @@ public class MusicService extends MediaBrowserServiceCompat {
         serviceStartId = startId;
 
         if (intent != null) {
-            final String action = intent.getAction();
-
-            String cmd = intent.getStringExtra("command");
-
-            AnalyticsManager.dropBreadcrumb(TAG, String.format("onStartCommand() Action: %s, Command: %s", action, cmd));
-
-            if (MediaButtonCommand.NEXT.equals(cmd) || ServiceCommand.NEXT_ACTION.equals(action)) {
-                gotoNext(true);
-            } else if (MediaButtonCommand.PREVIOUS.equals(cmd) || ServiceCommand.PREV_ACTION.equals(action)) {
-                if (getSeekPosition() < 2000) {
-                    previous();
-                } else {
-                    seekTo(0);
-                    play();
-                }
-            } else if (MediaButtonCommand.TOGGLE_PAUSE.equals(cmd) || ServiceCommand.TOGGLE_PAUSE_ACTION.equals(action)) {
-                if (isPlaying()) {
-                    AnalyticsManager.dropBreadcrumb(TAG, "Pausing due to media button or service command");
-                    pause();
-                } else {
-                    play();
-                }
-            } else if (MediaButtonCommand.PAUSE.equals(cmd) || ServiceCommand.PAUSE_ACTION.equals(action)) {
-                AnalyticsManager.dropBreadcrumb(TAG, "Pausing due to media button or service command (2)");
-                pause();
-            } else if (MediaButtonCommand.PLAY.equals(cmd)) {
-                play();
-            } else if (ServiceCommand.STOP_ACTION.equals(action) || MediaButtonCommand.STOP.equals(action)) {
-                AnalyticsManager.dropBreadcrumb(TAG, "Pausing due to media button or service stop command");
-                pause();
-                releaseServiceUiAndStop();
-                notificationStateHandler.removeCallbacksAndMessages(null);
-                //For some reason, the notification will only fuck off if this call is delayed.
-                new Handler().postDelayed(() -> stopForegroundImpl(true, false), 150);
-            } else if (ServiceCommand.SHUFFLE_ACTION.equals(action)) {
-                toggleShuffleMode();
-            } else if (ServiceCommand.REPEAT_ACTION.equals(action)) {
-                toggleRepeat();
-            } else if (MediaButtonCommand.TOGGLE_FAVORITE.equals(action) || ServiceCommand.TOGGLE_FAVORITE.equals(action)) {
-                toggleFavorite();
-            } else if (ExternalIntents.PLAY_STATUS_REQUEST.equals(action)) {
-                notifyChange(ExternalIntents.PLAY_STATUS_RESPONSE);
-            } else if (ServiceCommand.SHUTDOWN.equals(action)) {
-                shutdownScheduled = false;
-                releaseServiceUiAndStop();
-                return START_NOT_STICKY;
+            String action = intent.getAction();
+            String command = intent.getStringExtra(MediaButtonCommand.CMD_NAME);
+            AnalyticsManager.dropBreadcrumb(TAG, String.format("onStartCommand() Action: %s, Command: %s", action, command));
+            if (command != null) {
+                action = commandToAction(command);
             }
 
             if (action != null) {
                 switch (action) {
+                    case ServiceCommand.NEXT:
+                        gotoNext(true);
+                        break;
+                    case ServiceCommand.PREV:
+                        previous(false);
+                        break;
+                    case ServiceCommand.TOGGLE_PLAYBACK:
+                        if (isPlaying()) {
+                            pause(intent.getBooleanExtra(MediaButtonCommand.FORCE_PREVIOUS, false));
+                        } else {
+                            play();
+                        }
+                        break;
+                    case ServiceCommand.PAUSE:
+                        pause(true);
+                        break;
+                    case ServiceCommand.PLAY:
+                        play();
+                        break;
+                    case ServiceCommand.STOP:
+                        pause(false);
+                        releaseServiceUiAndStop();
+                        notificationStateHandler.removeCallbacksAndMessages(null);
+                        //For some reason, the notification will only go away if this call is delayed.
+                        new Handler().postDelayed(() -> stopForegroundImpl(true, false), 150);
+                        break;
+                    case ServiceCommand.SHUFFLE:
+                        toggleShuffleMode();
+                        break;
+                    case ServiceCommand.REPEAT:
+                        toggleRepeat();
+                        break;
+                    case ServiceCommand.TOGGLE_FAVORITE:
+                        toggleFavorite();
+                        break;
+                    case ExternalIntents.PLAY_STATUS_REQUEST:
+                        notifyChange(ExternalIntents.PLAY_STATUS_RESPONSE);
+                        break;
+                    case ServiceCommand.SHUTDOWN:
+                        shutdownScheduled = false;
+                        releaseServiceUiAndStop();
+                        return START_NOT_STICKY;
                     case ShortcutCommands.PLAY:
                         play();
                         break;
@@ -349,9 +340,8 @@ public class MusicService extends MediaBrowserServiceCompat {
             }
         }
 
-        // Make sure the service will shut down on its own if it was  just started but not bound to and nothing is playing
+        // Make sure the service will shut down on its own if it was just started but not bound to and nothing is playing
         AnalyticsManager.dropBreadcrumb(TAG, "onStartCommand() scheduling delayed shutdown");
-
         scheduleDelayedShutdown();
 
         if (intent != null && intent.getBooleanExtra(MediaButtonCommand.FROM_MEDIA_BUTTON, false)) {
@@ -364,44 +354,69 @@ public class MusicService extends MediaBrowserServiceCompat {
     private final BroadcastReceiver intentReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(final Context context, final Intent intent) {
-            final String action = intent.getAction();
-            final String command = intent.getStringExtra("command");
 
-            AnalyticsManager.dropBreadcrumb(TAG, String.format("onReceive() Action: %s, Command: %s", action, command));
+            String action = intent.getAction();
 
-            if (MediaButtonCommand.NEXT.equals(command) || ServiceCommand.NEXT_ACTION.equals(action)) {
-                gotoNext(true);
-            } else {
-                if (MediaButtonCommand.PREVIOUS.equals(command) || ServiceCommand.PREV_ACTION.equals(action)) {
-                    if (getSeekPosition() < 2000) {
-                        previous();
-                    } else {
-                        seekTo(0);
-                        play();
-                    }
-                } else {
-                    if (MediaButtonCommand.TOGGLE_PAUSE.equals(command) || ServiceCommand.TOGGLE_PAUSE_ACTION.equals(action)) {
+            String command = intent.getStringExtra(MediaButtonCommand.CMD_NAME);
+            if (command != null) {
+                action = commandToAction(command);
+                widgetManager.processCommand(MusicService.this, intent, command);
+            }
+
+            if (action != null) {
+                AnalyticsManager.dropBreadcrumb(TAG, String.format("onReceive() Action: %s, Command: %s", action, command));
+                switch (action) {
+                    case ServiceCommand.NEXT:
+                        gotoNext(true);
+                        break;
+                    case ServiceCommand.PREV:
+                        previous(false);
+                        break;
+                    case ServiceCommand.TOGGLE_PLAYBACK:
                         if (isPlaying()) {
-                            pause();
+                            pause(true);
                         } else {
                             play();
                         }
-                    } else if (MediaButtonCommand.PAUSE.equals(command)
-                            || ServiceCommand.PAUSE_ACTION.equals(action)) {
-                        pause();
-                    } else if (MediaButtonCommand.PLAY.equals(command)) {
+                        break;
+                    case ServiceCommand.PAUSE:
+                        pause(true);
+                        break;
+                    case ServiceCommand.PLAY:
                         play();
-                    } else if (MediaButtonCommand.STOP.equals(command)) {
-                        pause();
+                        break;
+                    case ServiceCommand.STOP:
+                        pause(false);
                         releaseServiceUiAndStop();
-                    } else if (MediaButtonCommand.TOGGLE_FAVORITE.equals(command)) {
+                        break;
+                    case ServiceCommand.TOGGLE_FAVORITE:
                         toggleFavorite();
-                    }
-                    widgetManager.processCommand(MusicService.this, intent, command);
+                        break;
                 }
             }
         }
     };
+
+    @Nullable
+    public String commandToAction(@NonNull String command) {
+        switch (command) {
+            case MediaButtonCommand.NEXT:
+                return ServiceCommand.NEXT;
+            case MediaButtonCommand.PREVIOUS:
+                return ServiceCommand.PREV;
+            case MediaButtonCommand.TOGGLE_PAUSE:
+                return ServiceCommand.TOGGLE_PLAYBACK;
+            case MediaButtonCommand.PAUSE:
+                return ServiceCommand.PAUSE;
+            case MediaButtonCommand.PLAY:
+                return ServiceCommand.PLAY;
+            case MediaButtonCommand.STOP:
+                return ServiceCommand.STOP;
+            case MediaButtonCommand.TOGGLE_FAVORITE:
+                return ServiceCommand.TOGGLE_FAVORITE;
+        }
+        return null;
+    }
 
     /**
      * Release resources and destroy the service.
@@ -482,22 +497,18 @@ public class MusicService extends MediaBrowserServiceCompat {
      * @param action The action to take
      */
     public void enqueue(List<Song> songs, @QueueManager.EnqueueAction final int action) {
-        synchronized (this) {
-            playbackManager.enqueue(songs, action);
-        }
+        playbackManager.enqueue(songs, action);
     }
 
     public void moveToNext(QueueItem queueItem) {
-        synchronized (this) {
-            List<QueueItem> playlist = queueManager.getCurrentPlaylist();
-            int fromIndex = playlist.indexOf(queueItem);
+        List<QueueItem> playlist = queueManager.getCurrentPlaylist();
+        int fromIndex = playlist.indexOf(queueItem);
 
-            QueueItem currentQueueItem = queueManager.getCurrentQueueItem();
-            int toIndex = playlist.indexOf(currentQueueItem) + 1;
+        QueueItem currentQueueItem = queueManager.getCurrentQueueItem();
+        int toIndex = playlist.indexOf(currentQueueItem) + 1;
 
-            if (fromIndex != toIndex) {
-                playbackManager.moveQueueItem(fromIndex, toIndex);
-            }
+        if (fromIndex != toIndex) {
+            playbackManager.moveQueueItem(fromIndex, toIndex);
         }
     }
 
@@ -505,9 +516,7 @@ public class MusicService extends MediaBrowserServiceCompat {
      * Sets the track to be played
      */
     protected void setNextTrack() {
-        synchronized (this) {
-            playbackManager.setNextTrack();
-        }
+        playbackManager.setNextTrack();
     }
 
     /**
@@ -516,22 +525,8 @@ public class MusicService extends MediaBrowserServiceCompat {
      * @param songs The list of songs to open
      * @param position The position to start playback at
      */
-    public void open(@NonNull List<Song> songs, final int position) {
-        synchronized (this) {
-            playbackManager.open(songs, position);
-        }
-    }
-
-    /**
-     * Opens a song and prepares it for playback
-     *
-     * @param song the song to open
-     * @return true if the song as successfully opened
-     */
-    public boolean open(@NonNull Song song) {
-        synchronized (this) {
-            return playbackManager.open(song);
-        }
+    public void open(@NonNull List<Song> songs, int position, Boolean playWhenReady) {
+        playbackManager.load(songs, position, playWhenReady, 0);
     }
 
     /**
@@ -539,19 +534,19 @@ public class MusicService extends MediaBrowserServiceCompat {
      *
      * @param path The path of the file to open
      */
-    public void openFile(String path, @Nullable Action completion) {
-        synchronized (this) {
-            playbackManager.openFile(path, completion);
-        }
+    public void openFile(String path, Boolean playWhenReady) {
+        playbackManager.loadFile(path, playWhenReady);
     }
 
     /**
      * Starts playback of a previously opened file
      */
     public void play() {
-        synchronized (this) {
-            playbackManager.play();
-        }
+        playbackManager.play();
+    }
+
+    public void togglePlayback() {
+        playbackManager.togglePlayback();
     }
 
     /**
@@ -559,19 +554,17 @@ public class MusicService extends MediaBrowserServiceCompat {
      */
     public void stop() {
         AnalyticsManager.dropBreadcrumb(TAG, "stop()");
-        synchronized (this) {
-            playbackManager.stop(true);
-        }
+        playbackManager.stop(true);
     }
 
     /**
      * Pauses playback
+     *
+     * @param canFade whether we are allowed to fade out before pausing.
      */
-    public void pause() {
+    public void pause(boolean canFade) {
         AnalyticsManager.dropBreadcrumb(TAG, "pause()");
-        synchronized (this) {
-            playbackManager.pause();
-        }
+        playbackManager.pause(canFade);
     }
 
     /**
@@ -580,27 +573,21 @@ public class MusicService extends MediaBrowserServiceCompat {
      * @return true if something is playing (or will be playing shortly, in case we're currently transitioning between tracks), false if not
      */
     public boolean isPlaying() {
-        synchronized (this) {
-            return playbackManager.isPlaying();
-        }
+        return playbackManager.isPlaying();
     }
 
     /**
      * @return true if is playing or has played recently
      */
     private boolean recentlyPlayed() {
-        synchronized (this) {
-            return playbackManager.recentlyPlayed();
-        }
+        return playbackManager.recentlyPlayed();
     }
 
     /**
      * Changes from the current track to the previous track
      */
-    public void previous() {
-        synchronized (this) {
-            playbackManager.previous();
-        }
+    public void previous(boolean force) {
+        playbackManager.previous(force);
     }
 
     /**
@@ -609,18 +596,14 @@ public class MusicService extends MediaBrowserServiceCompat {
      * @param force true to move to the next song regardless of repeat mode.
      */
     public void gotoNext(boolean force) {
-        synchronized (this) {
-            playbackManager.next(force);
-        }
+        playbackManager.next(force);
     }
 
     /**
      * Returns the current playback position in milliseconds
      */
     public long getSeekPosition() {
-        synchronized (this) {
-            return playbackManager.getSeekPosition();
-        }
+        return playbackManager.getSeekPosition();
     }
 
     /**
@@ -629,27 +612,21 @@ public class MusicService extends MediaBrowserServiceCompat {
      * @param position The position to seek to, in milliseconds
      */
     public void seekTo(long position) {
-        synchronized (this) {
-            playbackManager.seekTo(position);
-        }
+        playbackManager.seekTo(position);
     }
 
     /**
      * @return int the audio session ID.
      */
     public int getAudioSessionId() {
-        synchronized (this) {
-            return playbackManager.getAudioSessionId();
-        }
+        return playbackManager.getAudioSessionId();
     }
 
     /**
      * Creates a shuffled list of all songs and begins playback
      */
     public void playAutoShuffleList() {
-        synchronized (this) {
-            playbackManager.playAutoShuffleList();
-        }
+        playbackManager.playAutoShuffleList();
     }
 
     @QueueManager.ShuffleMode
@@ -658,9 +635,7 @@ public class MusicService extends MediaBrowserServiceCompat {
     }
 
     public void setShuffleMode(@QueueManager.ShuffleMode int shufflemode) {
-        synchronized (this) {
-            queueManager.setShuffleMode(shufflemode);
-        }
+        queueManager.setShuffleMode(shufflemode);
     }
 
     @QueueManager.RepeatMode
@@ -669,17 +644,13 @@ public class MusicService extends MediaBrowserServiceCompat {
     }
 
     public void setRepeatMode(@QueueManager.RepeatMode int repeatMode) {
-        synchronized (this) {
-            queueManager.setRepeatMode(repeatMode);
-            setNextTrack();
-        }
+        queueManager.setRepeatMode(repeatMode);
+        setNextTrack();
     }
 
     @Nullable
     public Song getSong() {
-        synchronized (this) {
-            return queueManager.getCurrentSong();
-        }
+        return queueManager.getCurrentSong();
     }
 
     public void toggleFavorite() {
@@ -746,30 +717,22 @@ public class MusicService extends MediaBrowserServiceCompat {
     }
 
     public void clearQueue() {
-        synchronized (this) {
-            playbackManager.clearQueue();
-        }
+        playbackManager.clearQueue();
     }
 
     void reloadQueue() {
-        synchronized (this) {
-            playbackManager.reloadQueue();
-        }
+        playbackManager.reloadQueue(false);
     }
 
     public List<QueueItem> getQueue() {
-        synchronized (this) {
-            return queueManager.getCurrentPlaylist();
-        }
+        return queueManager.getCurrentPlaylist();
     }
 
     /**
      * @return the position in the queue
      */
     public int getQueuePosition() {
-        synchronized (this) {
-            return queueManager.queuePosition;
-        }
+        return queueManager.queuePosition;
     }
 
     /**
@@ -778,33 +741,23 @@ public class MusicService extends MediaBrowserServiceCompat {
      * @param position The position in the queue of the track that will be played.
      */
     public void setQueuePosition(int position) {
-        synchronized (this) {
-            playbackManager.setQueuePosition(position);
-        }
+        playbackManager.setQueuePosition(position);
     }
 
     public void removeQueueItems(List<QueueItem> queueItems) {
-        synchronized (this) {
-            playbackManager.removeQueueItems(queueItems);
-        }
+        playbackManager.removeQueueItems(queueItems);
     }
 
     public void removeSongs(List<Song> songs) {
-        synchronized (this) {
-            playbackManager.removeSongs(songs);
-        }
+        playbackManager.removeSongs(songs);
     }
 
     public void removeQueueItem(QueueItem queueItem) {
-        synchronized (this) {
-            playbackManager.removeQueueItem(queueItem);
-        }
+        playbackManager.removeQueueItem(queueItem);
     }
 
     public void moveQueueItem(int from, int to) {
-        synchronized (this) {
-            playbackManager.moveQueueItem(from, to);
-        }
+        playbackManager.moveQueueItem(from, to);
     }
 
     // EQ
@@ -822,10 +775,10 @@ public class MusicService extends MediaBrowserServiceCompat {
     }
 
     private void scheduleDelayedShutdown() {
-        if (isPlaying() || serviceInUse || playbackManager.pausedByTransientLossOfFocus) {
+        if (isPlaying() || serviceInUse || playbackManager.willResumePlayback()) {
             AnalyticsManager.dropBreadcrumb(TAG,
-                    String.format("scheduleDelayedShutdown called.. returning early. isPlaying: %s service in use: %s paused by loss of focus: %s",
-                            isPlaying(), serviceInUse, playbackManager.pausedByTransientLossOfFocus));
+                    String.format("scheduleDelayedShutdown called.. returning early. isPlaying: %s service in use: %s will resume playback: %s",
+                            isPlaying(), serviceInUse, playbackManager.willResumePlayback()));
             return;
         }
 
@@ -905,7 +858,6 @@ public class MusicService extends MediaBrowserServiceCompat {
             }
         } catch (NullPointerException | ConcurrentModificationException e) {
             Crashlytics.log("startForegroundImpl error: " + e.getMessage());
-            Log.e(TAG, "startForeground should have been called, but an exfeption occured: " + e);
         }
     }
 
@@ -919,7 +871,6 @@ public class MusicService extends MediaBrowserServiceCompat {
         if (withDelay) {
             notificationStateHandler.sendEmptyMessageDelayed(NotificationStateHandler.STOP_FOREGROUND, 1500);
         } else {
-            Log.i(TAG, "Stop foreground called");
             stopForeground(removeNotification);
         }
     }
@@ -1054,8 +1005,6 @@ public class MusicService extends MediaBrowserServiceCompat {
 
         void updateNotification();
 
-        void releaseServiceUiAndStop();
-
         void stopForegroundImpl(boolean removeNotification, boolean withDelay);
     }
 
@@ -1079,11 +1028,6 @@ public class MusicService extends MediaBrowserServiceCompat {
         @Override
         public void updateNotification() {
             MusicService.this.updateNotification();
-        }
-
-        @Override
-        public void releaseServiceUiAndStop() {
-            MusicService.this.releaseServiceUiAndStop();
         }
 
         @Override

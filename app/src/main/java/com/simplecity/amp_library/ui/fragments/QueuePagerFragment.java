@@ -31,7 +31,7 @@ import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import io.reactivex.Observable;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -105,16 +105,14 @@ public class QueuePagerFragment extends BaseFragment implements
                 int snapPosition = super.findTargetSnapPosition(layoutManager, velocityX, velocityY);
 
                 if (snapPosition < viewModelAdapter.items.size()) {
-                    Observable.defer(() -> {
-                        if (mediaManager.getQueuePosition() != snapPosition) {
-                            mediaManager.setQueuePosition(snapPosition);
-                        }
-                        return Observable.empty();
-                    })
-                            .delaySubscription(200, TimeUnit.MILLISECONDS)
-                            .subscribeOn(Schedulers.io())
+                    Observable.timer(200, TimeUnit.MILLISECONDS)
+                            .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(
-                                    o -> {},
+                                    o -> {
+                                        if (mediaManager.getQueuePosition() != snapPosition) {
+                                            mediaManager.setQueuePosition(snapPosition);
+                                        }
+                                    },
                                     throwable -> LogUtils.logException(TAG, "Error setting queue position", throwable)
                             );
                 }

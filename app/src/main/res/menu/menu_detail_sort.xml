@@ -5,8 +5,9 @@
     <item
         android:id="@+id/media_route_menu_item"
         android:title="@string/media_route_menu_title"
+        android:visible="true"
         app:actionProviderClass="com.simplecity.amp_library.ui.views.CustomMediaRouteActionProvider"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
 
     <item
         android:id="@+id/sorting"

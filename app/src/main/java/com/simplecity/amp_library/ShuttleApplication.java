@@ -20,11 +20,8 @@ import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.core.CrashlyticsCore;
-import com.google.android.libraries.cast.companionlibrary.cast.CastConfiguration;
-import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.simplecity.amp_library.constants.Config;
 import com.simplecity.amp_library.dagger.component.AppComponent;
 import com.simplecity.amp_library.dagger.component.DaggerAppComponent;
 import com.simplecity.amp_library.dagger.module.AppModule;
@@ -79,8 +76,6 @@ public class ShuttleApplication extends Application {
 
     private boolean isUpgraded;
 
-    public static final double VOLUME_INCREMENT = 0.05;
-
     private RefWatcher refWatcher;
 
     public HashMap<String, UserSelectedArtwork> userSelectedArtwork = new HashMap<>();
@@ -128,13 +123,6 @@ public class ShuttleApplication extends Application {
         // Firebase
         FirebaseApp.initializeApp(this);
         FirebaseAnalytics.getInstance(this);
-
-        VideoCastManager.initialize(this,
-                new CastConfiguration.Builder(Config.CHROMECAST_APP_ID)
-                        .enableLockScreen()
-                        .enableNotification()
-                        .build()
-        );
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         // we cannot call setDefaultValues for multiple fragment based XML preference

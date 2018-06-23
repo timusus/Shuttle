@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.afollestad.aesthetic.AestheticActivity;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.Purchase;
+import com.google.android.gms.cast.framework.CastContext;
 import com.greysonparrelli.permiso.Permiso;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
@@ -83,6 +84,8 @@ public abstract class BaseActivity extends AestheticActivity implements ServiceC
                 Toast.makeText(BaseActivity.this, R.string.iab_purchase_restored, Toast.LENGTH_SHORT).show();
             }
         });
+
+        CastContext castContext = CastContext.getSharedInstance(this);
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
     }

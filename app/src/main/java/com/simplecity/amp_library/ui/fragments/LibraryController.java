@@ -29,6 +29,7 @@ import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.ViewBackgroundAction;
 import com.annimon.stream.Stream;
 import com.cantrowitz.rxbroadcast.RxBroadcast;
+import com.google.android.gms.cast.framework.CastButtonFactory;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.ActivityModule;
@@ -182,7 +183,9 @@ public class LibraryController extends BaseFragment implements
         super.onCreateOptionsMenu(menu, inflater);
 
         inflater.inflate(R.menu.menu_library, menu);
-        setupCastMenu(menu);
+
+        MenuItem menuItem = CastButtonFactory.setUpMediaRouteButton(getContext(), menu, R.id.media_route_menu_item);
+        menuItem.setVisible(true);
     }
 
     @Override

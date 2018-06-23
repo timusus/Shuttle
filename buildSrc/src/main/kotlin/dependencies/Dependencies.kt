@@ -6,8 +6,6 @@ object Dependencies {
     const val targetSdk = 27
     const val compileSdk = 27
 
-    const val buildTools = "27.0.3"
-
     object Versions {
         const val nanoHttp = "2.3.1"
         const val crashlytics = "2.9.4"
@@ -76,8 +74,8 @@ object Dependencies {
     object Plugins {
 
         object Versions {
-            const val androidGradlePlugin = "3.2.0"
-            const val kotlin = "1.2.51"
+            const val androidGradlePlugin = "3.2.1"
+            const val kotlin = "1.2.71"
             const val dexcountGradlePlugin = "0.8.3"
             const val fabricGradlePlugin = "1.+"
             const val playPublisher = "1.2.2"
@@ -123,7 +121,7 @@ object Dependencies {
 
         object Versions {
             const val haha = "2.0.4"
-            const val leakCanary = "1.5.4"
+            const val leakCanary = "1.6.1"
             const val okio = "1.14.1"
             const val okhttp = "3.10.0"
             const val retrofit = "2.4.0"
@@ -222,9 +220,6 @@ object Dependencies {
 
 
     object Projects {
-
-        // Cast Companion Library
-        val ccl = ":libraries:ccl"
 
         // Glide Palette - https://git.io/vix57 (Florent Champigny)
         val glidePalette = ":libraries:glidepalette"

@@ -36,7 +36,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import java.util.List;
 import kotlin.Unit;
 
-public class MediaSessionManager {
+class MediaSessionManager {
 
     private static final String TAG = "MediaSessionManager";
 
@@ -64,8 +64,7 @@ public class MediaSessionManager {
         mediaSession.setCallback(new MediaSessionCompat.Callback() {
             @Override
             public void onPause() {
-                playbackManager.pause();
-                playbackManager.setPausedByTransientLossOfFocus(false);
+                playbackManager.pause(true);
             }
 
             @Override
@@ -85,7 +84,7 @@ public class MediaSessionManager {
 
             @Override
             public void onSkipToPrevious() {
-                playbackManager.previous();
+                playbackManager.previous(false);
             }
 
             @Override
@@ -104,9 +103,7 @@ public class MediaSessionManager {
 
             @Override
             public void onStop() {
-                playbackManager.pause();
-                playbackManager.setPausedByTransientLossOfFocus(false);
-                musicServiceCallbacks.releaseServiceUiAndStop();
+                playbackManager.stop(true);
             }
 
             @Override
@@ -118,14 +115,13 @@ public class MediaSessionManager {
 
             @Override
             public void onPlayFromMediaId(String mediaId, Bundle extras) {
-                mediaIdHelper.getSongListForMediaId(mediaId, (songs, position) ->
-                {
-                    playbackManager.open((List<Song>) songs, position);
-                    playbackManager.play();
+                mediaIdHelper.getSongListForMediaId(mediaId, (songs, position) -> {
+                    playbackManager.load((List<Song>) songs, position, true, 0);
                     return Unit.INSTANCE;
                 });
             }
 
+            @SuppressWarnings("ResultOfMethodCallIgnored")
             @SuppressLint("CheckResult")
             @Override
             public void onPlayFromSearch(String query, Bundle extras) {
@@ -136,10 +132,9 @@ public class MediaSessionManager {
                             .subscribe(
                                     pair -> {
                                         if (!pair.getFirst().isEmpty()) {
-                                            playbackManager.open(pair.getFirst(), pair.getSecond());
-                                            playbackManager.play();
+                                            playbackManager.load(pair.getFirst(), pair.getSecond(), true, 0);
                                         } else {
-                                            playbackManager.pause();
+                                            playbackManager.pause(false);
                                         }
                                     },
                                     error -> LogUtils.logException(TAG, "Failed to gather songs from search. Query: " + query, error)
@@ -186,7 +181,7 @@ public class MediaSessionManager {
 
     private void updateMediaSession(final String action) {
 
-        int playState = playbackManager.getIsSupposedToBePlaying() ? PlaybackStateCompat.STATE_PLAYING : PlaybackStateCompat.STATE_PAUSED;
+        int playState = playbackManager.isPlaying() ? PlaybackStateCompat.STATE_PLAYING : PlaybackStateCompat.STATE_PAUSED;
 
         long playbackActions = getMediaSessionActions();
 
@@ -220,7 +215,7 @@ public class MediaSessionManager {
 
             if (currentQueueItem != null) {
                 MediaMetadataCompat.Builder metaData = new MediaMetadataCompat.Builder()
-                        .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, String.valueOf(queueManager.getCurrentSong().id))
+                        .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, String.valueOf(currentQueueItem.getSong().id))
                         .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, currentQueueItem.getSong().artistName)
                         .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, currentQueueItem.getSong().albumArtistName)
                         .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, currentQueueItem.getSong().albumName)
@@ -243,42 +238,46 @@ public class MediaSessionManager {
                 mediaSession.setQueueTitle(context.getString(R.string.menu_queue));
 
                 if (SettingsManager.getInstance().showLockscreenArtwork() || CarHelper.isCarUiMode(context)) {
-
-                    disposables.add(
-                            Completable.defer(() -> Completable.fromAction(() ->
-                                    Glide.with(context)
-                                            .load(currentQueueItem.getSong().getAlbum())
-                                            .asBitmap()
-                                            .override(1024, 1024)
-                                            .into(new SimpleTarget<Bitmap>() {
-                                                @Override
-                                                public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-                                                    if (bitmap != null) {
-                                                        metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap);
-                                                    }
-                                                    try {
-                                                        mediaSession.setMetadata(metaData.build());
-                                                    } catch (NullPointerException e) {
-                                                        metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, null);
-                                                        mediaSession.setMetadata(metaData.build());
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                                                    super.onLoadFailed(e, errorDrawable);
-                                                    mediaSession.setMetadata(metaData.build());
-                                                }
-                                            })
-                            ))
-                                    .subscribeOn(AndroidSchedulers.mainThread())
-                                    .subscribe()
-
-                    );
+                    updateMediaSessionArtwork(metaData);
                 } else {
                     mediaSession.setMetadata(metaData.build());
                 }
             }
+        }
+    }
+
+    private void updateMediaSessionArtwork(MediaMetadataCompat.Builder metaData) {
+        QueueItem currentQueueItem = queueManager.getCurrentQueueItem();
+        if (currentQueueItem != null) {
+            disposables.add(Completable.defer(() -> Completable.fromAction(() ->
+                            Glide.with(context)
+                                    .load(currentQueueItem.getSong().getAlbum())
+                                    .asBitmap()
+                                    .override(1024, 1024)
+                                    .into(new SimpleTarget<Bitmap>() {
+                                        @Override
+                                        public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+                                            if (bitmap != null) {
+                                                metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap);
+                                            }
+                                            try {
+                                                mediaSession.setMetadata(metaData.build());
+                                            } catch (NullPointerException e) {
+                                                metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, null);
+                                                mediaSession.setMetadata(metaData.build());
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                                            super.onLoadFailed(e, errorDrawable);
+                                            mediaSession.setMetadata(metaData.build());
+                                        }
+                                    })
+                    ))
+                            .subscribeOn(AndroidSchedulers.mainThread())
+                            .subscribe()
+            );
         }
     }
 
@@ -295,15 +294,15 @@ public class MediaSessionManager {
                 | PlaybackStateCompat.ACTION_SKIP_TO_QUEUE_ITEM;
     }
 
-    public MediaSessionCompat.Token getSessionToken() {
+    MediaSessionCompat.Token getSessionToken() {
         return mediaSession.getSessionToken();
     }
 
-    public void setActive(boolean active) {
+    void setActive(boolean active) {
         mediaSession.setActive(active);
     }
 
-    public void destroy() {
+    void destroy() {
         disposables.clear();
         mediaSession.release();
     }

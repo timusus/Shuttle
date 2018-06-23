@@ -74,17 +74,17 @@ public class MusicNotificationHelper extends NotificationHelper {
                 .addAction(
                         R.drawable.ic_skip_previous_24dp,
                         context.getString(R.string.btn_prev),
-                        MusicService.retrievePlaybackAction(context, ServiceCommand.PREV_ACTION)
+                        MusicService.retrievePlaybackAction(context, ServiceCommand.PREV)
                 )
                 .addAction(
                         isPlaying ? R.drawable.ic_pause_24dp : R.drawable.ic_play_24dp,
                         context.getString(isPlaying ? R.string.btn_pause : R.string.btn_play),
-                        MusicService.retrievePlaybackAction(context, ServiceCommand.TOGGLE_PAUSE_ACTION)
+                        MusicService.retrievePlaybackAction(context, ServiceCommand.TOGGLE_PLAYBACK)
                 )
                 .addAction(
                         R.drawable.ic_skip_next_24dp,
                         context.getString(R.string.btn_skip),
-                        MusicService.retrievePlaybackAction(context, ServiceCommand.NEXT_ACTION)
+                        MusicService.retrievePlaybackAction(context, ServiceCommand.NEXT)
                 )
                 .addAction(
                         isFavorite ? R.drawable.ic_favorite_24dp_scaled : R.drawable.ic_favorite_border_24dp_scaled,

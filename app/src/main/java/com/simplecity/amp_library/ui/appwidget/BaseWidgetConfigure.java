@@ -206,7 +206,7 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
 
             // Send broadcast intent to any running MediaPlaybackService so it can
             // wrap around with an immediate update.
-            Intent updateIntent = new Intent(ServiceCommand.SERVICE_COMMAND);
+            Intent updateIntent = new Intent(ServiceCommand.COMMAND);
             updateIntent.putExtra(MediaButtonCommand.CMD_NAME, getUpdateCommandString());
             updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[] { appWidgetId });
             updateIntent.addFlags(Intent.FLAG_RECEIVER_REGISTERED_ONLY);

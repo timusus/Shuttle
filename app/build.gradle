@@ -52,7 +52,6 @@ android {
     }
 
     compileSdkVersion Dependencies.compileSdk
-    buildToolsVersion Dependencies.buildTools
 
     defaultConfig {
         minSdkVersion Dependencies.minSdk
@@ -224,7 +223,7 @@ dependencies {
     implementation Dependencies.Google.firebaseCore
     implementation Dependencies.Google.firebaseRemoteConfig
     implementation Dependencies.Google.constraintLayout
-    implementation Dependencies.Google.chromecast
+    implementation Dependencies.Google.chromeCastFramework
 
     // Square libs
     implementation Dependencies.Square.okio
@@ -240,7 +239,6 @@ dependencies {
     implementation project(Dependencies.Projects.navigation)
     implementation project(Dependencies.Projects.recyclerAdapter)
     implementation project(Dependencies.Projects.multiSheetView)
-    implementation project(Dependencies.Projects.ccl)
     implementation project(Dependencies.Projects.glidePalette)
     implementation project(Dependencies.Projects.aesthetic)
 

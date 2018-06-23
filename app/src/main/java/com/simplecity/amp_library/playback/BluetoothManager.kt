@@ -39,7 +39,7 @@ class BluetoothManager(
                                 val previousState = extras.getInt(BluetoothA2dp.EXTRA_PREVIOUS_STATE)
                                 if ((state == BluetoothA2dp.STATE_DISCONNECTED || state == BluetoothA2dp.STATE_DISCONNECTING) && previousState == BluetoothA2dp.STATE_CONNECTED) {
                                     AnalyticsManager.dropBreadcrumb(TAG, "ACTION_AUDIO_STATE_CHANGED.. pausing. State: $state")
-                                    playbackManager.pause()
+                                    playbackManager.pause(false)
                                 }
                             }
                             BluetoothHeadset.ACTION_AUDIO_STATE_CHANGED -> if (extras != null) {
@@ -47,7 +47,7 @@ class BluetoothManager(
                                 val previousState = extras.getInt(BluetoothHeadset.EXTRA_PREVIOUS_STATE)
                                 if (state == BluetoothHeadset.STATE_AUDIO_DISCONNECTED && previousState == BluetoothHeadset.STATE_AUDIO_CONNECTED) {
                                     AnalyticsManager.dropBreadcrumb(TAG, "ACTION_AUDIO_STATE_CHANGED.. pausing. State: $state")
-                                    playbackManager.pause()
+                                    playbackManager.pause(false)
                                 }
                             }
                         }

@@ -42,10 +42,14 @@ public class HttpServer {
         }
     }
 
-    public void serveImage(byte[] imageUri) {
-        if (imageUri != null) {
-            imageBytesToServe = imageUri;
+    public void serveImage(byte[] imageBytes) {
+        if (imageBytes != null) {
+            imageBytesToServe = imageBytes;
         }
+    }
+
+    public void clearImage() {
+        imageBytesToServe = null;
     }
 
     public void start() {
@@ -136,8 +140,12 @@ public class HttpServer {
                     e.printStackTrace();
                 }
             } else if (uri.contains("image")) {
+                if (imageBytesToServe == null) {
+                    return newFixedLengthResponse(Response.Status.NOT_FOUND, "text/html", "Image bytes null");
+                }
                 cleanupImageStream();
                 imageInputStream = new ByteArrayInputStream(imageBytesToServe);
+                Log.i(TAG, "Serving image bytes: " + imageBytesToServe.length);
                 return newFixedLengthResponse(Response.Status.OK, "image/png", imageInputStream, imageBytesToServe.length);
             }
             Log.e(TAG, "Returning NOT_FOUND response");

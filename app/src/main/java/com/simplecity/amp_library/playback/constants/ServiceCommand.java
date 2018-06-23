@@ -1,14 +1,15 @@
 package com.simplecity.amp_library.playback.constants;
 
 public interface ServiceCommand {
-    String SERVICE_COMMAND = "com.simplecity.shuttle.music_service_command";
-    String TOGGLE_PAUSE_ACTION = SERVICE_COMMAND + ".togglepause";
-    String PAUSE_ACTION = SERVICE_COMMAND + ".pause";
-    String PREV_ACTION = SERVICE_COMMAND + ".prev";
-    String NEXT_ACTION = SERVICE_COMMAND + ".next";
-    String STOP_ACTION = SERVICE_COMMAND + ".stop";
-    String SHUFFLE_ACTION = SERVICE_COMMAND + ".shuffle";
-    String REPEAT_ACTION = SERVICE_COMMAND + ".repeat";
-    String SHUTDOWN = SERVICE_COMMAND + ".shutdown";
-    String TOGGLE_FAVORITE = SERVICE_COMMAND + ".togglefavorite";
+    String COMMAND = "com.simplecityapps.shuttle.service_command";
+    String TOGGLE_PLAYBACK = COMMAND + ".toggle_playback";
+    String PAUSE = COMMAND + ".pause";
+    String PLAY = COMMAND + ".play";
+    String PREV = COMMAND + ".prev";
+    String NEXT = COMMAND + ".next";
+    String STOP = COMMAND + ".stop";
+    String SHUFFLE = COMMAND + ".shuffle";
+    String REPEAT = COMMAND + ".repeat";
+    String SHUTDOWN = COMMAND + ".shutdown";
+    String TOGGLE_FAVORITE = COMMAND + ".toggle_favorite";
 }

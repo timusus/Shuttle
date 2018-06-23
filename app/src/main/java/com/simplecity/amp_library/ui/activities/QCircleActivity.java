@@ -232,12 +232,12 @@ public class QCircleActivity extends BaseActivity {
         pauseBtn = findViewById(R.id.btn_pause);
         setPauseButtonImage();
 
-        prevBtn.setOnClickListener(v -> mediaManager.previous(true));
+        prevBtn.setOnClickListener(v -> mediaManager.previous(false));
 
         skipBtn.setOnClickListener(v -> mediaManager.next());
 
         pauseBtn.setOnClickListener(v -> {
-            mediaManager.playOrPause();
+            mediaManager.togglePlayback();
             setPauseButtonImage();
         });
     }

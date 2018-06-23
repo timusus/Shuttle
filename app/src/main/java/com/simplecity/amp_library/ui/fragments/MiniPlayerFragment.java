@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -32,6 +33,7 @@ import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.multisheetview.ui.view.MultiSheetView;
 import io.reactivex.disposables.CompositeDisposable;
 import javax.inject.Inject;
+import kotlin.Unit;
 
 public class MiniPlayerFragment extends BaseFragment {
 
@@ -93,10 +95,10 @@ public class MiniPlayerFragment extends BaseFragment {
         });
         rootView.setOnTouchListener(new OnSwipeTouchListener(getActivity()));
 
-        playPauseView.setOnClickListener(v -> {
-            playPauseView.toggle();
-            playPauseView.postDelayed(() -> presenter.togglePlayback(), 200);
-        });
+        playPauseView.setOnClickListener(v -> playPauseView.toggle(() -> {
+            presenter.togglePlayback();
+            return Unit.INSTANCE;
+        }));
 
         progressBar.setMax(1000);
 
@@ -216,11 +218,11 @@ public class MiniPlayerFragment extends BaseFragment {
         public void playbackChanged(boolean isPlaying) {
             if (isPlaying) {
                 if (playPauseView.isPlay()) {
-                    playPauseView.toggle();
+                    playPauseView.toggle(null);
                 }
             } else {
                 if (!playPauseView.isPlay()) {
-                    playPauseView.toggle();
+                    playPauseView.toggle(null);
                 }
             }
         }

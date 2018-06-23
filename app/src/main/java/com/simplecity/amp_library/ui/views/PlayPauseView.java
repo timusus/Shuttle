@@ -1,6 +1,7 @@
 package com.simplecity.amp_library.ui.views;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -9,13 +10,18 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
 
 public class PlayPauseView extends FrameLayout {
+
+    private static final String TAG = "PlayPauseView";
 
     private static final long PLAY_PAUSE_ANIMATION_DURATION = 200;
 
@@ -90,7 +96,11 @@ public class PlayPauseView extends FrameLayout {
         drawable.draw(canvas);
     }
 
-    public void toggle() {
+    public void update() {
+
+    }
+
+    public void toggle(@Nullable Function0<Unit> completion) {
         if (animator != null) {
             animator.cancel();
         }
@@ -99,6 +109,17 @@ public class PlayPauseView extends FrameLayout {
         animator.setInterpolator(new DecelerateInterpolator());
         animator.setDuration(PLAY_PAUSE_ANIMATION_DURATION);
         animator.start();
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                animation.removeListener(this);
+
+                if (completion != null) {
+                    completion.invoke();
+                }
+            }
+        });
     }
 
     public boolean isPlay() {
