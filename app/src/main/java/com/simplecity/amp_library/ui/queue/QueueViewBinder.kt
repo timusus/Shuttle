@@ -88,14 +88,16 @@ class QueueViewBinder(var queueItem: QueueItem, private val requestManager: Requ
 
         holder.dragHandle.isActivated = isCurrentTrack
 
-        if (showAlbumArt && SettingsManager.getInstance().showArtworkInQueue()) {
-            holder.artwork.visibility = View.VISIBLE
-            requestManager.load<Song>(queueItem.song)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(queueItem.song.albumName, false))
-                .into(holder.artwork)
-        } else {
-            holder.artwork.visibility = View.GONE
+        holder.artwork?.let { artwork ->
+            if (showAlbumArt && SettingsManager.getInstance().showArtworkInQueue()) {
+                artwork.visibility = View.VISIBLE
+                requestManager.load<Song>(queueItem.song)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(queueItem.song.albumName, false))
+                    .into(artwork)
+            } else {
+                artwork.visibility = View.GONE
+            }
         }
 
         holder.overflowButton.contentDescription = holder.itemView.resources.getString(R.string.btn_options, queueItem.song.name)
@@ -194,7 +196,8 @@ class QueueViewBinder(var queueItem: QueueItem, private val requestManager: Requ
         lateinit var dragHandle: ImageView
 
         @BindView(R.id.image)
-        lateinit var artwork: ImageView
+        @JvmField
+        var artwork: ImageView? = null
 
         init {
             ButterKnife.bind(this, itemView)
