@@ -78,9 +78,6 @@ public class MediaManager {
                         e -> LogUtils.logException(TAG, "Shuffle all error", e));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void shuffleAll(@NotNull List<Song> songs, @NotNull Function1<? super String, Unit> onEmpty) {
         setShuffleMode(QueueManager.ShuffleMode.ON);
         if (!songs.isEmpty()) {
