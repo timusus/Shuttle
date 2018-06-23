@@ -72,11 +72,13 @@ public class DashClockService extends DashClockExtension {
     private final BroadcastReceiver mStatusListener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (!mIsInitialized) {
+
+            final Bundle extras = intent.getExtras();
+
+            if (!mIsInitialized || extras == null) {
                 return;
             }
 
-            final Bundle extras = intent.getExtras();
             mIsPlaying = extras.getBoolean("playing", false);
 
             if (!mIsPlaying) {
