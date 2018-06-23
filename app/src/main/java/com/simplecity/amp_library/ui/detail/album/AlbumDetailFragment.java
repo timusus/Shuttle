@@ -307,10 +307,10 @@ public class AlbumDetailFragment extends BaseFragment implements
             case R.id.addToQueue:
                 presenter.addToQueue();
                 return true;
-            case MediaManager.ADD_TO_PLAYLIST:
+            case MediaManager.Defs.ADD_TO_PLAYLIST:
                 presenter.newPlaylist();
                 return true;
-            case MediaManager.PLAYLIST_SELECTED:
+            case MediaManager.Defs.PLAYLIST_SELECTED:
                 presenter.playlistSelected(getContext(), item, () -> presenter.closeContextualToolbar());
                 return true;
             case R.id.editTags:

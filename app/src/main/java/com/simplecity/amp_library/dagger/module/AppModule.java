@@ -3,7 +3,6 @@ package com.simplecity.amp_library.dagger.module;
 import android.content.Context;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.playback.MediaManager;
-import com.simplecity.amp_library.utils.MusicUtils;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;
@@ -26,6 +25,6 @@ public class AppModule {
     @Provides
     @Singleton
     public MediaManager provideMediaManager() {
-        return new MusicUtils();
+        return new MediaManager();
     }
 }

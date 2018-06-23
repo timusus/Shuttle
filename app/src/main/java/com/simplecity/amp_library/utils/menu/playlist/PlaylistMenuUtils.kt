@@ -96,10 +96,10 @@ object PlaylistMenuUtils {
                 return true
             }
             R.id.deletePlaylist -> {
-                callbacks.showDeleteConfirmationDialog(playlist, {
+                callbacks.showDeleteConfirmationDialog(playlist) {
                     playlist.delete()
                     callbacks.onPlaylistDeleted()
-                })
+                }
                 return true
             }
             R.id.editPlaylist -> {

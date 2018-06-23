@@ -6,6 +6,7 @@ import com.simplecity.amp_library.R
 import com.simplecity.amp_library.model.Genre
 import com.simplecity.amp_library.model.Playlist
 import com.simplecity.amp_library.playback.MediaManager
+import com.simplecity.amp_library.playback.MediaManager.Defs
 import com.simplecity.amp_library.utils.PlaylistUtils
 import com.simplecity.amp_library.utils.extensions.getSongs
 import com.simplecity.amp_library.utils.menu.MenuUtils
@@ -34,11 +35,11 @@ object GenreMenuUtils {
                     callbacks.playNext(genre)
                     return@OnMenuItemClickListener true
                 }
-                MediaManager.NEW_PLAYLIST -> {
+                Defs.NEW_PLAYLIST -> {
                     MenuUtils.newPlaylist(context, genre.getSongs(), { callbacks.onPlaylistItemsInserted() })
                     return@OnMenuItemClickListener true
                 }
-                MediaManager.PLAYLIST_SELECTED -> {
+                Defs.PLAYLIST_SELECTED -> {
                     MenuUtils.addToPlaylist(context, item.intent.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist, genre.getSongs(), { callbacks.onPlaylistItemsInserted() })
                     return@OnMenuItemClickListener true
                 }

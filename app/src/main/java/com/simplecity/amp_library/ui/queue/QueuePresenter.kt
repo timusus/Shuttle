@@ -33,7 +33,7 @@ constructor(internal var mediaManager: MediaManager) : Presenter<View>(), QueueC
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { intent ->
                 val queueView = getView()
-                queueView?.updateQueuePosition(mediaManager.getQueuePosition())
+                queueView?.updateQueuePosition(mediaManager.queuePosition)
             })
 
         filter = IntentFilter()

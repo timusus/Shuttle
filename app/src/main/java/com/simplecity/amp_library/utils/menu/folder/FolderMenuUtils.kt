@@ -15,6 +15,7 @@ import com.simplecity.amp_library.model.FolderObject
 import com.simplecity.amp_library.model.Playlist
 import com.simplecity.amp_library.model.Song
 import com.simplecity.amp_library.playback.MediaManager
+import com.simplecity.amp_library.playback.MediaManager.Defs
 import com.simplecity.amp_library.ui.modelviews.FolderView
 import com.simplecity.amp_library.utils.CustomMediaScanner
 import com.simplecity.amp_library.utils.DialogUtils
@@ -188,11 +189,11 @@ object FolderMenuUtils {
                     callbacks.playNext(getSongsForFolderObject(folderObject))
                     return@OnMenuItemClickListener true
                 }
-                MediaManager.NEW_PLAYLIST -> {
+                Defs.NEW_PLAYLIST -> {
                     MenuUtils.newPlaylist(context, getSongsForFolderObject(folderObject), { callbacks.onPlaylistItemsInserted() })
                     return@OnMenuItemClickListener true
                 }
-                MediaManager.PLAYLIST_SELECTED -> {
+                Defs.PLAYLIST_SELECTED -> {
                     MenuUtils.addToPlaylist(
                         context,
                         menuItem.intent.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist,
@@ -239,11 +240,11 @@ object FolderMenuUtils {
                     getSongForFile(fileObject).subscribe({ song -> MenuUtils.playNext(mediaManager, song, { callbacks.showToast(it) }) }, errorHandler)
                     return@OnMenuItemClickListener true
                 }
-                MediaManager.NEW_PLAYLIST -> {
+                Defs.NEW_PLAYLIST -> {
                     getSongForFile(fileObject).subscribe({ song -> MenuUtils.newPlaylist(context, listOf(song), { callbacks.onPlaylistItemsInserted() }) }, errorHandler)
                     return@OnMenuItemClickListener true
                 }
-                MediaManager.PLAYLIST_SELECTED -> {
+                Defs.PLAYLIST_SELECTED -> {
                     getSongForFile(fileObject).subscribe({ song ->
                         MenuUtils.addToPlaylist(
                             context,

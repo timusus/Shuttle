@@ -20,7 +20,7 @@ import com.simplecity.amp_library.ShuttleApplication
 import com.simplecity.amp_library.dagger.module.ActivityModule
 import com.simplecity.amp_library.dagger.module.FragmentModule
 import com.simplecity.amp_library.model.Song
-import com.simplecity.amp_library.playback.MediaManager
+import com.simplecity.amp_library.playback.MediaManager.Defs
 import com.simplecity.amp_library.tagger.TaggerDialog
 import com.simplecity.amp_library.ui.dialog.DeleteDialog
 import com.simplecity.amp_library.ui.dialog.UpgradeDialog
@@ -123,7 +123,7 @@ class QueueFragment : BaseFragment(), QueueContract.View {
         toolbar.setNavigationOnClickListener { v -> activity?.onBackPressed() }
         toolbar.inflateMenu(R.menu.menu_fragment_queue)
 
-        val subMenu = toolbar.menu.addSubMenu(0, MediaManager.ADD_TO_PLAYLIST, 1, R.string.save_as_playlist)
+        val subMenu = toolbar.menu.addSubMenu(0, Defs.ADD_TO_PLAYLIST, 1, R.string.save_as_playlist)
         disposables.add(PlaylistUtils.createUpdatingPlaylistMenu(subMenu).subscribe())
 
         toolbar.setOnMenuItemClickListener(toolbarListener)
@@ -249,11 +249,11 @@ class QueueFragment : BaseFragment(), QueueContract.View {
                 queuePresenter.clearQueue()
                 return@OnMenuItemClickListener true
             }
-            MediaManager.NEW_PLAYLIST -> {
+            Defs.NEW_PLAYLIST -> {
                 queuePresenter.saveQueue(context!!)
                 return@OnMenuItemClickListener true
             }
-            MediaManager.PLAYLIST_SELECTED -> {
+            Defs.PLAYLIST_SELECTED -> {
                 queuePresenter.saveQueue(context!!, item)
                 return@OnMenuItemClickListener true
             }

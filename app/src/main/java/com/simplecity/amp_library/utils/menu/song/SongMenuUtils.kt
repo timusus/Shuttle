@@ -5,7 +5,7 @@ import android.support.v7.widget.Toolbar
 import com.simplecity.amp_library.R
 import com.simplecity.amp_library.model.Playlist
 import com.simplecity.amp_library.model.Song
-import com.simplecity.amp_library.playback.MediaManager
+import com.simplecity.amp_library.playback.MediaManager.Defs
 import com.simplecity.amp_library.ui.queue.QueueItem
 import com.simplecity.amp_library.utils.PlaylistUtils
 import com.simplecity.amp_library.utils.menu.MenuUtils
@@ -90,11 +90,11 @@ object SongMenuUtils {
     fun getSongMenuClickListener(songsSingle: Single<List<Song>>, callbacks: SongListCallbacks): Toolbar.OnMenuItemClickListener {
         return Toolbar.OnMenuItemClickListener { item ->
             when (item.itemId) {
-                MediaManager.NEW_PLAYLIST -> {
+                Defs.NEW_PLAYLIST -> {
                     callbacks.newPlaylist(songsSingle)
                     return@OnMenuItemClickListener true
                 }
-                MediaManager.PLAYLIST_SELECTED -> {
+                Defs.PLAYLIST_SELECTED -> {
                     callbacks.playlistSelected(item.intent.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist, songsSingle)
                     return@OnMenuItemClickListener true
                 }
@@ -126,11 +126,11 @@ object SongMenuUtils {
                     callbacks.playNext(song)
                     return@OnMenuItemClickListener true
                 }
-                MediaManager.NEW_PLAYLIST -> {
+                Defs.NEW_PLAYLIST -> {
                     callbacks.newPlaylist(song)
                     return@OnMenuItemClickListener true
                 }
-                MediaManager.PLAYLIST_SELECTED -> {
+                Defs.PLAYLIST_SELECTED -> {
                     callbacks.playlistSelected(item.intent.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist, song)
                     return@OnMenuItemClickListener true
                 }

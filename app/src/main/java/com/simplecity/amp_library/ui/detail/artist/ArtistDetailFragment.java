@@ -331,10 +331,10 @@ public class ArtistDetailFragment extends BaseFragment implements
             case R.id.addToQueue:
                 presenter.addToQueue();
                 return true;
-            case MediaManager.NEW_PLAYLIST:
+            case MediaManager.Defs.NEW_PLAYLIST:
                 presenter.newPlaylist();
                 return true;
-            case MediaManager.PLAYLIST_SELECTED:
+            case MediaManager.Defs.PLAYLIST_SELECTED:
                 presenter.playlistSelected(getContext(), item, () -> presenter.closeContextualToolbar());
                 return true;
             case R.id.editTags:

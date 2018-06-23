@@ -231,11 +231,11 @@ public class PlaylistUtils {
                 .take(autoUpdate ? Long.MAX_VALUE : 1)
                 .doOnNext(playlists -> {
                     subMenu.clear();
-                    subMenu.add(0, MediaManager.NEW_PLAYLIST, 0, R.string.new_playlist);
+                    subMenu.add(0, MediaManager.Defs.NEW_PLAYLIST, 0, R.string.new_playlist);
                     for (Playlist playlist : playlists) {
                         final Intent intent = new Intent();
                         intent.putExtra(ARG_PLAYLIST, playlist);
-                        subMenu.add(0, MediaManager.PLAYLIST_SELECTED, 0, playlist.name).setIntent(intent);
+                        subMenu.add(0, MediaManager.Defs.PLAYLIST_SELECTED, 0, playlist.name).setIntent(intent);
                     }
                 })
                 .ignoreElements()

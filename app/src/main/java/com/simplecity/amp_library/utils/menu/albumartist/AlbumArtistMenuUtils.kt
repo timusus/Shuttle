@@ -8,6 +8,7 @@ import com.simplecity.amp_library.model.AlbumArtist
 import com.simplecity.amp_library.model.Playlist
 import com.simplecity.amp_library.model.Song
 import com.simplecity.amp_library.playback.MediaManager
+import com.simplecity.amp_library.playback.MediaManager.Defs
 import com.simplecity.amp_library.utils.Operators
 import com.simplecity.amp_library.utils.PlaylistUtils
 import com.simplecity.amp_library.utils.ShuttleUtils
@@ -46,12 +47,12 @@ object AlbumArtistMenuUtils {
     fun getAlbumArtistMenuClickListener(context: Context, mediaManager: MediaManager, selectedAlbumArtists: Single<List<AlbumArtist>>, callbacks: Callbacks): Toolbar.OnMenuItemClickListener {
         return Toolbar.OnMenuItemClickListener { item ->
             when (item.itemId) {
-                MediaManager.NEW_PLAYLIST -> {
-                    MenuUtils.newPlaylist(context, selectedAlbumArtists.getSongs(), { callbacks.onPlaylistItemsInserted() })
+                Defs.NEW_PLAYLIST -> {
+                    MenuUtils.newPlaylist(context, selectedAlbumArtists.getSongs()) { callbacks.onPlaylistItemsInserted() }
                     return@OnMenuItemClickListener true
                 }
-                MediaManager.PLAYLIST_SELECTED -> {
-                    MenuUtils.addToPlaylist(context, item.intent.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist, selectedAlbumArtists.getSongs(), { callbacks.onPlaylistItemsInserted() })
+                Defs.PLAYLIST_SELECTED -> {
+                    MenuUtils.addToPlaylist(context, item.intent.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist, selectedAlbumArtists.getSongs()) { callbacks.onPlaylistItemsInserted() }
                     return@OnMenuItemClickListener true
                 }
                 R.id.playNext -> {
@@ -59,7 +60,7 @@ object AlbumArtistMenuUtils {
                     return@OnMenuItemClickListener true
                 }
                 R.id.addToQueue -> {
-                    MenuUtils.addToQueue(mediaManager, selectedAlbumArtists.getSongs(), { callbacks.onQueueItemsInserted(it) })
+                    MenuUtils.addToQueue(mediaManager, selectedAlbumArtists.getSongs()) { callbacks.onQueueItemsInserted(it) }
                     return@OnMenuItemClickListener true
                 }
                 R.id.delete -> {
@@ -75,33 +76,33 @@ object AlbumArtistMenuUtils {
         return PopupMenu.OnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.play -> {
-                    MenuUtils.play(mediaManager, albumArtist.songsSingle, { callbacks.showToast(it) })
+                    MenuUtils.play(mediaManager, albumArtist.songsSingle) { callbacks.showToast(it) }
                     return@OnMenuItemClickListener true
                 }
                 R.id.playNext -> {
                     callbacks.playNext(albumArtist.songsSingle)
                     albumArtist.songsSingle
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ songs -> MenuUtils.playNext(mediaManager, songs, { callbacks.showToast(it) }) })
+                        .subscribe { songs -> MenuUtils.playNext(mediaManager, songs) { callbacks.showToast(it) } }
                     return@OnMenuItemClickListener true
                 }
                 R.id.albumShuffle -> {
                     MenuUtils.play(
                         mediaManager,
-                        albumArtist.songsSingle.map({ Operators.albumShuffleSongs(it) }),
-                        { callbacks.showToast(it) })
+                        albumArtist.songsSingle.map { Operators.albumShuffleSongs(it) }
+                    ) { callbacks.showToast(it) }
                     return@OnMenuItemClickListener true
                 }
-                MediaManager.NEW_PLAYLIST -> {
-                    MenuUtils.newPlaylist(context, albumArtist.songsSingle, { callbacks.onPlaylistItemsInserted() })
+                Defs.NEW_PLAYLIST -> {
+                    MenuUtils.newPlaylist(context, albumArtist.songsSingle) { callbacks.onPlaylistItemsInserted() }
                     return@OnMenuItemClickListener true
                 }
-                MediaManager.PLAYLIST_SELECTED -> {
-                    MenuUtils.addToPlaylist(context, item.intent.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist, albumArtist.songsSingle, { callbacks.onPlaylistItemsInserted() })
+                Defs.PLAYLIST_SELECTED -> {
+                    MenuUtils.addToPlaylist(context, item.intent.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist, albumArtist.songsSingle) { callbacks.onPlaylistItemsInserted() }
                     return@OnMenuItemClickListener true
                 }
                 R.id.addToQueue -> {
-                    MenuUtils.addToQueue(mediaManager, albumArtist.songsSingle, { callbacks.onQueueItemsInserted(it) })
+                    MenuUtils.addToQueue(mediaManager, albumArtist.songsSingle) { callbacks.onQueueItemsInserted(it) }
                     return@OnMenuItemClickListener true
                 }
                 R.id.editTags -> {

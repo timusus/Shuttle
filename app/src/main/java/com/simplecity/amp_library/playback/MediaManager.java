@@ -1,4 +1,4 @@
-package com.simplecity.amp_library.utils;
+package com.simplecity.amp_library.playback;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -9,9 +9,10 @@ import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Song;
-import com.simplecity.amp_library.playback.MediaManager;
-import com.simplecity.amp_library.playback.QueueManager;
 import com.simplecity.amp_library.ui.queue.QueueItem;
+import com.simplecity.amp_library.utils.LogUtils;
+import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
+import com.simplecity.amp_library.utils.SettingsManager;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -23,14 +24,21 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import org.jetbrains.annotations.NotNull;
 
-public class MusicUtils implements MediaManager {
+public class MediaManager {
+
+    public interface Defs {
+
+        int ADD_TO_PLAYLIST = 0;
+        int PLAYLIST_SELECTED = 1;
+        int NEW_PLAYLIST = 2;
+    }
 
     @Inject
-    public MusicUtils() {
+    public MediaManager() {
 
     }
 
-    private static final String TAG = "MusicUtils";
+    private static final String TAG = "MediaManager";
 
     @NonNull
     public Disposable playAll(@NonNull Single<List<Song>> songsSingle, @NotNull Function1<? super String, Unit> onEmpty) {
@@ -319,7 +327,6 @@ public class MusicUtils implements MediaManager {
         onAdded.invoke(ShuttleApplication.getInstance().getResources().getQuantityString(R.plurals.NNNtrackstoqueue, songs.size(), songs.size()));
     }
 
-    @Override
     public void moveToNext(@NotNull QueueItem queueItem) {
         if (MusicServiceConnectionUtils.serviceBinder.getService() == null) {
             return;
@@ -364,7 +371,6 @@ public class MusicUtils implements MediaManager {
         }
     }
 
-    @Override
     public void removeSongsFromQueue(@NotNull List<Song> songs) {
         if (MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null) {
             MusicServiceConnectionUtils.serviceBinder.getService().removeSongs(songs);

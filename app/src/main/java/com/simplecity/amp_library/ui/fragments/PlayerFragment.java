@@ -612,7 +612,7 @@ public class PlayerFragment extends BaseFragment implements
     @SuppressLint("CheckResult")
     private void goToArtist() {
         AlbumArtist currentAlbumArtist = mediaManager.getAlbumArtist();
-        // MusicUtils.getAlbumArtist() is only populate with the album the current Song belongs to.
+        // MediaManager.getAlbumArtist() is only populate with the album the current Song belongs to.
         // Let's find the matching AlbumArtist in the DataManager.albumArtistRelay
         DataManager.getInstance().getAlbumArtistsRelay()
                 .first(Collections.emptyList())
