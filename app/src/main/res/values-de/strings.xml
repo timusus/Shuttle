@@ -152,6 +152,8 @@
     <string name="dialog_button_playlist_duplicate_skip">Überspringen</string>
     <!-- Checkbox text 'always add duplicates' -->
     <string name="dialog_checkbox_playlist_duplicate_always_add">Duplikate immer hinzufügen</string>
+    <string name="dialog_title_playlist_delete">Playlist löschen?</string>
+    <string name="dialog_button_delete">Löschen</string>
     <!-- ## Widgets ## -->
     <!-- Checkbox text to invert colors of buttons & text -->
     <string name="widget_background_color">Hintergrund</string>
@@ -437,7 +439,7 @@
     <!-- -->
     <string name="track_number">Track \#</string>
     <string name="track_total">Gesamtanzahl Titel</string>
-    <string name="disc_number">Album \#</string>
+    <string name="disc_number">Disc \#</string>
     <string name="disc_total">Gesamtanzahl Alben</string>
     <!-- Track count. i.e "1 of 15" -->
     <string name="track_count"><xliff:g id="track">%1$s</xliff:g> von <xliff:g id="total tracks">%2$s</xliff:g></string>
@@ -724,7 +726,7 @@ Ordner</item>
     <!-- "Folders" Shortcut label disabled. (I don't think this ever happens)-->
     <string name="shortcut_folders_disabled">Ordner nicht verfügbar</string>
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
-    <string name="disc_number_label">Album <xliff:g id="number">%d</xliff:g></string>
+    <string name="disc_number_label">Disc <xliff:g id="number">%d</xliff:g></string>
     <!-- Search Filter-->
     <string name="search_fuzzy">Fuzzy</string>
     <string name="search_artists">Interpreten</string>

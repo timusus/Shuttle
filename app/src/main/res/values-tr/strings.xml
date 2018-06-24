@@ -90,7 +90,7 @@
 \n\ Üstelik uygulamanın geliştirilmesine de yardımcı olur.</string>
     <!-- -->
     <string name="upgraded_title">Teşekkürler</string>
-    <string name="upgraded_message">Başarıyla Shuttle+\'a yükselttiniz. Desteğiniz için teşekkür ederim.
+    <string name="upgraded_message">Başarıyla Shuttle+\'a yükselttiniz. Desteğiniz için çok teşekkür ederim.
 \n\nTüm özelliklerin etkinleştirilmesini sağlamak için lütfen uygulamayı yeniden başlatın</string>
     <string name="upgrade_dialog_message">• ChromeCast Desteği
 \n• Ekstra temalar
@@ -151,6 +151,9 @@
     <string name="dialog_button_playlist_duplicate_skip">Atla</string>
     <!-- Checkbox text 'always add duplicates' -->
     <string name="dialog_checkbox_playlist_duplicate_always_add">Tekrarlamaları her zaman ekle</string>
+    <string name="dialog_title_playlist_delete">Şarkı listesi silinsin mi?</string>
+    <string name="dialog_message_playlist_delete"><xliff:g id="playlist">%s</xliff:g> kalıcı olarak silinecek</string>
+    <string name="dialog_button_delete">Sil</string>
     <!-- ## Widgets ## -->
     <!-- Checkbox text to invert colors of buttons & text -->
     <string name="widget_background_color">Arka plan</string>
@@ -437,7 +440,7 @@ Bu seçenek işaretli değilse, Shuttle simgesi kullanılacaktır.</string>
     <!-- Button text for saving tags  -->
     <string name="save">Kaydet</string>
     <!-- Message displayed when tag editing fails -->
-    <string name="tag_error">Etiketleri düzenlerken bir hata oluştu</string>
+    <string name="tag_error">Etiketleri düzenlerken bir hata oluştu. Dosya bir SD Kartta kayıtlıysa, Shuttle\'ın buna erişim izni olmayabilir.</string>
     <string name="tag_editor_document_tree_message">Android 5.0 \'daki değişiklikler nedeniyle Google, şimdi bir SD karttaki hangi uygulamanın hangi klasörleri düzenlenmesine izin verdiğinizi belirtmenizi gerektiriyor.\n\nShuttle şimdi dosya seçiciyi açacaktır. Değiştirmek istediğiniz dosyaların üst klasörünü seçin.</string>
     <string name="tag_editor_check_permission">İzinler denetleniyor. Bu biraz zaman alabilir ...\n\nGoogle\'ı suçlayın!</string>
     <string name="tag_editor_document_tree_permission_failed">Görünüşe göre Shuttle hala dosyaları düzenleme iznine sahip değil. Dosya seçicideki dizini kontrol edin.</string>
@@ -463,6 +466,9 @@ dosyalar</item>
     <!-- -->
     <string name="show_filenames">Dosya Adlarını Göster</string>
     <!-- -->
+    <string name="set_home_dir">Ana dizini ayarla</string>
+    <string name="remove_home_dir">Ana dizini kaldır</string>
+    <string name="nav_home_dir">Ana dizine git</string>
     <!-- 'Scan'-->
     <string name="scan_file">Tara</string>
     <!-- Scan Complete-->

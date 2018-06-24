@@ -38,17 +38,17 @@
     <string name="ringtone_set_failed">Ei saanud helinat muuta</string>
     <!-- Toasts after adding song(s) to playlists -->
     <plurals name="NNNtrackstoplaylist">
-        <item quantity="one">Loendisse lisatud 1 laul.</item>
-        <item quantity="other">Loendisse lisatud <xliff:g example="27" id="number">%d</xliff:g> laulu.</item>
+        <item quantity="one">Esitusloendisse lisati 1 lugu.</item>
+        <item quantity="other">Esiusloendisse lisati <xliff:g example="27" id="number">%d</xliff:g> lugu.</item>
     </plurals>
     <!-- Toast after selecting an empty playlist -->
-    <string name="emptyplaylist">Valitud playlist on tühi.</string>
+    <string name="emptyplaylist">Valitud esitusloend on tühi.</string>
     <!-- -->
     <string name="initial_dir_set_message">" seatud algkaustaks"</string>
     <!-- Transient popup message shown after deleting a playlist -->
-    <string name="playlist_deleted_message">Playlist kustutatud.</string>
+    <string name="playlist_deleted_message">Esitusloend kustutati.</string>
     <!-- Transient popup message shown after renaming a playlist -->
-    <string name="playlist_renamed_message">Playlist ümber nimetatud.</string>
+    <string name="playlist_renamed_message">Esitusloend nimetati ümber.</string>
     <!-- Toast confirming that song(s) was/were deleted. -->
     <!-- -->
     <plurals name="NNNtrackstoqueue">
@@ -61,7 +61,7 @@
     <string name="song_removed_from_favourites"><xliff:g id="song_name">%s</xliff:g> eemaldati lemmikutest.</string>
     <!-- ## Dialogs ## -->
     <!-- Restart now button -->
-    <string name="restart_button">Taaskäivita nüüd</string>
+    <string name="restart_button">Taaskäivita kohe</string>
     <!-- Displays when picking a theme color -->
     <string name="color_pick">Vali värv</string>
     <!-- Displayed in the color picker dialog, to choose a 'custom' color -->
@@ -76,9 +76,9 @@
     <!-- Displays when you need to choose which app to share the song with -->
     <string name="share_via">Jaga läbi:</string>
     <!-- Displayed when an M3U playlist is being saved-->
-    <string name="saving_playlist">Salvestan playlisti.</string>
+    <string name="saving_playlist">Esitusloendi salvestamine</string>
     <!-- Displayed when whitelisting a folder, as the app gathers the songs-->
-    <string name="gathering_songs">Kogun laule...</string>
+    <string name="gathering_songs">Laulude kogumine...</string>
     <!-- -->
     <string name="get_pro_title">Uuenda Shuttle+ peale</string>
     <!-- -->
@@ -94,7 +94,7 @@
     <string name="upgraded_message">Olete edukalt uuendanud Shuttle+ile. Täname abi eest. \n\nPalun taaskäivita äpp, et veenduda, kas kõik funktsioonid toimiksid</string>
     <string name="upgrade_dialog_message">• Chromecasti tugi
 \n• Suurem valik värviskeeme
-\n• Märgiste muutmine
+\n• Siltide muutmine
 \n• Kaustade sirvimine
 \n• Toetad arendust ❤️</string>
     <string name="upgrade_required_folders">Uuenda Shuttle+ile</string>
@@ -104,21 +104,21 @@
     <!-- Dialog 'close' button -->
     <string name="close">Sulge</string>
     <!-- No internet connection warning -->
-    <string name="connection_unavailable">Internetiühendus kättesaamatu</string>
+    <string name="connection_unavailable">Internetiühendust pole</string>
     <!-- Prompt in dialog when creating a playlist. The user will enter the name of the playlist in a textfield underneath this prompt. -->
-    <string name="create_playlist_create_text_prompt">Playlisti nimetus</string>
+    <string name="create_playlist_create_text_prompt">Esitusloendi nimi</string>
     <!-- Text for the "cancel" button in the "delete" and "create playlist" confirmation dialogs -->
     <string name="cancel">Katkesta</string>
     <!-- Delete confirmation dialog when deleting an entire artist -->
-    <string name="delete_album_artist_desc">Kõik lood artisti <xliff:g id="album-artist">%s</xliff:g> poolt kustutatakse jäädavalt.</string>
+    <string name="delete_album_artist_desc">Kõik artisti <xliff:g id="album-artist">%s</xliff:g> lood kustutatakse jäädavalt.</string>
     <!-- Delete confirmation dialog message when deleting artists -->
-    <string name="delete_album_artist_desc_multiple">Kõik järgnevate artistide lood kustutatakse jäädavalt: <xliff:g id="album-artist">%s</xliff:g></string>
+    <string name="delete_album_artist_desc_multiple">Kõik nende artistide lood kustutatakse jäädavalt: <xliff:g id="album-artist">%s</xliff:g></string>
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">Kõik laulud albumist <xliff:g id="album">%s</xliff:g> kustutatakse lõplikult.</string>
     <!-- Delete confirmation dialog message when deleting albums -->
     <string name="get_pro_button_play_store">Play Pood</string>
     <string name="get_pro_button_amazon">Amazon</string>
-    <string name="delete_album_desc_multiple">Kõik järgnevate albumite lood kustutatakse jäädavalt: <xliff:g id="album">%s</xliff:g></string>
+    <string name="delete_album_desc_multiple">Kõik nende albumite lood kustutatakse jäädavalt: <xliff:g id="album">%s</xliff:g></string>
     <!-- Delete confirmation dialog when deleting a single song -->
     <string name="delete_song_desc"><xliff:g id="song">%s</xliff:g> kustutatakse lõplikult.</string>
     <!-- Delete confirmation dialog message title when deleting songs -->
@@ -130,11 +130,11 @@
     <!-- Delete confirmation dialog, confirmation button text -->
     <string name="button_ok">OK</string>
     <!-- -->
-    <string name="delete_folder_confirmation_dialog">Oled sa kindel, et sa tahad kustutada kausta \"<xliff:g id="folder">%s</xliff:g>\"? Kõik asjad selles kaustas kustutatakse, isegi asjad, mida Shuttle failisirvija ei näe.</string>
+    <string name="delete_folder_confirmation_dialog">Oled sa kindel, et sa tahad kustutada kausta \"<xliff:g id="folder">%s</xliff:g>\"? Kõik asjad selles kaustas kustutatakse. Isegi asjad, mida Shuttle failisirvija ei näe.</string>
     <!-- -->
     <string name="delete_file_confirmation_dialog">Oled sa kindel, et sa tahad kustutada faili \"<xliff:g id="file">%s</xliff:g>\"?</string>
     <!-- Displayed when user presses 'delete artwork' -->
-    <string name="delete_artwork_confirmation_dialog">Kas oled kindel et tahad lõplikult kustutada kõik kaanepildid seadmest?</string>
+    <string name="delete_artwork_confirmation_dialog">Kas oled kindel, et tahad lõplikult kustutada kõik kaanepildid seadmest?</string>
     <!--"Set Ringtone" title -->
     <string name="dialog_title_set_ringtone">Sea helin</string>
     <!-- "Set Ringtone" message -->
@@ -151,6 +151,9 @@
     <string name="dialog_button_playlist_duplicate_skip">Jäta vahele</string>
     <!-- Checkbox text 'always add duplicates' -->
     <string name="dialog_checkbox_playlist_duplicate_always_add">Lisa alati duplikaadid</string>
+    <string name="dialog_title_playlist_delete">Kustutada esitusloend?</string>
+    <string name="dialog_message_playlist_delete"><xliff:g id="playlist">%s</xliff:g> kustutatakse jäädavalt</string>
+    <string name="dialog_button_delete">Kustuta</string>
     <!-- ## Widgets ## -->
     <!-- Checkbox text to invert colors of buttons & text -->
     <string name="widget_background_color">Taust</string>
@@ -181,7 +184,7 @@
     <!-- Context menu item -->
     <string name="new_playlist">Uus</string>
     <!-- menu item to save the current list as a new playlist -->
-    <string name="save_as_playlist">Salvesta playlistina</string>
+    <string name="save_as_playlist">Salvesta esitusloendina</string>
     <!-- Context menu item to remove the selected item from the playlist -->
     <!-- Context menu item to remove the selected item from the queue -->
     <string name="remove_from_queue">Eemalda</string>
@@ -268,9 +271,9 @@
     <!--Settings title for clearing whitelist-->
     <string name="pref_title_clear_whitelist">Tühenda</string>
     <!-- Context menu item to remove the selected item from the blacklist -->
-    <string name="pref_title_crop_album_art">Lõika Albumi Kujundust</string>
+    <string name="pref_title_crop_album_art">Lõika kaanepilti</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
-    <string name="pref_summary_crop_album_art">Lõikab albumi kujundust nii, et see võtaks enda alla terve \"Hetkel Mängimas\" kuva</string>
+    <string name="pref_summary_crop_album_art">Lõikab kaanepilti nii, et see võtaks enda alla terve \"Hetkel mängimas\" vaate</string>
     <!-- Settings title for showing artwork in the queue screen -->
     <string name="pref_title_artwork_queue">Näita \'Järgmisena\' esitatava loo kaanepilti</string>
     <!-- Settings title for embedded artwork checkbox (whether the app can use local artwork for the album art -->
@@ -296,13 +299,13 @@
     <!-- Settings title for Artwork settings heading -->
     <string name="pref_string_title_artwork">Albumi kujundus</string>
     <!-- Settings title for the download artwork button -->
-    <string name="pref_title_download_artwork">Tõmba alla albumi kujundust</string>
+    <string name="pref_title_download_artwork">Tõmba alla kaanepilte</string>
     <!-- Settings summary for the download artwork button-->
     <string name="pref_summary_download_artwork">Tõmba alla puuduvad esitajate ja albumite pildid</string>
     <!-- Settings warning for the download artwork button -->
     <string name="pref_warning_download_artwork">Shuttle laadib alla kõik kaanepildid hoolimata sinu võrgu seadistustest. Lisanduda võivad andmesidetasud.</string>
     <!-- Settings title for the delete artwork button-->
-    <string name="pref_title_delete_artwork">Kustuta Albumi Kujundus</string>
+    <string name="pref_title_delete_artwork">Kustuta albumi kaanepilt</string>
     <!-- Settings summary for the delete artwork button -->
     <string name="pref_summary_delete_artwork">Kustuta sellelt seadmelt esitajate ja albumite pildid</string>
     <!-- Shown when a user changes artwork source, and is prompted to delete existing artwork-->
@@ -310,26 +313,26 @@
     <!-- The 'remove' artwork confirmation button-->
     <string name="pref_button_remove_artwork">Eemalda</string>
     <!-- Settings title for the option to download artwork automatically-->
-    <string name="pref_title_download_artwork_auto">Tõmba Albumi Kujundust Automaatselt</string>
+    <string name="pref_title_download_artwork_auto">Tõmba kaanepildid automaatselt</string>
     <!-- Settings summary for the option to download artwork automatically-->
     <string name="pref_summary_download_artwork_auto">Tõmba alla puuduvad esitajate ja albumite pildid automaatselt</string>
     <!-- Settings title for the download via Wi-Fi checkbox -->
-    <string name="pref_title_download_wifi_only">Tõmba Kasutades Ainult Wi-Fi\'t</string>
+    <string name="pref_title_download_wifi_only">Tõmba kasutades ainult Wi-Fi\'t</string>
     <!-- Settings summary for the download via Wi-Fi checkbox -->
     <string name="pref_summary_download_wifi_only">Esitajate ja albumite pildid tõmmatakse alla ainult siis, kui Wi-Fi võrk on saadaval</string>
     <!-- Settings title for gmail style placeholders checkbox-->
-    <string name="pref_title_placeholders">Kasuta Gmail\'i stiili Kohatäiteid</string>
+    <string name="pref_title_placeholders">Kasuta Gmail\'i stiilis kohatäiteid</string>
     <!-- Settings summary for gmail style placeholders checkbox-->
-    <string name="pref_summary_placeholders">Kasutab Gmail\'i stiili kohatäiteid vaikimisi.
+    <string name="pref_summary_placeholders">Kasutab Gmail\'i stiilis kohatäiteid vaikimisi.
 Kui see on välja lülitatud, siis kasutatakse Shuttle ikooni kohatäitena.</string>
     <!-- Settings title for the enable lockscreen controls checkbox -->
-    <string name="pref_title_lockscreen">Lülita Lukustuskuva Kaanepilt Sisse</string>
+    <string name="pref_title_lockscreen">Lülita lukustusekraani kaanepilt sisse</string>
     <!-- Settings summary for the enable lockscreen controls checkbox -->
     <string name="pref_summary_lockscreen">Lülitab lukustuskuval näidatava albumi kujunduse sisse/välja.</string>
     <!-- Settings title for the Display heading -->
     <string name="pref_title_display">Kuva</string>
     <!-- Settings title for the keep screen on checkbox -->
-    <string name="pref_title_screen_on">Jäta Ekraan Sisse</string>
+    <string name="pref_title_screen_on">Hoia ekraan sisselülitatuna</string>
     <!-- Settings summary for the keep screen on checkbox -->
     <string name="pref_summary_screen_on">Ei lase ekraanil tumedamaks minna</string>
     <!-- Settings title for the default page (choose which page displays by default in the Main Activity) -->
@@ -339,11 +342,11 @@ Kui see on välja lülitatud, siis kasutatakse Shuttle ikooni kohatäitena.</str
     <!-- Settings title for the headset control options -->
     <string name="pref_title_headset_bluetooth">Peakomplekt/Bluetooth</string>
     <!-- Settings title for the headset resume on connect option -->
-    <string name="pref_title_headset_con">Jätka Taasühendamisel</string>
+    <string name="pref_title_headset_con">Jätka taasühendamisel</string>
     <!-- Settings summary for the headset resume on connect option -->
     <string name="pref_summary_headset_con">Jätkab taasesitust, kui kõrvaklapid on ühendatud</string>
     <!-- Settings title for the headset pause on disconnect -->
-    <string name="pref_title_headset_disconnect">Peata Lahti Ühendamisel</string>
+    <string name="pref_title_headset_disconnect">Peata lahtiühendamisel</string>
     <!-- Settings summary for the headset pause on disconnect -->
     <string name="pref_summary_headset_disconnect">Peatab taasesituse, kui kõrvaklapid ühendatakse lahti</string>
     <!-- Settings title 'headset' -->
@@ -394,7 +397,7 @@ Kui see on välja lülitatud, siis kasutatakse Shuttle ikooni kohatäitena.</str
     <!-- Settings summary for ignore playlist duplicates -->
     <string name="pref_summary_ignore_duplicates">Ära otsi ja ära paku topeltlugude eiramist, kui lisad laule esitusloendisse</string>
     <!-- Displayed on the settings page to choose the default main page -->
-    <string name="select_default_page">Vali Vaikimisi Leht</string>
+    <string name="select_default_page">Vali vaikimisi leht</string>
     <!-- Option to view the list as a list or grid -->
     <string name="view_as_title">Vaata kui</string>
     <!-- List ('view as' option) -->
@@ -433,11 +436,11 @@ Kui see on välja lülitatud, siis kasutatakse Shuttle ikooni kohatäitena.</str
     <string name="disc_number">Ketta nr</string>
     <string name="disc_total">Kettaid kokku</string>
     <!-- Track count. i.e "1 of 15" -->
-    <string name="track_count"><xliff:g id="track">%1$s</xliff:g> <xliff:g id="total tracks">%2$s</xliff:g>st</string>
+    <string name="track_count"><xliff:g id="track">%1$s</xliff:g> <xliff:g id="total tracks">%2$s</xliff:g>-st</string>
     <!-- Button text for saving tags  -->
     <string name="save">Salvesta</string>
     <!-- Message displayed when tag editing fails -->
-    <string name="tag_error">Viga siltide muutmisel.</string>
+    <string name="tag_error">Viga siltide muutmisel. Kui fail on SD-kaardil, siis võib olla, et Shuttlel pole õigusi sellele ligipääsemiseks.</string>
     <string name="tag_editor_document_tree_message">Muudatuste tõttu Android 5.0-s nõuab Google nüüd, et sa määdad, millistes SD-kaardi kaustades võib äpp muudatusi teha.\n\nShuttle avab nüüd failide valija. Palun vali kaust, milles soovid muudatusi teha.</string>
     <string name="tag_editor_check_permission">Õiguste kontrollimine. Sellega võib veidi aega minna ...\n\nSüüdista Google\'it!</string>
     <string name="tag_editor_document_tree_permission_failed">Näib, et Shuttle\'il pole ikkagi õigusi nende failide muutmiseks. Kontrolli failide valijaga üle kaustatee.</string>
@@ -456,7 +459,8 @@ Kui see on välja lülitatud, siis kasutatakse Shuttle ikooni kohatäitena.</str
     <plurals name="Nfolders">
         <item quantity="other"><xliff:g id="count">%d</xliff:g>
             kausta</item>
-        <item quantity="one"></item>
+        <item quantity="one"><xliff:g id="count">%d</xliff:g>
+            kaust</item>
     </plurals>
     <!-- -->
     <string name="parent_folder">Põhikaust</string>
@@ -480,7 +484,7 @@ Kui see on välja lülitatud, siis kasutatakse Shuttle ikooni kohatäitena.</str
     <!-- Songs screen title -->
     <string name="tracks_title">Lood</string>
     <!-- Playlists screen title -->
-    <string name="playlists_title">Playlistid</string>
+    <string name="playlists_title">Esitusloendid</string>
     <!-- Genres screen title -->
     <string name="genres_title">Žanrid</string>
     <!-- Files title -->
@@ -513,7 +517,7 @@ Kui see on välja lülitatud, siis kasutatakse Shuttle ikooni kohatäitena.</str
     <!-- Displayed at the top of the preset selection screen in the equalizer -->
     <string name="select_preset">Vali eelseadistatute hulgast</string>
     <!-- Bass boost strength -->
-    <string name="bass_boost_strength">Bassivõimenduse Tugevus</string>
+    <string name="bass_boost_strength">Bassivõimenduse tugevus</string>
     <!-- Virtualizer strength -->
     <string name="virtualizer_strength">Virtualiseerija tugevus</string>
     <!-- Button to open external equalizer (DSP manager) -->
@@ -528,7 +532,7 @@ Kui see on välja lülitatud, siis kasutatakse Shuttle ikooni kohatäitena.</str
     <!-- -->
     <string name="empty_genres">Ei leidnud ühegi žanri.</string>
     <!-- -->
-    <string name="empty_playlist">Playlist on tühi. Hoia oma näppu esitajal, albumil või laulul ning vali \"lisa playlisti\" või vajuta + nupul, et alata.</string>
+    <string name="empty_playlist">Esitusloend on tühi. Hoia oma näppu esitajal, albumil või laulul ning vali \"lisa esitusloendisse\" või vajuta + nupul, et alaustada.</string>
     <!-- -->
     <string name="empty_songlist">Ei leidnud ühtegi laulu. Kopeeri mõned laulud oma seadmele!</string>
     <!-- -->
@@ -583,31 +587,31 @@ Kui see on välja lülitatud, siis kasutatakse Shuttle ikooni kohatäitena.</str
     <string name="weekpicker_title">Vali, mitu nädalat peaks sisaldama muusika, mis on \'hiljutiste\' loetelus.</string>
     <!-- ## Notification bar text ## -->
     <!-- Message in notification bar when downloading -->
-    <string name="notif_downloading_art">Tõmba Albumi Kujundus alla</string>
+    <string name="notif_downloading_art">Albumi kaanepiltide allatõmbamine</string>
     <!-- ## SD card error messages ##-->
     <!-- Title of screen when no sd card is present -->
-    <string name="sdcard_missing_title">Puudub SD kaart</string>
+    <string name="sdcard_missing_title">SD kaart puudub</string>
     <!-- Title of screen when no sd card is present -->
-    <string name="sdcard_missing_title_nosdcard" msgid="9008284946643270850">Puudub USB ketas</string>
+    <string name="sdcard_missing_title_nosdcard" msgid="9008284946643270850">USB ketas puudub</string>
     <!-- label underneath icon used to indicate that the sd card is present, but currently unavailable -->
-    <string name="sdcard_busy_title">SD kaart kättesaamatu</string>
+    <string name="sdcard_busy_title">SD kaart pole saadaval</string>
     <!-- label underneath icon used to indicate that the sd card is present, but currently unavailable -->
-    <string name="sdcard_busy_title_nosdcard" msgid="1162763571147174655">USB ketas kättesaamatu</string>
+    <string name="sdcard_busy_title_nosdcard" msgid="1162763571147174655">USB ketas pole saadaval</string>
     <!-- label underneath icon used to indicate sd card is mounted to your computer via USB -->
     <!-- ## Playlist creation ## -->
     <!-- Template for newly created playlist name -->
-    <string name="new_playlist_name_template">Uus playlist <xliff:g id="number">%d</xliff:g></string>
+    <string name="new_playlist_name_template">Uus esitusloend <xliff:g id="number">%d</xliff:g></string>
     <!-- Button name when saving a playlist -->
     <string name="create_playlist_create_text">Salvesta</string>
     <!-- Button name when saving a playlist and the new playlist will overwrite an existing one -->
     <string name="create_playlist_overwrite_text">Kirjuta üle</string>
     <!-- ## Various plurals ## -->
     <!-- used in various places to indicate there is one song for a given artist or album -->
-    <string name="onesong">1 laul</string>
+    <string name="onesong">1 lugu</string>
     <!-- used in various places to indicate there is some number other than one songs for a given artist or album. -->
     <plurals name="Nsongs">
-        <item quantity="one"><xliff:g id="count">%d</xliff:g> laulu</item>
-        <item quantity="other"><xliff:g id="count">%d</xliff:g> laulu</item>
+        <item quantity="one"><xliff:g id="count">%d</xliff:g> lugu</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> lugu</item>
     </plurals>
     <!-- Used in artists list view, indicates how many albums exist for a given artist. -->
     <plurals name="Nalbums">
@@ -620,9 +624,9 @@ Kui see on välja lülitatud, siis kasutatakse Shuttle ikooni kohatäitena.</str
     <!-- Chromecast button for choosing which Chromecast device to play on -->
     <string name="media_route_menu_title">Mängi&#8230; peal</string>
     <!-- Action bar button text for saving a selected items to whitelist -->
-    <string name="save_whitelist">Salvesta Valge Nimekiri</string>
+    <string name="save_whitelist">Salvesta valge nimekiri</string>
     <!-- DashClock Extension Description -->
-    <string name="extension_description">Kuvab laulu teavet</string>
+    <string name="extension_description">Kuvab loo teavet</string>
     <!-- Week Selector title -->
     <string name="week_selector">Nädala valija</string>
     <!-- Displayed under the 'Most Played' section of the 'suggested' tab.. Artist, Album, Song -->

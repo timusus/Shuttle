@@ -91,7 +91,7 @@ músicas adicionadas à fila.</item>
 \nE também ajuda a promover o desenvolvimento futuro do aplicativo.</string>
     <!-- -->
     <string name="upgraded_title">Obrigado</string>
-    <string name="upgraded_message">Você atualizou para o Shuttle+ com sucesso. Eu agradeço o suporte.
+    <string name="upgraded_message">Você atualizou para o Shuttle+ com sucesso. Obrigado pelo apoio.
 \n\nPor favor, reinicie o aplicativo para garantir que todos os recursos estão habilitados</string>
     <string name="upgrade_dialog_message">• Suporte ao ChromeCast
 \n• Temas extras
@@ -152,6 +152,9 @@ músicas adicionadas à fila.</item>
     <string name="dialog_button_playlist_duplicate_skip">Pular</string>
     <!-- Checkbox text 'always add duplicates' -->
     <string name="dialog_checkbox_playlist_duplicate_always_add">Sempre adicionar duplicatas</string>
+    <string name="dialog_title_playlist_delete">Apagar playlist?</string>
+    <string name="dialog_message_playlist_delete"><xliff:g id="playlist">%s</xliff:g> será permanentemente apagada.</string>
+    <string name="dialog_button_delete">Apagar</string>
     <!-- ## Widgets ## -->
     <!-- Checkbox text to invert colors of buttons & text -->
     <string name="widget_background_color">Cor do fundo</string>
@@ -438,7 +441,7 @@ Se estiver desmarcado, o ícone do Shuttle será usado como uma capa</string>
     <!-- Button text for saving tags  -->
     <string name="save">Salvar</string>
     <!-- Message displayed when tag editing fails -->
-    <string name="tag_error">Um erro ocorreu ao editar as tags.</string>
+    <string name="tag_error">Um erro ocorreu ao editar as tags. Se o arquivo estiver são num Cartão SD, o Shuttle pode não ter permissões para acessá-lo.</string>
     <string name="tag_editor_document_tree_message">Devido à mudanças no Android 5.0, o Google agora exige que você especifique quais pastas o app pode editar num cartão de memória.\n\nO Shuttle abrirá um seletor de arquivos. Por favor, escolha a pasta mãe dos arquivos que você deseja modificar.</string>
     <string name="tag_editor_check_permission">Conferindo permissões. Isso pode demorar um pouco...\n\nCulpe o Google!</string>
     <string name="tag_editor_document_tree_permission_failed">Parece que o Shuttle ainda não tem permissões para editar os arquivos. Marque novamente o diretório no seletor de arquivos.</string>

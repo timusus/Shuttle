@@ -149,6 +149,9 @@
     <string name="dialog_button_playlist_duplicate_skip">略過</string>
     <!-- Checkbox text 'always add duplicates' -->
     <string name="dialog_checkbox_playlist_duplicate_always_add">一律加入重複項目</string>
+    <string name="dialog_title_playlist_delete">刪除播放清單？</string>
+    <string name="dialog_message_playlist_delete">將會永久刪除「<xliff:g id="playlist">%s</xliff:g>」</string>
+    <string name="dialog_button_delete">刪除</string>
     <!-- ## Widgets ## -->
     <!-- Checkbox text to invert colors of buttons & text -->
     <string name="widget_background_color">背景</string>
@@ -434,7 +437,7 @@
     <!-- Button text for saving tags  -->
     <string name="save">儲存</string>
     <!-- Message displayed when tag editing fails -->
-    <string name="tag_error">編輯標籤時發生錯誤</string>
+    <string name="tag_error">編輯標籤時發生錯誤。如果檔案存放於 SD 卡，Shuttle 將沒有權限對其進行存取</string>
     <string name="tag_editor_document_tree_message">由於 Google 對於 Android 5.0 作業系統的規範變更，您必須指定 SD 卡中有哪些資料夾允許應用程式存取內容。\n\nShuttle 將會開啟檔案選取介面，請選擇您要允許應用程式使用的主要資料夾</string>
     <string name="tag_editor_check_permission">正在檢查權限，可能需要一段時間…\n\n都是 Google！</string>
     <string name="tag_editor_document_tree_permission_failed">Shuttle 似乎仍無法取得變更檔案內容的權限。請再確認一次選取介面中所選擇的資料夾路徑</string>
