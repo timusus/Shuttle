@@ -397,7 +397,7 @@
     &lt;string name=\"pref_title_rate\"&gt;感谢评分&lt;/string&gt;
     &lt;string name=\"pref_summary_rate\"&gt;若您喜欢 Shuttle，您可给予评价&lt;/string&gt;
     &lt;string name=\"pref_title_headset_beep\"&gt;耳机跳歌提醒&lt;/string&gt;
-    &lt;string name=\"pref_summary_headset_beep\"&gt;通过耳机跳过曲目时发出提示音&lt;/string&gt;
+    &lt;string name=\"pref_summary_headset_beep\"&gt;通过耳机跳过歌曲时发出提示音&lt;/string&gt;
     &lt;!-- Settings title for ignore playlist duplicates --&gt;
     &lt;string name=\"pref_title_ignore_duplicates\"&gt;略过歌单复项&lt;/string&gt;
     &lt;!-- Settings summary for ignore playlist duplicates --&gt;
@@ -783,7 +783,7 @@
     <!-- Toast after turning repeat all on -->
     <string name="repeat_all_notif">循环播放</string>
     <!-- Individual song context menu item -->
-    <string name="ringtone_menu">设为手机铃声</string>
+    <string name="ringtone_menu">设为铃声</string>
     <!-- Toast after setting a song as phone ringtone -->
     <string name="ringtone_set">已将<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\"设为铃声</string>
     <!-- Toast if setting ringtone fails -->
@@ -927,7 +927,7 @@
     <!-- Multi select menu item-->
     <string name="menu_playlist">歌单列表</string>
     <!-- Multi select menu item-->
-    <string name="menu_queue">播放界面</string>
+    <string name="menu_queue">播放队列</string>
     <!-- Artist overflow menu item-->
     <string name="menu_album_shuffle">专辑随机</string>
     <!-- Context menu item -->
@@ -996,7 +996,7 @@
     <!--Settings title for enabling the tinted navigation bar -->
     <string name="pref_title_tinted_nav">导览列变色彩</string>
     <!--Settings summary for enabling the tinted navigation bar -->
-    <string name="pref_summary_tinted_nav">导览列的色彩</string>
+    <string name="pref_summary_tinted_nav">导览列色彩变化</string>
     <!-- Settings title for the themes -->
     <string name="pref_string_title_themes">主题</string>
     <!--Settings titles for the themes -->
@@ -1038,7 +1038,7 @@
     <!-- Settings summary for the ignore folder artwork checkbox-->
     <string name="pref_summary_ignore_mediastore_art">Android 媒体库会搜寻您的内嵌专辑封面，并以较低的解析度储存。勾选即可略过这项程序 (但读取时可能会较慢)</string>
     <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_ignore_folder_art">忽略文件夹内的专辑封面</string>
+    <string name="pref_title_ignore_folder_art">忽略文件封面</string>
     <!-- Settings summary for the embedded artwork checkbox-->
     <string name="pref_summary_ignore_folder_art">不使用文件夹中存放的专辑封面</string>
     <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
@@ -1141,7 +1141,7 @@
     <string name="pref_title_rate">感谢评分</string>
     <string name="pref_summary_rate">若您喜欢 Shuttle，您可给予评价</string>
     <string name="pref_title_headset_beep">耳机跳歌提醒</string>
-    <string name="pref_summary_headset_beep">通过耳机跳过曲目时发出提示音</string>
+    <string name="pref_summary_headset_beep">通过耳机跳过歌曲时发出提示音</string>
     <!-- Settings title for ignore playlist duplicates -->
     <string name="pref_title_ignore_duplicates">略过歌单复项</string>
     <!-- Settings summary for ignore playlist duplicates -->
