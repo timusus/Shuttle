@@ -153,6 +153,7 @@
     <!-- Checkbox text 'always add duplicates' -->
     <string name="dialog_checkbox_playlist_duplicate_always_add">Duplikate immer hinzufügen</string>
     <string name="dialog_title_playlist_delete">Playlist löschen?</string>
+    <string name="dialog_message_playlist_delete"><xliff:g id="playlist">%s</xliff:g> wird dauerhaft gelöscht</string>
     <string name="dialog_button_delete">Löschen</string>
     <!-- ## Widgets ## -->
     <!-- Checkbox text to invert colors of buttons & text -->
@@ -326,8 +327,8 @@
     <!-- Settings title for gmail style placeholders checkbox-->
     <string name="pref_title_placeholders">Platzhalter im Gmail-Stil verwenden</string>
     <!-- Settings summary for gmail style placeholders checkbox-->
-    <string name="pref_summary_placeholders">"Platzhalter im Gmail-Stil werden verwendet. Wenn abgewählt, wird das Shuttle-Symbol als Platzhalter verwendet.
-    "</string>
+    <string name="pref_summary_placeholders">Platzhalter im Gmail-Stil verwenden.
+        Ansonsten wird das Shuttle-Icon als Platzhalter verwendet</string>
     <!-- Settings title for the enable lockscreen controls checkbox -->
     <string name="pref_title_lockscreen">Albumcover im Sperrbildschirm anzeigen</string>
     <!-- Settings summary for the enable lockscreen controls checkbox -->
@@ -446,7 +447,7 @@
     <!-- Button text for saving tags  -->
     <string name="save">Speichern</string>
     <!-- Message displayed when tag editing fails -->
-    <string name="tag_error">Tags konnten nicht bearbeitet werden.</string>
+    <string name="tag_error">Fehler beim Bearbeiten der Tags. Falls die Datei auf einer SD-Karte gespeichert ist, hat Shuttle eventuell nicht die nötigen Zugriffsberechtigungen.</string>
     <string name="tag_editor_document_tree_message">Wegen Änderungen in Android 5.0 muss angegeben werden, welche Dateien auf der SD-Karte bearbeitet werden dürfen.\n\nWähle den Überordner aus, in dem die Dateien bearbeitet werden dürfen.</string>
     <string name="tag_editor_check_permission">Rechte werden überprüft. Es könnte einen Moment dauern...\n\nGoogle ist schuld!</string>
     <string name="tag_editor_document_tree_permission_failed">Shuttle hat immer noch keine Rechte zum Bearbeiten von Dateien. Überprüfe das Verzeichnis im Explorer.</string>
@@ -472,6 +473,9 @@ Ordner</item>
     <!-- -->
     <string name="show_filenames">Zeige Dateinamen</string>
     <!-- -->
+    <string name="set_home_dir">Home-Verzeichnis setzen</string>
+    <string name="remove_home_dir">Home-Verzeichnis entfernen</string>
+    <string name="nav_home_dir">Zum Home-Verzeichnis wechseln</string>
     <!-- 'Scan'-->
     <string name="scan_file">Scan</string>
     <!-- Scan Complete-->
@@ -751,4 +755,7 @@ Ordner</item>
     <!-- Displayed at the top of the album list, album shuffle mode-->
     <string name="shuffle_albums">Alben zufällig wiedergeben</string>
     <!-- Storage Access Framework (Used when deleting files from SD CarD)-->
+    <string name="saf_access_required_title">Speicherzugriff benötigt</string>
+    <string name="saf_access_required_message">Shuttle benötigt eine Erlaubnis, um auf diese Dateien zugreifen zu können. Wähle bitte das Verzeichnis mit Deiner Musik.</string>
+    <string name="saf_show_files_button">Dateien anzeigen</string>
 </resources>
