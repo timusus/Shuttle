@@ -217,8 +217,10 @@ public class MediaButtonIntentReceiver extends WakefulBroadcastReceiver {
         intent.putExtra(MediaButtonCommand.CMD_NAME, command);
         intent.putExtra(MediaButtonCommand.FROM_MEDIA_BUTTON, true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            AnalyticsManager.logMusicServiceStarted("MediaButtonIntentReceiver (foreground service). Command: " + command);
             context.startForegroundService(intent);
         } else {
+            AnalyticsManager.logMusicServiceStarted("MediaButtonIntentReceiver (wakeful service). Command: " + command);
             startWakefulService(context, intent);
         }
     }

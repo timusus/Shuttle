@@ -8,6 +8,7 @@ import com.annimon.stream.Optional;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.playback.constants.ShortcutCommands;
+import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -28,6 +29,7 @@ public class ShortcutTrampolineActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, MusicService.class);
                 intent.setAction(action);
                 startService(intent);
+                AnalyticsManager.logMusicServiceStarted(TAG);
                 finish();
                 break;
             case ShortcutCommands.FOLDERS:
