@@ -222,7 +222,9 @@ class QueueViewBinder(var queueItem: QueueItem, private val requestManager: Requ
         override fun recycle() {
             super.recycle()
 
-            Glide.clear(artwork)
+            artwork?.let { artwork ->
+                Glide.clear(artwork)
+            }
         }
     }
 }
