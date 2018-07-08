@@ -10,20 +10,20 @@ object Dependencies {
 
     object Versions {
         const val nanoHttp = "2.3.1"
-        const val crashlytics = "2.9.0"
+        const val crashlytics = "2.9.4"
         const val dashClockApi = "2.0.0"
-        const val fastScroll = "1.0.16"
+        const val fastScroll = "1.0.18"
         const val glide = "3.8.0-SNAPSHOT"
         const val glideOkhttp = "1.4.0@aar"
         const val materialDialogs = "0.9.6.0"
         const val permiso = "0.3.0"
-        const val streams = "1.1.9"
+        const val streams = "1.2.0"
         const val butterknife = "8.8.1"
         const val butterknifeAnnotationProcessor = "8.8.1"
-        const val dagger = "2.14.1"
-        const val daggerAnnotationProcessor = "2.14.1"
+        const val dagger = "2.16"
+        const val daggerAnnotationProcessor = "2.16"
         const val expandableRecyclerView = "3.0.0-RC1"
-        const val billing = "1.0"
+        const val billing = "1.1"
     }
 
     // Kotlin
@@ -77,12 +77,12 @@ object Dependencies {
 
         object Versions {
             const val androidGradlePlugin = "3.2.0-beta01"
-            const val kotlin = "1.2.30"
-            const val dexcountGradlePlugin = "0.8.2"
+            const val kotlin = "1.2.51"
+            const val dexcountGradlePlugin = "0.8.3"
             const val fabricGradlePlugin = "1.+"
-            const val playPublisher = "1.2.0"
-            const val gradleVersions = "0.17.0"
-            const val playServices = "3.2.0"
+            const val playPublisher = "1.2.2"
+            const val gradleVersions = "0.20.0"
+            const val playServices = "4.0.1"
         }
 
         const val android = "com.android.tools.build:gradle:${Versions.androidGradlePlugin}"
@@ -98,9 +98,9 @@ object Dependencies {
 
         object Versions {
             const val supportLib = "27.1.0"
-            const val firebaseCore = "11.8.0"
-            const val firebaseRemoteConfig = "11.8.0"
-            const val chromecast = "11.8.0"
+            const val firebaseCore = "16.0.1"
+            const val firebaseRemoteConfig = "16.0.0"
+            const val chromecast = "15.0.1"
             const val constraintLayout = "1.1.0-beta5"
         }
 
@@ -122,12 +122,12 @@ object Dependencies {
     object Square {
 
         object Versions {
-            const val haha = "2.0.3"
-            const val leakCanary = "1.5.1"
-            const val okio = "1.14.0"
-            const val okhttp = "3.9.1"
-            const val retrofit = "2.3.0"
-            const val retrofitGson = "2.3.0"
+            const val haha = "2.0.4"
+            const val leakCanary = "1.5.4"
+            const val okio = "1.14.1"
+            const val okhttp = "3.10.0"
+            const val retrofit = "2.4.0"
+            const val retrofitGson = "2.4.0"
             const val sqlBrite = "2.0.0"
         }
 
@@ -151,7 +151,7 @@ object Dependencies {
             const val rxJava = "2.1.9"
             const val rxRelay = "2.0.0"
             const val rxBroadcast = "2.0.0"
-            const val rxPrefs = "2.0.0-RC3"
+            const val rxPrefs = "2.0.0"
             const val traceur = "1.0.1"
         }
 
