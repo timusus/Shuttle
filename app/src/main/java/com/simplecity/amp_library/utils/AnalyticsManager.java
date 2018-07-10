@@ -121,4 +121,20 @@ public class AnalyticsManager {
         FirebaseAnalytics.getInstance(ShuttleApplication.getInstance())
                 .logEvent(FirebaseAnalytics.Event.VIEW_ITEM, params);
     }
+
+    public static void logMusicServiceStarted(String from) {
+        if (!analyticsEnabled()) {
+            return;
+        }
+
+        CrashlyticsCore.getInstance().log(String.format("Service started from: %s", from));
+    }
+
+    public static void logMusicServiceStartForeground() {
+        if (!analyticsEnabled()) {
+            return;
+        }
+
+        CrashlyticsCore.getInstance().log("MusicService StartForeground called. ");
+    }
 }

@@ -32,6 +32,7 @@ public class MusicServiceConnectionUtils {
             realActivity = (Activity) context;
         }
         final ContextWrapper contextWrapper = new ContextWrapper(realActivity);
+        AnalyticsManager.logMusicServiceStarted("MusicServiceConnectionUtils. Activity: " + realActivity.getClass().getSimpleName());
         contextWrapper.startService(new Intent(contextWrapper, MusicService.class));
         final ServiceBinder binder = new ServiceBinder(callback);
         if (contextWrapper.bindService(new Intent().setClass(contextWrapper, MusicService.class), binder, 0)) {

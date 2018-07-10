@@ -1,6 +1,7 @@
 package com.simplecity.amp_library.utils;
 
 import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 import com.simplecity.amp_library.R;
@@ -20,6 +21,7 @@ public class FileBrowser {
 
     private static final String TAG = "FileBrowser";
 
+    @Nullable
     private File currentDir;
 
     /**
@@ -106,6 +108,7 @@ public class FileBrowser {
         return folderObjects;
     }
 
+    @Nullable
     public File getCurrentDir() {
         return currentDir;
     }
@@ -206,7 +209,9 @@ public class FileBrowser {
     }
 
     public void setHomeDir() {
-        SettingsManager.getInstance().setFolderBrowserInitialDir(currentDir.getPath());
+        if (currentDir != null) {
+            SettingsManager.getInstance().setFolderBrowserInitialDir(currentDir.getPath());
+        }
     }
 
     public File getHomeDir() {

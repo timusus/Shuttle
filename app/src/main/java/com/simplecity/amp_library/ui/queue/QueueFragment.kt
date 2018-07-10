@@ -338,13 +338,9 @@ class QueueFragment : BaseFragment(), QueueContract.View {
 
     override fun updateQueuePosition(queuePosition: Int) {
 
-        if (adapter.items.isEmpty() || queuePosition >= adapter.items.size || queuePosition < 0) {
-            return
-        }
-
         val queueViewBinders = adapter.items.filterIsInstance<QueueViewBinder>()
 
-        if (queueViewBinders.isEmpty()) {
+        if (queueViewBinders.isEmpty() || queuePosition >= queueViewBinders.size || queuePosition < 0) {
             return
         }
 

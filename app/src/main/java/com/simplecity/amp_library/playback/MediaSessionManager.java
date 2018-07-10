@@ -195,7 +195,6 @@ public class MediaSessionManager {
         PlaybackStateCompat.Builder builder = new PlaybackStateCompat.Builder();
         builder.setActions(playbackActions);
 
-        Log.i(TAG, "Shuffle is " + queueManager.shuffleMode);
         switch (queueManager.shuffleMode) {
             case QueueManager.ShuffleMode.OFF:
                 builder.addCustomAction(

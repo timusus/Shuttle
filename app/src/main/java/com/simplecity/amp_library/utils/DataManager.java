@@ -1,8 +1,11 @@
 package com.simplecity.amp_library.utils;
 
+import android.support.annotation.Nullable;
 import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.annimon.stream.function.Predicate;
+import com.google.firebase.perf.FirebasePerformance;
+import com.google.firebase.perf.metrics.Trace;
 import com.jakewharton.rxrelay2.BehaviorRelay;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Album;
@@ -58,6 +61,9 @@ public class DataManager {
     private Disposable exclSubscription;
     private BehaviorRelay<List<InclExclItem>> exclRelay = BehaviorRelay.create();
 
+    @Nullable
+    private Trace trace = FirebasePerformance.getInstance().newTrace("get_all_songs");
+
     public static DataManager getInstance() {
         if (instance == null) {
             instance = new DataManager();
@@ -71,8 +77,25 @@ public class DataManager {
 
     public Observable<List<Song>> getAllSongsRelay() {
         if (allSongsSubscription == null || allSongsSubscription.isDisposed()) {
+
+            if (trace != null) {
+                trace.start();
+            }
+
             allSongsSubscription = SqlBriteUtils.createObservableList(ShuttleApplication.getInstance(), Song::new, Song.getQuery())
-                    .subscribe(allSongsRelay, error -> LogUtils.logException(TAG, "getAllSongsRelay threw error", error));
+                    .subscribe(songs -> {
+                        if (trace != null) {
+                            trace.stop();
+                            trace = null;
+                        }
+                        allSongsRelay.accept(songs);
+                    }, error -> {
+                        if (trace != null) {
+                            trace.stop();
+                            trace = null;
+                        }
+                        LogUtils.logException(TAG, "getAllSongsRelay threw error", error);
+                    });
         }
         return allSongsRelay
                 .subscribeOn(Schedulers.io())

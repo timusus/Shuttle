@@ -25,6 +25,7 @@ import com.simplecity.amp_library.glide.utils.GlideUtils;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.playback.constants.ServiceCommand;
+import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.PlaylistUtils;
@@ -152,6 +153,7 @@ public class MusicNotificationHelper extends NotificationHelper {
     public void startForeground(Service service, @NonNull Song song, boolean isPlaying, @NonNull MediaSessionCompat.Token mediaSessionToken) {
         notify(service, song, isPlaying, mediaSessionToken);
         try {
+            AnalyticsManager.logMusicServiceStartForeground();
             service.startForeground(NOTIFICATION_ID, notification);
         } catch (RuntimeException e) {
             LogUtils.logException(TAG, "Error starting foreground notification", e);
