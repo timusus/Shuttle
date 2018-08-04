@@ -6,7 +6,7 @@ object Dependencies {
     const val targetSdk = 27
     const val compileSdk = 27
 
-    const val buildTools = "28.0.2"
+    const val buildTools = "27.0.3"
 
     object Versions {
         const val nanoHttp = "2.3.1"
@@ -100,8 +100,8 @@ object Dependencies {
             const val supportLib = "27.1.0"
             const val firebaseCore = "16.0.1"
             const val firebaseRemoteConfig = "16.0.0"
-            const val chromecast = "15.0.1"
             const val constraintLayout = "1.1.0-beta5"
+            const val chromeCastFramework = "15.0.1"
         }
 
         const val cardView = "com.android.support:cardview-v7:${Versions.supportLib}"
@@ -113,10 +113,10 @@ object Dependencies {
         const val firebaseRemoteConfig = "com.google.firebase:firebase-config:${Versions.firebaseRemoteConfig}"
         const val appcompat = "com.android.support:appcompat-v7:${Versions.supportLib}"
         const val mediarouter = "com.android.support:mediarouter-v7:${Versions.supportLib}"
-        const val chromecast = "com.google.android.gms:play-services-cast:${Versions.chromecast}"
         const val constraintLayout = "com.android.support.constraint:constraint-layout:${Versions.constraintLayout}"
         const val prefCompat = "com.android.support:preference-v7:${Versions.supportLib}"
         const val prefCompatv14 = "com.android.support:preference-v14:${Versions.supportLib}"
+        const val chromeCastFramework = "com.google.android.gms:play-services-cast-framework:${Versions.chromeCastFramework}"
     }
 
     object Square {
