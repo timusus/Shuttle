@@ -212,10 +212,21 @@ public class MediaButtonIntentReceiver extends WakefulBroadcastReceiver {
     }
 
     static void startService(final Context context, final String command) {
+
+        // If we're attempting to pause, and the service isn't already running, return early. This prevents an issue where
+        // we call startForegroundService, and then we don't proceed to call startForeground() on the service, since the service
+        // basically gets shutdown again due to the fact that we're not playing anything.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && MediaButtonCommand.PAUSE.equals(command)) {
+            if (MusicServiceConnectionUtils.serviceBinder == null || MusicServiceConnectionUtils.serviceBinder.getService() == null) {
+                return;
+            }
+        }
+
         final Intent intent = new Intent(context, MusicService.class);
         intent.setAction(ServiceCommand.SERVICE_COMMAND);
         intent.putExtra(MediaButtonCommand.CMD_NAME, command);
         intent.putExtra(MediaButtonCommand.FROM_MEDIA_BUTTON, true);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             AnalyticsManager.logMusicServiceStarted("MediaButtonIntentReceiver (foreground service). Command: " + command);
             context.startForegroundService(intent);
