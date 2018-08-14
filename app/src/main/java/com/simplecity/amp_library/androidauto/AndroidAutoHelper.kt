@@ -21,17 +21,17 @@ import io.reactivex.Single
 
 sealed class MediaIdWrapper {
 
-    class RootDirectory : MediaIdWrapper()
+    object RootDirectory : MediaIdWrapper()
 
-    class ArtistDirectory : MediaIdWrapper()
+    object ArtistDirectory : MediaIdWrapper()
 
     class AlbumDirectory(var artistHash: Int?) : MediaIdWrapper()
 
     class SongDirectory(var artistHash: String?, var albumId: Long?) : MediaIdWrapper()
 
-    class PlaylistDirectory : MediaIdWrapper()
+    object PlaylistDirectory : MediaIdWrapper()
 
-    class GenreDirectory : MediaIdWrapper()
+    object GenreDirectory : MediaIdWrapper()
 
     class Song(var artistHash: String?, var albumId: Long?, var songId: Long?) : MediaIdWrapper()
 
@@ -54,7 +54,7 @@ class MediaIdHelper {
         return when (uri.pathSegments.firstOrNull()) {
 
             "root" -> {
-                MediaIdWrapper.RootDirectory()
+                MediaIdWrapper.RootDirectory
             }
             else -> {
                 val artistHash = uri.pathSegments.getNextSegment("artists")
@@ -67,9 +67,9 @@ class MediaIdHelper {
                     when {
                         uri.pathSegments.contains("songs") -> MediaIdWrapper.SongDirectory(artistHash, albumId)
                         uri.pathSegments.contains("albums") -> MediaIdWrapper.AlbumDirectory(artistHash?.toInt())
-                        uri.pathSegments.contains("artists") -> MediaIdWrapper.ArtistDirectory()
-                        uri.pathSegments.contains("playlists") -> MediaIdWrapper.PlaylistDirectory()
-                        uri.pathSegments.contains("genres") -> MediaIdWrapper.GenreDirectory()
+                        uri.pathSegments.contains("artists") -> MediaIdWrapper.ArtistDirectory
+                        uri.pathSegments.contains("playlists") -> MediaIdWrapper.PlaylistDirectory
+                        uri.pathSegments.contains("genres") -> MediaIdWrapper.GenreDirectory
                         else -> {
                             throw IllegalStateException("Unknown MediaId '$mediaId' path")
                         }
@@ -145,9 +145,9 @@ class MediaIdHelper {
                 getSongsForPredicate { if (mediaWrapper.albumId == null) true else it.albumId == mediaWrapper.albumId }
                     .map { songs ->
                         songs
-                            .sortedBy { it.albumArtistName }
-                            .sortedBy { it.albumName }
-                            .sortedBy { it.track }
+                            .sortedBy { song -> song.albumArtistName }
+                            .sortedBy { song -> song.albumName }
+                            .sortedBy { song -> song.track }
                     }
                     .subscribe(
                         { songs -> completion(songs, songs.indexOfFirst { it.id == mediaWrapper.songId }.or(0)) },
@@ -171,57 +171,59 @@ class MediaIdHelper {
         }
     }
 
-    fun handlePlayFromSearch(query: String, extras: Bundle): Single<List<Song>> {
+    fun handlePlayFromSearch(query: String, extras: Bundle): Single<Pair<List<Song>, Int>> {
         val mediaFocus = extras.getString(MediaStore.EXTRA_MEDIA_FOCUS)
         when (mediaFocus) {
             MediaStore.Audio.Artists.ENTRY_CONTENT_TYPE -> {
                 extras.getString(MediaStore.EXTRA_MEDIA_ARTIST)?.let { artist ->
-                    return getSongsForPredicate { it.artistName.equals(artist, true) }
+                    return getSongsForPredicate { song -> song.artistName.equals(artist, true) }
                         .map { songs ->
-                            songs
-                                .sortedBy { it.albumName }
-                                .sortedBy { it.track }
+                            Pair(songs.sortedBy { song -> song.albumName }.sortedBy { song -> song.track }, 0)
                         }
                 }
             }
             MediaStore.Audio.Albums.ENTRY_CONTENT_TYPE -> {
                 extras.getString(MediaStore.EXTRA_MEDIA_ALBUM)?.let { album ->
-                    return getSongsForPredicate { it.albumName.equals(album, true) }
+                    return getSongsForPredicate { song -> song.albumName.equals(album, true) }
                         .map { songs ->
-                            songs
-                                .sortedBy { it.track }
+                            Pair(songs.sortedBy { song -> song.track }, 0)
                         }
                 }
             }
             MediaStore.Audio.Genres.ENTRY_CONTENT_TYPE -> {
-                extras.getString(MediaStore.EXTRA_MEDIA_GENRE)?.let { genre ->
+                extras.getString(MediaStore.EXTRA_MEDIA_GENRE)?.let { genreName ->
                     return DataManager.getInstance().genresRelay
                         .first(emptyList())
-                        .flatMap { Single.just(it.first { it.name == genre }) }
-                        .flatMap { it.songsObservable }
+                        .flatMap { genres -> Single.just(genres.first { genre -> genre.name == genreName }) }
+                        .flatMap { genresSingle -> genresSingle.songsObservable }
                         .map { songs ->
-                            songs
-                                .sortedBy { it.playlistSongPlayOrder }
-                                .toMutableList()
+                            Pair(songs.sortedBy { it.playlistSongPlayOrder }.toMutableList(), 0)
                         }
                 }
             }
         }
 
-        return getSongsForPredicate { it.name.contains(query, true) }
-            .flatMap {
-                if (it.isEmpty()) {
-                    Single.just(emptyList<Song>())
+        return getSongsForPredicate { song -> song.name.contains(query, true) }
+            .flatMap { songs ->
+                if (songs.isEmpty()) {
+                    Single.just(Pair<Song?, List<Song>>(null, emptyList()))
                 } else {
-                    it.first().album.songsSingle
+                    // Take the first song matching our predicate, and retrieve all songs from the same album.
+                    val song = songs.first()
+                    song.album.songsSingle.map { albumSongs -> Pair(song, albumSongs) }
                 }
             }
-            .map { songs ->
-                songs
-                    .sortedBy { it.artistName }
-                    .sortedBy { it.albumName }
-                    .sortedBy { it.track }
-                    .sortedBy { it.discNumber }
+            .map { pair ->
+                val songs = pair.second
+                    .sortedBy { song -> song.artistName }
+                    .sortedBy { song -> song.albumName }
+                    .sortedBy { song -> song.track }
+                    .sortedBy { song -> song.discNumber }
+                var index = 0
+                pair.first?.let { song ->
+                    index = songs.indexOf(song)
+                }
+                Pair(songs, index)
             }
     }
 
@@ -288,9 +290,9 @@ class MediaIdHelper {
         getSongsForPredicate { if (albumId == null) true else it.albumId == albumId }
             .map { songs ->
                 songs
-                    .sortedBy { it.albumArtistName }
-                    .sortedBy { it.albumName }
-                    .sortedBy { it.track }
+                    .sortedBy { song -> song.albumArtistName }
+                    .sortedBy { song -> song.albumName }
+                    .sortedBy { song -> song.track }
                     .map { song -> song.toMediaItem(mediaId) }
                     .toMutableList()
             }
@@ -304,7 +306,7 @@ class MediaIdHelper {
     private fun getSongsForPlaylistId(playlistId: Long?): Single<List<Song>> {
         return DataManager.getInstance().playlistsRelay
             .first(emptyList())
-            .flatMap { Single.just(it.first { it.id == playlistId }) }
+            .flatMap { playlists -> Single.just(playlists.first { playlist -> playlist.id == playlistId }) }
             .flatMap { it.songsObservable.first(emptyList()) }
             .map { songs ->
                 songs
@@ -316,7 +318,7 @@ class MediaIdHelper {
     private fun getSongsForGenreId(genreId: Long?): Single<MutableList<Song>> {
         return DataManager.getInstance().genresRelay
             .first(emptyList())
-            .flatMap { Single.just(it.first { it.id == genreId }) }
+            .flatMap { genres -> Single.just(genres.first { genre -> genre.id == genreId }) }
             .flatMap { it.songsObservable }
             .map { songs ->
                 songs.shuffled().toMutableList()

@@ -134,9 +134,9 @@ public class MediaSessionManager {
                 } else {
                     mediaIdHelper.handlePlayFromSearch(query, extras)
                             .subscribe(
-                                    songs -> {
-                                        if (!songs.isEmpty()) {
-                                            playbackManager.open(songs, 0);
+                                    pair -> {
+                                        if (!pair.getFirst().isEmpty()) {
+                                            playbackManager.open(pair.getFirst(), pair.getSecond());
                                             playbackManager.play();
                                         } else {
                                             playbackManager.pause();
