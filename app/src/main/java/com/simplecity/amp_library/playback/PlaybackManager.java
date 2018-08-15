@@ -168,7 +168,8 @@ public class PlaybackManager {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        queueManager.reloadQueue(this::reloadComplete,
+
+        disposables.add(queueManager.reloadQueue(this::reloadComplete,
                 () -> {
                     setOpenFailedCounter(20);
                     openCurrentAndNext();
@@ -177,7 +178,7 @@ public class PlaybackManager {
                     if (queueManager.getCurrentSong() != null) {
                         seekTo(seekPos < queueManager.getCurrentSong().duration ? seekPos : 0);
                     }
-                });
+                }));
     }
 
     public void removeQueueItems(List<QueueItem> queueItems) {

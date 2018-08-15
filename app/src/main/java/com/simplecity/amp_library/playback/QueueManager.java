@@ -429,6 +429,7 @@ public class QueueManager {
     }
 
     private void onQueueReloadComplete(UnsafeAction completion) {
+        queueReloading = false;
         completion.run();
         notifyQueueChanged();
         notifyMetaChanged();
