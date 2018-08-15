@@ -30,11 +30,12 @@
 
     <!--Widget Dimens -->
     <dimen name="widget_medium_width">250dp</dimen>
-    <dimen name="widget_medium_height">96dp</dimen>
     <dimen name="widget_large_height">152dp</dimen>
     <dimen name="widget_small_height">96dp</dimen>
     <dimen name="widget_small_width">128dp</dimen>
-    <dimen name="widget_medium_artwork_height">96dp</dimen>
+
+    <dimen name="widget_medium_height">76dp</dimen>
+    <dimen name="widget_medium_artwork_height">76dp</dimen>
 
     <!--Widget Dimens -->
     <dimen name="widget_large_image_width">88dp</dimen>

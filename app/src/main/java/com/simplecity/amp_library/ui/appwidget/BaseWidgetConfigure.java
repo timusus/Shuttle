@@ -353,7 +353,7 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
                     text1.setTextColor(textColor);
                 }
                 if (artistName != null && albumName != null && text2 != null && text3 == null) {
-                    text2.setText(artistName + " | " + albumName);
+                    text2.setText(artistName + " • " + albumName);
                     text2.setTextColor(textColor);
                 } else if (artistName != null && albumName != null && text2 != null) {
                     text2.setText(albumName);

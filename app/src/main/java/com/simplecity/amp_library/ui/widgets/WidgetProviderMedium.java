@@ -130,7 +130,7 @@ public class WidgetProviderMedium extends BaseWidgetProvider {
                 // No error, so show normal titles
                 views.setViewVisibility(R.id.text1, View.VISIBLE);
                 views.setTextViewText(R.id.text1, titleName);
-                views.setTextViewText(R.id.text2, artistName + " | " + albumName);
+                views.setTextViewText(R.id.text2, artistName + " • " + albumName);
             }
 
             boolean invertIcons = mPrefs.getBoolean(ARG_WIDGET_INVERT_ICONS + appWidgetId, false);
