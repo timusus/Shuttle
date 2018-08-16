@@ -211,7 +211,7 @@
     <!-- title of the "current playlist" screen when not in party shuffle mode -->
     <string name="nowplaying_title">現正播放</string>
     <!-- -->
-    <string name="up_next_title">Up Next</string>
+    <string name="up_next_title">佇列</string>
     <!-- Popup menu item -->
     <string name="go_to">前往</string>
     <!-- 'More' button -->
