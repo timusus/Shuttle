@@ -342,7 +342,7 @@ static String getPlayStoreTrack() {
 
 play {
     track = getPlayStoreTrack()
-    userFraction = 0.1
+    userFraction = 0.05
     untrackOld = true
     serviceAccountEmail = 'app-deployment@api-5801704373554614142-812229.iam.gserviceaccount.com'
     jsonFile = file('../deployment_keys.json')
