@@ -118,8 +118,9 @@ public class ArtistDetailFragment extends BaseFragment implements
 
     private SongMenuCallbacksAdapter songMenuCallbacksAdapter = new SongMenuCallbacksAdapter(this, disposables);
 
+    @Nullable
     private ColorStateList collapsingToolbarTextColor;
-
+    @Nullable
     private ColorStateList collapsingToolbarSubTextColor;
 
     private EmptyView emptyView = new EmptyView(R.string.empty_songlist);
@@ -509,7 +510,7 @@ public class ArtistDetailFragment extends BaseFragment implements
 
                 @Override
                 public void finish() {
-                    if (toolbarLayout != null) {
+                    if (toolbarLayout != null && collapsingToolbarTextColor != null && collapsingToolbarSubTextColor != null) {
                         toolbarLayout.setCollapsedTitleTextColor(collapsingToolbarTextColor);
                         toolbarLayout.setCollapsedSubTextColor(collapsingToolbarSubTextColor);
                     }
@@ -642,7 +643,7 @@ public class ArtistDetailFragment extends BaseFragment implements
         if (!data.second.isEmpty()) {
             List<ViewModel> items = new ArrayList<>();
 
-            items.add(new SubheaderView(StringUtils.makeSongsAndTimeLabel(getContext(), data.second.size(),  Stream.of(data.second).mapToLong(song -> song.duration / 1000).sum())));
+            items.add(new SubheaderView(StringUtils.makeSongsAndTimeLabel(getContext(), data.second.size(), Stream.of(data.second).mapToLong(song -> song.duration / 1000).sum())));
 
             items.addAll(Stream.of(data.second)
                     .map(song -> {

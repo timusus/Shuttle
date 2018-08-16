@@ -109,8 +109,9 @@ public class PlaylistDetailFragment extends BaseFragment implements
 
     private SongMenuCallbacksAdapter songMenuCallbacksAdapter;
 
+    @Nullable
     private ColorStateList collapsingToolbarTextColor;
-
+    @Nullable
     private ColorStateList collapsingToolbarSubTextColor;
 
     private EmptyView emptyView = new EmptyView(R.string.empty_songlist);
@@ -542,7 +543,7 @@ public class PlaylistDetailFragment extends BaseFragment implements
 
                 @Override
                 public void finish() {
-                    if (toolbarLayout != null) {
+                    if (toolbarLayout != null && collapsingToolbarTextColor != null && collapsingToolbarSubTextColor != null) {
                         toolbarLayout.setCollapsedTitleTextColor(collapsingToolbarTextColor);
                         toolbarLayout.setCollapsedSubTextColor(collapsingToolbarSubTextColor);
                     }
