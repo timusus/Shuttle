@@ -64,20 +64,26 @@ public class PlayerPresenter extends Presenter<PlayerView> {
         addDisposable(playbackMonitor.getProgressObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(progress -> view.setSeekProgress((int) (progress * 1000)),
-                        error -> LogUtils.logException(TAG, "PlayerPresenter: Error updating seek progress", error)));
+                .subscribe(
+                        progress -> view.setSeekProgress((int) (progress * 1000)),
+                        error -> LogUtils.logException(TAG, "PlayerPresenter: Error updating seek progress", error))
+        );
 
         addDisposable(playbackMonitor.getCurrentTimeObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(pos -> refreshTimeText(pos / 1000),
-                        error -> LogUtils.logException(TAG, "PlayerPresenter: Error refreshing time text", error)));
+                .subscribe(
+                        pos -> refreshTimeText(pos / 1000),
+                        error -> LogUtils.logException(TAG, "PlayerPresenter: Error refreshing time text", error))
+        );
 
         addDisposable(Flowable.interval(500, TimeUnit.MILLISECONDS)
                 .onBackpressureDrop()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(aLong -> setCurrentTimeVisibility(mediaManager.isPlaying() || !currentPlaybackTimeVisible),
-                        error -> LogUtils.logException(TAG, "PlayerPresenter: Error emitting current time", error)));
+                .subscribe(
+                        aLong -> setCurrentTimeVisibility(mediaManager.isPlaying() || !currentPlaybackTimeVisible),
+                        error -> LogUtils.logException(TAG, "PlayerPresenter: Error emitting current time", error))
+        );
 
         final IntentFilter filter = new IntentFilter();
         filter.addAction(InternalIntents.META_CHANGED);
@@ -90,36 +96,39 @@ public class PlayerPresenter extends Presenter<PlayerView> {
         addDisposable(RxBroadcast.fromBroadcast(ShuttleApplication.getInstance(), filter)
                 .toFlowable(BackpressureStrategy.LATEST)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(intent -> {
-                    final String action = intent.getAction();
-                    if (action != null) {
-                        switch (action) {
-                            case InternalIntents.META_CHANGED:
-                                updateTrackInfo();
-                                break;
-                            case InternalIntents.QUEUE_CHANGED:
-                                updateTrackInfo();
-                                break;
-                            case InternalIntents.PLAY_STATE_CHANGED:
-                                updateTrackInfo();
-                                updatePlaystate();
-                                break;
-                            case InternalIntents.SHUFFLE_CHANGED:
-                                updateTrackInfo();
-                                updateShuffleMode();
-                                break;
-                            case InternalIntents.REPEAT_CHANGED:
-                                updateRepeatMode();
-                                break;
-                            case InternalIntents.SERVICE_CONNECTED:
-                                updateTrackInfo();
-                                updatePlaystate();
-                                updateShuffleMode();
-                                updateRepeatMode();
-                                break;
-                        }
-                    }
-                }, error -> LogUtils.logException(TAG, "PlayerPresenter: Error sending broadcast", error)));
+                .subscribe(
+                        intent -> {
+                            final String action = intent.getAction();
+                            if (action != null) {
+                                switch (action) {
+                                    case InternalIntents.META_CHANGED:
+                                        updateTrackInfo();
+                                        break;
+                                    case InternalIntents.QUEUE_CHANGED:
+                                        updateTrackInfo();
+                                        break;
+                                    case InternalIntents.PLAY_STATE_CHANGED:
+                                        updateTrackInfo();
+                                        updatePlaystate();
+                                        break;
+                                    case InternalIntents.SHUFFLE_CHANGED:
+                                        updateTrackInfo();
+                                        updateShuffleMode();
+                                        break;
+                                    case InternalIntents.REPEAT_CHANGED:
+                                        updateRepeatMode();
+                                        break;
+                                    case InternalIntents.SERVICE_CONNECTED:
+                                        updateTrackInfo();
+                                        updatePlaystate();
+                                        updateShuffleMode();
+                                        updateRepeatMode();
+                                        break;
+                                }
+                            }
+                        },
+                        error -> LogUtils.logException(TAG, "PlayerPresenter: Error sending broadcast", error))
+        );
     }
 
     private void refreshTimeText(long playbackTime) {
@@ -166,7 +175,10 @@ public class PlayerPresenter extends Presenter<PlayerView> {
             isFavoriteDisposable = PlaylistUtils.isFavorite(mediaManager.getSong())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(isFavorite -> updateFavorite((isFavorite)));
+                    .subscribe(
+                            isFavorite -> updateFavorite((isFavorite)),
+                            error -> LogUtils.logException(TAG, "updateTrackInfo error", error)
+                    );
 
             addDisposable(isFavoriteDisposable);
         }

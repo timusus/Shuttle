@@ -229,22 +229,25 @@ public class AlbumFragment extends BaseFragment implements
                                     .toList();
                         })
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(items -> {
+                        .subscribe(
+                                items -> {
 
-                            if (items.isEmpty()) {
-                                adapter.setItems(Collections.singletonList(new EmptyView(R.string.empty_albums)));
-                            } else {
-                                items.add(0, shuffleView);
-                                adapter.setItems(items);
-                            }
+                                    if (items.isEmpty()) {
+                                        adapter.setItems(Collections.singletonList(new EmptyView(R.string.empty_albums)));
+                                    } else {
+                                        items.add(0, shuffleView);
+                                        adapter.setItems(items);
+                                    }
 
-                            //Move the RV back to the top if we've had a sort order change.
-                            if (sortOrderChanged) {
-                                recyclerView.scrollToPosition(0);
-                            }
+                                    //Move the RV back to the top if we've had a sort order change.
+                                    if (sortOrderChanged) {
+                                        recyclerView.scrollToPosition(0);
+                                    }
 
-                            sortOrderChanged = false;
-                        }, error -> LogUtils.logException(TAG, "Error refreshing adapter items", error));
+                                    sortOrderChanged = false;
+                                },
+                                error -> LogUtils.logException(TAG, "Error refreshing adapter items", error)
+                        );
             }
         });
     }
@@ -439,13 +442,12 @@ public class AlbumFragment extends BaseFragment implements
                 .map(Operators::albumShuffleSongs);
 
         mediaManager.playAll(DataManager.getInstance()
-                        .getSongsRelay()
-                        .firstOrError()
-                        .map(Operators::albumShuffleSongs),
-                message -> {
-                    Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
-                    return Unit.INSTANCE;
-                });
+                .getSongsRelay()
+                .firstOrError()
+                .map(Operators::albumShuffleSongs), message -> {
+            Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+            return Unit.INSTANCE;
+        });
     }
 
     @Override
@@ -469,7 +471,10 @@ public class AlbumFragment extends BaseFragment implements
             if (playlistMenuDisposable != null) {
                 playlistMenuDisposable.dispose();
             }
-            playlistMenuDisposable = PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe();
+            playlistMenuDisposable = PlaylistUtils.createUpdatingPlaylistMenu(sub)
+                    .doOnError(throwable -> LogUtils.logException(TAG, "setupContextualToolbar error", throwable))
+                    .onErrorComplete()
+                    .subscribe();
 
             contextualToolbar.setOnMenuItemClickListener(
                     AlbumMenuUtils.INSTANCE.getAlbumMenuClickListener(

@@ -57,12 +57,12 @@ class PlaylistDetailPresenter constructor(private val mediaManager: MediaManager
                 playlist.songsObservable
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnNext { songs -> sortSongs(songs) }
-                    .subscribe { songs ->
-
+                    .subscribe({ songs ->
                         this.songs = songs
-
                         view?.setData(songs)
-                    }
+                    }, { error ->
+                        LogUtils.logException(TAG, "loadData error", error);
+                    })
             )
         }
     }

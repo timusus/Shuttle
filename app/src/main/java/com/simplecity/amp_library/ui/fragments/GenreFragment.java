@@ -132,13 +132,16 @@ public class GenreFragment extends BaseFragment implements GenreView.ClickListen
                                 })
                                 .toList())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(items -> {
-                            if (items.isEmpty()) {
-                                adapter.setItems(Collections.singletonList(new EmptyView(R.string.empty_genres)));
-                            } else {
-                                adapter.setItems(items);
-                            }
-                        }, error -> LogUtils.logException(TAG, "Error refreshing adapter items", error));
+                        .subscribe(
+                                items -> {
+                                    if (items.isEmpty()) {
+                                        adapter.setItems(Collections.singletonList(new EmptyView(R.string.empty_genres)));
+                                    } else {
+                                        adapter.setItems(items);
+                                    }
+                                },
+                                error -> LogUtils.logException(TAG, "Error refreshing adapter items", error)
+                        );
             }
         });
     }

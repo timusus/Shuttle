@@ -72,7 +72,10 @@ public class DataManager {
     public Observable<List<Song>> getAllSongsRelay() {
         if (allSongsSubscription == null || allSongsSubscription.isDisposed()) {
             allSongsSubscription = SqlBriteUtils.createObservableList(ShuttleApplication.getInstance(), Song::new, Song.getQuery())
-                    .subscribe(allSongsRelay, error -> LogUtils.logException(TAG, "getAllSongsRelay threw error", error));
+                    .subscribe(
+                            allSongsRelay,
+                            error -> LogUtils.logException(TAG, "getAllSongsRelay threw error", error)
+                    );
         }
         return allSongsRelay
                 .subscribeOn(Schedulers.io())

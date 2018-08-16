@@ -30,6 +30,7 @@ import com.simplecity.amp_library.ui.recyclerview.GridDividerDecoration;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.DataManager;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
@@ -210,21 +211,24 @@ public class AlbumArtistFragment extends BaseFragment implements
                                     .toList();
                         })
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(items -> {
+                        .subscribe(
+                                items -> {
 
-                            if (items.isEmpty()) {
-                                adapter.setItems(Collections.singletonList(new EmptyView(R.string.empty_artists)));
-                            } else {
-                                adapter.setItems(items);
-                            }
+                                    if (items.isEmpty()) {
+                                        adapter.setItems(Collections.singletonList(new EmptyView(R.string.empty_artists)));
+                                    } else {
+                                        adapter.setItems(items);
+                                    }
 
-                            //Move the RV back to the top if we've had a sort order change.
-                            if (sortOrderChanged) {
-                                recyclerView.scrollToPosition(0);
-                            }
+                                    //Move the RV back to the top if we've had a sort order change.
+                                    if (sortOrderChanged) {
+                                        recyclerView.scrollToPosition(0);
+                                    }
 
-                            sortOrderChanged = false;
-                        });
+                                    sortOrderChanged = false;
+                                },
+                                error -> LogUtils.logException(TAG, "refreshAdapterItems error", error)
+                        );
             }
         });
     }
@@ -435,7 +439,11 @@ public class AlbumArtistFragment extends BaseFragment implements
             if (playlistMenuDisposable != null) {
                 playlistMenuDisposable.dispose();
             }
-            playlistMenuDisposable = PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe();
+            playlistMenuDisposable = PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe(
+                    () -> {
+                    },
+                    throwable -> LogUtils.logException(TAG, "setupContextualToolbar", throwable)
+            );
 
             contextualToolbar.setOnMenuItemClickListener(
                     AlbumArtistMenuUtils.INSTANCE.getAlbumArtistMenuClickListener(

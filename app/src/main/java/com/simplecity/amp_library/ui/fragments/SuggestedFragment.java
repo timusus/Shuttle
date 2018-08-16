@@ -389,13 +389,16 @@ public class SuggestedFragment extends BaseFragment implements
                         .debounce(200, TimeUnit.MILLISECONDS)
                         .switchIfEmpty(Observable.just(Collections.emptyList()))
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(adaptableItems -> {
-                            if (adaptableItems.isEmpty()) {
-                                setItemsDisposable = adapter.setItems(Collections.singletonList((new EmptyView(R.string.empty_suggested))));
-                            } else {
-                                setItemsDisposable = adapter.setItems(adaptableItems);
-                            }
-                        }, error -> LogUtils.logException(TAG, "Error setting items", error)));
+                        .subscribe(
+                                adaptableItems -> {
+                                    if (adaptableItems.isEmpty()) {
+                                        setItemsDisposable = adapter.setItems(Collections.singletonList((new EmptyView(R.string.empty_suggested))));
+                                    } else {
+                                        setItemsDisposable = adapter.setItems(adaptableItems);
+                                    }
+                                },
+                                error -> LogUtils.logException(TAG, "Error setting items", error))
+                );
             }
         });
     }

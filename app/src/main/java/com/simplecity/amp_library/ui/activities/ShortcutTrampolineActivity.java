@@ -46,11 +46,14 @@ public class ShortcutTrampolineActivity extends AppCompatActivity {
                         .map(Optional::get)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(playlist -> {
-                            intent.putExtra(PlaylistUtils.ARG_PLAYLIST, playlist);
-                            startActivity(intent);
-                            finish();
-                        }, error -> LogUtils.logException(TAG, "Error starting activity", error));
+                        .subscribe(
+                                playlist -> {
+                                    intent.putExtra(PlaylistUtils.ARG_PLAYLIST, playlist);
+                                    startActivity(intent);
+                                    finish();
+                                },
+                                error -> LogUtils.logException(TAG, "Error starting activity", error)
+                        );
                 break;
         }
     }

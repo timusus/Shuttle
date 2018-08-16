@@ -32,7 +32,9 @@ open class PlaylistMenuCallbacksAdapter(val fragment: BaseFragment, val disposab
     }
 
     override fun playNext(playlist: Playlist) {
-        fragment.mediaManager.playNext(playlist.songsObservable.first(emptyList<Song>())) { message -> Toast.makeText(fragment.context, message, Toast.LENGTH_LONG).show() }
+        fragment.mediaManager.playNext(playlist.songsObservable.first(emptyList<Song>())) {
+                message -> Toast.makeText(fragment.context, message, Toast.LENGTH_LONG).show()
+        }
     }
 
     override fun showDeleteConfirmationDialog(playlist: Playlist, onDelete: () -> Unit) {

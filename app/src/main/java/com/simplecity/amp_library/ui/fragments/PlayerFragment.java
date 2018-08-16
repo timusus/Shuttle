@@ -301,37 +301,49 @@ public class PlayerFragment extends BaseFragment implements
                     .observeOn(AndroidSchedulers.mainThread())
                     .share();
 
-            disposables.add(sharedSeekBarEvents.subscribe(seekBarChangeEvent -> {
-                if (seekBarChangeEvent instanceof SeekBarStartChangeEvent) {
-                    isSeeking = true;
-                } else if (seekBarChangeEvent instanceof SeekBarStopChangeEvent) {
-                    isSeeking = false;
-                }
-            }, error -> LogUtils.logException(TAG, "Error in seek change event", error)));
+            disposables.add(sharedSeekBarEvents.subscribe(
+                    seekBarChangeEvent -> {
+                        if (seekBarChangeEvent instanceof SeekBarStartChangeEvent) {
+                            isSeeking = true;
+                        } else if (seekBarChangeEvent instanceof SeekBarStopChangeEvent) {
+                            isSeeking = false;
+                        }
+                    },
+                    error -> LogUtils.logException(TAG, "Error in seek change event", error))
+            );
 
             disposables.add(sharedSeekBarEvents
                     .ofType(SeekBarProgressChangeEvent.class)
                     .filter(SeekBarProgressChangeEvent::fromUser)
                     .debounce(15, TimeUnit.MILLISECONDS)
-                    .subscribe(seekBarChangeEvent -> presenter.seekTo(seekBarChangeEvent.progress()),
-                            error -> LogUtils.logException(TAG, "Error receiving seekbar progress", error)));
+                    .subscribe(
+                            seekBarChangeEvent -> presenter.seekTo(seekBarChangeEvent.progress()),
+                            error -> LogUtils.logException(TAG, "Error receiving seekbar progress", error))
+            );
         }
 
         disposables.add(RxSharedPreferences.create(PreferenceManager.getDefaultSharedPreferences(getContext()))
                 .getBoolean(SettingsManager.KEY_DISPLAY_REMAINING_TIME)
                 .asObservable()
-                .subscribe(aBoolean -> presenter.updateRemainingTime()));
+                .subscribe(
+                        aBoolean -> presenter.updateRemainingTime(),
+                        error -> LogUtils.logException(TAG, "Remaining time changed", error)
+                )
+        );
 
         disposables.add(sheetEventRelay.getEvents()
-                .subscribe(event -> {
-                    if (event.nowPlayingExpanded()) {
-                        isExpanded = true;
-                        snowfallView.letItSnow();
-                    } else if (event.nowPlayingCollapsed()) {
-                        isExpanded = false;
-                        snowfallView.clear();
-                    }
-                }, throwable -> Log.e(TAG, "error listening for sheet slide events", throwable)));
+                .subscribe(
+                        event -> {
+                            if (event.nowPlayingExpanded()) {
+                                isExpanded = true;
+                                snowfallView.letItSnow();
+                            } else if (event.nowPlayingCollapsed()) {
+                                isExpanded = false;
+                                snowfallView.clear();
+                            }
+                        },
+                        throwable -> Log.e(TAG, "error listening for sheet slide events", throwable))
+        );
 
         update();
     }
@@ -620,7 +632,10 @@ public class PlayerFragment extends BaseFragment implements
                 .filter(albumArtist -> currentAlbumArtist != null && albumArtist.name.equals(currentAlbumArtist.name) && albumArtist.albums.containsAll(currentAlbumArtist.albums))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(albumArtist -> navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_ARTIST, albumArtist, true)));
+                .subscribe(
+                        albumArtist -> navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_ARTIST, albumArtist, true)),
+                        error -> LogUtils.logException(TAG, "goToArtist error", error)
+                );
     }
 
     private void goToAlbum() {
@@ -634,7 +649,8 @@ public class PlayerFragment extends BaseFragment implements
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         (UnsafeConsumer<Genre>) genre -> navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_GENRE, genre, true)),
-                        error -> LogUtils.logException(TAG, "Error retrieving genre", error));
+                        error -> LogUtils.logException(TAG, "Error retrieving genre", error)
+                );
     }
 
     void animateColors(@NonNull ColorSet from, @NonNull ColorSet to, int duration, @NonNull UnsafeConsumer<ColorSet> consumer, @Nullable UnsafeAction onComplete) {

@@ -165,22 +165,25 @@ public class SongFragment extends BaseFragment implements
                                             .toList();
                                 })
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(items -> {
+                                .subscribe(
+                                        items -> {
 
-                                    if (items.isEmpty()) {
-                                        adapter.setItems(Collections.singletonList(new EmptyView(R.string.empty_songlist)));
-                                    } else {
-                                        items.add(0, shuffleView);
-                                        adapter.setItems(items);
-                                    }
+                                            if (items.isEmpty()) {
+                                                adapter.setItems(Collections.singletonList(new EmptyView(R.string.empty_songlist)));
+                                            } else {
+                                                items.add(0, shuffleView);
+                                                adapter.setItems(items);
+                                            }
 
-                                    //Move the RV back to the top if we've had a sort order change.
-                                    if (sortOrderChanged) {
-                                        recyclerView.scrollToPosition(0);
-                                    }
+                                            //Move the RV back to the top if we've had a sort order change.
+                                            if (sortOrderChanged) {
+                                                recyclerView.scrollToPosition(0);
+                                            }
 
-                                    sortOrderChanged = false;
-                                }, error -> LogUtils.logException(TAG, "Error refreshing adapter items", error));
+                                            sortOrderChanged = false;
+                                        },
+                                        error -> LogUtils.logException(TAG, "Error refreshing adapter items", error)
+                                );
                     }
                 }
         );
@@ -307,7 +310,10 @@ public class SongFragment extends BaseFragment implements
             if (playlistMenuDisposable != null) {
                 playlistMenuDisposable.dispose();
             }
-            playlistMenuDisposable = PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe();
+            playlistMenuDisposable = PlaylistUtils.createUpdatingPlaylistMenu(sub).subscribe(
+                    () -> {},
+                    throwable -> LogUtils.logException(TAG, "setupContextualToolbar error", throwable)
+            );
 
             contextualToolbarHelper = new ContextualToolbarHelper<>(contextualToolbar, new ContextualToolbarHelper.Callback() {
                 @Override

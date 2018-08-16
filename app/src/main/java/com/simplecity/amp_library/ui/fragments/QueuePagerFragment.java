@@ -25,6 +25,7 @@ import com.simplecity.amp_library.glide.preloader.RecyclerViewPreloader;
 import com.simplecity.amp_library.ui.modelviews.QueuePagerItemView;
 import com.simplecity.amp_library.ui.presenters.QueuePagerPresenter;
 import com.simplecity.amp_library.ui.views.QueuePagerView;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
@@ -112,7 +113,10 @@ public class QueuePagerFragment extends BaseFragment implements
                     })
                             .delaySubscription(200, TimeUnit.MILLISECONDS)
                             .subscribeOn(Schedulers.io())
-                            .subscribe();
+                            .subscribe(
+                                    o -> {},
+                                    throwable -> LogUtils.logException(TAG, "Error setting queue position", throwable)
+                            );
                 }
 
                 return snapPosition;

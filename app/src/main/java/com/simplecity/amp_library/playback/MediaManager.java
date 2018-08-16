@@ -44,7 +44,10 @@ public class MediaManager {
     public Disposable playAll(@NonNull Single<List<Song>> songsSingle, @NotNull Function1<? super String, Unit> onEmpty) {
         return songsSingle
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(songs -> playAll(songs, 0, true, onEmpty));
+                .subscribe(
+                        songs -> playAll(songs, 0, true, onEmpty),
+                        error -> LogUtils.logException(TAG, "playAll error", error)
+                );
     }
 
     public void playAll(@NonNull List<Song> songs, int position, boolean canClearShuffle, @NotNull Function1<? super String, Unit> onEmpty) {
@@ -313,7 +316,10 @@ public class MediaManager {
         }
         return songsSingle
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(songs -> playNext(songs, onAdded));
+                .subscribe(
+                        songs -> playNext(songs, onAdded),
+                        error -> LogUtils.logException(TAG, "playNext error", error)
+                );
     }
 
     public void playNext(@NonNull List<Song> songs, @NotNull Function1<? super String, Unit> onAdded) {

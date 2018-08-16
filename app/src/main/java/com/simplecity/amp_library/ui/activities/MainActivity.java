@@ -161,7 +161,10 @@ public class MainActivity extends BaseCastActivity implements
             return true;
         })
                 .delaySubscription(350, TimeUnit.MILLISECONDS)
-                .subscribe();
+                .subscribe(
+                        aBoolean -> {},
+                        throwable -> LogUtils.logException(TAG, "handleIntent error", throwable)
+                );
     }
 
     private void handlePendingPlaybackRequest() {
@@ -194,15 +197,18 @@ public class MainActivity extends BaseCastActivity implements
                 SqlBriteUtils.createSingle(this, Playlist::new, query, null)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(playlist -> {
-                            mediaManager.playAll(playlist.getSongsObservable().first(new ArrayList<>()),
-                                    message -> {
-                                        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-                                        return Unit.INSTANCE;
-                                    });
-                            // Make sure to process intent only once
-                            setIntent(new Intent());
-                        }, error -> LogUtils.logException(TAG, "Error handling playback request", error));
+                        .subscribe(
+                                playlist -> {
+                                    mediaManager.playAll(playlist.getSongsObservable().first(new ArrayList<>()),
+                                            message -> {
+                                                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                                                return Unit.INSTANCE;
+                                            });
+                                    // Make sure to process intent only once
+                                    setIntent(new Intent());
+                                },
+                                error -> LogUtils.logException(TAG, "Error handling playback request", error)
+                        );
             }
         }
 

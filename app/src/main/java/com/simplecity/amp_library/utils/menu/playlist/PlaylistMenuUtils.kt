@@ -88,7 +88,7 @@ object PlaylistMenuUtils {
     fun handleMenuItemClicks(menuItem: MenuItem, mediaManager: MediaManager, playlist: Playlist, callbacks: Callbacks): Boolean {
         when (menuItem.itemId) {
             R.id.playPlaylist -> {
-                MenuUtils.play(mediaManager, playlist.songsObservable.first(emptyList<Song>()), { callbacks.showToast(it) })
+                MenuUtils.play(mediaManager, playlist.songsObservable.first(emptyList<Song>())) { callbacks.showToast(it) }
                 return true
             }
             R.id.playNext -> {

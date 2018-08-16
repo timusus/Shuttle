@@ -179,13 +179,16 @@ public class PlaylistFragment extends BaseFragment {
                                     .toList();
                         })
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(items -> {
-                            if (items.isEmpty()) {
-                                adapter.setItems(Collections.singletonList(new EmptyView(R.string.empty_playlist)));
-                            } else {
-                                adapter.setItems(items);
-                            }
-                        }, error -> LogUtils.logException(TAG, "Error refreshing adapter", error));
+                        .subscribe(
+                                items -> {
+                                    if (items.isEmpty()) {
+                                        adapter.setItems(Collections.singletonList(new EmptyView(R.string.empty_playlist)));
+                                    } else {
+                                        adapter.setItems(items);
+                                    }
+                                },
+                                error -> LogUtils.logException(TAG, "Error refreshing adapter", error)
+                        );
             }
         });
     }

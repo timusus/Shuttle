@@ -196,8 +196,7 @@ public class FolderFragment extends BaseFragment implements
         compositeDisposable.add(Aesthetic.get(getContext())
                 .colorPrimary()
                 .compose(distinctToMainThread())
-                .subscribe(color -> ViewBackgroundAction.create(appBarLayout)
-                        .accept(color), onErrorLogAndRethrow()));
+                .subscribe(color -> ViewBackgroundAction.create(appBarLayout).accept(color), onErrorLogAndRethrow()));
 
         return rootView;
     }
@@ -208,15 +207,17 @@ public class FolderFragment extends BaseFragment implements
 
         if (currentDir == null) {
             disposables.add(Observable.fromCallable(() -> {
-                if (!TextUtils.isEmpty(currentDir)) {
-                    return new File(currentDir);
-                } else {
-                    return fileBrowser.getInitialDir();
-                }
-            }).subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(this::changeDir,
-                            error -> LogUtils.logException(TAG, "Error in onResume", error)));
+                        if (!TextUtils.isEmpty(currentDir)) {
+                            return new File(currentDir);
+                        } else {
+                            return fileBrowser.getInitialDir();
+                        }
+                    }).subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
+                                    this::changeDir,
+                                    error -> LogUtils.logException(TAG, "Error in onResume", error))
+            );
         }
 
         getNavigationController().addBackPressListener(this);
@@ -378,18 +379,21 @@ public class FolderFragment extends BaseFragment implements
                     return items;
                 }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(adaptableItems -> {
-                    if (adapter != null) {
-                        setItemsDisposable = adapter.setItems(adaptableItems);
-                    }
-                    if (breadcrumb != null) {
-                        breadcrumb.changeBreadcrumbPath(currentDir);
-                    }
-                    if (adapter != null) {
-                        changeBreadcrumbPath();
-                    }
-                    updateMenuItems();
-                }, error -> LogUtils.logException(TAG, "Error changing dir", error)));
+                .subscribe(
+                        adaptableItems -> {
+                            if (adapter != null) {
+                                setItemsDisposable = adapter.setItems(adaptableItems);
+                            }
+                            if (breadcrumb != null) {
+                                breadcrumb.changeBreadcrumbPath(currentDir);
+                            }
+                            if (adapter != null) {
+                                changeBreadcrumbPath();
+                            }
+                            updateMenuItems();
+                        },
+                        error -> LogUtils.logException(TAG, "Error changing dir", error))
+        );
     }
 
     public void reload() {
@@ -418,22 +422,24 @@ public class FolderFragment extends BaseFragment implements
             if (folderView.baseFileObject.fileType == FileType.FILE) {
                 FileHelper.getSongList(new File(folderView.baseFileObject.path), false, true)
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(songs -> {
-                            int index = -1;
-                            for (int i = 0, songsSize = songs.size(); i < songsSize; i++) {
-                                Song song = songs.get(i);
-                                if (song.path.contains(folderView.baseFileObject.path)) {
-                                    index = i;
-                                    break;
-                                }
-                            }
-                            mediaManager.playAll(songs, index, true, message -> {
-                                if (isAdded() && getContext() != null) {
-                                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-                                }
-                                return Unit.INSTANCE;
-                            });
-                        }, error -> LogUtils.logException(TAG, "Error playing all", error));
+                        .subscribe(
+                                songs -> {
+                                    int index = -1;
+                                    for (int i = 0, songsSize = songs.size(); i < songsSize; i++) {
+                                        Song song = songs.get(i);
+                                        if (song.path.contains(folderView.baseFileObject.path)) {
+                                            index = i;
+                                            break;
+                                        }
+                                    }
+                                    mediaManager.playAll(songs, index, true, message -> {
+                                        if (isAdded() && getContext() != null) {
+                                            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                                        }
+                                        return Unit.INSTANCE;
+                                    });
+                                },
+                                error -> LogUtils.logException(TAG, "Error playing all", error));
             } else {
                 changeDir(new File(folderView.baseFileObject.path));
             }

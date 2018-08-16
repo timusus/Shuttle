@@ -48,7 +48,6 @@ import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import io.fabric.sdk.android.Fabric;
 import io.reactivex.Completable;
-import io.reactivex.CompletableTransformer;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 import java.io.File;
@@ -183,6 +182,8 @@ public class ShuttleApplication extends Application {
                             ),
                     query);
         })
+                .doOnError(throwable -> LogUtils.logException(TAG, "Error updating user selected artwork", throwable))
+                .onErrorComplete()
                 .subscribeOn(Schedulers.io())
                 .subscribe();
 
@@ -213,14 +214,6 @@ public class ShuttleApplication extends Application {
                 .onErrorComplete()
                 .subscribeOn(Schedulers.io())
                 .subscribe();
-    }
-
-    CompletableTransformer doOnDelay(long delay, TimeUnit timeUnit) {
-        return upstream -> Completable.timer(delay, timeUnit)
-                .andThen(Completable.defer(() -> upstream))
-                .doOnError(throwable -> LogUtils.logException(TAG, "Failed to delete old resources", throwable))
-                .onErrorComplete()
-                .subscribeOn(Schedulers.io());
     }
 
     public RefWatcher getRefWatcher() {

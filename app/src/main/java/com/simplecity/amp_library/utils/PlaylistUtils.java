@@ -196,14 +196,17 @@ public class PlaylistUtils {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(file -> {
-                    progressDialog.dismiss();
-                    if (file != null) {
-                        Toast.makeText(context, String.format(context.getString(R.string.playlist_saved), file.getPath()), Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(context, R.string.playlist_save_failed, Toast.LENGTH_SHORT).show();
-                    }
-                }, error -> LogUtils.logException(TAG, "Error saving m3u playlist", error));
+                .subscribe(
+                        file -> {
+                            progressDialog.dismiss();
+                            if (file != null) {
+                                Toast.makeText(context, String.format(context.getString(R.string.playlist_saved), file.getPath()), Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(context, R.string.playlist_save_failed, Toast.LENGTH_SHORT).show();
+                            }
+                        },
+                        error -> LogUtils.logException(TAG, "Error saving m3u playlist", error)
+                );
     }
 
     /**
@@ -218,7 +221,11 @@ public class PlaylistUtils {
     }
 
     public static void createPlaylistMenu(SubMenu subMenu) {
-        createPlaylistMenu(subMenu, false).subscribe();
+        createPlaylistMenu(subMenu, false).subscribe(
+                () -> {
+                },
+                throwable -> LogUtils.logException(TAG, "createPlaylistMenu error", throwable)
+        );
     }
 
     public static Completable createUpdatingPlaylistMenu(SubMenu subMenu) {
@@ -271,12 +278,15 @@ public class PlaylistUtils {
         ShuttleUtils.getSongsForFileObjects(fileObjects)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(songs -> {
-                    if (progressDialog != null && progressDialog.isShowing()) {
-                        progressDialog.dismiss();
-                    }
-                    addToPlaylist(context, playlist, songs, insertCallback);
-                }, error -> LogUtils.logException(TAG, "Error getting songs for file object", error));
+                .subscribe(
+                        songs -> {
+                            if (progressDialog != null && progressDialog.isShowing()) {
+                                progressDialog.dismiss();
+                            }
+                            addToPlaylist(context, playlist, songs, insertCallback);
+                        },
+                        error -> LogUtils.logException(TAG, "Error getting songs for file object", error)
+                );
     }
 
     /**
@@ -297,77 +307,79 @@ public class PlaylistUtils {
 
         playlist.getSongsObservable().first(Collections.emptyList())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(existingSongs -> {
+                .subscribe(
+                        existingSongs -> {
+                            if (!SettingsManager.getInstance().ignoreDuplicates()) {
 
-                    if (!SettingsManager.getInstance().ignoreDuplicates()) {
+                                List<Song> duplicates = Stream.of(existingSongs)
+                                        .filter(mutableSongList::contains)
+                                        .distinct()
+                                        .toList();
 
-                        List<Song> duplicates = Stream.of(existingSongs)
-                                .filter(mutableSongList::contains)
-                                .distinct()
-                                .toList();
+                                if (!duplicates.isEmpty()) {
 
-                        if (!duplicates.isEmpty()) {
+                                    @SuppressLint("InflateParams")
+                                    View customView = LayoutInflater.from(context).inflate(R.layout.dialog_playlist_duplicates, null);
+                                    TextView messageText = customView.findViewById(R.id.textView);
+                                    CheckBox applyToAll = customView.findViewById(R.id.applyToAll);
+                                    CheckBox alwaysAdd = customView.findViewById(R.id.alwaysAdd);
 
-                            @SuppressLint("InflateParams")
-                            View customView = LayoutInflater.from(context).inflate(R.layout.dialog_playlist_duplicates, null);
-                            TextView messageText = customView.findViewById(R.id.textView);
-                            CheckBox applyToAll = customView.findViewById(R.id.applyToAll);
-                            CheckBox alwaysAdd = customView.findViewById(R.id.alwaysAdd);
+                                    if (duplicates.size() <= 1) {
+                                        applyToAll.setVisibility(View.GONE);
+                                        applyToAll.setChecked(false);
+                                    }
 
-                            if (duplicates.size() <= 1) {
-                                applyToAll.setVisibility(View.GONE);
-                                applyToAll.setChecked(false);
+                                    messageText.setText(getPlaylistRemoveString(context, duplicates.get(0)));
+                                    applyToAll.setText(getApplyCheckboxString(context, duplicates.size()));
+
+                                    DialogUtils.getBuilder(context)
+                                            .title(R.string.dialog_title_playlist_duplicates)
+                                            .customView(customView, false)
+                                            .positiveText(R.string.dialog_button_playlist_duplicate_add)
+                                            .autoDismiss(false)
+                                            .onPositive((dialog, which) -> {
+                                                //If we've only got one item, or we're applying it to all items
+                                                if (duplicates.size() != 1 && !applyToAll.isChecked()) {
+                                                    //If we're 'adding' this song, we remove it from the 'duplicates' list
+                                                    duplicates.remove(0);
+                                                    messageText.setText(getPlaylistRemoveString(context, duplicates.get(0)));
+                                                    applyToAll.setText(getApplyCheckboxString(context, duplicates.size()));
+                                                } else {
+                                                    //Add all songs to the playlist
+                                                    insertPlaylistItems(context, playlist, mutableSongList, existingSongs.size(), insertCallback);
+                                                    SettingsManager.getInstance().setIgnoreDuplicates(alwaysAdd.isChecked());
+                                                    dialog.dismiss();
+                                                }
+                                            })
+                                            .negativeText(R.string.dialog_button_playlist_duplicate_skip)
+                                            .onNegative((dialog, which) -> {
+                                                //If we've only got one item, or we're applying it to all items
+                                                if (duplicates.size() != 1 && !applyToAll.isChecked()) {
+                                                    //If we're 'skipping' this song, we remove it from the 'duplicates' list,
+                                                    // and from the ids to be added
+                                                    mutableSongList.remove(duplicates.remove(0));
+                                                    messageText.setText(getPlaylistRemoveString(context, duplicates.get(0)));
+                                                    applyToAll.setText(getApplyCheckboxString(context, duplicates.size()));
+                                                } else {
+                                                    //Remove duplicates from our set of ids
+                                                    Stream.of(duplicates)
+                                                            .filter(mutableSongList::contains)
+                                                            .forEach(mutableSongList::remove);
+                                                    insertPlaylistItems(context, playlist, mutableSongList, existingSongs.size(), insertCallback);
+                                                    SettingsManager.getInstance().setIgnoreDuplicates(alwaysAdd.isChecked());
+                                                    dialog.dismiss();
+                                                }
+                                            })
+                                            .show();
+                                } else {
+                                    insertPlaylistItems(context, playlist, mutableSongList, existingSongs.size(), insertCallback);
+                                }
+                            } else {
+                                insertPlaylistItems(context, playlist, mutableSongList, existingSongs.size(), insertCallback);
                             }
-
-                            messageText.setText(getPlaylistRemoveString(context, duplicates.get(0)));
-                            applyToAll.setText(getApplyCheckboxString(context, duplicates.size()));
-
-                            DialogUtils.getBuilder(context)
-                                    .title(R.string.dialog_title_playlist_duplicates)
-                                    .customView(customView, false)
-                                    .positiveText(R.string.dialog_button_playlist_duplicate_add)
-                                    .autoDismiss(false)
-                                    .onPositive((dialog, which) -> {
-                                        //If we've only got one item, or we're applying it to all items
-                                        if (duplicates.size() != 1 && !applyToAll.isChecked()) {
-                                            //If we're 'adding' this song, we remove it from the 'duplicates' list
-                                            duplicates.remove(0);
-                                            messageText.setText(getPlaylistRemoveString(context, duplicates.get(0)));
-                                            applyToAll.setText(getApplyCheckboxString(context, duplicates.size()));
-                                        } else {
-                                            //Add all songs to the playlist
-                                            insertPlaylistItems(context, playlist, mutableSongList, existingSongs.size(), insertCallback);
-                                            SettingsManager.getInstance().setIgnoreDuplicates(alwaysAdd.isChecked());
-                                            dialog.dismiss();
-                                        }
-                                    })
-                                    .negativeText(R.string.dialog_button_playlist_duplicate_skip)
-                                    .onNegative((dialog, which) -> {
-                                        //If we've only got one item, or we're applying it to all items
-                                        if (duplicates.size() != 1 && !applyToAll.isChecked()) {
-                                            //If we're 'skipping' this song, we remove it from the 'duplicates' list,
-                                            // and from the ids to be added
-                                            mutableSongList.remove(duplicates.remove(0));
-                                            messageText.setText(getPlaylistRemoveString(context, duplicates.get(0)));
-                                            applyToAll.setText(getApplyCheckboxString(context, duplicates.size()));
-                                        } else {
-                                            //Remove duplicates from our set of ids
-                                            Stream.of(duplicates)
-                                                    .filter(mutableSongList::contains)
-                                                    .forEach(mutableSongList::remove);
-                                            insertPlaylistItems(context, playlist, mutableSongList, existingSongs.size(), insertCallback);
-                                            SettingsManager.getInstance().setIgnoreDuplicates(alwaysAdd.isChecked());
-                                            dialog.dismiss();
-                                        }
-                                    })
-                                    .show();
-                        } else {
-                            insertPlaylistItems(context, playlist, mutableSongList, existingSongs.size(), insertCallback);
-                        }
-                    } else {
-                        insertPlaylistItems(context, playlist, mutableSongList, existingSongs.size(), insertCallback);
-                    }
-                }, error -> LogUtils.logException(TAG, "PlaylistUtils: Error determining existing songs", error));
+                        },
+                        error -> LogUtils.logException(TAG, "PlaylistUtils: Error determining existing songs", error)
+                );
     }
 
     private static void insertPlaylistItems(@NonNull Context context,
@@ -461,11 +473,6 @@ public class PlaylistUtils {
             playlist = new Playlist(Playlist.Type.USER_CREATED, id, name, true, false, true, true, true);
         } else {
             Crashlytics.log(String.format("Failed to create playlist. Name: %s, id: %d", name, id));
-            DataManager.getInstance().getPlaylistsRelay().first(Collections.emptyList())
-                    .subscribe(
-                            playlists -> Crashlytics.log("Existing playlists: " + playlists),
-                            throwable -> {
-                            });
         }
 
         return playlist;
@@ -494,7 +501,11 @@ public class PlaylistUtils {
                     ShuttleApplication.getInstance().getContentResolver().delete(uri, null, null);
                 }))
                 .subscribeOn(Schedulers.io())
-                .subscribe();
+                .subscribe(
+                        () -> {
+                        },
+                        throwable -> LogUtils.logException(TAG, "clearFavorites error", throwable)
+                );
     }
 
     @SuppressLint("CheckResult")
@@ -502,21 +513,24 @@ public class PlaylistUtils {
         isFavorite(song)
                 .first(false)
                 .subscribeOn(Schedulers.io())
-                .subscribe(favorite -> {
-                    if (!favorite) {
-                        addToFavorites(song, success -> {
-                            if (success) {
-                                isFavorite.accept(true);
+                .subscribe(
+                        favorite -> {
+                            if (!favorite) {
+                                addToFavorites(song, success -> {
+                                    if (success) {
+                                        isFavorite.accept(true);
+                                    }
+                                });
+                            } else {
+                                removeFromFavorites(song, success -> {
+                                    if (success) {
+                                        isFavorite.accept(false);
+                                    }
+                                });
                             }
-                        });
-                    } else {
-                        removeFromFavorites(song, success -> {
-                            if (success) {
-                                isFavorite.accept(false);
-                            }
-                        });
-                    }
-                }, error -> LogUtils.logException(TAG, "PlaylistUtils: Error toggling favorites", error));
+                        },
+                        error -> LogUtils.logException(TAG, "PlaylistUtils: Error toggling favorites", error)
+                );
     }
 
     /**
@@ -547,7 +561,8 @@ public class PlaylistUtils {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         success,
-                        throwable -> LogUtils.logException(TAG, "Error adding to playlist", throwable));
+                        throwable -> LogUtils.logException(TAG, "Error adding to playlist", throwable)
+                );
     }
 
     @SuppressLint("CheckResult")
@@ -559,7 +574,8 @@ public class PlaylistUtils {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         playlist -> removeFromPlaylist(playlist, song, success),
-                        error -> LogUtils.logException(TAG, "PlaylistUtils: Error Removing from favorites", error));
+                        error -> LogUtils.logException(TAG, "PlaylistUtils: Error Removing from favorites", error)
+                );
     }
 
     @SuppressLint("CheckResult")
@@ -581,7 +597,8 @@ public class PlaylistUtils {
                                 success.accept(numTracksRemoved > 0);
                             }
                         },
-                        error -> LogUtils.logException(TAG, "PlaylistUtils: Error Removing from favorites", error));
+                        error -> LogUtils.logException(TAG, "PlaylistUtils: Error Removing from favorites", error)
+                );
     }
 
     public static void showPlaylistToast(Context context, int numTracksAdded) {
@@ -609,12 +626,15 @@ public class PlaylistUtils {
         Observable.fromCallable(() -> makePlaylistName(context))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(name -> {
-                    editText.setText(name);
-                    if (!TextUtils.isEmpty(name)) {
-                        editText.setSelection(name.length());
-                    }
-                }, error -> LogUtils.logException(TAG, "PlaylistUtils: Error Setting playlist name", error));
+                .subscribe(
+                        name -> {
+                            editText.setText(name);
+                            if (!TextUtils.isEmpty(name)) {
+                                editText.setSelection(name.length());
+                            }
+                        },
+                        error -> LogUtils.logException(TAG, "PlaylistUtils: Error Setting playlist name", error)
+                );
 
         MaterialDialog.Builder builder = DialogUtils.getBuilder(context)
                 .customView(customView, false)
@@ -626,26 +646,29 @@ public class PlaylistUtils {
                         idForPlaylistObservable(context, name)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(id -> {
-                                    Uri uri;
-                                    if (id >= 0) {
-                                        uri = ContentUris.withAppendedId(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, id);
-                                        clearPlaylist(id);
-                                    } else {
-                                        ContentValues values = new ContentValues(1);
-                                        values.put(MediaStore.Audio.Playlists.NAME, name);
-                                        try {
-                                            uri = context.getContentResolver().insert(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, values);
-                                        } catch (IllegalArgumentException | NullPointerException e) {
-                                            Toast.makeText(context, R.string.dialog_create_playlist_error, Toast.LENGTH_LONG).show();
-                                            uri = null;
-                                        }
-                                    }
+                                .subscribe(
+                                        id -> {
+                                            Uri uri;
+                                            if (id >= 0) {
+                                                uri = ContentUris.withAppendedId(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, id);
+                                                clearPlaylist(id);
+                                            } else {
+                                                ContentValues values = new ContentValues(1);
+                                                values.put(MediaStore.Audio.Playlists.NAME, name);
+                                                try {
+                                                    uri = context.getContentResolver().insert(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, values);
+                                                } catch (IllegalArgumentException | NullPointerException e) {
+                                                    Toast.makeText(context, R.string.dialog_create_playlist_error, Toast.LENGTH_LONG).show();
+                                                    uri = null;
+                                                }
+                                            }
 
-                                    if (uri != null) {
-                                        listener.onSave(new Playlist(Playlist.Type.USER_CREATED, Long.valueOf(uri.getLastPathSegment()), name, true, false, true, true, true));
-                                    }
-                                }, error -> LogUtils.logException(TAG, "PlaylistUtils: Error Saving playlist", error));
+                                            if (uri != null) {
+                                                listener.onSave(new Playlist(Playlist.Type.USER_CREATED, Long.valueOf(uri.getLastPathSegment()), name, true, false, true, true, true));
+                                            }
+                                        },
+                                        error -> LogUtils.logException(TAG, "PlaylistUtils: Error Saving playlist", error)
+                                );
                     }
                 })
                 .negativeText(R.string.cancel);
@@ -671,13 +694,16 @@ public class PlaylistUtils {
                     idForPlaylistObservable(context, newText)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(id -> {
-                                if (id >= 0) {
-                                    ((MaterialDialog) dialog).getActionButton(DialogAction.POSITIVE).setText(R.string.create_playlist_overwrite_text);
-                                } else {
-                                    ((MaterialDialog) dialog).getActionButton(DialogAction.POSITIVE).setText(R.string.create_playlist_create_text);
-                                }
-                            }, error -> LogUtils.logException(TAG, "PlaylistUtils: Error handling text change", error));
+                            .subscribe(
+                                    id -> {
+                                        if (id >= 0) {
+                                            ((MaterialDialog) dialog).getActionButton(DialogAction.POSITIVE).setText(R.string.create_playlist_overwrite_text);
+                                        } else {
+                                            ((MaterialDialog) dialog).getActionButton(DialogAction.POSITIVE).setText(R.string.create_playlist_create_text);
+                                        }
+                                    },
+                                    error -> LogUtils.logException(TAG, "PlaylistUtils: Error handling text change", error)
+                            );
                 }
             }
 
