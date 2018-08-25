@@ -15,7 +15,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
-import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
@@ -353,11 +352,13 @@ public class ShuttleApplication extends Application {
         return DataManager.getInstance()
                 .getSongsObservable(value -> value.year < 1)
                 .first(Collections.emptyList())
-                .map(songs -> Stream.of(songs)
-                        .flatMap(song -> {
+                .flatMapObservable(Observable::fromIterable)
+                .concatMap(song -> Observable.just(song).delay(50, TimeUnit.MILLISECONDS))
+                .flatMap(song -> {
                             if (!TextUtils.isEmpty(song.path)) {
                                 File file = new File(song.path);
-                                if (file.exists()) {
+                                // Don't bother checking files > 100mb, uses too much memory.
+                                if (file.exists() && file.length() < 100 * 1024 * 1024) {
                                     try {
                                         AudioFile audioFile = AudioFileIO.read(file);
                                         Tag tag = audioFile.getTag();
@@ -369,22 +370,24 @@ public class ShuttleApplication extends Application {
                                                 ContentValues contentValues = new ContentValues();
                                                 contentValues.put(MediaStore.Audio.Media.YEAR, yearInt);
 
-                                                return Stream.of(ContentProviderOperation
+                                                return Observable.just(ContentProviderOperation
                                                         .newUpdate(ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, song.id))
                                                         .withValues(contentValues)
                                                         .build());
                                             }
                                         }
-                                    } catch (CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException e) {
-                                        e.printStackTrace();
+                                    } catch (CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException | OutOfMemoryError e) {
+                                        LogUtils.logException(TAG, "Failed to repair media store year", e);
                                     }
                                 }
                             }
-                            return Stream.empty();
-                        })
-                        .collect(Collectors.toCollection(ArrayList::new))
-                )
-                .doOnSuccess(contentProviderOperations -> getContentResolver().applyBatch(MediaStore.AUTHORITY, contentProviderOperations))
+                            return Observable.empty();
+                        }
+
+                ).toList()
+                .doOnSuccess(contentProviderOperations -> {
+                    getContentResolver().applyBatch(MediaStore.AUTHORITY, new ArrayList<>(contentProviderOperations));
+                })
                 .flatMapCompletable(songs -> Completable.complete());
     }
 
