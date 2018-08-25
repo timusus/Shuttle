@@ -18,6 +18,7 @@ import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.annimon.stream.function.Supplier;
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Song;
@@ -123,6 +124,9 @@ public class DeleteDialog extends DialogFragment implements SafManager.SafDialog
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ShuttleApplication.getInstance().getAppComponent()
+                .inject(this);
+
         deleteMessageId = getArguments().getInt(ARG_DELETE_MESSAGE_ID);
 
         type = getArguments().getInt(ARG_TYPE);
@@ -144,6 +148,7 @@ public class DeleteDialog extends DialogFragment implements SafManager.SafDialog
         }
     }
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
