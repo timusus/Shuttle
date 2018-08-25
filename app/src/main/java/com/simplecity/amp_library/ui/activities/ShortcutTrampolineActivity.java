@@ -29,7 +29,7 @@ public class ShortcutTrampolineActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, MusicService.class);
                 intent.setAction(action);
                 startService(intent);
-                AnalyticsManager.logMusicServiceStarted(TAG);
+                AnalyticsManager.dropBreadcrumb(TAG, "Service started");
                 finish();
                 break;
             case ShortcutCommands.FOLDERS:

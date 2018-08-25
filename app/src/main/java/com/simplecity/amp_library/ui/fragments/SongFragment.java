@@ -24,6 +24,7 @@ import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
 import com.simplecity.amp_library.ui.modelviews.ShuffleView;
 import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
+import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
@@ -169,9 +170,11 @@ public class SongFragment extends BaseFragment implements
                                         items -> {
 
                                             if (items.isEmpty()) {
+                                                AnalyticsManager.dropBreadcrumb(TAG, "setItems() (empty)");
                                                 adapter.setItems(Collections.singletonList(new EmptyView(R.string.empty_songlist)));
                                             } else {
                                                 items.add(0, shuffleView);
+                                                AnalyticsManager.dropBreadcrumb(TAG, "setItems()");
                                                 adapter.setItems(items);
                                             }
 

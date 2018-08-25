@@ -74,6 +74,8 @@ public class MainActivity extends BaseCastActivity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        AnalyticsManager.dropBreadcrumb(TAG, "onCreate()");
+
         ShuttleApplication.getInstance().getAppComponent().plus(new ActivityModule(this)).inject(this);
 
         // If we haven't set any defaults, do that now
@@ -120,6 +122,7 @@ public class MainActivity extends BaseCastActivity implements
     @Override
     public void onResume() {
         super.onResume();
+        AnalyticsManager.dropBreadcrumb(TAG, "onCreate()");
 
         showChangelogDialog();
     }
@@ -127,6 +130,7 @@ public class MainActivity extends BaseCastActivity implements
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
         super.onServiceConnected(name, service);
+        AnalyticsManager.dropBreadcrumb(TAG, "onServiceConnected()");
 
         handlePendingPlaybackRequest();
     }
@@ -136,6 +140,20 @@ public class MainActivity extends BaseCastActivity implements
         super.onNewIntent(intent);
 
         handleIntent(intent);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        AnalyticsManager.dropBreadcrumb(TAG, "onPause()");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        AnalyticsManager.dropBreadcrumb(TAG, "onDestroy()");
     }
 
     private void handleIntent(Intent intent) {

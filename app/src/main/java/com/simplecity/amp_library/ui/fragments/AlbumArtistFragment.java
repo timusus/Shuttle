@@ -28,6 +28,7 @@ import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
 import com.simplecity.amp_library.ui.recyclerview.GridDividerDecoration;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
+import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
@@ -215,8 +216,10 @@ public class AlbumArtistFragment extends BaseFragment implements
                                 items -> {
 
                                     if (items.isEmpty()) {
+                                        AnalyticsManager.dropBreadcrumb(TAG, "setItems() (empty)");
                                         adapter.setItems(Collections.singletonList(new EmptyView(R.string.empty_artists)));
                                     } else {
+                                        AnalyticsManager.dropBreadcrumb(TAG, "setItems()");
                                         adapter.setItems(items);
                                     }
 

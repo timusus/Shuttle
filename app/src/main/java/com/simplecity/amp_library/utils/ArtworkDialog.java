@@ -108,6 +108,7 @@ public class ArtworkDialog {
                 .filter(viewModel -> viewModel instanceof ArtworkView)
                 .forEach(viewModel -> ((ArtworkView) viewModel).setListener(listener));
 
+        AnalyticsManager.dropBreadcrumb(TAG, "setItems()");
         adapter.setItems(viewModels);
 
         Observable.fromCallable(artworkProvider::getFolderArtworkFiles)

@@ -32,6 +32,7 @@ import com.simplecity.amp_library.ui.modelviews.HorizontalRecyclerView;
 import com.simplecity.amp_library.ui.modelviews.SuggestedHeaderView;
 import com.simplecity.amp_library.ui.modelviews.SuggestedSongView;
 import com.simplecity.amp_library.ui.views.SuggestedDividerDecoration;
+import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
@@ -246,6 +247,7 @@ public class SuggestedFragment extends BaseFragment implements
                         Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(b.playCount, a.playCount));
                         SongClickListener songClickListener = new SongClickListener(songs);
 
+                        AnalyticsManager.dropBreadcrumb(TAG, "mostPlayedRecyclerView.setItems()");
                         mostPlayedRecyclerView.viewModelAdapter.setItems(Stream.of(songs)
                                 .map(song -> {
                                     SuggestedSongView suggestedSongView = new SuggestedSongView(song, requestManager);
@@ -330,6 +332,7 @@ public class SuggestedFragment extends BaseFragment implements
                         viewModels.add(favoriteRecyclerView);
 
                         SongClickListener songClickListener = new SongClickListener(songs);
+                        AnalyticsManager.dropBreadcrumb(TAG, "favoriteRecyclerView.setItems()");
                         favoriteRecyclerView.viewModelAdapter.setItems(Stream.of(songs).map(song -> {
                             SuggestedSongView suggestedSongView = new SuggestedSongView(song, requestManager);
                             suggestedSongView.setClickListener(songClickListener);
@@ -396,8 +399,10 @@ public class SuggestedFragment extends BaseFragment implements
                         .subscribe(
                                 adaptableItems -> {
                                     if (adaptableItems.isEmpty()) {
+                                        AnalyticsManager.dropBreadcrumb(TAG, "refreshAdapterItems() (empty)");
                                         setItemsDisposable = adapter.setItems(Collections.singletonList((new EmptyView(R.string.empty_suggested))));
                                     } else {
+                                        AnalyticsManager.dropBreadcrumb(TAG, "refreshAdapterItems()");
                                         setItemsDisposable = adapter.setItems(adaptableItems);
                                     }
                                 },

@@ -60,6 +60,7 @@ import com.simplecity.amp_library.ui.modelviews.SubheaderView;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.ui.views.ContextualToolbarHost;
 import com.simplecity.amp_library.utils.ActionBarUtils;
+import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.Operators;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
@@ -457,6 +458,7 @@ public class GenreDetailFragment extends BaseFragment implements
             if (setHorizontalItemsDisposable != null) {
                 setHorizontalItemsDisposable.dispose();
             }
+            AnalyticsManager.dropBreadcrumb(TAG, "horizontalRecyclerView.setItems()");
             setHorizontalItemsDisposable = horizontalRecyclerView.setItems(Stream.of(data.first)
                     .map(album -> {
                         HorizontalAlbumView horizontalAlbumView = new HorizontalAlbumView(album, requestManager);

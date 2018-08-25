@@ -13,6 +13,8 @@ import java.util.WeakHashMap;
 
 public class MusicServiceConnectionUtils {
 
+    private static final String TAG = "MusicServiceConnectionU";
+
     public static LocalBinder serviceBinder = null;
 
     private static final WeakHashMap<Context, ServiceBinder> connectionMap = new WeakHashMap<>();
@@ -32,7 +34,7 @@ public class MusicServiceConnectionUtils {
             realActivity = (Activity) context;
         }
         final ContextWrapper contextWrapper = new ContextWrapper(realActivity);
-        AnalyticsManager.logMusicServiceStarted("MusicServiceConnectionUtils. Activity: " + realActivity.getClass().getSimpleName());
+        AnalyticsManager.dropBreadcrumb(TAG, "Service started. Activity: " + realActivity.getClass().getSimpleName());
         contextWrapper.startService(new Intent(contextWrapper, MusicService.class));
         final ServiceBinder binder = new ServiceBinder(callback);
         if (contextWrapper.bindService(new Intent().setClass(contextWrapper, MusicService.class), binder, 0)) {

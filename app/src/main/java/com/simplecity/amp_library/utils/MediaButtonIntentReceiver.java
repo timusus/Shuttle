@@ -27,6 +27,8 @@ import com.simplecity.amp_library.ui.activities.MainActivity;
  */
 public class MediaButtonIntentReceiver extends WakefulBroadcastReceiver {
 
+    private static final String TAG = "MediaButtonIntentReceiv";
+
     private static final int MSG_LONGPRESS_TIMEOUT = 1;
     private static final int MSG_HEADSET_DOUBLE_CLICK_TIMEOUT = 2;
 
@@ -228,10 +230,10 @@ public class MediaButtonIntentReceiver extends WakefulBroadcastReceiver {
         intent.putExtra(MediaButtonCommand.FROM_MEDIA_BUTTON, true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            AnalyticsManager.logMusicServiceStarted("MediaButtonIntentReceiver (foreground service). Command: " + command);
+            AnalyticsManager.dropBreadcrumb(TAG, "Service started. (foreground) Command: " + command);
             context.startForegroundService(intent);
         } else {
-            AnalyticsManager.logMusicServiceStarted("MediaButtonIntentReceiver (wakeful service). Command: " + command);
+            AnalyticsManager.dropBreadcrumb(TAG, "Service started. (wakeful) Command: " + command);
             startWakefulService(context, intent);
         }
     }

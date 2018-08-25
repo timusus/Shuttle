@@ -16,12 +16,15 @@ import com.simplecity.amp_library.model.CategoryItem;
 import com.simplecity.amp_library.ui.fragments.LibraryController;
 import com.simplecity.amp_library.ui.modelviews.TabViewModel;
 import com.simplecity.amp_library.ui.recyclerview.ItemTouchHelperCallback;
+import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import java.util.List;
 
 public class TabChooserDialog {
+
+    private static final String TAG = "TabChooserDialog";
 
     private TabChooserDialog() {
         //no instance
@@ -65,6 +68,8 @@ public class TabChooserDialog {
                     return tabViewModel;
                 })
                 .collect(Collectors.toList());
+
+        AnalyticsManager.dropBreadcrumb(TAG, "setItems()");
         adapter.setItems(items);
 
         RecyclerView recyclerView = new RecyclerView(activity);

@@ -50,6 +50,7 @@ import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
 import com.simplecity.amp_library.ui.modelviews.SongView;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.ui.views.ContextualToolbarHost;
+import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.Operators;
 import com.simplecity.amp_library.utils.PlaylistUtils;
@@ -246,6 +247,7 @@ public class SearchFragment extends BaseFragment implements
 
     @Override
     public void setLoading(boolean loading) {
+        AnalyticsManager.dropBreadcrumb(TAG, "setLoading..");
         adapter.setItems(Collections.singletonList(loadingView));
     }
 
@@ -291,6 +293,7 @@ public class SearchFragment extends BaseFragment implements
             viewModels.add(emptyView);
         }
 
+        AnalyticsManager.dropBreadcrumb(TAG, "setData..");
         setDataDisposable = adapter.setItems(viewModels, new CompletionListUpdateCallbackAdapter() {
             @Override
             public void onComplete() {

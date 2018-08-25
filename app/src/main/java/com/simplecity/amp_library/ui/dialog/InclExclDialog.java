@@ -14,6 +14,7 @@ import com.simplecity.amp_library.model.InclExclItem;
 import com.simplecity.amp_library.sql.databases.InclExclHelper;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.InclExclView;
+import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
@@ -65,8 +66,10 @@ public class InclExclDialog {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(inclExclViews -> {
                     if (inclExclViews.size() == 0) {
+                        AnalyticsManager.dropBreadcrumb(TAG, "getDialog setData (empty)");
                         inclExclAdapter.setItems(Collections.singletonList(new EmptyView(getItemsEmptyResId(type))));
                     } else {
+                        AnalyticsManager.dropBreadcrumb(TAG, "getDialog setData");
                         inclExclAdapter.setItems(inclExclViews);
                     }
                 }, error -> LogUtils.logException(TAG, "Error setting incl/excl items", error));

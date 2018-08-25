@@ -40,6 +40,7 @@ import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
 import com.simplecity.amp_library.ui.views.BreadcrumbItem;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.ui.views.ThemedStatusBarView;
+import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.ContextualToolbarHelper;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.FileBrowser;
@@ -377,6 +378,7 @@ public class FolderFragment extends BaseFragment implements
                 .subscribe(
                         adaptableItems -> {
                             if (adapter != null) {
+                                AnalyticsManager.dropBreadcrumb(TAG, "setItems()");
                                 setItemsDisposable = adapter.setItems(adaptableItems);
                             }
                             if (breadcrumb != null) {

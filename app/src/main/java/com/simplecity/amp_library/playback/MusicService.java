@@ -32,6 +32,7 @@ import com.simplecity.amp_library.playback.constants.ShortcutCommands;
 import com.simplecity.amp_library.playback.constants.WidgetManager;
 import com.simplecity.amp_library.services.Equalizer;
 import com.simplecity.amp_library.ui.queue.QueueItem;
+import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MediaButtonIntentReceiver;
 import com.simplecity.amp_library.utils.PlaylistUtils;
@@ -97,6 +98,8 @@ public class MusicService extends MediaBrowserServiceCompat {
     public void onCreate() {
         super.onCreate();
 
+        AnalyticsManager.dropBreadcrumb(TAG, "onCreate()");
+
         mPackageValidator = new PackageValidator(this);
 
         queueManager = new QueueManager(musicServiceCallbacks);
@@ -145,6 +148,8 @@ public class MusicService extends MediaBrowserServiceCompat {
 
     @Override
     public IBinder onBind(final Intent intent) {
+
+        AnalyticsManager.dropBreadcrumb(TAG, "onBind()");
 
         cancelShutdown();
         serviceInUse = true;
@@ -229,6 +234,9 @@ public class MusicService extends MediaBrowserServiceCompat {
 
     @Override
     public void onDestroy() {
+        AnalyticsManager.dropBreadcrumb(TAG, "onDestroy()");
+
+
         saveState(true);
 
         //Shutdown the EQ
@@ -263,7 +271,10 @@ public class MusicService extends MediaBrowserServiceCompat {
 
         if (intent != null) {
             final String action = intent.getAction();
+
             String cmd = intent.getStringExtra("command");
+
+            AnalyticsManager.dropBreadcrumb(TAG, String.format("onStartCommand() Action: %s, Command: %s", action, cmd));
 
             if (MediaButtonCommand.NEXT.equals(cmd) || ServiceCommand.NEXT_ACTION.equals(action)) {
                 gotoNext(true);
@@ -333,6 +344,8 @@ public class MusicService extends MediaBrowserServiceCompat {
         public void onReceive(final Context context, final Intent intent) {
             final String action = intent.getAction();
             final String command = intent.getStringExtra("command");
+
+            AnalyticsManager.dropBreadcrumb(TAG, String.format("onReceive() Action: %s, Command: %s", action, command));
 
             if (MediaButtonCommand.NEXT.equals(command) || ServiceCommand.NEXT_ACTION.equals(action)) {
                 gotoNext(true);

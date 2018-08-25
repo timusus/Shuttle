@@ -16,6 +16,7 @@ import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.ui.adapters.SectionedAdapter;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.GenreView;
+import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
@@ -135,8 +136,10 @@ public class GenreFragment extends BaseFragment implements GenreView.ClickListen
                         .subscribe(
                                 items -> {
                                     if (items.isEmpty()) {
+                                        AnalyticsManager.dropBreadcrumb(TAG, "setItems() (empty)");
                                         adapter.setItems(Collections.singletonList(new EmptyView(R.string.empty_genres)));
                                     } else {
+                                        AnalyticsManager.dropBreadcrumb(TAG, "setItems()");
                                         adapter.setItems(items);
                                     }
                                 },

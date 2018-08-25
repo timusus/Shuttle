@@ -122,19 +122,11 @@ public class AnalyticsManager {
                 .logEvent(FirebaseAnalytics.Event.VIEW_ITEM, params);
     }
 
-    public static void logMusicServiceStarted(String from) {
+    public static void dropBreadcrumb(String tag, String breadCrumb) {
         if (!analyticsEnabled()) {
             return;
         }
 
-        CrashlyticsCore.getInstance().log(String.format("Service started from: %s", from));
-    }
-
-    public static void logMusicServiceStartForeground() {
-        if (!analyticsEnabled()) {
-            return;
-        }
-
-        CrashlyticsCore.getInstance().log("MusicService StartForeground called. ");
+        CrashlyticsCore.getInstance().log(String.format("%s | %s", tag, breadCrumb));
     }
 }
