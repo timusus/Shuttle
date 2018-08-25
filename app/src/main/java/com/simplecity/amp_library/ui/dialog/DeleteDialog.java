@@ -152,8 +152,6 @@ public class DeleteDialog extends DialogFragment implements SafManager.SafDialog
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        String stringToFormat = getString(deleteMessageId);
-
         List<String> names = new ArrayList<>();
         switch (type) {
             case Type.ARTISTS:
@@ -167,17 +165,18 @@ public class DeleteDialog extends DialogFragment implements SafManager.SafDialog
                 break;
         }
 
-        String nameString;
-        if (names.size() > 1) {
-            stringToFormat = getString(deleteMessageId);
-            nameString = Stream.of(names)
-                    .map(itemName -> "\n\u2022 " + itemName)
-                    .collect(Collectors.joining()) + "\n";
+        String message;
+        if (names.isEmpty()) {
+            message = getString(R.string.delete_songs_unknown);
         } else {
-            nameString = names.get(0);
+            if (names.size() > 1) {
+                message = String.format(getString(deleteMessageId), Stream.of(names)
+                        .map(itemName -> "\n\u2022 " + itemName)
+                        .collect(Collectors.joining()) + "\n");
+            } else {
+                message = String.format(getString(deleteMessageId), names.get(0));
+            }
         }
-
-        String message = String.format(stringToFormat, nameString);
 
         return DialogUtils.getBuilder(getContext())
                 .iconRes(R.drawable.ic_warning_24dp)

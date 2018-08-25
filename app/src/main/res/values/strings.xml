@@ -124,13 +124,17 @@
     <string name="create_playlist_create_text_prompt">Playlist name</string>
     <!-- Text for the "cancel" button in the "delete" and "create playlist" confirmation dialogs -->
     <string name="cancel">Cancel</string>
+
     <!-- Delete confirmation dialog when deleting an entire artist -->
     <string name="delete_album_artist_desc">All songs by <xliff:g id="album-artist">%s</xliff:g> will be permanently deleted.</string>
     <!-- Delete confirmation dialog message when deleting artists -->
     <string name="delete_album_artist_desc_multiple">All songs by the following album artists:<xliff:g id="album-artist">%s</xliff:g>will be permanently deleted.</string>
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">All songs from the album <xliff:g id="album">%s</xliff:g> will be permanently deleted.</string>
-    <!-- Delete confirmation dialog message when deleting albums -->
+    <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
+    <string name="delete_songs_unknown">Selected songs will be permanently deleted.</string>
+
+
     <string name="get_pro_button_play_store">Play Store</string>
     <string name="get_pro_button_amazon">Amazon</string>
 
