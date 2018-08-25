@@ -297,7 +297,7 @@ public class MediaManager {
 
     public void toggleShuffleMode() {
         AnalyticsManager.dropBreadcrumb(TAG, "toggleShuffleMode()");
-        if (MusicServiceConnectionUtils.serviceBinder.getService() == null) {
+        if (MusicServiceConnectionUtils.serviceBinder == null || MusicServiceConnectionUtils.serviceBinder.getService() == null) {
             return;
         }
         MusicServiceConnectionUtils.serviceBinder.getService().toggleShuffleMode();
@@ -305,7 +305,7 @@ public class MediaManager {
 
     public void cycleRepeat() {
         AnalyticsManager.dropBreadcrumb(TAG, "cycleRepeat()");
-        if (MusicServiceConnectionUtils.serviceBinder.getService() == null) {
+        if (MusicServiceConnectionUtils.serviceBinder == null || MusicServiceConnectionUtils.serviceBinder.getService() == null) {
             return;
         }
         MusicServiceConnectionUtils.serviceBinder.getService().toggleRepeat();
@@ -313,7 +313,7 @@ public class MediaManager {
 
     public void addToQueue(@NonNull List<Song> songs, @NotNull Function1<? super String, Unit> onAdded) {
         AnalyticsManager.dropBreadcrumb(TAG, "addToQueue()");
-        if (MusicServiceConnectionUtils.serviceBinder.getService() == null) {
+        if (MusicServiceConnectionUtils.serviceBinder == null || MusicServiceConnectionUtils.serviceBinder.getService() == null) {
             return;
         }
         MusicServiceConnectionUtils.serviceBinder.getService().enqueue(songs, QueueManager.EnqueueAction.LAST);
@@ -323,7 +323,7 @@ public class MediaManager {
     @Nullable
     public Disposable playNext(@NonNull Single<List<Song>> songsSingle, @NotNull Function1<? super String, Unit> onAdded) {
         AnalyticsManager.dropBreadcrumb(TAG, "playNext()");
-        if (MusicServiceConnectionUtils.serviceBinder.getService() == null) {
+        if (MusicServiceConnectionUtils.serviceBinder == null || MusicServiceConnectionUtils.serviceBinder.getService() == null) {
             return null;
         }
         return songsSingle
@@ -336,7 +336,7 @@ public class MediaManager {
 
     public void playNext(@NonNull List<Song> songs, @NotNull Function1<? super String, Unit> onAdded) {
         AnalyticsManager.dropBreadcrumb(TAG, "playNext()");
-        if (MusicServiceConnectionUtils.serviceBinder.getService() == null) {
+        if (MusicServiceConnectionUtils.serviceBinder == null || MusicServiceConnectionUtils.serviceBinder.getService() == null) {
             return;
         }
         MusicServiceConnectionUtils.serviceBinder.getService().enqueue(songs, QueueManager.EnqueueAction.NEXT);
@@ -344,8 +344,8 @@ public class MediaManager {
     }
 
     public void moveToNext(@NotNull QueueItem queueItem) {
-        AnalyticsManager.dropBreadcrumb(TAG, "moveToNExt()");
-        if (MusicServiceConnectionUtils.serviceBinder.getService() == null) {
+        AnalyticsManager.dropBreadcrumb(TAG, "moveToNext()");
+        if (MusicServiceConnectionUtils.serviceBinder == null || MusicServiceConnectionUtils.serviceBinder.getService() == null) {
             return;
         }
         MusicServiceConnectionUtils.serviceBinder.getService().moveToNext(queueItem);
