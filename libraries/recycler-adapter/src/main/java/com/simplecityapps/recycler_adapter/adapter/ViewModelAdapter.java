@@ -1,5 +1,6 @@
 package com.simplecityapps.recycler_adapter.adapter;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.util.ListUpdateCallback;
@@ -27,6 +28,9 @@ public class ViewModelAdapter extends RecyclerView.Adapter {
 
     private boolean enableLogging = true;
 
+    @Nullable
+    private Disposable setItemsDisposable = null;
+
     /**
      * The dataset for this RecyclerView Adapter
      */
@@ -38,7 +42,7 @@ public class ViewModelAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         for (ViewModel item : items) {
             if (viewType == item.getViewType()) {
@@ -49,12 +53,12 @@ public class ViewModelAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         items.get(position).bindView(holder);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List payloads) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull List payloads) {
         if (payloads.isEmpty()) {
             onBindViewHolder(holder, position);
         } else {
@@ -91,7 +95,11 @@ public class ViewModelAdapter extends RecyclerView.Adapter {
             return null;
         }
 
-        return Single.fromCallable(() -> DiffUtil.calculateDiff(new DiffCallback(this.items, items)))
+        if (setItemsDisposable != null && !setItemsDisposable.isDisposed()) {
+            setItemsDisposable.dispose();
+        }
+
+        setItemsDisposable = Single.fromCallable(() -> DiffUtil.calculateDiff(new DiffCallback(this.items, items)))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(diffResult -> {
@@ -107,6 +115,8 @@ public class ViewModelAdapter extends RecyclerView.Adapter {
                         diffResult.dispatchUpdatesTo(callback);
                     }
                 });
+
+        return setItemsDisposable;
     }
 
     private void logDiffResult(DiffUtil.DiffResult diffResult) {

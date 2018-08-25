@@ -220,6 +220,15 @@ public class SuggestedFragment extends BaseFragment implements
         refreshAdapterItems();
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        if (setItemsDisposable != null) {
+            setItemsDisposable.dispose();
+        }
+    }
+
     Observable<List<ViewModel>> getMostPlayedViewModels() {
         return Playlist.mostPlayedPlaylist
                 .getSongsObservable()
@@ -366,11 +375,6 @@ public class SuggestedFragment extends BaseFragment implements
     }
 
     void refreshAdapterItems() {
-
-        if (setItemsDisposable != null) {
-            setItemsDisposable.dispose();
-        }
-
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {
                 refreshDisposables.add(Observable.combineLatest(

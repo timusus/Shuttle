@@ -231,6 +231,15 @@ public class SearchFragment extends BaseFragment implements
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        if (setDataDisposable != null) {
+            setDataDisposable.dispose();
+        }
+    }
+
+    @Override
     protected String screenName() {
         return TAG;
     }
@@ -242,11 +251,6 @@ public class SearchFragment extends BaseFragment implements
 
     @Override
     public void setData(@NonNull SearchResult searchResult) {
-
-        if (setDataDisposable != null) {
-            setDataDisposable.dispose();
-        }
-
         char[] prefix = query.toUpperCase().toCharArray();
 
         List<ViewModel> viewModels = new ArrayList<>();

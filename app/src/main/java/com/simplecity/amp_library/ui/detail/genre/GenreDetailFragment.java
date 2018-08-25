@@ -447,11 +447,7 @@ public class GenreDetailFragment extends BaseFragment implements
     }
 
     @Override
-    public void setData(Pair<List<Album>, List<Song>> data) {
-        if (setItemsDisposable != null) {
-            setItemsDisposable.dispose();
-        }
-
+    public void setData(@NonNull Pair<List<Album>, List<Song>> data) {
         List<ViewModel> viewModels = new ArrayList<>();
 
         if (!data.first.isEmpty()) {

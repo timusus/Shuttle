@@ -419,10 +419,6 @@ public class AlbumDetailFragment extends BaseFragment implements
 
     @Override
     public void setData(@NonNull List<Song> data) {
-        if (setItemsDisposable != null) {
-            setItemsDisposable.dispose();
-        }
-
         List<ViewModel> viewModels = new ArrayList<>();
 
         int songsSortOrder = SortManager.getInstance().getAlbumDetailSongsSortOrder();

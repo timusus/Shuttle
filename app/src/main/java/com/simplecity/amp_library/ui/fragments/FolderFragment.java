@@ -332,11 +332,6 @@ public class FolderFragment extends BaseFragment implements
 
     @SuppressLint("CheckResult")
     public void changeDir(File newDir) {
-
-        if (setItemsDisposable != null) {
-            setItemsDisposable.dispose();
-        }
-
         disposables.add(Single.zip(
                 DataManager.getInstance().getIncludeItems().first(Collections.emptyList()),
                 DataManager.getInstance().getExcludeItems().first(Collections.emptyList()),

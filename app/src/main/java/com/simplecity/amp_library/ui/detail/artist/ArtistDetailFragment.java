@@ -612,10 +612,6 @@ public class ArtistDetailFragment extends BaseFragment implements
 
     @Override
     public void setData(@NonNull Pair<List<Album>, List<Song>> data) {
-        if (setItemsDisposable != null) {
-            setItemsDisposable.dispose();
-        }
-
         List<ViewModel> viewModels = new ArrayList<>();
 
         if (!data.first.isEmpty()) {
