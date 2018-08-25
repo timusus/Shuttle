@@ -262,7 +262,12 @@ public class DeleteDialog extends DialogFragment implements SafManager.SafDialog
                 .subscribeOn(Schedulers.io())
                 .subscribe(requiresSafDialog -> {
                     if (requiresSafDialog) {
-                        SafManager.SafDialog.show(DeleteDialog.this);
+                        if (DeleteDialog.this.isAdded()) {
+                            SafManager.SafDialog.show(DeleteDialog.this);
+                        } else {
+                            LogUtils.logException(TAG, "Failed to delete songs.. Couldn't show SAFDialog", null);
+                            Toast.makeText(getContext(), getString(R.string.delete_songs_failure_toast), Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         disposables.add(deleteSongs()
                                 .observeOn(AndroidSchedulers.mainThread())
