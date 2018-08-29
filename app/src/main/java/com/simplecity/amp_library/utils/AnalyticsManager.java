@@ -2,6 +2,7 @@ package com.simplecity.amp_library.utils;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.crashlytics.android.core.CrashlyticsCore;
@@ -123,6 +124,9 @@ public class AnalyticsManager {
     }
 
     public static void dropBreadcrumb(String tag, String breadCrumb) {
+
+        Log.i(tag, breadCrumb);
+
         if (!analyticsEnabled()) {
             return;
         }

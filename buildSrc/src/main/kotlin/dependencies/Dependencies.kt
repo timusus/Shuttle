@@ -6,7 +6,7 @@ object Dependencies {
     const val targetSdk = 27
     const val compileSdk = 27
 
-    const val buildTools = "27.0.3"
+    const val buildTools = "28.0.2"
 
     object Versions {
         const val nanoHttp = "2.3.1"
@@ -76,7 +76,7 @@ object Dependencies {
     object Plugins {
 
         object Versions {
-            const val androidGradlePlugin = "3.2.0-beta05"
+            const val androidGradlePlugin = "3.2.0-rc02"
             const val kotlin = "1.2.51"
             const val dexcountGradlePlugin = "0.8.3"
             const val fabricGradlePlugin = "1.+"

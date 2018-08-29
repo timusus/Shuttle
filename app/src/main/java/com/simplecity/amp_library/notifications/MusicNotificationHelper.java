@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.util.Log;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -154,8 +155,10 @@ public class MusicNotificationHelper extends NotificationHelper {
         notify(service, song, isPlaying, mediaSessionToken);
         try {
             AnalyticsManager.dropBreadcrumb(TAG, "startForeground() called");
+            Log.w(TAG, "service.startForeground called");
             service.startForeground(NOTIFICATION_ID, notification);
         } catch (RuntimeException e) {
+            Log.e(TAG, "startForeground not called, error: " + e);
             LogUtils.logException(TAG, "Error starting foreground notification", e);
         }
     }

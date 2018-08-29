@@ -7,6 +7,7 @@ import android.os.Message;
 import android.util.Log;
 import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.playback.constants.PlayerHandler;
+import com.simplecity.amp_library.utils.AnalyticsManager;
 import java.lang.ref.WeakReference;
 
 final class MediaPlayerHandler extends Handler {
@@ -26,6 +27,9 @@ final class MediaPlayerHandler extends Handler {
 
     @Override
     public void handleMessage(Message msg) {
+
+        AnalyticsManager.dropBreadcrumb(TAG, "Handle message: " + msg.toString());
+
         PlaybackManager playbackManager = playbackManagerWeakReference.get();
         QueueManager queueManager = queueManagerWeakReference.get();
         if (playbackManager == null || queueManager == null) {

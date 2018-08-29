@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.simplecity.amp_library.playback.constants.PlayerHandler;
+import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 
 class MultiPlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener {
@@ -247,6 +248,7 @@ class MultiPlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnCompleti
 
     @Override
     public boolean onError(final MediaPlayer mp, final int what, final int extra) {
+        AnalyticsManager.dropBreadcrumb(TAG, "Media player error: " + what + " " + extra);
         switch (what) {
             case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
                 isInitialized = false;
@@ -268,7 +270,9 @@ class MultiPlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnCompleti
             currentMediaPlayer = nextMediaPlayer;
             nextMediaPlayer = null;
             handler.sendEmptyMessage(PlayerHandler.TRACK_WENT_TO_NEXT);
+            AnalyticsManager.dropBreadcrumb(TAG, "Track went to next");
         } else {
+            AnalyticsManager.dropBreadcrumb(TAG, "Track ended. Acquiring wakelock");
             wakeLock.acquire(30000);
             handler.sendEmptyMessage(PlayerHandler.TRACK_ENDED);
             handler.sendEmptyMessage(PlayerHandler.RELEASE_WAKELOCK);
@@ -276,6 +280,7 @@ class MultiPlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnCompleti
     }
 
     public void releaseWakelock() {
+        AnalyticsManager.dropBreadcrumb(TAG, "Releasing wakelock");
         wakeLock.release();
     }
 }
