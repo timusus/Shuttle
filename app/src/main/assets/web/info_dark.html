@@ -8,6 +8,17 @@
 </head>
 
 <body>
+<h4>2.0.6-beta3</h4>
+<ul>
+    <li>Fixed the random pausing issue.
+        </p>
+        The 'music service' schedules an alarm to shut itself down after 5 minutes, which is usually cancelled when playback starts.
+        But, when starting playback from the headset, bluetooth, or widget without actually launching the app UI, this alarm was being cancelled
+        before being scheduled - so the cancellation had no effect, and the service would shut down after 5 minutes. In some cases, the app may have
+        kept playing music, but then the system would see the service is no longer important, and shut it down. This whole section of code needs to be reviewed,
+        but the problem should be fixed now.
+    </li>
+</ul>
 <h4>2.0.6-beta2</h4>
 <ul>
     <li>Added a bunch of logging to help track down this FUCKING RANDOM pausing issue</li>
