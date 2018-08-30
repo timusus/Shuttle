@@ -505,7 +505,7 @@ public class PlaybackManager {
 
         playerHandler.removeCallbacksAndMessages(null);
 
-        equalizer.releaseEffects();
+        equalizer.release();
         equalizer.closeEqualizerSessions(true, getAudioSessionId());
 
         // Quit the thread so that anything that gets posted won't run

@@ -76,8 +76,8 @@ class ChromecastManager {
         if (castManager != null) {
             try {
                 castManager.stop();
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (CastException | TransientNetworkDisconnectionException | NoConnectionException e) {
+                LogUtils.logException(TAG, "Failed to stop cast manager", e);
             }
             castManager.removeVideoCastConsumer(castConsumer);
         }

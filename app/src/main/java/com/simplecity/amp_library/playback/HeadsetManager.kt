@@ -10,8 +10,6 @@ class HeadsetManager(private val playbackManager: PlaybackManager) {
 
     private var headsetReceiver: BroadcastReceiver? = null
 
-    private var headsetReceiverIsRegistered: Boolean = false
-
     fun registerHeadsetPlugReceiver(context: Context) {
 
         val filter = IntentFilter()
@@ -43,10 +41,6 @@ class HeadsetManager(private val playbackManager: PlaybackManager) {
     }
 
     fun unregisterHeadsetPlugReceiver(context: Context) {
-
-        if (headsetReceiverIsRegistered) {
-            context.unregisterReceiver(headsetReceiver)
-            headsetReceiverIsRegistered = false
-        }
+        context.unregisterReceiver(headsetReceiver)
     }
 }
