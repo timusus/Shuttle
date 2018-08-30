@@ -141,6 +141,7 @@ public class MusicService extends MediaBrowserServiceCompat {
         this.shutdownIntent = PendingIntent.getService(this, 0, shutdownIntent, 0);
 
         // Listen for the idle state
+        AnalyticsManager.dropBreadcrumb(TAG, "onCreate(), scheduling delayed shutdown");
         scheduleDelayedShutdown();
 
         reloadQueue();
@@ -149,8 +150,7 @@ public class MusicService extends MediaBrowserServiceCompat {
     @Override
     public IBinder onBind(final Intent intent) {
 
-        AnalyticsManager.dropBreadcrumb(TAG, "onBind()");
-
+        AnalyticsManager.dropBreadcrumb(TAG, "onBind().. cancelShutdown()");
         cancelShutdown();
         serviceInUse = true;
 
@@ -193,6 +193,7 @@ public class MusicService extends MediaBrowserServiceCompat {
 
     @Override
     public void onRebind(Intent intent) {
+        AnalyticsManager.dropBreadcrumb(TAG, "onRebind().. cancelShutdown()");
         cancelShutdown();
         serviceInUse = true;
     }
@@ -211,6 +212,10 @@ public class MusicService extends MediaBrowserServiceCompat {
             // If there is a playlist but playback is paused, then wait a while before stopping the service, so that pause/resume isn't slow.
             // Also delay stopping the service if we're transitioning between tracks.
         } else if (queueManager.playlist.size() > 0 || queueManager.shuffleList.size() > 0 || playbackManager.hasTrackEndedMessage()) {
+            AnalyticsManager.dropBreadcrumb(TAG, String.format("onUnbind() scheduling delayed shutdown. Playlist size: %d queue size: %d has track ended message: %s",
+                    queueManager.playlist.size(), queueManager.shuffleList.size(), playbackManager.hasTrackEndedMessage())
+            );
+
             scheduleDelayedShutdown();
             return true;
         }
@@ -345,6 +350,8 @@ public class MusicService extends MediaBrowserServiceCompat {
         }
 
         // Make sure the service will shut down on its own if it was  just started but not bound to and nothing is playing
+        AnalyticsManager.dropBreadcrumb(TAG, "onStartCommand() scheduling delayed shutdown");
+
         scheduleDelayedShutdown();
 
         if (intent != null && intent.getBooleanExtra(MediaButtonCommand.FROM_MEDIA_BUTTON, false)) {
@@ -815,11 +822,20 @@ public class MusicService extends MediaBrowserServiceCompat {
     }
 
     private void scheduleDelayedShutdown() {
+        if (isPlaying() || serviceInUse || playbackManager.pausedByTransientLossOfFocus) {
+            AnalyticsManager.dropBreadcrumb(TAG,
+                    String.format("scheduleDelayedShutdown called.. returning early. isPlaying: %s service in use: %s paused by loss of focus: %s",
+                            isPlaying(), serviceInUse, playbackManager.pausedByTransientLossOfFocus));
+            return;
+        }
+
+        AnalyticsManager.dropBreadcrumb(TAG, "scheduleDelayedShutdown for 5 mins from now");
         alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 5 * 60 * 1000 /* 5 mins */, shutdownIntent);
         shutdownScheduled = true;
     }
 
     private void cancelShutdown() {
+        AnalyticsManager.dropBreadcrumb(TAG, "cancelShutdown() called. Shutdown scheduled: " + shutdownScheduled);
         if (shutdownScheduled) {
             alarmManager.cancel(shutdownIntent);
             shutdownScheduled = false;
