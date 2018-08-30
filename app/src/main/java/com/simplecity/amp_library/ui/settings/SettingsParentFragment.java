@@ -342,6 +342,15 @@ public class SettingsParentFragment extends BaseNavigationController implements
                     return true;
                 });
             }
+            
+            // Playback
+            SwitchPreferenceCompat enableVisualizerPreference = (SwitchPreferenceCompat) findPreference(SettingsManager.KEY_PREF_VISUALIZER);
+            if (enableVisualizerPreference != null) {
+                enableVisualizerPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                    settingsPresenter.changeVisualizerPreferenceClicked(getContext());
+                    return true;
+                });
+            }
 
             // Headset/Bluetooth
 
@@ -564,6 +573,12 @@ public class SettingsParentFragment extends BaseNavigationController implements
 
         @Override
         public void showArtworkPreferenceChangeDialog(MaterialDialog dialog) {
+            dialog.show();
+        }
+        
+        // Playback
+        @Override
+        public void showVisualizerPreferenceChangeDialog(MaterialDialog dialog) {
             dialog.show();
         }
 

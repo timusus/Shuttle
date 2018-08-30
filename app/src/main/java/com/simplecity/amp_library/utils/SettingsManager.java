@@ -54,6 +54,7 @@ public class SettingsManager extends BaseSettingsManager {
 
     // Playback
     public static String KEY_PREF_REMEMBER_SHUFFLE = "pref_remember_shuffle";
+    public static String KEY_PREF_VISUALIZER = "pref_enable_visualizer";
 
     // Upgrade
     public static String KEY_PREF_UPGRADE = "pref_upgrade";
@@ -433,6 +434,13 @@ public class SettingsManager extends BaseSettingsManager {
 
     public void setRememberShuffle(boolean rememberShuffle) {
         setBool(KEY_PREF_REMEMBER_SHUFFLE, rememberShuffle);
+    }
+    
+    public boolean getVisualizerEnabled() {
+        return getBool(KEY_PREF_VISUALIZER, false);
+    }
+    public void setVisualizerEnabled(boolean visualizerEnabled) {
+        setBool(KEY_PREF_VISUALIZER, visualizerEnabled);
     }
 
     // Library Controller

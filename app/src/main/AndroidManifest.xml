@@ -17,6 +17,8 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <!-- Used to read mediastore db, caching artwork etc. -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!-- Used by the visualizer -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <!-- ## End 'Special' permissions ##-->
 
     <application
