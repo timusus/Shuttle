@@ -45,4 +45,14 @@
         android:id="@+id/delete"
         android:title="@string/delete_item" />
 
+    <item
+        android:id="@+id/go_to"
+        android:title="@string/go_to">
+        <menu>
+            <item
+                android:id="@+id/goToArtist"
+                android:title="@string/artist_title"/>
+        </menu>
+    </item>
+
 </menu>

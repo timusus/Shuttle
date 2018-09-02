@@ -268,7 +268,7 @@ public class SongFragment extends BaseFragment implements
     @Override
     public void onSongOverflowClick(int position, View view, Song song) {
         PopupMenu menu = new PopupMenu(getContext(), view);
-        SongMenuUtils.INSTANCE.setupSongMenu(menu, false);
+        SongMenuUtils.INSTANCE.setupSongMenu(menu, false, true, true);
         menu.setOnMenuItemClickListener(SongMenuUtils.INSTANCE.getSongMenuClickListener(song, songMenuCallbacksAdapter));
         menu.show();
     }

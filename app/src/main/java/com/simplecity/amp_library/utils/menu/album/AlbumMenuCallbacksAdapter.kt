@@ -9,6 +9,7 @@ import com.simplecity.amp_library.ui.dialog.DeleteDialog
 import com.simplecity.amp_library.ui.dialog.UpgradeDialog
 import com.simplecity.amp_library.ui.fragments.BaseFragment
 import com.simplecity.amp_library.utils.ArtworkDialog
+import com.simplecity.amp_library.utils.menu.MenuUtils
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 
@@ -58,5 +59,9 @@ class AlbumMenuCallbacksAdapter(val fragment: BaseFragment, val disposables: Com
 
     override fun showToast(message: String) {
         Toast.makeText(fragment.context, message, Toast.LENGTH_LONG).show()
+    }
+
+    override fun goToArtist(album: Album) {
+        MenuUtils.goToArtist(album.albumArtist, fragment.navigationEventRelay)
     }
 }

@@ -540,7 +540,7 @@ public class ArtistDetailFragment extends BaseFragment implements
         @Override
         public void onSongOverflowClick(int position, View v, Song song) {
             PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
-            SongMenuUtils.INSTANCE.setupSongMenu(popupMenu, false);
+            SongMenuUtils.INSTANCE.setupSongMenu(popupMenu, false, true, false);
             popupMenu.setOnMenuItemClickListener(SongMenuUtils.INSTANCE.getSongMenuClickListener(song, songMenuCallbacksAdapter));
             popupMenu.show();
         }
@@ -568,7 +568,7 @@ public class ArtistDetailFragment extends BaseFragment implements
         @Override
         public void onAlbumOverflowClicked(View v, Album album) {
             PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
-            AlbumMenuUtils.INSTANCE.setupAlbumMenu(popupMenu);
+            AlbumMenuUtils.INSTANCE.setupAlbumMenu(popupMenu, false);
             popupMenu.setOnMenuItemClickListener(AlbumMenuUtils.INSTANCE.getAlbumMenuClickListener(v.getContext(), mediaManager, album, menuFragmentHelper));
             popupMenu.show();
         }
