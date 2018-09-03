@@ -2,7 +2,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- ## Toast Messages ## -->
     <!-- Shown when a user attempts to edit tags, but they don't have a 'DocumentProvider' available to pick the directory of their music (and thus give permission to Shuttle)-->
-    <string name="R.string.toast_no_document_provider">Sem gerenciador de arquivos disponível para gerenciar permissão de acesso</string>
+    <string name="R.string.toast_no_document_provider">Sem gerenciador de arquivos disponível para gerenciar permissões de acesso</string>
     <!-- Displayed when an M3U playlist is being saved, but it already exists -->
     <!-- Displayed when an M3U playlist save fails -->
     <string name="playlist_save_failed">A playlist não pôde ser salva</string>
@@ -98,8 +98,8 @@ músicas adicionadas à fila.</item>
 \n• Edição de tags
 \n• Navegação por pastas
 \n• Ajuda e suporte ao desenvolvimento do app ❤️</string>
-    <string name="upgrade_required_folders">Atualizar para Shuttle+</string>
-    <string name="btn_upgrade">Atualizar</string>
+    <string name="upgrade_required_folders">Upgrade para Shuttle+</string>
+    <string name="btn_upgrade">Upgrade</string>
     <!-- -->
     <string name="get_pro_button_no">Não, obrigado</string>
     <!-- Dialog 'close' button -->
