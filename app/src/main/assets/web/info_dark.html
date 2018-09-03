@@ -8,25 +8,11 @@
 </head>
 
 <body>
-<h4>2.0.6-beta3</h4>
+<h4>2.0.6</h4>
 <ul>
-    <li>Fixed the random pausing issue.
-        </p>
-        The 'music service' schedules an alarm to shut itself down after 5 minutes, which is usually cancelled when playback starts.
-        But, when starting playback from the headset, bluetooth, or widget without actually launching the app UI, this alarm was being cancelled
-        before being scheduled - so the cancellation had no effect, and the service would shut down after 5 minutes. In some cases, the app may have
-        kept playing music, but then the system would see the service is no longer important, and shut it down. This whole section of code needs to be reviewed,
-        but the problem should be fixed now.
-    </li>
-</ul>
-<h4>2.0.6-beta2</h4>
-<ul>
-    <li>Added a bunch of logging to help track down this FUCKING RANDOM pausing issue</li>
-</ul>
-<h4>2.0.6-beta1</h4>
-<ul>
-    <li>Crash fixes</li>
-    <li>Fixed an issue preventing songs/albums/artists from being deleted</li>
+    <li>Fixed a major issue where the app would randomly pause. This occurred when starting playback from a headset, bluetooth, widget, or any other means which didn't involve opening the app.</li>
+    <li>Various Crash fixes</li>
+    <li>Note: There are some crashes occurring on Android 9.0 (Pie), which are platform related. These have been raised with Google and we can only wait for a fix.</li>
 </ul>
 <h4>2.0.5</h4>
 <ul>
