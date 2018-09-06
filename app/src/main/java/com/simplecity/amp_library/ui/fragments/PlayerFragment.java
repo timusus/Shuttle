@@ -779,12 +779,6 @@ public class PlayerFragment extends BaseFragment implements
             mVisualizer.setEnabled(false);
             fftView.plotData(new int[64]);
         }
-            
-        if (!SettingsManager.getInstance().getEqualizerEnabled()) {
-            mediaManager.openEqualizerSession(false, mediaManager.getAudioSessionId());
-        } else {
-            mediaManager.closeEqualizerSessions(false, mediaManager.getAudioSessionId());
-        }
     }
     @Override
     public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {};
