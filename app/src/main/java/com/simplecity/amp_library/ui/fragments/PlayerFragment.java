@@ -767,7 +767,7 @@ public class PlayerFragment extends BaseFragment implements
                     mVisualizer = new Visualizer(mediaManager.getAudioSessionId());
                     mVisualizer.setEnabled(false);
                     mVisualizer.setCaptureSize(mVisualizer.getCaptureSizeRange()[1]);
-                    mVisualizer.setDataCaptureListener(this, 20000, false, true);
+                    mVisualizer.setDataCaptureListener(this, ((mVisualizer.getMaxCaptureRate() > 20000) ? 20000 : mVisualizer.getMaxCaptureRate()), false, true);
                     mVisualizer.setEnabled(mediaManager.isPlaying());
                 } else if (mVisualizer != null) {
                     mVisualizer.setEnabled(mediaManager.isPlaying());
