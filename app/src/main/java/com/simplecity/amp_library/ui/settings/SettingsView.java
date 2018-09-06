@@ -36,6 +36,9 @@ public interface SettingsView extends PurchaseView {
 
     void showArtworkPreferenceChangeDialog(MaterialDialog dialog);
 
+    //Playback
+    void showVisualizerPreferenceChangeDialog(MaterialDialog dialog);
+    
     // Scrobbling
     void launchDownloadScrobblerIntent(Intent intent);
 

@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
+import android.media.audiofx.Visualizer;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -50,12 +51,14 @@ import com.simplecity.amp_library.glide.palette.ColorSetTranscoder;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.playback.QueueManager;
 import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.rx.UnsafeConsumer;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.drawer.NavigationEventRelay;
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
+import com.simplecity.amp_library.ui.views.FFTView;
 import com.simplecity.amp_library.ui.views.FavoriteActionBarView;
 import com.simplecity.amp_library.ui.views.PlayPauseView;
 import com.simplecity.amp_library.ui.views.PlayerView;
@@ -84,7 +87,8 @@ import javax.inject.Inject;
 
 public class PlayerFragment extends BaseFragment implements
         PlayerView,
-        Toolbar.OnMenuItemClickListener {
+        Toolbar.OnMenuItemClickListener,
+        Visualizer.OnDataCaptureListener {
 
     private final String TAG = ((Object) this).getClass().getSimpleName();
 
@@ -136,6 +140,9 @@ public class PlayerFragment extends BaseFragment implements
     @BindView(R.id.backgroundView)
     ImageView backgroundView;
 
+    @BindView(R.id.fftView)
+    FFTView fftView;
+                
     @Nullable
     @BindView(R.id.seekbar)
     SizableSeekBar seekBar;
@@ -164,6 +171,10 @@ public class PlayerFragment extends BaseFragment implements
     private boolean isLandscape;
 
     private boolean isExpanded;
+
+    @Inject
+    MediaManager mediaManager;
+    private Visualizer mVisualizer;
 
     @Nullable
     private ValueAnimator colorAnimator;
@@ -345,12 +356,14 @@ public class PlayerFragment extends BaseFragment implements
                         throwable -> Log.e(TAG, "error listening for sheet slide events", throwable))
         );
 
+        startVisualizer();
         update();
     }
 
     @Override
     public void onPause() {
         disposables.clear();
+        if (mVisualizer != null) mVisualizer.setEnabled(false);
         super.onPause();
     }
 
@@ -413,6 +426,8 @@ public class PlayerFragment extends BaseFragment implements
         if (!isPlaying) {
             snowfallView.removeSnow();
         }
+            
+        startVisualizer();
     }
 
     @Override
@@ -559,6 +574,10 @@ public class PlayerFragment extends BaseFragment implements
 
         if (playPauseView != null) {
             playPauseView.setDrawableColor(colorSet.getPrimaryTextColor());
+        }
+
+        if (fftView != null) {
+            fftView.setColor(colorSet.getAccentColor());
         }
 
         this.colorSet = colorSet;
@@ -755,5 +774,37 @@ public class PlayerFragment extends BaseFragment implements
                 Aesthetic.get(getContext()).colorAccent(),
                 Pair::new
         ).map(pair -> ColorSet.Companion.fromPrimaryAccentColors(getContext(), pair.first, pair.second));
+    }
+
+    private void startVisualizer() {
+        if (SettingsManager.getInstance().getVisualizerEnabled()) {
+            try {
+                if (mVisualizer == null && mediaManager.getAudioSessionId() != 0) {
+                    mVisualizer = new Visualizer(mediaManager.getAudioSessionId());
+                    mVisualizer.setEnabled(false);
+                    mVisualizer.setCaptureSize(mVisualizer.getCaptureSizeRange()[1]);
+                    mVisualizer.setDataCaptureListener(this, ((mVisualizer.getMaxCaptureRate() > 20000) ? 20000 : mVisualizer.getMaxCaptureRate()), false, true);
+                    mVisualizer.setEnabled(mediaManager.isPlaying());
+                } else if (mVisualizer != null) {
+                    mVisualizer.setEnabled(mediaManager.isPlaying());
+                }
+            } catch (RuntimeException e) {
+                SettingsManager.getInstance().setVisualizerEnabled(false);
+            }
+        } else if (mVisualizer != null) {
+            mVisualizer.setEnabled(false);
+            fftView.plotData(new int[64]);
+        }
+    }
+
+    @Override
+    public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {};
+
+    @Override
+    public void onFftDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
+        if (fftView == null) return;
+        int[] data = new int[64];
+        for (int i = 0; i < 64; i++) data[i] = (int) (2 * Math.sqrt(bytes[2*i] * bytes[2*i] + bytes[2*i+1] * bytes[2*i+1]));
+        fftView.plotData(data);
     }
 }

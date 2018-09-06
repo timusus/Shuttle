@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.audiofx.Visualizer;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -18,6 +20,7 @@ import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.billing.BillingManager;
 import com.simplecity.amp_library.model.CategoryItem;
 import com.simplecity.amp_library.model.InclExclItem;
+import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.services.ArtworkDownloadService;
 import com.simplecity.amp_library.ui.activities.BaseActivity;
 import com.simplecity.amp_library.ui.dialog.ChangelogDialog;
@@ -277,6 +280,49 @@ public class SettingsPresenter extends PurchasePresenter<SettingsView> {
                             .onPositive((dialog1, which) -> deleteArtwork())
                             .negativeText(R.string.close)
                             .show());
+        }
+    }
+    
+    // Playback
+    @Inject
+    MediaManager mediaManager;
+    public class OpenSettings {
+        // StartActivity can't be used in the presenter, so we must use a new class
+        public void Setting(Context context)
+        {
+            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, android.net.Uri.parse("package:" + context.getPackageName()));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }
+    }
+    
+    private void visualizerPermissionChecker(Context context) {
+        new OpenSettings().Setting(context);
+        try {
+            Visualizer mVisualizer = new Visualizer(mediaManager.getAudioSessionId());
+            SettingsManager.getInstance().setVisualizerEnabled(true);
+        } catch (RuntimeException e) {
+            SettingsManager.getInstance().setVisualizerEnabled(false);
+        }
+    }
+    
+    public void changeVisualizerPreferenceClicked(Context context) {
+        SettingsView settingsView = getView();
+        if (settingsView != null && !SettingsManager.getInstance().getVisualizerEnabled()) {
+            try {
+                Visualizer mVisualizer = new Visualizer(mediaManager.getAudioSessionId());
+                mVisualizer.release();
+            } catch (Exception e) {
+                settingsView.showVisualizerPreferenceChangeDialog(
+                    new MaterialDialog.Builder(context)
+                            .title("Enable Visualizer")
+                            .content("In order to enable this feature, Shuttle need the 'Microphone' permission. After pressing 'Ok', you need to go into 'Permissions' and check 'Microphone' permission, and then retry.")
+                            .positiveText("OK")
+                            .onPositive((dialog1, which) -> visualizerPermissionChecker(context))
+                            .negativeText(R.string.close)
+                            .onNegative(((dialog, which) -> SettingsManager.getInstance().setVisualizerEnabled(false)))
+                            .show());
+            }
         }
     }
 
