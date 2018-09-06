@@ -780,8 +780,10 @@ public class PlayerFragment extends BaseFragment implements
             fftView.plotData(new int[64]);
         }
     }
+
     @Override
     public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {};
+
     @Override
     public void onFftDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
         if (fftView == null) return;
