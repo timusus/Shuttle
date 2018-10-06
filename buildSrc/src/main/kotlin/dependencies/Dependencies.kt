@@ -76,13 +76,13 @@ object Dependencies {
     object Plugins {
 
         object Versions {
-            const val androidGradlePlugin = "3.2.0-rc02"
-            const val kotlin = "1.2.51"
+            const val androidGradlePlugin = "3.2.0"
+            const val kotlin = "1.2.71"
             const val dexcountGradlePlugin = "0.8.3"
             const val fabricGradlePlugin = "1.+"
             const val playPublisher = "1.2.2"
             const val gradleVersions = "0.20.0"
-            const val playServices = "4.0.1"
+            const val playServices = "4.1.0"
         }
 
         const val android = "com.android.tools.build:gradle:${Versions.androidGradlePlugin}"
@@ -98,10 +98,10 @@ object Dependencies {
 
         object Versions {
             const val supportLib = "27.1.0"
-            const val firebaseCore = "16.0.1"
-            const val firebaseRemoteConfig = "16.0.0"
-            const val chromecast = "15.0.1"
-            const val constraintLayout = "1.1.0-beta5"
+            const val firebaseCore = "16.0.4"
+            const val firebaseRemoteConfig = "16.0.1"
+            const val chromecast = "16.0.3"
+            const val constraintLayout = "1.1.0"
         }
 
         const val cardView = "com.android.support:cardview-v7:${Versions.supportLib}"
@@ -123,7 +123,7 @@ object Dependencies {
 
         object Versions {
             const val haha = "2.0.4"
-            const val leakCanary = "1.5.4"
+            const val leakCanary = "1.6.1"
             const val okio = "1.14.1"
             const val okhttp = "3.10.0"
             const val retrofit = "2.4.0"
