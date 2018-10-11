@@ -29,4 +29,6 @@
 
     <color name="primary_text_dark">#ffffff</color>
 
+    <color name="ic_launcher_background">#03A9F4</color>
+
 </resources>
