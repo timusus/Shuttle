@@ -347,7 +347,7 @@ public class AlbumDetailFragment extends BaseFragment implements
         }
 
         AlbumSortHelper.updateAlbumSortMenuItems(toolbar.getMenu(), SortManager.getInstance().getArtistDetailAlbumsSortOrder(), SortManager.getInstance().getArtistDetailAlbumsAscending());
-        SongSortHelper.updateSongSortMenuItems(toolbar.getMenu(), SortManager.getInstance().getArtistDetailSongsSortOrder(), SortManager.getInstance().getArtistDetailSongsAscending());
+        SongSortHelper.updateSongSortMenuItems(toolbar.getMenu(), SortManager.getInstance().getAlbumDetailSongsSortOrder(), SortManager.getInstance().getAlbumDetailSongsAscending());
 
         return super.onOptionsItemSelected(item);
     }
