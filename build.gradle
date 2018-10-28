@@ -4,8 +4,8 @@ apply plugin: Dependencies.BuildPlugins.gradleVersions
 
 buildscript {
     repositories {
-        jcenter()
         google()
+        jcenter()
     }
     dependencies {
         classpath Dependencies.Plugins.android
@@ -18,8 +18,8 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
         google()
+        jcenter()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://jitpack.io" }
     }
