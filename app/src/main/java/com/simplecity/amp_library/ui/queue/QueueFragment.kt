@@ -26,7 +26,7 @@ import com.simplecity.amp_library.ui.dialog.DeleteDialog
 import com.simplecity.amp_library.ui.dialog.UpgradeDialog
 import com.simplecity.amp_library.ui.fragments.BaseFragment
 import com.simplecity.amp_library.ui.modelviews.SelectableViewModel
-import com.simplecity.amp_library.ui.modelviews.SubheaderView
+import com.simplecity.amp_library.ui.modelviews.SubheaderLockView
 import com.simplecity.amp_library.ui.presenters.PlayerPresenter
 import com.simplecity.amp_library.ui.recyclerview.ItemTouchHelperCallback
 import com.simplecity.amp_library.ui.views.ContextualToolbar
@@ -56,6 +56,7 @@ import kotlinx.android.synthetic.main.fragment_queue.line2
 import kotlinx.android.synthetic.main.fragment_queue.recyclerView
 import kotlinx.android.synthetic.main.fragment_queue.statusBarView
 import kotlinx.android.synthetic.main.fragment_queue.toolbar
+import kotlinx.android.synthetic.main.list_item_subheader_lock.*
 import java.util.ArrayList
 import javax.inject.Inject
 
@@ -83,9 +84,13 @@ class QueueFragment : BaseFragment(), QueueContract.View {
 
     private lateinit var itemTouchHelper: ItemTouchHelper
 
+    private lateinit var itemTouchHelperCallback : ItemTouchHelperCallback
+
     private lateinit var cabToolbar: ContextualToolbar
 
     private lateinit var cabHelper: ContextualToolbarHelper<QueueItem>
+
+    private var locked : Boolean = true
 
     // Lifecycle
 
@@ -134,30 +139,36 @@ class QueueFragment : BaseFragment(), QueueContract.View {
         recyclerView.setRecyclerListener(RecyclerListener())
         recyclerView.adapter = adapter
 
-        itemTouchHelper = ItemTouchHelper(object : ItemTouchHelperCallback(
+        itemTouchHelperCallback = object : ItemTouchHelperCallback(
             { fromPosition, toPosition -> adapter.moveItem(fromPosition, toPosition) },
             { from, to ->
                 val numBeforeFrom = (0..from)
-                    .map { value -> adapter.items[value] }
-                    .filter { value -> value !is QueueViewBinder }
-                    .count()
+                        .map { value -> adapter.items[value] }
+                        .filter { value -> value !is QueueViewBinder }
+                        .count()
 
                 val numBeforeTo = (0..to)
-                    .map { value -> adapter.items[value] }
-                    .filter { value -> value !is QueueViewBinder }
-                    .count()
+                        .map { value -> adapter.items[value] }
+                        .filter { value -> value !is QueueViewBinder }
+                        .count()
 
                 mediaManager.moveQueueItem(from - numBeforeFrom, to - numBeforeTo)
             },
             {
                 // Nothing to do
+            },
+            {
+                pos -> queuePresenter.removeFromQueue((adapter.items[pos] as QueueViewBinder).queueItem)
+                adapter.removeItem(pos)
             }) {
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
                 return if (viewHolder.itemViewType == target.itemViewType) {
                     super.onMove(recyclerView, viewHolder, target)
                 } else false
             }
-        })
+        }
+
+        itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
 
         itemTouchHelper.attachToRecyclerView(recyclerView)
 
@@ -311,6 +322,19 @@ class QueueFragment : BaseFragment(), QueueContract.View {
                         queueItems.map { queueItem -> queueItem.song.duration / 1000 }.sum()
                     )
                 )
+                queueHeaderView.setClickListener{
+                    if(locked) {
+                        showToast("Unlocked swipe to delete", Toast.LENGTH_SHORT)
+                        locked = false
+                        itemTouchHelperCallback.changeSwipeState()
+                        imageView.setImageResource(R.drawable.ic_unlock_24dp)
+                    } else {
+                        showToast("Locked swipe to delete", Toast.LENGTH_SHORT)
+                        locked = true
+                        itemTouchHelperCallback.changeSwipeState()
+                        imageView.setImageResource(R.drawable.ic_lock_24dp)
+                    }
+                }
 
                 val viewModels = ArrayList<ViewModel<*>>()
                 viewModels.add(queueHeaderView)
@@ -409,7 +433,7 @@ class QueueFragment : BaseFragment(), QueueContract.View {
         }
     }
 
-    class QueueHeaderView(title: String) : SubheaderView(title) {
+    class QueueHeaderView(title: String) : SubheaderLockView(title) {
 
         override fun equals(other: Any?): Boolean {
             if (this === other) return true

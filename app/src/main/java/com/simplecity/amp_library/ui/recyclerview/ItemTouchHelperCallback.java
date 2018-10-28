@@ -8,6 +8,7 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     private int startPosition = -1;
     private int endPosition = -1;
+    private boolean isSwipable = false;
 
     public interface OnItemMoveListener {
         void onItemMove(int fromPosition, int toPosition);
@@ -21,21 +22,31 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
         void onClear();
     }
 
+    public interface OnSwipeListener {
+        void onSwipe(int pos);
+    }
+
     private OnItemMoveListener mItemMoveListener;
     private OnDropListener mOnDropListener;
 
     @Nullable
     private OnClearListener mOnClearListener;
+    private OnSwipeListener mOnSwipeListener;
 
-    public ItemTouchHelperCallback(OnItemMoveListener onMoveListener, OnDropListener onDropListener, @Nullable OnClearListener onClearListener) {
+    public ItemTouchHelperCallback(OnItemMoveListener onMoveListener, OnDropListener onDropListener, @Nullable OnClearListener onClearListener, OnSwipeListener onSwipeListener) {
         mItemMoveListener = onMoveListener;
         mOnDropListener = onDropListener;
         mOnClearListener = onClearListener;
+        mOnSwipeListener = onSwipeListener;
     }
 
     @Override
     public boolean isItemViewSwipeEnabled() {
-        return false;
+        return isSwipable;
+    }
+
+    public void changeSwipeState() {
+        isSwipable = !isSwipable;
     }
 
     @Override
@@ -57,7 +68,7 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        //Nothing endPosition do
+        mOnSwipeListener.onSwipe(viewHolder.getAdapterPosition());
     }
 
     @Override

@@ -590,6 +590,9 @@ public class PlaylistDetailFragment extends BaseFragment implements
             },
             () -> {
                 // Nothing to do
+            },
+            (pos) -> {
+
             }) {
         @Override
         public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
