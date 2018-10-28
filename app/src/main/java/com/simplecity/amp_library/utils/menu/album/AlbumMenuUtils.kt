@@ -40,10 +40,16 @@ object AlbumMenuUtils {
         fun showUpgradeDialog()
 
         fun showToast(message: String)
+
+        fun goToArtist(album: Album)
     }
 
-    fun setupAlbumMenu(menu: PopupMenu) {
+    fun setupAlbumMenu(menu: PopupMenu, showGoToArtist: Boolean = true) {
         menu.inflate(R.menu.menu_album)
+
+        if (!showGoToArtist) {
+            menu.menu.findItem(R.id.go_to).isVisible = false
+        }
 
         // Add playlist menu
         val sub = menu.menu.findItem(R.id.addToPlaylist).subMenu
@@ -127,6 +133,10 @@ object AlbumMenuUtils {
                 }
                 R.id.delete -> {
                     callbacks.showDeleteDialog(album)
+                    return@OnMenuItemClickListener true
+                }
+                R.id.goToArtist -> {
+                    callbacks.goToArtist(album)
                     return@OnMenuItemClickListener true
                 }
             }

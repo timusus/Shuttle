@@ -72,6 +72,8 @@ import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.StringUtils;
 import com.simplecity.amp_library.utils.color.ArgbEvaluator;
+import com.simplecity.amp_library.utils.menu.MenuUtils;
+
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
@@ -600,13 +602,13 @@ public class PlayerFragment extends BaseFragment implements
                 presenter.showLyrics(getContext());
                 return true;
             case R.id.goToArtist:
-                goToArtist();
+                MenuUtils.goToArtist(mediaManager.getAlbumArtist(), navigationEventRelay);
                 return true;
             case R.id.goToAlbum:
-                goToAlbum();
+                MenuUtils.goToAlbum(mediaManager.getAlbum(), navigationEventRelay);
                 return true;
             case R.id.goToGenre:
-                goToGenre();
+                MenuUtils.goToGenre(mediaManager.getGenre(), navigationEventRelay);
                 return true;
             case R.id.editTags:
                 presenter.editTagsClicked(getActivity());
@@ -619,38 +621,6 @@ public class PlayerFragment extends BaseFragment implements
                 return true;
         }
         return false;
-    }
-
-    @SuppressLint("CheckResult")
-    private void goToArtist() {
-        AlbumArtist currentAlbumArtist = mediaManager.getAlbumArtist();
-        // MediaManager.getAlbumArtist() is only populate with the album the current Song belongs to.
-        // Let's find the matching AlbumArtist in the DataManager.albumArtistRelay
-        DataManager.getInstance().getAlbumArtistsRelay()
-                .first(Collections.emptyList())
-                .flatMapObservable(Observable::fromIterable)
-                .filter(albumArtist -> currentAlbumArtist != null && albumArtist.name.equals(currentAlbumArtist.name) && albumArtist.albums.containsAll(currentAlbumArtist.albums))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        albumArtist -> navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_ARTIST, albumArtist, true)),
-                        error -> LogUtils.logException(TAG, "goToArtist error", error)
-                );
-    }
-
-    private void goToAlbum() {
-        navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_ALBUM, mediaManager.getAlbum(), true));
-    }
-
-    @SuppressLint("CheckResult")
-    private void goToGenre() {
-        mediaManager.getGenre()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        (UnsafeConsumer<Genre>) genre -> navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_GENRE, genre, true)),
-                        error -> LogUtils.logException(TAG, "Error retrieving genre", error)
-                );
     }
 
     void animateColors(@NonNull ColorSet from, @NonNull ColorSet to, int duration, @NonNull UnsafeConsumer<ColorSet> consumer, @Nullable UnsafeAction onComplete) {

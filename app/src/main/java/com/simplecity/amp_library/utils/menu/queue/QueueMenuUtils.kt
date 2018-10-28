@@ -100,6 +100,18 @@ object QueueMenuUtils {
                     callbacks.removeQueueItem(queueItem)
                     return@OnMenuItemClickListener true
                 }
+                R.id.goToAlbum -> {
+                    callbacks.goToAlbum(queueItem.song)
+                    return@OnMenuItemClickListener true
+                }
+                R.id.goToArtist -> {
+                    callbacks.goToArtist(queueItem.song)
+                    return@OnMenuItemClickListener true
+                }
+                R.id.goToGenre -> {
+                    callbacks.goToGenre(queueItem.song)
+                    return@OnMenuItemClickListener true
+                }
             }
             false
         }

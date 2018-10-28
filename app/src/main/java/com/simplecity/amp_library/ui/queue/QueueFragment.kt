@@ -39,6 +39,7 @@ import com.simplecity.amp_library.utils.PlaylistUtils
 import com.simplecity.amp_library.utils.ResourceUtils
 import com.simplecity.amp_library.utils.ShuttleUtils
 import com.simplecity.amp_library.utils.StringUtils
+import com.simplecity.amp_library.utils.menu.MenuUtils
 import com.simplecity.amp_library.utils.menu.queue.QueueMenuUtils
 import com.simplecity.amp_library.utils.menu.song.SongMenuCallbacksAdapter
 import com.simplecity.multisheetview.ui.view.MultiSheetView
@@ -107,6 +108,18 @@ class QueueFragment : BaseFragment(), QueueContract.View {
 
             override fun removeQueueItems(queueItems: Single<List<QueueItem>>) {
                 queuePresenter.removeFromQueue(queueItems)
+            }
+
+            override fun goToArtist(song: Song) {
+                MenuUtils.goToArtist(song.albumArtist, navigationEventRelay)
+            }
+
+            override fun goToAlbum(song: Song) {
+                MenuUtils.goToAlbum(song.album, navigationEventRelay)
+            }
+
+            override fun goToGenre(song: Song) {
+                MenuUtils.goToGenre(song.genre, navigationEventRelay)
             }
         }
 

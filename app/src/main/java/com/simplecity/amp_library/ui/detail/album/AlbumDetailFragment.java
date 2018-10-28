@@ -559,7 +559,7 @@ public class AlbumDetailFragment extends BaseFragment implements
         @Override
         public void onSongOverflowClick(int position, View v, Song song) {
             PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
-            SongMenuUtils.INSTANCE.setupSongMenu(popupMenu, false);
+            SongMenuUtils.INSTANCE.setupSongMenu(popupMenu, false, false, true);
             popupMenu.setOnMenuItemClickListener(SongMenuUtils.INSTANCE.getSongMenuClickListener(song, songMenuCallbacksAdapter));
             popupMenu.show();
         }
