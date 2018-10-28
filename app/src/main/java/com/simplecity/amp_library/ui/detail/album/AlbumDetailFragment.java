@@ -293,7 +293,7 @@ public class AlbumDetailFragment extends BaseFragment implements
         toolbar.getMenu().findItem(R.id.info).setVisible(true);
         toolbar.getMenu().findItem(R.id.artwork).setVisible(true);
 
-        AlbumSortHelper.updateAlbumSortMenuItems(toolbar.getMenu(), SortManager.getInstance().getArtistDetailAlbumsSortOrder(), SortManager.getInstance().getArtistDetailAlbumsAscending());
+        SongSortHelper.updateSongSortMenuItems(toolbar.getMenu(), SortManager.getInstance().getAlbumDetailSongsSortOrder(), SortManager.getInstance().getAlbumDetailSongsAscending());
     }
 
     @Override
@@ -325,16 +325,6 @@ public class AlbumDetailFragment extends BaseFragment implements
                 return true;
         }
 
-        Integer albumSortOrder = AlbumSortHelper.handleAlbumDetailMenuSortOrderClicks(item);
-        if (albumSortOrder != null) {
-            SortManager.getInstance().setArtistDetailAlbumsSortOrder(albumSortOrder);
-            presenter.loadData();
-        }
-        Boolean albumsAsc = AlbumSortHelper.handleAlbumDetailMenuSortOrderAscClicks(item);
-        if (albumsAsc != null) {
-            SortManager.getInstance().setArtistDetailAlbumsAscending(albumsAsc);
-            presenter.loadData();
-        }
         Integer songSortOder = SongSortHelper.handleSongMenuSortOrderClicks(item);
         if (songSortOder != null) {
             SortManager.getInstance().setAlbumDetailSongsSortOrder(songSortOder);
@@ -346,7 +336,6 @@ public class AlbumDetailFragment extends BaseFragment implements
             presenter.loadData();
         }
 
-        AlbumSortHelper.updateAlbumSortMenuItems(toolbar.getMenu(), SortManager.getInstance().getArtistDetailAlbumsSortOrder(), SortManager.getInstance().getArtistDetailAlbumsAscending());
         SongSortHelper.updateSongSortMenuItems(toolbar.getMenu(), SortManager.getInstance().getAlbumDetailSongsSortOrder(), SortManager.getInstance().getAlbumDetailSongsAscending());
 
         return super.onOptionsItemSelected(item);
