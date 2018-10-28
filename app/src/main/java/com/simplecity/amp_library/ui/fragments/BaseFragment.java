@@ -19,6 +19,7 @@ import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.ui.activities.BaseCastActivity;
+import com.simplecity.amp_library.ui.drawer.NavigationEventRelay;
 import com.simplecity.amp_library.ui.views.CustomMediaRouteActionProvider;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
 import com.simplecity.amp_library.utils.AnalyticsManager;
@@ -39,6 +40,9 @@ public abstract class BaseFragment extends BaseController {
 
     @Inject
     protected MediaManager mediaManager;
+
+    @Inject
+    protected NavigationEventRelay navigationEventRelay;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -132,6 +136,10 @@ public abstract class BaseFragment extends BaseController {
 
     public MediaManager getMediaManager() {
         return mediaManager;
+    }
+
+    public NavigationEventRelay getNavigationEventRelay() {
+        return navigationEventRelay;
     }
 
     protected abstract String screenName();

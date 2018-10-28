@@ -447,7 +447,7 @@ public class SearchFragment extends BaseFragment implements
         @Override
         public void onSongOverflowClick(int position, View v, Song song) {
             PopupMenu menu = new PopupMenu(v.getContext(), v);
-            SongMenuUtils.INSTANCE.setupSongMenu(menu, false);
+            SongMenuUtils.INSTANCE.setupSongMenu(menu, false, true, true);
             menu.setOnMenuItemClickListener(SongMenuUtils.INSTANCE.getSongMenuClickListener(song, songMenuCallbacksAdapter));
             menu.show();
         }
@@ -474,7 +474,7 @@ public class SearchFragment extends BaseFragment implements
         @Override
         public void onAlbumOverflowClicked(View v, Album album) {
             PopupMenu menu = new PopupMenu(v.getContext(), v);
-            AlbumMenuUtils.INSTANCE.setupAlbumMenu(menu);
+            AlbumMenuUtils.INSTANCE.setupAlbumMenu(menu, true);
             menu.setOnMenuItemClickListener(AlbumMenuUtils.INSTANCE.getAlbumMenuClickListener(v.getContext(), mediaManager, album, albumMenuCallbacksAdapter));
             menu.show();
         }

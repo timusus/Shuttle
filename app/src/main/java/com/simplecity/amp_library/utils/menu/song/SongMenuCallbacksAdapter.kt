@@ -113,4 +113,15 @@ open class SongMenuCallbacksAdapter(val fragment: BaseFragment, val disposables:
         MenuUtils.addToPlaylist(fragment.context, playlist, songs, { onPlaylistItemsInserted(songs) })
     }
 
+    override fun goToArtist(song: Song) {
+        MenuUtils.goToArtist(song.albumArtist, fragment.navigationEventRelay)
+    }
+
+    override fun goToAlbum(song: Song) {
+        MenuUtils.goToAlbum(song.album, fragment.navigationEventRelay)
+    }
+
+    override fun goToGenre(song: Song) {
+        MenuUtils.goToGenre(song.genre, fragment.navigationEventRelay)
+    }
 }

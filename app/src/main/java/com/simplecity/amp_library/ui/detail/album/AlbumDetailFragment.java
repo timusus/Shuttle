@@ -293,7 +293,7 @@ public class AlbumDetailFragment extends BaseFragment implements
         toolbar.getMenu().findItem(R.id.info).setVisible(true);
         toolbar.getMenu().findItem(R.id.artwork).setVisible(true);
 
-        AlbumSortHelper.updateAlbumSortMenuItems(toolbar.getMenu(), SortManager.getInstance().getArtistDetailAlbumsSortOrder(), SortManager.getInstance().getArtistDetailAlbumsAscending());
+        SongSortHelper.updateSongSortMenuItems(toolbar.getMenu(), SortManager.getInstance().getAlbumDetailSongsSortOrder(), SortManager.getInstance().getAlbumDetailSongsAscending());
     }
 
     @Override
@@ -336,7 +336,7 @@ public class AlbumDetailFragment extends BaseFragment implements
             presenter.loadData();
         }
 
-        AlbumSortHelper.updateAlbumSortMenuItems(toolbar.getMenu(), SortManager.getInstance().getArtistDetailAlbumsSortOrder(), SortManager.getInstance().getArtistDetailAlbumsAscending());
+        SongSortHelper.updateSongSortMenuItems(toolbar.getMenu(), SortManager.getInstance().getAlbumDetailSongsSortOrder(), SortManager.getInstance().getAlbumDetailSongsAscending());
 
         return super.onOptionsItemSelected(item);
     }
@@ -559,7 +559,7 @@ public class AlbumDetailFragment extends BaseFragment implements
         @Override
         public void onSongOverflowClick(int position, View v, Song song) {
             PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
-            SongMenuUtils.INSTANCE.setupSongMenu(popupMenu, false);
+            SongMenuUtils.INSTANCE.setupSongMenu(popupMenu, false, false, true);
             popupMenu.setOnMenuItemClickListener(SongMenuUtils.INSTANCE.getSongMenuClickListener(song, songMenuCallbacksAdapter));
             popupMenu.show();
         }

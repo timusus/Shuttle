@@ -46,6 +46,12 @@ object SongMenuUtils {
         fun removeSong(song: Song)
 
         fun showDeleteDialog(song: Song)
+
+        fun goToArtist(song: Song)
+
+        fun goToAlbum(song: Song)
+
+        fun goToGenre(song: Song)
     }
 
     interface SongListCallbacks {
@@ -75,11 +81,24 @@ object SongMenuUtils {
         fun showDeleteDialog(songs: Single<List<Song>>)
     }
 
-    fun setupSongMenu(menu: PopupMenu, showRemoveButton: Boolean) {
+    fun setupSongMenu(
+            menu: PopupMenu,
+            showRemoveButton: Boolean,
+            showGoToAlbum: Boolean = true,
+            showGoToArtist: Boolean = true
+    ) {
         menu.inflate(R.menu.menu_song)
 
         if (!showRemoveButton) {
             menu.menu.findItem(R.id.remove).isVisible = false
+        }
+
+        if (!showGoToAlbum) {
+            menu.menu.findItem(R.id.goToAlbum).isVisible = false
+        }
+
+        if (!showGoToArtist) {
+            menu.menu.findItem(R.id.goToArtist).isVisible = false
         }
 
         // Add playlist menu
@@ -164,6 +183,18 @@ object SongMenuUtils {
                 }
                 R.id.remove -> {
                     callbacks.removeSong(song)
+                    return@OnMenuItemClickListener true
+                }
+                R.id.goToAlbum -> {
+                    callbacks.goToAlbum(song)
+                    return@OnMenuItemClickListener true
+                }
+                R.id.goToArtist -> {
+                    callbacks.goToArtist(song)
+                    return@OnMenuItemClickListener true
+                }
+                R.id.goToGenre -> {
+                    callbacks.goToGenre(song)
                     return@OnMenuItemClickListener true
                 }
             }

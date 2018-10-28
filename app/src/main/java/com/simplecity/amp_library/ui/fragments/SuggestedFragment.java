@@ -92,7 +92,7 @@ public class SuggestedFragment extends BaseFragment implements
         @Override
         public void onSongOverflowClicked(View v, int position, Song song) {
             PopupMenu popupMenu = new PopupMenu(getContext(), v);
-            SongMenuUtils.INSTANCE.setupSongMenu(popupMenu, false);
+            SongMenuUtils.INSTANCE.setupSongMenu(popupMenu, false, true, true);
             popupMenu.setOnMenuItemClickListener(SongMenuUtils.INSTANCE.getSongMenuClickListener(song, songMenuCallbacksAdapter));
             popupMenu.show();
         }
@@ -427,7 +427,7 @@ public class SuggestedFragment extends BaseFragment implements
     @Override
     public void onAlbumOverflowClicked(View v, Album album) {
         PopupMenu menu = new PopupMenu(getContext(), v);
-        AlbumMenuUtils.INSTANCE.setupAlbumMenu(menu);
+        AlbumMenuUtils.INSTANCE.setupAlbumMenu(menu, true);
         menu.setOnMenuItemClickListener(AlbumMenuUtils.INSTANCE.getAlbumMenuClickListener(getContext(), mediaManager, album, albumMenuCallbacksAdapter));
         menu.show();
     }
