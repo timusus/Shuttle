@@ -42,6 +42,8 @@ public class TabChooserDialog {
                         (fromPosition, toPosition) -> {
                         },
                         () -> {
+                        },
+                        (pos) -> {
                         }
                 ));
 
