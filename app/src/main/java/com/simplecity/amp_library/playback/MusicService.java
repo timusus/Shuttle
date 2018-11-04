@@ -216,7 +216,7 @@ public class MusicService extends MediaBrowserServiceCompat {
             // If there is a playlist but playback is paused, then wait a while before stopping the service, so that pause/resume isn't slow.
             // Also delay stopping the service if we're transitioning between tracks.
         } else if (!queueManager.getCurrentPlaylist().isEmpty()) {
-            AnalyticsManager.dropBreadcrumb(TAG, String.format("onUnbind() scheduling delayed shutdown. Playlist size: %d queue size: %d has track ended message: %s"));
+            AnalyticsManager.dropBreadcrumb(TAG, "onUnbind() scheduling delayed shutdown.");
             scheduleDelayedShutdown();
             return true;
         }
