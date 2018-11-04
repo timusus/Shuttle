@@ -1,0 +1,67 @@
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:name="vector"
+            android:height="24dp"
+            android:viewportHeight="24"
+            android:viewportWidth="24"
+            android:width="24dp">
+            <path
+                android:name="main"
+                android:fillColor="#000"
+                android:pathData="M 18 20 L 18 10 L 6 10 L 6 20 L 18 20 M 18 8 C 19.1 8 20 8.9 20 10 L 20 20 C 20 21.1 19.1 22 18 22 L 6 22 C 4.9 22 4 21.1 4 20 L 4 10 C 4 8.9 4.9 8 6 8 L 15 8 L 15 6 C 15 4.3 13.7 3 12 3 C 10.3 3 9 4.3 9 6 L 7 6 C 7 3.2 9.2 1 12 1 C 14.8 1 17 3.2 17 6 L 17 8 L 18 8"
+                android:strokeWidth="1"/>
+            <path
+                android:name="locked_rect"
+                android:fillColor="#000"
+                android:pathData="M 7 6 L 9 6 L 9 6 L 7 6 Z"
+                android:strokeWidth="1"/>
+            <path
+                android:name="box"
+                android:fillColor="#00000000"
+                android:pathData="M 6 10 L 18 10 L 18 20 L 6 20 M 12 13 C 11.47 13 10.961 13.211 10.586 13.586 C 10.211 13.961 10 14.47 10 15 C 10 15.53 10.211 16.039 10.586 16.414 C 10.961 16.789 11.47 17 12 17 C 12.53 17 13.039 16.789 13.414 16.414 C 13.789 16.039 14 15.53 14 15 C 14 14.47 13.789 13.961 13.414 13.586 C 13.039 13.211 12.53 13 12 13 Z"
+                android:strokeWidth="1"/>
+            <path
+                android:name="path"
+                android:fillColor="#000"
+                android:pathData="M 12 13 C 11.47 13 10.961 13.211 10.586 13.586 C 10.211 13.961 10 14.47 10 15 C 10 15.53 10.211 16.039 10.586 16.414 C 10.961 16.789 11.47 17 12 17 C 12.53 17 13.039 16.789 13.414 16.414 C 13.789 16.039 14 15.53 14 15 C 14 14.47 13.789 13.961 13.414 13.586 C 13.039 13.211 12.53 13 12 13 Z"/>
+        </vector>
+    </aapt:attr>
+    <target android:name="box">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="150"
+                android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+                android:propertyName="fillColor"
+                android:startOffset="150"
+                android:valueFrom="#00000000"
+                android:valueTo="#000000"
+                android:valueType="colorType"/>
+        </aapt:attr>
+    </target>
+    <target android:name="locked_rect">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="250"
+                android:interpolator="@android:interpolator/fast_out_slow_in"
+                android:propertyName="pathData"
+                android:valueFrom="M 7 6 L 9 6 L 9 6 L 7 6 Z"
+                android:valueTo="M 7 6 L 9 6 L 9 8 L 7 8 Z"
+                android:valueType="pathType"/>
+        </aapt:attr>
+    </target>
+    <target android:name="path">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="150"
+                android:interpolator="@android:interpolator/fast_out_slow_in"
+                android:propertyName="fillColor"
+                android:startOffset="150"
+                android:valueFrom="#000000"
+                android:valueTo="#00000000"
+                android:valueType="colorType"/>
+        </aapt:attr>
+    </target>
+</animated-vector>

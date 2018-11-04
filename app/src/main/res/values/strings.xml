@@ -220,7 +220,10 @@
     <string name="fav_title">Favorites</string>
     <!-- -->
     <string name="library_title">Library</string>
-    <!-- -->
+    <!-- Lock Queue -->
+    <string name="menu_queue_swipe_enable">Enable Swipe</string>
+    <string name="menu_queue_swipe_disable">Disable Swipe</string>
+
 
     <!-- Library screen, menu item -->
     <string name="search_title">Search</string>

@@ -8,7 +8,8 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     private int startPosition = -1;
     private int endPosition = -1;
-    private boolean isSwipable = false;
+
+    private boolean enabled = false;
 
     public interface OnItemMoveListener {
         void onItemMove(int fromPosition, int toPosition);
@@ -42,11 +43,11 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public boolean isItemViewSwipeEnabled() {
-        return isSwipable;
+        return enabled;
     }
 
-    public void changeSwipeState() {
-        isSwipable = !isSwipable;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     @Override

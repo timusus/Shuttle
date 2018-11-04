@@ -55,6 +55,4 @@ public @interface ViewType {
     int SUBHEADER = 33;
 
     int SHUFFLE_ALBUMS = 34;
-
-    int SUBHEADERLOCK = 35;
 }

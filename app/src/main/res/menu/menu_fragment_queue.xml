@@ -7,4 +7,10 @@
         android:title="@string/clear_queue"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/menu_lock"
+        android:title="@string/menu_queue_swipe_disable"
+        app:actionLayout="@layout/action_bar_lock"
+        app:showAsAction="ifRoom"/>
+
 </menu>

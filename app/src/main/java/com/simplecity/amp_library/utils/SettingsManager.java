@@ -61,13 +61,11 @@ public class SettingsManager extends BaseSettingsManager {
     // Whether the 'rate' snackbar has been seen during this session
     public boolean hasSeenRateSnackbar = false;
 
-    // Whether to display artwork in the songs list
-    //public static String KEY_SHOW_
-
     private SettingsManager() {
 
     }
 
+    // Whether to display artwork in the songs list
     public static final String KEY_SHOW_LOCKSCREEN_ARTWORK = "pref_show_lockscreen_artwork";
 
     public boolean showLockscreenArtwork() {
@@ -318,6 +316,7 @@ public class SettingsManager extends BaseSettingsManager {
     private static final String KEY_DOWNLOAD_AUTOMATICALLY = "pref_download_artwork_auto";
     private static final String KEY_USE_GMAIL_PLACEHOLDERS = "pref_placeholders";
     private static final String KEY_QUEUE_ARTWORK = "pref_artwork_queue";
+    private static final String KEY_QUEUE_SWIPE_LOCKED = "pref_lock_queue";
     private static final String KEY_SONG_LIST_ARTWORK = "pref_artwork_song_list";
     private static final String KEY_CROP_ARTWORK = "pref_crop_artwork";
     public static final String KEY_IGNORE_MEDIASTORE_ART = "pref_ignore_mediastore_artwork";
@@ -343,6 +342,14 @@ public class SettingsManager extends BaseSettingsManager {
 
     public boolean showArtworkInQueue() {
         return getBool(KEY_QUEUE_ARTWORK, true);
+    }
+
+    public boolean queueSwipeLocked() {
+        return getBool(KEY_QUEUE_SWIPE_LOCKED, false);
+    }
+
+    public void setQueueSwipeLocked(boolean locked) {
+        setBool(KEY_QUEUE_SWIPE_LOCKED, locked);
     }
 
     public boolean cropArtwork() {
@@ -467,15 +474,13 @@ public class SettingsManager extends BaseSettingsManager {
         setInt(KEY_NUM_WEEKS, weeks);
     }
 
-
-
     // Song List
 
     public boolean showArtworkInSongList() {
         return getBool(KEY_SONG_LIST_ARTWORK, true);
     }
 
-    public void setShowArtworkInSongList(boolean showArtworkInSongList){
+    public void setShowArtworkInSongList(boolean showArtworkInSongList) {
         setBool(KEY_SONG_LIST_ARTWORK, showArtworkInSongList);
     }
 }

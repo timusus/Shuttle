@@ -25,6 +25,8 @@ interface QueueContract {
         fun onRemovedFromQueue(queueItems: List<QueueItem>)
 
         fun showUpgradeDialog()
+
+        fun setQueueSwipeLocked(locked: Boolean)
     }
 
     interface Presenter {
@@ -39,8 +41,12 @@ interface QueueContract {
 
         fun removeFromQueue(queueItems: Single<List<QueueItem>>)
 
+        fun moveQueueItem(from: Int, to: Int)
+
         fun loadData()
 
         fun onQueueItemClick(queueItem: QueueItem)
+
+        fun setQueueSwipeLocked(locked: Boolean)
     }
 }

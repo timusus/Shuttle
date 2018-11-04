@@ -12,6 +12,7 @@ import com.simplecity.amp_library.playback.constants.InternalIntents
 import com.simplecity.amp_library.ui.presenters.Presenter
 import com.simplecity.amp_library.ui.queue.QueueContract.View
 import com.simplecity.amp_library.utils.PlaylistUtils
+import com.simplecity.amp_library.utils.SettingsManager
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -52,12 +53,12 @@ constructor(internal var mediaManager: MediaManager) : Presenter<View>(), QueueC
     }
 
     override fun saveQueue(context: Context) {
-        PlaylistUtils.createPlaylistDialog(context, mediaManager.getQueue().toSongs(), null)
+        PlaylistUtils.createPlaylistDialog(context, mediaManager.queue.toSongs(), null)
     }
 
     override fun saveQueue(context: Context, item: MenuItem) {
         val playlist = item.intent.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist
-        PlaylistUtils.addToPlaylist(context, playlist, mediaManager.getQueue().toSongs(), null)
+        PlaylistUtils.addToPlaylist(context, playlist, mediaManager.queue.toSongs(), null)
     }
 
     override fun clearQueue() {
@@ -76,16 +77,25 @@ constructor(internal var mediaManager: MediaManager) : Presenter<View>(), QueueC
         })
     }
 
+    override fun moveQueueItem(from: Int, to: Int) {
+        mediaManager.moveQueueItem(from, to)
+    }
+
     override fun loadData() {
-        view?.setData(mediaManager.getQueue(), mediaManager.getQueuePosition())
+        view?.setData(mediaManager.queue, mediaManager.queuePosition)
     }
 
     override fun onQueueItemClick(queueItem: QueueItem) {
-        val index = mediaManager.getQueue().indexOf(queueItem)
+        val index = mediaManager.queue.indexOf(queueItem)
         if (index >= 0) {
-            mediaManager.setQueuePosition(index)
+            mediaManager.queuePosition = index
             view?.updateQueuePosition(index)
         }
+    }
+
+    override fun setQueueSwipeLocked(locked: Boolean) {
+        SettingsManager.getInstance().setQueueSwipeLocked(locked)
+        view?.setQueueSwipeLocked(locked)
     }
 
     companion object {
