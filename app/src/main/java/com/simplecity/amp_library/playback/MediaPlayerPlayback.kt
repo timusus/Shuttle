@@ -143,7 +143,11 @@ internal class MediaPlayerPlayback(context: Context) : LocalPlayback(context), M
     override fun setNextDataSource(path: String?) {
         synchronized(this) {
 
-            currentMediaPlayer?.setNextMediaPlayer(null)
+            try {
+                currentMediaPlayer?.setNextMediaPlayer(null)
+            } catch (ignored: IllegalArgumentException) {
+                // Nothing to do
+            }
 
             releaseNextMediaPlayer()
 
