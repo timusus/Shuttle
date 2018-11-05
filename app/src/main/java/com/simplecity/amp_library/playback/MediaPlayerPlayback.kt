@@ -145,7 +145,7 @@ internal class MediaPlayerPlayback(context: Context) : LocalPlayback(context), M
 
             currentMediaPlayer?.setNextMediaPlayer(null)
 
-            nextMediaPlayer?.release()
+            releaseNextMediaPlayer()
 
             if (TextUtils.isEmpty(path)) {
                 return
