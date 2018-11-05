@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="initial-scale=1.0" />
-    <link rel="stylesheet" href="styles_dark.css" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="initial-scale=1.0"/>
+    <link rel="stylesheet" href="styles_dark.css"/>
 </head>
 
 <body>
-<body>
+<h4>2.0.7-beta3</h4>
+<ul>
+    <li>Crash fixes</li>
+</ul>
 <h4>2.0.7-beta2</h4>
 <ul>
     <li>Migrated to new Cast Framework. Lots of improvements to Chromecast playback</li>
@@ -101,7 +104,7 @@
     <li>Lowered translation threshold. Translations need to be only 70% complete to make it into Shuttle.
         </p>
         </p>
-        Calling all translators: <a href="https://www.shuttle.oneskyapp.com">Shuttle Translations</a> </li>
+        Calling all translators: <a href="https://www.shuttle.oneskyapp.com">Shuttle Translations</a></li>
     <li>Various crash fixes</li>
 </ul>
 <h4>2.0.0</h4>
@@ -242,10 +245,14 @@
 </ul>
 <h4>1.6.0</h4>
 <h4>Album-artist support.</h4>
-<p>Finally, after more than 3 years of procrastination, excuses &amp; failed attempts, album-artist support has arrived for Shuttle. I've managed to work around the shortcomings of the Android MediaStore. So, artists/albums who share the same album-artist will now be grouped together. Hooray for compilation albums!</p>
+<p>Finally, after more than 3 years of procrastination, excuses &amp; failed attempts, album-artist support has arrived for Shuttle. I've managed to work around the shortcomings of the Android
+    MediaStore. So, artists/albums who share the same album-artist will now be grouped together. Hooray for compilation albums!</p>
 <h4>Major performance improvements:</h4>
-<p>Since Shuttle is backed by the Android Media Store (a sqlite database), it spends a great deal of time making 'queries' to that database. These queries can take a bit of time, and in some unexpected places, these were blocking the app from doing more important stuff. These were just some bad-practice remnants/old code from long ago. Anyway, this whole approach has been rethought, and Shuttle is now backed by a library called RxJava. All of this intensive work has been moved into the background, and the amount of repeat work has been significantly reduced.</p>
-<p>I've also done some digging into some of the more subtle performance issues plaguing Shuttle. I've learnt a lot in the process, as well as applying a lot of new techniques I've picked up over the last couple of years of working as a professional developer - so you can expect to be much more performant now, and going forward.</p>
+<p>Since Shuttle is backed by the Android Media Store (a sqlite database), it spends a great deal of time making 'queries' to that database. These queries can take a bit of time, and in some
+    unexpected places, these were blocking the app from doing more important stuff. These were just some bad-practice remnants/old code from long ago. Anyway, this whole approach has been rethought,
+    and Shuttle is now backed by a library called RxJava. All of this intensive work has been moved into the background, and the amount of repeat work has been significantly reduced.</p>
+<p>I've also done some digging into some of the more subtle performance issues plaguing Shuttle. I've learnt a lot in the process, as well as applying a lot of new techniques I've picked up over the
+    last couple of years of working as a professional developer - so you can expect to be much more performant now, and going forward.</p>
 <p>Lastly, with all these changes going on, I've made Shuttle's codebase a lot easier to work with. So fixes &amp; features should be easier to implement. (I say this every time!)</p>
 <h4>New artwork picker (Shuttle +):</h4>
 <p>You can now view all the possible artwork sources for an album/artist, and select the one you prefer.</p>
@@ -254,7 +261,8 @@
 <h4>Shared element transitions:</h4>
 <p>Finally, a bit of animation. Shuttle now uses some (admittedly basic) Material style animations when transitioning between screens. Hopefully there's more of this to come.</p>
 <h4>Artwork loading/downloading changes:</h4>
-<p>Lots of work has been done on the artwork loading (more info below). Note: Cache cleaners like 'Sd Maid' will delete Shuttle's artwork.. My recommendation is to avoid cache cleaners and instead allow the Android system to manage caches the way they're meant to be managed!</p>
+<p>Lots of work has been done on the artwork loading (more info below). Note: Cache cleaners like 'Sd Maid' will delete Shuttle's artwork.. My recommendation is to avoid cache cleaners and instead
+    allow the Android system to manage caches the way they're meant to be managed!</p>
 <h4>Folder browsing:</h4>
 <ul>
     <li>Improved the folder browser media scanner. Now actually works when scanning a directory.</li>
@@ -287,7 +295,9 @@
 </ul>
 <h4>Blacklist/Whitelist:</h4>
 <ul>
-    <li>The blacklist and whitelist have been improved. You can now blacklist albums &amp; artists. Also, if all songs belonging to an album are blacklisted, that album no longer shows up in the listing screens.</li>
+    <li>The blacklist and whitelist have been improved. You can now blacklist albums &amp; artists. Also, if all songs belonging to an album are blacklisted, that album no longer shows up in the
+        listing screens.
+    </li>
 </ul>
 <h4>Various:</h4>
 <ul>
@@ -295,7 +305,9 @@
     <li>The 'suggested' screen has been overhauled. Shows more suggestions via horizontal lists.</li>
     <li>Search has been rewritten. Should fix issue where search results didn't show up for some users.</li>
     <li>Added selection count to multi-selection toolbar</li>
-    <li>Integrated Firebase Analytics. Shuttle now anonymously tracks events like number of screen views, which tabs get used the most, which colors are used the most, etc. No personally identifiable information is collected. This information will be used to help make informed decisions about future changes to Shuttle.</li>
+    <li>Integrated Firebase Analytics. Shuttle now anonymously tracks events like number of screen views, which tabs get used the most, which colors are used the most, etc. No personally identifiable
+        information is collected. This information will be used to help make informed decisions about future changes to Shuttle.
+    </li>
 </ul>
 <h4>Fixes:</h4>
 <ul>
@@ -400,7 +412,9 @@
     <li>Added search word highlighting (thanks Andrew Neal)</li>
     <li>Show voice search query in search view</li>
     <li>Major folder browser work. Go see for yourself!</li>
-    <li>Added a 'snackbar' asking you to rate the app. Shown for 15 seconds on the 10th, 50th, 100th, 150th, etc. time you launch the app. This will never show again if you click 'rate it' (you don't have to leave a rating)</li>
+    <li>Added a 'snackbar' asking you to rate the app. Shown for 15 seconds on the 10th, 50th, 100th, 150th, etc. time you launch the app. This will never show again if you click 'rate it' (you don't
+        have to leave a rating)
+    </li>
     <li>Added option to tint navigation bar</li>
     <li>Dark themed changelog!!</li>
     <li>Fixed whitelist checkbox padding issue</li>
