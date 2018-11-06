@@ -63,6 +63,7 @@ public class MusicService extends MediaBrowserServiceCompat {
 
     private PlaybackManager playbackManager;
 
+    @Nullable
     private CastManager castManager;
 
     private BluetoothManager bluetoothManager;
@@ -109,7 +110,9 @@ public class MusicService extends MediaBrowserServiceCompat {
         playbackManager = new PlaybackManager(this, queueManager, musicServiceCallbacks);
         setSessionToken(playbackManager.getMediaSessionToken());
 
-        castManager = new CastManager(this, playbackManager);
+        if (CastManager.isCastAvailable(this)) {
+            castManager = new CastManager(this, playbackManager);
+        }
 
         bluetoothManager = new BluetoothManager(playbackManager, musicServiceCallbacks);
 
@@ -254,7 +257,9 @@ public class MusicService extends MediaBrowserServiceCompat {
         // Remove any callbacks from the handlers
         notificationStateHandler.removeCallbacksAndMessages(null);
 
-        castManager.destroy();
+        if (castManager != null) {
+            castManager.destroy();
+        }
 
         headsetManager.unregisterHeadsetPlugReceiver(this);
         bluetoothManager.unregisterBluetoothReceiver(this);

@@ -14,8 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,12 +44,11 @@ import com.jakewharton.rxbinding2.widget.SeekBarStopChangeEvent;
 import com.jp.wasabeef.glide.transformations.BlurTransformation;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.cast.CastManager;
 import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.glide.palette.ColorSet;
 import com.simplecity.amp_library.glide.palette.ColorSetTranscoder;
-import com.simplecity.amp_library.model.AlbumArtist;
-import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.QueueManager;
 import com.simplecity.amp_library.rx.UnsafeAction;
@@ -68,7 +65,6 @@ import com.simplecity.amp_library.ui.views.ShuffleButton;
 import com.simplecity.amp_library.ui.views.SizableSeekBar;
 import com.simplecity.amp_library.ui.views.SnowfallView;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetSlideEventRelay;
-import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.SettingsManager;
@@ -76,14 +72,11 @@ import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.StringUtils;
 import com.simplecity.amp_library.utils.color.ArgbEvaluator;
 import com.simplecity.amp_library.utils.menu.MenuUtils;
-
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
-import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import kotlin.Unit;
@@ -210,8 +203,10 @@ public class PlayerFragment extends BaseFragment implements
         toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
         toolbar.inflateMenu(R.menu.menu_now_playing);
 
-        MenuItem menuItem = CastButtonFactory.setUpMediaRouteButton(getContext(), toolbar.getMenu(), R.id.media_route_menu_item);
-        menuItem.setVisible(true);
+        if (CastManager.isCastAvailable(getContext())) {
+            MenuItem menuItem = CastButtonFactory.setUpMediaRouteButton(getContext(), toolbar.getMenu(), R.id.media_route_menu_item);
+            menuItem.setVisible(true);
+        }
 
         MenuItem favoriteMenuItem = toolbar.getMenu().findItem(R.id.favorite);
         FavoriteActionBarView menuActionView = (FavoriteActionBarView) favoriteMenuItem.getActionView();

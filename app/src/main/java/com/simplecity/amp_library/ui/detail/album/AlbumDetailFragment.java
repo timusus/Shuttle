@@ -36,6 +36,7 @@ import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.cast.framework.CastButtonFactory;
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.cast.CastManager;
 import com.simplecity.amp_library.glide.utils.AlwaysCrossFade;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.ArtworkProvider;
@@ -67,7 +68,6 @@ import com.simplecity.amp_library.utils.StringUtils;
 import com.simplecity.amp_library.utils.TypefaceManager;
 import com.simplecity.amp_library.utils.menu.song.SongMenuCallbacksAdapter;
 import com.simplecity.amp_library.utils.menu.song.SongMenuUtils;
-import com.simplecity.amp_library.utils.sorting.AlbumSortHelper;
 import com.simplecity.amp_library.utils.sorting.SongSortHelper;
 import com.simplecity.amp_library.utils.sorting.SortManager;
 import com.simplecityapps.recycler_adapter.adapter.CompletionListUpdateCallbackAdapter;
@@ -277,8 +277,10 @@ public class AlbumDetailFragment extends BaseFragment implements
     private void setupToolbarMenu(Toolbar toolbar) {
         toolbar.inflateMenu(R.menu.menu_detail_sort);
 
-        MenuItem menuItem = CastButtonFactory.setUpMediaRouteButton(getContext(), toolbar.getMenu(), R.id.media_route_menu_item);
-        menuItem.setVisible(true);
+        if (CastManager.isCastAvailable(getContext())) {
+            MenuItem menuItem = CastButtonFactory.setUpMediaRouteButton(getContext(), toolbar.getMenu(), R.id.media_route_menu_item);
+            menuItem.setVisible(true);
+        }
 
         toolbar.setOnMenuItemClickListener(this);
 

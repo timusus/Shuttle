@@ -40,6 +40,7 @@ import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.cast.framework.CastButtonFactory;
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.cast.CastManager;
 import com.simplecity.amp_library.glide.utils.AlwaysCrossFade;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
@@ -300,8 +301,10 @@ public class ArtistDetailFragment extends BaseFragment implements
 
         toolbar.inflateMenu(R.menu.menu_detail_sort);
 
-        MenuItem menuItem = CastButtonFactory.setUpMediaRouteButton(getContext(), toolbar.getMenu(), R.id.media_route_menu_item);
-        menuItem.setVisible(true);
+        if (CastManager.isCastAvailable(getContext())) {
+            MenuItem menuItem = CastButtonFactory.setUpMediaRouteButton(getContext(), toolbar.getMenu(), R.id.media_route_menu_item);
+            menuItem.setVisible(true);
+        }
 
         toolbar.setOnMenuItemClickListener(this);
 

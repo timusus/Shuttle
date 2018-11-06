@@ -6,10 +6,12 @@ import com.google.android.gms.cast.framework.CastContext;
 import com.google.android.gms.cast.framework.CastSession;
 import com.google.android.gms.cast.framework.SessionManager;
 import com.google.android.gms.cast.framework.SessionManagerListener;
+import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.playback.CastPlayback;
 import com.simplecity.amp_library.playback.MediaPlayerPlayback;
 import com.simplecity.amp_library.playback.Playback;
 import com.simplecity.amp_library.playback.PlaybackManager;
+import com.simplecity.amp_library.utils.LogUtils;
 
 public class CastManager {
 
@@ -29,6 +31,7 @@ public class CastManager {
         this.playbackManager = playbackManager;
 
         sessionManager = CastContext.getSharedInstance(context).getSessionManager();
+
         sessionManagerListener = new CastSessionManagerListener();
         sessionManager.addSessionManagerListener(sessionManagerListener, CastSession.class);
     }
@@ -98,6 +101,22 @@ public class CastManager {
         @Override
         public void onSessionSuspended(CastSession castSession, int i) {
             Log.d(TAG, "onSessionSuspended");
+        }
+    }
+
+    public static boolean isCastAvailable(Context context) {
+        // Cast is only available in the paid version
+        if (!ShuttleApplication.getInstance().getIsUpgraded()) {
+            return false;
+        }
+
+        // Ensure we can access the CastContext without crashing
+        try {
+            CastContext.getSharedInstance(context);
+            return true;
+        } catch (Exception e) {
+            LogUtils.logException(TAG, "Cast not available", e);
+            return false;
         }
     }
 }

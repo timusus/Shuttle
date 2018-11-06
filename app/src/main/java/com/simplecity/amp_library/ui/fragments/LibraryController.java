@@ -32,6 +32,7 @@ import com.cantrowitz.rxbroadcast.RxBroadcast;
 import com.google.android.gms.cast.framework.CastButtonFactory;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.cast.CastManager;
 import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.Album;
@@ -184,8 +185,10 @@ public class LibraryController extends BaseFragment implements
 
         inflater.inflate(R.menu.menu_library, menu);
 
-        MenuItem menuItem = CastButtonFactory.setUpMediaRouteButton(getContext(), menu, R.id.media_route_menu_item);
-        menuItem.setVisible(true);
+        if (CastManager.isCastAvailable(getContext())) {
+            MenuItem menuItem = CastButtonFactory.setUpMediaRouteButton(getContext(), menu, R.id.media_route_menu_item);
+            menuItem.setVisible(true);
+        }
     }
 
     @Override
