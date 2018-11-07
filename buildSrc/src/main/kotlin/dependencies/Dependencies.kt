@@ -3,25 +3,25 @@ package dependencies
 object Dependencies {
 
     const val minSdk = 21
-    const val targetSdk = 27
-    const val compileSdk = 27
+    const val targetSdk = 28
+    const val compileSdk = 28
 
     object Versions {
         const val nanoHttp = "2.3.1"
-        const val crashlytics = "2.9.4"
+        const val crashlytics = "2.9.5"
         const val dashClockApi = "2.0.0"
         const val fastScroll = "1.0.18"
         const val glide = "3.8.0-SNAPSHOT"
         const val glideOkhttp = "1.4.0@aar"
         const val materialDialogs = "0.9.6.0"
         const val permiso = "0.3.0"
-        const val streams = "1.2.0"
+        const val streams = "1.2.1"
         const val butterknife = "8.8.1"
         const val butterknifeAnnotationProcessor = "8.8.1"
-        const val dagger = "2.16"
-        const val daggerAnnotationProcessor = "2.16"
+        const val dagger = "2.19"
+        const val daggerAnnotationProcessor = "2.19"
         const val expandableRecyclerView = "3.0.0-RC1"
-        const val billing = "1.1"
+        const val billing = "1.2"
     }
 
     // Kotlin
@@ -75,12 +75,12 @@ object Dependencies {
 
         object Versions {
             const val androidGradlePlugin = "3.2.1"
-            const val kotlin = "1.2.71"
-            const val dexcountGradlePlugin = "0.8.3"
+            const val kotlin = "1.3.0"
+            const val dexcountGradlePlugin = "0.8.4"
             const val fabricGradlePlugin = "1.+"
             const val playPublisher = "1.2.2"
             const val gradleVersions = "0.20.0"
-            const val playServices = "4.0.1"
+            const val playServices = "4.2.0"
         }
 
         const val android = "com.android.tools.build:gradle:${Versions.androidGradlePlugin}"
@@ -95,11 +95,11 @@ object Dependencies {
     object Google {
 
         object Versions {
-            const val supportLib = "27.1.0"
-            const val firebaseCore = "16.0.1"
-            const val firebaseRemoteConfig = "16.0.0"
-            const val constraintLayout = "1.1.0-beta5"
-            const val chromeCastFramework = "15.0.1"
+            const val supportLib = "28.0.0"
+            const val firebaseCore = "16.0.5"
+            const val firebaseRemoteConfig = "16.1.0"
+            const val constraintLayout = "2.0.0-alpha2"
+            const val chromeCastFramework = "16.1.0"
         }
 
         const val cardView = "com.android.support:cardview-v7:${Versions.supportLib}"
@@ -121,9 +121,9 @@ object Dependencies {
 
         object Versions {
             const val haha = "2.0.4"
-            const val leakCanary = "1.6.1"
-            const val okio = "1.14.1"
-            const val okhttp = "3.10.0"
+            const val leakCanary = "1.6.2"
+            const val okio = "2.1.0"
+            const val okhttp = "3.11.0"
             const val retrofit = "2.4.0"
             const val retrofitGson = "2.4.0"
             const val sqlBrite = "2.0.0"
@@ -143,11 +143,11 @@ object Dependencies {
     object Rx {
 
         object Versions {
-            const val rxAndroid = "2.0.2"
-            const val rxBinding = "2.1.1"
-            const val rxBindingAppCompat = "2.1.1"
+            const val rxAndroid = "2.1.0"
+            const val rxBinding = "2.2.0"
+            const val rxBindingAppCompat = "2.2.0"
             const val rxJava = "2.1.9"
-            const val rxRelay = "2.0.0"
+            const val rxRelay = "2.1.0"
             const val rxBroadcast = "2.0.0"
             const val rxPrefs = "2.0.0"
             const val traceur = "1.0.1"

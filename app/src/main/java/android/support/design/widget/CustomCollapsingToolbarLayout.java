@@ -17,6 +17,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
 import android.support.annotation.StyleRes;
+import android.support.design.animation.AnimationUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.math.MathUtils;
@@ -31,6 +32,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 
 import com.simplecity.amp_library.R;
@@ -89,10 +91,8 @@ public class CustomCollapsingToolbarLayout extends FrameLayout {
     public CustomCollapsingToolbarLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        ThemeUtils.checkAppCompatTheme(context);
-
         mCollapsingTextHelper = new CustomCollapsingTextHelper(this);
-        mCollapsingTextHelper.setTextSizeInterpolator(AnimationUtils.DECELERATE_INTERPOLATOR);
+        mCollapsingTextHelper.setTextSizeInterpolator((Interpolator) AnimationUtils.DECELERATE_INTERPOLATOR);
 
         TypedArray a1 = context.obtainStyledAttributes(attrs,
                 R.styleable.CollapsingToolbarLayout, defStyleAttr,
