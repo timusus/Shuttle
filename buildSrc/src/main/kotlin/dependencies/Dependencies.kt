@@ -38,7 +38,7 @@ object Dependencies {
     const val dashClockApi = "com.google.android.apps.dashclock:dashclock-api:${Versions.dashClockApi}"
 
     // RecyclerView-FastScroll - https://git.io/vix5z
-    const val fastScroll = "com.simplecityapps:recyclerview-fastscroll:${Versions.fastScroll}"
+    const val fastScroll = "com.github.timusus:RecyclerView-FastScroll:master"
 
     // Glide - https://git.io/vtn9K (Bump)
     const val glide = "com.github.bumptech.glide:glide:${Versions.glide}"
@@ -150,7 +150,6 @@ object Dependencies {
             const val rxRelay = "2.1.0"
             const val rxBroadcast = "2.0.0"
             const val rxPrefs = "2.0.0"
-            const val traceur = "1.0.1"
         }
 
         // RxJava - https://git.io/vihv0 (ReactiveX)
@@ -176,8 +175,6 @@ object Dependencies {
 
         // Rx Prefs - https://github.com/f2prateek/rx-preferences
         const val rxPrefs = "com.f2prateek.rx.preferences2:rx-preferences:${Versions.rxPrefs}"
-
-        const val traceur = "com.tspoon.traceur:traceur:${Versions.traceur}"
     }
 
 

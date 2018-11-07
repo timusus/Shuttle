@@ -98,8 +98,6 @@ public class ShuttleApplication extends Application {
         instance = this;
 
         if (BuildConfig.DEBUG) {
-            // Traceur.enableLogging();
-
             // enableStrictMode();
         }
 
