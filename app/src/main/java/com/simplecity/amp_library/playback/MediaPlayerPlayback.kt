@@ -78,23 +78,21 @@ internal class MediaPlayerPlayback(context: Context) : LocalPlayback(context), M
 
     override fun load(song: Song, playWhenReady: Boolean, seekPosition: Long, completion: ((Boolean) -> Unit)?) {
         synchronized(this) {
+            fadeAnimator?.cancel()
             currentMediaPlayer?.let { currentMediaPlayer ->
                 setDataSourceImpl(currentMediaPlayer, song.path) { success ->
-
                     isInitialized = success
 
-                    if (success) {
+                    if (isInitialized) {
                         // Invalidate any old 'next data source', will be re-set via external call to setNextDataSource().
-                        if (isInitialized) {
-                            setNextDataSource(null)
+                        setNextDataSource(null)
 
-                            if (seekPosition != 0L) {
-                                seekTo(seekPosition)
-                            }
+                        if (seekPosition != 0L) {
+                            seekTo(seekPosition)
+                        }
 
-                            if (playWhenReady) {
-                                start()
-                            }
+                        if (playWhenReady) {
+                            start()
                         }
                     }
                     completion?.invoke(isInitialized)
@@ -227,14 +225,15 @@ internal class MediaPlayerPlayback(context: Context) : LocalPlayback(context), M
             if (fade) {
                 fadeOut()
             } else {
-                super.pause(fade)
-                try {
-                    currentMediaPlayer?.pause()
-                } catch (e: IllegalStateException) {
-                    Log.e(TAG, "Error pausing MediaPlayerPlayback: " + e.localizedMessage)
+                if (isInitialized) {
+                    super.pause(fade)
+                    try {
+                        currentMediaPlayer?.pause()
+                    } catch (e: IllegalStateException) {
+                        Log.e(TAG, "Error pausing MediaPlayerPlayback: " + e.localizedMessage)
+                    }
+                    callbacks?.onPlayStateChanged(this)
                 }
-
-                callbacks?.onPlayStateChanged(this)
             }
         }
     }
@@ -323,6 +322,12 @@ internal class MediaPlayerPlayback(context: Context) : LocalPlayback(context), M
                     super.onAnimationEnd(animation)
                     isFadingUp = false
                 }
+
+                override fun onAnimationCancel(animation: Animator?) {
+                    super.onAnimationCancel(animation)
+                    fadeAnimator!!.removeAllListeners()
+                    isFadingUp = false
+                }
             })
             fadeAnimator!!.start()
         }
@@ -347,6 +352,12 @@ internal class MediaPlayerPlayback(context: Context) : LocalPlayback(context), M
                     super.onAnimationEnd(animation)
                     isFadingDown = false
                     pause(false)
+                }
+
+                override fun onAnimationCancel(animation: Animator?) {
+                    super.onAnimationCancel(animation)
+                    fadeAnimator!!.removeAllListeners()
+                    isFadingDown = false
                 }
             })
             fadeAnimator!!.start()

@@ -129,6 +129,7 @@ class MediaSessionManager {
                     playbackManager.play();
                 } else {
                     mediaIdHelper.handlePlayFromSearch(query, extras)
+                            .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(
                                     pair -> {
                                         if (!pair.getFirst().isEmpty()) {
