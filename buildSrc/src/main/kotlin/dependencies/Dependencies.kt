@@ -38,7 +38,7 @@ object Dependencies {
     const val dashClockApi = "com.google.android.apps.dashclock:dashclock-api:${Versions.dashClockApi}"
 
     // RecyclerView-FastScroll - https://git.io/vix5z
-    const val fastScroll = "com.github.timusus:RecyclerView-FastScroll:master"
+    const val fastScroll = "com.github.timusus:RecyclerView-FastScroll:master-SNAPSHOT"
 
     // Glide - https://git.io/vtn9K (Bump)
     const val glide = "com.github.bumptech.glide:glide:${Versions.glide}"
