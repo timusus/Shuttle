@@ -28,6 +28,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import java.lang.reflect.Field;
 
 /** @author Aidan Follestad (afollestad) */
 @SuppressWarnings("WeakerAccess")
@@ -35,6 +36,19 @@ public final class Util {
 
   static void setInflaterFactory(@NonNull LayoutInflater li) {
     LayoutInflaterCompat.setFactory(li, new InflationInterceptor());
+  }
+
+  static Field findField(Class clazz, String... names) throws NoSuchFieldException{
+    for (String name : names) {
+      try {
+        Field field = clazz.getDeclaredField(name);
+        field.setAccessible(true);
+        return field;
+      } catch (NoSuchFieldException ignored){
+      }
+    }
+
+    throw new NoSuchFieldException();
   }
 
   /** Taken from CollapsingToolbarLayout's CollapsingTextHelper class. */

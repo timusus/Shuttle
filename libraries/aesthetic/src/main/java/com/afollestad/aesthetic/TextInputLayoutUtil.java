@@ -17,7 +17,7 @@ final class TextInputLayoutUtil {
   static void setHint(@NonNull TextInputLayout view, @ColorInt int hintColor) {
     try {
       final Field mDefaultTextColorField =
-          TextInputLayout.class.getDeclaredField("mDefaultTextColor");
+         Util.findField(TextInputLayout.class, "defaultHintTextColor", "mDefaultTextColor");
       mDefaultTextColorField.setAccessible(true);
       mDefaultTextColorField.set(view, ColorStateList.valueOf(hintColor));
       final Method updateLabelStateMethod =
@@ -32,8 +32,7 @@ final class TextInputLayoutUtil {
 
   static void setAccent(@NonNull TextInputLayout view, @ColorInt int accentColor) {
     try {
-      final Field mFocusedTextColorField =
-          TextInputLayout.class.getDeclaredField("mFocusedTextColor");
+      final Field mFocusedTextColorField = Util.findField(TextInputLayout.class, "focusedTextColor", "mFocusedTextColor");
       mFocusedTextColorField.setAccessible(true);
       mFocusedTextColorField.set(view, ColorStateList.valueOf(accentColor));
       final Method updateLabelStateMethod =
