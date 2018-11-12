@@ -59,7 +59,8 @@
                 android:layout_weight="1"
                 android:checked="true"
                 android:gravity="center_vertical"
-                android:text="@string/widget_show_artwork"/>
+                android:text="@string/widget_show_artwork"
+                android:textColorHighlight="#6680cbc4"/>
 
             <com.simplecity.amp_library.ui.views.CustomCheckbox
                 android:id="@+id/checkBox2"
@@ -67,7 +68,8 @@
                 android:layout_height="48dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="@string/widget_invert_icons"/>
+                android:text="@string/widget_invert_icons"
+                android:textColorHighlight="#6680cbc4"/>
 
         </LinearLayout>
 
@@ -119,14 +121,14 @@
 
             <com.simplecity.amp_library.ui.views.SizableSeekBar
                 android:id="@+id/seekBar1"
-                style="@style/SeekBar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:indeterminate="false"
                 android:max="255"
-                android:progress="218"/>
+                android:progress="218"
+                style="@style/SeekBar"/>
         </LinearLayout>
 
         <View
