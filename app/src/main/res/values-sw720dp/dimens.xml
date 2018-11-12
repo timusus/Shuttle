@@ -4,8 +4,6 @@
 
     <dimen name="grid_item_horizontal_width">168dp</dimen>
 
-    <dimen name="mini_player_height">80dp</dimen>
-
     <dimen name="header_view_height">600dp</dimen>
 
     <dimen name="preference_icon_minWidth">56dp</dimen>
