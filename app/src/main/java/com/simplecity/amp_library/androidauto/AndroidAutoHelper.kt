@@ -18,6 +18,7 @@ import com.simplecity.amp_library.model.Song
 import com.simplecity.amp_library.utils.DataManager
 import com.simplecity.amp_library.utils.StringUtils
 import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 sealed class MediaIdWrapper {
 
@@ -149,6 +150,7 @@ class MediaIdHelper {
                             .sortedBy { song -> song.albumName }
                             .sortedBy { song -> song.track }
                     }
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                         { songs -> completion(songs, songs.indexOfFirst { it.id == mediaWrapper.songId }.or(0)) },
                         { completion(mutableListOf(), 0) }
@@ -156,6 +158,7 @@ class MediaIdHelper {
             }
             is MediaIdWrapper.Playlist -> {
                 getSongsForPlaylistId(mediaWrapper.playlistId)
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                         { songs -> completion(songs, 0) },
                         { completion(mutableListOf(), 0) }
@@ -163,6 +166,7 @@ class MediaIdHelper {
             }
             is MediaIdWrapper.Genre -> {
                 getSongsForGenreId(mediaWrapper.genreId)
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                         { songs -> completion(songs, 0) },
                         { completion(mutableListOf(), 0) }

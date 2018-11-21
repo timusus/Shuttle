@@ -23,6 +23,7 @@ import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.SleepTimer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import java.util.List;
@@ -143,6 +144,7 @@ public class PlaybackManager implements Playback.Callbacks {
             disposables.add(DataManager.getInstance().getSongsRelay()
                     .firstOrError()
                     .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(songs -> {
                         queueManager.playlist = QueueItemKt.toQueueItems(songs);
                         queueManager.queuePosition = -1;
