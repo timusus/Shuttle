@@ -31,4 +31,6 @@
 
     <color name="ic_launcher_background">#03A9F4</color>
 
+    <color name="text_highlight">#6680cbc4</color>
+
 </resources>

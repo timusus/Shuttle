@@ -52,6 +52,7 @@
         <item name="colorAccent">@color/md_grey_250</item>
         <item name="android:windowShowWallpaper">true</item>
         <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:textColorHighlight">@color/text_highlight</item>
     </style>
 
     <style name="Theme.AppCompat.NoActionBar.FullScreen" parent="@style/Theme.AppCompat"/>
@@ -74,7 +75,7 @@
     <style name="ExpandedSubtitleAppearance" parent="TextAppearance.AppCompat.Headline">
         <item name="android:textColor">#fff</item>
     </style>
-    
+
     <style name="SeekBar" parent="android:Widget.SeekBar">
         <item name="android:progressDrawable">@drawable/scrubber_progress_horizontal_material</item>
         <item name="android:indeterminateDrawable">@drawable/scrubber_progress_horizontal_material
