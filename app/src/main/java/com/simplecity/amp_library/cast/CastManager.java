@@ -12,6 +12,7 @@ import com.simplecity.amp_library.playback.MediaPlayerPlayback;
 import com.simplecity.amp_library.playback.Playback;
 import com.simplecity.amp_library.playback.PlaybackManager;
 import com.simplecity.amp_library.utils.LogUtils;
+import com.simplecity.amp_library.utils.ShuttleUtils;
 
 public class CastManager {
 
@@ -106,7 +107,8 @@ public class CastManager {
 
     public static boolean isCastAvailable(Context context) {
         // Cast is only available in the paid version
-        if (!ShuttleApplication.getInstance().getIsUpgraded()) {
+        if (!ShuttleUtils.isUpgraded()) {
+            Log.i(TAG, "Cast available false, not upgraded");
             return false;
         }
 
