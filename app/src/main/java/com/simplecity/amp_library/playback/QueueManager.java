@@ -358,6 +358,10 @@ public class QueueManager {
             return;
         }
 
+        if (queueReloading) {
+            return;
+        }
+
         if (saveQueue) {
             PlaybackSettingsManager.INSTANCE.setQueueList(serializePlaylist(playlist));
             if (shuffleMode == ShuffleMode.ON) {
@@ -389,6 +393,7 @@ public class QueueManager {
                         if (queuePosition < 0 || queuePosition >= playlist.size()) {
                             // The saved playlist is bogus, discard it
                             playlist.clear();
+                            queueReloading = false;
                             onComplete.invoke();
                             return;
                         }
@@ -409,6 +414,7 @@ public class QueueManager {
                                 if (queuePosition >= shuffleList.size()) {
                                     // The saved playlist is bogus, discard it
                                     shuffleList.clear();
+                                    queueReloading = false;
                                     onComplete.invoke();
                                     return;
                                 }
@@ -419,18 +425,13 @@ public class QueueManager {
                             QueueManager.this.queuePosition = 0;
                         }
                     }
+                    queueReloading = false;
                     onComplete.invoke();
                 }, error -> {
+                    queueReloading = false;
                     onComplete.invoke();
                     LogUtils.logException(TAG, "Reloading queue", error);
                 });
-    }
-
-    private void onQueueReloadComplete(UnsafeAction completion) {
-        queueReloading = false;
-        completion.run();
-        notifyQueueChanged();
-        notifyMetaChanged();
     }
 
     /**
