@@ -385,9 +385,11 @@ public class PlaybackManager implements Playback.Callbacks {
     }
 
     public void pause(boolean fade) {
+        if (isPlaying()) {
+            updateLastPlayedTime();
+        }
         playback.pause(fade);
         equalizer.closeEqualizerSessions(false, getAudioSessionId());
-        updateLastPlayedTime();
         saveBookmarkIfNeeded();
         notifyChange(InternalIntents.PLAY_STATE_CHANGED);
         musicServiceCallbacks.scheduleDelayedShutdown();
@@ -407,7 +409,10 @@ public class PlaybackManager implements Playback.Callbacks {
 
     public void stop(boolean goToIdle) {
 
-        updateLastPlayedTime();
+        if (isPlaying()) {
+            updateLastPlayedTime();
+        }
+
         saveBookmarkIfNeeded();
 
         playback.stop();
