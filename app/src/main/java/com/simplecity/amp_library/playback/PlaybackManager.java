@@ -334,7 +334,9 @@ public class PlaybackManager implements Playback.Callbacks {
     }
 
     void saveState() {
-        PlaybackSettingsManager.INSTANCE.setSeekPosition(playback.getPosition());
+        if (playback.isInitialized()) {
+            PlaybackSettingsManager.INSTANCE.setSeekPosition(playback.getPosition());
+        }
     }
 
     void release() {
@@ -482,6 +484,7 @@ public class PlaybackManager implements Playback.Callbacks {
         } else if (queueManager.getCurrentPlaylist().isEmpty()) {
             // This is mostly so that if you press 'play' on a bluetooth headset without ever having played anything before, it will still play something.
             if (queueManager.queueReloading) {
+                // Todo: This doesn't make sense. If our queue is already reloading we just want to play once it's finished. Not reload the queue all over again.
                 reloadQueue(true);
             } else {
                 playAutoShuffleList();
