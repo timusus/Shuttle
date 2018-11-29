@@ -149,6 +149,7 @@ class MediaIdHelper {
                             .sortedBy { song -> song.albumArtistName }
                             .sortedBy { song -> song.albumName }
                             .sortedBy { song -> song.track }
+                            .sortedBy { song -> song.discNumber }
                     }
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
@@ -182,7 +183,11 @@ class MediaIdHelper {
                 extras.getString(MediaStore.EXTRA_MEDIA_ARTIST)?.let { artist ->
                     return getSongsForPredicate { song -> song.artistName.equals(artist, true) }
                         .map { songs ->
-                            Pair(songs.sortedBy { song -> song.albumName }.sortedBy { song -> song.track }, 0)
+                            Pair(songs
+                                .sortedBy { song -> song.albumName }
+                                .sortedBy { song -> song.track }
+                                .sortedBy { song -> song.discNumber },
+                                0)
                         }
                 }
             }
@@ -190,7 +195,10 @@ class MediaIdHelper {
                 extras.getString(MediaStore.EXTRA_MEDIA_ALBUM)?.let { album ->
                     return getSongsForPredicate { song -> song.albumName.equals(album, true) }
                         .map { songs ->
-                            Pair(songs.sortedBy { song -> song.track }, 0)
+                            Pair(songs
+                                .sortedBy { song -> song.track }
+                                .sortedBy { song -> song.discNumber },
+                                0)
                         }
                 }
             }
@@ -297,6 +305,7 @@ class MediaIdHelper {
                     .sortedBy { song -> song.albumArtistName }
                     .sortedBy { song -> song.albumName }
                     .sortedBy { song -> song.track }
+                    .sortedBy { song -> song.discNumber }
                     .map { song -> song.toMediaItem(mediaId) }
                     .toMutableList()
             }
