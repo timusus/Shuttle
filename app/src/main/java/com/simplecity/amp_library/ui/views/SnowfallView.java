@@ -75,18 +75,21 @@ public class SnowfallView extends View {
     final Handler snowHandler = new Handler();
 
     /** Used to determine if we let it snow */
-    final FirebaseRemoteConfig remoteConfig;
+    @Nullable
+    private FirebaseRemoteConfig remoteConfig = null;
 
     public SnowfallView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         snowPaint.setColor(Color.WHITE);
         snowPaint.setStyle(Paint.Style.FILL);
 
-        remoteConfig = FirebaseRemoteConfig.getInstance();
-        remoteConfig.setDefaults(R.xml.remote_config_defaults);
-        remoteConfig.setConfigSettings(new FirebaseRemoteConfigSettings.Builder()
-                .setDeveloperModeEnabled(BuildConfig.DEBUG)
-                .build());
+        if(!isInEditMode()) {
+            remoteConfig = FirebaseRemoteConfig.getInstance();
+            remoteConfig.setDefaults(R.xml.remote_config_defaults);
+            remoteConfig.setConfigSettings(new FirebaseRemoteConfigSettings.Builder()
+                    .setDeveloperModeEnabled(BuildConfig.DEBUG)
+                    .build());
+        }
     }
 
     @Override
@@ -134,6 +137,9 @@ public class SnowfallView extends View {
     }
 
     private void fetchSnowConfig() {
+        if (isInEditMode()) {
+            return;
+        }
         remoteConfig.fetch().addOnCompleteListener((Activity) getContext(), task -> {
             if (task.isSuccessful()) {
                 remoteConfig.activateFetched();

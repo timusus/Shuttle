@@ -121,11 +121,10 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
         android:tag=":aesthetic_ignore"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/prev"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text2"/>
+        app:layout_constraintTop_toTopOf="@+id/prev"/>
 
     <com.simplecity.amp_library.ui.views.RepeatingImageButton
         android:id="@+id/prev"
@@ -137,10 +136,10 @@
         android:scaleType="centerCrop"
         android:src="@drawable/ic_skip_previous_24dp"
         android:tag=":aesthetic_ignore"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/play"
         app:layout_constraintLeft_toRightOf="@+id/shuffle"
         app:layout_constraintRight_toLeftOf="@+id/play"
-        app:layout_constraintTop_toBottomOf="@+id/text2"/>
+        app:layout_constraintTop_toTopOf="@+id/play"/>
 
     <com.simplecity.amp_library.ui.views.RepeatingImageButton
         android:id="@+id/next"
@@ -152,22 +151,21 @@
         android:scaleType="centerCrop"
         android:src="@drawable/ic_skip_next_24dp"
         android:tag=":aesthetic_ignore"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/play"
         app:layout_constraintLeft_toRightOf="@+id/play"
         app:layout_constraintRight_toLeftOf="@+id/repeat"
-        app:layout_constraintTop_toBottomOf="@+id/text2"/>
+        app:layout_constraintTop_toTopOf="@+id/play"/>
 
     <include
         layout="@layout/repeat_button"
         android:id="@+id/repeat"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:tag=":aesthetic_ignore"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/next"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text2"/>
+        app:layout_constraintTop_toTopOf="@+id/next"/>
 
     <com.simplecity.amp_library.ui.views.PlayPauseView
         android:id="@+id/play"
@@ -204,6 +202,7 @@
     <com.simplecity.amp_library.ui.views.SnowfallView
         android:id="@+id/let_it_snow"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        tools:visibility="gone"/>
 
 </android.support.constraint.ConstraintLayout>
