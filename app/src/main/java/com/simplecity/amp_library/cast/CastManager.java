@@ -6,7 +6,6 @@ import com.google.android.gms.cast.framework.CastContext;
 import com.google.android.gms.cast.framework.CastSession;
 import com.google.android.gms.cast.framework.SessionManager;
 import com.google.android.gms.cast.framework.SessionManagerListener;
-import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.playback.CastPlayback;
 import com.simplecity.amp_library.playback.MediaPlayerPlayback;
 import com.simplecity.amp_library.playback.Playback;
@@ -65,12 +64,15 @@ public class CastManager {
         public void onSessionEnding(CastSession castSession) {
             Log.d(TAG, "onSessionEnding.. isPlaying" + playbackManager.isPlaying());
 
-            // This is our final chance to update the underlying stream position In onSessionEnded(), the underlying CastPlayback#mRemoteMediaClient
-            // is disconnected and hence we update our local value of stream position to the latest position.
-            playbackManager.getPlayback().updateLastKnownStreamPosition();
+            if (playbackManager.getPlayback() instanceof CastPlayback) {
 
-            Playback playback = new MediaPlayerPlayback(applicationContext);
-            playbackManager.switchToPlayback(playback, playbackManager.getPlayback().getPosition());
+                // This is our final chance to update the underlying stream position In onSessionEnded(), the underlying CastPlayback#mRemoteMediaClient
+                // is disconnected and hence we update our local value of stream position to the latest position.
+                playbackManager.getPlayback().updateLastKnownStreamPosition();
+
+                Playback playback = new MediaPlayerPlayback(applicationContext);
+                playbackManager.switchToPlayback(playback, playbackManager.getPlayback().getPosition());
+            }
         }
 
         @Override
