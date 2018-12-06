@@ -21,12 +21,14 @@ public final class SqlBriteUtils {
 
     }
 
+    static final boolean LOGGING_ENABLED = false;
+
     private static final String TAG = "SqlBriteUtils";
 
     private static BriteContentResolver wrapContentProvider(@NonNull Context context) {
         final SqlBrite sqlBrite = new SqlBrite.Builder().build();
         BriteContentResolver briteContentResolver = sqlBrite.wrapContentProvider(context.getContentResolver(), Schedulers.io());
-        briteContentResolver.setLoggingEnabled(BuildConfig.DEBUG);
+        briteContentResolver.setLoggingEnabled(LOGGING_ENABLED && BuildConfig.DEBUG);
         return briteContentResolver;
     }
 
