@@ -50,6 +50,8 @@ public class PlaybackManager implements Playback.Callbacks {
 
     private MusicService.Callbacks musicServiceCallbacks;
 
+    private boolean playOnQueueReload = false;
+
     @NonNull
     Playback playback;
 
@@ -96,15 +98,17 @@ public class PlaybackManager implements Playback.Callbacks {
         queueManager.clearQueue();
     }
 
-    void reloadQueue(boolean playWhenReady) {
+    void reloadQueue() {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
 
         disposables.add(queueManager.reloadQueue(() -> {
-            load(true, playWhenReady, PlaybackSettingsManager.INSTANCE.getSeekPosition());
-            return Unit.INSTANCE;
-        }));
+                    load(true, playOnQueueReload, PlaybackSettingsManager.INSTANCE.getSeekPosition());
+                    playOnQueueReload = false;
+                    return Unit.INSTANCE;
+                })
+        );
     }
 
     void removeQueueItems(List<QueueItem> queueItems) {
@@ -257,6 +261,9 @@ public class PlaybackManager implements Playback.Callbacks {
     private void load(@NonNull Song song, Boolean playWhenReady, long seekPosition, @Nullable Function1<Boolean, Unit> completion) {
         playback.load(song, playWhenReady, seekPosition, success -> {
             if (success) {
+                if (playWhenReady) {
+                    musicServiceCallbacks.cancelShutdown();
+                }
                 if (completion != null) {
                     completion.invoke(true);
                 }
@@ -484,8 +491,7 @@ public class PlaybackManager implements Playback.Callbacks {
         } else if (queueManager.getCurrentPlaylist().isEmpty()) {
             // This is mostly so that if you press 'play' on a bluetooth headset without ever having played anything before, it will still play something.
             if (queueManager.queueReloading) {
-                // Todo: This doesn't make sense. If our queue is already reloading we just want to play once it's finished. Not reload the queue all over again.
-                reloadQueue(true);
+                playOnQueueReload = true;
             } else {
                 playAutoShuffleList();
             }

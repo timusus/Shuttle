@@ -151,7 +151,7 @@ public class MusicService extends MediaBrowserServiceCompat {
         AnalyticsManager.dropBreadcrumb(TAG, "onCreate(), scheduling delayed shutdown");
         scheduleDelayedShutdown();
 
-        reloadQueue();
+        playbackManager.reloadQueue();
     }
 
     @Override
@@ -432,6 +432,11 @@ public class MusicService extends MediaBrowserServiceCompat {
      */
     void releaseServiceUiAndStop() {
 
+        // If we're currently playing, or we're going to be playing in the near future, don't shutdown.
+        if (isPlaying() || playbackManager.willResumePlayback()) {
+            return;
+        }
+
         AnalyticsManager.dropBreadcrumb(TAG, "releaseServiceUiAndStop()");
 
         playbackManager.release();
@@ -476,7 +481,7 @@ public class MusicService extends MediaBrowserServiceCompat {
                         closeExternalStorageFiles();
                     } else if (Intent.ACTION_MEDIA_MOUNTED.equals(action)) {
                         queueManager.queueIsSaveable = true;
-                        reloadQueue();
+                        playbackManager.reloadQueue();
                     }
                 }
             };
@@ -727,10 +732,6 @@ public class MusicService extends MediaBrowserServiceCompat {
 
     public void clearQueue() {
         playbackManager.clearQueue();
-    }
-
-    void reloadQueue() {
-        playbackManager.reloadQueue(false);
     }
 
     public List<QueueItem> getQueue() {

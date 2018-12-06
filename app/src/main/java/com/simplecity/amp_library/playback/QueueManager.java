@@ -12,7 +12,9 @@ import com.simplecity.amp_library.ui.queue.QueueItemKt;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -383,6 +385,8 @@ public class QueueManager {
         return DataManager.getInstance().getSongsRelay()
                 .first(Collections.emptyList())
                 .map(QueueItemKt::toQueueItems)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((UnsafeConsumer<List<QueueItem>>) queueItems -> {
                     String queueList = PlaybackSettingsManager.INSTANCE.getQueueList();
                     if (queueList != null) {
