@@ -251,6 +251,8 @@
     <string name="heading_more">More</string>
     <!-- Share option-->
     <string name="share">Share</string>
+    <!-- Skip by album button-->
+    <string name="skip_by_album">Skip by album</string>
 
     <!-- ## Navigation Drawer ## -->
     <!-- Accessibility description 'open navigation drawer'-->

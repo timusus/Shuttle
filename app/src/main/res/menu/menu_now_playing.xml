@@ -55,4 +55,10 @@
         android:title="@string/song_info"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/skipByAlbum"
+        android:title="@string/skip_by_album"
+        android:actionLayout="@layout/switch_item"
+        app:showAsAction="always"/>
+
 </menu>
