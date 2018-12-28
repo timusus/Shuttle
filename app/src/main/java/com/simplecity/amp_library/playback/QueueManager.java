@@ -280,7 +280,7 @@ public class QueueManager {
         }
     }
 
-    public int getPreviousAlbumPosition(boolean ignoreRepeatMode){
+    public void getPreviousAlbumPosition(boolean ignoreRepeatMode){
         long albumId = getCurrentSong().albumId;
         Song prevSong;
 
@@ -292,14 +292,12 @@ public class QueueManager {
             for (int i = queuePosition - 1; i < getCurrentPlaylist().size() && i > 0 ; i--) {
                 prevSong = getCurrentPlaylist().get(i).getSong();
                 if (albumId != prevSong.albumId) {
-                    return i;
+                    queuePosition = i;
                 } else if(albumId == prevSong.albumId){
                     continue;
                 }
             }
-            return getCurrentPlaylist().size();
         }
-
     }
 
     /**
