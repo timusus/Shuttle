@@ -130,6 +130,7 @@ public class QueueManager {
             queuePosition = getCurrentPlaylist().size() - 1;
         }
     }
+    
 
     void moveQueueItem(int from, int to) {
 
@@ -206,26 +207,7 @@ public class QueueManager {
     /**
      * @return The next position to play, ot -1 if playback should complete.
      */
-    /*int getNextPosition(boolean ignoreRepeatMode) {
-        boolean queueComplete = queuePosition >= getCurrentPlaylist().size() - 1;
-
-        if (ignoreRepeatMode) {
-            return queueComplete ? 0 : queuePosition + 1;
-        } else {
-            switch (repeatMode) {
-                case RepeatMode.ONE:
-                    return queuePosition < 0 ? 0 : queuePosition;
-                case RepeatMode.OFF:
-                    return queueComplete ? -1 : queuePosition + 1;
-                case RepeatMode.ALL:
-                    return queueComplete ? 0 : queuePosition + 1;
-                default:
-                    return -1;
-            }
-        }
-    }*/
-
-    int getNextPosition (boolean ignoreRepeatMode){
+    int getNextPosition(boolean ignoreRepeatMode) {
         boolean queueComplete = queuePosition >= getCurrentPlaylist().size() - 1;
 
         if (ignoreRepeatMode) {
@@ -246,21 +228,69 @@ public class QueueManager {
 
     public int getNextAlbumPosition(boolean ignoreRepeatMode){
         long albumId = getCurrentSong().albumId;
-        Song nextSong = getCurrentPlaylist().get(queuePosition + 1).getSong();
+        Song nextSong;
         boolean queueComplete = queuePosition >= getCurrentPlaylist().size() - 1;
 
         if(ignoreRepeatMode) {
             if (queueComplete) {
                 return 0;
-            } else if (albumId == nextSong.albumId) {
-                for (int i = queuePosition; i < getCurrentPlaylist().size() - queuePosition; i++) {
-                    if (albumId != nextSong.albumId) {
-                        return i + 1;
-                    } else{
-                        nextSong = getCurrentPlaylist().get(i + 1).getSong();
-                    }
+            }
+            for (int i = queuePosition + 1; i < getCurrentPlaylist().size(); i++) {
+                nextSong = getCurrentPlaylist().get(i).getSong();
+                if (albumId != nextSong.albumId) {
+                    return i;
+                } else if(albumId == nextSong.albumId){
+                    continue;
                 }
-            } else if (albumId != nextSong.albumId){
+            }
+            return 0;
+        } else{
+            switch (repeatMode) {
+                case RepeatMode.ONE:
+                    return queuePosition < 0 ? 0 : queuePosition;
+                case RepeatMode.OFF:
+                    if (queueComplete) {
+                        return -1;
+                    }
+                    for (int i = queuePosition + 1; i < getCurrentPlaylist().size(); i++) {
+                        nextSong = getCurrentPlaylist().get(i).getSong();
+                        if (albumId != nextSong.albumId) {
+                            return i;
+                        } else if(albumId == nextSong.albumId){
+                            break;
+                        }
+                    }
+                    return 0;
+                case RepeatMode.ALL:
+                    if (queueComplete) {
+                        return 0;
+                    }
+                    for (int i = queuePosition + 1; i < getCurrentPlaylist().size(); i++) {
+                        nextSong = getCurrentPlaylist().get(i).getSong();
+                        if (albumId != nextSong.albumId) {
+                            return i;
+                        } else if(albumId == nextSong.albumId){
+                            break;
+                        }
+                    }
+                    return 0;
+                default:
+                    return -1;
+            }
+        }
+    }
+
+    /*public int getNextAlbumPosition(boolean ignoreRepeatMode){
+        //long albumId = getCurrentSong().albumId;
+        //Song nextSong = getCurrentPlaylist().get(queuePosition + 1).getSong();
+        boolean queueComplete = queuePosition >= getCurrentPlaylist().size() - 1;
+
+        if(ignoreRepeatMode) {
+            if (queueComplete) {
+                return 0;
+            } else if (songInSameAlbum()) {
+                return nextAlbumPosition();
+            } else if (!songInSameAlbum()){
                 return queuePosition + 1;
             }
         } else{
@@ -270,33 +300,44 @@ public class QueueManager {
                 case RepeatMode.OFF:
                     if (queueComplete) {
                         return -1;
-                    } else if (albumId == nextSong.albumId) {
-                        for (int i = queuePosition; i < getCurrentPlaylist().size() - queuePosition; i++) {
-                            if (albumId != nextSong.albumId) {
-                                return i + 1;
-                            } else{
-                                nextSong = getCurrentPlaylist().get(i + 1).getSong();
-                            }
-                        }
-                    } else if (albumId != nextSong.albumId){
+                    } else if (songInSameAlbum()) {
+                        return nextAlbumPosition();
+                    } else if (!songInSameAlbum()){
                         return queuePosition + 1;
                     }
                 case RepeatMode.ALL:
                     if (queueComplete) {
                         return 0;
-                    } else if (albumId == nextSong.albumId) {
-                        for (int i = queuePosition; i < getCurrentPlaylist().size() - queuePosition; i++) {
-                            if (albumId != nextSong.albumId) {
-                                return i + 1;
-                            } else{
-                                nextSong = getCurrentPlaylist().get(i + 1).getSong();
-                            }
-                        }
-                    } else if (albumId != nextSong.albumId){
+                    } else if (songInSameAlbum()) {
+                        return nextAlbumPosition();
+                    } else if (!songInSameAlbum()){
                         return queuePosition + 1;
                     }
                 default:
                     return -1;
+            }
+        }
+        return -1;
+    }*/
+
+    private boolean songInSameAlbum(){
+        return (getCurrentSong().albumId == getCurrentPlaylist().get(queuePosition + 1).getSong().albumId);
+    }
+
+    private int nextAlbumPosition(){
+        //long albumId = getCurrentSong().albumId;
+        Song nextSong = getCurrentPlaylist().get(queuePosition + 1).getSong();
+        //boolean queueComplete = queuePosition >= getCurrentPlaylist().size() - 1;
+
+        for (int i = queuePosition + 1; i < getCurrentPlaylist().size(); i++) {
+            if (!songInSameAlbum()) {
+                queuePosition = i;
+                return i;
+            } else if(songInSameAlbum()){
+                nextSong = getCurrentPlaylist().get(i + 1).getSong();
+            }
+            else{
+                return 0;
             }
         }
         return -1;

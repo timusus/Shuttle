@@ -428,23 +428,10 @@ public class PlaybackManager implements Playback.Callbacks {
      * @param force true to ignore the repeat mode.
      * @return true if the we've successfully moved to the next track.
      */
-/*    public boolean next(boolean force) {
+    public boolean next(boolean force) {
         notifyChange(InternalIntents.TRACK_ENDING);
 
         int nextPosition = getNextPosition(force);
-        if (nextPosition < 0) {
-            musicServiceCallbacks.scheduleDelayedShutdown();
-            return false;
-        }
-
-        setQueuePosition(nextPosition);
-        return true;
-    }*/
-
-    public boolean next(boolean force){
-        notifyChange(InternalIntents.TRACK_ENDING);
-
-        int nextPosition = getNextAlbumPosition(force);
         if (nextPosition < 0) {
             musicServiceCallbacks.scheduleDelayedShutdown();
             return false;
