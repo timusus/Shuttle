@@ -184,6 +184,10 @@ public class PlaybackManager implements Playback.Callbacks {
         return queueManager.getNextPosition(force);
     }
 
+    private int getNextAlbumPosition(boolean force) {
+        return queueManager.getNextAlbumPosition(force);
+    }
+
     public void load(@NonNull List<Song> songs, int queuePosition, Boolean playWhenReady, long seekPosition) {
         queueManager.load(
                 songs,
@@ -424,10 +428,23 @@ public class PlaybackManager implements Playback.Callbacks {
      * @param force true to ignore the repeat mode.
      * @return true if the we've successfully moved to the next track.
      */
-    public boolean next(boolean force) {
+/*    public boolean next(boolean force) {
         notifyChange(InternalIntents.TRACK_ENDING);
 
         int nextPosition = getNextPosition(force);
+        if (nextPosition < 0) {
+            musicServiceCallbacks.scheduleDelayedShutdown();
+            return false;
+        }
+
+        setQueuePosition(nextPosition);
+        return true;
+    }*/
+
+    public boolean next(boolean force){
+        notifyChange(InternalIntents.TRACK_ENDING);
+
+        int nextPosition = getNextAlbumPosition(force);
         if (nextPosition < 0) {
             musicServiceCallbacks.scheduleDelayedShutdown();
             return false;
