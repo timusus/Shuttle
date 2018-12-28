@@ -257,7 +257,7 @@ public class QueueManager {
                         if (albumId != nextSong.albumId) {
                             return i;
                         } else if(albumId == nextSong.albumId){
-                            break;
+                            continue;
                         }
                     }
                     return 0;
@@ -270,7 +270,7 @@ public class QueueManager {
                         if (albumId != nextSong.albumId) {
                             return i;
                         } else if(albumId == nextSong.albumId){
-                            break;
+                            continue;
                         }
                     }
                     return 0;
@@ -280,67 +280,26 @@ public class QueueManager {
         }
     }
 
-    /*public int getNextAlbumPosition(boolean ignoreRepeatMode){
-        //long albumId = getCurrentSong().albumId;
-        //Song nextSong = getCurrentPlaylist().get(queuePosition + 1).getSong();
-        boolean queueComplete = queuePosition >= getCurrentPlaylist().size() - 1;
+    public int getPreviousAlbumPosition(boolean ignoreRepeatMode){
+        long albumId = getCurrentSong().albumId;
+        Song prevSong;
 
-        if(ignoreRepeatMode) {
-            if (queueComplete) {
-                return 0;
-            } else if (songInSameAlbum()) {
-                return nextAlbumPosition();
-            } else if (!songInSameAlbum()){
-                return queuePosition + 1;
-            }
-        } else{
-            switch (repeatMode) {
-                case RepeatMode.ONE:
-                    return queuePosition < 0 ? 0 : queuePosition;
-                case RepeatMode.OFF:
-                    if (queueComplete) {
-                        return -1;
-                    } else if (songInSameAlbum()) {
-                        return nextAlbumPosition();
-                    } else if (!songInSameAlbum()){
-                        return queuePosition + 1;
-                    }
-                case RepeatMode.ALL:
-                    if (queueComplete) {
-                        return 0;
-                    } else if (songInSameAlbum()) {
-                        return nextAlbumPosition();
-                    } else if (!songInSameAlbum()){
-                        return queuePosition + 1;
-                    }
-                default:
-                    return -1;
-            }
+        if(queuePosition < 0){
+            queuePosition = getCurrentPlaylist().size() - 1;
         }
-        return -1;
-    }*/
 
-    private boolean songInSameAlbum(){
-        return (getCurrentSong().albumId == getCurrentPlaylist().get(queuePosition + 1).getSong().albumId);
-    }
-
-    private int nextAlbumPosition(){
-        //long albumId = getCurrentSong().albumId;
-        Song nextSong = getCurrentPlaylist().get(queuePosition + 1).getSong();
-        //boolean queueComplete = queuePosition >= getCurrentPlaylist().size() - 1;
-
-        for (int i = queuePosition + 1; i < getCurrentPlaylist().size(); i++) {
-            if (!songInSameAlbum()) {
-                queuePosition = i;
-                return i;
-            } else if(songInSameAlbum()){
-                nextSong = getCurrentPlaylist().get(i + 1).getSong();
+       else{
+            for (int i = queuePosition - 1; i < getCurrentPlaylist().size() && i > 0 ; i--) {
+                prevSong = getCurrentPlaylist().get(i).getSong();
+                if (albumId != prevSong.albumId) {
+                    return i;
+                } else if(albumId == prevSong.albumId){
+                    continue;
+                }
             }
-            else{
-                return 0;
-            }
+            return getCurrentPlaylist().size();
         }
-        return -1;
+
     }
 
     /**
