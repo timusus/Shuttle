@@ -446,7 +446,7 @@ public class PlaybackManager implements Playback.Callbacks {
      */
     public void previous(boolean force) {
         if (force || getSeekPosition() <= 2000) {
-            queueManager.previous();
+            queueManager.getPreviousAlbumPosition();
             stop(false);
             load(false, true, 0);
         } else {

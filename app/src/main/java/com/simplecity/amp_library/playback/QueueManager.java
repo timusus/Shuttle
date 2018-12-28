@@ -280,7 +280,7 @@ public class QueueManager {
         }
     }
 
-    public void getPreviousAlbumPosition(boolean ignoreRepeatMode){
+    public void getPreviousAlbumPosition(){
         long albumId = getCurrentSong().albumId;
         Song prevSong;
 
