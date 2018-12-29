@@ -288,7 +288,7 @@ public class QueueManager {
             queuePosition = getCurrentPlaylist().size() - 1;
         }
 
-       else{
+        else{
             for (int i = queuePosition - 1; i < getCurrentPlaylist().size() && i > 0 ; i--) {
                 prevSong = getCurrentPlaylist().get(i).getSong();
                 if (albumId != prevSong.albumId) {
@@ -299,6 +299,7 @@ public class QueueManager {
             }
         }
     }
+
 
     /**
      * Removes the first instance of the Song the playlist & shuffleList.
