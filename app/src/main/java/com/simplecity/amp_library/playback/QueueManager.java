@@ -289,10 +289,11 @@ public class QueueManager {
         }
 
         else{
-            for (int i = queuePosition - 1; i < getCurrentPlaylist().size() && i > 0 ; i--) {
+            for (int i = queuePosition - 1;  i >= 0 ; i--) {
                 prevSong = getCurrentPlaylist().get(i).getSong();
                 if (albumId != prevSong.albumId) {
                     queuePosition = i;
+                    break;
                 } else if(albumId == prevSong.albumId){
                     continue;
                 }
