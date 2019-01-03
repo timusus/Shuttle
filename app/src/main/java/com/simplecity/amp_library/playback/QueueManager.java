@@ -382,7 +382,7 @@ public class QueueManager {
         shuffleMode = PlaybackSettingsManager.INSTANCE.getShuffleMode();
         repeatMode = PlaybackSettingsManager.INSTANCE.getRepeatMode();
 
-        return DataManager.getInstance().getSongsRelay()
+        return DataManager.getInstance().getAllSongsRelay()
                 .first(Collections.emptyList())
                 .map(QueueItemKt::toQueueItems)
                 .subscribeOn(Schedulers.io())
