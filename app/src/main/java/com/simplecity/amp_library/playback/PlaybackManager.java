@@ -396,10 +396,10 @@ public class PlaybackManager implements Playback.Callbacks {
     public void pause(boolean fade) {
         if (isPlaying()) {
             updateLastPlayedTime();
+            saveBookmarkIfNeeded();
         }
         playback.pause(fade);
         equalizer.closeEqualizerSessions(false, getAudioSessionId());
-        saveBookmarkIfNeeded();
         notifyChange(InternalIntents.PLAY_STATE_CHANGED);
         musicServiceCallbacks.scheduleDelayedShutdown();
     }
@@ -420,9 +420,8 @@ public class PlaybackManager implements Playback.Callbacks {
 
         if (isPlaying()) {
             updateLastPlayedTime();
+            saveBookmarkIfNeeded();
         }
-
-        saveBookmarkIfNeeded();
 
         playback.stop();
 
@@ -509,31 +508,24 @@ public class PlaybackManager implements Playback.Callbacks {
     }
 
     private void saveBookmarkIfNeeded() {
-        try {
-            if (queueManager.getCurrentSong() != null) {
-                if (queueManager.getCurrentSong().isPodcast) {
-                    long pos = getSeekPosition();
-                    long bookmark = queueManager.getCurrentSong().bookMark;
-                    long duration = queueManager.getCurrentSong().duration;
-                    if ((pos < bookmark && (pos + 10000) > bookmark) || (pos > bookmark && (pos - 10000) < bookmark)) {
-                        // The existing bookmark is close to the current position, so don't update it.
-                        return;
-                    }
-                    if (pos < 15000 || (pos + 10000) > duration) {
-                        // If we're near the start or end, clear the bookmark
-                        pos = 0;
-                    }
-
-                    // Write 'pos' to the bookmark field
-                    ContentValues values = new ContentValues();
-                    values.put(MediaStore.Audio.Media.BOOKMARK, pos);
-                    Uri uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, queueManager.getCurrentSong().id);
-                    if (uri != null) {
-                        context.getContentResolver().update(uri, values, null, null);
-                    }
-                }
+        if (queueManager.getCurrentSong() != null && queueManager.getCurrentSong().isPodcast) {
+            long pos = getSeekPosition();
+            long duration = queueManager.getCurrentSong().duration;
+            if (pos < 5000 || (pos + 5000) > duration) {
+                // If we're near the start or end, clear the bookmark
+                pos = 0;
             }
-        } catch (SQLiteException ignored) {
+
+            try {
+                // Write 'pos' to the bookmark field
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Audio.Media.BOOKMARK, pos);
+                Uri uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, queueManager.getCurrentSong().id);
+                if (uri != null) {
+                    context.getContentResolver().update(uri, values, null, null);
+                }
+            } catch (SQLiteException ignored) {
+            }
         }
     }
 
