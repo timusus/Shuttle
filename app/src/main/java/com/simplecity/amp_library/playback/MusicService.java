@@ -18,6 +18,7 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserServiceCompat;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.crashlytics.android.Crashlytics;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.androidauto.MediaIdHelper;
@@ -37,13 +38,15 @@ import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MediaButtonIntentReceiver;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
+
+import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
+import java.util.List;
+
 import io.reactivex.Completable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
-import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
-import java.util.List;
 import kotlin.Unit;
 
 @SuppressLint("InlinedApi")
@@ -478,7 +481,7 @@ public class MusicService extends MediaBrowserServiceCompat {
     /**
      * Queues a new list for playback
      *
-     * @param songs The list to queue
+     * @param songs  The list to queue
      * @param action The action to take
      */
     public void enqueue(List<Song> songs, @QueueManager.EnqueueAction final int action) {
@@ -513,7 +516,7 @@ public class MusicService extends MediaBrowserServiceCompat {
     /**
      * Opens a list of songs for playback
      *
-     * @param songs The list of songs to open
+     * @param songs    The list of songs to open
      * @param position The position to start playback at
      */
     public void open(@NonNull List<Song> songs, final int position) {
@@ -772,6 +775,12 @@ public class MusicService extends MediaBrowserServiceCompat {
         }
     }
 
+    public boolean getQueueReloading() {
+        synchronized (this) {
+            return queueManager.queueReloading;
+        }
+    }
+
     /**
      * Starts playing the track at the given position in the queue.
      *
@@ -913,7 +922,7 @@ public class MusicService extends MediaBrowserServiceCompat {
      * Stops the foreground notification
      *
      * @param removeNotification true to remove the notification as well as stop the service running in the foreground
-     * @param withDelay true to delay the stop call by 1.5 seconds, allowing subsequent start calls to cancel this call
+     * @param withDelay          true to delay the stop call by 1.5 seconds, allowing subsequent start calls to cancel this call
      */
     void stopForegroundImpl(boolean removeNotification, boolean withDelay) {
         if (withDelay) {

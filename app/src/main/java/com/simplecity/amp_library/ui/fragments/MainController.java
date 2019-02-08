@@ -13,8 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.cantrowitz.rxbroadcast.RxBroadcast;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
@@ -45,11 +44,16 @@ import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.SleepTimer;
 import com.simplecity.multisheetview.ui.view.MultiSheetView;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import java.util.List;
-import javax.inject.Inject;
 import test.com.androidnavigation.fragment.BackPressHandler;
 import test.com.androidnavigation.fragment.BaseNavigationController;
 import test.com.androidnavigation.fragment.FragmentInfo;
@@ -201,7 +205,9 @@ public class MainController extends BaseNavigationController implements BackPres
                 RxBroadcast.fromBroadcast(getContext(), intentFilter)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(intent -> toggleBottomSheetVisibility(true, true))
+                        .subscribe(intent -> {
+                            toggleBottomSheetVisibility(true, true);
+                        })
         );
 
         DrawerLockManager.getInstance().setDrawerLockController(this);
@@ -223,7 +229,7 @@ public class MainController extends BaseNavigationController implements BackPres
      * Hide/show the bottom sheet, depending on whether the queue is empty.
      */
     private void toggleBottomSheetVisibility(boolean collapse, boolean animate) {
-        if (mediaManager.getQueue().isEmpty()) {
+        if (!mediaManager.getQueueReloading() && mediaManager.getQueue().isEmpty()) {
             multiSheetView.hide(collapse, false);
         } else if (MiniPlayerLockManager.getInstance().canShowMiniPlayer()) {
             multiSheetView.unhide(animate);
