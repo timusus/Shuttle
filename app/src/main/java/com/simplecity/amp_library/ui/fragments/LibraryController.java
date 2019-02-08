@@ -4,9 +4,11 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
@@ -20,13 +22,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.ViewBackgroundAction;
 import com.annimon.stream.Stream;
 import com.cantrowitz.rxbroadcast.RxBroadcast;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
+import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.CategoryItem;
@@ -35,35 +41,26 @@ import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.search.SearchFragment;
 import com.simplecity.amp_library.ui.activities.ToolbarListener;
 import com.simplecity.amp_library.ui.adapters.PagerAdapter;
-import com.simplecity.amp_library.ui.detail.AlbumDetailFragment;
-import com.simplecity.amp_library.ui.detail.ArtistDetailFragment;
-import com.simplecity.amp_library.ui.detail.BaseDetailFragment;
-import com.simplecity.amp_library.ui.detail.GenreDetailFragment;
-import com.simplecity.amp_library.ui.detail.PlaylistDetailFragment;
+import com.simplecity.amp_library.ui.detail.album.AlbumDetailFragment;
+import com.simplecity.amp_library.ui.detail.artist.ArtistDetailFragment;
+import com.simplecity.amp_library.ui.detail.genre.GenreDetailFragment;
+import com.simplecity.amp_library.ui.detail.playlist.PlaylistDetailFragment;
 import com.simplecity.amp_library.ui.drawer.NavigationEventRelay;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import com.simplecity.amp_library.ui.views.ContextualToolbarHost;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
 import com.simplecity.amp_library.utils.DialogUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.multisheetview.ui.view.MultiSheetView;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import java.util.ArrayList;
+import java.util.List;
+import javax.inject.Inject;
 import test.com.androidnavigation.fragment.FragmentInfo;
 
 import static com.afollestad.aesthetic.Rx.distinctToMainThread;
 import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
-
 
 public class LibraryController extends BaseFragment implements
         AlbumArtistFragment.AlbumArtistClickListener,
@@ -117,6 +114,8 @@ public class LibraryController extends BaseFragment implements
         super.onCreate(savedInstanceState);
 
         ShuttleApplication.getInstance().getAppComponent()
+                .plus(new ActivityModule(getActivity()))
+                .plus(new FragmentModule(this))
                 .inject(this);
 
         setHasOptionsMenu(true);
@@ -126,7 +125,7 @@ public class LibraryController extends BaseFragment implements
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_library, container, false);
 
         unbinder = ButterKnife.bind(this, rootView);
@@ -134,12 +133,6 @@ public class LibraryController extends BaseFragment implements
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         setupViewPager();
-
-        Aesthetic.get(getContext())
-                .colorPrimary()
-                .take(1)
-                .subscribe(color -> ViewBackgroundAction.create(appBarLayout)
-                        .accept(color), onErrorLogAndRethrow());
 
         compositeDisposable.add(Aesthetic.get(getContext())
                 .colorPrimary()
@@ -163,7 +156,7 @@ public class LibraryController extends BaseFragment implements
     public void onResume() {
         super.onResume();
 
-        if (!MusicUtils.getQueue().isEmpty()) {
+        if (!mediaManager.getQueue().isEmpty()) {
             multiSheetEventRelay.sendEvent(new MultiSheetEventRelay.MultiSheetEvent(MultiSheetEventRelay.MultiSheetEvent.Action.SHOW_IF_HIDDEN, MultiSheetView.Sheet.NONE));
         }
 
@@ -270,7 +263,7 @@ public class LibraryController extends BaseFragment implements
         pushDetailFragment(PlaylistDetailFragment.newInstance(playlist), null);
     }
 
-    void pushDetailFragment(BaseDetailFragment detailFragment, @Nullable View transitionView) {
+    void pushDetailFragment(Fragment fragment, @Nullable View transitionView) {
 
         List<Pair<View, String>> transitions = new ArrayList<>();
 
@@ -281,12 +274,12 @@ public class LibraryController extends BaseFragment implements
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                 Transition moveTransition = TransitionInflater.from(getContext()).inflateTransition(R.transition.image_transition);
-                detailFragment.setSharedElementEnterTransition(moveTransition);
-                detailFragment.setSharedElementReturnTransition(moveTransition);
+                fragment.setSharedElementEnterTransition(moveTransition);
+                fragment.setSharedElementReturnTransition(moveTransition);
             }
         }
 
-        getNavigationController().pushViewController(detailFragment, "DetailFragment", transitions);
+        getNavigationController().pushViewController(fragment, "DetailFragment", transitions);
     }
 
     @Override

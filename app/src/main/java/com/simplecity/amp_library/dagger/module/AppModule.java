@@ -1,13 +1,11 @@
 package com.simplecity.amp_library.dagger.module;
 
 import android.content.Context;
-
 import com.simplecity.amp_library.ShuttleApplication;
-
-import javax.inject.Singleton;
-
+import com.simplecity.amp_library.playback.MediaManager;
 import dagger.Module;
 import dagger.Provides;
+import javax.inject.Singleton;
 
 @Module
 public class AppModule {
@@ -24,4 +22,9 @@ public class AppModule {
         return application;
     }
 
+    @Provides
+    @Singleton
+    public MediaManager provideMediaManager() {
+        return new MediaManager();
+    }
 }

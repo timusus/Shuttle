@@ -6,8 +6,8 @@ import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.RemoteViews;
-
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.utils.ColorUtils;
 import com.simplecity.amp_library.utils.DrawableUtils;
@@ -92,9 +92,15 @@ public class WidgetProviderSmall extends BaseWidgetProvider {
             final Resources res = service.getResources();
             final RemoteViews views = new RemoteViews(service.getPackageName(), mLayoutId);
 
-            CharSequence titleName = service.getSongName();
-            CharSequence artistName = service.getAlbumArtistName();
+            CharSequence titleName = "";
+            CharSequence artistName = "";
             CharSequence errorState = null;
+
+            Song song = service.getSong();
+            if (song != null) {
+                titleName = song.name;
+                artistName = song.albumArtistName;
+            }
 
             // Format title string with track number, or show SD card message
             String status = Environment.getExternalStorageState();
@@ -118,7 +124,6 @@ public class WidgetProviderSmall extends BaseWidgetProvider {
                 // Show error state to user
                 views.setViewVisibility(R.id.text1, View.GONE);
                 views.setTextViewText(R.id.text2, errorState);
-
             } else {
                 // No error, so show normal titles
                 views.setViewVisibility(R.id.text1, View.VISIBLE);
@@ -174,5 +179,4 @@ public class WidgetProviderSmall extends BaseWidgetProvider {
             pushUpdate(service, appWidgetId, views);
         }
     }
-
 }

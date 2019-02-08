@@ -5,7 +5,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.ui.adapters.ViewType;
@@ -13,9 +14,6 @@ import com.simplecity.amp_library.ui.views.NonScrollImageButton;
 import com.simplecity.amp_library.utils.StringUtils;
 import com.simplecityapps.recycler_adapter.model.BaseViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class GenreView extends BaseViewModel<GenreView.ViewHolder> implements
         SectionedView {
@@ -129,7 +127,6 @@ public class GenreView extends BaseViewModel<GenreView.ViewHolder> implements
         GenreView genreView = (GenreView) o;
 
         return genre != null ? genre.equals(genreView.genre) : genreView.genre == null;
-
     }
 
     @Override

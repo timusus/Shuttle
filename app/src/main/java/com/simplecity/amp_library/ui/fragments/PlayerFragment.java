@@ -1,14 +1,15 @@
 package com.simplecity.amp_library.ui.fragments;
 
-import android.animation.ArgbEvaluator;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.graphics.Palette;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,14 +17,18 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import com.afollestad.aesthetic.Aesthetic;
-import com.afollestad.aesthetic.Util;
+import com.afollestad.aesthetic.ColorIsDarkState;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -38,13 +43,15 @@ import com.jakewharton.rxbinding2.widget.SeekBarStopChangeEvent;
 import com.jp.wasabeef.glide.transformations.BlurTransformation;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
-import com.simplecity.amp_library.glide.palette.PaletteBitmap;
-import com.simplecity.amp_library.glide.palette.PaletteBitmapTranscoder;
+import com.simplecity.amp_library.glide.palette.ColorSet;
+import com.simplecity.amp_library.glide.palette.ColorSetTranscoder;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Song;
-import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.playback.QueueManager;
+import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.rx.UnsafeConsumer;
 import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.drawer.NavigationEventRelay;
@@ -60,26 +67,20 @@ import com.simplecity.amp_library.ui.views.SnowfallView;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetSlideEventRelay;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.StringUtils;
-
-import java.util.Collections;
-import java.util.concurrent.TimeUnit;
-
-import javax.inject.Inject;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
+import com.simplecity.amp_library.utils.color.ArgbEvaluator;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
+import javax.inject.Inject;
 
 public class PlayerFragment extends BaseFragment implements
         PlayerView,
@@ -155,7 +156,7 @@ public class PlayerFragment extends BaseFragment implements
 
     private Unbinder unbinder;
 
-    int currentColor = Color.TRANSPARENT;
+    ColorSet colorSet = ColorSet.Companion.empty();
 
     @Nullable
     private Target<GlideDrawable> target;
@@ -163,6 +164,9 @@ public class PlayerFragment extends BaseFragment implements
     private boolean isLandscape;
 
     private boolean isExpanded;
+
+    @Nullable
+    private ValueAnimator colorAnimator;
 
     public PlayerFragment() {
     }
@@ -179,18 +183,23 @@ public class PlayerFragment extends BaseFragment implements
         super.onCreate(savedInstanceState);
 
         ShuttleApplication.getInstance().getAppComponent()
+                .plus(new ActivityModule(getActivity()))
                 .plus(new FragmentModule(this))
                 .inject(this);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_player, container, false);
+    }
 
-        View rootView = inflater.inflate(R.layout.fragment_player, container, false);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         isLandscape = ShuttleUtils.isLandscape();
 
-        unbinder = ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, view);
 
         toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
         toolbar.inflateMenu(R.menu.menu_now_playing);
@@ -210,10 +219,12 @@ public class PlayerFragment extends BaseFragment implements
 
         if (repeatButton != null) {
             repeatButton.setOnClickListener(v -> presenter.toggleRepeat());
+            repeatButton.setTag(":aesthetic_ignore");
         }
 
         if (shuffleButton != null) {
             shuffleButton.setOnClickListener(v -> presenter.toggleShuffle());
+            shuffleButton.setTag(":aesthetic_ignore");
         }
 
         if (nextButton != null) {
@@ -236,12 +247,15 @@ public class PlayerFragment extends BaseFragment implements
                     .commit();
         }
 
-        return rootView;
-    }
+        getAestheticColorSetDisposable()
+                .take(1)
+                .subscribe(
+                        this::invalidateColors,
+                        error -> {
+                            // Nothing to do
+                        }
+                );
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         presenter.bindView(this);
     }
 
@@ -251,6 +265,11 @@ public class PlayerFragment extends BaseFragment implements
             Glide.clear(target);
         }
         snowfallView.clear();
+
+        if (colorAnimator != null) {
+            colorAnimator.cancel();
+        }
+
         presenter.unbindView(this);
         unbinder.unbind();
         super.onDestroyView();
@@ -266,9 +285,14 @@ public class PlayerFragment extends BaseFragment implements
     public void onResume() {
         super.onResume();
 
-        disposables.add(Aesthetic.get(getContext())
-                .colorPrimary()
-                .subscribe(this::invalidateColors));
+        if (!SettingsManager.getInstance().getUsePalette() && !SettingsManager.getInstance().getUsePaletteNowPlayingOnly()) {
+            disposables.add(getAestheticColorSetDisposable().subscribe(
+                    colorSet -> animateColors(PlayerFragment.this.colorSet, colorSet, 800, this::invalidateColors, null),
+                    error -> {
+                        // Nothing to do
+                    })
+            );
+        }
 
         if (seekBar != null) {
             Flowable<SeekBarChangeEvent> sharedSeekBarEvents = RxSeekBar.changeEvents(seekBar)
@@ -277,37 +301,49 @@ public class PlayerFragment extends BaseFragment implements
                     .observeOn(AndroidSchedulers.mainThread())
                     .share();
 
-            disposables.add(sharedSeekBarEvents.subscribe(seekBarChangeEvent -> {
-                if (seekBarChangeEvent instanceof SeekBarStartChangeEvent) {
-                    isSeeking = true;
-                } else if (seekBarChangeEvent instanceof SeekBarStopChangeEvent) {
-                    isSeeking = false;
-                }
-            }, error -> LogUtils.logException(TAG, "Error in seek change event", error)));
+            disposables.add(sharedSeekBarEvents.subscribe(
+                    seekBarChangeEvent -> {
+                        if (seekBarChangeEvent instanceof SeekBarStartChangeEvent) {
+                            isSeeking = true;
+                        } else if (seekBarChangeEvent instanceof SeekBarStopChangeEvent) {
+                            isSeeking = false;
+                        }
+                    },
+                    error -> LogUtils.logException(TAG, "Error in seek change event", error))
+            );
 
             disposables.add(sharedSeekBarEvents
                     .ofType(SeekBarProgressChangeEvent.class)
                     .filter(SeekBarProgressChangeEvent::fromUser)
                     .debounce(15, TimeUnit.MILLISECONDS)
-                    .subscribe(seekBarChangeEvent -> presenter.seekTo(seekBarChangeEvent.progress()),
-                            error -> LogUtils.logException(TAG, "Error receiving seekbar progress", error)));
+                    .subscribe(
+                            seekBarChangeEvent -> presenter.seekTo(seekBarChangeEvent.progress()),
+                            error -> LogUtils.logException(TAG, "Error receiving seekbar progress", error))
+            );
         }
 
         disposables.add(RxSharedPreferences.create(PreferenceManager.getDefaultSharedPreferences(getContext()))
                 .getBoolean(SettingsManager.KEY_DISPLAY_REMAINING_TIME)
                 .asObservable()
-                .subscribe(aBoolean -> presenter.updateRemainingTime()));
+                .subscribe(
+                        aBoolean -> presenter.updateRemainingTime(),
+                        error -> LogUtils.logException(TAG, "Remaining time changed", error)
+                )
+        );
 
         disposables.add(sheetEventRelay.getEvents()
-                .subscribe(event -> {
-                    if (event.nowPlayingExpanded()) {
-                        isExpanded = true;
-                        snowfallView.letItSnow();
-                    } else if (event.nowPlayingCollapsed()) {
-                        isExpanded = false;
-                        snowfallView.clear();
-                    }
-                }, throwable -> Log.e(TAG, "error listening for sheet slide events", throwable)));
+                .subscribe(
+                        event -> {
+                            if (event.nowPlayingExpanded()) {
+                                isExpanded = true;
+                                snowfallView.letItSnow();
+                            } else if (event.nowPlayingCollapsed()) {
+                                isExpanded = false;
+                                snowfallView.clear();
+                            }
+                        },
+                        throwable -> Log.e(TAG, "error listening for sheet slide events", throwable))
+        );
 
         update();
     }
@@ -323,9 +359,7 @@ public class PlayerFragment extends BaseFragment implements
         return TAG;
     }
 
-    ////////////////////////////////////////////////////////////////////
     // View implementation
-    ////////////////////////////////////////////////////////////////////
 
     @Override
     public void setSeekProgress(int progress) {
@@ -344,14 +378,14 @@ public class PlayerFragment extends BaseFragment implements
     @Override
     public void currentTimeChanged(long seconds) {
         if (currentTime != null) {
-            currentTime.setText(StringUtils.makeTimeString(this.getActivity(), seconds));
+            currentTime.setText(StringUtils.makeTimeString(getContext(), seconds));
         }
     }
 
     @Override
     public void totalTimeChanged(long seconds) {
         if (totalTime != null) {
-            totalTime.setText(StringUtils.makeTimeString(this.getActivity(), seconds));
+            totalTime.setText(StringUtils.makeTimeString(getContext(), seconds));
         }
     }
 
@@ -382,14 +416,14 @@ public class PlayerFragment extends BaseFragment implements
     }
 
     @Override
-    public void shuffleChanged(@MusicService.ShuffleMode int shuffleMode) {
+    public void shuffleChanged(@QueueManager.ShuffleMode int shuffleMode) {
         if (shuffleButton != null) {
             shuffleButton.setShuffleMode(shuffleMode);
         }
     }
 
     @Override
-    public void repeatChanged(@MusicService.RepeatMode int repeatMode) {
+    public void repeatChanged(@QueueManager.RepeatMode int repeatMode) {
         if (repeatButton != null) {
             repeatButton.setRepeatMode(repeatMode);
         }
@@ -414,7 +448,7 @@ public class PlayerFragment extends BaseFragment implements
             snowfallView.removeSnow();
         }
 
-        String totalTimeString = StringUtils.makeTimeString(this.getActivity(), song.duration / 1000);
+        String totalTimeString = StringUtils.makeTimeString(getContext(), song.duration / 1000);
         if (!TextUtils.isEmpty(totalTimeString)) {
             if (totalTime != null) {
                 totalTime.setText(totalTimeString);
@@ -426,12 +460,12 @@ public class PlayerFragment extends BaseFragment implements
             track.setSelected(true);
         }
         if (album != null) {
-            album.setText(String.format("%s | %s", song.artistName, song.albumName));
+            album.setText(String.format("%s • %s", song.artistName, song.albumName));
         }
 
         if (isLandscape) {
             toolbar.setTitle(song.name);
-            toolbar.setSubtitle(String.format("%s | %s", song.artistName, song.albumName));
+            toolbar.setSubtitle(String.format("%s • %s", song.artistName, song.albumName));
 
             target = Glide.with(this)
                     .load(song)
@@ -453,95 +487,81 @@ public class PlayerFragment extends BaseFragment implements
         }
 
         if (SettingsManager.getInstance().getUsePalette()) {
-            //noinspection unchecked
+
+            if (paletteTarget != null) {
+                Glide.clear(paletteTarget);
+            }
+
             Glide.with(this)
                     .load(song)
                     .asBitmap()
-                    .transcode(new PaletteBitmapTranscoder(getContext()), PaletteBitmap.class)
+                    .transcode(new ColorSetTranscoder(getContext()), ColorSet.class)
                     .override(250, 250)
+                    .priority(Priority.HIGH)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(new SimpleTarget<PaletteBitmap>() {
-                        @Override
-                        public void onResourceReady(PaletteBitmap resource, GlideAnimation<? super PaletteBitmap> glideAnimation) {
-
-                            if (!isAdded() || getContext() == null) {
-                                return;
-                            }
-
-                            Palette.Swatch swatch = resource.palette.getDarkMutedSwatch();
-                            if (swatch != null) {
-                                if (SettingsManager.getInstance().getUsePalette()) {
-                                    if (SettingsManager.getInstance().getUsePaletteNowPlayingOnly()) {
-                                        animateColors(currentColor, swatch.getRgb(), color -> invalidateColors(color));
-                                    } else {
-                                        // Set Aesthetic colors globally, based on the current Palette swatch
-                                        disposables.add(
-                                                Aesthetic.get(getContext())
-                                                        .colorPrimary()
-                                                        .take(1)
-                                                        .subscribe(integer -> animateColors(integer, swatch.getRgb(), color -> {
-                                                            if (getContext() != null && isAdded()) {
-                                                                Aesthetic aesthetic = Aesthetic.get(getContext())
-                                                                        .colorPrimary(color)
-                                                                        .colorStatusBarAuto();
-
-                                                                if (SettingsManager.getInstance().getTintNavBar()) {
-                                                                    aesthetic = aesthetic.colorNavigationBar(color);
-                                                                }
-
-                                                                aesthetic.apply();
-                                                            }
-                                                        })));
-                                    }
-                                }
-                            } else {
-                                // Failed to generate the dark muted swatch, fall back to the primary theme colour.
-                                Aesthetic.get(getContext())
-                                        .colorPrimary()
-                                        .take(1)
-                                        .subscribe(primaryColor -> animateColors(currentColor, primaryColor, color -> invalidateColors(color)));
-                            }
-                        }
-
-                        @Override
-                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                            super.onLoadFailed(e, errorDrawable);
-                            Aesthetic.get(getContext())
-                                    .colorPrimary()
-                                    .take(1)
-                                    .subscribe(primaryColor -> animateColors(currentColor, primaryColor, color -> invalidateColors(color)));
-                        }
-                    });
+                    .into(paletteTarget);
         }
     }
 
-    void invalidateColors(int color) {
+    void invalidateColors(ColorSet colorSet) {
 
-        currentColor = color;
-
-        boolean isColorLight = Util.isColorLight(color);
-        int textColor = isColorLight ? Color.BLACK : Color.WHITE;
+        boolean ignorePalette = false;
+        if (!SettingsManager.getInstance().getUsePalette() && !SettingsManager.getInstance().getUsePaletteNowPlayingOnly()) {
+            // If we're not using Palette at all, use non-tinted colors for text.
+            colorSet.setPrimaryTextColorTinted(colorSet.getPrimaryTextColor());
+            colorSet.setSecondaryTextColorTinted(colorSet.getSecondaryTextColor());
+            ignorePalette = true;
+        }
 
         if (!isLandscape && backgroundView != null) {
-            backgroundView.setBackgroundColor(color);
+            backgroundView.setBackgroundColor(colorSet.getPrimaryColor());
         }
 
-        if (currentTime != null) {
-            currentTime.setTextColor(textColor);
+        if (!isLandscape && currentTime != null) {
+            currentTime.setTextColor(colorSet.getPrimaryTextColor());
         }
 
-        if (totalTime != null) {
-            totalTime.setTextColor(textColor);
+        if (!isLandscape && totalTime != null) {
+            totalTime.setTextColor(colorSet.getPrimaryTextColor());
         }
+
         if (track != null) {
-            track.setTextColor(textColor);
+            track.setTextColor(colorSet.getPrimaryTextColorTinted());
         }
+
         if (album != null) {
-            album.setTextColor(textColor);
+            album.setTextColor(colorSet.getSecondaryTextColorTinted());
         }
+
         if (artist != null) {
-            artist.setTextColor(textColor);
+            artist.setTextColor(colorSet.getSecondaryTextColorTinted());
         }
+
+        if (seekBar != null) {
+            seekBar.invalidateColors(new ColorIsDarkState(ignorePalette ? colorSet.getAccentColor() : colorSet.getPrimaryTextColorTinted(), false));
+        }
+
+        if (shuffleButton != null) {
+            shuffleButton.invalidateColors(colorSet.getPrimaryTextColor(), colorSet.getPrimaryTextColorTinted());
+        }
+
+        if (repeatButton != null) {
+            repeatButton.invalidateColors(colorSet.getPrimaryTextColor(), colorSet.getPrimaryTextColorTinted());
+        }
+
+        if (prevButton != null) {
+            prevButton.invalidateColors(colorSet.getPrimaryTextColor());
+        }
+
+        if (nextButton != null) {
+            nextButton.invalidateColors(colorSet.getPrimaryTextColor());
+        }
+
+        if (playPauseView != null) {
+            playPauseView.setDrawableColor(colorSet.getPrimaryTextColor());
+        }
+
+        this.colorSet = colorSet;
     }
 
     @Override
@@ -603,8 +623,8 @@ public class PlayerFragment extends BaseFragment implements
 
     @SuppressLint("CheckResult")
     private void goToArtist() {
-        AlbumArtist currentAlbumArtist = MusicUtils.getAlbumArtist();
-        // MusicUtils.getAlbumArtist() is only populate with the album the current Song belongs to.
+        AlbumArtist currentAlbumArtist = mediaManager.getAlbumArtist();
+        // MediaManager.getAlbumArtist() is only populate with the album the current Song belongs to.
         // Let's find the matching AlbumArtist in the DataManager.albumArtistRelay
         DataManager.getInstance().getAlbumArtistsRelay()
                 .first(Collections.emptyList())
@@ -612,29 +632,128 @@ public class PlayerFragment extends BaseFragment implements
                 .filter(albumArtist -> currentAlbumArtist != null && albumArtist.name.equals(currentAlbumArtist.name) && albumArtist.albums.containsAll(currentAlbumArtist.albums))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(albumArtist -> navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_ARTIST, albumArtist, true)));
+                .subscribe(
+                        albumArtist -> navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_ARTIST, albumArtist, true)),
+                        error -> LogUtils.logException(TAG, "goToArtist error", error)
+                );
     }
 
     private void goToAlbum() {
-        navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_ALBUM, MusicUtils.getAlbum(), true));
+        navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_ALBUM, mediaManager.getAlbum(), true));
     }
 
     @SuppressLint("CheckResult")
     private void goToGenre() {
-        MusicUtils.getGenre()
+        mediaManager.getGenre()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         (UnsafeConsumer<Genre>) genre -> navigationEventRelay.sendEvent(new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.GO_TO_GENRE, genre, true)),
-                        error -> LogUtils.logException(TAG, "Error retrieving genre", error));
+                        error -> LogUtils.logException(TAG, "Error retrieving genre", error)
+                );
     }
 
-    void animateColors(int from, int to, UnsafeConsumer<Integer> consumer) {
-        ValueAnimator valueAnimator = ValueAnimator.ofInt(from, to);
-        valueAnimator.setEvaluator(new ArgbEvaluator());
-        valueAnimator.setDuration(450);
-        valueAnimator.addUpdateListener(animator -> consumer.accept((Integer) animator.getAnimatedValue()));
-        valueAnimator.start();
+    void animateColors(@NonNull ColorSet from, @NonNull ColorSet to, int duration, @NonNull UnsafeConsumer<ColorSet> consumer, @Nullable UnsafeAction onComplete) {
+        colorAnimator = ValueAnimator.ofFloat(1, 0);
+        colorAnimator.setDuration(duration);
+        colorAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        ArgbEvaluator argbEvaluator = ArgbEvaluator.getInstance();
+        colorAnimator.addUpdateListener(animator -> {
+            ColorSet colorSet = new ColorSet(
+                    (int) argbEvaluator.evaluate(animator.getAnimatedFraction(), from.getPrimaryColor(), to.getPrimaryColor()),
+                    (int) argbEvaluator.evaluate(animator.getAnimatedFraction(), from.getAccentColor(), to.getAccentColor()),
+                    (int) argbEvaluator.evaluate(animator.getAnimatedFraction(), from.getPrimaryTextColorTinted(), to.getPrimaryTextColorTinted()),
+                    (int) argbEvaluator.evaluate(animator.getAnimatedFraction(), from.getSecondaryTextColorTinted(), to.getSecondaryTextColorTinted()),
+                    (int) argbEvaluator.evaluate(animator.getAnimatedFraction(), from.getPrimaryTextColor(), to.getPrimaryTextColor()),
+                    (int) argbEvaluator.evaluate(animator.getAnimatedFraction(), from.getSecondaryTextColor(), to.getSecondaryTextColor())
+            );
+            consumer.accept(colorSet);
+        });
+        colorAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                animation.removeAllListeners();
+                if (onComplete != null) {
+                    onComplete.run();
+                }
+            }
+        });
+        colorAnimator.start();
     }
 
+    private SimpleTarget<ColorSet> paletteTarget = new SimpleTarget<ColorSet>() {
+        @Override
+        public void onResourceReady(ColorSet newColorSet, GlideAnimation<? super ColorSet> glideAnimation) {
+
+            if (!isAdded() || getContext() == null) {
+                return;
+            }
+
+            if (colorSet == newColorSet) {
+                return;
+            }
+
+            ColorSet oldColorSet = colorSet;
+
+            animateColors(
+                    oldColorSet,
+                    newColorSet,
+                    800,
+                    intermediateColorSet -> {
+
+                        if (!isAdded() || getContext() == null) return;
+
+                        // Update all the colours related to the now playing screen first
+                        invalidateColors(intermediateColorSet);
+
+                        // We need to update the nav bar colour at the same time, since it's visible as well.
+                        if (SettingsManager.getInstance().getTintNavBar()) {
+                            Aesthetic.get(getContext()).colorNavigationBar(intermediateColorSet.getPrimaryColor()).apply();
+                        }
+                    },
+                    () -> {
+                        if (!isAdded() || getContext() == null) return;
+
+                        // Wait until the first set of color change animations is complete, before updating Aesthetic.
+                        // This allows our invalidateColors() animation to run smoothly, as the Aesthetic color change
+                        // introduces some jank.
+                        if (!SettingsManager.getInstance().getUsePaletteNowPlayingOnly()) {
+
+                            animateColors(oldColorSet, newColorSet, 450, intermediateColorSet -> {
+
+                                if (!isAdded() || getContext() == null) return;
+
+                                Aesthetic.get(getContext())
+                                        .colorPrimary(intermediateColorSet.getPrimaryColor())
+                                        .colorAccent(intermediateColorSet.getAccentColor())
+                                        .colorStatusBarAuto().apply();
+                            }, null);
+                        }
+                    }
+            );
+        }
+
+        @SuppressLint("CheckResult")
+        @Override
+        public void onLoadFailed(Exception e, Drawable errorDrawable) {
+            super.onLoadFailed(e, errorDrawable);
+
+            getAestheticColorSetDisposable()
+                    .take(1)
+                    .subscribe(
+                            colorSet -> animateColors(PlayerFragment.this.colorSet, colorSet, 800, intermediateColorSet -> invalidateColors(intermediateColorSet), null),
+                            error -> {
+                                // Nothing ot do
+                            }
+                    );
+        }
+    };
+
+    private Observable<ColorSet> getAestheticColorSetDisposable() {
+        return Observable.combineLatest(
+                Aesthetic.get(getContext()).colorPrimary(),
+                Aesthetic.get(getContext()).colorAccent(),
+                Pair::new
+        ).map(pair -> ColorSet.Companion.fromPrimaryAccentColors(getContext(), pair.first, pair.second));
+    }
 }

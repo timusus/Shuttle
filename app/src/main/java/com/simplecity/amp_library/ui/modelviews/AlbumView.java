@@ -5,7 +5,6 @@ import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.florent37.glidepalette.GlidePalette;
@@ -13,9 +12,8 @@ import com.simplecity.amp_library.format.PrefixHighlighter;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
-import com.simplecity.amp_library.utils.SortManager;
+import com.simplecity.amp_library.utils.sorting.SortManager;
 import com.simplecity.amp_library.utils.StringUtils;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -170,16 +168,16 @@ public class AlbumView extends MultiItemView<AlbumView.ViewHolder, Album> implem
         String string = null;
         boolean requiresSubstring = true;
         switch (sortOrder) {
-            case com.simplecity.amp_library.utils.SortManager.AlbumSort.DEFAULT:
+            case SortManager.AlbumSort.DEFAULT:
                 string = StringUtils.keyFor(album.name);
                 break;
-            case com.simplecity.amp_library.utils.SortManager.AlbumSort.NAME:
+            case SortManager.AlbumSort.NAME:
                 string = album.name;
                 break;
-            case com.simplecity.amp_library.utils.SortManager.AlbumSort.ARTIST_NAME:
+            case SortManager.AlbumSort.ARTIST_NAME:
                 string = album.albumArtistName;
                 break;
-            case com.simplecity.amp_library.utils.SortManager.AlbumSort.YEAR:
+            case SortManager.AlbumSort.YEAR:
                 string = String.valueOf(album.year);
                 if (string.length() != 4) {
                     string = "-";
@@ -210,7 +208,6 @@ public class AlbumView extends MultiItemView<AlbumView.ViewHolder, Album> implem
 
         if (viewType != albumView.viewType) return false;
         return album != null ? album.equals(albumView.album) : albumView.album == null;
-
     }
 
     @Override

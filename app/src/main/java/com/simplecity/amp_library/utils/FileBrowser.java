@@ -1,16 +1,16 @@
 package com.simplecity.amp_library.utils;
 
 import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
-
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.interfaces.FileType;
 import com.simplecity.amp_library.model.BaseFileObject;
 import com.simplecity.amp_library.model.FileObject;
 import com.simplecity.amp_library.model.FolderObject;
 import com.simplecity.amp_library.model.TagInfo;
-
+import com.simplecity.amp_library.utils.sorting.SortManager;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,6 +21,7 @@ public class FileBrowser {
 
     private static final String TAG = "FileBrowser";
 
+    @Nullable
     private File currentDir;
 
     /**
@@ -65,7 +66,6 @@ public class FileBrowser {
                     if (!folderObjects.contains(baseFileObject)) {
                         folderObjects.add(baseFileObject);
                     }
-
                 } else {
                     baseFileObject = new FileObject();
                     baseFileObject.path = FileHelper.getPath(file);
@@ -108,6 +108,7 @@ public class FileBrowser {
         return folderObjects;
     }
 
+    @Nullable
     public File getCurrentDir() {
         return currentDir;
     }
@@ -208,7 +209,9 @@ public class FileBrowser {
     }
 
     public void setHomeDir() {
-        SettingsManager.getInstance().setFolderBrowserInitialDir(currentDir.getPath());
+        if (currentDir != null) {
+            SettingsManager.getInstance().setFolderBrowserInitialDir(currentDir.getPath());
+        }
     }
 
     public File getHomeDir() {
@@ -253,9 +256,9 @@ public class FileBrowser {
         return (Comparator<BaseFileObject>) (lhs, rhs) -> lhs.name.compareToIgnoreCase(rhs.name);
     }
 
-//    private Comparator durationComparator() {
-//        return (Comparator<FileObject>) (lhs, rhs) -> (int) (rhs.duration - lhs.duration);
-//    }
+    //    private Comparator durationComparator() {
+    //        return (Comparator<FileObject>) (lhs, rhs) -> (int) (rhs.duration - lhs.duration);
+    //    }
 
     private Comparator trackNumberComparator() {
         return (Comparator<FileObject>) (lhs, rhs) -> lhs.tagInfo.trackNumber - rhs.tagInfo.trackNumber;
@@ -299,5 +302,4 @@ public class FileBrowser {
     <T extends Comparable<T>> int nullCompare(T a, T b) {
         return a == null ? (b == null ? 0 : Integer.MIN_VALUE) : (b == null ? Integer.MAX_VALUE : a.compareTo(b));
     }
-
 }

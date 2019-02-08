@@ -7,13 +7,13 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-
 import com.simplecity.amp_library.playback.LocalBinder;
 import com.simplecity.amp_library.playback.MusicService;
-
 import java.util.WeakHashMap;
 
 public class MusicServiceConnectionUtils {
+
+    private static final String TAG = "MusicServiceConnectionU";
 
     public static LocalBinder serviceBinder = null;
 
@@ -24,7 +24,7 @@ public class MusicServiceConnectionUtils {
     }
 
     /**
-     * @param context  The {@link Context} to use
+     * @param context The {@link Context} to use
      * @param callback The {@link ServiceConnection} to use
      * @return The new instance of {@link ServiceToken}
      */
@@ -34,6 +34,7 @@ public class MusicServiceConnectionUtils {
             realActivity = (Activity) context;
         }
         final ContextWrapper contextWrapper = new ContextWrapper(realActivity);
+        AnalyticsManager.dropBreadcrumb(TAG, "Service started. Activity: " + realActivity.getClass().getSimpleName());
         contextWrapper.startService(new Intent(contextWrapper, MusicService.class));
         final ServiceBinder binder = new ServiceBinder(callback);
         if (contextWrapper.bindService(new Intent().setClass(contextWrapper, MusicService.class), binder, 0)) {

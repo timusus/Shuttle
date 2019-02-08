@@ -7,7 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -19,19 +20,13 @@ import com.simplecity.amp_library.ui.views.NonScrollImageButton;
 import com.simplecity.amp_library.ui.views.PlayCountView;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.SettingsManager;
-import com.simplecity.amp_library.utils.SortManager;
 import com.simplecity.amp_library.utils.StringUtils;
+import com.simplecity.amp_library.utils.sorting.SortManager;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
-
 import java.util.Arrays;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
-public class SongView extends BaseSelectableViewModel<SongView.ViewHolder> implements
-        SectionedView,
-        SelectableViewModel {
+public class SongView extends BaseSelectableViewModel<SongView.ViewHolder> implements SectionedView {
 
     public interface ClickListener {
 
@@ -66,8 +61,6 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder> imple
 
     private boolean showAlbumName = true;
 
-    private boolean isCurrentTrack;
-
     @Nullable
     private ClickListener listener;
 
@@ -86,6 +79,10 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder> imple
 
     public void showAlbumArt(boolean showAlbumArt) {
         this.showAlbumArt = showAlbumArt;
+    }
+
+    public boolean getShowAlbumArt() {
+        return showAlbumArt;
     }
 
     public void showPlayCount(boolean showPlayCount) {
@@ -107,14 +104,6 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder> imple
 
     public void setShowTrackNumber(boolean showTrackNumber) {
         this.showTrackNumber = showTrackNumber;
-    }
-
-    public void setCurrentTrack(boolean isCurrentTrack) {
-        this.isCurrentTrack = isCurrentTrack;
-    }
-
-    public boolean isCurrentTrack() {
-        return isCurrentTrack;
     }
 
     void onItemClick(int position) {
@@ -179,10 +168,6 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder> imple
 
         holder.lineThree.setText(song.getDurationLabel());
 
-        if (holder.dragHandle != null) {
-            holder.dragHandle.setActivated(isCurrentTrack);
-        }
-
         if (holder.artwork != null) {
             if (showAlbumArt && SettingsManager.getInstance().showArtworkInQueue()) {
                 holder.artwork.setVisibility(View.VISIBLE);
@@ -221,10 +206,6 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder> imple
         if (prefixHighlighter != null) {
             prefixHighlighter.setText(holder.lineOne, prefix);
             prefixHighlighter.setText(holder.lineTwo, prefix);
-        }
-
-        if (holder.dragHandle != null) {
-            holder.dragHandle.setActivated(isCurrentTrack);
         }
     }
 
@@ -301,7 +282,6 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder> imple
         if (showTrackNumber != songView.showTrackNumber) return false;
         if (showArtistName != songView.showArtistName) return false;
         if (showAlbumName != songView.showAlbumName) return false;
-        if (isCurrentTrack != songView.isCurrentTrack) return false;
         return song != null ? song.equals(songView.song) : songView.song == null;
     }
 
@@ -314,7 +294,6 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder> imple
         result = 31 * result + (showTrackNumber ? 1 : 0);
         result = 31 * result + (showArtistName ? 1 : 0);
         result = 31 * result + (showAlbumName ? 1 : 0);
-        result = 31 * result + (isCurrentTrack ? 1 : 0);
         return result;
     }
 
@@ -329,19 +308,23 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder> imple
         @BindView(R.id.line_three)
         TextView lineThree;
 
-        @Nullable @BindView(R.id.trackNumber)
+        @Nullable
+        @BindView(R.id.trackNumber)
         TextView trackNumber;
 
-        @Nullable @BindView(R.id.play_count)
+        @Nullable
+        @BindView(R.id.play_count)
         PlayCountView playCount;
 
         @BindView(R.id.btn_overflow)
         public NonScrollImageButton overflowButton;
 
-        @Nullable @BindView(R.id.drag_handle)
+        @Nullable
+        @BindView(R.id.drag_handle)
         ImageView dragHandle;
 
-        @Nullable @BindView(R.id.image)
+        @Nullable
+        @BindView(R.id.image)
         ImageView artwork;
 
         ViewHolder(View itemView) {

@@ -1,20 +1,25 @@
 package com.simplecity.amp_library.utils;
 
-import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
 import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.CategoryItem;
 import com.simplecity.amp_library.ui.adapters.ViewType;
+import com.simplecity.amp_library.utils.sorting.SortManager;
 
-public class SettingsManager {
+public class SettingsManager extends BaseSettingsManager {
 
     private static final String TAG = "SettingsManager";
+
+    private static SettingsManager instance;
+
+    public static SettingsManager getInstance() {
+        if (instance == null) {
+            instance = new SettingsManager();
+        }
+        return instance;
+    }
 
     // Support
     public static String KEY_PREF_CHANGELOG = "pref_changelog";
@@ -53,60 +58,14 @@ public class SettingsManager {
     // Upgrade
     public static String KEY_PREF_UPGRADE = "pref_upgrade";
 
-    private static SettingsManager sInstance;
-
-    public static SettingsManager getInstance() {
-        if (sInstance == null) {
-            sInstance = new SettingsManager();
-        }
-        return sInstance;
-    }
-
     // Whether the 'rate' snackbar has been seen during this session
     public boolean hasSeenRateSnackbar = false;
 
+    // Whether to display artwork in the songs list
+    //public static String KEY_SHOW_
+
     private SettingsManager() {
 
-    }
-
-    private SharedPreferences getSharedPreferences() {
-        return PreferenceManager.getDefaultSharedPreferences(ShuttleApplication.getInstance());
-    }
-
-    @Nullable
-    private String getString(@NonNull String key) {
-        return getString(key, null);
-    }
-
-    @NonNull
-    private String getString(@NonNull String key, @NonNull String defaultValue) {
-        return getSharedPreferences().getString(key, defaultValue);
-    }
-
-    private void setString(@NonNull String key, @Nullable String value) {
-        final SharedPreferences.Editor editor = getSharedPreferences().edit();
-        editor.putString(key, value);
-        editor.apply();
-    }
-
-    private boolean getBool(@NonNull String key, boolean defaultValue) {
-        return getSharedPreferences().getBoolean(key, defaultValue);
-    }
-
-    private void setBool(@NonNull String key, boolean value) {
-        final SharedPreferences.Editor editor = getSharedPreferences().edit();
-        editor.putBoolean(key, value);
-        editor.apply();
-    }
-
-    private int getInt(@NonNull String key, int defaultValue) {
-        return getSharedPreferences().getInt(key, defaultValue);
-    }
-
-    private void setInt(@NonNull String key, int value) {
-        final SharedPreferences.Editor editor = getSharedPreferences().edit();
-        editor.putInt(key, value);
-        editor.apply();
     }
 
     public static final String KEY_SHOW_LOCKSCREEN_ARTWORK = "pref_show_lockscreen_artwork";
@@ -211,13 +170,13 @@ public class SettingsManager {
         return getBool("audiofx.global.enable", false);
     }
 
-
     private static final String DOCUMENT_TREE_URI = "document_tree_uri";
 
     public void setDocumentTreeUri(String documentTreeUri) {
         setString(DOCUMENT_TREE_URI, documentTreeUri);
     }
 
+    @Nullable
     public String getDocumentTreeUri() {
         return getString(DOCUMENT_TREE_URI);
     }
@@ -359,6 +318,7 @@ public class SettingsManager {
     private static final String KEY_DOWNLOAD_AUTOMATICALLY = "pref_download_artwork_auto";
     private static final String KEY_USE_GMAIL_PLACEHOLDERS = "pref_placeholders";
     private static final String KEY_QUEUE_ARTWORK = "pref_artwork_queue";
+    private static final String KEY_SONG_LIST_ARTWORK = "pref_artwork_song_list";
     private static final String KEY_CROP_ARTWORK = "pref_crop_artwork";
     public static final String KEY_IGNORE_MEDIASTORE_ART = "pref_ignore_mediastore_artwork";
     public static final String KEY_IGNORE_EMBEDDED_ARTWORK = "pref_ignore_embedded_artwork";
@@ -443,7 +403,6 @@ public class SettingsManager {
         return getBool(KEY_SEARCH_ALBUMS, true);
     }
 
-
     // Changelog
 
     private static final String KEY_VERSION_CODE = "version_code";
@@ -489,7 +448,6 @@ public class SettingsManager {
         setInt(KEY_DEFAULT_PAGE, type);
     }
 
-
     // Legacy Upgrade Preference
     private static final String KEY_UPGRADED = "pref_theme_gold";
 
@@ -497,4 +455,27 @@ public class SettingsManager {
         return getBool(KEY_UPGRADED, false);
     }
 
+    // Recently added
+
+    private static final String KEY_NUM_WEEKS = "numweeks";
+
+    public int getNumWeeks() {
+        return getInt(KEY_NUM_WEEKS, 2);
+    }
+
+    public void setNumWeeks(int weeks) {
+        setInt(KEY_NUM_WEEKS, weeks);
+    }
+
+
+
+    // Song List
+
+    public boolean showArtworkInSongList() {
+        return getBool(KEY_SONG_LIST_ARTWORK, true);
+    }
+
+    public void setShowArtworkInSongList(boolean showArtworkInSongList){
+        setBool(KEY_SONG_LIST_ARTWORK, showArtworkInSongList);
+    }
 }

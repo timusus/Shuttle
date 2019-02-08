@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
@@ -21,6 +22,11 @@ public class RepeatingImageButton extends android.support.v7.widget.AppCompatIma
     private RepeatListener listener;
     long interval = 500;
 
+    @NonNull
+    Drawable drawable;
+
+    int normalColor = Color.WHITE;
+
     public RepeatingImageButton(Context context) {
         this(context, null);
     }
@@ -34,8 +40,8 @@ public class RepeatingImageButton extends android.support.v7.widget.AppCompatIma
         setFocusable(true);
         setLongClickable(true);
 
-        Drawable drawable = DrawableCompat.wrap(getDrawable().mutate());
-        DrawableCompat.setTint(drawable, Color.WHITE);
+        drawable = DrawableCompat.wrap(getDrawable().mutate());
+        DrawableCompat.setTint(drawable, normalColor);
         setImageDrawable(drawable);
     }
 
@@ -120,12 +126,19 @@ public class RepeatingImageButton extends android.support.v7.widget.AppCompatIma
          * specified in setRepeatListener(), for as long as the button
          * is pressed.
          *
-         * @param v           The button as a View.
-         * @param duration    The number of milliseconds the button has been pressed so far.
+         * @param v The button as a View.
+         * @param duration The number of milliseconds the button has been pressed so far.
          * @param repeatCount The number of previous calls in this sequence.
-         *                    If this is going to be the last call in this sequence (i.e. the user
-         *                    just stopped pressing the button), the value will be -1.
+         * If this is going to be the last call in this sequence (i.e. the user
+         * just stopped pressing the button), the value will be -1.
          */
         void onRepeat(View v, long duration, int repeatCount);
+    }
+
+    public void invalidateColors(int normal) {
+
+        this.normalColor = normal;
+
+        DrawableCompat.setTint(drawable, normal);
     }
 }

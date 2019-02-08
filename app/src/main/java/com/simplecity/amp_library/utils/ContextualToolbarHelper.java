@@ -1,13 +1,11 @@
 package com.simplecity.amp_library.utils;
 
 import android.support.annotation.NonNull;
-
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -16,7 +14,8 @@ import java.util.Map;
 public class ContextualToolbarHelper<T> {
 
     public interface Callback {
-        void notifyItemChanged(int position, SelectableViewModel viewModel);
+        void notifyItemChanged(SelectableViewModel viewModel);
+
         void notifyDatasetChanged();
     }
 
@@ -80,20 +79,20 @@ public class ContextualToolbarHelper<T> {
         }
     }
 
-    public boolean handleClick(int position, SelectableViewModel selectableViewModel, T item) {
+    public boolean handleClick(SelectableViewModel selectableViewModel, T item) {
         if (isActive) {
             addOrRemoveItem(selectableViewModel, item);
-            callback.notifyItemChanged(position, selectableViewModel);
+            callback.notifyItemChanged(selectableViewModel);
             return true;
         }
         return false;
     }
 
-    public boolean handleLongClick(int position, SelectableViewModel selectableViewModel, T item) {
+    public boolean handleLongClick(SelectableViewModel selectableViewModel, T item) {
         if (!isActive) {
             start();
             addOrRemoveItem(selectableViewModel, item);
-            callback.notifyItemChanged(position, selectableViewModel);
+            callback.notifyItemChanged(selectableViewModel);
             return true;
         }
         return false;
@@ -102,5 +101,4 @@ public class ContextualToolbarHelper<T> {
     public List<T> getItems() {
         return new ArrayList<>(map.values());
     }
-
 }

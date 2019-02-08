@@ -2,9 +2,7 @@ package com.simplecity.amp_library.sql.sqlbrite;
 
 import android.database.Cursor;
 import android.support.annotation.Nullable;
-
 import com.squareup.sqlbrite2.SqlBrite;
-
 import io.reactivex.ObservableOperator;
 import io.reactivex.Observer;
 import io.reactivex.exceptions.Exceptions;

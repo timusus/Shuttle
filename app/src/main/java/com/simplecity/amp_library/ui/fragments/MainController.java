@@ -13,43 +13,43 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.cantrowitz.rxbroadcast.RxBroadcast;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
+import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Genre;
 import com.simplecity.amp_library.model.Playlist;
-import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.playback.MediaManager;
+import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.rx.UnsafeAction;
-import com.simplecity.amp_library.ui.detail.AlbumDetailFragment;
-import com.simplecity.amp_library.ui.detail.ArtistDetailFragment;
-import com.simplecity.amp_library.ui.detail.GenreDetailFragment;
-import com.simplecity.amp_library.ui.detail.PlaylistDetailFragment;
+import com.simplecity.amp_library.ui.detail.album.AlbumDetailFragment;
+import com.simplecity.amp_library.ui.detail.artist.ArtistDetailFragment;
+import com.simplecity.amp_library.ui.detail.genre.GenreDetailFragment;
+import com.simplecity.amp_library.ui.detail.playlist.PlaylistDetailFragment;
 import com.simplecity.amp_library.ui.drawer.DrawerLockController;
 import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
 import com.simplecity.amp_library.ui.drawer.DrawerProvider;
 import com.simplecity.amp_library.ui.drawer.MiniPlayerLockManager;
 import com.simplecity.amp_library.ui.drawer.NavigationEventRelay;
+import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
+import com.simplecity.amp_library.ui.queue.QueueFragment;
 import com.simplecity.amp_library.ui.settings.SettingsParentFragment;
-import com.simplecity.amp_library.ui.views.UpNextView;
+import com.simplecity.amp_library.ui.upnext.UpNextView;
 import com.simplecity.amp_library.ui.views.multisheet.CustomMultiSheetView;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
 import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.SleepTimer;
 import com.simplecity.multisheetview.ui.view.MultiSheetView;
-
-import java.util.List;
-
-import javax.inject.Inject;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import java.util.List;
+import javax.inject.Inject;
 import test.com.androidnavigation.fragment.BackPressHandler;
 import test.com.androidnavigation.fragment.BaseNavigationController;
 import test.com.androidnavigation.fragment.FragmentInfo;
@@ -65,6 +65,12 @@ public class MainController extends BaseNavigationController implements BackPres
 
     @Inject
     MultiSheetEventRelay multiSheetEventRelay;
+
+    @Inject
+    MediaManager mediaManager;
+
+    @Inject
+    PlayerPresenter playerPresenter;
 
     private Handler delayHandler;
 
@@ -92,20 +98,23 @@ public class MainController extends BaseNavigationController implements BackPres
 
         ButterKnife.bind(this, rootView);
 
-        ShuttleApplication.getInstance().getAppComponent().inject(this);
+        ShuttleApplication.getInstance().getAppComponent()
+                .plus(new ActivityModule(getActivity()))
+                .plus(new FragmentModule(this))
+                .inject(this);
 
         if (savedInstanceState == null) {
             getChildFragmentManager()
                     .beginTransaction()
                     .add(multiSheetView.getSheetContainerViewResId(MultiSheetView.Sheet.FIRST), PlayerFragment.newInstance())
                     .add(multiSheetView.getSheetPeekViewResId(MultiSheetView.Sheet.FIRST), MiniPlayerFragment.newInstance())
-                    .add(multiSheetView.getSheetContainerViewResId(MultiSheetView.Sheet.SECOND), QueueFragment.newInstance())
+                    .add(multiSheetView.getSheetContainerViewResId(MultiSheetView.Sheet.SECOND), QueueFragment.Companion.newInstance())
                     .commit();
         } else {
             multiSheetView.restoreSheet(savedInstanceState.getInt(STATE_CURRENT_SHEET));
         }
 
-        ((ViewGroup) multiSheetView.findViewById(multiSheetView.getSheetPeekViewResId(MultiSheetView.Sheet.SECOND))).addView(new UpNextView(getContext()));
+        ((ViewGroup) multiSheetView.findViewById(multiSheetView.getSheetPeekViewResId(MultiSheetView.Sheet.SECOND))).addView(UpNextView.Companion.newInstance(getContext(), playerPresenter));
 
         toggleBottomSheetVisibility(false, false);
 
@@ -141,15 +150,18 @@ public class MainController extends BaseNavigationController implements BackPres
                             ).show();
                             break;
                         case NavigationEventRelay.NavigationEvent.Type.EQUALIZER_SELECTED:
-                            delayHandler.postDelayed(() -> multiSheetEventRelay.sendEvent(new MultiSheetEventRelay.MultiSheetEvent(MultiSheetEventRelay.MultiSheetEvent.Action.HIDE, MultiSheetView.Sheet.FIRST)), 100);
+                            delayHandler.postDelayed(
+                                    () -> multiSheetEventRelay.sendEvent(new MultiSheetEventRelay.MultiSheetEvent(MultiSheetEventRelay.MultiSheetEvent.Action.HIDE, MultiSheetView.Sheet.FIRST)), 100);
                             delayHandler.postDelayed(() -> pushViewController(EqualizerFragment.newInstance(), "EqualizerFragment"), 250);
                             break;
                         case NavigationEventRelay.NavigationEvent.Type.SETTINGS_SELECTED:
-                            delayHandler.postDelayed(() -> multiSheetEventRelay.sendEvent(new MultiSheetEventRelay.MultiSheetEvent(MultiSheetEventRelay.MultiSheetEvent.Action.HIDE, MultiSheetView.Sheet.FIRST)), 100);
+                            delayHandler.postDelayed(
+                                    () -> multiSheetEventRelay.sendEvent(new MultiSheetEventRelay.MultiSheetEvent(MultiSheetEventRelay.MultiSheetEvent.Action.HIDE, MultiSheetView.Sheet.FIRST)), 100);
                             delayHandler.postDelayed(() -> pushViewController(SettingsParentFragment.newInstance(R.xml.settings_headers, R.string.settings), "Settings Fragment"), 250);
                             break;
                         case NavigationEventRelay.NavigationEvent.Type.SUPPORT_SELECTED:
-                            delayHandler.postDelayed(() -> multiSheetEventRelay.sendEvent(new MultiSheetEventRelay.MultiSheetEvent(MultiSheetEventRelay.MultiSheetEvent.Action.HIDE, MultiSheetView.Sheet.FIRST)), 100);
+                            delayHandler.postDelayed(
+                                    () -> multiSheetEventRelay.sendEvent(new MultiSheetEventRelay.MultiSheetEvent(MultiSheetEventRelay.MultiSheetEvent.Action.HIDE, MultiSheetView.Sheet.FIRST)), 100);
                             delayHandler.postDelayed(() -> pushViewController(SettingsParentFragment.newInstance(R.xml.settings_support, R.string.pref_title_support), "Support Fragment"), 250);
                             break;
                         case NavigationEventRelay.NavigationEvent.Type.PLAYLIST_SELECTED:
@@ -179,13 +191,12 @@ public class MainController extends BaseNavigationController implements BackPres
                                 pushViewController(GenreDetailFragment.newInstance(genre), "GenreDetailFragment");
                             }, 250);
                             break;
-
                     }
                 }));
 
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(MusicService.InternalIntents.SERVICE_CONNECTED);
-        intentFilter.addAction(MusicService.InternalIntents.QUEUE_CHANGED);
+        intentFilter.addAction(InternalIntents.SERVICE_CONNECTED);
+        intentFilter.addAction(InternalIntents.QUEUE_CHANGED);
         disposables.add(
                 RxBroadcast.fromBroadcast(getContext(), intentFilter)
                         .subscribeOn(Schedulers.io())
@@ -212,7 +223,7 @@ public class MainController extends BaseNavigationController implements BackPres
      * Hide/show the bottom sheet, depending on whether the queue is empty.
      */
     private void toggleBottomSheetVisibility(boolean collapse, boolean animate) {
-        if (MusicUtils.getQueue().isEmpty()) {
+        if (mediaManager.getQueue().isEmpty()) {
             multiSheetView.hide(collapse, false);
         } else if (MiniPlayerLockManager.getInstance().canShowMiniPlayer()) {
             multiSheetView.unhide(animate);

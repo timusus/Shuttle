@@ -3,7 +3,6 @@ package com.simplecity.amp_library.glide.fetcher;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.data.DataFetcher;
 import com.simplecity.amp_library.model.ArtworkProvider;
-
 import java.io.File;
 import java.io.InputStream;
 

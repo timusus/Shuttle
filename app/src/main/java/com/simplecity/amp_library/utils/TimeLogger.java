@@ -22,7 +22,7 @@ public class TimeLogger {
      * Note: Must call startLog() or the 'total' time won't be accurate.
      * <p>
      *
-     * @param tag     the tag to use for the log message
+     * @param tag the tag to use for the log message
      * @param message the message to output
      */
     public void logInterval(String tag, String message) {
@@ -33,5 +33,4 @@ public class TimeLogger {
         );
         intervalTime = System.currentTimeMillis();
     }
-
 }

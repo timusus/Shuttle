@@ -1,15 +1,13 @@
 package com.simplecity.amp_library.http;
 
 import android.util.Log;
-
+import fi.iki.elonen.NanoHTTPD;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import fi.iki.elonen.NanoHTTPD;
 
 public class HttpServer {
 

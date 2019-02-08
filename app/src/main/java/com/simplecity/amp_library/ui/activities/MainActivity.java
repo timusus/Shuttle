@@ -17,15 +17,16 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-
 import com.afollestad.aesthetic.Aesthetic;
 import com.greysonparrelli.permiso.Permiso;
 import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Query;
-import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.playback.MediaManager;
+import com.simplecity.amp_library.playback.constants.ShortcutCommands;
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
 import com.simplecity.amp_library.ui.dialog.ChangelogDialog;
 import com.simplecity.amp_library.ui.drawer.DrawerProvider;
@@ -34,20 +35,17 @@ import com.simplecity.amp_library.ui.fragments.MainController;
 import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ThemeUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import javax.inject.Inject;
-
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import javax.inject.Inject;
+import kotlin.Unit;
 import test.com.androidnavigation.fragment.BackPressHandler;
 import test.com.androidnavigation.fragment.BackPressListener;
 
@@ -69,11 +67,16 @@ public class MainActivity extends BaseCastActivity implements
     @Inject
     NavigationEventRelay navigationEventRelay;
 
+    @Inject
+    MediaManager mediaManager;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ShuttleApplication.getInstance().getAppComponent().inject(this);
+        AnalyticsManager.dropBreadcrumb(TAG, "onCreate()");
+
+        ShuttleApplication.getInstance().getAppComponent().plus(new ActivityModule(this)).inject(this);
 
         // If we haven't set any defaults, do that now
         if (Aesthetic.isFirstTime(this)) {
@@ -119,6 +122,7 @@ public class MainActivity extends BaseCastActivity implements
     @Override
     public void onResume() {
         super.onResume();
+        AnalyticsManager.dropBreadcrumb(TAG, "onCreate()");
 
         showChangelogDialog();
     }
@@ -126,6 +130,7 @@ public class MainActivity extends BaseCastActivity implements
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
         super.onServiceConnected(name, service);
+        AnalyticsManager.dropBreadcrumb(TAG, "onServiceConnected()");
 
         handlePendingPlaybackRequest();
     }
@@ -137,15 +142,29 @@ public class MainActivity extends BaseCastActivity implements
         handleIntent(intent);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        AnalyticsManager.dropBreadcrumb(TAG, "onPause()");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        AnalyticsManager.dropBreadcrumb(TAG, "onDestroy()");
+    }
+
     private void handleIntent(Intent intent) {
         Single.fromCallable(() -> {
             boolean handled = false;
-            if (MusicService.ShortcutCommands.PLAYLIST.equals(intent.getAction())) {
+            if (ShortcutCommands.PLAYLIST.equals(intent.getAction())) {
                 Playlist playlist = (Playlist) intent.getExtras().getSerializable(PlaylistUtils.ARG_PLAYLIST);
                 NavigationEventRelay.NavigationEvent navigationEvent = new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.PLAYLIST_SELECTED, playlist, true);
                 navigationEventRelay.sendEvent(navigationEvent);
                 handled = true;
-            } else if (MusicService.ShortcutCommands.FOLDERS.equals(intent.getAction())) {
+            } else if (ShortcutCommands.FOLDERS.equals(intent.getAction())) {
                 NavigationEventRelay.NavigationEvent foldersSelectedEvent = new NavigationEventRelay.NavigationEvent(NavigationEventRelay.NavigationEvent.Type.FOLDERS_SELECTED, null, true);
                 navigationEventRelay.sendEvent(foldersSelectedEvent);
                 handled = true;
@@ -160,7 +179,10 @@ public class MainActivity extends BaseCastActivity implements
             return true;
         })
                 .delaySubscription(350, TimeUnit.MILLISECONDS)
-                .subscribe();
+                .subscribe(
+                        aBoolean -> {},
+                        throwable -> LogUtils.logException(TAG, "handleIntent error", throwable)
+                );
     }
 
     private void handlePendingPlaybackRequest() {
@@ -182,7 +204,7 @@ public class MainActivity extends BaseCastActivity implements
         final String mimeType = intent.getType();
 
         if (uri != null && uri.toString().length() > 0) {
-            MusicUtils.playFile(uri);
+            mediaManager.playFile(uri);
             // Make sure to process intent only once
             setIntent(new Intent());
         } else if (MediaStore.Audio.Playlists.CONTENT_TYPE.equals(mimeType)) {
@@ -193,12 +215,18 @@ public class MainActivity extends BaseCastActivity implements
                 SqlBriteUtils.createSingle(this, Playlist::new, query, null)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(playlist -> {
-                            MusicUtils.playAll(playlist.getSongsObservable().first(new ArrayList<>()),
-                                    message -> Toast.makeText(this, message, Toast.LENGTH_SHORT).show());
-                            // Make sure to process intent only once
-                            setIntent(new Intent());
-                        }, error -> LogUtils.logException(TAG, "Error handling playback request", error));
+                        .subscribe(
+                                playlist -> {
+                                    mediaManager.playAll(playlist.getSongsObservable().first(new ArrayList<>()),
+                                            message -> {
+                                                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                                                return Unit.INSTANCE;
+                                            });
+                                    // Make sure to process intent only once
+                                    setIntent(new Intent());
+                                },
+                                error -> LogUtils.logException(TAG, "Error handling playback request", error)
+                        );
             }
         }
 

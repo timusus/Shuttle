@@ -10,7 +10,7 @@
         <menu>
             <group android:checkableBehavior="single">
                 <item
-                    android:id="@+id/sort_default"
+                    android:id="@+id/sort_album_default"
                     android:title="@string/sort_default"/>
                 <item
                     android:id="@+id/sort_album_name"
@@ -22,7 +22,7 @@
                     android:id="@+id/sort_album_artist_name"
                     android:title="@string/sort_artist_name"/>
                 <item
-                    android:id="@+id/sort_ascending"
+                    android:id="@+id/sort_album_ascending"
                     android:checkable="true"
                     android:checked="true"
                     android:title="@string/sort_ascending"/>

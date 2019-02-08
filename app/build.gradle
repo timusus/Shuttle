@@ -19,6 +19,8 @@ buildscript {
 
 apply plugin: Dependencies.BuildPlugins.androidApplication
 apply plugin: Dependencies.BuildPlugins.kotlin
+apply plugin: Dependencies.BuildPlugins.kotlinAndroidExtensions
+apply plugin: Dependencies.BuildPlugins.kapt
 apply plugin: Dependencies.BuildPlugins.dexCount
 apply plugin: Dependencies.BuildPlugins.fabric
 apply plugin: Dependencies.BuildPlugins.playPublisher
@@ -59,7 +61,7 @@ android {
         versionName Config.versionName
         versionCode 5000
 
-        resConfigs "en", "zh-rCN", "fr", "de", "ko", "it", "ru", "nl", "tr", "pl", "ro", "hu", "uk", "bg-rBG", "en-rGB", "et-rEE", "vi", "pt-rBR", "es", "en-rNZ", "zh-rTW", "es-rES", "ca", "hr", "en-rAU", "eu-rES", "th", "ja"
+        resConfigs "en", "zh-rCN", "fr", "de", "ko", "it", "ru", "nl", "tr", "pl", "ro", "hu", "hi-rIN", "uk", "bg-rBG", "en-rGB", "et-rEE", "vi", "pt-rBR", "es", "en-rNZ", "zh-rTW", "es-rES", "ca", "hr", "en-rAU", "eu-rES", "th", "ja"
 
         renderscriptTargetApi 23
 
@@ -267,10 +269,10 @@ dependencies {
     implementation Dependencies.billing
 
     implementation Dependencies.butterknife
-    annotationProcessor Dependencies.butterknifeAnnotationProcessor
+    kapt Dependencies.butterknifeAnnotationProcessor
 
     implementation Dependencies.dagger
-    annotationProcessor Dependencies.daggerAnnotationProcessor
+    kapt Dependencies.daggerAnnotationProcessor
 
     implementation(Dependencies.crashlytics) {
         transitive = true
@@ -340,7 +342,7 @@ static String getPlayStoreTrack() {
 
 play {
     track = getPlayStoreTrack()
-    userFraction = 0.1
+    userFraction = 0.05
     untrackOld = true
     serviceAccountEmail = 'app-deployment@api-5801704373554614142-812229.iam.gserviceaccount.com'
     jsonFile = file('../deployment_keys.json')

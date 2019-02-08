@@ -21,7 +21,6 @@ public class BitmapAndSize {
 
         if (bitmap != null ? !bitmap.equals(that.bitmap) : that.bitmap != null) return false;
         return size != null ? size.equals(that.size) : that.size == null;
-
     }
 
     @Override

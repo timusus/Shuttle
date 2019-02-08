@@ -8,25 +8,30 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
-
 import com.afollestad.aesthetic.Aesthetic;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.playback.MusicService;
-
+import com.simplecity.amp_library.playback.QueueManager;
 import io.reactivex.disposables.Disposable;
 
 public class RepeatButton extends android.support.v7.widget.AppCompatImageButton {
 
-    @MusicService.RepeatMode
+    @QueueManager.RepeatMode
     private int repeatMode;
 
+    @Nullable
     private Disposable aestheticDisposable;
 
+    int normalColor = Color.WHITE;
     int selectedColor = Color.WHITE;
 
-    @NonNull Drawable offDrawable;
-    @NonNull Drawable oneDrawable;
-    @NonNull Drawable allDrawable;
+    @NonNull
+    Drawable offDrawable;
+
+    @NonNull
+    Drawable oneDrawable;
+
+    @NonNull
+    Drawable allDrawable;
 
     public RepeatButton(Context context) {
         this(context, null);
@@ -39,30 +44,31 @@ public class RepeatButton extends android.support.v7.widget.AppCompatImageButton
     public RepeatButton(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        offDrawable = ContextCompat.getDrawable(context, R.drawable.ic_repeat_24dp_scaled);
-        oneDrawable = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.ic_repeat_one_24dp_scaled));
+        offDrawable = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.ic_repeat_24dp_scaled)).mutate();
+        oneDrawable = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.ic_repeat_one_24dp_scaled)).mutate();
         allDrawable = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.ic_repeat_24dp_scaled)).mutate();
 
-        setRepeatMode(MusicService.RepeatMode.OFF);
+        setRepeatMode(QueueManager.RepeatMode.OFF);
+        setImageDrawable(offDrawable);
     }
 
-    public void setRepeatMode(@MusicService.RepeatMode int repeatMode) {
+    public void setRepeatMode(@QueueManager.RepeatMode int repeatMode) {
 
         if (repeatMode != this.repeatMode) {
             this.repeatMode = repeatMode;
 
-            invalidateColors(selectedColor);
+            invalidateColors(normalColor, selectedColor);
 
             switch (repeatMode) {
-                case MusicService.RepeatMode.ALL:
+                case QueueManager.RepeatMode.ALL:
                     setContentDescription(getResources().getString(R.string.btn_repeat_all));
                     setImageDrawable(allDrawable);
                     break;
-                case MusicService.RepeatMode.ONE:
+                case QueueManager.RepeatMode.ONE:
                     setContentDescription(getResources().getString(R.string.btn_repeat_current));
                     setImageDrawable(oneDrawable);
                     break;
-                case MusicService.RepeatMode.OFF:
+                case QueueManager.RepeatMode.OFF:
                     setContentDescription(getResources().getString(R.string.btn_repeat_off));
                     setImageDrawable(offDrawable);
                     break;
@@ -78,21 +84,30 @@ public class RepeatButton extends android.support.v7.widget.AppCompatImageButton
             return;
         }
 
-        aestheticDisposable = Aesthetic.get(getContext()).colorAccent()
-                .subscribe(colorAccent -> {
-                    selectedColor = colorAccent;
-                    invalidateColors(selectedColor);
-                });
+        if (!":aesthetic_ignore".equals(getTag())) {
+            aestheticDisposable = Aesthetic.get(getContext()).colorAccent()
+                    .subscribe(colorAccent -> {
+                        selectedColor = colorAccent;
+                        invalidateColors(Color.WHITE, selectedColor);
+                    });
+        }
     }
 
     @Override
     protected void onDetachedFromWindow() {
-        aestheticDisposable.dispose();
+        if (aestheticDisposable != null) {
+            aestheticDisposable.dispose();
+        }
         super.onDetachedFromWindow();
     }
 
-    private void invalidateColors(int selectedColor) {
-        DrawableCompat.setTint(oneDrawable, selectedColor);
-        DrawableCompat.setTint(allDrawable, selectedColor);
+    public void invalidateColors(int normal, int selected) {
+
+        this.normalColor = normal;
+        this.selectedColor = selected;
+
+        DrawableCompat.setTint(offDrawable, normal);
+        DrawableCompat.setTint(oneDrawable, selected);
+        DrawableCompat.setTint(allDrawable, selected);
     }
 }

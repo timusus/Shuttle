@@ -17,5 +17,4 @@ public final class Config {
 
     // IAP
     public static final String SKU_PREMIUM = "id_upgrade_to_pro";
-
 }

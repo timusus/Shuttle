@@ -1,9 +1,9 @@
 package com.simplecity.amp_library.glide.preloader;
 
 import android.support.v7.widget.RecyclerView;
-
 import com.bumptech.glide.ListPreloader;
-import com.bumptech.glide.ListPreloader.*;
+import com.bumptech.glide.ListPreloader.PreloadModelProvider;
+import com.bumptech.glide.ListPreloader.PreloadSizeProvider;
 
 /**
  * Loads a few resources ahead in the direction of scrolling in any {@link RecyclerView} so that
@@ -28,12 +28,12 @@ public final class RecyclerViewPreloader<T> extends RecyclerView.OnScrollListene
      * Constructor that accepts interfaces for providing the dimensions of images to preload, the list
      * of models to preload for a given position, and the request to use to load images.
      *
-     * @param preloadModelProvider     Provides models to load and requests capable of loading them.
+     * @param preloadModelProvider Provides models to load and requests capable of loading them.
      * @param preloadDimensionProvider Provides the dimensions of images to load.
-     * @param maxPreload               Maximum number of items to preload.
+     * @param maxPreload Maximum number of items to preload.
      */
     public RecyclerViewPreloader(PreloadModelProvider<T> preloadModelProvider,
-                                 PreloadSizeProvider<T> preloadDimensionProvider, int maxPreload) {
+            PreloadSizeProvider<T> preloadDimensionProvider, int maxPreload) {
 
         ListPreloader<T> listPreloader = new ListPreloader<>(preloadModelProvider,
                 preloadDimensionProvider, maxPreload);

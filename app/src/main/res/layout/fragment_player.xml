@@ -16,7 +16,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:background="#B0363A" />
+        tools:background="#B0363A"/>
 
     <ImageView
         android:id="@+id/backgroundView"
@@ -25,22 +25,23 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_container" />
+        app:layout_constraintTop_toBottomOf="@+id/main_container"/>
 
     <com.simplecity.amp_library.ui.views.SizableSeekBar
         android:id="@+id/seekbar"
-        style="@style/SeekBar.NoBackground"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:indeterminate="false"
         android:paddingEnd="0dp"
         android:paddingStart="0dp"
+        android:tag=":aesthetic_ignore"
         app:layout_constraintBottom_toTopOf="@+id/backgroundView"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/main_container"
         tools:max="100"
-        tools:progress="60" />
+        tools:progress="60"
+        style="@style/SeekBar.NoBackground"/>
 
     <TextView
         android:id="@+id/current_time"
@@ -55,7 +56,7 @@
         android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/text1"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_container" />
+        app:layout_constraintTop_toBottomOf="@+id/main_container"/>
 
     <TextView
         android:id="@+id/total_time"
@@ -70,11 +71,10 @@
         android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/text1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_container" />
+        app:layout_constraintTop_toBottomOf="@+id/main_container"/>
 
     <TextView
         android:id="@+id/text1"
-        style="@android:style/TextAppearance.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -91,7 +91,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/current_time"
-        tools:text="Down In It" />
+        tools:text="Down In It"
+        style="@android:style/TextAppearance.Large"/>
 
     <TextView
         android:id="@+id/text2"
@@ -112,18 +113,19 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text1"
-        tools:text="Nine Inch Nails" />
+        tools:text="Nine Inch Nails"/>
 
     <include
-        android:id="@+id/shuffle"
         layout="@layout/shuffle_button"
+        android:id="@+id/shuffle"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
+        android:tag=":aesthetic_ignore"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text2" />
+        app:layout_constraintTop_toBottomOf="@+id/text2"/>
 
     <com.simplecity.amp_library.ui.views.RepeatingImageButton
         android:id="@+id/prev"
@@ -134,10 +136,11 @@
         android:padding="8dp"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_skip_previous_24dp"
+        android:tag=":aesthetic_ignore"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/shuffle"
         app:layout_constraintRight_toLeftOf="@+id/play"
-        app:layout_constraintTop_toBottomOf="@+id/text2" />
+        app:layout_constraintTop_toBottomOf="@+id/text2"/>
 
     <com.simplecity.amp_library.ui.views.RepeatingImageButton
         android:id="@+id/next"
@@ -148,21 +151,23 @@
         android:padding="8dp"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_skip_next_24dp"
+        android:tag=":aesthetic_ignore"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/play"
         app:layout_constraintRight_toLeftOf="@+id/repeat"
-        app:layout_constraintTop_toBottomOf="@+id/text2" />
+        app:layout_constraintTop_toBottomOf="@+id/text2"/>
 
     <include
-        android:id="@+id/repeat"
         layout="@layout/repeat_button"
+        android:id="@+id/repeat"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
+        android:tag=":aesthetic_ignore"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text2" />
+        app:layout_constraintTop_toBottomOf="@+id/text2"/>
 
     <com.simplecity.amp_library.ui.views.PlayPauseView
         android:id="@+id/play"
@@ -173,7 +178,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text2" />
+        app:layout_constraintTop_toBottomOf="@+id/text2"/>
 
     <com.simplecity.amp_library.ui.views.ThemedStatusBarView
         android:id="@+id/statusBarView"
@@ -183,7 +188,7 @@
         android:visibility="invisible"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -194,11 +199,11 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/statusBarView"
         app:navigationIcon="?attr/homeAsUpIndicator"
-        app:transparentBackground="true" />
+        app:transparentBackground="true"/>
 
     <com.simplecity.amp_library.ui.views.SnowfallView
         android:id="@+id/let_it_snow"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
 </android.support.constraint.ConstraintLayout>

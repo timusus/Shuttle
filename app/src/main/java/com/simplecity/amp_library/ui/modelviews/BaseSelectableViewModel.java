@@ -1,10 +1,8 @@
 package com.simplecity.amp_library.ui.modelviews;
 
 import android.support.annotation.CallSuper;
-
 import com.simplecityapps.recycler_adapter.model.BaseViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
-
 import java.util.List;
 
 public abstract class BaseSelectableViewModel<VH extends BaseViewHolder> extends BaseViewModel<VH> implements SelectableViewModel {

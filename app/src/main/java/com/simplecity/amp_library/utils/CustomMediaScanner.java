@@ -10,18 +10,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
-
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.FolderObject;
 import com.simplecity.amp_library.rx.UnsafeConsumer;
-
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
 public class CustomMediaScanner implements MediaScannerConnection.MediaScannerConnectionClient {
@@ -36,7 +34,8 @@ public class CustomMediaScanner implements MediaScannerConnection.MediaScannerCo
 
     private final List<String> paths;
 
-    @Nullable private final ScanCompletionListener scanCompletionListener;
+    @Nullable
+    private final ScanCompletionListener scanCompletionListener;
 
     private MediaScannerConnection connection;
     private int nextPath;
@@ -111,7 +110,8 @@ public class CustomMediaScanner implements MediaScannerConnection.MediaScannerCo
         }
     }
 
-    public static void scanFile(Context context, FolderObject folderObject) {
+    // Todo: Remove context requirement
+    public static Disposable scanFile(Context context, FolderObject folderObject) {
 
         @SuppressLint("InflateParams")
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_progress, null);
@@ -127,7 +127,7 @@ public class CustomMediaScanner implements MediaScannerConnection.MediaScannerCo
                 .negativeText(R.string.close)
                 .show();
 
-        FileHelper.getPathList(new File(folderObject.path), true, false)
+        return FileHelper.getPathList(new File(folderObject.path), true, false)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(paths -> {
                     ViewUtils.fadeOut(indeterminateProgress, null);

@@ -118,11 +118,11 @@
     <!-- Delete confirmation dialog message when deleting albums -->
     <string name="get_pro_button_play_store">Play Store</string>
     <string name="get_pro_button_amazon">Amazon</string>
-    <string name="delete_album_desc_multiple">Les albums suivants:<xliff:g id="album">%s</xliff:g> seront supprimés définitivement.</string>
+    <string name="delete_album_desc_multiple">Toutes les musiques des albums suivant :<xliff:g id="album">%s</xliff:g> seront supprimées définitivement.</string>
     <!-- Delete confirmation dialog when deleting a single song -->
     <string name="delete_song_desc">\"<xliff:g id="song">%s</xliff:g>\" sera définitivement supprimé de la carte SD.</string>
     <!-- Delete confirmation dialog message title when deleting songs -->
-    <string name="delete_song_desc_multiple">Les chansons suivantes:<xliff:g id="song">%s</xliff:g> seront supprimés définitivement.</string>
+    <string name="delete_song_desc_multiple">Les chansons suivantes :<xliff:g id="song">%s</xliff:g> seront supprimées définitivement.</string>
     <!-- Toast shown when songs are successfully deleted -->
     <string name="delete_songs_success_toast"><xliff:g id="number">%d</xliff:g> titres ont été supprimés.</string>
     <!-- Toast shown when failing to delete songs-->
@@ -151,6 +151,9 @@
     <string name="dialog_button_playlist_duplicate_skip">Passer</string>
     <!-- Checkbox text 'always add duplicates' -->
     <string name="dialog_checkbox_playlist_duplicate_always_add">Toujours ajouter les doublons</string>
+    <string name="dialog_title_playlist_delete">Supprimer la playlist ?</string>
+    <string name="dialog_message_playlist_delete"><xliff:g id="playlist">%s</xliff:g> sera effacée définitivement</string>
+    <string name="dialog_button_delete">Supprimer</string>
     <!-- ## Widgets ## -->
     <!-- Checkbox text to invert colors of buttons & text -->
     <string name="widget_background_color">Fond</string>
@@ -184,7 +187,7 @@
     <string name="save_as_playlist">Enregistrer comme playlist</string>
     <!-- Context menu item to remove the selected item from the playlist -->
     <!-- Context menu item to remove the selected item from the queue -->
-    <string name="remove_from_queue">Supprimer de la file d\'attente</string>
+    <string name="remove_from_queue">Enlever</string>
     <!-- Context menu item -->
     <string name="play_next">Piste suivante</string>
     <!-- Menu text for the settings item -->
@@ -234,9 +237,9 @@
     <!--Settings summary for opening the dialog to pick which categories are shown as tab headings -->
     <string name="pref_summary_choose_tabs">Choisir et réorganiser les catégories affichées sous forme d\'onglets en haut de l\'écran</string>
     <!--Settings title for picking the primary theme color -->
-    <string name="pref_title_theme_pick_color">Couleur du thème</string>
+    <string name="pref_title_theme_pick_color">Couleur primaire</string>
     <!--Settings summary for picking the primary theme color-->
-    <string name="pref_summary_theme_pick_color">Appuyez ici pour sélectionner la couleur de votre thème</string>
+    <string name="pref_summary_theme_pick_color">Choisissez la couleur primaire de votre thème</string>
     <!--Settings title for for picking the accent theme color-->
     <string name="pref_title_theme_pick_accent_color">Couleur d\'accent</string>
     <!--Settings summary for picking the accent theme color-->
@@ -276,7 +279,7 @@
     <!-- Settings title for embedded artwork checkbox (whether the app can use local artwork for the album art -->
     <string name="pref_title_prefer_embedded_art">Privilégier les illustrations incorporés</string>
     <!-- Settings summary for the ignore embedded artwork checkbox-->
-    <string name="pref_summary_prefer_embedded_art">Cochez cette case si vous préférez que Shuttle cherche l\'illustration dans le fichier lui-même, avant de chercher les fichers folder.jpg, cover.png, etc.</string>
+    <string name="pref_summary_prefer_embedded_art">Cochez cette case si vous préférez que Shuttle cherche les illustrations incluses dans vos fichiez de musique, avant de chercher dans vos dossiers de musique</string>
     <!-- Settings title for ignore embedded artwork checkbox (whether the app can use local artwork for the album art -->
     <string name="pref_title_ignore_embedded_art">Ignorer la pochette intégrée</string>
     <!-- Settings summary for the ignore folder artwork checkbox-->
@@ -584,7 +587,7 @@
     <!-- Button name in time span picker -->
     <string name="button_done">Terminé</string>
     <!-- Title of time span picker -->
-    <string name="weekpicker_title">Définir la durée</string>
+    <string name="weekpicker_title">Définir combien de semaines en arrière Shuttle doit chercher pour les musiques \"récentes\".</string>
     <!-- ## Notification bar text ## -->
     <!-- Message in notification bar when downloading -->
     <string name="notif_downloading_art">Téléchargement des illustrations</string>
@@ -737,7 +740,7 @@
     <!-- Button for lyrics -->
     <string name="lyrics">Paroles</string>
     <!-- Shown when there are no lyrics -->
-    <string name="no_lyrics">Paroles incorporées introuvables</string>
+    <string name="no_lyrics">Paroles incorporées introuvables.</string>
     <!-- QuickLyric info dialog message-->
     <string name="quicklyric_info">QuickLyrics est un récupérateur open-source de paroles sur le Google Play Store.\n\nUne fois installé, QuickLyrics sera ouvert depuis Shuttle dès que vous appuierez sur le bouton \'QuickLyrics\' du menu.</string>
     <!-- "Playlist" Shortcut label. Max 10 characters.-->

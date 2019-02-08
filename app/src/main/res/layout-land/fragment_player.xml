@@ -32,9 +32,9 @@
         android:layout_width="match_parent"
         android:layout_height="96dp"
         android:background="@drawable/text_protection_scrim_reversed"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"/>
 
     <FrameLayout
         android:id="@+id/main_container"
@@ -104,6 +104,6 @@
     <com.simplecity.amp_library.ui.views.SnowfallView
         android:id="@+id/let_it_snow"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
 </android.support.constraint.ConstraintLayout>

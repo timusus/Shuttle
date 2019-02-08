@@ -1,6 +1,7 @@
 package com.simplecity.amp_library.ui.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
@@ -9,35 +10,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import com.bumptech.glide.GenericRequestBuilder;
 import com.bumptech.glide.ListPreloader;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.glide.preloader.RecyclerViewPreloader;
 import com.simplecity.amp_library.ui.modelviews.QueuePagerItemView;
 import com.simplecity.amp_library.ui.presenters.QueuePagerPresenter;
 import com.simplecity.amp_library.ui.views.QueuePagerView;
-import com.simplecity.amp_library.utils.MusicUtils;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
-
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
 import javax.inject.Inject;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-import io.reactivex.Observable;
-import io.reactivex.schedulers.Schedulers;
 
 public class QueuePagerFragment extends BaseFragment implements
         RequestManagerProvider,
@@ -80,12 +78,13 @@ public class QueuePagerFragment extends BaseFragment implements
         viewModelAdapter = new ViewModelAdapter();
 
         ShuttleApplication.getInstance().getAppComponent()
+                .plus(new ActivityModule(getActivity()))
                 .plus(new FragmentModule(this))
                 .inject(this);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_queue_pager, container, false);
 
         unbinder = ButterKnife.bind(this, rootView);
@@ -107,14 +106,17 @@ public class QueuePagerFragment extends BaseFragment implements
 
                 if (snapPosition < viewModelAdapter.items.size()) {
                     Observable.defer(() -> {
-                        if (MusicUtils.getQueuePosition() != snapPosition) {
-                            MusicUtils.setQueuePosition(snapPosition);
+                        if (mediaManager.getQueuePosition() != snapPosition) {
+                            mediaManager.setQueuePosition(snapPosition);
                         }
                         return Observable.empty();
                     })
-                            .delaySubscription(150, TimeUnit.MILLISECONDS)
+                            .delaySubscription(200, TimeUnit.MILLISECONDS)
                             .subscribeOn(Schedulers.io())
-                            .subscribe();
+                            .subscribe(
+                                    o -> {},
+                                    throwable -> LogUtils.logException(TAG, "Error setting queue position", throwable)
+                            );
                 }
 
                 return snapPosition;
@@ -143,7 +145,7 @@ public class QueuePagerFragment extends BaseFragment implements
             public boolean onPreDraw() {
                 // This null check doesn't make sense to me, but there was an NPE here..
                 if (recyclerView != null) {
-                    imageSize = new int[]{recyclerView.getWidth(), recyclerView.getHeight()};
+                    imageSize = new int[] { recyclerView.getWidth(), recyclerView.getHeight() };
                     recyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
                 }
                 return false;

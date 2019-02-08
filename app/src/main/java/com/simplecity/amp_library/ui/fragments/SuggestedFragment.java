@@ -3,6 +3,7 @@ package com.simplecity.amp_library.ui.fragments;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -11,12 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
 import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.bumptech.glide.RequestManager;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
@@ -24,41 +25,46 @@ import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.model.SuggestedHeader;
 import com.simplecity.amp_library.ui.adapters.ViewType;
-import com.simplecity.amp_library.ui.detail.PlaylistDetailFragment;
-import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
+import com.simplecity.amp_library.ui.detail.playlist.PlaylistDetailFragment;
 import com.simplecity.amp_library.ui.modelviews.AlbumView;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.HorizontalRecyclerView;
 import com.simplecity.amp_library.ui.modelviews.SuggestedHeaderView;
 import com.simplecity.amp_library.ui.modelviews.SuggestedSongView;
 import com.simplecity.amp_library.ui.views.SuggestedDividerDecoration;
+import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MenuUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.Operators;
 import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
+import com.simplecity.amp_library.utils.menu.album.AlbumMenuCallbacksAdapter;
+import com.simplecity.amp_library.utils.menu.album.AlbumMenuUtils;
+import com.simplecity.amp_library.utils.menu.song.SongMenuCallbacksAdapter;
+import com.simplecity.amp_library.utils.menu.song.SongMenuUtils;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import javax.inject.Inject;
-
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import javax.inject.Inject;
+import kotlin.Unit;
 
 public class SuggestedFragment extends BaseFragment implements
         SuggestedHeaderView.ClickListener,
         AlbumView.ClickListener {
+
+    private CompositeDisposable disposables = new CompositeDisposable();
+
+    private SongMenuCallbacksAdapter songMenuCallbacksAdapter = new SongMenuCallbacksAdapter(this, disposables);
+    private AlbumMenuCallbacksAdapter albumMenuCallbacksAdapter = new AlbumMenuCallbacksAdapter(this, disposables);
 
     public interface SuggestedClickListener {
 
@@ -77,32 +83,17 @@ public class SuggestedFragment extends BaseFragment implements
 
         @Override
         public void onSongClick(Song song, SuggestedSongView.ViewHolder holder) {
-            MusicUtils.playAll(songs, songs.indexOf(song), true, (String message) -> Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show());
+            mediaManager.playAll(songs, songs.indexOf(song), true, message -> {
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                return Unit.INSTANCE;
+            });
         }
 
         @Override
-        public boolean onSongLongClick(Song song) {
-            return false;
-        }
-
-        @Override
-        public void onSongOverflowClicked(View v, Song song) {
+        public void onSongOverflowClicked(View v, int position, Song song) {
             PopupMenu popupMenu = new PopupMenu(getContext(), v);
-            MenuUtils.setupSongMenu(popupMenu, false);
-            popupMenu.setOnMenuItemClickListener(MenuUtils.getSongMenuClickListener(
-                    getContext(),
-                    song,
-                    taggerDialog -> {
-                        if (!ShuttleUtils.isUpgraded()) {
-                            UpgradeDialog.getUpgradeDialog(getActivity()).show();
-                        } else {
-                            taggerDialog.show(getChildFragmentManager());
-                        }
-                    },
-                    deleteDialog -> deleteDialog.show(getChildFragmentManager()),
-                    null,
-                    null,
-                    null));
+            SongMenuUtils.INSTANCE.setupSongMenu(popupMenu, false);
+            popupMenu.setOnMenuItemClickListener(SongMenuUtils.INSTANCE.getSongMenuClickListener(song, songMenuCallbacksAdapter));
             popupMenu.show();
         }
     }
@@ -161,6 +152,7 @@ public class SuggestedFragment extends BaseFragment implements
         super.onCreate(savedInstanceState);
 
         ShuttleApplication.getInstance().getAppComponent()
+                .plus(new ActivityModule(getActivity()))
                 .plus(new FragmentModule(this))
                 .inject(this);
 
@@ -170,7 +162,7 @@ public class SuggestedFragment extends BaseFragment implements
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         if (recyclerView == null) {
             recyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_suggested, container, false);
@@ -211,10 +203,31 @@ public class SuggestedFragment extends BaseFragment implements
     }
 
     @Override
+    public void onPause() {
+
+        disposables.clear();
+
+        if (refreshDisposables != null) {
+            refreshDisposables.clear();
+        }
+
+        super.onPause();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
 
         refreshAdapterItems();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        if (setItemsDisposable != null) {
+            setItemsDisposable.dispose();
+        }
     }
 
     Observable<List<ViewModel>> getMostPlayedViewModels() {
@@ -234,6 +247,7 @@ public class SuggestedFragment extends BaseFragment implements
                         Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(b.playCount, a.playCount));
                         SongClickListener songClickListener = new SongClickListener(songs);
 
+                        AnalyticsManager.dropBreadcrumb(TAG, "mostPlayedRecyclerView.setItems()");
                         mostPlayedRecyclerView.viewModelAdapter.setItems(Stream.of(songs)
                                 .map(song -> {
                                     SuggestedSongView suggestedSongView = new SuggestedSongView(song, requestManager);
@@ -274,7 +288,8 @@ public class SuggestedFragment extends BaseFragment implements
                     if (!albums.isEmpty()) {
                         List<ViewModel> viewModels = new ArrayList<>();
 
-                        SuggestedHeader recentlyPlayedHeader = new SuggestedHeader(getString(R.string.suggested_recent_title), getString(R.string.suggested_recent_subtitle), Playlist.recentlyPlayedPlaylist);
+                        SuggestedHeader recentlyPlayedHeader =
+                                new SuggestedHeader(getString(R.string.suggested_recent_title), getString(R.string.suggested_recent_subtitle), Playlist.recentlyPlayedPlaylist);
                         SuggestedHeaderView recentlyPlayedHeaderView = new SuggestedHeaderView(recentlyPlayedHeader);
                         recentlyPlayedHeaderView.setClickListener(this);
                         viewModels.add(recentlyPlayedHeaderView);
@@ -317,6 +332,7 @@ public class SuggestedFragment extends BaseFragment implements
                         viewModels.add(favoriteRecyclerView);
 
                         SongClickListener songClickListener = new SongClickListener(songs);
+                        AnalyticsManager.dropBreadcrumb(TAG, "favoriteRecyclerView.setItems()");
                         favoriteRecyclerView.viewModelAdapter.setItems(Stream.of(songs).map(song -> {
                             SuggestedSongView suggestedSongView = new SuggestedSongView(song, requestManager);
                             suggestedSongView.setClickListener(songClickListener);
@@ -335,14 +351,15 @@ public class SuggestedFragment extends BaseFragment implements
                 .getSongsObservable()
                 .flatMap(songs -> Observable.just(Operators.songsToAlbums(songs)))
                 .flatMapSingle(source -> Observable.fromIterable(source)
-                        .sorted((a, b) -> ComparisonUtils.compareLong(b.songPlayCount, a.songPlayCount))
+                        .sorted((a, b) -> ComparisonUtils.compareLong(b.dateAdded, a.dateAdded))
                         .take(20)
                         .toList())
                 .map(albums -> {
                     if (!albums.isEmpty()) {
                         List<ViewModel> viewModels = new ArrayList<>();
 
-                        SuggestedHeader recentlyAddedHeader = new SuggestedHeader(getString(R.string.recentlyadded), getString(R.string.suggested_recently_added_subtitle), Playlist.recentlyAddedPlaylist);
+                        SuggestedHeader recentlyAddedHeader =
+                                new SuggestedHeader(getString(R.string.recentlyadded), getString(R.string.suggested_recently_added_subtitle), Playlist.recentlyAddedPlaylist);
                         SuggestedHeaderView recentlyAddedHeaderView = new SuggestedHeaderView(recentlyAddedHeader);
                         recentlyAddedHeaderView.setClickListener(this);
                         viewModels.add(recentlyAddedHeaderView);
@@ -361,11 +378,6 @@ public class SuggestedFragment extends BaseFragment implements
     }
 
     void refreshAdapterItems() {
-
-        if (setItemsDisposable != null) {
-            setItemsDisposable.dispose();
-        }
-
         PermissionUtils.RequestStoragePermissions(() -> {
             if (getActivity() != null && isAdded()) {
                 refreshDisposables.add(Observable.combineLatest(
@@ -384,25 +396,20 @@ public class SuggestedFragment extends BaseFragment implements
                         .debounce(200, TimeUnit.MILLISECONDS)
                         .switchIfEmpty(Observable.just(Collections.emptyList()))
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(adaptableItems -> {
-                            if (adaptableItems.isEmpty()) {
-                                setItemsDisposable = adapter.setItems(Collections.singletonList((new EmptyView(R.string.empty_suggested))));
-                            } else {
-                                setItemsDisposable = adapter.setItems(adaptableItems);
-                            }
-                        }, error -> LogUtils.logException(TAG, "Error setting items", error)));
+                        .subscribe(
+                                adaptableItems -> {
+                                    if (adaptableItems.isEmpty()) {
+                                        AnalyticsManager.dropBreadcrumb(TAG, "refreshAdapterItems() (empty)");
+                                        setItemsDisposable = adapter.setItems(Collections.singletonList((new EmptyView(R.string.empty_suggested))));
+                                    } else {
+                                        AnalyticsManager.dropBreadcrumb(TAG, "refreshAdapterItems()");
+                                        setItemsDisposable = adapter.setItems(adaptableItems);
+                                    }
+                                },
+                                error -> LogUtils.logException(TAG, "Error setting items", error))
+                );
             }
         });
-    }
-
-    @Override
-    public void onPause() {
-
-        if (refreshDisposables != null) {
-            refreshDisposables.clear();
-        }
-
-        super.onPause();
     }
 
     @Override
@@ -420,13 +427,8 @@ public class SuggestedFragment extends BaseFragment implements
     @Override
     public void onAlbumOverflowClicked(View v, Album album) {
         PopupMenu menu = new PopupMenu(getContext(), v);
-        MenuUtils.setupAlbumMenu(menu);
-        menu.setOnMenuItemClickListener(MenuUtils.getAlbumMenuClickListener(getContext(), album,
-                taggerDialog -> taggerDialog.show(getChildFragmentManager()),
-                deleteDialog -> deleteDialog.show(getChildFragmentManager()),
-                () -> UpgradeDialog.getUpgradeDialog(getActivity()).show(),
-                null
-                ));
+        AlbumMenuUtils.INSTANCE.setupAlbumMenu(menu);
+        menu.setOnMenuItemClickListener(AlbumMenuUtils.INSTANCE.getAlbumMenuClickListener(getContext(), mediaManager, album, albumMenuCallbacksAdapter));
         menu.show();
     }
 

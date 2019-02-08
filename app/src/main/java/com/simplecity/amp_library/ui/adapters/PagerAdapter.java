@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.util.SparseArray;
 import android.view.ViewGroup;
-
 import com.annimon.stream.IntStream;
 
 public class PagerAdapter extends FragmentPagerAdapter {

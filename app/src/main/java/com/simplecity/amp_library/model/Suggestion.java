@@ -14,13 +14,13 @@ public class Suggestion {
     public ArrayList<Album> recentlyAddedAlbumsTwo = new ArrayList<>(2);
 
     public Suggestion(AlbumArtist mostPlayedAlbumArtist,
-                      Album mostPlayedAlbum,
-                      Song mostPlayedSong,
-                      ArrayList<Song> favouriteSongsOne,
-                      ArrayList<Song> favouriteSongsTwo,
-                      ArrayList<Album> recentlyPlayedAlbums,
-                      ArrayList<Album> recentlyAddedAlbumsOne,
-                      ArrayList<Album> recentlyAddedAlbumsTwo) {
+            Album mostPlayedAlbum,
+            Song mostPlayedSong,
+            ArrayList<Song> favouriteSongsOne,
+            ArrayList<Song> favouriteSongsTwo,
+            ArrayList<Album> recentlyPlayedAlbums,
+            ArrayList<Album> recentlyAddedAlbumsOne,
+            ArrayList<Album> recentlyAddedAlbumsTwo) {
 
         this.mostPlayedArtist = mostPlayedAlbumArtist;
         this.mostPlayedAlbum = mostPlayedAlbum;

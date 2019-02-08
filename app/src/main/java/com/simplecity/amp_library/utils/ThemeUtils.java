@@ -1,9 +1,7 @@
 package com.simplecity.amp_library.utils;
 
 import android.support.annotation.ColorRes;
-
 import com.simplecity.amp_library.R;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;

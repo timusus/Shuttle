@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
-
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
@@ -29,13 +28,10 @@ import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.ColorPalette;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
-
-import java.util.List;
-
-import javax.inject.Inject;
-
 import io.reactivex.Completable;
 import io.reactivex.schedulers.Schedulers;
+import java.util.List;
+import javax.inject.Inject;
 
 public class SettingsPresenter extends PurchasePresenter<SettingsView> {
 
@@ -170,7 +166,7 @@ public class SettingsPresenter extends PurchasePresenter<SettingsView> {
         SettingsView settingsView = getView();
         if (settingsView != null) {
             settingsView.showAccentColorDialog(
-                    new ColorChooserDialog.Builder(context, R.string.pref_title_theme_pick_color)
+                    new ColorChooserDialog.Builder(context, R.string.pref_title_theme_pick_accent_color)
                             .accentMode(true)
                             .allowUserColorInput(true)
                             .allowUserColorInputAlpha(false)
@@ -197,10 +193,12 @@ public class SettingsPresenter extends PurchasePresenter<SettingsView> {
     public void usePaletteClicked(Context context, boolean usePalette) {
         // If we're not using palette any more, set the primary color back to default
         if (!usePalette) {
-            int storedColor = SettingsManager.getInstance().getPrimaryColor();
+            int storedPrimaryColor = SettingsManager.getInstance().getPrimaryColor();
+            int storedAccentColor = SettingsManager.getInstance().getAccentColor();
 
             Aesthetic.get(context)
-                    .colorPrimary(storedColor == -1 ? ContextCompat.getColor(context, R.color.md_blue_500) : storedColor)
+                    .colorPrimary(storedPrimaryColor == -1 ? ContextCompat.getColor(context, R.color.md_blue_500) : storedPrimaryColor)
+                    .colorAccent(storedAccentColor == -1 ? ContextCompat.getColor(context, R.color.md_amber_300) : storedAccentColor)
                     .colorStatusBarAuto()
                     .colorNavigationBarAuto(SettingsManager.getInstance().getTintNavBar())
                     .apply();
@@ -210,10 +208,12 @@ public class SettingsPresenter extends PurchasePresenter<SettingsView> {
     public void usePaletteNowPlayingOnlyClicked(Context context, boolean usePaletteNowPlayingOnly) {
         // If we're only using palette for 'now playing', set the primary color back to default
         if (usePaletteNowPlayingOnly) {
-            int storedColor = SettingsManager.getInstance().getPrimaryColor();
+            int storedPrimaryColor = SettingsManager.getInstance().getPrimaryColor();
+            int storedAccentColor = SettingsManager.getInstance().getAccentColor();
 
             Aesthetic.get(context)
-                    .colorPrimary(storedColor == -1 ? ContextCompat.getColor(context, R.color.md_blue_500) : storedColor)
+                    .colorPrimary(storedPrimaryColor == -1 ? ContextCompat.getColor(context, R.color.md_blue_500) : storedPrimaryColor)
+                    .colorAccent(storedAccentColor == -1 ? ContextCompat.getColor(context, R.color.md_amber_300) : storedAccentColor)
                     .colorStatusBarAuto()
                     .colorNavigationBarAuto(SettingsManager.getInstance().getTintNavBar())
                     .apply();

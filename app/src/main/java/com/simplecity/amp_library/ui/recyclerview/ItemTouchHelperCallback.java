@@ -1,6 +1,5 @@
 package com.simplecity.amp_library.ui.recyclerview;
 
-
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;

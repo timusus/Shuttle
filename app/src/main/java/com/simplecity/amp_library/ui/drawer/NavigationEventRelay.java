@@ -2,13 +2,10 @@ package com.simplecity.amp_library.ui.drawer;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
 import com.jakewharton.rxrelay2.PublishRelay;
 import com.simplecity.amp_library.utils.ShuttleUtils;
-
-import javax.inject.Inject;
-
 import io.reactivex.Observable;
+import javax.inject.Inject;
 
 public class NavigationEventRelay {
 
@@ -64,10 +61,10 @@ public class NavigationEventRelay {
         private boolean isActionable = true;
 
         /**
-         * @param type         the {@link Type of event}
-         * @param data         optional Object to be passed with this event
+         * @param type the {@link Type of event}
+         * @param data optional Object to be passed with this event
          * @param isActionable true if navigational changes should be performed in response to this NavigationEvent
-         *                     Defaults to true.
+         * Defaults to true.
          */
         public NavigationEvent(int type, @Nullable Object data, boolean isActionable) {
             this.type = type;

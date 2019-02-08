@@ -15,14 +15,13 @@ import com.simplecity.amp_library.sql.databases.InclExclDbOpenHelper;
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
 import com.squareup.sqlbrite2.BriteDatabase;
 import com.squareup.sqlbrite2.SqlBrite;
-
+import io.reactivex.Observable;
+import io.reactivex.ObservableTransformer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import io.reactivex.Observable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 public class DataManager {
 
@@ -72,7 +71,11 @@ public class DataManager {
 
     public Observable<List<Song>> getAllSongsRelay() {
         if (allSongsSubscription == null || allSongsSubscription.isDisposed()) {
-            allSongsSubscription = SqlBriteUtils.createObservableList(ShuttleApplication.getInstance(), Song::new, Song.getQuery()).subscribe(allSongsRelay, error -> LogUtils.logException(TAG, "getAllSongsRelay threw error", error));
+            allSongsSubscription = SqlBriteUtils.createObservableList(ShuttleApplication.getInstance(), Song::new, Song.getQuery())
+                    .subscribe(
+                            allSongsRelay,
+                            error -> LogUtils.logException(TAG, "getAllSongsRelay threw error", error)
+                    );
         }
         return allSongsRelay
                 .subscribeOn(Schedulers.io())
@@ -82,7 +85,11 @@ public class DataManager {
     /**
      * Returns an {@link Observable}, which emits a List of {@link Song}s retrieved from the MediaStore.
      * <p>
-     * This Observable is continuous. It will emit its most recent value upon subscription, and continue to emit
+     * Note: The resultant songs are filtered according to the include/exclude lists (see {@link com.simplecity.amp_library.sql.databases.InclExclHelper})
+     * <p>
+     * Note: The resultant songs list does not include podcasts (See {@link Song#isPodcast})
+     * <p>
+     * Note: This Observable is continuous. It will emit its most recent value upon subscription, and continue to emit
      * whenever the underlying {@code uri}'s data changes.
      * <p>
      * This Observable is backed by an {@link BehaviorRelay} subscribed to a {@link SqlBrite} {@link Observable}.
@@ -98,36 +105,44 @@ public class DataManager {
      * {@link Schedulers#io()} {@code scheduler}.
      */
     public Observable<List<Song>> getSongsRelay() {
-
         if (songsSubscription == null || songsSubscription.isDisposed()) {
-
-            songsSubscription = Observable.combineLatest(getAllSongsRelay(), getInclRelay(), getExclRelay(), (songs, inclItems, exclItems) ->
-            {
-                List<Song> result = songs;
-
-                // Filter out excluded paths
-                if (!exclItems.isEmpty()) {
-                    result = Stream.of(songs)
-                            .filterNot(song -> Stream.of(exclItems)
-                                    .anyMatch(exclItem -> StringUtils.containsIgnoreCase(song.path, exclItem.path)))
-                            .toList();
-                }
-
-                // Filter out non-included paths
-                if (!inclItems.isEmpty()) {
-                    result = Stream.of(result)
-                            .filter(song -> Stream.of(inclItems)
-                                    .anyMatch(inclItem -> StringUtils.containsIgnoreCase(song.path, inclItem.path)))
-                            .toList();
-                }
-
-                return result;
-            })
-                    .subscribe(songsRelay, error -> LogUtils.logException(TAG, "getSongsRelay threw error", error));
+            songsSubscription = getAllSongsRelay()
+                    .compose(getInclExclTransformer())
+                    .map(songs -> Stream.of(songs).filterNot(song -> song.isPodcast).toList())
+                    .subscribe(
+                            songsRelay,
+                            error -> LogUtils.logException(TAG, "getSongsRelay threw error", error)
+                    );
         }
+
         return songsRelay
                 .subscribeOn(Schedulers.io())
                 .map(ArrayList::new);
+    }
+
+    public ObservableTransformer<List<Song>, List<Song>> getInclExclTransformer() {
+        return upstream -> Observable.combineLatest(upstream, getInclRelay(), getExclRelay(), (songs, inclItems, exclItems) ->
+        {
+            List<Song> result = songs;
+
+            // Filter out excluded paths
+            if (!exclItems.isEmpty()) {
+                result = Stream.of(songs)
+                        .filterNot(song -> Stream.of(exclItems)
+                                .anyMatch(exclItem -> StringUtils.containsIgnoreCase(song.path, exclItem.path)))
+                        .toList();
+            }
+
+            // Filter out non-included paths
+            if (!inclItems.isEmpty()) {
+                result = Stream.of(result)
+                        .filter(song -> Stream.of(inclItems)
+                                .anyMatch(inclItem -> StringUtils.containsIgnoreCase(song.path, inclItem.path)))
+                        .toList();
+            }
+
+            return result;
+        });
     }
 
     /**

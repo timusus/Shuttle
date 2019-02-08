@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
-
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
@@ -15,16 +14,15 @@ import com.simplecity.amp_library.model.InclExclItem;
 import com.simplecity.amp_library.sql.databases.InclExclHelper;
 import com.simplecity.amp_library.ui.modelviews.EmptyView;
 import com.simplecity.amp_library.ui.modelviews.InclExclView;
+import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
-
-import java.util.Collections;
-import java.util.List;
-
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import java.util.Collections;
+import java.util.List;
 
 public class InclExclDialog {
 
@@ -68,8 +66,10 @@ public class InclExclDialog {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(inclExclViews -> {
                     if (inclExclViews.size() == 0) {
+                        AnalyticsManager.dropBreadcrumb(TAG, "getDialog setData (empty)");
                         inclExclAdapter.setItems(Collections.singletonList(new EmptyView(getItemsEmptyResId(type))));
                     } else {
+                        AnalyticsManager.dropBreadcrumb(TAG, "getDialog setData");
                         inclExclAdapter.setItems(inclExclViews);
                     }
                 }, error -> LogUtils.logException(TAG, "Error setting incl/excl items", error));

@@ -31,19 +31,23 @@ import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
+import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.playback.MediaManager;
+import com.simplecity.amp_library.playback.constants.MediaButtonCommand;
+import com.simplecity.amp_library.playback.constants.ServiceCommand;
 import com.simplecity.amp_library.ui.activities.BaseActivity;
 import com.simplecity.amp_library.ui.fragments.WidgetFragment;
 import com.simplecity.amp_library.ui.views.SizableSeekBar;
 import com.simplecity.amp_library.ui.widgets.BaseWidgetProvider;
 import com.simplecity.amp_library.utils.ColorUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
+import javax.inject.Inject;
 
 public abstract class BaseWidgetConfigure extends BaseActivity implements
         View.OnClickListener,
@@ -89,9 +93,15 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
 
     SparseArray<Fragment> registeredFragments = new SparseArray<>();
 
+    @Inject
+    MediaManager mediaManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ShuttleApplication.getInstance().getAppComponent().plus(new ActivityModule(this)).inject(this);
+
 
         if (Aesthetic.isFirstTime(this)) {
             Aesthetic.get(this)
@@ -172,7 +182,6 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
         if (compoundButton.getId() == R.id.checkBox1) {
             showAlbumArt = checked;
             prefs.edit().putBoolean(BaseWidgetProvider.ARG_WIDGET_SHOW_ARTWORK + appWidgetId, showAlbumArt).apply();
-
         }
         if (compoundButton.getId() == R.id.checkBox2) {
             invertIcons = checked;
@@ -197,9 +206,9 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
 
             // Send broadcast intent to any running MediaPlaybackService so it can
             // wrap around with an immediate update.
-            Intent updateIntent = new Intent(MusicService.ServiceCommand.SERVICE_COMMAND);
-            updateIntent.putExtra(MusicService.MediaButtonCommand.CMD_NAME, getUpdateCommandString());
-            updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{appWidgetId});
+            Intent updateIntent = new Intent(ServiceCommand.SERVICE_COMMAND);
+            updateIntent.putExtra(MediaButtonCommand.CMD_NAME, getUpdateCommandString());
+            updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[] { appWidgetId });
             updateIntent.addFlags(Intent.FLAG_RECEIVER_REGISTERED_ONLY);
             sendBroadcast(updateIntent);
 
@@ -329,15 +338,22 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
                 TextView text1 = widgetLayout.findViewById(R.id.text1);
                 TextView text2 = widgetLayout.findViewById(R.id.text2);
                 TextView text3 = widgetLayout.findViewById(R.id.text3);
-                String trackName = MusicUtils.getSongName();
-                String artistName = MusicUtils.getAlbumArtistName();
-                final String albumName = MusicUtils.getAlbumName();
+                Song song = mediaManager.getSong();
+
+                String trackName = null;
+                String artistName = null;
+                String albumName = null;
+                if (song != null) {
+                    trackName = song.name;
+                    artistName = song.albumArtistName;
+                    albumName = song.albumName;
+                }
                 if (trackName != null && text1 != null) {
                     text1.setText(trackName);
                     text1.setTextColor(textColor);
                 }
                 if (artistName != null && albumName != null && text2 != null && text3 == null) {
-                    text2.setText(artistName + " | " + albumName);
+                    text2.setText(artistName + " • " + albumName);
                     text2.setTextColor(textColor);
                 } else if (artistName != null && albumName != null && text2 != null) {
                     text2.setText(albumName);
@@ -370,7 +386,7 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
                     }
 
                     Glide.with(this)
-                            .load(MusicUtils.getSong())
+                            .load(mediaManager.getSong())
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .placeholder(R.drawable.ic_placeholder_light_medium)
                             .into(albumArt);
@@ -428,5 +444,4 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
     public String key() {
         return "widget_activity";
     }
-
 }

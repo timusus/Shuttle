@@ -14,8 +14,8 @@ import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.util.Property;
-
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.utils.ResourceUtils;
 
@@ -33,6 +33,8 @@ public class PlayPauseDrawable extends Drawable {
                     d.setProgress(value);
                 }
             };
+
+    private int color = Color.WHITE;
 
     private final Path mLeftPauseBar = new Path();
     private final Path mRightPauseBar = new Path();
@@ -52,10 +54,16 @@ public class PlayPauseDrawable extends Drawable {
         final Resources res = context.getResources();
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.FILL);
-        mPaint.setColor(Color.WHITE);
+        mPaint.setColor(color);
         mPauseBarWidth = res.getDimensionPixelSize(R.dimen.pause_bar_width);
         mPauseBarHeight = res.getDimensionPixelSize(R.dimen.pause_bar_height);
         mPauseBarDistance = res.getDimensionPixelSize(R.dimen.pause_bar_distance);
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+        mPaint.setColor(color);
+        invalidateSelf();
     }
 
     @Override
@@ -67,7 +75,7 @@ public class PlayPauseDrawable extends Drawable {
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    public void draw(@NonNull Canvas canvas) {
         mLeftPauseBar.rewind();
         mRightPauseBar.rewind();
 
@@ -105,7 +113,6 @@ public class PlayPauseDrawable extends Drawable {
         // Translate the play button a tiny bit to the right so it looks more centered.
         canvas.translate(lerp(0, ResourceUtils.toPixels(4), mProgress), 0);
 
-
         // (1) Pause --> Play: rotate 0 to 90 degrees clockwise.
         // (2) Play --> Pause: rotate 90 to 180 degrees clockwise.
         final float rotationProgress = mIsPlay ? mProgress : 1 - mProgress;
@@ -130,7 +137,6 @@ public class PlayPauseDrawable extends Drawable {
             public void onAnimationStart(Animator animation) {
                 mIsPlay = !mIsPlay;
             }
-
         });
         return anim;
     }

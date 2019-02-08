@@ -5,14 +5,13 @@ import com.annimon.stream.Stream;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Song;
-
+import com.simplecity.amp_library.utils.sorting.SortManager;
+import io.reactivex.Single;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import io.reactivex.Single;
 
 public class Operators {
 
@@ -49,7 +48,6 @@ public class Operators {
                 Stream.of(album.paths)
                         .filter(path -> !oldAlbum.paths.contains(path))
                         .forEach(path -> oldAlbum.paths.add(path));
-
             } else {
                 //Couldn't find an existing entry for this album. Add a new one.
                 albumMap.put(album.id, album);
@@ -76,7 +74,6 @@ public class Operators {
                 if (!oldAlbumArtist.albums.contains(album)) {
                     oldAlbumArtist.albums.add(album);
                 }
-
             } else {
                 albumArtistMap.put(albumArtist.name, albumArtist);
             }

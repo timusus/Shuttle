@@ -2,7 +2,7 @@ package com.simplecity.amp_library.utils;
 
 import android.app.Activity;
 import android.os.Bundle;
-
+import android.util.Log;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.crashlytics.android.core.CrashlyticsCore;
@@ -109,7 +109,7 @@ public class AnalyticsManager {
                 .logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
 
-    public static void didSnow(){
+    public static void didSnow() {
         if (!analyticsEnabled()) {
             return;
         }
@@ -121,6 +121,16 @@ public class AnalyticsManager {
 
         FirebaseAnalytics.getInstance(ShuttleApplication.getInstance())
                 .logEvent(FirebaseAnalytics.Event.VIEW_ITEM, params);
+    }
 
+    public static void dropBreadcrumb(String tag, String breadCrumb) {
+
+        Log.i(tag, breadCrumb);
+
+        if (!analyticsEnabled()) {
+            return;
+        }
+
+        CrashlyticsCore.getInstance().log(String.format("%s | %s", tag, breadCrumb));
     }
 }

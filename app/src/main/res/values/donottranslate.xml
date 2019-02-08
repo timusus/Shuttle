@@ -19,6 +19,8 @@
     <string name="hms_picker_hours_label">H</string>
     <string name="hms_picker_minutes_label">M</string>
 
+    <string name="songs_time_label">%1$s • %2$s</string>
+
     <!-- Do not translate -->
     <string-array name="pref_default_page_entries">
         <item>@string/genres_title</item>

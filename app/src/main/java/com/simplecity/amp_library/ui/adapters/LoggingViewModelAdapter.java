@@ -2,15 +2,12 @@ package com.simplecity.amp_library.ui.adapters;
 
 import android.support.annotation.Nullable;
 import android.util.Log;
-
 import com.crashlytics.android.Crashlytics;
 import com.simplecityapps.recycler_adapter.adapter.CompletionListUpdateCallback;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
-
-import java.util.List;
-
 import io.reactivex.disposables.Disposable;
+import java.util.List;
 
 public class LoggingViewModelAdapter extends ViewModelAdapter {
 

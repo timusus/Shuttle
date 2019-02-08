@@ -11,20 +11,17 @@ import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.ViewBackgroundAction;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.interfaces.Breadcrumb;
 import com.simplecity.amp_library.interfaces.BreadcrumbListener;
 import com.simplecity.amp_library.utils.FileHelper;
-
+import io.reactivex.disposables.Disposable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import io.reactivex.disposables.Disposable;
 
 import static com.afollestad.aesthetic.Rx.distinctToMainThread;
 import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
@@ -44,8 +41,6 @@ public class BreadcrumbView extends RelativeLayout implements Breadcrumb, OnClic
 
     /**
      * Constructor of <code>BreadcrumbView</code>
-     *
-     * @param context
      */
     public BreadcrumbView(Context context) {
         super(context);
@@ -55,8 +50,7 @@ public class BreadcrumbView extends RelativeLayout implements Breadcrumb, OnClic
     /**
      * Constructor of <code>BreadcrumbView</code>
      *
-     * @param context
-     * @param attrs   The attributes of the XML tag that is inflating the view
+     * @param attrs The attributes of the XML tag that is inflating the view
      */
     public BreadcrumbView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -66,12 +60,11 @@ public class BreadcrumbView extends RelativeLayout implements Breadcrumb, OnClic
     /**
      * Constructor of <code>BreadcrumbView</code>
      *
-     * @param context
-     * @param attrs    The attributes of the XML tag that is inflating the view.
+     * @param attrs The attributes of the XML tag that is inflating the view.
      * @param defStyle The default style to apply to this view. If 0, no style
-     *                 will be applied (beyond what is included in the theme). This may
-     *                 either be an attribute resource, whose value will be retrieved
-     *                 from the current theme, or an explicit style resource.
+     * will be applied (beyond what is included in the theme). This may
+     * either be an attribute resource, whose value will be retrieved
+     * from the current theme, or an explicit style resource.
      */
     public BreadcrumbView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -92,7 +85,6 @@ public class BreadcrumbView extends RelativeLayout implements Breadcrumb, OnClic
         //Recover all views
         this.mScrollView = findViewById(R.id.breadcrumb_scrollview);
         this.mBreadcrumbBar = findViewById(R.id.breadcrumb);
-
     }
 
     @Override
@@ -191,7 +183,7 @@ public class BreadcrumbView extends RelativeLayout implements Breadcrumb, OnClic
      * Creates the a new file reference for a partial breadcrumb item.
      *
      * @param dirs The split strings directory
-     * @param pos  The position up to which to create
+     * @param pos The position up to which to create
      * @return File The file reference
      */
     private File createFile(String[] dirs, int pos) {

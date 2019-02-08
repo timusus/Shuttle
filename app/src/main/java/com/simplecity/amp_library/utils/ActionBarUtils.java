@@ -11,7 +11,7 @@ public final class ActionBarUtils {
     /**
      * The attribute depicting the Size of the {@link android.app.ActionBar}
      */
-    private static final int[] ACTION_BAR_SIZE = new int[]{
+    private static final int[] ACTION_BAR_SIZE = new int[] {
             android.R.attr.actionBarSize
     };
 
@@ -40,5 +40,4 @@ public final class ActionBarUtils {
         }
         return result;
     }
-
 }

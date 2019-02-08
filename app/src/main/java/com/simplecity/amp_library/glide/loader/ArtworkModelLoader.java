@@ -1,21 +1,19 @@
 package com.simplecity.amp_library.glide.loader;
 
 import android.content.Context;
-
 import com.bumptech.glide.load.data.DataFetcher;
 import com.bumptech.glide.load.model.GenericLoaderFactory;
 import com.bumptech.glide.load.model.ModelLoader;
 import com.bumptech.glide.load.model.ModelLoaderFactory;
 import com.simplecity.amp_library.glide.fetcher.MultiFetcher;
 import com.simplecity.amp_library.model.ArtworkProvider;
-
 import java.io.InputStream;
 
 public class ArtworkModelLoader implements ModelLoader<ArtworkProvider, InputStream> {
 
     private boolean allowOfflineDownload;
 
-    public ArtworkModelLoader(boolean allowOfflineDownload){
+    public ArtworkModelLoader(boolean allowOfflineDownload) {
         this.allowOfflineDownload = allowOfflineDownload;
     }
 
@@ -41,5 +39,4 @@ public class ArtworkModelLoader implements ModelLoader<ArtworkProvider, InputStr
             // Do nothing.
         }
     }
-
 }

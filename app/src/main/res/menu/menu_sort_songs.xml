@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:icon="@drawable/ic_sort_24dp"
         android:title="@string/sorting"
@@ -9,7 +9,7 @@
         <menu>
             <group android:checkableBehavior="single">
                 <item
-                    android:id="@+id/sort_default"
+                    android:id="@+id/sort_song_default"
                     android:title="@string/sort_default"/>
                 <item
                     android:id="@+id/sort_song_name"
@@ -33,11 +33,17 @@
                     android:id="@+id/sort_song_artist_name"
                     android:title="@string/sort_artist_name"/>
                 <item
-                    android:id="@+id/sort_ascending"
+                    android:id="@+id/sort_song_ascending"
                     android:checkable="true"
                     android:checked="true"
                     android:title="@string/sort_ascending"/>
             </group>
         </menu>
     </item>
+    <item
+        android:id="@+id/showArtwork"
+        android:checkable="true"
+        android:checked="true"
+        android:icon="@drawable/ic_image_24dp"
+        android:title="@string/widget_show_artwork"/>
 </menu>

@@ -3,11 +3,9 @@ package com.simplecity.amp_library.ui.views;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
-
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.Util;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
-
 import io.reactivex.disposables.Disposable;
 
 public class AestheticFastScrollRecyclerView extends FastScrollRecyclerView {

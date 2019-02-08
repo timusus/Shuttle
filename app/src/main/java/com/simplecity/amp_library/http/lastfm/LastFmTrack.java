@@ -1,7 +1,6 @@
 package com.simplecity.amp_library.http.lastfm;
 
 import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,5 +28,4 @@ class LastFmTrack implements LastFmResult {
     public String getImageUrl() {
         return LastFmUtils.getBestImageUrl(track.album.images);
     }
-
 }

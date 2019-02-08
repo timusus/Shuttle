@@ -1,9 +1,10 @@
 package com.simplecity.amp_library.model;
 
 import android.text.TextUtils;
-
 import com.simplecity.amp_library.utils.StringUtils;
-
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.AudioHeader;
@@ -13,10 +14,6 @@ import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
 
 /**
  * A holder for various id3 tag information associated with a file.

@@ -6,22 +6,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.widget.Toast;
-
 import com.annimon.stream.Stream;
+import com.simplecity.amp_library.ShuttleApplication;
+import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
+import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.ui.activities.BaseActivity;
 import com.simplecity.amp_library.ui.activities.MainActivity;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
-
-import java.util.Collections;
-import java.util.Locale;
-
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import java.util.Collections;
+import java.util.Locale;
+import javax.inject.Inject;
+import kotlin.Unit;
 
 import static com.simplecity.amp_library.utils.StringUtils.containsIgnoreCase;
 
@@ -35,9 +36,14 @@ public class VoiceSearchActivity extends BaseActivity {
 
     private int position = -1;
 
+    @Inject
+    MediaManager mediaManager;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ShuttleApplication.getInstance().getAppComponent().plus(new ActivityModule(this)).inject(this);
 
         intent = getIntent();
 
@@ -70,7 +76,6 @@ public class VoiceSearchActivity extends BaseActivity {
                     Collections.sort(songs, (a, b) -> ComparisonUtils.compareInt(a.discNumber, b.discNumber));
                     return songs;
                 });
-
 
         //Search for album-artists, albums & songs matching our filter. Then, create an Observable emitting List<Song> for each type of result.
         //Then we concat the results, and return the first one which is non-empty. Order is important here, we want album-artist first, if it's
@@ -125,8 +130,10 @@ public class VoiceSearchActivity extends BaseActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(songs -> {
                     if (songs != null) {
-                        MusicUtils.playAll(songs, position, true, (String message) ->
-                                Toast.makeText(this, message, Toast.LENGTH_SHORT).show());
+                        mediaManager.playAll(songs, position, true, message -> {
+                            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                            return Unit.INSTANCE;
+                        });
                         startActivity(new Intent(this, MainActivity.class));
                     }
                     finish();

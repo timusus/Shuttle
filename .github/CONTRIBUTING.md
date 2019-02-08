@@ -1,8 +1,18 @@
 ### Contributing
 
-Thank you for visiting this page. Contributions is one of the main reasons Shuttle was open-sourced, so I'm happy to have you here!
+Thank you for visiting this page. Contributions is one of the main reasons Shuttle was open-sourced, so I'm happy to have you here!  
 
 The following is a set of guidelines for contributing to Shuttle. These are just guidelines, not rules. Use your best judgement, and feel free to propose changes to this document in a pull request.
+
+
+#### Contributing Code
+
+There are a couple of important things to know:
+
+  1. You must be aware of the GPL v3 license, and agree to the [Contributors License Agreement](https://cla-assistant.io/timusus/Shuttle). 
+  2. Not all proposed contributions can be accepted. The more effort you invest, the better you should clarify in advance whether the contribution fits: the best way would be to just open an issue to discuss the feature you plan to implement (make it clear you intend to contribute).
+  
+When you contribute (code, documentation, or anything else), you have to be aware that your contribution is covered by the same GPLv3 License that is applied to Shuttle Music Player itself. In particular you need to agree to the Individual Contributor License Agreement, which can be found [here](https://cla-assistant.io/timusus/Shuttle). (This applies to all contributors, including those contributing on behalf of a company). If you agree to its content, you simply have to click on the link posted by the CLA assistant as a comment to the pull request. Click it to check the CLA, then accept it on the following screen if you agree to it. CLA assistant will save this decision for upcoming contributions and will notify you if there is any change to the CLA in the meantime.
 
 
 #### Development
@@ -29,6 +39,8 @@ Also, please respect the licenses of any code that is used/contributed to Shuttl
 
 #### Getting started:
 
+I strongly encourage you to join the [Slack](http://shuttle-slack-inviter.herokuapp.com) channel, where you can get help compiling the app, or discuss proposed changes.
+
 Clone the `dev` branch. Shuttle has been setup so you should be able to run it without any additional configuration.
 
 [Change the build variant in Android Studio](https://developer.android.com/studio/run/index.html#changing-variant) to `devDebug` to avoid initial build problems. The `release` variants are for Shuttle Play Store releases, and will not compile for you as you need private API keys & keystore information.
@@ -38,7 +50,7 @@ If you're using the Last.fm artwork a lot, please go to https://www.last.fm/api/
 
 #### Git
 
-The plan is to use the [Git-flow](https://datasift.github.io/gitflow/IntroducingGitFlow.html) branching model. Feature branches should branch off `dev`.
+Shuttle uses the [Git-flow](https://datasift.github.io/gitflow/IntroducingGitFlow.html) branching model. Feature branches should branch off `dev`.
 
 
 #### Bug Reports:
@@ -67,31 +79,6 @@ Use your judgement, and try and keep the code as consistent as possible with nei
 Translations are managed via [OneSky](http://shuttle.oneskyapp.com). Translations are imported from the OneSky project fairly frequently. Please don't perform translations directly on the source files.
 
 
-#### Codebase:
-
-Shuttle is a pretty old codebase. I've done my best to try and modernise and refactor what I can, but there are still some dark corners where you'll find some pretty bizarre stuff going on. 
-
-Currently, the MediaStore is the database backing everything you see in the app. 
-
-I've outlined some of the more commonly used / intricate aspects of Shuttle, in the hope that it helps with becoming familiar with the codebase:
-
-
-##### Data Manager
-
-I've started to recently adopt `RXJava`, which is best demonstrated in the `DataManager` class, which is used to build an in-memory version of the MediaStore, using `RXJava` `BehaviorSubject`s. The `DataManager` also does some parsing of songs on the device, to populate the AlbumArtist field.
-
-Any time you need to get to a song/album/artist, `DataManager.getInstance()` is a good place to start.
-
-
-##### ViewModelAdapter/ViewModel
-
-There's a very loose implementation of the VM from MVVM when displaying items in a RecyclerView. Models are wrapped in an `AdaptableItem` which defines how the model should be presented in the `RecyclerView`. `AdaptableItem`s are passed to `ViewModelAdapter` (the base `RecyclerView.Adapter` used to back most `RecyclerView`s in Shuttle). The `ViewModelAdapter` uses `DiffUtil` to determine which changes to notify the `RecyclerView` of. The `ContentsComparator` interface is an interesting component here - it helps the `DiffUtil` decide whether two different `AdaptableItem`s represent the same underlying data (so it can potentially partially-refresh the view if need be)
-
-##### MusicService
-
-The `MusicService` is (unfortunately) the God-object responsible for almost everything to do with audio playback.
-
-
 #### Contact
 
-Shuttle is developed and maintained by Tim Masleed. Get in touch via email or hangouts: t.malseed@gmail.com
+Shuttle is developed and maintained by Tim Malseed. Get in touch via [Slack](http://shuttle-slack-inviter.herokuapp.com), email or hangouts: t.malseed@gmail.com

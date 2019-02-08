@@ -1,7 +1,6 @@
 package com.simplecity.amp_library.ui.drawer;
 
 import android.support.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +9,7 @@ public class DrawerLockManager {
     public interface DrawerLock {
         String getTag();
     }
-    
+
     private static DrawerLockManager instance;
 
     private List<DrawerLock> drawerLocks = new ArrayList<>();

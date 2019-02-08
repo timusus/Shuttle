@@ -8,18 +8,18 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
-
 import com.afollestad.aesthetic.Aesthetic;
 import com.simplecity.amp_library.R;
-
 import io.reactivex.disposables.Disposable;
 
 public class DragGripView extends View {
 
     Disposable aestheticDisposable;
 
-    private static final int[] ATTRS = new int[]{android.R.attr.gravity,
-            android.R.attr.color,};
+    private static final int[] ATTRS = new int[] {
+            android.R.attr.gravity,
+            android.R.attr.color,
+    };
 
     private static final int HORIZ_RIDGES = 2;
 

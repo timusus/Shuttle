@@ -4,15 +4,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.BaseViewModel;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
-
-import java.util.List;
-
 import io.reactivex.disposables.Disposable;
+import java.util.List;
 
 import static android.support.v7.widget.LinearLayoutManager.HORIZONTAL;
 import static com.simplecity.amp_library.R.layout.recycler_header;

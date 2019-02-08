@@ -3,14 +3,12 @@ package com.simplecity.amp_library.ui.views;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
-
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.AestheticCheckBox;
 import com.afollestad.aesthetic.ColorIsDarkState;
 import com.afollestad.aesthetic.Rx;
 import com.afollestad.aesthetic.ViewTextColorAction;
 import com.afollestad.aesthetic.ViewUtil;
-
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 

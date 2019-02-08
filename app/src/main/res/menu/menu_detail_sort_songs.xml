@@ -9,7 +9,7 @@
         android:id="@+id/group_songs"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/sort_song_default"
+            android:id="@+id/sort_song_detail_default"
             android:title="@string/sort_default"/>
         <item
             android:id="@+id/sort_song_name"
@@ -32,7 +32,7 @@
     </group>
 
     <item
-        android:id="@+id/sort_songs_ascending"
+        android:id="@+id/sort_song_ascending"
         android:checkable="true"
         android:checked="true"
         android:title="@string/sort_ascending"/>

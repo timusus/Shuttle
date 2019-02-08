@@ -15,8 +15,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
-
-import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
@@ -46,17 +44,10 @@ import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.StringUtils;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
-
-import org.jaudiotagger.audio.AudioFile;
-import org.jaudiotagger.audio.AudioFileIO;
-import org.jaudiotagger.audio.exceptions.CannotReadException;
-import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
-import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
-import org.jaudiotagger.tag.FieldKey;
-import org.jaudiotagger.tag.Tag;
-import org.jaudiotagger.tag.TagException;
-import org.jaudiotagger.tag.TagOptionSingleton;
-
+import io.fabric.sdk.android.Fabric;
+import io.reactivex.Completable;
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -66,12 +57,15 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import io.fabric.sdk.android.Fabric;
-import io.reactivex.Completable;
-import io.reactivex.CompletableTransformer;
-import io.reactivex.Observable;
-import io.reactivex.schedulers.Schedulers;
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.Tag;
+import org.jaudiotagger.tag.TagException;
+import org.jaudiotagger.tag.TagOptionSingleton;
 
 public class ShuttleApplication extends Application {
 
@@ -166,7 +160,7 @@ public class ShuttleApplication extends Application {
         Completable.fromAction(() -> {
             Query query = new Query.Builder()
                     .uri(CustomArtworkTable.URI)
-                    .projection(new String[]{CustomArtworkTable.COLUMN_ID, CustomArtworkTable.COLUMN_KEY, CustomArtworkTable.COLUMN_TYPE, CustomArtworkTable.COLUMN_PATH})
+                    .projection(new String[] { CustomArtworkTable.COLUMN_ID, CustomArtworkTable.COLUMN_KEY, CustomArtworkTable.COLUMN_TYPE, CustomArtworkTable.COLUMN_PATH })
                     .build();
 
             SqlUtils.createActionableQuery(ShuttleApplication.this, cursor ->
@@ -178,6 +172,8 @@ public class ShuttleApplication extends Application {
                             ),
                     query);
         })
+                .doOnError(throwable -> LogUtils.logException(TAG, "Error updating user selected artwork", throwable))
+                .onErrorComplete()
                 .subscribeOn(Schedulers.io())
                 .subscribe();
 
@@ -208,15 +204,6 @@ public class ShuttleApplication extends Application {
                 .onErrorComplete()
                 .subscribeOn(Schedulers.io())
                 .subscribe();
-
-    }
-
-    CompletableTransformer doOnDelay(long delay, TimeUnit timeUnit) {
-        return upstream -> Completable.timer(delay, timeUnit)
-                .andThen(Completable.defer(() -> upstream))
-                .doOnError(throwable -> LogUtils.logException(TAG, "Failed to delete old resources", throwable))
-                .onErrorComplete()
-                .subscribeOn(Schedulers.io());
     }
 
     public RefWatcher getRefWatcher() {
@@ -295,7 +282,7 @@ public class ShuttleApplication extends Application {
 
             Query query = new Query.Builder()
                     .uri(PlayCountTable.URI)
-                    .projection(new String[]{PlayCountTable.COLUMN_ID})
+                    .projection(new String[] { PlayCountTable.COLUMN_ID })
                     .build();
 
             SqlUtils.createActionableQuery(this, cursor ->
@@ -305,7 +292,7 @@ public class ShuttleApplication extends Application {
 
             query = new Query.Builder()
                     .uri(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)
-                    .projection(new String[]{MediaStore.Audio.Media._ID})
+                    .projection(new String[] { MediaStore.Audio.Media._ID })
                     .build();
 
             SqlUtils.createActionableQuery(this, cursor ->
@@ -365,11 +352,13 @@ public class ShuttleApplication extends Application {
         return DataManager.getInstance()
                 .getSongsObservable(value -> value.year < 1)
                 .first(Collections.emptyList())
-                .map(songs -> Stream.of(songs)
-                        .flatMap(song -> {
+                .flatMapObservable(Observable::fromIterable)
+                .concatMap(song -> Observable.just(song).delay(50, TimeUnit.MILLISECONDS))
+                .flatMap(song -> {
                             if (!TextUtils.isEmpty(song.path)) {
                                 File file = new File(song.path);
-                                if (file.exists()) {
+                                // Don't bother checking files > 100mb, uses too much memory.
+                                if (file.exists() && file.length() < 100 * 1024 * 1024) {
                                     try {
                                         AudioFile audioFile = AudioFileIO.read(file);
                                         Tag tag = audioFile.getTag();
@@ -381,22 +370,24 @@ public class ShuttleApplication extends Application {
                                                 ContentValues contentValues = new ContentValues();
                                                 contentValues.put(MediaStore.Audio.Media.YEAR, yearInt);
 
-                                                return Stream.of(ContentProviderOperation
+                                                return Observable.just(ContentProviderOperation
                                                         .newUpdate(ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, song.id))
                                                         .withValues(contentValues)
                                                         .build());
                                             }
                                         }
-                                    } catch (CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException e) {
-                                        e.printStackTrace();
+                                    } catch (CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException | OutOfMemoryError e) {
+                                        LogUtils.logException(TAG, "Failed to repair media store year", e);
                                     }
                                 }
                             }
-                            return Stream.empty();
-                        })
-                        .collect(Collectors.toCollection(ArrayList::new))
-                )
-                .doOnSuccess(contentProviderOperations -> getContentResolver().applyBatch(MediaStore.AUTHORITY, contentProviderOperations))
+                            return Observable.empty();
+                        }
+
+                ).toList()
+                .doOnSuccess(contentProviderOperations -> {
+                    getContentResolver().applyBatch(MediaStore.AUTHORITY, new ArrayList<>(contentProviderOperations));
+                })
                 .flatMapCompletable(songs -> Completable.complete());
     }
 

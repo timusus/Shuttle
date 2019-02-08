@@ -14,7 +14,6 @@ import android.support.annotation.Nullable;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.widget.Toast;
-
 import com.afollestad.aesthetic.AestheticActivity;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.Purchase;
@@ -23,11 +22,10 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.billing.BillingManager;
 import com.simplecity.amp_library.constants.Config;
-import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
-
 import java.util.List;
 
 import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
@@ -84,7 +82,6 @@ public abstract class BaseActivity extends AestheticActivity implements ServiceC
                 ShuttleApplication.getInstance().setIsUpgraded(true);
                 Toast.makeText(BaseActivity.this, R.string.iab_purchase_restored, Toast.LENGTH_SHORT).show();
             }
-
         });
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -142,7 +139,7 @@ public abstract class BaseActivity extends AestheticActivity implements ServiceC
     @Override
     @CallSuper
     public void onServiceConnected(ComponentName name, IBinder service) {
-        sendBroadcast(new Intent(MusicService.InternalIntents.SERVICE_CONNECTED));
+        sendBroadcast(new Intent(InternalIntents.SERVICE_CONNECTED));
     }
 
     @Override
@@ -179,5 +176,4 @@ public abstract class BaseActivity extends AestheticActivity implements ServiceC
     }
 
     protected abstract String screenName();
-
 }

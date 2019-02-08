@@ -7,7 +7,6 @@ import com.simplecity.amp_library.model.ArtworkProvider;
 import com.simplecity.amp_library.model.UserSelectedArtwork;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
-
 import java.io.File;
 import java.io.InputStream;
 

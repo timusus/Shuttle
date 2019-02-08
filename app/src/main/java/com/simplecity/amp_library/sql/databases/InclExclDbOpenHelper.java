@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.InclExclItem;
@@ -15,7 +14,6 @@ import com.simplecity.amp_library.sql.legacy.LegacyDatabaseUtils;
 import com.simplecity.amp_library.sql.legacy.WhitelistDbOpenHelper;
 import com.simplecity.amp_library.sql.legacy.WhitelistFolder;
 import com.simplecity.amp_library.utils.DataManager;
-
 import java.util.Collections;
 import java.util.List;
 

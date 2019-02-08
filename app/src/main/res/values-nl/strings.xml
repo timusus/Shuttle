@@ -150,6 +150,9 @@
     <string name="dialog_button_playlist_duplicate_skip">Overslaan</string>
     <!-- Checkbox text 'always add duplicates' -->
     <string name="dialog_checkbox_playlist_duplicate_always_add">Altijd dubbelingen toevoegen</string>
+    <string name="dialog_title_playlist_delete">Afspeellijst verwijderen?</string>
+    <string name="dialog_message_playlist_delete"><xliff:g id="playlist">%s</xliff:g> wordt permanent verwijderd</string>
+    <string name="dialog_button_delete">Verwijderen</string>
     <!-- ## Widgets ## -->
     <!-- Checkbox text to invert colors of buttons & text -->
     <string name="widget_background_color">Achtergrond</string>
@@ -436,7 +439,7 @@ Indien uitgeschakeld wordt het Shuttle-icoon als plaatshouder gebruikt</string>
     <!-- Button text for saving tags  -->
     <string name="save">Opslaan</string>
     <!-- Message displayed when tag editing fails -->
-    <string name="tag_error">Er is een fout opgetreden bij het bewerken van tags.</string>
+    <string name="tag_error">Er is een fout opgetreden bij het bewerken van tags. Als het bestand is opgeslagen op een SD-kaart, heeft Shuttle mogelijk geen toegangsrechten.</string>
     <string name="tag_editor_document_tree_message">Vanwege wijzigingen in Android 5.0, vereist Google nu om aan te geven in welke mappen op de SD-kaart een app bestanden mag bewerken.\n\nShuttle zal nu een bestandenzoeker openen. Kies daarin de hoofdmap van de bestanden die je wilt bewerken.</string>
     <string name="tag_editor_check_permission">Controleren op rechten. Dit kan even duren...\n\nGeef Google maar de schuld!</string>
     <string name="tag_editor_document_tree_permission_failed">Het lijkt erop dan Shuttle nog steeds geen rechten heeft om de bestanden te bewerken. Controleer de map in de bestandenzoeker.</string>
@@ -463,6 +466,9 @@ map "</item>
     <!-- -->
     <string name="show_filenames">Laat bestandsnamen zien</string>
     <!-- -->
+    <string name="set_home_dir">Homemap instellen</string>
+    <string name="remove_home_dir">Homemap verwijderen</string>
+    <string name="nav_home_dir">Naar homemap navigeren</string>
     <!-- 'Scan'-->
     <string name="scan_file">Scannen</string>
     <!-- Scan Complete-->
@@ -742,4 +748,7 @@ map "</item>
     <!-- Displayed at the top of the album list, album shuffle mode-->
     <string name="shuffle_albums">Albumshuffle</string>
     <!-- Storage Access Framework (Used when deleting files from SD CarD)-->
+    <string name="saf_access_required_title">Toegang tot opslag nodig</string>
+    <string name="saf_access_required_message">Shuttle heeft toestemming nodig voor toegang tot deze bestanden. Kies de map die jouw muziek bevat.</string>
+    <string name="saf_show_files_button">Bestanden tonen</string>
 </resources>

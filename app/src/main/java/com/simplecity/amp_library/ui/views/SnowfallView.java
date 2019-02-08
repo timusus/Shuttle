@@ -9,13 +9,11 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
-
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.utils.AnalyticsManager;
-
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
@@ -221,5 +219,4 @@ public class SnowfallView extends View {
             snowY = startY;
         }
     }
-
 }

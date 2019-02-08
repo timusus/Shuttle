@@ -2,7 +2,6 @@ package com.simplecity.amp_library.tagger;
 
 import android.os.AsyncTask;
 import android.support.v4.provider.DocumentFile;
-
 import java.util.List;
 
 public class CheckDocumentPermissionsTask extends AsyncTask<Void, Void, Boolean> {

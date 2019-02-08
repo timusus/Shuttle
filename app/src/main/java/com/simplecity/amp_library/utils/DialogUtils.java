@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.NumberPicker;
 import android.widget.TextView;
-
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
@@ -58,7 +57,7 @@ public class DialogUtils {
         numberPicker = view.findViewById(R.id.weeks);
         numberPicker.setMaxValue(12);
         numberPicker.setMinValue(1);
-        numberPicker.setValue(MusicUtils.getIntPref(context, "numweeks", 2));
+        numberPicker.setValue(SettingsManager.getInstance().getNumWeeks());
 
         getBuilder(context)
                 .title(R.string.week_selector)
@@ -68,7 +67,7 @@ public class DialogUtils {
                 .onPositive((materialDialog, dialogAction) -> {
                     int numweeks;
                     numweeks = numberPicker.getValue();
-                    MusicUtils.setIntPref(context, "numweeks", numweeks);
+                    SettingsManager.getInstance().setNumWeeks(numweeks);
                 })
                 .show();
     }

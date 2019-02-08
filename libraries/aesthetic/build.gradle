@@ -33,6 +33,7 @@ dependencies {
 
     implementation Dependencies.Google.appcompat
     implementation Dependencies.Google.cardView
+    implementation Dependencies.Google.chromecast
 
     implementation Dependencies.Google.design
     implementation Dependencies.Google.recyclerView
@@ -41,4 +42,17 @@ dependencies {
     implementation Dependencies.Rx.rxAndroid
     implementation 'com.f2prateek.rx.preferences2:rx-preferences:2.0.0-RC3'
     implementation 'me.zhanghai.android.materialprogressbar:library:1.4.2'
+}
+
+configurations.all {
+    resolutionStrategy {
+        eachDependency { details ->
+            // Force all of the primary support libraries to use the same version.
+            if (details.requested.group == 'com.android.support'
+                && details.requested.name != 'multidex'
+                && details.requested.name != 'multidex-instrumentation') {
+                details.useVersion Dependencies.Google.Versions.supportLib
+            }
+        }
+    }
 }

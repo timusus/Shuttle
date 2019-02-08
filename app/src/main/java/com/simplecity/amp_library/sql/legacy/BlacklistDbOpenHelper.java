@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-
 public class BlacklistDbOpenHelper extends SQLiteOpenHelper {
 
     public static final String TABLE_SONGS = "songs";

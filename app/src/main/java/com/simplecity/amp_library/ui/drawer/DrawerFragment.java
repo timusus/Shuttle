@@ -3,10 +3,12 @@ package com.simplecity.amp_library.ui.drawer;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -14,7 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.Rx;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -26,6 +29,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.ActivityModule;
+import com.simplecity.amp_library.dagger.module.FragmentModule;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.ui.fragments.BaseFragment;
@@ -33,19 +37,15 @@ import com.simplecity.amp_library.ui.presenters.PlayerPresenter;
 import com.simplecity.amp_library.ui.views.CircleImageView;
 import com.simplecity.amp_library.ui.views.PlayerViewAdapter;
 import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MusicUtils;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
 import com.simplecity.amp_library.utils.SleepTimer;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import com.simplecity.amp_library.utils.menu.playlist.PlaylistMenuCallbacksAdapter;
+import com.simplecity.amp_library.utils.menu.playlist.PlaylistMenuUtils;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import java.util.ArrayList;
+import java.util.List;
+import javax.inject.Inject;
 
 public class DrawerFragment extends BaseFragment implements
         DrawerView,
@@ -101,6 +101,8 @@ public class DrawerFragment extends BaseFragment implements
 
     private List<Parent<DrawerChild>> drawerParents;
 
+    private PlaylistMenuCallbacksAdapter playlistMenuCallbacksAdapter = new PlaylistMenuCallbacksAdapter(this, disposables);
+
     public DrawerFragment() {
     }
 
@@ -110,6 +112,7 @@ public class DrawerFragment extends BaseFragment implements
 
         ShuttleApplication.getInstance().getAppComponent()
                 .plus(new ActivityModule(getActivity()))
+                .plus(new FragmentModule(this))
                 .inject(this);
 
         if (savedInstanceState != null) {
@@ -137,7 +140,7 @@ public class DrawerFragment extends BaseFragment implements
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_drawer, container, false);
@@ -156,7 +159,7 @@ public class DrawerFragment extends BaseFragment implements
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         drawerPresenter.bindView(this);
@@ -172,7 +175,7 @@ public class DrawerFragment extends BaseFragment implements
                 .compose(Rx.distinctToMainThread())
                 .subscribe(color -> {
                     backgroundPlaceholder.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
-                    if (MusicUtils.getSong() == null) {
+                    if (mediaManager.getSong() == null) {
                         backgroundImage.setImageDrawable(backgroundPlaceholder);
                     }
                 }));
@@ -237,14 +240,38 @@ public class DrawerFragment extends BaseFragment implements
         outState.putSerializable(STATE_SELECTED_PLAYLIST, currentSelectedPlaylist);
     }
 
+    void onPlaylistClicked(Playlist playlist) {
+        drawerPresenter.onPlaylistClicked(playlist);
+    }
+
     @Override
-    public void setPlaylistItems(List<DrawerChild> drawerChildren) {
+    public void setPlaylistItems(List<Playlist> playlists) {
 
         int parentPosition = adapter.getParentList().indexOf(playlistDrawerParent);
 
         int prevItemCount = playlistDrawerParent.children.size();
         playlistDrawerParent.children.clear();
         adapter.notifyChildRangeRemoved(parentPosition, 0, prevItemCount);
+
+        List<DrawerChild> drawerChildren = Stream.of(playlists)
+                .map(playlist -> {
+                    DrawerChild drawerChild = new DrawerChild(playlist);
+                    drawerChild.setListener(new DrawerChild.ClickListener() {
+                        @Override
+                        public void onClick(Playlist playlist) {
+                            onPlaylistClicked(playlist);
+                        }
+
+                        @Override
+                        public void onOverflowClick(View view, Playlist playlist) {
+                            PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
+                            PlaylistMenuUtils.INSTANCE.setupPlaylistMenu(popupMenu, playlist);
+                            popupMenu.setOnMenuItemClickListener(PlaylistMenuUtils.INSTANCE.getPlaylistPopupMenuClickListener(mediaManager, playlist, playlistMenuCallbacksAdapter));
+                            popupMenu.show();
+                        }
+                    });
+                    return drawerChild;
+                }).toList();
 
         playlistDrawerParent.children.addAll(drawerChildren);
         adapter.notifyChildRangeInserted(parentPosition, 0, drawerChildren.size());

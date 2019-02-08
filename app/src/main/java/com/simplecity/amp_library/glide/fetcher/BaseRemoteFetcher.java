@@ -2,14 +2,11 @@ package com.simplecity.amp_library.glide.fetcher;
 
 import android.text.TextUtils;
 import android.util.Log;
-
 import com.bumptech.glide.util.ContentLengthInputStream;
 import com.simplecity.amp_library.http.HttpClient;
 import com.simplecity.amp_library.model.ArtworkProvider;
-
 import java.io.IOException;
 import java.io.InputStream;
-
 import okhttp3.Request;
 import okhttp3.Response;
 import retrofit2.Call;

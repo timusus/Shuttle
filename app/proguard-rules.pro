@@ -46,10 +46,10 @@
 -keep class org.jaudiotagger.** { *; }
 
 # OkHttp
--keepattributes Signature
--keepattributes *Annotation*
--keep interface com.squareup.okhttp3.** { *; }
--dontwarn com.squareup.okhttp3.**
+-dontwarn javax.annotation.**
+-keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
+-dontwarn org.codehaus.mojo.animal_sniffer.*
+-dontwarn okhttp3.internal.platform.ConscryptPlatform
 
 # Okio
 -keep class sun.misc.Unsafe { *; }
