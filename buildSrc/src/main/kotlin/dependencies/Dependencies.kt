@@ -12,7 +12,7 @@ object Dependencies {
         const val nanoHttp = "2.3.1"
         const val crashlytics = "2.9.4"
         const val dashClockApi = "2.0.0"
-        const val fastScroll = "1.0.21"
+        const val fastScroll = "1.0.20"
         const val glide = "3.8.0-SNAPSHOT"
         const val glideOkhttp = "1.4.0@aar"
         const val materialDialogs = "0.9.6.0"
