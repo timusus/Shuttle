@@ -224,7 +224,7 @@
     <!-- Accessibility description 'open navigation drawer'-->
     <string name="navigation_drawer_open">Gezinme çekmecesini aç</string>
     <!-- Accessibility description 'close navigation drawer'-->
-    <string name="navigation_drawer_close">Gezinme çekmecesi kapat</string>
+    <string name="navigation_drawer_close">Gezinme çekmecesini kapat</string>
     <!-- ## Preference Menu ## -->
     <!--Settings category for 'navigation' items -->
     <string name="pref_category_navigation">Gezinme</string>
@@ -271,7 +271,7 @@
     <!--Settings title for clearing whitelist-->
     <string name="pref_title_clear_whitelist">Temizle</string>
     <!-- Context menu item to remove the selected item from the blacklist -->
-    <string name="pref_title_crop_album_art">Albüm Kapağını Kırpın</string>
+    <string name="pref_title_crop_album_art">Albüm Kapağını Kırp</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
     <string name="pref_summary_crop_album_art">\'Şimdi çalınıyor\' ekranında mevcut alanın tamamında görüntülemek için albüm kapağını kırpar</string>
     <!-- Settings title for showing artwork in the queue screen -->
@@ -279,7 +279,7 @@
     <!-- Settings title for embedded artwork checkbox (whether the app can use local artwork for the album art -->
     <string name="pref_title_prefer_embedded_art">Yerleşik albüm kapağını tercih et</string>
     <!-- Settings summary for the ignore embedded artwork checkbox-->
-    <string name="pref_summary_prefer_embedded_art">Müzik dizinleri içinde arama yapmadan önce, Shuttle\'ın müzik dosyalarınıza gömülü olan albüm kapaklarına bakmasını tercih ediyorsanız bu kutuyu işaretleyin</string>
+    <string name="pref_summary_prefer_embedded_art">Müzik dizinlerinde arama yapmadan önce, Shuttle\'ın müzik dosyalarınızda gömülü resimleri aramasını tercih ederseniz bu kutuyu işaretleyin</string>
     <!-- Settings title for ignore embedded artwork checkbox (whether the app can use local artwork for the album art -->
     <string name="pref_title_ignore_embedded_art">Yerleşik albüm kapaklarını yoksay</string>
     <!-- Settings summary for the ignore folder artwork checkbox-->
@@ -287,7 +287,7 @@
     <!-- Settings title for ignore embedded artwork checkbox (whether the app can use local artwork for the album art -->
     <string name="pref_title_ignore_mediastore_art">Medya Depolama albüm kapağını yoksay</string>
     <!-- Settings summary for the ignore folder artwork checkbox-->
-    <string name="pref_summary_ignore_mediastore_art">Android Medya Depolama yerleşik olan albüm kapaklarını bulmuş ve düşük çözünürlükte depolamış gibi mi görünüyor. Medya Depolamayı atlamak için bunu değiştirin (biraz daha yavaş albüm kapağı yükleme)</string>
+    <string name="pref_summary_ignore_mediastore_art">Android Medya Depolama yerleşik olan albüm kapaklarını bulmuş ve düşük çözünürlükte depolamış gibi mi görünüyor. Medya Depolamayı atlamak için bunu değiştirin (biraz daha yavaş albüm kapağı yüklemesi)</string>
     <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
     <string name="pref_title_ignore_folder_art">Klasör albüm kapaklarını yoksay</string>
     <!-- Settings summary for the embedded artwork checkbox-->
@@ -319,7 +319,7 @@
     <!-- Settings title for the download via Wi-Fi checkbox -->
     <string name="pref_title_download_wifi_only">Yalnızca Wi-Fi ile indir</string>
     <!-- Settings summary for the download via Wi-Fi checkbox -->
-    <string name="pref_summary_download_wifi_only">Sanatçı ve albüm kapakları yalnızca bir Wi-Fi bağlantısı mevcutsa indirilir</string>
+    <string name="pref_summary_download_wifi_only">Sanatçı ve albüm kapakları yalnızca bir kablosuz bağlantı mevcutsa indirilir</string>
     <!-- Settings title for gmail style placeholders checkbox-->
     <string name="pref_title_placeholders">Gmail Tarzı Harf Görsellerini Kullan</string>
     <!-- Settings summary for gmail style placeholders checkbox-->

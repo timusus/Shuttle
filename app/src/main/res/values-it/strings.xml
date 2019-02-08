@@ -150,6 +150,9 @@
     <string name="dialog_button_playlist_duplicate_skip">Tralascia</string>
     <!-- Checkbox text 'always add duplicates' -->
     <string name="dialog_checkbox_playlist_duplicate_always_add">Aggiungere sempre duplicati</string>
+    <string name="dialog_title_playlist_delete">Eliminare la playlist?</string>
+    <string name="dialog_message_playlist_delete"><xliff:g id="playlist">%s</xliff:g>verrà eliminata definitivamente</string>
+    <string name="dialog_button_delete">Elimina</string>
     <!-- ## Widgets ## -->
     <!-- Checkbox text to invert colors of buttons & text -->
     <string name="widget_background_color">Sfondo</string>
@@ -465,6 +468,9 @@
     <!-- -->
     <string name="show_filenames">Mostra i nomi dei file</string>
     <!-- -->
+    <string name="set_home_dir">Imposta percorso iniziale</string>
+    <string name="remove_home_dir">Rimuovi percorso iniziale</string>
+    <string name="nav_home_dir">Naviga al percorso iniziale</string>
     <!-- 'Scan'-->
     <string name="scan_file">Scansiona</string>
     <!-- Scan Complete-->
@@ -744,4 +750,7 @@
     <!-- Displayed at the top of the album list, album shuffle mode-->
     <string name="shuffle_albums">Album casuale</string>
     <!-- Storage Access Framework (Used when deleting files from SD CarD)-->
+    <string name="saf_access_required_title">Accesso alla memoria richiesto</string>
+    <string name="saf_access_required_message">Shuttle ha bisogno dell\'autorizzazione per accedere a questi file. Scegli la cartella contenente la tua musica.</string>
+    <string name="saf_show_files_button">Mostra file</string>
 </resources>

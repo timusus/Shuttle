@@ -74,7 +74,7 @@
     <!-- Option to share audio file -->
     <string name="share_option_audio_file">Le fichier audio</string>
     <!-- Displays when you need to choose which app to share the song with -->
-    <string name="share_via">Partager le titre via:</string>
+    <string name="share_via">Partager le titre via :</string>
     <!-- Displayed when an M3U playlist is being saved-->
     <string name="saving_playlist">Enregistrement de la playlist</string>
     <!-- Displayed when whitelisting a folder, as the app gathers the songs-->
