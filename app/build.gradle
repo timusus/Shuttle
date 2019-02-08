@@ -254,6 +254,7 @@ dependencies {
     implementation Dependencies.Rx.rxBroadcast
     implementation Dependencies.Rx.rxPrefs
     implementation Dependencies.Rx.traceur
+    implementation Dependencies.Rx.rxKotlin
 
     // External libs
     implementation Dependencies.nanoHttp

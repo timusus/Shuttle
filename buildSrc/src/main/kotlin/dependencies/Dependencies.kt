@@ -3,10 +3,10 @@ package dependencies
 object Dependencies {
 
     const val minSdk = 21
-    const val targetSdk = 27
-    const val compileSdk = 27
+    const val targetSdk = 28
+    const val compileSdk = 28
 
-    const val buildTools = "28.0.2"
+    const val buildTools = "28.0.3"
 
     object Versions {
         const val nanoHttp = "2.3.1"
@@ -76,9 +76,9 @@ object Dependencies {
     object Plugins {
 
         object Versions {
-            const val androidGradlePlugin = "3.2.0-rc02"
-            const val kotlin = "1.2.51"
-            const val dexcountGradlePlugin = "0.8.3"
+            const val androidGradlePlugin = "3.3.1"
+            const val kotlin = "1.3.20"
+            const val dexcountGradlePlugin = "0.8.2"
             const val fabricGradlePlugin = "1.+"
             const val playPublisher = "1.2.2"
             const val gradleVersions = "0.20.0"
@@ -153,6 +153,7 @@ object Dependencies {
             const val rxBroadcast = "2.0.0"
             const val rxPrefs = "2.0.0"
             const val traceur = "1.0.1"
+            const val rxKotlin = "2.3.0"
         }
 
         // RxJava - https://git.io/vihv0 (ReactiveX)
@@ -180,6 +181,8 @@ object Dependencies {
         const val rxPrefs = "com.f2prateek.rx.preferences2:rx-preferences:${Versions.rxPrefs}"
 
         const val traceur = "com.tspoon.traceur:traceur:${Versions.traceur}"
+
+        const val rxKotlin = "io.reactivex.rxjava2:rxkotlin:${Versions.rxKotlin}"
     }
 
 
