@@ -128,7 +128,7 @@ public abstract class BaseActivity extends AestheticActivity implements ServiceC
     }
 
     void bindService() {
-        token = MusicServiceConnectionUtils.bindToService(getLifecycle(), this, this);
+        MusicServiceConnectionUtils.bindToService(getLifecycle(), this, this, serviceToken -> token = serviceToken);
     }
 
     void unbindService() {

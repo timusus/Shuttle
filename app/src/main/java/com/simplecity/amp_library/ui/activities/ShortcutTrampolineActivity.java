@@ -30,7 +30,7 @@ public class ShortcutTrampolineActivity extends AppCompatActivity {
             case ShortcutCommands.SHUFFLE_ALL:
                 Intent intent = new Intent(this, MusicService.class);
                 intent.setAction(action);
-                new ResumingServiceManager(getLifecycle()).startService(this, intent);
+                new ResumingServiceManager(getLifecycle()).startService(this, intent, null);
                 finish();
                 break;
             case ShortcutCommands.FOLDERS:

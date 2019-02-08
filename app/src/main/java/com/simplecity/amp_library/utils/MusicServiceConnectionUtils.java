@@ -9,6 +9,7 @@ import android.os.IBinder;
 
 import com.simplecity.amp_library.playback.LocalBinder;
 import com.simplecity.amp_library.playback.MusicService;
+import com.simplecity.amp_library.rx.UnsafeConsumer;
 
 import java.util.WeakHashMap;
 
@@ -24,24 +25,19 @@ public class MusicServiceConnectionUtils {
 
     }
 
-    /**
-     * @param context  The {@link Context} to use
-     * @param callback The {@link ServiceConnection} to use
-     * @return The new instance of {@link ServiceToken}
-     */
-    public static ServiceToken bindToService(Lifecycle lifecycle, Context context, ServiceConnection callback) {
-        new ResumingServiceManager(lifecycle).startService(context, new Intent(context, MusicService.class));
-        final ServiceBinder binder = new ServiceBinder(callback);
-        if (context.bindService(new Intent().setClass(context, MusicService.class), binder, 0)) {
-            connectionMap.put(context, binder);
-            return new ServiceToken(context);
-        }
-        return null;
+    public static void bindToService(Lifecycle lifecycle, Context context, ServiceConnection callback, UnsafeConsumer<ServiceToken> tokenCallback) {
+        new ResumingServiceManager(lifecycle).startService(context, new Intent(context, MusicService.class), () -> {
+            ServiceBinder binder = new ServiceBinder(callback);
+            if (context.bindService(new Intent().setClass(context, MusicService.class), binder, 0)) {
+                connectionMap.put(context, binder);
+                tokenCallback.accept(new ServiceToken(context));
+            } else {
+                tokenCallback.accept(null);
+            }
+            return null;
+        });
     }
 
-    /**
-     * @param token The {@link ServiceToken} to unbind from
-     */
     public static void unbindFromService(ServiceToken token) {
         if (token == null) {
             return;
@@ -67,7 +63,6 @@ public class MusicServiceConnectionUtils {
 
         @Override
         public void onServiceConnected(final ComponentName className, final IBinder service) {
-
             serviceBinder = (LocalBinder) service;
 
             if (callback != null) {

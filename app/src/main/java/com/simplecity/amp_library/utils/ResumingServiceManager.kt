@@ -21,9 +21,10 @@ class ResumingServiceManager(val lifecycle: Lifecycle) : LifecycleObserver {
 
     val disposable: CompositeDisposable = CompositeDisposable()
 
-    fun startService(context: Context, intent: Intent) {
+    fun startService(context: Context, intent: Intent, completion: (() -> Unit)? = null) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             context.startService(intent)
+            completion?.invoke()
         } else {
             Single.just(true)
                     .delaySubscription(300, TimeUnit.MILLISECONDS)
@@ -33,6 +34,7 @@ class ResumingServiceManager(val lifecycle: Lifecycle) : LifecycleObserver {
                             onSuccess = {
                                 AnalyticsManager.dropBreadcrumb("ResumingServiceManager", "Starting service after 300ms delay")
                                 context.startService(intent)
+                                completion?.invoke()
                             }
 
                     ).addTo(disposable)
