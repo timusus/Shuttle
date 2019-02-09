@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/shuttle.iml" filepath="$PROJECT_DIR$/shuttle.iml" />
       <module fileurl="file://$PROJECT_DIR$/libraries/aesthetic/aesthetic.iml" filepath="$PROJECT_DIR$/libraries/aesthetic/aesthetic.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/buildSrc/buildSrc.iml" filepath="$PROJECT_DIR$/buildSrc/buildSrc.iml" />
@@ -11,7 +12,6 @@
       <module fileurl="file://$PROJECT_DIR$/libraries/multisheetview/multisheetview.iml" filepath="$PROJECT_DIR$/libraries/multisheetview/multisheetview.iml" />
       <module fileurl="file://$PROJECT_DIR$/libraries/navigation/navigation.iml" filepath="$PROJECT_DIR$/libraries/navigation/navigation.iml" />
       <module fileurl="file://$PROJECT_DIR$/libraries/recycler-adapter/recycler-adapter.iml" filepath="$PROJECT_DIR$/libraries/recycler-adapter/recycler-adapter.iml" />
-      <module fileurl="file://$PROJECT_DIR$/shuttle.iml" filepath="$PROJECT_DIR$/shuttle.iml" />
     </modules>
   </component>
 </project>

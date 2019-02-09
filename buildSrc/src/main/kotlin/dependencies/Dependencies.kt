@@ -10,7 +10,7 @@ object Dependencies {
         const val nanoHttp = "2.3.1"
         const val crashlytics = "2.9.5"
         const val dashClockApi = "2.0.0"
-        const val fastScroll = "1.0.18"
+        const val fastScroll = "1.0.20"
         const val glide = "3.8.0-SNAPSHOT"
         const val glideOkhttp = "1.4.0@aar"
         const val materialDialogs = "0.9.6.0"
@@ -38,7 +38,7 @@ object Dependencies {
     const val dashClockApi = "com.google.android.apps.dashclock:dashclock-api:${Versions.dashClockApi}"
 
     // RecyclerView-FastScroll - https://git.io/vix5z
-    const val fastScroll = "com.github.timusus:RecyclerView-FastScroll:master-SNAPSHOT"
+    const val fastScroll = "com.simplecityapps:recyclerview-fastscroll:${Versions.fastScroll}"
 
     // Glide - https://git.io/vtn9K (Bump)
     const val glide = "com.github.bumptech.glide:glide:${Versions.glide}"
@@ -74,7 +74,7 @@ object Dependencies {
     object Plugins {
 
         object Versions {
-            const val androidGradlePlugin = "3.2.1"
+            const val androidGradlePlugin = "3.3.1"
             const val kotlin = "1.3.0"
             const val dexcountGradlePlugin = "0.8.4"
             const val fabricGradlePlugin = "1.+"
@@ -150,6 +150,8 @@ object Dependencies {
             const val rxRelay = "2.1.0"
             const val rxBroadcast = "2.0.0"
             const val rxPrefs = "2.0.0"
+            const val traceur = "1.0.1"
+            const val rxKotlin = "2.3.0"
         }
 
         // RxJava - https://git.io/vihv0 (ReactiveX)
@@ -175,6 +177,10 @@ object Dependencies {
 
         // Rx Prefs - https://github.com/f2prateek/rx-preferences
         const val rxPrefs = "com.f2prateek.rx.preferences2:rx-preferences:${Versions.rxPrefs}"
+
+        const val traceur = "com.tspoon.traceur:traceur:${Versions.traceur}"
+
+        const val rxKotlin = "io.reactivex.rxjava2:rxkotlin:${Versions.rxKotlin}"
     }
 
 

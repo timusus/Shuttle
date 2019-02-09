@@ -7,3 +7,7 @@ repositories {
 plugins {
     `kotlin-dsl`
 }
+
+repositories {
+    jcenter()
+}
