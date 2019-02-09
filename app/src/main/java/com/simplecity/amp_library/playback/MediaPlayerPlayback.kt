@@ -314,7 +314,7 @@ internal class MediaPlayerPlayback(context: Context) : LocalPlayback(context), M
             setVolume(currentVolume)
 
             fadeAnimator = ValueAnimator.ofFloat(currentVolume, 1f)
-            fadeAnimator!!.duration = 400
+            fadeAnimator!!.duration = 250
             fadeAnimator!!.interpolator = FadeInterpolator(2)
             fadeAnimator!!.addUpdateListener { animation -> setVolume(animation.animatedValue as Float) }
             fadeAnimator!!.addListener(object : AnimatorListenerAdapter() {
@@ -344,7 +344,7 @@ internal class MediaPlayerPlayback(context: Context) : LocalPlayback(context), M
             fadeAnimator?.cancel()
 
             fadeAnimator = ValueAnimator.ofFloat(currentVolume, 0f)
-            fadeAnimator!!.duration = 500
+            fadeAnimator!!.duration = 350
             fadeAnimator!!.interpolator = FadeInterpolator(1)
             fadeAnimator!!.addUpdateListener { animation -> setVolume(animation.animatedValue as Float) }
             fadeAnimator!!.addListener(object : AnimatorListenerAdapter() {
