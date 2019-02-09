@@ -9,13 +9,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
-import android.preference.PreferenceManager;
 import android.support.annotation.LayoutRes;
 import android.widget.RemoteViews;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.glide.utils.CustomAppWidgetTarget;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.playback.QueueManager;
@@ -23,7 +21,7 @@ import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.playback.constants.MediaButtonCommand;
 import com.simplecity.amp_library.playback.constants.ServiceCommand;
 import com.simplecity.amp_library.rx.UnsafeAction;
-import com.simplecity.amp_library.ui.activities.MainActivity;
+import com.simplecity.amp_library.ui.screens.main.MainActivity;
 import com.simplecity.amp_library.utils.DrawableUtils;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 
@@ -47,10 +45,14 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     public static final String ARG_WIDGET_SHOW_ARTWORK = "widget_show_artwork_";
     public static final String ARG_WIDGET_COLOR_FILTER = "widget_color_filter_";
 
-    public SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(ShuttleApplication.getInstance());
+    public SharedPreferences sharedPreferences;
 
     @LayoutRes
     public int mLayoutId;
+
+    public BaseWidgetProvider(SharedPreferences sharedPreferences) {
+        this.sharedPreferences = sharedPreferences;
+    }
 
     public abstract void update(MusicService service, int[] appWidgetIds, boolean updateArtwork);
 
@@ -60,7 +62,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 
         for (int appWidgetId : appWidgetIds) {
-            mLayoutId = mPrefs.getInt(getLayoutIdString() + appWidgetId, getWidgetLayoutId());
+            mLayoutId = sharedPreferences.getInt(getLayoutIdString() + appWidgetId, getWidgetLayoutId());
             initialiseWidget(context, appWidgetId);
         }
 

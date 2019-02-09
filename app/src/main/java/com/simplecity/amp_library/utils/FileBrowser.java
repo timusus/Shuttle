@@ -24,6 +24,12 @@ public class FileBrowser {
     @Nullable
     private File currentDir;
 
+    private SettingsManager settingsManager;
+
+    public FileBrowser(SettingsManager settingsManager) {
+        this.settingsManager = settingsManager;
+    }
+
     /**
      * Loads the specified folder.
      *
@@ -87,11 +93,11 @@ public class FileBrowser {
         sortFileObjects(fileObjects);
         sortFolderObjects(folderObjects);
 
-        if (!SettingsManager.getInstance().getFolderBrowserFilesAscending()) {
+        if (!settingsManager.getFolderBrowserFilesAscending()) {
             Collections.reverse(fileObjects);
         }
 
-        if (!SettingsManager.getInstance().getFolderBrowserFoldersAscending()) {
+        if (!settingsManager.getFolderBrowserFoldersAscending()) {
             Collections.reverse(folderObjects);
         }
 
@@ -121,7 +127,7 @@ public class FileBrowser {
         File dir;
         String[] files;
 
-        String settingsDir = SettingsManager.getInstance().getFolderBrowserInitialDir();
+        String settingsDir = settingsManager.getFolderBrowserInitialDir();
         if (settingsDir != null) {
             File file = new File(settingsDir);
             if (file.exists()) {
@@ -165,7 +171,7 @@ public class FileBrowser {
 
     public void sortFolderObjects(List<BaseFileObject> baseFileObjects) {
 
-        switch (SettingsManager.getInstance().getFolderBrowserFoldersSortOrder()) {
+        switch (settingsManager.getFolderBrowserFoldersSortOrder()) {
             case SortManager.SortFolders.COUNT:
                 Collections.sort(baseFileObjects, fileCountComparator());
                 Collections.sort(baseFileObjects, folderCountComparator());
@@ -179,7 +185,7 @@ public class FileBrowser {
     }
 
     public void sortFileObjects(List<BaseFileObject> baseFileObjects) {
-        switch (SettingsManager.getInstance().getFolderBrowserFilesSortOrder()) {
+        switch (settingsManager.getFolderBrowserFilesSortOrder()) {
             case SortManager.SortFiles.SIZE:
                 Collections.sort(baseFileObjects, sizeComparator());
                 break;
@@ -205,17 +211,17 @@ public class FileBrowser {
     }
 
     public void clearHomeDir() {
-        SettingsManager.getInstance().setFolderBrowserInitialDir("");
+        settingsManager.setFolderBrowserInitialDir("");
     }
 
     public void setHomeDir() {
         if (currentDir != null) {
-            SettingsManager.getInstance().setFolderBrowserInitialDir(currentDir.getPath());
+            settingsManager.setFolderBrowserInitialDir(currentDir.getPath());
         }
     }
 
     public File getHomeDir() {
-        return new File(SettingsManager.getInstance().getFolderBrowserInitialDir());
+        return new File(settingsManager.getFolderBrowserInitialDir());
     }
 
     public boolean hasHomeDir() {

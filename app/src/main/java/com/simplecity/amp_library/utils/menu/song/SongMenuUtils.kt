@@ -6,92 +6,21 @@ import com.simplecity.amp_library.R
 import com.simplecity.amp_library.model.Playlist
 import com.simplecity.amp_library.model.Song
 import com.simplecity.amp_library.playback.MediaManager.Defs
-import com.simplecity.amp_library.ui.queue.QueueItem
-import com.simplecity.amp_library.utils.PlaylistUtils
-import com.simplecity.amp_library.utils.menu.MenuUtils
+import com.simplecity.amp_library.utils.playlists.PlaylistManager
+import com.simplecity.amp_library.utils.playlists.PlaylistMenuHelper
 import io.reactivex.Single
 
 object SongMenuUtils {
 
-    interface SongCallbacks {
-
-        fun playNext(song: Song)
-
-        fun moveToNext(queueItem: QueueItem)
-
-        fun newPlaylist(song: Song)
-
-        fun playlistSelected(playlist: Playlist, song: Song)
-
-        fun onPlaylistItemsInserted(songs: Single<List<Song>>)
-
-        fun onPlaylistItemsInserted(songs: List<Song>)
-
-        fun addToQueue(song: Song)
-
-        fun onQueueItemInserted(message: String)
-
-        fun showBiographyDialog(song: Song)
-
-        fun showTagEditor(song: Song)
-
-        fun showToast(message: String)
-
-        fun shareSong(song: Song)
-
-        fun setRingtone(song: Song)
-
-        fun removeQueueItem(queueItem: QueueItem)
-
-        fun removeSong(song: Song)
-
-        fun showDeleteDialog(song: Song)
-
-        fun goToArtist(song: Song)
-
-        fun goToAlbum(song: Song)
-
-        fun goToGenre(song: Song)
-    }
-
-    interface SongListCallbacks {
-
-        fun playNext(songs: Single<List<Song>>)
-
-        fun newPlaylist(songs: Single<List<Song>>)
-
-        fun playlistSelected(playlist: Playlist, songsSingle: Single<List<Song>>)
-
-        fun onPlaylistItemsInserted(songs: Single<List<Song>>)
-
-        fun onPlaylistItemsInserted(songs: List<Song>)
-
-        fun addToQueue(songs: Single<List<Song>>)
-
-        fun blacklist(songs: Single<List<Song>>)
-
-        fun onQueueItemInserted(message: String)
-
-        fun showToast(message: String)
-
-        fun removeQueueItems(queueItems: Single<List<QueueItem>>)
-
-        fun removeQueueItem(queueItem: QueueItem)
-
-        fun showDeleteDialog(songs: Single<List<Song>>)
-    }
+    const val TAG = "SongMenuUtils"
 
     fun setupSongMenu(
-            menu: PopupMenu,
-            showRemoveButton: Boolean,
-            showGoToAlbum: Boolean = true,
-            showGoToArtist: Boolean = true
+        menu: PopupMenu,
+        showGoToAlbum: Boolean = true,
+        showGoToArtist: Boolean = true,
+        playlistMenuHelper: PlaylistMenuHelper
     ) {
         menu.inflate(R.menu.menu_song)
-
-        if (!showRemoveButton) {
-            menu.menu.findItem(R.id.remove).isVisible = false
-        }
 
         if (!showGoToAlbum) {
             menu.menu.findItem(R.id.goToAlbum).isVisible = false
@@ -102,35 +31,35 @@ object SongMenuUtils {
         }
 
         // Add playlist menu
-        val sub = menu.menu.findItem(R.id.addToPlaylist).subMenu
-        PlaylistUtils.createPlaylistMenu(sub)
+        val subMenu = menu.menu.findItem(R.id.addToPlaylist).subMenu
+        playlistMenuHelper.createPlaylistMenu(subMenu)
     }
 
-    fun getSongMenuClickListener(songsSingle: Single<List<Song>>, callbacks: SongListCallbacks): Toolbar.OnMenuItemClickListener {
+    fun getSongMenuClickListener(songs: Single<List<Song>>, callbacks: SongsMenuCallbacks): Toolbar.OnMenuItemClickListener {
         return Toolbar.OnMenuItemClickListener { item ->
             when (item.itemId) {
                 Defs.NEW_PLAYLIST -> {
-                    callbacks.newPlaylist(songsSingle)
+                    callbacks.createPlaylist(songs)
                     return@OnMenuItemClickListener true
                 }
                 Defs.PLAYLIST_SELECTED -> {
-                    callbacks.playlistSelected(item.intent.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist, songsSingle)
+                    callbacks.addToPlaylist(item.intent.getSerializableExtra(PlaylistManager.ARG_PLAYLIST) as Playlist, songs)
                     return@OnMenuItemClickListener true
                 }
                 R.id.playNext -> {
-                    callbacks.playNext(songsSingle)
+                    callbacks.playNext(songs)
                     return@OnMenuItemClickListener true
                 }
                 R.id.addToQueue -> {
-                    callbacks.addToQueue(songsSingle)
+                    callbacks.addToQueue(songs)
                     return@OnMenuItemClickListener true
                 }
                 R.id.blacklist -> {
-                    callbacks.blacklist(songsSingle)
+                    callbacks.blacklist(songs)
                     return@OnMenuItemClickListener true
                 }
                 R.id.delete -> {
-                    callbacks.showDeleteDialog(songsSingle)
+                    callbacks.delete(songs)
                     return@OnMenuItemClickListener true
                 }
             }
@@ -138,7 +67,7 @@ object SongMenuUtils {
         }
     }
 
-    fun getSongMenuClickListener(song: Song, callbacks: SongCallbacks): PopupMenu.OnMenuItemClickListener {
+    fun getSongMenuClickListener(song: Song, callbacks: SongsMenuCallbacks): PopupMenu.OnMenuItemClickListener {
         return PopupMenu.OnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.playNext -> {
@@ -146,11 +75,11 @@ object SongMenuUtils {
                     return@OnMenuItemClickListener true
                 }
                 Defs.NEW_PLAYLIST -> {
-                    callbacks.newPlaylist(song)
+                    callbacks.createPlaylist(song)
                     return@OnMenuItemClickListener true
                 }
                 Defs.PLAYLIST_SELECTED -> {
-                    callbacks.playlistSelected(item.intent.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist, song)
+                    callbacks.addToPlaylist(item.intent.getSerializableExtra(PlaylistManager.ARG_PLAYLIST) as Playlist, song)
                     return@OnMenuItemClickListener true
                 }
                 R.id.addToQueue -> {
@@ -158,11 +87,11 @@ object SongMenuUtils {
                     return@OnMenuItemClickListener true
                 }
                 R.id.editTags -> {
-                    callbacks.showTagEditor(song)
+                    callbacks.editTags(song)
                     return@OnMenuItemClickListener true
                 }
                 R.id.share -> {
-                    callbacks.shareSong(song)
+                    callbacks.share(song)
                     return@OnMenuItemClickListener true
                 }
                 R.id.ringtone -> {
@@ -170,19 +99,15 @@ object SongMenuUtils {
                     return@OnMenuItemClickListener true
                 }
                 R.id.songInfo -> {
-                    callbacks.showBiographyDialog(song)
+                    callbacks.songInfo(song)
                     return@OnMenuItemClickListener true
                 }
                 R.id.blacklist -> {
-                    MenuUtils.blacklist(song)
+                    callbacks.blacklist(song)
                     return@OnMenuItemClickListener true
                 }
                 R.id.delete -> {
-                    callbacks.showDeleteDialog(song)
-                    return@OnMenuItemClickListener true
-                }
-                R.id.remove -> {
-                    callbacks.removeSong(song)
+                    callbacks.delete(song)
                     return@OnMenuItemClickListener true
                 }
                 R.id.goToAlbum -> {

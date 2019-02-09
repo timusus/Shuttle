@@ -2,11 +2,7 @@ package com.simplecity.amp_library.model;
 
 import android.database.Cursor;
 import android.provider.MediaStore;
-import com.simplecity.amp_library.ShuttleApplication;
-import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
-import io.reactivex.Single;
 import java.io.Serializable;
-import java.util.List;
 
 public class Genre implements Serializable {
 
@@ -39,12 +35,6 @@ public class Genre implements Serializable {
     public Genre(long genreId, String name) {
         this.id = genreId;
         this.name = name;
-    }
-
-    public Single<List<Song>> getSongsObservable() {
-        Query query = Song.getQuery();
-        query.uri = MediaStore.Audio.Genres.Members.getContentUri("external", id);
-        return SqlBriteUtils.createSingleList(ShuttleApplication.getInstance(), Song::new, query);
     }
 
     @Override

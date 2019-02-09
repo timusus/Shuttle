@@ -30,14 +30,18 @@ public class Equalizer {
 
     private Context context;
 
+    private SettingsManager settingsManager;
+
     private static final String ACTION_OPEN_EQUALIZER_SESSION = "com.simplecity.amp_library.audiofx.OPEN_SESSION";
     private static final String ACTION_CLOSE_EQUALIZER_SESSION = "com.simplecity.amp_library.audiofx.CLOSE_SESSION";
 
     private SharedPreferences mPrefs;
 
-    public Equalizer(Context context) {
+    public Equalizer(Context context, SettingsManager settingsManager) {
 
         this.context = context;
+
+        this.settingsManager = settingsManager;
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -309,7 +313,7 @@ public class Equalizer {
     }
 
     private void updateDsp(EffectSet session) {
-        final boolean globalEnabled = SettingsManager.getInstance().getEqualizerEnabled();
+        final boolean globalEnabled = settingsManager.getEqualizerEnabled();
 
         try {
             session.enableBassBoost(globalEnabled && mPrefs.getBoolean("audiofx.bass.enable", false));
@@ -319,7 +323,7 @@ public class Equalizer {
         }
 
         //        try {
-        //            short preset = Short.decode(mPrefs.getString("audiofx.reverb.preset", String.valueOf(PresetReverb.PRESET_NONE)));
+        //            short preset = Short.decode(sharedPreferences.getString("audiofx.reverb.preset", String.valueOf(PresetReverb.PRESET_NONE)));
         //            session.enableReverb(globalEnabled && (preset > 0));
         //            session.setReverbPreset(preset);
         //

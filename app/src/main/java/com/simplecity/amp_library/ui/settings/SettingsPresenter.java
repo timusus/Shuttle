@@ -1,6 +1,5 @@
 package com.simplecity.amp_library.ui.settings;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,13 +16,8 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.billing.BillingManager;
 import com.simplecity.amp_library.model.CategoryItem;
-import com.simplecity.amp_library.model.InclExclItem;
 import com.simplecity.amp_library.services.ArtworkDownloadService;
-import com.simplecity.amp_library.ui.activities.BaseActivity;
-import com.simplecity.amp_library.ui.dialog.ChangelogDialog;
-import com.simplecity.amp_library.ui.dialog.InclExclDialog;
-import com.simplecity.amp_library.ui.dialog.TabChooserDialog;
-import com.simplecity.amp_library.ui.presenters.PurchasePresenter;
+import com.simplecity.amp_library.ui.common.PurchasePresenter;
 import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.ColorPalette;
 import com.simplecity.amp_library.utils.SettingsManager;
@@ -35,37 +29,48 @@ import javax.inject.Inject;
 
 public class SettingsPresenter extends PurchasePresenter<SettingsView> {
 
+    private ShuttleApplication application;
+    private BillingManager billingManager;
+    private AnalyticsManager analyticsManager;
+    private SettingsManager settingsManager;
+
     @Inject
-    public SettingsPresenter(Activity activity) {
-        super(activity);
+    public SettingsPresenter(
+            ShuttleApplication application,
+            BillingManager billingManager,
+            AnalyticsManager analyticsManager,
+            SettingsManager settingsManager
+    ) {
+
+        super();
+
+        this.application = application;
+        this.billingManager = billingManager;
+        this.analyticsManager = analyticsManager;
+        this.settingsManager = settingsManager;
     }
 
     // Support Preferences
 
-    void changelogClicked(Context context) {
-        AnalyticsManager.logChangelogViewed();
+    void changelogClicked() {
+        analyticsManager.logChangelogViewed();
 
         SettingsView settingsView = getView();
         if (settingsView != null) {
-            settingsView.showChangelog(ChangelogDialog.getChangelogDialog(context));
+            settingsView.showChangelog();
         }
     }
 
-    public void restorePurchasesClicked(Activity activity) {
-        if (activity instanceof BaseActivity) {
-            BillingManager billingManager = ((BaseActivity) activity).getBillingManager();
-            if (billingManager != null) {
-                billingManager.restorePurchases();
-            }
-        }
+    public void restorePurchasesClicked() {
+        billingManager.restorePurchases();
     }
 
     // Display
 
-    public void chooseTabsClicked(Activity activity) {
+    public void chooseTabsClicked() {
         SettingsView settingsView = getView();
         if (settingsView != null) {
-            settingsView.showTabChooserDialog(TabChooserDialog.getDialog(activity));
+            settingsView.showTabChooserDialog();
         }
     }
 
@@ -77,7 +82,7 @@ public class SettingsPresenter extends PurchasePresenter<SettingsView> {
                     .filter(categoryItem -> categoryItem.isChecked)
                     .toList();
 
-            int defaultPageType = SettingsManager.getInstance().getDefaultPageType();
+            int defaultPageType = settingsManager.getDefaultPageType();
             int defaultPage = Math.min(Stream.of(categoryItems)
                     .indexed()
                     .filter(categoryItemIntPair -> categoryItemIntPair.getSecond().type == defaultPageType)
@@ -92,7 +97,7 @@ public class SettingsPresenter extends PurchasePresenter<SettingsView> {
                                     .map(categoryItem -> context.getString(categoryItem.getTitleResId()))
                                     .toList())
                             .itemsCallbackSingleChoice(defaultPage, (dialog, itemView, which, text) -> {
-                                SettingsManager.getInstance().setDefaultPageType(categoryItems.get(which).type);
+                                settingsManager.setDefaultPageType(categoryItems.get(which).type);
                                 return false;
                             })
                             .build());
@@ -144,8 +149,8 @@ public class SettingsPresenter extends PurchasePresenter<SettingsView> {
         if (settingsView != null) {
             settingsView.showPrimaryColorDialog(
                     new ColorChooserDialog.Builder(context, R.string.pref_title_theme_pick_color)
-                            .customColors(ColorPalette.getPrimaryColors(), ColorPalette.getPrimaryColorsSub())
-                            .allowUserColorInput(ShuttleUtils.isUpgraded())
+                            .customColors(ColorPalette.getPrimaryColors(context, settingsManager), ColorPalette.getPrimaryColorsSub(context, settingsManager))
+                            .allowUserColorInput(ShuttleUtils.isUpgraded(application, settingsManager))
                             .allowUserColorInputAlpha(false)
                             .dynamicButtonColor(false)
                             .preselect(Aesthetic.get(context).colorPrimary().blockingFirst())
@@ -159,7 +164,7 @@ public class SettingsPresenter extends PurchasePresenter<SettingsView> {
                 .colorStatusBarAuto()
                 .apply();
 
-        SettingsManager.getInstance().storePrimaryColor(color);
+        settingsManager.storePrimaryColor(color);
     }
 
     public void accentColorClicked(Context context) {
@@ -181,7 +186,7 @@ public class SettingsPresenter extends PurchasePresenter<SettingsView> {
                 .colorAccent(color)
                 .apply();
 
-        SettingsManager.getInstance().storeAccentColor(color);
+        settingsManager.storeAccentColor(color);
     }
 
     public void tintNavBarClicked(Context context, boolean tintNavBar) {
@@ -193,14 +198,14 @@ public class SettingsPresenter extends PurchasePresenter<SettingsView> {
     public void usePaletteClicked(Context context, boolean usePalette) {
         // If we're not using palette any more, set the primary color back to default
         if (!usePalette) {
-            int storedPrimaryColor = SettingsManager.getInstance().getPrimaryColor();
-            int storedAccentColor = SettingsManager.getInstance().getAccentColor();
+            int storedPrimaryColor = settingsManager.getPrimaryColor();
+            int storedAccentColor = settingsManager.getAccentColor();
 
             Aesthetic.get(context)
                     .colorPrimary(storedPrimaryColor == -1 ? ContextCompat.getColor(context, R.color.md_blue_500) : storedPrimaryColor)
                     .colorAccent(storedAccentColor == -1 ? ContextCompat.getColor(context, R.color.md_amber_300) : storedAccentColor)
                     .colorStatusBarAuto()
-                    .colorNavigationBarAuto(SettingsManager.getInstance().getTintNavBar())
+                    .colorNavigationBarAuto(settingsManager.getTintNavBar())
                     .apply();
         }
     }
@@ -208,14 +213,14 @@ public class SettingsPresenter extends PurchasePresenter<SettingsView> {
     public void usePaletteNowPlayingOnlyClicked(Context context, boolean usePaletteNowPlayingOnly) {
         // If we're only using palette for 'now playing', set the primary color back to default
         if (usePaletteNowPlayingOnly) {
-            int storedPrimaryColor = SettingsManager.getInstance().getPrimaryColor();
-            int storedAccentColor = SettingsManager.getInstance().getAccentColor();
+            int storedPrimaryColor = settingsManager.getPrimaryColor();
+            int storedAccentColor = settingsManager.getAccentColor();
 
             Aesthetic.get(context)
                     .colorPrimary(storedPrimaryColor == -1 ? ContextCompat.getColor(context, R.color.md_blue_500) : storedPrimaryColor)
                     .colorAccent(storedAccentColor == -1 ? ContextCompat.getColor(context, R.color.md_amber_300) : storedAccentColor)
                     .colorStatusBarAuto()
-                    .colorNavigationBarAuto(SettingsManager.getInstance().getTintNavBar())
+                    .colorNavigationBarAuto(settingsManager.getTintNavBar())
                     .apply();
         }
     }
@@ -238,7 +243,7 @@ public class SettingsPresenter extends PurchasePresenter<SettingsView> {
 
     private void downloadArtwork(Context context) {
         Intent intent = new Intent(context, ArtworkDownloadService.class);
-        ShuttleApplication.getInstance().startService(intent);
+        context.startService(intent);
     }
 
     public void deleteArtworkClicked(Context context) {
@@ -259,9 +264,9 @@ public class SettingsPresenter extends PurchasePresenter<SettingsView> {
     private void deleteArtwork() {
         //Clear Glide' mem & disk cache
 
-        Glide.get(ShuttleApplication.getInstance()).clearMemory();
+        Glide.get(application).clearMemory();
 
-        Completable.fromAction(() -> Glide.get(ShuttleApplication.getInstance()).clearDiskCache())
+        Completable.fromAction(() -> Glide.get(application).clearDiskCache())
                 .subscribeOn(Schedulers.io())
                 .subscribe();
     }
@@ -291,17 +296,17 @@ public class SettingsPresenter extends PurchasePresenter<SettingsView> {
         }
     }
 
-    public void viewBlacklistClicked(Context context) {
+    public void viewBlacklistClicked() {
         SettingsView settingsView = getView();
         if (settingsView != null) {
-            settingsView.showBlacklistDialog(InclExclDialog.getDialog(context, InclExclItem.Type.EXCLUDE));
+            settingsView.showBlacklistDialog();
         }
     }
 
-    public void viewWhitelistClicked(Context context) {
+    public void viewWhitelistClicked() {
         SettingsView settingsView = getView();
         if (settingsView != null) {
-            settingsView.showWhitelistDialog(InclExclDialog.getDialog(context, InclExclItem.Type.INCLUDE));
+            settingsView.showWhitelistDialog();
         }
     }
 }

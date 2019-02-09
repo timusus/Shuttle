@@ -27,11 +27,17 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
-import com.simplecity.amp_library.dagger.module.ActivityModule;
-import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
-import com.simplecity.amp_library.ui.drawer.MiniPlayerLockManager;
+import com.simplecity.amp_library.billing.BillingManager;
+import com.simplecity.amp_library.model.InclExclItem;
+import com.simplecity.amp_library.ui.dialog.ChangelogDialog;
+import com.simplecity.amp_library.ui.dialog.InclExclDialog;
+import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
+import com.simplecity.amp_library.ui.screens.drawer.DrawerLockManager;
+import com.simplecity.amp_library.ui.screens.drawer.MiniPlayerLockManager;
+import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
+import dagger.android.support.AndroidSupportInjection;
 import io.reactivex.disposables.Disposable;
 import javax.inject.Inject;
 import test.com.androidnavigation.base.Controller;
@@ -127,8 +133,18 @@ public class SettingsParentFragment extends BaseNavigationController implements
 
         @Inject
         SupportPresenter supportPresenter;
+
         @Inject
         SettingsPresenter settingsPresenter;
+
+        @Inject
+        BillingManager billingManager;
+
+        @Inject
+        AnalyticsManager analyticsManager;
+
+        @Inject
+        SettingsManager settingsManager;
 
         private ColorChooserDialog primaryColorDialog;
         private ColorChooserDialog accentColorDialog;
@@ -168,16 +184,14 @@ public class SettingsParentFragment extends BaseNavigationController implements
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
 
-            ShuttleApplication.getInstance().getAppComponent()
-                    .plus(new ActivityModule(getActivity()))
-                    .inject(this);
+            AndroidSupportInjection.inject(this);
 
             // Support Preferences
 
             Preference changelogPreference = findPreference(SettingsManager.KEY_PREF_CHANGELOG);
             if (changelogPreference != null) {
                 changelogPreference.setOnPreferenceClickListener(preference -> {
-                    settingsPresenter.changelogClicked(getContext());
+                    settingsPresenter.changelogClicked();
                     return true;
                 });
             }
@@ -208,11 +222,11 @@ public class SettingsParentFragment extends BaseNavigationController implements
 
             Preference restorePurchasesPreference = findPreference(SettingsManager.KEY_PREF_RESTORE_PURCHASES);
             if (restorePurchasesPreference != null) {
-                if (ShuttleUtils.isAmazonBuild() || ShuttleUtils.isUpgraded()) {
+                if (ShuttleUtils.isAmazonBuild() || ShuttleUtils.isUpgraded((ShuttleApplication) getContext().getApplicationContext(), settingsManager)) {
                     restorePurchasesPreference.setVisible(false);
                 }
                 restorePurchasesPreference.setOnPreferenceClickListener(preference -> {
-                    settingsPresenter.restorePurchasesClicked(getActivity());
+                    settingsPresenter.restorePurchasesClicked();
                     return true;
                 });
             }
@@ -222,7 +236,7 @@ public class SettingsParentFragment extends BaseNavigationController implements
             Preference chooseTabsPreference = findPreference(SettingsManager.KEY_PREF_TAB_CHOOSER);
             if (chooseTabsPreference != null) {
                 chooseTabsPreference.setOnPreferenceClickListener(preference -> {
-                    settingsPresenter.chooseTabsClicked(getActivity());
+                    settingsPresenter.chooseTabsClicked();
                     return true;
                 });
             }
@@ -364,7 +378,7 @@ public class SettingsParentFragment extends BaseNavigationController implements
             Preference viewBlacklistPreference = findPreference(SettingsManager.KEY_PREF_BLACKLIST);
             if (viewBlacklistPreference != null) {
                 viewBlacklistPreference.setOnPreferenceClickListener(preference -> {
-                    settingsPresenter.viewBlacklistClicked(getContext());
+                    settingsPresenter.viewBlacklistClicked();
                     return true;
                 });
             }
@@ -372,7 +386,7 @@ public class SettingsParentFragment extends BaseNavigationController implements
             Preference viewWhitelistPreference = findPreference(SettingsManager.KEY_PREF_WHITELIST);
             if (viewWhitelistPreference != null) {
                 viewWhitelistPreference.setOnPreferenceClickListener(preference -> {
-                    settingsPresenter.viewWhitelistClicked(getContext());
+                    settingsPresenter.viewWhitelistClicked();
                     return true;
                 });
             }
@@ -380,7 +394,7 @@ public class SettingsParentFragment extends BaseNavigationController implements
             // Upgrade preference
             Preference upgradePreference = findPreference(SettingsManager.KEY_PREF_UPGRADE);
             if (upgradePreference != null) {
-                if (ShuttleUtils.isUpgraded()) {
+                if (ShuttleUtils.isUpgraded((ShuttleApplication) getContext().getApplicationContext(), settingsManager)) {
                     upgradePreference.setVisible(false);
                 }
             }
@@ -509,13 +523,13 @@ public class SettingsParentFragment extends BaseNavigationController implements
         // Support
 
         @Override
-        public void showChangelog(MaterialDialog dialog) {
-            dialog.show();
+        public void showChangelog() {
+            ChangelogDialog.Companion.newInstance().show(getChildFragmentManager());
         }
 
         @Override
-        public void showUpgradeDialog(MaterialDialog dialog) {
-            dialog.show();
+        public void showUpgradeDialog() {
+            new UpgradeDialog().show(getChildFragmentManager());
         }
 
         @Override
@@ -524,8 +538,8 @@ public class SettingsParentFragment extends BaseNavigationController implements
         }
 
         @Override
-        public void showTabChooserDialog(MaterialDialog dialog) {
-            dialog.show();
+        public void showTabChooserDialog() {
+            new TabChooserDialog().show(getChildFragmentManager());
         }
 
         @Override
@@ -577,13 +591,13 @@ public class SettingsParentFragment extends BaseNavigationController implements
         // Blacklist/Whitelist
 
         @Override
-        public void showBlacklistDialog(MaterialDialog dialog) {
-            dialog.show();
+        public void showBlacklistDialog() {
+            InclExclDialog.Companion.newInstance(InclExclItem.Type.EXCLUDE).show(getChildFragmentManager());
         }
 
         @Override
-        public void showWhitelistDialog(MaterialDialog dialog) {
-            dialog.show();
+        public void showWhitelistDialog() {
+            InclExclDialog.Companion.newInstance(InclExclItem.Type.INCLUDE).show(getChildFragmentManager());
         }
     }
 }

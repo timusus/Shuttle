@@ -22,6 +22,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.data.Repository;
 import com.simplecity.amp_library.glide.utils.GlideUtils;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
@@ -29,7 +30,8 @@ import com.simplecity.amp_library.playback.constants.ServiceCommand;
 import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
-import com.simplecity.amp_library.utils.PlaylistUtils;
+import com.simplecity.amp_library.utils.SettingsManager;
+import com.simplecity.amp_library.utils.playlists.FavoritesPlaylistManager;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import java.util.ConcurrentModificationException;
@@ -48,10 +50,13 @@ public class MusicNotificationHelper extends NotificationHelper {
 
     private Handler handler;
 
-    public MusicNotificationHelper(Context context) {
+    private AnalyticsManager analyticsManager;
+
+    public MusicNotificationHelper(Context context, AnalyticsManager analyticsManager) {
         super(context);
 
         handler = new Handler(Looper.getMainLooper());
+        this.analyticsManager = analyticsManager;
     }
 
     public NotificationCompat.Builder getBuilder(Context context, @NonNull Song song, @NonNull MediaSessionCompat.Token mediaSessionToken, @Nullable Bitmap bitmap, boolean isPlaying,
@@ -102,11 +107,19 @@ public class MusicNotificationHelper extends NotificationHelper {
     }
 
     @SuppressLint("CheckResult")
-    public void notify(Context context, @NonNull Song song, boolean isPlaying, @NonNull MediaSessionCompat.Token mediaSessionToken) {
+    public void notify(
+            Context context,
+            @NonNull Repository.PlaylistsRepository playlistsRepository,
+            @NonNull Repository.SongsRepository songsRepository,
+            @NonNull Song song, boolean isPlaying,
+            @NonNull MediaSessionCompat.Token mediaSessionToken,
+            @NonNull SettingsManager settingsManager,
+            FavoritesPlaylistManager favoritesPlaylistManager
+    ) {
         notification = getBuilder(context, song, mediaSessionToken, bitmap, isPlaying, isFavorite).build();
         notify(NOTIFICATION_ID, notification);
 
-        PlaylistUtils.isFavorite(song)
+        favoritesPlaylistManager.isFavorite(song)
                 .first(false)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -124,7 +137,7 @@ public class MusicNotificationHelper extends NotificationHelper {
                 .priority(Priority.IMMEDIATE)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .override(600, 600)
-                .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.albumName, false))
+                .placeholder(PlaceholderProvider.getInstance(context).getPlaceHolderDrawable(song.albumName, false, settingsManager))
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
@@ -151,10 +164,19 @@ public class MusicNotificationHelper extends NotificationHelper {
                 }));
     }
 
-    public void startForeground(Service service, @NonNull Song song, boolean isPlaying, @NonNull MediaSessionCompat.Token mediaSessionToken) {
-        notify(service, song, isPlaying, mediaSessionToken);
+    public void startForeground(
+            Service service,
+            @NonNull Repository.PlaylistsRepository playlistsRepository,
+            @NonNull Repository.SongsRepository songsRepository,
+            @NonNull Song song,
+            boolean isPlaying,
+            @NonNull MediaSessionCompat.Token mediaSessionToken,
+            SettingsManager settingsManager,
+            FavoritesPlaylistManager favoritesPlaylistManager
+    ) {
+        notify(service, playlistsRepository, songsRepository, song, isPlaying, mediaSessionToken, settingsManager, favoritesPlaylistManager);
         try {
-            AnalyticsManager.dropBreadcrumb(TAG, "startForeground() called");
+            analyticsManager.dropBreadcrumb(TAG, "startForeground() called");
             Log.w(TAG, "service.startForeground called");
             service.startForeground(NOTIFICATION_ID, notification);
         } catch (RuntimeException e) {

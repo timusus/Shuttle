@@ -10,22 +10,17 @@ import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import java.util.Collections;
 import java.util.List;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class SortManager {
-
-    private static SortManager sInstance;
-
-    public static SortManager getInstance() {
-        if (sInstance == null) {
-            sInstance = new SortManager();
-        }
-        return sInstance;
-    }
 
     private SharedPreferences mPrefs;
 
-    private SortManager() {
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(ShuttleApplication.getInstance());
+    @Inject
+    public SortManager(ShuttleApplication application) {
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(application);
     }
 
     private void setSortOrder(String key, int sortOrder) {

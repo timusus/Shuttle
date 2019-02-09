@@ -10,13 +10,16 @@ import android.support.v4.media.MediaDescriptionCompat.Builder
 import android.util.Log
 import com.simplecity.amp_library.R.string
 import com.simplecity.amp_library.ShuttleApplication
+import com.simplecity.amp_library.data.Repository
+import com.simplecity.amp_library.data.Repository.PlaylistsRepository
 import com.simplecity.amp_library.model.Album
 import com.simplecity.amp_library.model.AlbumArtist
 import com.simplecity.amp_library.model.Genre
 import com.simplecity.amp_library.model.Playlist
 import com.simplecity.amp_library.model.Song
-import com.simplecity.amp_library.utils.DataManager
 import com.simplecity.amp_library.utils.StringUtils
+import com.simplecity.amp_library.utils.extensions.getSongsObservable
+import com.simplecity.amp_library.utils.extensions.getSongsSingle
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 
@@ -41,7 +44,14 @@ sealed class MediaIdWrapper {
     class Playlist(var playlistId: Long) : MediaIdWrapper()
 }
 
-class MediaIdHelper {
+class MediaIdHelper(
+    private val application: ShuttleApplication,
+    private val songsRepository: Repository.SongsRepository,
+    private val albumsRepository: Repository.AlbumsRepository,
+    private val albumArtistsRepository: Repository.AlbumArtistsRepository,
+    private val genresRepository: Repository.GenresRepository,
+    private val playlistsRepository: PlaylistsRepository
+) {
 
     companion object {
         const val TAG = "MediaIdHelper"
@@ -108,23 +118,23 @@ class MediaIdHelper {
                 mutableListOf(
                     MediaItem(
                         Builder()
-                            .setTitle(ShuttleApplication.getInstance().getString(string.artists_title))
+                            .setTitle(application.getString(string.artists_title))
                             .setMediaId("media:/artists/")
                             .build(), MediaItem.FLAG_BROWSABLE
                     ),
                     MediaItem(
                         Builder()
-                            .setTitle(ShuttleApplication.getInstance().getString(string.albums_title))
+                            .setTitle(application.getString(string.albums_title))
                             .setMediaId("media:/albums/")
                             .build(), MediaItem.FLAG_BROWSABLE
                     ), MediaItem(
                         Builder()
-                            .setTitle(ShuttleApplication.getInstance().getString(string.playlists_title))
+                            .setTitle(application.getString(string.playlists_title))
                             .setMediaId("media:/playlists/")
                             .build(), MediaItem.FLAG_BROWSABLE
                     ), MediaItem(
                         Builder()
-                            .setTitle(ShuttleApplication.getInstance().getString(string.genres_title))
+                            .setTitle(application.getString(string.genres_title))
                             .setMediaId("media:/genres/")
                             .build(), MediaItem.FLAG_BROWSABLE
                     )
@@ -187,7 +197,8 @@ class MediaIdHelper {
                                 .sortedBy { song -> song.albumName }
                                 .sortedBy { song -> song.track }
                                 .sortedBy { song -> song.discNumber },
-                                0)
+                                0
+                            )
                         }
                 }
             }
@@ -198,16 +209,17 @@ class MediaIdHelper {
                             Pair(songs
                                 .sortedBy { song -> song.track }
                                 .sortedBy { song -> song.discNumber },
-                                0)
+                                0
+                            )
                         }
                 }
             }
             MediaStore.Audio.Genres.ENTRY_CONTENT_TYPE -> {
                 extras.getString(MediaStore.EXTRA_MEDIA_GENRE)?.let { genreName ->
-                    return DataManager.getInstance().genresRelay
+                    return genresRepository.getGenres()
                         .first(emptyList())
                         .flatMap { genres -> Single.just(genres.first { genre -> genre.name == genreName }) }
-                        .flatMap { genresSingle -> genresSingle.songsObservable }
+                        .flatMap { genresSingle -> genresSingle.getSongsObservable(application) }
                         .map { songs ->
                             Pair(songs.sortedBy { it.playlistSongPlayOrder }.toMutableList(), 0)
                         }
@@ -222,7 +234,7 @@ class MediaIdHelper {
                 } else {
                     // Take the first song matching our predicate, and retrieve all songs from the same album.
                     val song = songs.first()
-                    song.album.songsSingle.map { albumSongs -> Pair(song, albumSongs) }
+                    song.album.getSongsSingle(songsRepository).map { albumSongs -> Pair(song, albumSongs) }
                 }
             }
             .map { pair ->
@@ -243,7 +255,7 @@ class MediaIdHelper {
 
     @SuppressLint("CheckResult")
     private fun listArtists(mediaId: String, completion: (MutableList<MediaBrowserCompat.MediaItem>) -> Unit) {
-        DataManager.getInstance().albumArtistsRelay.first(emptyList())
+        albumArtistsRepository.getAlbumArtists().first(emptyList())
             .map { albumArtists ->
                 albumArtists
                     .sortedBy { albumArtist -> StringUtils.keyFor(albumArtist.name) }
@@ -255,7 +267,7 @@ class MediaIdHelper {
 
     @SuppressLint("CheckResult")
     private fun listPlaylists(mediaId: String, completion: (MutableList<MediaBrowserCompat.MediaItem>) -> Unit) {
-        DataManager.getInstance().playlistsRelay.first(emptyList())
+        playlistsRepository.getPlaylists().first(emptyList())
             .map { playlists ->
                 playlists
                     .sortedBy { playlist -> playlist.type }
@@ -267,7 +279,7 @@ class MediaIdHelper {
 
     @SuppressLint("CheckResult")
     private fun listGenres(mediaId: String, completion: (MutableList<MediaBrowserCompat.MediaItem>) -> Unit) {
-        DataManager.getInstance().genresRelay.first(emptyList())
+        genresRepository.getGenres().first(emptyList())
             .map { genres ->
                 genres
                     .sortedBy { genre -> genre.name }
@@ -281,11 +293,11 @@ class MediaIdHelper {
     private fun listAlbums(mediaId: String, artistHash: Int?, completion: (MutableList<MediaItem>) -> Unit) {
 
         val albumsSingle = if (artistHash != null) {
-            DataManager.getInstance().albumArtistsRelay.first(emptyList())
+            albumArtistsRepository.getAlbumArtists().first(emptyList())
                 .map { albumArtists -> albumArtists.first { it.hashCode() == artistHash } }
                 .map { albumArtist -> albumArtist.albums }
         } else {
-            DataManager.getInstance().albumsRelay.first(emptyList())
+            albumsRepository.getAlbums().first(emptyList())
         }
 
         albumsSingle.map { albums ->
@@ -313,14 +325,14 @@ class MediaIdHelper {
     }
 
     private fun getSongsForPredicate(predicate: (Song) -> Boolean): Single<List<Song>> {
-        return DataManager.getInstance().getSongsObservable(predicate).first(emptyList())
+        return songsRepository.getSongs(predicate).first(emptyList())
     }
 
     private fun getSongsForPlaylistId(playlistId: Long?): Single<List<Song>> {
-        return DataManager.getInstance().playlistsRelay
+        return playlistsRepository.getPlaylists()
             .first(emptyList())
             .flatMap { playlists -> Single.just(playlists.first { playlist -> playlist.id == playlistId }) }
-            .flatMap { it.songsObservable.first(emptyList()) }
+            .flatMap { playlist -> songsRepository.getSongs(playlist).first(emptyList()) }
             .map { songs ->
                 songs
                     .sortedBy { it.playlistSongPlayOrder }
@@ -329,10 +341,10 @@ class MediaIdHelper {
     }
 
     private fun getSongsForGenreId(genreId: Long?): Single<MutableList<Song>> {
-        return DataManager.getInstance().genresRelay
+        return genresRepository.getGenres()
             .first(emptyList())
             .flatMap { genres -> Single.just(genres.first { genre -> genre.id == genreId }) }
-            .flatMap { it.songsObservable }
+            .flatMap { genresSingle -> genresSingle.getSongsObservable(application) }
             .map { songs ->
                 songs.shuffled().toMutableList()
             }

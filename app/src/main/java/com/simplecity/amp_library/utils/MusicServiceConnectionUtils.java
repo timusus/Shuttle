@@ -6,11 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-
 import com.simplecity.amp_library.playback.LocalBinder;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.rx.UnsafeConsumer;
-
 import java.util.WeakHashMap;
 
 public class MusicServiceConnectionUtils {
@@ -25,8 +23,8 @@ public class MusicServiceConnectionUtils {
 
     }
 
-    public static void bindToService(Lifecycle lifecycle, Context context, ServiceConnection callback, UnsafeConsumer<ServiceToken> tokenCallback) {
-        new ResumingServiceManager(lifecycle).startService(context, new Intent(context, MusicService.class), () -> {
+    public static void bindToService(Lifecycle lifecycle, Context context, AnalyticsManager analyticsManager, ServiceConnection callback, UnsafeConsumer<ServiceToken> tokenCallback) {
+        new ResumingServiceManager(lifecycle, analyticsManager).startService(context, new Intent(context, MusicService.class), () -> {
             ServiceBinder binder = new ServiceBinder(callback);
             if (context.bindService(new Intent().setClass(context, MusicService.class), binder, 0)) {
                 connectionMap.put(context, binder);

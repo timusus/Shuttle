@@ -32,7 +32,7 @@ import java.io.ByteArrayOutputStream
 
 class CastPlayback(context: Context, castSession: CastSession) : Playback {
 
-    private val applicationContext: Context = context.applicationContext
+    private val applicationContext = context.applicationContext
 
     private val remoteMediaClient: RemoteMediaClient = castSession.remoteMediaClient
     private val remoteMediaClientCallback: RemoteMediaClient.Callback
@@ -88,9 +88,9 @@ class CastPlayback(context: Context, castSession: CastSession) : Playback {
         metadata.putString(MediaMetadata.KEY_ALBUM_ARTIST, song.albumArtistName)
         metadata.putString(MediaMetadata.KEY_ALBUM_TITLE, song.albumName)
         metadata.putString(MediaMetadata.KEY_TITLE, song.name)
-        metadata.addImage(WebImage(Uri.parse("http://" + ShuttleUtils.getIpAddr() + ":5000" + "/image/" + song.id)))
+        metadata.addImage(WebImage(Uri.parse("http://" + ShuttleUtils.getIpAddr(applicationContext) + ":5000" + "/image/" + song.id)))
 
-        val mediaInfo = MediaInfo.Builder("http://" + ShuttleUtils.getIpAddr() + ":5000" + "/audio/" + song.id)
+        val mediaInfo = MediaInfo.Builder("http://" + ShuttleUtils.getIpAddr(applicationContext) + ":5000" + "/audio/" + song.id)
             .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
             .setContentType("audio/*")
             .setMetadata(metadata)

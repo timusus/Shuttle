@@ -1,11 +1,8 @@
 package com.simplecity.amp_library.utils
 
-import android.preference.PreferenceManager
-import com.simplecity.amp_library.ShuttleApplication
+import android.content.SharedPreferences
 
-open class BaseSettingsManager {
-
-    private val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ShuttleApplication.getInstance())
+open class BaseSettingsManager(private val sharedPreferences: SharedPreferences) {
 
     @JvmOverloads
     fun getString(key: String, defaultValue: String? = null): String? {

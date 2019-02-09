@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/playNext"
+        android:title="@string/play_next"/>
+
+    <item
+        android:title="@string/menu_add_to">
+        <menu>
+            <item
+                android:id="@+id/addToPlaylist"
+                android:title="@string/menu_playlist">
+                <menu/>
+            </item>
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/editTags"
+        android:title="@string/edit_tags"/>
+
+    <item
+        android:id="@+id/share"
+        android:title="@string/share"/>
+
+    <item
+        android:id="@+id/ringtone"
+        android:title="@string/ringtone_menu"/>
+
+    <item
+        android:id="@+id/songInfo"
+        android:title="@string/song_info"/>
+
+    <item
+        android:id="@+id/blacklist"
+        android:title="@string/blacklist_title"/>
+
+    <item
+        android:id="@+id/remove"
+        android:title="@string/remove_from_queue"/>
+
+    <item
+        android:id="@+id/delete"
+        android:title="@string/delete_item"/>
+
+    <item
+        android:title="@string/go_to">
+        <menu>
+            <item
+                android:id="@+id/goToArtist"
+                android:title="@string/artist_title"/>
+
+            <item
+                android:id="@+id/goToAlbum"
+                android:title="@string/album_title"/>
+
+            <item
+                android:id="@+id/goToGenre"
+                android:title="@string/genre_title"/>
+        </menu>
+    </item>
+
+</menu>

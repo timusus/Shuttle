@@ -42,10 +42,6 @@
         android:title="@string/blacklist_title"/>
 
     <item
-        android:id="@+id/remove"
-        android:title="@string/remove_from_queue"/>
-
-    <item
         android:id="@+id/delete"
         android:title="@string/delete_item"/>
 

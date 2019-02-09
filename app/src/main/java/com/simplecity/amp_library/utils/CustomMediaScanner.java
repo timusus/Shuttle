@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.FolderObject;
 import com.simplecity.amp_library.rx.UnsafeConsumer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -32,6 +31,8 @@ public class CustomMediaScanner implements MediaScannerConnection.MediaScannerCo
         void onScanCompleted();
     }
 
+    private Context applicationContext;
+
     private final List<String> paths;
 
     @Nullable
@@ -42,15 +43,16 @@ public class CustomMediaScanner implements MediaScannerConnection.MediaScannerCo
 
     private Handler handler;
 
-    private CustomMediaScanner(List<String> paths, @Nullable ScanCompletionListener listener) {
+    private CustomMediaScanner(Context context, List<String> paths, @Nullable ScanCompletionListener listener) {
+        this.applicationContext = context.getApplicationContext();
         this.paths = paths;
         scanCompletionListener = listener;
-        handler = new Handler(ShuttleApplication.getInstance().getMainLooper());
+        handler = new Handler(context.getMainLooper());
     }
 
-    public static void scanFiles(List<String> paths, @Nullable ScanCompletionListener listener) {
-        CustomMediaScanner client = new CustomMediaScanner(paths, listener);
-        MediaScannerConnection connection = new MediaScannerConnection(ShuttleApplication.getInstance(), client);
+    public static void scanFiles(Context context, List<String> paths, @Nullable ScanCompletionListener listener) {
+        CustomMediaScanner client = new CustomMediaScanner(context, paths, listener);
+        MediaScannerConnection connection = new MediaScannerConnection(context, client);
         client.connection = connection;
         connection.connect();
     }
@@ -70,7 +72,7 @@ public class CustomMediaScanner implements MediaScannerConnection.MediaScannerCo
 
     private void scanNextPath() {
         if (nextPath >= paths.size()) {
-            scanComplete();
+            scanComplete(applicationContext);
             return;
         }
         String path = paths.get(nextPath);
@@ -87,11 +89,11 @@ public class CustomMediaScanner implements MediaScannerConnection.MediaScannerCo
         Log.d(TAG, "Scanning file: " + path);
     }
 
-    private void scanComplete() {
+    private void scanComplete(Context context) {
         connection.disconnect();
 
         //Notify all media uris of change. This will in turn update any content observers.
-        ShuttleApplication.getInstance().getContentResolver().notifyChange(Uri.parse("content://media"), null);
+        context.getContentResolver().notifyChange(Uri.parse("content://media"), null);
 
         if (handler != null) {
             handler.post(() -> {
@@ -121,7 +123,7 @@ public class CustomMediaScanner implements MediaScannerConnection.MediaScannerCo
         MaterialProgressBar indeterminateProgress = view.findViewById(R.id.indeterminateProgress);
         MaterialProgressBar horizontalProgress = view.findViewById(R.id.horizontalProgress);
 
-        MaterialDialog dialog = DialogUtils.getBuilder(context)
+        MaterialDialog dialog = new MaterialDialog.Builder(context)
                 .title(R.string.scanning)
                 .customView(view, false)
                 .negativeText(R.string.close)
@@ -134,7 +136,7 @@ public class CustomMediaScanner implements MediaScannerConnection.MediaScannerCo
                     ViewUtils.fadeIn(horizontalProgress, null);
                     horizontalProgress.setMax(paths.size());
 
-                    CustomMediaScanner.scanFiles(paths, new ScanCompletionListener() {
+                    CustomMediaScanner.scanFiles(context, paths, new ScanCompletionListener() {
                         @Override
                         public void onPathScanned(String path) {
                             horizontalProgress.setProgress(horizontalProgress.getProgress() + 1);
@@ -151,8 +153,8 @@ public class CustomMediaScanner implements MediaScannerConnection.MediaScannerCo
                 });
     }
 
-    public static void scanFile(String path, UnsafeConsumer<String> message) {
-        CustomMediaScanner.scanFiles(Collections.singletonList(path), new CustomMediaScanner.ScanCompletionListener() {
+    public static void scanFile(Context context, String path, UnsafeConsumer<String> message) {
+        CustomMediaScanner.scanFiles(context, Collections.singletonList(path), new CustomMediaScanner.ScanCompletionListener() {
             @Override
             public void onPathScanned(String path) {
 
@@ -160,7 +162,7 @@ public class CustomMediaScanner implements MediaScannerConnection.MediaScannerCo
 
             @Override
             public void onScanCompleted() {
-                message.accept(ShuttleApplication.getInstance().getString(R.string.scan_complete));
+                message.accept(context.getString(R.string.scan_complete));
             }
         });
     }

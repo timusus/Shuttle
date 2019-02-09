@@ -1,6 +1,6 @@
 package com.simplecity.amp_library.utils;
 
-import android.content.res.Resources;
+import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -13,33 +13,34 @@ import android.text.TextUtils;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.Rx;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.ShuttleApplication;
 
 public class PlaceholderProvider {
 
     private static PlaceholderProvider instance;
+
+    private Context applicationContext;
 
     private final TextPaint paint = new TextPaint();
     private final TypedArray colors;
 
     private boolean isDark = false;
 
-    public static PlaceholderProvider getInstance() {
+    public static PlaceholderProvider getInstance(Context context) {
         if (instance == null) {
-            instance = new PlaceholderProvider();
+            instance = new PlaceholderProvider(context);
         }
         return instance;
     }
 
-    private PlaceholderProvider() {
-        final Resources res = ShuttleApplication.getInstance().getResources();
-        paint.setTypeface(TypefaceManager.getInstance().getTypeface(TypefaceManager.SANS_SERIF_LIGHT));
+    private PlaceholderProvider(Context context) {
+        this.applicationContext = context.getApplicationContext();
+        paint.setTypeface(TypefaceManager.getInstance().getTypeface(applicationContext, TypefaceManager.SANS_SERIF_LIGHT));
         paint.setColor(Color.WHITE);
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setAntiAlias(true);
-        colors = res.obtainTypedArray(R.array.pastel_colors);
+        colors = applicationContext.getResources().obtainTypedArray(R.array.pastel_colors);
 
-        Aesthetic.get(ShuttleApplication.getInstance()).isDark()
+        Aesthetic.get(applicationContext).isDark()
                 .compose(Rx.distinctToMainThread())
                 .subscribe(isDark -> this.isDark = isDark);
     }
@@ -64,12 +65,12 @@ public class PlaceholderProvider {
         return isDark ? R.drawable.ic_placeholder_dark_large : R.drawable.ic_placeholder_light_large;
     }
 
-    public Drawable getPlaceHolderDrawable(@Nullable String displayName, boolean large) {
+    public Drawable getPlaceHolderDrawable(@Nullable String displayName, boolean large, SettingsManager settingsManager) {
         Drawable drawable;
-        if (!TextUtils.isEmpty(displayName) && SettingsManager.getInstance().useGmailPlaceholders()) {
-            drawable = PlaceholderProvider.getInstance().getLetterTile(displayName);
+        if (!TextUtils.isEmpty(displayName) && settingsManager.useGmailPlaceholders()) {
+            drawable = PlaceholderProvider.getInstance(applicationContext).getLetterTile(displayName);
         } else {
-            drawable = ContextCompat.getDrawable(ShuttleApplication.getInstance(), large ? getLargePlaceHolderResId() : getMediumPlaceHolderResId());
+            drawable = ContextCompat.getDrawable(applicationContext, large ? getLargePlaceHolderResId() : getMediumPlaceHolderResId());
         }
         return drawable;
     }

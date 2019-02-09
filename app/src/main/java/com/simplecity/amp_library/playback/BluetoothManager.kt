@@ -13,7 +13,9 @@ import com.simplecity.amp_library.utils.SettingsManager
 
 class BluetoothManager(
     private val playbackManager: PlaybackManager,
-    private val musicServiceCallbacks: MusicService.Callbacks
+    private val analyticsManager: AnalyticsManager,
+    private val musicServiceCallbacks: MusicService.Callbacks,
+    private val settingsManager: SettingsManager
 ) {
 
     private var bluetoothReceiver: BroadcastReceiver? = null
@@ -32,13 +34,13 @@ class BluetoothManager(
                 val action = intent.action
                 if (action != null) {
                     val extras = intent.extras
-                    if (SettingsManager.getInstance().bluetoothPauseDisconnect) {
+                    if (settingsManager.bluetoothPauseDisconnect) {
                         when (action) {
                             BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED -> if (extras != null) {
                                 val state = extras.getInt(BluetoothA2dp.EXTRA_STATE)
                                 val previousState = extras.getInt(BluetoothA2dp.EXTRA_PREVIOUS_STATE)
                                 if ((state == BluetoothA2dp.STATE_DISCONNECTED || state == BluetoothA2dp.STATE_DISCONNECTING) && previousState == BluetoothA2dp.STATE_CONNECTED) {
-                                    AnalyticsManager.dropBreadcrumb(TAG, "ACTION_AUDIO_STATE_CHANGED.. pausing. State: $state")
+                                    analyticsManager.dropBreadcrumb(TAG, "ACTION_AUDIO_STATE_CHANGED.. pausing. State: $state")
                                     playbackManager.pause(false)
                                 }
                             }
@@ -46,14 +48,14 @@ class BluetoothManager(
                                 val state = extras.getInt(BluetoothHeadset.EXTRA_STATE)
                                 val previousState = extras.getInt(BluetoothHeadset.EXTRA_PREVIOUS_STATE)
                                 if (state == BluetoothHeadset.STATE_AUDIO_DISCONNECTED && previousState == BluetoothHeadset.STATE_AUDIO_CONNECTED) {
-                                    AnalyticsManager.dropBreadcrumb(TAG, "ACTION_AUDIO_STATE_CHANGED.. pausing. State: $state")
+                                    analyticsManager.dropBreadcrumb(TAG, "ACTION_AUDIO_STATE_CHANGED.. pausing. State: $state")
                                     playbackManager.pause(false)
                                 }
                             }
                         }
                     }
 
-                    if (SettingsManager.getInstance().bluetoothResumeConnect) {
+                    if (settingsManager.bluetoothResumeConnect) {
                         when (action) {
                             BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED -> if (extras != null) {
                                 val state = extras.getInt(BluetoothA2dp.EXTRA_STATE)

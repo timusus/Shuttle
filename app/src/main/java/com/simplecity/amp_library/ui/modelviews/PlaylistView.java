@@ -14,7 +14,7 @@ import static com.simplecity.amp_library.R.id.line_one;
 import static com.simplecity.amp_library.R.layout.list_item_one_line;
 import static com.simplecity.amp_library.R.string.btn_options;
 import static com.simplecity.amp_library.ui.adapters.ViewType.PLAYLIST;
-import static com.simplecity.amp_library.ui.fragments.PlaylistFragment.PlaylistClickListener;
+import static com.simplecity.amp_library.ui.screens.playlist.list.PlaylistListFragment.PlaylistClickListener;
 
 public class PlaylistView extends BaseViewModel<PlaylistView.ViewHolder> {
 

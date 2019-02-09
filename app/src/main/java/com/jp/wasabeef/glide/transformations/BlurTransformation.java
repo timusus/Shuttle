@@ -22,7 +22,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Build;
 import android.renderscript.RSRuntimeException;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.Transformation;
 import com.bumptech.glide.load.engine.Resource;
@@ -91,7 +90,7 @@ public class BlurTransformation implements Transformation<Bitmap> {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             try {
-                bitmap = RSBlur.getInstance().blur(bitmap, mRadius);
+                bitmap = RSBlur.getInstance(mContext).blur(bitmap, mRadius);
             } catch (RSRuntimeException e) {
                 bitmap = FastBlur.blur(bitmap, mRadius, true);
             }

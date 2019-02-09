@@ -13,7 +13,7 @@ public class LegacyUtils {
     }
 
     @NonNull
-    public static Completable deleteOldResources() {
+    public static Completable deleteOldResources(ShuttleApplication application) {
         return Completable.fromAction(() -> {
             //Delete albumthumbs/artists directory
             if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
@@ -30,13 +30,13 @@ public class LegacyUtils {
             }
 
             //Delete old http cache
-            File oldHttpCache = ShuttleApplication.getDiskCacheDir("http");
+            File oldHttpCache = application.getDiskCacheDir("http");
             if (oldHttpCache != null && oldHttpCache.exists()) {
                 oldHttpCache.delete();
             }
 
             //Delete old thumbs cache
-            File oldThumbsCache = ShuttleApplication.getDiskCacheDir("thumbs");
+            File oldThumbsCache = application.getDiskCacheDir("thumbs");
             if (oldThumbsCache != null && oldThumbsCache.exists()) {
                 oldThumbsCache.delete();
             }

@@ -106,7 +106,7 @@ public class ArtworkView extends BaseViewModel<ArtworkView.ViewHolder> {
         holder.lineTwo.setText(null);
 
         Glide.with(holder.itemView.getContext())
-                .using(new TypeLoader(type, file), InputStream.class)
+                .using(new TypeLoader(holder.itemView.getContext(), type, file), InputStream.class)
                 .from(ArtworkProvider.class)
                 .as(BitmapAndSize.class)
                 .sourceEncoder(new StreamEncoder())
@@ -141,7 +141,7 @@ public class ArtworkView extends BaseViewModel<ArtworkView.ViewHolder> {
                     }
                 });
 
-        holder.lineOne.setText(ArtworkModel.getTypeString(type));
+        holder.lineOne.setText(ArtworkModel.getTypeString(holder.itemView.getContext(), type));
 
         if (type == ArtworkProvider.Type.FOLDER && file != null) {
             holder.lineOne.setText(file.getName());

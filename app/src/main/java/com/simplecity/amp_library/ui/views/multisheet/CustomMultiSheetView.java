@@ -5,13 +5,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.util.AttributeSet;
-import com.simplecity.amp_library.ShuttleApplication;
-import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
+import com.simplecity.amp_library.ui.screens.drawer.DrawerLockManager;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetSlideEventRelay.SlideEvent;
 import com.simplecity.multisheetview.ui.view.MultiSheetView;
 import io.reactivex.disposables.CompositeDisposable;
-
-import javax.inject.Inject;
 
 /**
  * A custom MultiSheetView with an RXRelay for responding to expand/collapse events.
@@ -20,9 +17,8 @@ public class CustomMultiSheetView extends MultiSheetView {
 
     private static final String TAG = "CustomMultiSheetView";
 
-    @Inject
     MultiSheetEventRelay multiSheetEventRelay;
-    @Inject
+
     MultiSheetSlideEventRelay multiSheetSlideEventRelay;
 
     private CompositeDisposable disposables;
@@ -67,11 +63,17 @@ public class CustomMultiSheetView extends MultiSheetView {
         });
     }
 
+    public void setMultiSheetEventRelay(MultiSheetEventRelay multiSheetEventRelay) {
+        this.multiSheetEventRelay = multiSheetEventRelay;
+    }
+
+    public void setMultiSheetSlideEventRelay(MultiSheetSlideEventRelay multiSheetSlideEventRelay) {
+        this.multiSheetSlideEventRelay = multiSheetSlideEventRelay;
+    }
+
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-
-        ShuttleApplication.getInstance().getAppComponent().inject(this);
 
         disposables.add(multiSheetEventRelay.getEvents().subscribe(event -> {
             switch (event.action) {

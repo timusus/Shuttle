@@ -1,13 +1,14 @@
 package com.simplecity.amp_library.model;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.annimon.stream.Stream;
+import com.simplecity.amp_library.data.Repository;
 import com.simplecity.amp_library.http.HttpClient;
 import com.simplecity.amp_library.http.itunes.ItunesResult;
 import com.simplecity.amp_library.http.lastfm.LastFmResult;
 import com.simplecity.amp_library.utils.ComparisonUtils;
-import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.StringUtils;
 import io.reactivex.Single;
 import java.io.File;
@@ -35,8 +36,8 @@ public class AlbumArtist implements
         this.albums = albums;
     }
 
-    public Single<List<Song>> getSongsSingle() {
-        return DataManager.getInstance().getSongsObservable(song -> Stream.of(albums)
+    public Single<List<Song>> getSongsSingle(Repository.SongsRepository songsRepository) {
+        return songsRepository.getSongs(song -> Stream.of(albums)
                 .map(album -> album.id)
                 .anyMatch(albumId -> albumId == song.albumId))
                 .first(Collections.emptyList());
@@ -137,7 +138,7 @@ public class AlbumArtist implements
 
     @Nullable
     @Override
-    public InputStream getMediaStoreArtwork() {
+    public InputStream getMediaStoreArtwork(Context context) {
         return null;
     }
 

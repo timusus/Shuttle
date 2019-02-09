@@ -1,6 +1,7 @@
 package com.simplecity.amp_library.ui.widgets;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
@@ -11,7 +12,10 @@ import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.utils.ColorUtils;
 import com.simplecity.amp_library.utils.DrawableUtils;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class WidgetProviderMedium extends BaseWidgetProvider {
 
     private static final String TAG = "MusicAppWidgetProvider";
@@ -20,13 +24,9 @@ public class WidgetProviderMedium extends BaseWidgetProvider {
 
     public static final String CMDAPPWIDGETUPDATE = "appwidgetupdate_medium";
 
-    private static WidgetProviderMedium sInstance;
-
-    public static synchronized WidgetProviderMedium getInstance() {
-        if (sInstance == null) {
-            sInstance = new WidgetProviderMedium();
-        }
-        return sInstance;
+    @Inject
+    public WidgetProviderMedium(SharedPreferences sharedPreferences) {
+        super(sharedPreferences);
     }
 
     @Override
@@ -56,19 +56,19 @@ public class WidgetProviderMedium extends BaseWidgetProvider {
         views.setViewVisibility(R.id.text1, View.GONE);
         views.setTextViewText(R.id.text2, res.getText(R.string.widget_initial_text));
 
-        int textColor = mPrefs.getInt(ARG_WIDGET_TEXT_COLOR + appWidgetId, ContextCompat.getColor(context, R.color.white));
+        int textColor = sharedPreferences.getInt(ARG_WIDGET_TEXT_COLOR + appWidgetId, ContextCompat.getColor(context, R.color.white));
         views.setImageViewResource(R.id.next_button, R.drawable.ic_skip_next_24dp);
         views.setImageViewResource(R.id.prev_button, R.drawable.ic_skip_previous_24dp);
         views.setTextColor(R.id.text2, textColor);
         views.setTextColor(R.id.text1, textColor);
 
-        int backgroundColor = mPrefs.getInt(ARG_WIDGET_BACKGROUND_COLOR + appWidgetId, ColorUtils.adjustAlpha(ContextCompat.getColor(context, R.color.white), 35 / 255f));
+        int backgroundColor = sharedPreferences.getInt(ARG_WIDGET_BACKGROUND_COLOR + appWidgetId, ColorUtils.adjustAlpha(ContextCompat.getColor(context, R.color.white), 35 / 255f));
         views.setInt(R.id.widget_layout_medium, "setBackgroundColor", backgroundColor);
-        boolean showAlbumArt = mPrefs.getBoolean(ARG_WIDGET_SHOW_ARTWORK + appWidgetId, true);
+        boolean showAlbumArt = sharedPreferences.getBoolean(ARG_WIDGET_SHOW_ARTWORK + appWidgetId, true);
         if (!showAlbumArt) {
             views.setViewVisibility(R.id.album_art, View.GONE);
         }
-        int colorFilter = mPrefs.getInt(ARG_WIDGET_COLOR_FILTER + appWidgetId, -1);
+        int colorFilter = sharedPreferences.getInt(ARG_WIDGET_COLOR_FILTER + appWidgetId, -1);
         if (colorFilter != -1) {
             views.setInt(R.id.album_art, "setColorFilter", colorFilter);
         }
@@ -85,9 +85,9 @@ public class WidgetProviderMedium extends BaseWidgetProvider {
 
         for (int appWidgetId : appWidgetIds) {
 
-            boolean showAlbumArt = mPrefs.getBoolean(ARG_WIDGET_SHOW_ARTWORK + appWidgetId, true);
+            boolean showAlbumArt = sharedPreferences.getBoolean(ARG_WIDGET_SHOW_ARTWORK + appWidgetId, true);
 
-            mLayoutId = mPrefs.getInt(ARG_MEDIUM_LAYOUT_ID + appWidgetId, R.layout.widget_layout_medium);
+            mLayoutId = sharedPreferences.getInt(ARG_MEDIUM_LAYOUT_ID + appWidgetId, R.layout.widget_layout_medium);
 
             final Resources res = service.getResources();
             final RemoteViews views = new RemoteViews(service.getPackageName(), mLayoutId);
@@ -133,7 +133,7 @@ public class WidgetProviderMedium extends BaseWidgetProvider {
                 views.setTextViewText(R.id.text2, artistName + " • " + albumName);
             }
 
-            boolean invertIcons = mPrefs.getBoolean(ARG_WIDGET_INVERT_ICONS + appWidgetId, false);
+            boolean invertIcons = sharedPreferences.getBoolean(ARG_WIDGET_INVERT_ICONS + appWidgetId, false);
 
             // Set correct drawable for pause state
             final boolean isPlaying = service.isPlaying();
@@ -155,7 +155,7 @@ public class WidgetProviderMedium extends BaseWidgetProvider {
 
             setupRepeatView(service, views, invertIcons);
 
-            int textColor = mPrefs.getInt(ARG_WIDGET_TEXT_COLOR + appWidgetId, ContextCompat.getColor(service, R.color.white));
+            int textColor = sharedPreferences.getInt(ARG_WIDGET_TEXT_COLOR + appWidgetId, ContextCompat.getColor(service, R.color.white));
             if (invertIcons) {
                 views.setImageViewBitmap(R.id.next_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_skip_next_24dp));
                 views.setImageViewBitmap(R.id.prev_button, DrawableUtils.getBlackBitmap(service, R.drawable.ic_skip_previous_24dp));
@@ -167,7 +167,7 @@ public class WidgetProviderMedium extends BaseWidgetProvider {
             views.setTextColor(R.id.text2, textColor);
             views.setTextColor(R.id.text1, textColor);
 
-            int backgroundColor = mPrefs.getInt(ARG_WIDGET_BACKGROUND_COLOR + appWidgetId, ColorUtils.adjustAlpha(ContextCompat.getColor(service, R.color.white), 35 / 255f));
+            int backgroundColor = sharedPreferences.getInt(ARG_WIDGET_BACKGROUND_COLOR + appWidgetId, ColorUtils.adjustAlpha(ContextCompat.getColor(service, R.color.white), 35 / 255f));
             views.setInt(R.id.widget_layout_medium, "setBackgroundColor", backgroundColor);
 
             setupButtons(service, views, appWidgetId, getRootViewId());
@@ -182,7 +182,7 @@ public class WidgetProviderMedium extends BaseWidgetProvider {
 
                 views.setImageViewResource(R.id.album_art, R.drawable.ic_placeholder_light_medium);
 
-                int colorFilter = mPrefs.getInt(ARG_WIDGET_COLOR_FILTER + appWidgetId, -1);
+                int colorFilter = sharedPreferences.getInt(ARG_WIDGET_COLOR_FILTER + appWidgetId, -1);
                 if (colorFilter != -1) {
                     views.setInt(R.id.album_art, "setColorFilter", colorFilter);
                 }

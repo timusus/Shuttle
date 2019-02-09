@@ -1,50 +1,20 @@
 package com.simplecity.amp_library.utils.menu.album
 
-import android.content.Context
 import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.Toolbar
 import com.simplecity.amp_library.R
 import com.simplecity.amp_library.model.Album
 import com.simplecity.amp_library.model.Playlist
-import com.simplecity.amp_library.model.Song
-import com.simplecity.amp_library.playback.MediaManager
 import com.simplecity.amp_library.playback.MediaManager.Defs
-import com.simplecity.amp_library.utils.PlaylistUtils
-import com.simplecity.amp_library.utils.ShuttleUtils
-import com.simplecity.amp_library.utils.extensions.getSongsSingle
-import com.simplecity.amp_library.utils.menu.MenuUtils
+import com.simplecity.amp_library.utils.playlists.PlaylistManager
+import com.simplecity.amp_library.utils.playlists.PlaylistMenuHelper
 import io.reactivex.Single
 
 object AlbumMenuUtils {
 
-    interface Callbacks {
+    const val TAG = "AlbumMenuUtils"
 
-        fun onPlaylistItemsInserted()
-
-        fun onQueueItemsInserted(message: String)
-
-        fun playNext(songsSingle: Single<List<Song>>)
-
-        fun showTagEditor(album: Album)
-
-        fun showDeleteDialog(album: Album)
-
-        fun showDeleteDialog(albums: List<Album>)
-
-        fun showDeleteDialog(albums: Single<List<Album>>)
-
-        fun showAlbumInfo(album: Album)
-
-        fun showArtworkChooser(album: Album)
-
-        fun showUpgradeDialog()
-
-        fun showToast(message: String)
-
-        fun goToArtist(album: Album)
-    }
-
-    fun setupAlbumMenu(menu: PopupMenu, showGoToArtist: Boolean = true) {
+    fun setupAlbumMenu(menu: PopupMenu, playlistMenuHelper: PlaylistMenuHelper, showGoToArtist: Boolean = true) {
         menu.inflate(R.menu.menu_album)
 
         if (!showGoToArtist) {
@@ -52,35 +22,31 @@ object AlbumMenuUtils {
         }
 
         // Add playlist menu
-        val sub = menu.menu.findItem(R.id.addToPlaylist).subMenu
-        PlaylistUtils.createPlaylistMenu(sub)
+        val subMenu = menu.menu.findItem(R.id.addToPlaylist).subMenu
+        playlistMenuHelper.createPlaylistMenu(subMenu)
     }
 
-    fun getAlbumMenuClickListener(context: Context, mediaManager: MediaManager, selectedAlbums: Single<List<Album>>, callbacks: Callbacks): Toolbar.OnMenuItemClickListener {
+    fun getAlbumMenuClickListener(selectedAlbums: Single<List<Album>>, callbacks: AlbumsMenuCallbacks): Toolbar.OnMenuItemClickListener {
         return Toolbar.OnMenuItemClickListener { item ->
             when (item.itemId) {
                 Defs.NEW_PLAYLIST -> {
-                    MenuUtils.newPlaylist(context, selectedAlbums.getSongsSingle()) { callbacks.onPlaylistItemsInserted() }
+                    callbacks.createPlaylistFromAlbums(selectedAlbums)
                     return@OnMenuItemClickListener true
                 }
                 Defs.PLAYLIST_SELECTED -> {
-                    MenuUtils.addToPlaylist(
-                        context,
-                        item.intent.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist,
-                        selectedAlbums.getSongsSingle(),
-                        { callbacks.onPlaylistItemsInserted() })
+                    callbacks.addAlbumsToPlaylist(item.intent.getSerializableExtra(PlaylistManager.ARG_PLAYLIST) as Playlist, selectedAlbums)
                     return@OnMenuItemClickListener true
                 }
                 R.id.playNext -> {
-                    callbacks.playNext(selectedAlbums.getSongsSingle())
+                    callbacks.playAlbumsNext(selectedAlbums)
                     return@OnMenuItemClickListener true
                 }
                 R.id.addToQueue -> {
-                    MenuUtils.addToQueue(mediaManager, selectedAlbums.getSongsSingle()) { callbacks.onQueueItemsInserted(it) }
+                    callbacks.addAlbumsToQueue(selectedAlbums)
                     return@OnMenuItemClickListener true
                 }
                 R.id.delete -> {
-                    callbacks.showDeleteDialog(selectedAlbums)
+                    callbacks.deleteAlbums(selectedAlbums)
                     return@OnMenuItemClickListener true
                 }
             }
@@ -88,51 +54,47 @@ object AlbumMenuUtils {
         }
     }
 
-    fun getAlbumMenuClickListener(context: Context, mediaManager: MediaManager, album: Album, callbacks: Callbacks): PopupMenu.OnMenuItemClickListener {
+    fun getAlbumMenuClickListener(album: Album, callbacks: AlbumsMenuCallbacks): PopupMenu.OnMenuItemClickListener {
         return PopupMenu.OnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.play -> {
-                    MenuUtils.play(mediaManager, album.songsSingle) { callbacks.showToast(it) }
+                    callbacks.play(album)
                     return@OnMenuItemClickListener true
                 }
                 R.id.playNext -> {
-                    callbacks.playNext(album.songsSingle)
+                    callbacks.playAlbumsNext(album)
                     return@OnMenuItemClickListener true
                 }
                 Defs.NEW_PLAYLIST -> {
-                    MenuUtils.newPlaylist(context, album.songsSingle) { callbacks.onPlaylistItemsInserted() }
+                    callbacks.createPlaylistFromAlbums(album)
                     return@OnMenuItemClickListener true
                 }
                 Defs.PLAYLIST_SELECTED -> {
-                    MenuUtils.addToPlaylist(context, item.intent.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist, album.songsSingle) { callbacks.onPlaylistItemsInserted() }
+                    callbacks.addAlbumsToPlaylist(item.intent.getSerializableExtra(PlaylistManager.ARG_PLAYLIST) as Playlist, album)
                     return@OnMenuItemClickListener true
                 }
                 R.id.addToQueue -> {
-                    MenuUtils.addToQueue(mediaManager, album.songsSingle) { callbacks.onQueueItemsInserted(it) }
+                    callbacks.addAlbumsToQueue(album)
                     return@OnMenuItemClickListener true
                 }
                 R.id.editTags -> {
-                    if (ShuttleUtils.isUpgraded()) {
-                        callbacks.showTagEditor(album)
-                    } else {
-                        callbacks.showUpgradeDialog()
-                    }
+                    callbacks.editTags(album)
                     return@OnMenuItemClickListener true
                 }
                 R.id.info -> {
-                    callbacks.showAlbumInfo(album)
+                    callbacks.albumInfo(album)
                     return@OnMenuItemClickListener true
                 }
                 R.id.artwork -> {
-                    callbacks.showArtworkChooser(album)
+                    callbacks.editArtwork(album)
                     return@OnMenuItemClickListener true
                 }
                 R.id.blacklist -> {
-                    MenuUtils.blacklist(album.songsSingle)
+                    callbacks.blacklistAlbums(album)
                     return@OnMenuItemClickListener true
                 }
                 R.id.delete -> {
-                    callbacks.showDeleteDialog(album)
+                    callbacks.deleteAlbums(album)
                     return@OnMenuItemClickListener true
                 }
                 R.id.goToArtist -> {

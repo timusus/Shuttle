@@ -1,6 +1,7 @@
 package com.simplecity.amp_library.utils;
 
 import android.content.ContentUris;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -9,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
 import com.annimon.stream.Stream;
-import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.Song;
 import java.io.ByteArrayInputStream;
@@ -98,13 +98,13 @@ public class ArtworkUtils {
      * Retrieves the Artwork for the given album id from the MediaStore as an {@link InputStream}
      */
     @WorkerThread
-    public static InputStream getMediaStoreArtwork(long albumId) {
+    public static InputStream getMediaStoreArtwork(Context context, long albumId) {
 
         Uri contentUri = ContentUris.withAppendedId(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, albumId);
 
         FileInputStream fileInputStream = null;
 
-        Cursor cursor = ShuttleApplication.getInstance()
+        Cursor cursor = context
                 .getContentResolver()
                 .query(contentUri, new String[] { MediaStore.Audio.Albums.ALBUM_ART }, null, null, null);
 
@@ -134,16 +134,16 @@ public class ArtworkUtils {
      * Retrieves the Artwork for the given {@link Song} from the MediaStore as an {@link InputStream}
      */
     @WorkerThread
-    public static InputStream getMediaStoreArtwork(@NonNull Song song) {
-        return getMediaStoreArtwork(song.albumId);
+    public static InputStream getMediaStoreArtwork(Context context, @NonNull Song song) {
+        return getMediaStoreArtwork(context, song.albumId);
     }
 
     /**
      * Retrieves the Artwork for the given {@link Album} from the MediaStore as an {@link InputStream}
      */
     @WorkerThread
-    public static InputStream getMediaStoreArtwork(@NonNull Album album) {
-        return getMediaStoreArtwork(album.id);
+    public static InputStream getMediaStoreArtwork(Context context, @NonNull Album album) {
+        return getMediaStoreArtwork(context, album.id);
     }
 
     /**

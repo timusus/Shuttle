@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.ui.adapters;
 
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -10,7 +11,7 @@ import com.annimon.stream.IntStream;
 
 public class PagerAdapter extends FragmentPagerAdapter {
 
-    private static final String ARG_PAGE_TITLE = "page_title";
+    private static final String ARG_PAGE_TITLE = "title";
 
     private FragmentManager fragmentManager;
 
@@ -27,7 +28,7 @@ public class PagerAdapter extends FragmentPagerAdapter {
     }
 
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
+    public Object instantiateItem(@NonNull ViewGroup container, int position) {
         Fragment fragment = (Fragment) super.instantiateItem(container, position);
         fragmentMap.put(position, fragment);
         return fragment;

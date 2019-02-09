@@ -47,7 +47,7 @@
             android:value="com.simplecity.amp_library.SearchActivity"/>
 
         <activity
-            android:name=".ui.activities.MainActivity"
+            android:name=".ui.screens.main.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:launchMode="singleInstance"
@@ -129,7 +129,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".search.VoiceSearchActivity"
+            android:name=".ui.screens.search.voice.VoiceSearchActivity"
             android:excludeFromRecents="true"
             android:exported="true"
             android:theme="@style/TranslucentTheme">
@@ -140,7 +140,7 @@
         </activity>
 
         <activity
-            android:name=".ui.activities.ShortcutTrampolineActivity"
+            android:name=".ui.screens.shortcut.ShortcutTrampolineActivity"
             android:excludeFromRecents="true"
             android:exported="true"
             android:theme="@style/TranslucentTheme">
@@ -193,7 +193,7 @@
 
         <!-- Config Activity for medium Widget -->
         <activity
-            android:name=".ui.appwidget.WidgetConfigureMedium"
+            android:name=".ui.widgets.WidgetConfigureActivityMedium"
             android:theme="@style/WallpaperTheme">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
@@ -202,7 +202,7 @@
 
         <!-- Config Activity for extra large Widget -->
         <activity
-            android:name=".ui.appwidget.WidgetConfigureExtraLarge"
+            android:name=".ui.widgets.WidgetConfigureActivityExtraLarge"
             android:theme="@style/WallpaperTheme">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
@@ -224,7 +224,7 @@
 
         <!-- Config Activity for small Widget -->
         <activity
-            android:name=".ui.appwidget.WidgetConfigureSmall"
+            android:name=".ui.widgets.WidgetConfigureActivitySmall"
             android:theme="@style/WallpaperTheme">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
@@ -246,7 +246,7 @@
 
         <!-- Config Activity for large Widget -->
         <activity
-            android:name=".ui.appwidget.WidgetConfigureLarge"
+            android:name=".ui.widgets.WidgetConfigureActivityLarge"
             android:theme="@style/WallpaperTheme">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
@@ -254,7 +254,7 @@
         </activity>
 
         <activity
-            android:name=".ui.activities.QCircleActivity"
+            android:name=".ui.screens.qcircle.QCircleActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:excludeFromRecents="true"
             android:icon="@mipmap/ic_launcher"

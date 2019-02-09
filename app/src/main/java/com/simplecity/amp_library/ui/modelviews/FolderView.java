@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.ui.modelviews;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -14,12 +15,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.afollestad.aesthetic.Aesthetic;
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.data.Repository;
 import com.simplecity.amp_library.interfaces.FileType;
 import com.simplecity.amp_library.model.BaseFileObject;
 import com.simplecity.amp_library.model.FileObject;
 import com.simplecity.amp_library.model.FolderObject;
 import com.simplecity.amp_library.model.InclExclItem;
-import com.simplecity.amp_library.sql.databases.InclExclHelper;
 import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.ui.views.CircleImageView;
 import com.simplecity.amp_library.utils.SettingsManager;
@@ -53,8 +54,22 @@ public class FolderView extends BaseSelectableViewModel<FolderView.ViewHolder> {
     private boolean isWhitelisted;
     private boolean isBlacklisted;
 
-    public FolderView(@NonNull BaseFileObject baseFileObject, boolean whitelisted, boolean blacklisted) {
+    private SettingsManager settingsManager;
+
+    Repository.WhitelistRepository whitelistRepository;
+    Repository.BlacklistRepository blacklistRepository;
+
+    public FolderView(
+            @NonNull BaseFileObject baseFileObject,
+            Repository.WhitelistRepository whitelistRepository,
+            Repository.BlacklistRepository blacklistRepository,
+            SettingsManager settingsManager,
+            boolean whitelisted,
+            boolean blacklisted) {
         this.baseFileObject = baseFileObject;
+        this.whitelistRepository = whitelistRepository;
+        this.blacklistRepository = blacklistRepository;
+        this.settingsManager = settingsManager;
         this.isWhitelisted = whitelisted;
         this.isBlacklisted = blacklisted;
     }
@@ -94,33 +109,33 @@ public class FolderView extends BaseSelectableViewModel<FolderView.ViewHolder> {
         setSelected(checkbox.isChecked());
 
         if (showWhitelist) {
-            setWhitelisted(checkbox.isChecked());
+            setWhitelisted(whitelistRepository, checkbox.isChecked());
         }
         if (showBlacklist) {
-            setBlacklisted(checkbox.isChecked());
+            setBlacklisted(blacklistRepository, checkbox.isChecked());
         }
         if (listener != null) {
             listener.onFileObjectCheckboxClick(checkbox, this);
         }
     }
 
-    public void setWhitelisted(boolean whitelisted) {
+    public void setWhitelisted(Repository.WhitelistRepository whitelistRepository, boolean whitelisted) {
         isWhitelisted = whitelisted;
         InclExclItem inclExclItem = new InclExclItem(baseFileObject.path, InclExclItem.Type.INCLUDE);
         if (whitelisted) {
-            InclExclHelper.addToInclExcl(inclExclItem);
+            whitelistRepository.add(inclExclItem);
         } else {
-            InclExclHelper.deleteInclExclItem(inclExclItem);
+            whitelistRepository.delete(inclExclItem);
         }
     }
 
-    public void setBlacklisted(boolean blacklisted) {
+    public void setBlacklisted(Repository.BlacklistRepository blacklistRepository, boolean blacklisted) {
         isBlacklisted = blacklisted;
         InclExclItem inclExclItem = new InclExclItem(baseFileObject.path, InclExclItem.Type.EXCLUDE);
         if (blacklisted) {
-            InclExclHelper.addToInclExcl(inclExclItem);
+            blacklistRepository.add(inclExclItem);
         } else {
-            InclExclHelper.deleteInclExclItem(inclExclItem);
+            blacklistRepository.delete(inclExclItem);
         }
     }
 
@@ -138,7 +153,7 @@ public class FolderView extends BaseSelectableViewModel<FolderView.ViewHolder> {
     public void bindView(ViewHolder holder) {
         super.bindView(holder);
 
-        if (baseFileObject instanceof FileObject && SettingsManager.getInstance().getFolderBrowserShowFileNames()) {
+        if (baseFileObject instanceof FileObject && settingsManager.getFolderBrowserShowFileNames()) {
             holder.lineFour.setText(String.format("%s.%s", ((FileObject) baseFileObject).name, ((FileObject) baseFileObject).extension));
             holder.lineFour.setVisibility(View.VISIBLE);
             holder.textContainer.setVisibility(View.GONE);
@@ -191,7 +206,7 @@ public class FolderView extends BaseSelectableViewModel<FolderView.ViewHolder> {
     public void bindView(ViewHolder holder, int position, List payloads) {
         super.bindView(holder, position, payloads);
 
-        if (baseFileObject instanceof FileObject && SettingsManager.getInstance().getFolderBrowserShowFileNames()) {
+        if (baseFileObject instanceof FileObject && settingsManager.getFolderBrowserShowFileNames()) {
             holder.lineFour.setText(String.format("%s.%s", ((FileObject) baseFileObject).name, ((FileObject) baseFileObject).extension));
             holder.lineFour.setVisibility(View.VISIBLE);
             holder.textContainer.setVisibility(View.GONE);
@@ -247,7 +262,7 @@ public class FolderView extends BaseSelectableViewModel<FolderView.ViewHolder> {
         Drawable parentFolderDrawable;
         Drawable fileDrawable;
 
-        public ViewHolder(final View itemView) {
+        public ViewHolder(View itemView) {
             super(itemView);
 
             ButterKnife.bind(this, itemView);
@@ -275,17 +290,20 @@ public class FolderView extends BaseSelectableViewModel<FolderView.ViewHolder> {
 
         private TextView textView;
 
+        private Context applicationContext;
+
         private FileObject fileObject;
 
         DurationTask(TextView textView, FileObject fileObject) {
             this.textView = textView;
             this.fileObject = fileObject;
+            applicationContext = textView.getContext().getApplicationContext();
             textView.setTag(new WeakReference<>(DurationTask.this));
         }
 
         @Override
         protected String doInBackground(Void... params) {
-            return fileObject.getTimeString();
+            return fileObject.getTimeString(applicationContext);
         }
 
         @Override

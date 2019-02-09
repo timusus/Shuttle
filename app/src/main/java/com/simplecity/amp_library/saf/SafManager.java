@@ -3,6 +3,7 @@ package com.simplecity.amp_library.saf;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.UriPermission;
 import android.net.Uri;
@@ -20,30 +21,36 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.Crashlytics;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.utils.SettingsManager;
+import dagger.android.support.AndroidSupportInjection;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
 
 public class SafManager {
 
     private static final String TAG = "SafManager";
 
+    private Context applicationContext;
+
+    private SettingsManager settingsManager;
+
     private static SafManager instance;
 
     static final int DOCUMENT_TREE_REQUEST_CODE = 901;
 
-    public static SafManager getInstance() {
+    public static SafManager getInstance(Context context, SettingsManager settingsManager) {
         if (instance == null) {
-            instance = new SafManager();
+            instance = new SafManager(context, settingsManager);
         }
         return instance;
     }
 
-    private SafManager() {
-
+    private SafManager(Context context, SettingsManager settingsManager) {
+        this.applicationContext = context.getApplicationContext();
+        this.settingsManager = settingsManager;
     }
 
     /**
@@ -141,7 +148,7 @@ public class SafManager {
         }
 
         // Start with root of SD card and then parse through document tree.
-        DocumentFile document = DocumentFile.fromTreeUri(ShuttleApplication.getInstance(), Uri.parse(treeUri));
+        DocumentFile document = DocumentFile.fromTreeUri(applicationContext, Uri.parse(treeUri));
 
         String[] parts = relativePath.split("/");
         for (String part : parts) {
@@ -162,8 +169,8 @@ public class SafManager {
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @Nullable
     public String getDocumentTree() {
-        String treeUri = SettingsManager.getInstance().getDocumentTreeUri();
-        List<UriPermission> perms = ShuttleApplication.getInstance().getContentResolver().getPersistedUriPermissions();
+        String treeUri = settingsManager.getDocumentTreeUri();
+        List<UriPermission> perms = applicationContext.getContentResolver().getPersistedUriPermissions();
         for (UriPermission perm : perms) {
             if (perm.getUri().toString().equals(treeUri) && perm.isWritePermission()) {
                 return treeUri;
@@ -201,10 +208,10 @@ public class SafManager {
     private List<String> getExtSdCardPaths() {
         List<String> paths = new ArrayList<>();
         try {
-            File[] externalFilesDirs = ShuttleApplication.getInstance().getExternalFilesDirs("external");
+            File[] externalFilesDirs = applicationContext.getExternalFilesDirs("external");
             if (externalFilesDirs != null && externalFilesDirs.length > 0) {
                 for (File file : externalFilesDirs) {
-                    if (file != null && !file.equals(ShuttleApplication.getInstance().getExternalFilesDir("external"))) {
+                    if (file != null && !file.equals(applicationContext.getExternalFilesDir("external"))) {
                         int index = file.getAbsolutePath().lastIndexOf("/Android/data");
                         if (index < 0) {
                             Log.w(TAG, "Unexpected external file dir: " + file.getAbsolutePath());
@@ -229,7 +236,7 @@ public class SafManager {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void openDocumentTreePicker(Activity activity) {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-        if (intent.resolveActivity(ShuttleApplication.getInstance().getPackageManager()) != null) {
+        if (intent.resolveActivity(applicationContext.getPackageManager()) != null) {
             activity.startActivityForResult(intent, DOCUMENT_TREE_REQUEST_CODE);
         } else {
             Toast.makeText(activity, R.string.R_string_toast_no_document_provider, Toast.LENGTH_LONG).show();
@@ -239,6 +246,9 @@ public class SafManager {
     public static class SafDialog extends DialogFragment {
 
         public static final String TAG = "SafDialog";
+
+        @Inject
+        SettingsManager settingsManager;
 
         public interface SafResultListener {
             void onResult(@Nullable Uri treeUri);
@@ -269,13 +279,16 @@ public class SafManager {
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+            AndroidSupportInjection.inject(this);
+
             return new MaterialDialog.Builder(getContext())
                     .title(R.string.saf_access_required_title)
                     .content(R.string.saf_access_required_message)
                     .positiveText(R.string.saf_show_files_button)
                     .onPositive((dialog, which) -> {
                         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-                        if (intent.resolveActivity(ShuttleApplication.getInstance().getPackageManager()) != null) {
+                        if (intent.resolveActivity(getContext().getPackageManager()) != null) {
                             startActivityForResult(intent, DOCUMENT_TREE_REQUEST_CODE);
                         } else {
                             Toast.makeText(getContext(), R.string.R_string_toast_no_document_provider, Toast.LENGTH_LONG).show();
@@ -294,8 +307,8 @@ public class SafManager {
                     if (resultCode == Activity.RESULT_OK) {
                         Uri treeUri = data.getData();
                         if (treeUri != null) {
-                            ShuttleApplication.getInstance().getContentResolver().takePersistableUriPermission(treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                            SettingsManager.getInstance().setDocumentTreeUri(data.getData().toString());
+                            getContext().getContentResolver().takePersistableUriPermission(treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                            settingsManager.setDocumentTreeUri(data.getData().toString());
                             if (listener != null) {
                                 listener.onResult(treeUri);
                             }

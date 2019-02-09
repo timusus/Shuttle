@@ -13,13 +13,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
-import com.annimon.stream.function.Predicate;
+import com.simplecity.amp_library.data.Repository;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.services.Equalizer;
-import com.simplecity.amp_library.ui.queue.QueueItem;
-import com.simplecity.amp_library.ui.queue.QueueItemKt;
-import com.simplecity.amp_library.utils.DataManager;
+import com.simplecity.amp_library.ui.screens.queue.QueueItem;
+import com.simplecity.amp_library.ui.screens.queue.QueueItemKt;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.SleepTimer;
@@ -38,6 +37,8 @@ public class PlaybackManager implements Playback.Callbacks {
 
     private QueueManager queueManager;
 
+    private PlaybackSettingsManager playbackSettingsManager;
+
     private MediaSessionManager mediaSessionManager;
 
     private Equalizer equalizer;
@@ -50,12 +51,27 @@ public class PlaybackManager implements Playback.Callbacks {
 
     private MusicService.Callbacks musicServiceCallbacks;
 
+    private Repository.SongsRepository songsRepository;
+
+    private SettingsManager settingsManager;
+
     private boolean playOnQueueReload = false;
 
     @NonNull
     Playback playback;
 
-    PlaybackManager(Context context, QueueManager queueManager, MusicService.Callbacks musicServiceCallbacks) {
+    PlaybackManager(
+            Context context,
+            QueueManager queueManager,
+            PlaybackSettingsManager playbackSettingsManager,
+            Repository.SongsRepository songsRepository,
+            Repository.AlbumsRepository albumsRepository,
+            Repository.AlbumArtistsRepository albumArtistsRepository,
+            Repository.GenresRepository genresRepository,
+            Repository.PlaylistsRepository playlistsRepository,
+            MusicService.Callbacks musicServiceCallbacks,
+            SettingsManager settingsManager
+    ) {
 
         playback = new MediaPlayerPlayback(context);
         playback.setCallbacks(this);
@@ -64,11 +80,27 @@ public class PlaybackManager implements Playback.Callbacks {
 
         this.queueManager = queueManager;
 
+        this.playbackSettingsManager = playbackSettingsManager;
+
         this.musicServiceCallbacks = musicServiceCallbacks;
 
-        mediaSessionManager = new MediaSessionManager(context, queueManager, this, musicServiceCallbacks);
+        this.songsRepository = songsRepository;
 
-        equalizer = new Equalizer(context);
+        this.settingsManager = settingsManager;
+
+        mediaSessionManager = new MediaSessionManager(
+                context, queueManager,
+                this,
+                playbackSettingsManager,
+                settingsManager,
+                songsRepository,
+                albumsRepository,
+                albumArtistsRepository,
+                genresRepository,
+                playlistsRepository
+        );
+
+        equalizer = new Equalizer(context, settingsManager);
 
         disposables.add(SleepTimer.getInstance().getCurrentTimeObservable()
                 .subscribe(remainingTime -> {
@@ -104,7 +136,7 @@ public class PlaybackManager implements Playback.Callbacks {
         }
 
         disposables.add(queueManager.reloadQueue(() -> {
-                    load(true, playOnQueueReload, PlaybackSettingsManager.INSTANCE.getSeekPosition());
+                    load(true, playOnQueueReload, playbackSettingsManager.getSeekPosition());
                     playOnQueueReload = false;
                     return Unit.INSTANCE;
                 })
@@ -145,7 +177,7 @@ public class PlaybackManager implements Playback.Callbacks {
 
     void playAutoShuffleList() {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            disposables.add(DataManager.getInstance().getSongsRelay()
+            disposables.add(songsRepository.getSongs((Function1<? super Song, Boolean>) null)
                     .firstOrError()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -289,7 +321,7 @@ public class PlaybackManager implements Playback.Callbacks {
         } catch (NumberFormatException ignored) {
         }
 
-        Predicate<Song> predicate;
+        Function1<? super Song, Boolean> predicate;
 
         long finalId = id;
         if (finalId != -1 && (path.startsWith(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.toString()) || path.startsWith(MediaStore.Files.getContentUri("external").toString()))) {
@@ -302,7 +334,7 @@ public class PlaybackManager implements Playback.Callbacks {
             predicate = song -> song.path.contains(finalPath);
         }
 
-        disposables.add(DataManager.getInstance().getSongsObservable(predicate)
+        disposables.add(songsRepository.getSongs(predicate)
                 .firstOrError()
                 .subscribe(songs -> {
                     if (!songs.isEmpty() && queueManager.getCurrentSong() != null) {
@@ -342,7 +374,7 @@ public class PlaybackManager implements Playback.Callbacks {
 
     void saveState() {
         if (playback.isInitialized()) {
-            PlaybackSettingsManager.INSTANCE.setSeekPosition(playback.getPosition());
+            playbackSettingsManager.setSeekPosition(playback.getPosition());
         }
     }
 
@@ -465,7 +497,7 @@ public class PlaybackManager implements Playback.Callbacks {
     }
 
     public void play() {
-        if (SettingsManager.getInstance().getEqualizerEnabled()) {
+        if (settingsManager.getEqualizerEnabled()) {
             //Shutdown any existing external audio sessions
             equalizer.closeEqualizerSessions(false, getAudioSessionId());
 

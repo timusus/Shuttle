@@ -10,6 +10,7 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
+import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecityapps.recycler_adapter.model.BaseViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 
@@ -17,10 +18,12 @@ public class QueuePagerItemView extends BaseViewModel<QueuePagerItemView.ViewHol
 
     public Song song;
     private RequestManager requestManager;
+    private SettingsManager settingsManager;
 
-    public QueuePagerItemView(Song song, RequestManager requestManager) {
+    public QueuePagerItemView(Song song, RequestManager requestManager, SettingsManager settingsManager) {
         this.song = song;
         this.requestManager = requestManager;
+        this.settingsManager = settingsManager;
     }
 
     @Override
@@ -45,7 +48,7 @@ public class QueuePagerItemView extends BaseViewModel<QueuePagerItemView.ViewHol
         requestManager
                 .load(song)
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .error(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.name, true))
+                .error(PlaceholderProvider.getInstance(holder.itemView.getContext()).getPlaceHolderDrawable(song.name, true, settingsManager))
                 .into(holder.imageView);
     }
 

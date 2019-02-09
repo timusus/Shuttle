@@ -1,6 +1,7 @@
 package com.jp.wasabeef.glide.transformations.internal;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.renderscript.Allocation;
@@ -8,8 +9,6 @@ import android.renderscript.Element;
 import android.renderscript.RSRuntimeException;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
-
-import com.simplecity.amp_library.ShuttleApplication;
 
 /**
  * Copyright (C) 2015 Wasabeef
@@ -34,15 +33,15 @@ public class RSBlur {
     private RenderScript renderScript;
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    public static RSBlur getInstance() {
+    public static RSBlur getInstance(Context context) {
         if (sInstance == null) {
-            sInstance = new RSBlur();
+            sInstance = new RSBlur(context);
         }
         return sInstance;
     }
 
-    private RSBlur() {
-        renderScript = RenderScript.create(ShuttleApplication.getInstance());
+    private RSBlur(Context context) {
+        renderScript = RenderScript.create(context);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)

@@ -118,10 +118,10 @@ public class SnowfallView extends View {
         super.onDetachedFromWindow();
     }
 
-    public void letItSnow() {
+    public void letItSnow(AnalyticsManager analyticsManager) {
         if (snowflakes.isEmpty()) {
             if (lerp(0f, 1f, snowRng.nextFloat()) <= LUCKY) {
-                fetchSnowConfig();
+                fetchSnowConfig(analyticsManager);
             }
         }
     }
@@ -136,7 +136,7 @@ public class SnowfallView extends View {
         invalidate();
     }
 
-    private void fetchSnowConfig() {
+    private void fetchSnowConfig(AnalyticsManager analyticsManager) {
         if (isInEditMode()) {
             return;
         }
@@ -146,7 +146,7 @@ public class SnowfallView extends View {
                 if (remoteConfig.getBoolean(LET_IT_SNOW)) {
                     snowHandler.removeCallbacksAndMessages(null);
                     snowHandler.postDelayed(this::generateSnow, SNOWFALL_DELAY);
-                    AnalyticsManager.didSnow();
+                    analyticsManager.didSnow();
                 }
             }
         });

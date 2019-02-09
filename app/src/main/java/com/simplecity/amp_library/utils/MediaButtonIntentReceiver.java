@@ -19,7 +19,7 @@ import com.simplecity.amp_library.playback.MusicService;
 import com.simplecity.amp_library.playback.PlaybackSettingsManager;
 import com.simplecity.amp_library.playback.constants.MediaButtonCommand;
 import com.simplecity.amp_library.playback.constants.ServiceCommand;
-import com.simplecity.amp_library.ui.activities.MainActivity;
+import com.simplecity.amp_library.ui.screens.main.MainActivity;
 
 /**
  * This class is used to control headset playback. Single press: pause/resume
@@ -35,11 +35,18 @@ public class MediaButtonIntentReceiver extends WakefulBroadcastReceiver {
     private static final int LONG_PRESS_DELAY = 1000;
     private static final int DOUBLE_CLICK = 800;
 
+    private PlaybackSettingsManager playbackSettingsManager;
+
     private static PowerManager.WakeLock wakeLock = null;
+
     static int clickCounter = 0;
     static long lastClickTime = 0;
     static boolean down = false;
     static boolean launched = false;
+
+    public MediaButtonIntentReceiver(PlaybackSettingsManager playbackSettingsManager) {
+        this.playbackSettingsManager = playbackSettingsManager;
+    }
 
     /**
      * Play a beep sound.
@@ -67,12 +74,21 @@ public class MediaButtonIntentReceiver extends WakefulBroadcastReceiver {
         }
     }
 
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        MediaButtonReceiverHelper.onReceive(context, intent, playbackSettingsManager);
+        if (isOrderedBroadcast()) {
+            abortBroadcast();
+        }
+    }
+
     public static class MediaButtonReceiverHelper {
-        public static void onReceive(Context context, Intent intent) {
+
+        public static void onReceive(Context context, Intent intent, PlaybackSettingsManager playbackSettingsManager) {
 
             final String intentAction = intent.getAction();
 
-            if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intentAction) && PlaybackSettingsManager.INSTANCE.getPauseOnHeadsetDisconnect()) {
+            if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intentAction) && playbackSettingsManager.getPauseOnHeadsetDisconnect()) {
                 startService(context, MediaButtonCommand.PAUSE);
             } else if (Intent.ACTION_MEDIA_BUTTON.equals(intentAction)) {
                 final KeyEvent event = intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
@@ -205,14 +221,6 @@ public class MediaButtonIntentReceiver extends WakefulBroadcastReceiver {
         }
     };
 
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        MediaButtonReceiverHelper.onReceive(context, intent);
-        if (isOrderedBroadcast()) {
-            abortBroadcast();
-        }
-    }
-
     static void startService(final Context context, final String command) {
 
         // If we're attempting to pause, and the service isn't already running, return early. This prevents an issue where
@@ -234,10 +242,8 @@ public class MediaButtonIntentReceiver extends WakefulBroadcastReceiver {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            AnalyticsManager.dropBreadcrumb(TAG, "Service started. (foreground) Command: " + command);
             context.startForegroundService(intent);
         } else {
-            AnalyticsManager.dropBreadcrumb(TAG, "Service started. (wakeful) Command: " + command);
             startWakefulService(context, intent);
         }
     }

@@ -6,9 +6,10 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import com.simplecity.amp_library.BuildConfig;
-import com.simplecity.amp_library.ShuttleApplication;
 
 public class PlayCountTable extends SQLiteOpenHelper {
+
+    private Context applicationContext;
 
     private static final String DATABASE_NAME = "play_count.db";
     private static final int DATABASE_VERSION = 2;
@@ -33,6 +34,8 @@ public class PlayCountTable extends SQLiteOpenHelper {
 
     public PlayCountTable(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+
+        this.applicationContext = context.getApplicationContext();
     }
 
     @Override
@@ -69,7 +72,7 @@ public class PlayCountTable extends SQLiteOpenHelper {
             //Add rows from count info table
             try {
                 String COUNT_INFO_DATABASE = "count_info.db";
-                String PATH_COUNT_INFO = ShuttleApplication.getInstance().getDatabasePath(COUNT_INFO_DATABASE).toString();
+                String PATH_COUNT_INFO = applicationContext.getDatabasePath(COUNT_INFO_DATABASE).toString();
                 String TABLE_COUNT_INFO = "COUNT_INFO";
                 String COUNT_INFO_COLUMN_ID = "_id";
                 String COUNT_INFO_COLUMN_TIME_PLAYED = "time_played";

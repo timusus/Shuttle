@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.glide.fetcher;
 
+import android.content.Context;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.data.DataFetcher;
 import com.simplecity.amp_library.ShuttleApplication;
@@ -14,14 +15,20 @@ public class MultiFetcher implements DataFetcher<InputStream> {
 
     private static final String TAG = "MultiFetcher";
 
+    private Context applicationContext;
+
     private DataFetcher<InputStream> dataFetcher;
 
     private ArtworkProvider artworkProvider;
 
+    private SettingsManager settingsManager;
+
     private boolean allowOfflineDownload = false;
 
-    public MultiFetcher(ArtworkProvider artworkProvider, boolean allowOfflineDownload) {
+    public MultiFetcher(Context context, ArtworkProvider artworkProvider, SettingsManager settingsManager, boolean allowOfflineDownload) {
+        applicationContext = context;
         this.artworkProvider = artworkProvider;
+        this.settingsManager = settingsManager;
         this.allowOfflineDownload = allowOfflineDownload;
     }
 
@@ -44,11 +51,11 @@ public class MultiFetcher implements DataFetcher<InputStream> {
         InputStream inputStream = null;
 
         //Custom/user selected artwork. Loads from a specific source.
-        UserSelectedArtwork userSelectedArtwork = ShuttleApplication.getInstance().userSelectedArtwork.get(artworkProvider.getArtworkKey());
+        UserSelectedArtwork userSelectedArtwork = ((ShuttleApplication) applicationContext).userSelectedArtwork.get(artworkProvider.getArtworkKey());
         if (userSelectedArtwork != null) {
             switch (userSelectedArtwork.type) {
                 case ArtworkProvider.Type.MEDIA_STORE:
-                    dataFetcher = new MediaStoreFetcher(artworkProvider);
+                    dataFetcher = new MediaStoreFetcher(applicationContext, artworkProvider);
                     break;
                 case ArtworkProvider.Type.FOLDER:
                     dataFetcher = new FolderFetcher(artworkProvider, new File(userSelectedArtwork.path));
@@ -69,31 +76,31 @@ public class MultiFetcher implements DataFetcher<InputStream> {
         //No user selected artwork. Check local then remote sources, according to user's preferences.
 
         //Check the MediaStore
-        if (inputStream == null && !SettingsManager.getInstance().ignoreMediaStoreArtwork()) {
-            dataFetcher = new MediaStoreFetcher(artworkProvider);
+        if (inputStream == null && !settingsManager.ignoreMediaStoreArtwork()) {
+            dataFetcher = new MediaStoreFetcher(applicationContext, artworkProvider);
             inputStream = loadData(dataFetcher, priority);
         }
 
         if (inputStream == null) {
-            if (SettingsManager.getInstance().preferEmbeddedArtwork()) {
+            if (settingsManager.preferEmbeddedArtwork()) {
                 //Check tags
-                if (!SettingsManager.getInstance().ignoreEmbeddedArtwork()) {
+                if (!settingsManager.ignoreEmbeddedArtwork()) {
                     dataFetcher = new TagFetcher(artworkProvider);
                     inputStream = loadData(dataFetcher, priority);
                 }
                 //Check folders
-                if (inputStream == null && !SettingsManager.getInstance().ignoreFolderArtwork()) {
+                if (inputStream == null && !settingsManager.ignoreFolderArtwork()) {
                     dataFetcher = new FolderFetcher(artworkProvider, null);
                     inputStream = loadData(dataFetcher, priority);
                 }
             } else {
                 //Check folders
-                if (!SettingsManager.getInstance().ignoreFolderArtwork()) {
+                if (!settingsManager.ignoreFolderArtwork()) {
                     dataFetcher = new FolderFetcher(artworkProvider, null);
                     inputStream = loadData(dataFetcher, priority);
                 }
                 //Check tags
-                if (inputStream == null && !SettingsManager.getInstance().ignoreEmbeddedArtwork()) {
+                if (inputStream == null && !settingsManager.ignoreEmbeddedArtwork()) {
                     dataFetcher = new TagFetcher(artworkProvider);
                     inputStream = loadData(dataFetcher, priority);
                 }
@@ -102,11 +109,11 @@ public class MultiFetcher implements DataFetcher<InputStream> {
 
         if (inputStream == null) {
             if (allowOfflineDownload
-                    || (SettingsManager.getInstance().canDownloadArtworkAutomatically()
-                    && ShuttleUtils.isOnline(true))) {
+                    || (settingsManager.canDownloadArtworkAutomatically()
+                    && ShuttleUtils.isOnline(applicationContext, true))) {
 
                 //Last FM
-                if (SettingsManager.getInstance().preferLastFM()) {
+                if (settingsManager.preferLastFM()) {
                     dataFetcher = new LastFmFetcher(artworkProvider);
                     inputStream = loadData(dataFetcher, priority);
                 } else {
@@ -132,9 +139,9 @@ public class MultiFetcher implements DataFetcher<InputStream> {
         }
     }
 
-    private String getCustomArtworkSuffix() {
-        if (ShuttleApplication.getInstance().userSelectedArtwork.containsKey(artworkProvider.getArtworkKey())) {
-            UserSelectedArtwork userSelectedArtwork = ShuttleApplication.getInstance().userSelectedArtwork.get(artworkProvider.getArtworkKey());
+    private String getCustomArtworkSuffix(Context context) {
+        if (((ShuttleApplication) context.getApplicationContext()).userSelectedArtwork.containsKey(artworkProvider.getArtworkKey())) {
+            UserSelectedArtwork userSelectedArtwork = ((ShuttleApplication) context.getApplicationContext()).userSelectedArtwork.get(artworkProvider.getArtworkKey());
             return "_" + userSelectedArtwork.type + "_" + (userSelectedArtwork.path == null ? "" : userSelectedArtwork.path.hashCode());
         }
         return "";
@@ -142,6 +149,6 @@ public class MultiFetcher implements DataFetcher<InputStream> {
 
     @Override
     public String getId() {
-        return artworkProvider.getArtworkKey() + getCustomArtworkSuffix();
+        return artworkProvider.getArtworkKey() + getCustomArtworkSuffix(applicationContext);
     }
 }

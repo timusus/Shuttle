@@ -5,13 +5,13 @@ import android.content.SharedPreferences;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.ui.fragments.AlbumArtistFragment;
-import com.simplecity.amp_library.ui.fragments.AlbumFragment;
-import com.simplecity.amp_library.ui.fragments.FolderFragment;
-import com.simplecity.amp_library.ui.fragments.GenreFragment;
-import com.simplecity.amp_library.ui.fragments.PlaylistFragment;
-import com.simplecity.amp_library.ui.fragments.SongFragment;
-import com.simplecity.amp_library.ui.fragments.SuggestedFragment;
+import com.simplecity.amp_library.ui.screens.album.list.AlbumListFragment;
+import com.simplecity.amp_library.ui.screens.artist.list.AlbumArtistListFragment;
+import com.simplecity.amp_library.ui.screens.folders.FolderFragment;
+import com.simplecity.amp_library.ui.screens.genre.list.GenreListFragment;
+import com.simplecity.amp_library.ui.screens.playlist.list.PlaylistListFragment;
+import com.simplecity.amp_library.ui.screens.songs.list.SongListFragment;
+import com.simplecity.amp_library.ui.screens.suggested.SuggestedFragment;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -133,19 +133,19 @@ public class CategoryItem {
     public Fragment getFragment(Context context) {
         switch (type) {
             case Type.GENRES:
-                return GenreFragment.newInstance(context.getString(getTitleResId()));
+                return GenreListFragment.Companion.newInstance(context.getString(getTitleResId()));
             case Type.SUGGESTED:
-                return SuggestedFragment.newInstance(context.getString(getTitleResId()));
+                return SuggestedFragment.Companion.newInstance(context.getString(getTitleResId()));
             case Type.ARTISTS:
-                return AlbumArtistFragment.newInstance(context.getString(getTitleResId()));
+                return AlbumArtistListFragment.Companion.newInstance(context.getString(getTitleResId()));
             case Type.ALBUMS:
-                return AlbumFragment.newInstance(context.getString(getTitleResId()));
+                return AlbumListFragment.Companion.newInstance(context.getString(getTitleResId()));
             case Type.SONGS:
-                return SongFragment.newInstance(context.getString(getTitleResId()));
+                return SongListFragment.Companion.newInstance(context.getString(getTitleResId()));
             case Type.FOLDERS:
                 return FolderFragment.newInstance(context.getString(getTitleResId()), true);
             case Type.PLAYLISTS:
-                return PlaylistFragment.newInstance(context.getString(getTitleResId()));
+                return PlaylistListFragment.Companion.newInstance(context.getString(getTitleResId()));
         }
         return null;
     }

@@ -29,6 +29,7 @@ import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.constants.Config;
+import com.simplecity.amp_library.data.Repository;
 import com.simplecity.amp_library.model.BaseFileObject;
 import com.simplecity.amp_library.model.Query;
 import com.simplecity.amp_library.model.Song;
@@ -83,95 +84,14 @@ public final class ShuttleUtils {
     }
 
     /**
-     * Method setRingtone.
-     *
-     * @param context context
-     * @param song Song
-     */
-    public static void setRingtone(final Context context, final Song song) {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!Settings.System.canWrite(context)) {
-
-                new AlertDialog.Builder(context)
-                        .setTitle(R.string.dialog_title_set_ringtone)
-                        .setMessage(R.string.dialog_message_set_ringtone)
-                        .setPositiveButton(R.string.button_ok, (dialog, which) -> {
-                            Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
-                            intent.setData(Uri.parse("package:" + ShuttleApplication.getInstance().getPackageName()));
-                            context.startActivity(intent);
-                        }).setNegativeButton(R.string.cancel, null)
-                        .show();
-                return;
-            }
-        }
-
-        Observable.fromCallable(() -> {
-
-                    boolean success = false;
-
-                    final ContentResolver resolver = context.getContentResolver();
-                    // Set the flag in the database to mark this as a ringtone
-                    final Uri ringUri = ContentUris.withAppendedId(
-                            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, song.id);
-                    try {
-                        final ContentValues values = new ContentValues(2);
-                        values.put(MediaStore.Audio.AudioColumns.IS_RINGTONE, "1");
-                        values.put(MediaStore.Audio.AudioColumns.IS_ALARM, "1");
-                        if (ringUri != null) {
-                            resolver.update(ringUri, values, null, null);
-                        }
-                    } catch (final UnsupportedOperationException ex) {
-                        // most likely the card just got unmounted
-                        Log.e(TAG, "couldn't set ringtone flag for song " + song);
-                        return false;
-                    }
-
-                    Query query = new Query.Builder()
-                            .uri(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)
-                            .projection(new String[] {
-                                    BaseColumns._ID,
-                                    MediaStore.MediaColumns.DATA, MediaStore.MediaColumns.TITLE
-                            })
-                            .selection(BaseColumns._ID + "=" + song.id)
-                            .build();
-
-                    final Cursor cursor = SqlUtils.createQuery(context, query);
-                    if (cursor != null) {
-                        try {
-                            if (cursor.getCount() == 1) {
-                                // Set the system setting to make this the current ringtone
-                                cursor.moveToFirst();
-                                if (ringUri != null) {
-                                    Settings.System.putString(resolver, Settings.System.RINGTONE, ringUri.toString());
-                                }
-                                success = true;
-                            }
-                        } finally {
-                            cursor.close();
-                        }
-                    }
-                    return success;
-                }
-        )
-                .map(success -> success ? context.getString(R.string.ringtone_set, song.name) : context.getString(R.string.ringtone_set_failed))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        message -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show(),
-                        error -> LogUtils.logException(TAG, "Error setting ringtone", error)
-                );
-    }
-
-    /**
      * Check whether we have an internet connection
      *
      * @param careAboutWifiOnly whether we care if the preference 'download via wifi only' is checked
      * @return true if we have a connection, false otherwise
      */
-    public static boolean isOnline(boolean careAboutWifiOnly) {
+    public static boolean isOnline(Context context, boolean careAboutWifiOnly) {
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ShuttleApplication.getInstance());
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         //Check if we are restricted to download over wifi only
         boolean wifiOnly = prefs.getBoolean("pref_download_wifi_only", true);
@@ -181,7 +101,7 @@ public final class ShuttleUtils {
             wifiOnly = false;
         }
 
-        final ConnectivityManager cm = (ConnectivityManager) ShuttleApplication.getInstance()
+        final ConnectivityManager cm = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
 
         //Check the state of the wifi network
@@ -195,18 +115,18 @@ public final class ShuttleUtils {
         return netInfo != null && netInfo.isConnectedOrConnecting() && !wifiOnly;
     }
 
-    public static boolean isUpgraded() {
+    public static boolean isUpgraded(ShuttleApplication application, SettingsManager settingsManager) {
 
-        if (ShuttleApplication.getInstance().getIsUpgraded()) {
+        if (application.getIsUpgraded()) {
             return true;
         }
 
-        if (SettingsManager.getInstance().getIsLegacyUpgraded()) {
+        if (settingsManager.getIsLegacyUpgraded()) {
             return true;
         }
 
         try {
-            return ShuttleApplication.getInstance().getPackageName().equals(Config.PACKAGE_NAME_PRO);
+            return application.getPackageName().equals(Config.PACKAGE_NAME_PRO);
         } catch (Exception ignored) {
         }
 
@@ -235,19 +155,19 @@ public final class ShuttleUtils {
         return Build.VERSION.SDK_INT >= 26;
     }
 
-    public static boolean isLandscape() {
-        final int orientation = ShuttleApplication.getInstance().getResources().getConfiguration().orientation;
+    public static boolean isLandscape(Context context) {
+        final int orientation = context.getResources().getConfiguration().orientation;
         return orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
-    public static boolean isTablet() {
-        return ShuttleApplication.getInstance().getResources().getBoolean(R.bool.isTablet);
+    public static boolean isTablet(Context context) {
+        return context.getResources().getBoolean(R.bool.isTablet);
     }
 
-    public static Single<List<Song>> getSongsForFileObjects(List<BaseFileObject> fileObjects) {
+    public static Single<List<Song>> getSongsForFileObjects(Repository.SongsRepository songsRepository, List<BaseFileObject> fileObjects) {
 
         List<Single<List<Song>>> observables = Stream.of(fileObjects)
-                .map(fileObject -> FileHelper.getSongList(new File(fileObject.path), true, false))
+                .map(fileObject -> FileHelper.getSongList(songsRepository, new File(fileObject.path), true, false))
                 .toList();
 
         return Single.concat(observables)
@@ -279,9 +199,9 @@ public final class ShuttleUtils {
         }
     }
 
-    public static String getIpAddr() {
+    public static String getIpAddr(Context context) {
         @SuppressLint("WifiManagerLeak")
-        int i = ((WifiManager) ShuttleApplication.getInstance().getSystemService(Context.WIFI_SERVICE)).getConnectionInfo().getIpAddress();
+        int i = ((WifiManager) context.getSystemService(Context.WIFI_SERVICE)).getConnectionInfo().getIpAddress();
         Object[] arrayOfObject = new Object[4];
         arrayOfObject[0] = i & 0xFF;
         arrayOfObject[1] = 0xFF & i >> 8;

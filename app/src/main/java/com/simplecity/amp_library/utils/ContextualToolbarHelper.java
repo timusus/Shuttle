@@ -1,9 +1,9 @@
 package com.simplecity.amp_library.utils;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.ui.modelviews.SelectableViewModel;
 import com.simplecity.amp_library.ui.views.ContextualToolbar;
 import java.util.ArrayList;
@@ -19,6 +19,8 @@ public class ContextualToolbarHelper<T> {
         void notifyDatasetChanged();
     }
 
+    private Context applicationContext;
+
     private final Map<SelectableViewModel, T> map = new LinkedHashMap<>(0);
 
     @NonNull
@@ -29,7 +31,8 @@ public class ContextualToolbarHelper<T> {
     private boolean isActive;
     private boolean canChangeTitle = true;
 
-    public ContextualToolbarHelper(@NonNull ContextualToolbar contextualToolbar, @NonNull Callback callback) {
+    public ContextualToolbarHelper(Context context, @NonNull ContextualToolbar contextualToolbar, @NonNull Callback callback) {
+        this.applicationContext = context.getApplicationContext();
         this.contextualToolbar = contextualToolbar;
         this.callback = callback;
     }
@@ -59,7 +62,7 @@ public class ContextualToolbarHelper<T> {
 
     private void updateCount() {
         if (canChangeTitle) {
-            contextualToolbar.setTitle(ShuttleApplication.getInstance().getString(R.string.action_mode_selection_count, map.size()));
+            contextualToolbar.setTitle(applicationContext.getString(R.string.action_mode_selection_count, map.size()));
         }
     }
 

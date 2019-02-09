@@ -1,15 +1,17 @@
 package com.simplecity.amp_library.utils;
 
+import android.content.Context;
 import android.graphics.Color;
+import com.simplecity.amp_library.ShuttleApplication;
 
 public class ColorPalette {
 
-    public static int[] getPrimaryColors() {
-        return ShuttleUtils.isUpgraded() ? PRIMARY_COLORS : PRIMARY_COLORS_FREE;
+    public static int[] getPrimaryColors(Context context, SettingsManager settingsManager) {
+        return ShuttleUtils.isUpgraded((ShuttleApplication) context.getApplicationContext(), settingsManager) ? PRIMARY_COLORS : PRIMARY_COLORS_FREE;
     }
 
-    public static int[][] getPrimaryColorsSub() {
-        return ShuttleUtils.isUpgraded() ? PRIMARY_COLORS_SUB : PRIMARY_COLORS_SUB_FREE;
+    public static int[][] getPrimaryColorsSub(Context context, SettingsManager settingsManager) {
+        return ShuttleUtils.isUpgraded((ShuttleApplication) context.getApplicationContext(), settingsManager) ? PRIMARY_COLORS_SUB : PRIMARY_COLORS_SUB_FREE;
     }
 
     private final static int[] PRIMARY_COLORS = new int[] {

@@ -18,8 +18,8 @@ object Dependencies {
         const val streams = "1.2.1"
         const val butterknife = "8.8.1"
         const val butterknifeAnnotationProcessor = "8.8.1"
-        const val dagger = "2.19"
-        const val daggerAnnotationProcessor = "2.19"
+        const val dagger = "2.18"
+        const val daggerAssistedInject = "0.3.1"
         const val expandableRecyclerView = "3.0.0-RC1"
         const val billing = "1.2"
     }
@@ -27,6 +27,7 @@ object Dependencies {
     // Kotlin
 
     const val kotlin = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Plugins.Versions.kotlin}"
+    const val ktx = "androidx.core:core-ktx:${Plugins.Versions.ktx}"
 
     // NanoHttp - https://github.com/NanoHttpd/nanohttpd (Various)
     const val nanoHttp = "org.nanohttpd:nanohttpd-webserver:${Versions.nanoHttp}"
@@ -62,7 +63,13 @@ object Dependencies {
 
     // Dagger
     const val dagger = "com.google.dagger:dagger:${Versions.dagger}"
-    const val daggerAnnotationProcessor = "com.google.dagger:dagger-compiler:${Versions.daggerAnnotationProcessor}"
+    const val daggerCompiler = "com.google.dagger:dagger-compiler:${Versions.dagger}"
+    const val daggerProcessor = "com.google.dagger:dagger-android-processor:${Versions.dagger}"
+    const val daggerSupport = "com.google.dagger:dagger-android-support:${Versions.dagger}"
+
+    // Dagger Assisted Inject
+    const val daggerAssistedInject = "com.squareup.inject:assisted-inject-annotations-dagger2:${Versions.daggerAssistedInject}"
+    const val daggerAssistedInjectProcessor = "com.squareup.inject:assisted-inject-processor-dagger2:${Versions.daggerAssistedInject}"
 
     // Expandable Recycler View - https://github.com/thoughtbot/expandable-recycler-view
     const val expandableRecyclerView = "com.bignerdranch.android:expandablerecyclerview:${Versions.expandableRecyclerView}"
@@ -70,12 +77,12 @@ object Dependencies {
     // In app purchases
     const val billing = "com.android.billingclient:billing:${Versions.billing}"
 
-
     object Plugins {
 
         object Versions {
             const val androidGradlePlugin = "3.3.1"
             const val kotlin = "1.3.0"
+            const val ktx = "1.0.0"
             const val dexcountGradlePlugin = "0.8.4"
             const val fabricGradlePlugin = "1.+"
             const val playPublisher = "1.2.2"
@@ -139,7 +146,6 @@ object Dependencies {
         const val sqlBrite = "com.squareup.sqlbrite2:sqlbrite:${Versions.sqlBrite}"
     }
 
-
     object Rx {
 
         object Versions {
@@ -183,7 +189,6 @@ object Dependencies {
         const val rxKotlin = "io.reactivex.rxjava2:rxkotlin:${Versions.rxKotlin}"
     }
 
-
     object Testing {
 
         object Versions {
@@ -220,7 +225,6 @@ object Dependencies {
         // AssertJ - http://joel-costigliola.github.io/assertj/
         const val assertj = "org.assertj:assertj-core:${Versions.assertj}"
     }
-
 
     object Projects {
 

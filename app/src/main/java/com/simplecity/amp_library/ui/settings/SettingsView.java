@@ -10,13 +10,13 @@ public interface SettingsView extends PurchaseView {
 
     // Support
 
-    void showChangelog(MaterialDialog dialog);
+    void showChangelog();
 
     void showRestorePurchasesMessage(@StringRes int messageResId);
 
     // Display
 
-    void showTabChooserDialog(MaterialDialog dialog);
+    void showTabChooserDialog();
 
     void showDefaultPageDialog(MaterialDialog dialog);
 
@@ -41,7 +41,7 @@ public interface SettingsView extends PurchaseView {
 
     // Blacklist/Whitelist
 
-    void showBlacklistDialog(MaterialDialog dialog);
+    void showBlacklistDialog();
 
-    void showWhitelistDialog(MaterialDialog dialog);
+    void showWhitelistDialog();
 }

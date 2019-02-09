@@ -147,14 +147,14 @@ public class Song implements
         setArtworkKey();
     }
 
-    public Song(){
+    public Song() {
 
     }
 
-    public Single<Genre> getGenre() {
+    public Single<Genre> getGenre(Context context) {
         Query query = Genre.getQuery();
         query.uri = MediaStore.Audio.Genres.getContentUriForAudioId("external", (int) id);
-        return SqlBriteUtils.createSingle(ShuttleApplication.getInstance(), Genre::new, query, null);
+        return SqlBriteUtils.createSingle(context, Genre::new, query, null);
     }
 
     public int getPlayCount(Context context) {
@@ -220,9 +220,9 @@ public class Song implements
         }
     }
 
-    public String getDurationLabel() {
+    public String getDurationLabel(Context context) {
         if (durationLabel == null) {
-            durationLabel = StringUtils.makeTimeString(ShuttleApplication.getInstance(), duration / 1000);
+            durationLabel = StringUtils.makeTimeString(context, duration / 1000);
         }
         return durationLabel;
     }
@@ -234,21 +234,21 @@ public class Song implements
         return tagInfo;
     }
 
-    public String getBitrateLabel() {
+    public String getBitrateLabel(Context context) {
         if (bitrateLabel == null) {
-            bitrateLabel = getTagInfo().bitrate + ShuttleApplication.getInstance().getString(R.string.song_info_bitrate_suffix);
+            bitrateLabel = getTagInfo().bitrate + context.getString(R.string.song_info_bitrate_suffix);
         }
         return bitrateLabel;
     }
 
-    public String getSampleRateLabel() {
+    public String getSampleRateLabel(Context context) {
         if (sampleRateLabel == null) {
             int sampleRate = getTagInfo().sampleRate;
             if (sampleRate == -1) {
                 sampleRateLabel = "Unknown";
                 return sampleRateLabel;
             }
-            sampleRateLabel = ((float) sampleRate) / 1000 + ShuttleApplication.getInstance().getString(R.string.song_info_sample_rate_suffix);
+            sampleRateLabel = ((float) sampleRate) / 1000 + context.getString(R.string.song_info_sample_rate_suffix);
         }
         return sampleRateLabel;
     }
@@ -368,8 +368,8 @@ public class Song implements
     }
 
     @Override
-    public InputStream getMediaStoreArtwork() {
-        return ArtworkUtils.getMediaStoreArtwork(this);
+    public InputStream getMediaStoreArtwork(Context context) {
+        return ArtworkUtils.getMediaStoreArtwork(context, this);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.simplecity.amp_library.model;
 
-import com.simplecity.amp_library.ShuttleApplication;
+import android.content.Context;
 import com.simplecity.amp_library.interfaces.FileType;
 import com.simplecity.amp_library.utils.FileHelper;
 import com.simplecity.amp_library.utils.StringUtils;
@@ -17,11 +17,11 @@ public class FileObject extends BaseFileObject {
         this.fileType = FileType.FILE;
     }
 
-    public String getTimeString() {
+    public String getTimeString(Context context) {
         if (duration == 0) {
-            duration = FileHelper.getDuration(ShuttleApplication.getInstance(), this);
+            duration = FileHelper.getDuration(context, this);
         }
-        return StringUtils.makeTimeString(ShuttleApplication.getInstance(), duration / 1000);
+        return StringUtils.makeTimeString(context, duration / 1000);
     }
 
     @Override

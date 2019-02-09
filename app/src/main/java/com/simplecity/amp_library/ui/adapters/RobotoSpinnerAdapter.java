@@ -15,7 +15,7 @@ public class RobotoSpinnerAdapter<T> extends ArrayAdapter<T> {
 
     public RobotoSpinnerAdapter(Context context, int textViewResourceId, T[] objects) {
         super(context, textViewResourceId, 0, Arrays.asList(objects));
-        mTypeface = TypefaceManager.getInstance().getTypeface(TypefaceManager.SANS_SERIF_LIGHT);
+        mTypeface = TypefaceManager.getInstance().getTypeface(context, TypefaceManager.SANS_SERIF_LIGHT);
     }
 
     @Override

@@ -6,7 +6,10 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.media.AudioManager
 
-class HeadsetManager(private val playbackManager: PlaybackManager) {
+class HeadsetManager(
+    private val playbackManager: PlaybackManager,
+    private val playbackSettingsManager: PlaybackSettingsManager
+) {
 
     private var headsetReceiver: BroadcastReceiver? = null
 
@@ -25,11 +28,11 @@ class HeadsetManager(private val playbackManager: PlaybackManager) {
 
                 if (intent.hasExtra("state")) {
                     if (intent.getIntExtra("state", 0) == 0) {
-                        if (PlaybackSettingsManager.pauseOnHeadsetDisconnect) {
+                        if (playbackSettingsManager.pauseOnHeadsetDisconnect) {
                             playbackManager.pause(false)
                         }
                     } else if (intent.getIntExtra("state", 0) == 1) {
-                        if (PlaybackSettingsManager.playOnHeadsetConnect) {
+                        if (playbackSettingsManager.playOnHeadsetConnect) {
                             playbackManager.play()
                         }
                     }

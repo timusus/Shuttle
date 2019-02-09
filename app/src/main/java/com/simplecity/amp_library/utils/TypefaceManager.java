@@ -1,8 +1,8 @@
 package com.simplecity.amp_library.utils;
 
+import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.util.ArrayMap;
-import com.simplecity.amp_library.ShuttleApplication;
 import java.util.Map;
 
 public class TypefaceManager {
@@ -34,7 +34,7 @@ public class TypefaceManager {
      * @return The {@link android.graphics.Typeface} that matches
      * <code>typeface</code>
      */
-    public Typeface getTypeface(String typeface) {
+    public Typeface getTypeface(Context context, String typeface) {
         Typeface result = mCache.get(typeface);
         if (result == null) {
 
@@ -49,7 +49,7 @@ public class TypefaceManager {
                     result = Typeface.create("sans-serif-light", Typeface.NORMAL);
                     break;
                 default:
-                    result = Typeface.createFromAsset(ShuttleApplication.getInstance().getAssets(), "fonts/" + typeface);
+                    result = Typeface.createFromAsset(context.getAssets(), "fonts/" + typeface);
                     break;
             }
             mCache.put(typeface, result);

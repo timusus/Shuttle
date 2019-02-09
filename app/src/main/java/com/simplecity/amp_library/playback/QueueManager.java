@@ -3,13 +3,13 @@ package com.simplecity.amp_library.playback;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.annimon.stream.Stream;
+import com.simplecity.amp_library.data.Repository;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.rx.UnsafeConsumer;
-import com.simplecity.amp_library.ui.queue.QueueItem;
-import com.simplecity.amp_library.ui.queue.QueueItemKt;
-import com.simplecity.amp_library.utils.DataManager;
+import com.simplecity.amp_library.ui.screens.queue.QueueItem;
+import com.simplecity.amp_library.ui.screens.queue.QueueItemKt;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -66,8 +66,22 @@ public class QueueManager {
 
     private MusicService.Callbacks musicServiceCallbacks;
 
-    public QueueManager(MusicService.Callbacks musicServiceCallbacks) {
+    private Repository.SongsRepository songsRepository;
+
+    private PlaybackSettingsManager playbackSettingsManager;
+
+    private SettingsManager settingsManager;
+
+    public QueueManager(
+            MusicService.Callbacks musicServiceCallbacks,
+            Repository.SongsRepository songsRepository,
+            PlaybackSettingsManager playbackSettingsManager,
+            SettingsManager settingsManager
+    ) {
         this.musicServiceCallbacks = musicServiceCallbacks;
+        this.songsRepository = songsRepository;
+        this.playbackSettingsManager = playbackSettingsManager;
+        this.settingsManager = settingsManager;
     }
 
     private void notifyQueueChanged() {
@@ -170,7 +184,7 @@ public class QueueManager {
         queuePosition = -1;
         nextPlayPos = -1;
 
-        if (!SettingsManager.getInstance().getRememberShuffle()) {
+        if (!settingsManager.getRememberShuffle()) {
             setShuffleMode(ShuffleMode.OFF);
         }
 
@@ -365,34 +379,34 @@ public class QueueManager {
         }
 
         if (saveQueue) {
-            PlaybackSettingsManager.INSTANCE.setQueueList(serializePlaylist(playlist));
+            playbackSettingsManager.setQueueList(serializePlaylist(playlist));
             if (shuffleMode == ShuffleMode.ON) {
-                PlaybackSettingsManager.INSTANCE.setShuffleList(serializePlaylist(shuffleList));
+                playbackSettingsManager.setShuffleList(serializePlaylist(shuffleList));
             }
         }
 
-        PlaybackSettingsManager.INSTANCE.setQueuePosition(queuePosition);
-        PlaybackSettingsManager.INSTANCE.setRepeatMode(repeatMode);
-        PlaybackSettingsManager.INSTANCE.setShuffleMode(shuffleMode);
+        playbackSettingsManager.setQueuePosition(queuePosition);
+        playbackSettingsManager.setRepeatMode(repeatMode);
+        playbackSettingsManager.setShuffleMode(shuffleMode);
     }
 
     Disposable reloadQueue(@NonNull Function0<Unit> onComplete) {
         queueReloading = true;
 
-        shuffleMode = PlaybackSettingsManager.INSTANCE.getShuffleMode();
-        repeatMode = PlaybackSettingsManager.INSTANCE.getRepeatMode();
+        shuffleMode = playbackSettingsManager.getShuffleMode();
+        repeatMode = playbackSettingsManager.getRepeatMode();
 
-        return DataManager.getInstance().getAllSongsRelay()
+        return songsRepository.getAllSongs()
                 .first(Collections.emptyList())
                 .map(QueueItemKt::toQueueItems)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((UnsafeConsumer<List<QueueItem>>) queueItems -> {
-                    String queueList = PlaybackSettingsManager.INSTANCE.getQueueList();
+                    String queueList = playbackSettingsManager.getQueueList();
                     if (queueList != null) {
                         playlist = deserializePlaylist(queueList, queueItems);
 
-                        final int queuePosition = PlaybackSettingsManager.INSTANCE.getQueuePosition();
+                        final int queuePosition = playbackSettingsManager.getQueuePosition();
 
                         if (queuePosition < 0 || queuePosition >= playlist.size()) {
                             // The saved playlist is bogus, discard it
@@ -411,7 +425,7 @@ public class QueueManager {
                             shuffleMode = ShuffleMode.OFF;
                         }
                         if (shuffleMode == ShuffleMode.ON) {
-                            queueList = PlaybackSettingsManager.INSTANCE.getShuffleList();
+                            queueList = playbackSettingsManager.getShuffleList();
                             if (queueList != null) {
                                 shuffleList = deserializePlaylist(queueList, queueItems);
 

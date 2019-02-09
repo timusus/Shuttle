@@ -45,7 +45,11 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder> imple
 
     private RequestManager requestManager;
 
+    private SortManager sortManager;
+
     private PrefixHighlighter prefixHighlighter;
+
+    private SettingsManager settingsManager;
 
     private char[] prefix;
 
@@ -64,9 +68,11 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder> imple
     @Nullable
     private ClickListener listener;
 
-    public SongView(Song song, RequestManager requestManager) {
+    public SongView(Song song, RequestManager requestManager, SortManager sortManager, SettingsManager settingsManager) {
         this.song = song;
         this.requestManager = requestManager;
+        this.sortManager = sortManager;
+        this.settingsManager = settingsManager;
     }
 
     public void setClickListener(@Nullable ClickListener listener) {
@@ -166,14 +172,14 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder> imple
             holder.lineTwo.setVisibility(View.GONE);
         }
 
-        holder.lineThree.setText(song.getDurationLabel());
+        holder.lineThree.setText(song.getDurationLabel(holder.itemView.getContext()));
 
         if (holder.artwork != null) {
-            if (showAlbumArt && SettingsManager.getInstance().showArtworkInQueue()) {
+            if (showAlbumArt && settingsManager.showArtworkInQueue()) {
                 holder.artwork.setVisibility(View.VISIBLE);
                 requestManager.load(song)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.albumName, false))
+                        .placeholder(PlaceholderProvider.getInstance(holder.itemView.getContext()).getPlaceHolderDrawable(song.albumName, false, settingsManager))
                         .into(holder.artwork);
             } else {
                 holder.artwork.setVisibility(View.GONE);
@@ -216,7 +222,7 @@ public class SongView extends BaseSelectableViewModel<SongView.ViewHolder> imple
 
     @Override
     public String getSectionName() {
-        int sortOrder = SortManager.getInstance().getSongsSortOrder();
+        int sortOrder = sortManager.getSongsSortOrder();
 
         if (sortOrder != SortManager.SongSort.DATE
                 && sortOrder != SortManager.SongSort.DURATION

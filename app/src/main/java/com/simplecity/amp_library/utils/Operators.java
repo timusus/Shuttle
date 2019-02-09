@@ -82,9 +82,9 @@ public class Operators {
         return new ArrayList<>(albumArtistMap.values());
     }
 
-    public static List<Song> albumShuffleSongs(List<Song> songs) {
+    public static List<Song> albumShuffleSongs(List<Song> songs, SortManager sortManager) {
 
-        SortManager.getInstance().sortSongs(songs, SortManager.SongSort.ALBUM_NAME);
+        sortManager.sortSongs(songs, SortManager.SongSort.ALBUM_NAME);
 
         List<Map.Entry<Long, List<Song>>> albumSongMap = Stream.of(songs)
                 .groupBy(song -> song.albumId)

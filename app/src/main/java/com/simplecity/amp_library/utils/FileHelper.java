@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 import com.annimon.stream.Stream;
+import com.simplecity.amp_library.data.Repository;
 import com.simplecity.amp_library.model.BaseFileObject;
 import com.simplecity.amp_library.model.FileObject;
 import com.simplecity.amp_library.model.Song;
@@ -215,11 +216,10 @@ public class FileHelper {
      * @param recursive whether to recursively check the sub-directories for song Id's
      * @return List<Song> a list of the songs for the given fileObject's directory & sub-directories
      */
-    public static Single<List<Song>> getSongList(final File file, final boolean recursive, final boolean inSameDir) {
+    public static Single<List<Song>> getSongList(Repository.SongsRepository songsRepository, File file, boolean recursive, boolean inSameDir) {
         return Single.fromCallable(
                 () -> walk(file, new ArrayList<>(), recursive, inSameDir))
-                .flatMap(filePaths -> DataManager.getInstance()
-                        .getSongsObservable(song -> song.path.contains(FileHelper.getPath(inSameDir ? file.getParentFile() : file)))
+                .flatMap(filePaths -> songsRepository.getSongs(song -> song.path.contains(FileHelper.getPath(inSameDir ? file.getParentFile() : file)))
                         .first(Collections.emptyList()))
                 .subscribeOn(Schedulers.io());
     }
@@ -227,9 +227,8 @@ public class FileHelper {
     /**
      * Gets the song for a given file
      */
-    public static Single<Song> getSong(File file) {
-        return DataManager.getInstance()
-                .getSongsObservable(song -> song.path.contains(FileHelper.getPath(file)))
+    public static Single<Song> getSong(Repository.SongsRepository songsRepository, File file) {
+        return songsRepository.getSongs(song -> song.path.contains(FileHelper.getPath(file)))
                 .firstOrError()
                 .flatMap(songs -> {
                     try {
@@ -330,7 +329,7 @@ public class FileHelper {
         File newFile = new File(baseFileObject.getParent(), newName);
         if (file.renameTo(newFile)) {
             baseFileObject.name = FileHelper.getName(newFile.getName());
-            CustomMediaScanner.scanFiles(Collections.singletonList(file.getPath()), null);
+            CustomMediaScanner.scanFiles(context, Collections.singletonList(file.getPath()), null);
             return true;
         }
         return false;

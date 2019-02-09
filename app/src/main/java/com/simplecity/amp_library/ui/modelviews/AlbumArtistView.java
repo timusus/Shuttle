@@ -14,8 +14,9 @@ import com.simplecity.amp_library.format.PrefixHighlighter;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
-import com.simplecity.amp_library.utils.sorting.SortManager;
+import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.StringUtils;
+import com.simplecity.amp_library.utils.sorting.SortManager;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,17 +40,23 @@ public class AlbumArtistView extends MultiItemView<AlbumArtistView.ViewHolder, A
 
     private RequestManager requestManager;
 
+    private SortManager sortManager;
+
     private PrefixHighlighter prefixHighlighter;
+
+    private SettingsManager settingsManager;
 
     private char[] prefix;
 
     @Nullable
     private ClickListener listener;
 
-    public AlbumArtistView(AlbumArtist albumArtist, @ViewType int viewType, RequestManager requestManager) {
+    public AlbumArtistView(AlbumArtist albumArtist, @ViewType int viewType, RequestManager requestManager, SortManager sortManager, SettingsManager settingsManager) {
         this.albumArtist = albumArtist;
         this.viewType = viewType;
         this.requestManager = requestManager;
+        this.sortManager = sortManager;
+        this.settingsManager = settingsManager;
     }
 
     public void setClickListener(@Nullable ClickListener listener) {
@@ -119,7 +126,7 @@ public class AlbumArtistView extends MultiItemView<AlbumArtistView.ViewHolder, A
                         .crossfade(true)
                         : null)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(albumArtist.name, false))
+                .placeholder(PlaceholderProvider.getInstance(holder.itemView.getContext()).getPlaceHolderDrawable(albumArtist.name, false, settingsManager))
                 .into(holder.imageOne);
 
         holder.overflowButton.setContentDescription(holder.itemView.getResources().getString(R.string.btn_options, albumArtist.name));
@@ -153,7 +160,7 @@ public class AlbumArtistView extends MultiItemView<AlbumArtistView.ViewHolder, A
 
     @Override
     public String getSectionName() {
-        int sortOrder = SortManager.getInstance().getArtistsSortOrder();
+        int sortOrder = sortManager.getArtistsSortOrder();
 
         String string = null;
         switch (sortOrder) {

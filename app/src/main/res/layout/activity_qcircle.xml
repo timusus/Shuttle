@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="top|center_horizontal"
     android:background="#000000"
-    tools:context=".ui.activities.QCircleActivity">
+    tools:context=".ui.screens.qcircle.QCircleActivity">
 
     <RelativeLayout
         android:id="@+id/cover_main_view"

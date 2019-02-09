@@ -1,7 +1,7 @@
 package com.simplecity.amp_library.model;
 
+import android.content.Context;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.ShuttleApplication;
 import java.io.File;
 
 public class ArtworkModel {
@@ -18,18 +18,18 @@ public class ArtworkModel {
         this.file = file;
     }
 
-    public static String getTypeString(@ArtworkProvider.Type int type) {
+    public static String getTypeString(Context context, @ArtworkProvider.Type int type) {
         switch (type) {
             case ArtworkProvider.Type.MEDIA_STORE:
-                return ShuttleApplication.getInstance().getString(R.string.artwork_type_media_store);
+                return context.getString(R.string.artwork_type_media_store);
             case ArtworkProvider.Type.TAG:
-                return ShuttleApplication.getInstance().getString(R.string.artwork_type_tag);
+                return context.getString(R.string.artwork_type_tag);
             case ArtworkProvider.Type.FOLDER:
                 return "Folder";
             case ArtworkProvider.Type.LAST_FM:
-                return ShuttleApplication.getInstance().getString(R.string.artwork_type_lastfm);
+                return context.getString(R.string.artwork_type_lastfm);
             case ArtworkProvider.Type.ITUNES:
-                return ShuttleApplication.getInstance().getString(R.string.artwork_type_itunes);
+                return context.getString(R.string.artwork_type_itunes);
         }
         return null;
     }

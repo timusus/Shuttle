@@ -9,6 +9,7 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
+import com.simplecity.amp_library.utils.SettingsManager;
 
 public class SuggestedSongView extends MultiItemView<SuggestedSongView.ViewHolder, Song> {
 
@@ -23,12 +24,15 @@ public class SuggestedSongView extends MultiItemView<SuggestedSongView.ViewHolde
 
     private RequestManager requestManager;
 
+    private SettingsManager settingsManager;
+
     @Nullable
     private ClickListener listener;
 
-    public SuggestedSongView(Song song, RequestManager requestManager) {
+    public SuggestedSongView(Song song, RequestManager requestManager, SettingsManager settingsManager) {
         this.song = song;
         this.requestManager = requestManager;
+        this.settingsManager = settingsManager;
     }
 
     void onItemClick(ViewHolder holder) {
@@ -73,7 +77,7 @@ public class SuggestedSongView extends MultiItemView<SuggestedSongView.ViewHolde
 
         requestManager.load(song)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .placeholder(PlaceholderProvider.getInstance().getPlaceHolderDrawable(song.albumName, false))
+                .placeholder(PlaceholderProvider.getInstance(holder.imageOne.getContext()).getPlaceHolderDrawable(song.albumName, false, settingsManager))
                 .into(holder.imageOne);
 
         holder.overflowButton.setContentDescription(holder.itemView.getResources().getString(R.string.btn_options, song.name));

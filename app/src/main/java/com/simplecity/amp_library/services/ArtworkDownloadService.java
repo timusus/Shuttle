@@ -13,12 +13,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.data.Repository;
 import com.simplecity.amp_library.glide.loader.ArtworkModelLoader;
 import com.simplecity.amp_library.model.ArtworkProvider;
 import com.simplecity.amp_library.notifications.NotificationHelper;
-import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
+import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
+import dagger.android.AndroidInjection;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -31,6 +33,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import javax.inject.Inject;
 
 /**
  * A service which will download all artist & album artworkProvider, via an AsyncTask, and display the progress in a notification.
@@ -51,6 +54,15 @@ public class ArtworkDownloadService extends Service {
 
     NotificationHelper notificationHelper;
 
+    @Inject
+    Repository.AlbumsRepository albumsRepository;
+
+    @Inject
+    Repository.AlbumArtistsRepository albumArtistsRepository;
+
+    @Inject
+    SettingsManager settingsManager;
+
     private NotificationCompat.Builder getNotificationBuilder() {
 
         final ComponentName serviceName = new ComponentName(this, ArtworkDownloadService.class);
@@ -70,9 +82,11 @@ public class ArtworkDownloadService extends Service {
     public void onCreate() {
         super.onCreate();
 
+        AndroidInjection.inject(this);
+
         notificationHelper = new NotificationHelper(this);
 
-        if (!ShuttleUtils.isOnline(false)) {
+        if (!ShuttleUtils.isOnline(this, false)) {
             Toast toast = Toast.makeText(this, getResources().getString(R.string.connection_unavailable), Toast.LENGTH_SHORT);
             toast.show();
             stopSelf();
@@ -81,11 +95,10 @@ public class ArtworkDownloadService extends Service {
 
         notificationHelper.notify(NOTIFICATION_ID, getNotificationBuilder().build());
 
-        Single<List<ArtworkProvider>> sharedItemsSingle = DataManager.getInstance()
-                .getAlbumArtistsRelay()
+        Single<List<ArtworkProvider>> sharedItemsSingle = albumArtistsRepository.getAlbumArtists()
                 .first(Collections.emptyList())
                 .<ArtworkProvider>flatMapObservable(Observable::fromIterable)
-                .mergeWith(DataManager.getInstance().getAlbumsRelay()
+                .mergeWith(albumsRepository.getAlbums()
                         .first(Collections.emptyList())
                         .flatMapObservable(Observable::fromIterable))
                 .toList();
@@ -101,7 +114,7 @@ public class ArtworkDownloadService extends Service {
                 .flatMap(artworkProvider -> Observable.just(artworkProvider)
                         .map(artwork -> {
                             FutureTarget<File> futureTarget = Glide.with(ArtworkDownloadService.this)
-                                    .using(new ArtworkModelLoader(true), InputStream.class)
+                                    .using(new ArtworkModelLoader(this, true), InputStream.class)
                                     .load(artwork)
                                     .as(InputStream.class)
                                     .downloadOnly(SimpleTarget.SIZE_ORIGINAL, SimpleTarget.SIZE_ORIGINAL);

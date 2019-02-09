@@ -1,6 +1,7 @@
 package com.simplecity.amp_library.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import com.crashlytics.android.answers.Answers;
@@ -8,13 +9,22 @@ import com.crashlytics.android.answers.CustomEvent;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.simplecity.amp_library.BuildConfig;
-import com.simplecity.amp_library.ShuttleApplication;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class AnalyticsManager {
 
     private static final String TAG = "AnalyticsManager";
 
-    private static boolean analyticsEnabled() {
+    private Context context;
+
+    @Inject
+    public AnalyticsManager(Context context) {
+        this.context = context;
+    }
+
+    private boolean analyticsEnabled() {
         return !BuildConfig.DEBUG;
     }
 
@@ -24,7 +34,7 @@ public class AnalyticsManager {
         String UPGRADE = "Upgrade";
     }
 
-    public static void logChangelogViewed() {
+    public void logChangelogViewed() {
         if (!analyticsEnabled()) {
             return;
         }
@@ -33,12 +43,12 @@ public class AnalyticsManager {
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "changelog");
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "0");
 
-        FirebaseAnalytics.getInstance(ShuttleApplication.getInstance())
+        FirebaseAnalytics.getInstance(context)
                 .logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
         Answers.getInstance().logCustom(new CustomEvent("Changelog Viewed"));
     }
 
-    public static void logUpgrade(@UpgradeType String upgradeType) {
+    public void logUpgrade(@UpgradeType String upgradeType) {
         if (!analyticsEnabled()) {
             return;
         }
@@ -49,28 +59,28 @@ public class AnalyticsManager {
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, upgradeType);
         bundle.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, "upgrade");
 
-        FirebaseAnalytics.getInstance(ShuttleApplication.getInstance())
+        FirebaseAnalytics.getInstance(context)
                 .logEvent(FirebaseAnalytics.Event.PRESENT_OFFER, bundle);
     }
 
-    public static void logScreenName(Activity activity, String name) {
+    public void logScreenName(Activity activity, String name) {
         if (!analyticsEnabled()) {
             return;
         }
 
         CrashlyticsCore.getInstance().log(String.format("Screen: %s", name));
-        FirebaseAnalytics.getInstance(ShuttleApplication.getInstance()).setCurrentScreen(activity, name, null);
+        FirebaseAnalytics.getInstance(context).setCurrentScreen(activity, name, null);
     }
 
-    public static void setIsUpgraded() {
+    public void setIsUpgraded(boolean isUpgraded) {
         if (!analyticsEnabled()) {
             return;
         }
 
-        FirebaseAnalytics.getInstance(ShuttleApplication.getInstance()).setUserProperty("Upgraded", String.valueOf(ShuttleUtils.isUpgraded()));
+        FirebaseAnalytics.getInstance(context).setUserProperty("Upgraded", String.valueOf(isUpgraded));
     }
 
-    public static void logInitialTheme(ThemeUtils.Theme theme) {
+    public void logInitialTheme(ThemeUtils.Theme theme) {
         if (!analyticsEnabled()) {
             return;
         }
@@ -79,10 +89,10 @@ public class AnalyticsManager {
         params.putString(FirebaseAnalytics.Param.ITEM_ID, String.valueOf(theme.id));
         params.putString(FirebaseAnalytics.Param.ITEM_NAME, String.format("%s-%s-%s", theme.primaryColorName, theme.accentColorName, theme.isDark));
         params.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, "themes");
-        FirebaseAnalytics.getInstance(ShuttleApplication.getInstance()).logEvent(FirebaseAnalytics.Event.VIEW_ITEM, params);
+        FirebaseAnalytics.getInstance(context).logEvent(FirebaseAnalytics.Event.VIEW_ITEM, params);
     }
 
-    public static void logRateShown() {
+    public void logRateShown() {
         if (!analyticsEnabled()) {
             return;
         }
@@ -92,11 +102,11 @@ public class AnalyticsManager {
         params.putString(FirebaseAnalytics.Param.ITEM_NAME, "show_rate_snackbar");
         params.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, "rate_app");
 
-        FirebaseAnalytics.getInstance(ShuttleApplication.getInstance())
+        FirebaseAnalytics.getInstance(context)
                 .logEvent(FirebaseAnalytics.Event.VIEW_ITEM, params);
     }
 
-    public static void logRateClicked() {
+    public void logRateClicked() {
         if (!analyticsEnabled()) {
             return;
         }
@@ -105,11 +115,11 @@ public class AnalyticsManager {
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "rate_snackbar");
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "0");
 
-        FirebaseAnalytics.getInstance(ShuttleApplication.getInstance())
+        FirebaseAnalytics.getInstance(context)
                 .logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
 
-    public static void didSnow() {
+    public void didSnow() {
         if (!analyticsEnabled()) {
             return;
         }
@@ -119,11 +129,11 @@ public class AnalyticsManager {
         params.putString(FirebaseAnalytics.Param.ITEM_NAME, "show_snow");
         params.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, "easter_eggs");
 
-        FirebaseAnalytics.getInstance(ShuttleApplication.getInstance())
+        FirebaseAnalytics.getInstance(context)
                 .logEvent(FirebaseAnalytics.Event.VIEW_ITEM, params);
     }
 
-    public static void dropBreadcrumb(String tag, String breadCrumb) {
+    public void dropBreadcrumb(String tag, String breadCrumb) {
 
         Log.d(tag, breadCrumb);
 

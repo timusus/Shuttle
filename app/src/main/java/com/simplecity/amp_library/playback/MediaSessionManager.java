@@ -23,10 +23,11 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.androidauto.CarHelper;
 import com.simplecity.amp_library.androidauto.MediaIdHelper;
+import com.simplecity.amp_library.data.Repository;
 import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.constants.InternalIntents;
-import com.simplecity.amp_library.ui.queue.QueueItem;
-import com.simplecity.amp_library.ui.queue.QueueItemKt;
+import com.simplecity.amp_library.ui.screens.queue.QueueItem;
+import com.simplecity.amp_library.ui.screens.queue.QueueItemKt;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MediaButtonIntentReceiver;
 import com.simplecity.amp_library.utils.SettingsManager;
@@ -48,16 +49,35 @@ class MediaSessionManager {
 
     private PlaybackManager playbackManager;
 
+    private PlaybackSettingsManager playbackSettingsManager;
+
+    private SettingsManager settingsManager;
+
     private CompositeDisposable disposables = new CompositeDisposable();
 
-    private MediaIdHelper mediaIdHelper = new MediaIdHelper();
+    private MediaIdHelper mediaIdHelper;
 
     private static String SHUFFLE_ACTION = "ACTION_SHUFFLE";
 
-    MediaSessionManager(Context context, QueueManager queueManager, PlaybackManager playbackManager, MusicService.Callbacks musicServiceCallbacks) {
+    MediaSessionManager(
+            Context context,
+            QueueManager queueManager,
+            PlaybackManager playbackManager,
+            PlaybackSettingsManager playbackSettingsManager,
+            SettingsManager settingsManager,
+            Repository.SongsRepository songsRepository,
+            Repository.AlbumsRepository albumsRepository,
+            Repository.AlbumArtistsRepository albumArtistsRepository,
+            Repository.GenresRepository genresRepository,
+            Repository.PlaylistsRepository playlistsRepository
+    ) {
         this.context = context.getApplicationContext();
         this.queueManager = queueManager;
         this.playbackManager = playbackManager;
+        this.settingsManager = settingsManager;
+        this.playbackSettingsManager = playbackSettingsManager;
+
+        mediaIdHelper = new MediaIdHelper((ShuttleApplication) context.getApplicationContext(), songsRepository, albumsRepository, albumArtistsRepository, genresRepository, playlistsRepository);
 
         ComponentName mediaButtonReceiverComponent = new ComponentName(context.getPackageName(), MediaButtonIntentReceiver.class.getName());
         mediaSession = new MediaSessionCompat(context, "Shuttle", mediaButtonReceiverComponent, null);
@@ -109,7 +129,7 @@ class MediaSessionManager {
             @Override
             public boolean onMediaButtonEvent(Intent mediaButtonEvent) {
                 Log.e("MediaButtonReceiver", "OnMediaButtonEvent called");
-                MediaButtonIntentReceiver.MediaButtonReceiverHelper.onReceive(context, mediaButtonEvent);
+                MediaButtonIntentReceiver.MediaButtonReceiverHelper.onReceive(context, mediaButtonEvent, playbackSettingsManager);
                 return true;
             }
 
@@ -194,11 +214,11 @@ class MediaSessionManager {
         switch (queueManager.shuffleMode) {
             case QueueManager.ShuffleMode.OFF:
                 builder.addCustomAction(
-                        new PlaybackStateCompat.CustomAction.Builder(SHUFFLE_ACTION, ShuttleApplication.getInstance().getString(R.string.btn_shuffle_on), R.drawable.ic_shuffle_off_circled).build());
+                        new PlaybackStateCompat.CustomAction.Builder(SHUFFLE_ACTION, context.getString(R.string.btn_shuffle_on), R.drawable.ic_shuffle_off_circled).build());
                 break;
             case QueueManager.ShuffleMode.ON:
                 builder.addCustomAction(
-                        new PlaybackStateCompat.CustomAction.Builder(SHUFFLE_ACTION, ShuttleApplication.getInstance().getString(R.string.btn_shuffle_off), R.drawable.ic_shuffle_on_circled).build());
+                        new PlaybackStateCompat.CustomAction.Builder(SHUFFLE_ACTION, context.getString(R.string.btn_shuffle_off), R.drawable.ic_shuffle_on_circled).build());
                 break;
         }
 
@@ -238,7 +258,7 @@ class MediaSessionManager {
                 mediaSession.setQueue(QueueItemKt.toMediaSessionQueueItems(queueManager.getCurrentPlaylist()));
                 mediaSession.setQueueTitle(context.getString(R.string.menu_queue));
 
-                if (SettingsManager.getInstance().showLockscreenArtwork() || CarHelper.isCarUiMode(context)) {
+                if (settingsManager.showLockscreenArtwork() || CarHelper.isCarUiMode(context)) {
                     updateMediaSessionArtwork(metaData);
                 } else {
                     mediaSession.setMetadata(metaData.build());

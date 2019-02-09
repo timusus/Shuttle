@@ -21,7 +21,7 @@ import com.simplecity.amp_library.model.UserSelectedArtwork;
 import com.simplecity.amp_library.sql.databases.CustomArtworkTable;
 import com.simplecity.amp_library.ui.modelviews.ArtworkLoadingView;
 import com.simplecity.amp_library.ui.modelviews.ArtworkView;
-import com.simplecity.amp_library.ui.recyclerview.SpacesItemDecoration;
+import com.simplecity.amp_library.ui.views.recyclerview.SpacesItemDecoration;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener;
@@ -69,7 +69,7 @@ public class ArtworkDialog {
 
         List<ViewModel> viewModels = new ArrayList<>();
 
-        UserSelectedArtwork userSelectedArtwork = ShuttleApplication.getInstance().userSelectedArtwork.get(artworkProvider.getArtworkKey());
+        UserSelectedArtwork userSelectedArtwork = ((ShuttleApplication) context.getApplicationContext()).userSelectedArtwork.get(artworkProvider.getArtworkKey());
         if (userSelectedArtwork != null) {
             File file = null;
             if (userSelectedArtwork.path != null) {
@@ -108,7 +108,6 @@ public class ArtworkDialog {
                 .filter(viewModel -> viewModel instanceof ArtworkView)
                 .forEach(viewModel -> ((ArtworkView) viewModel).setListener(listener));
 
-        AnalyticsManager.dropBreadcrumb(TAG, "setItems()");
         adapter.setItems(viewModels);
 
         Observable.fromCallable(artworkProvider::getFolderArtworkFiles)
@@ -139,11 +138,11 @@ public class ArtworkDialog {
                         values.put(CustomArtworkTable.COLUMN_PATH, artworkModel.file == null ? null : artworkModel.file.getPath());
                         context.getContentResolver().insert(CustomArtworkTable.URI, values);
 
-                        ShuttleApplication.getInstance().userSelectedArtwork.put(artworkProvider.getArtworkKey(),
+                        ((ShuttleApplication) context.getApplicationContext()).userSelectedArtwork.put(artworkProvider.getArtworkKey(),
                                 new UserSelectedArtwork(artworkModel.type, artworkModel.file == null ? null : artworkModel.file.getPath()));
                     } else {
                         context.getContentResolver().delete(CustomArtworkTable.URI, CustomArtworkTable.COLUMN_KEY + "='" + artworkProvider.getArtworkKey().replaceAll("'", "\''") + "'", null);
-                        ShuttleApplication.getInstance().userSelectedArtwork.remove(artworkProvider.getArtworkKey());
+                        ((ShuttleApplication) context.getApplicationContext()).userSelectedArtwork.remove(artworkProvider.getArtworkKey());
                     }
                     dialog.dismiss();
                 })
@@ -157,7 +156,7 @@ public class ArtworkDialog {
                             // The directory will be shuttle/custom_artwork/key_hashcode/currentSystemTime.artwork
                             // We want the directory to be based on the key, so we can delete old artwork, and the
                             // filename to be unique, because it's used for Glide caching.
-                            File dir = new File(ShuttleApplication.getInstance().getFilesDir() + "/shuttle/custom_artwork/" + artworkProvider.getArtworkKey().hashCode() + "/");
+                            File dir = new File(context.getFilesDir() + "/shuttle/custom_artwork/" + artworkProvider.getArtworkKey().hashCode() + "/");
 
                             // Create dir if necessary
                             if (!dir.exists()) {

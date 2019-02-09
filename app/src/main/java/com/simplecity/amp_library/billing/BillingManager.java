@@ -13,6 +13,7 @@ import com.simplecity.amp_library.constants.Config;
 import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.utils.LogUtils;
 import java.util.List;
+import javax.inject.Inject;
 
 public class BillingManager implements PurchasesUpdatedListener {
 
@@ -42,7 +43,8 @@ public class BillingManager implements PurchasesUpdatedListener {
     private boolean purchaseFlowInitiated = false;
     private boolean restorePurchasesInitiated = false;
 
-    public BillingManager(Activity activity, final BillingUpdatesListener updatesListener) {
+    @Inject
+    public BillingManager(Activity activity, BillingUpdatesListener updatesListener) {
 
         this.activity = activity;
         this.updatesListener = updatesListener;

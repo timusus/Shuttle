@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.glide.fetcher;
 
+import android.content.Context;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.data.DataFetcher;
 import com.simplecity.amp_library.model.ArtworkProvider;
@@ -10,6 +11,8 @@ public class TypeFetcher implements DataFetcher<InputStream> {
 
     private static final String TAG = "MultiFetcher";
 
+    private Context applicationContext;
+
     private DataFetcher<InputStream> dataFetcher;
 
     private ArtworkProvider artworkProvider;
@@ -19,7 +22,8 @@ public class TypeFetcher implements DataFetcher<InputStream> {
 
     private File file;
 
-    public TypeFetcher(ArtworkProvider artworkProvider, @ArtworkProvider.Type int type, File file) {
+    public TypeFetcher(Context context, ArtworkProvider artworkProvider, @ArtworkProvider.Type int type, File file) {
+        applicationContext = context.getApplicationContext();
         this.artworkProvider = artworkProvider;
         this.type = type;
         this.file = file;
@@ -42,7 +46,7 @@ public class TypeFetcher implements DataFetcher<InputStream> {
     public InputStream loadData(Priority priority) throws Exception {
         switch (type) {
             case ArtworkProvider.Type.MEDIA_STORE:
-                dataFetcher = new MediaStoreFetcher(artworkProvider);
+                dataFetcher = new MediaStoreFetcher(applicationContext, artworkProvider);
                 break;
             case ArtworkProvider.Type.FOLDER:
                 dataFetcher = new FolderFetcher(artworkProvider, file);

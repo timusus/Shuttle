@@ -17,11 +17,11 @@ import java.util.List;
 
 public final class SqlBriteUtils {
 
+    static final boolean LOGGING_ENABLED = false;
+
     private SqlBriteUtils() {
 
     }
-
-    static final boolean LOGGING_ENABLED = false;
 
     private static final String TAG = "SqlBriteUtils";
 

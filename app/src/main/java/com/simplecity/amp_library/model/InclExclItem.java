@@ -1,7 +1,7 @@
 package com.simplecity.amp_library.model;
 
 import android.database.Cursor;
-import com.simplecity.amp_library.sql.databases.InclExclDbOpenHelper;
+import com.simplecity.amp_library.sql.databases.BlacklistWhitelistDbOpenHelper;
 import io.reactivex.annotations.NonNull;
 
 public class InclExclItem {
@@ -18,9 +18,9 @@ public class InclExclItem {
     public int type;
 
     public InclExclItem(Cursor cursor) {
-        this.id = cursor.getLong(cursor.getColumnIndex(InclExclDbOpenHelper.COLUMN_ID));
-        this.path = cursor.getString(cursor.getColumnIndex(InclExclDbOpenHelper.COLUMN_PATH));
-        this.type = cursor.getInt(cursor.getColumnIndex(InclExclDbOpenHelper.COLUMN_TYPE));
+        this.id = cursor.getLong(cursor.getColumnIndex(BlacklistWhitelistDbOpenHelper.COLUMN_ID));
+        this.path = cursor.getString(cursor.getColumnIndex(BlacklistWhitelistDbOpenHelper.COLUMN_PATH));
+        this.type = cursor.getInt(cursor.getColumnIndex(BlacklistWhitelistDbOpenHelper.COLUMN_TYPE));
     }
 
     public InclExclItem(String path, @Type int type) {

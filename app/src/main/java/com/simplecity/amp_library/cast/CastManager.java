@@ -6,31 +6,34 @@ import com.google.android.gms.cast.framework.CastContext;
 import com.google.android.gms.cast.framework.CastSession;
 import com.google.android.gms.cast.framework.SessionManager;
 import com.google.android.gms.cast.framework.SessionManagerListener;
+import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.playback.CastPlayback;
 import com.simplecity.amp_library.playback.MediaPlayerPlayback;
 import com.simplecity.amp_library.playback.Playback;
 import com.simplecity.amp_library.playback.PlaybackManager;
 import com.simplecity.amp_library.utils.LogUtils;
+import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 
 public class CastManager {
 
     private static final String TAG = "CastManager";
 
+    private Context applicationContext;
+
     private SessionManager sessionManager;
 
     private SessionManagerListener<CastSession> sessionManagerListener;
-
-    private Context applicationContext;
 
     private PlaybackManager playbackManager;
 
     public CastManager(Context context, PlaybackManager playbackManager) {
 
-        applicationContext = context.getApplicationContext();
+        this.applicationContext = context.getApplicationContext();
+
         this.playbackManager = playbackManager;
 
-        sessionManager = CastContext.getSharedInstance(context).getSessionManager();
+        sessionManager = CastContext.getSharedInstance(applicationContext).getSessionManager();
 
         sessionManagerListener = new CastSessionManagerListener();
         sessionManager.addSessionManagerListener(sessionManagerListener, CastSession.class);
@@ -107,9 +110,9 @@ public class CastManager {
         }
     }
 
-    public static boolean isCastAvailable(Context context) {
+    public static boolean isCastAvailable(Context context, SettingsManager settingsManager) {
         // Cast is only available in the paid version
-        if (!ShuttleUtils.isUpgraded()) {
+        if (!ShuttleUtils.isUpgraded((ShuttleApplication) context.getApplicationContext(), settingsManager)) {
             Log.i(TAG, "Cast available false, not upgraded");
             return false;
         }

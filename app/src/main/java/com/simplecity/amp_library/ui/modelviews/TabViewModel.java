@@ -7,8 +7,10 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.CategoryItem;
 import com.simplecity.amp_library.ui.adapters.ViewType;
+import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecityapps.recycler_adapter.model.BaseViewModel;
 import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
@@ -26,8 +28,11 @@ public class TabViewModel extends BaseViewModel<TabViewModel.ViewHolder> {
     @Nullable
     private Listener listener;
 
-    public TabViewModel(CategoryItem categoryItem) {
+    private SettingsManager settingsManager;
+
+    public TabViewModel(CategoryItem categoryItem, SettingsManager settingsManager) {
         this.categoryItem = categoryItem;
+        this.settingsManager = settingsManager;
     }
 
     public void setListener(@Nullable Listener listener) {
@@ -66,7 +71,7 @@ public class TabViewModel extends BaseViewModel<TabViewModel.ViewHolder> {
         holder.textView.setText(holder.itemView.getContext().getString(categoryItem.getTitleResId()));
         holder.checkBox.setChecked(categoryItem.isChecked);
 
-        if (categoryItem.type == CategoryItem.Type.FOLDERS && !ShuttleUtils.isUpgraded()) {
+        if (categoryItem.type == CategoryItem.Type.FOLDERS && !ShuttleUtils.isUpgraded((ShuttleApplication) holder.itemView.getContext().getApplicationContext(), settingsManager)) {
             holder.checkBox.setAlpha(0.4f);
         } else {
             holder.checkBox.setAlpha(1.0f);

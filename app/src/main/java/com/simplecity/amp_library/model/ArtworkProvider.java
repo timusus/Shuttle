@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.model;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.simplecity.amp_library.http.itunes.ItunesResult;
@@ -29,7 +30,7 @@ public interface ArtworkProvider {
     Call<ItunesResult> getItunesArtwork();
 
     @Nullable
-    InputStream getMediaStoreArtwork();
+    InputStream getMediaStoreArtwork(Context context);
 
     @Nullable
     InputStream getFolderArtwork();

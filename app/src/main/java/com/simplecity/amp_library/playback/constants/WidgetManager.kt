@@ -2,19 +2,21 @@ package com.simplecity.amp_library.playback.constants
 
 import android.appwidget.AppWidgetManager
 import android.content.Intent
-
 import com.simplecity.amp_library.playback.MusicService
 import com.simplecity.amp_library.ui.widgets.WidgetProviderExtraLarge
 import com.simplecity.amp_library.ui.widgets.WidgetProviderLarge
 import com.simplecity.amp_library.ui.widgets.WidgetProviderMedium
 import com.simplecity.amp_library.ui.widgets.WidgetProviderSmall
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class WidgetManager {
-
-    private val widgetProviderMedium = WidgetProviderMedium.getInstance()
-    private val widgetProviderSmall = WidgetProviderSmall.getInstance()
-    private val widgetProviderLarge = WidgetProviderLarge.getInstance()
-    private val widgetProviderExtraLarge = WidgetProviderExtraLarge.getInstance()
+@Singleton
+class WidgetManager @Inject constructor(
+    private val widgetProviderMedium: WidgetProviderMedium,
+    private val widgetProviderSmall: WidgetProviderSmall,
+    private val widgetProviderLarge: WidgetProviderLarge,
+    private val widgetProviderExtraLarge: WidgetProviderExtraLarge
+) {
 
     fun processCommand(musicService: MusicService, intent: Intent, command: String) {
         when (command) {
