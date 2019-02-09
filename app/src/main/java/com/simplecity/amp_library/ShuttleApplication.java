@@ -156,55 +156,53 @@ public class ShuttleApplication extends Application implements HasActivityInject
 
         settingsManager.incrementLaunchCount();
 
-        // Todo: Reinstate
+        Completable.fromAction(() -> {
+            Query query = new Query.Builder()
+                    .uri(CustomArtworkTable.URI)
+                    .projection(new String[] { CustomArtworkTable.COLUMN_ID, CustomArtworkTable.COLUMN_KEY, CustomArtworkTable.COLUMN_TYPE, CustomArtworkTable.COLUMN_PATH })
+                    .build();
 
-        //Completable.fromAction(() -> {
-        //    Query query = new Query.Builder()
-        //            .uri(CustomArtworkTable.URI)
-        //            .projection(new String[] { CustomArtworkTable.COLUMN_ID, CustomArtworkTable.COLUMN_KEY, CustomArtworkTable.COLUMN_TYPE, CustomArtworkTable.COLUMN_PATH })
-        //            .build();
-        //
-        //    SqlUtils.createActionableQuery(ShuttleApplication.this, cursor ->
-        //                    userSelectedArtwork.put(
-        //                            cursor.getString(cursor.getColumnIndexOrThrow(CustomArtworkTable.COLUMN_KEY)),
-        //                            new UserSelectedArtwork(
-        //                                    cursor.getInt(cursor.getColumnIndexOrThrow(CustomArtworkTable.COLUMN_TYPE)),
-        //                                    cursor.getString(cursor.getColumnIndexOrThrow(CustomArtworkTable.COLUMN_PATH)))
-        //                    ),
-        //            query);
-        //})
-        //        .doOnError(throwable -> LogUtils.logException(TAG, "Error updating user selected artwork", throwable))
-        //        .onErrorComplete()
-        //        .subscribeOn(Schedulers.io())
-        //        .subscribe();
-        //
-        //Completable.timer(5, TimeUnit.SECONDS)
-        //        .andThen(Completable.defer(this::repairMediaStoreYearFromTags))
-        //        .doOnError(throwable -> LogUtils.logException(TAG, "Failed to update year from tags", throwable))
-        //        .onErrorComplete()
-        //        .subscribeOn(Schedulers.io())
-        //        .subscribe();
-        //
-        //Completable.timer(10, TimeUnit.SECONDS)
-        //        .andThen(Completable.defer(this::cleanGenres))
-        //        .doOnError(throwable -> LogUtils.logException(TAG, "Failed to clean genres", throwable))
-        //        .onErrorComplete()
-        //        .subscribeOn(Schedulers.io())
-        //        .subscribe();
-        //
-        //Completable.timer(15, TimeUnit.SECONDS)
-        //        .andThen(Completable.defer(this::cleanMostPlayedPlaylist))
-        //        .doOnError(throwable -> LogUtils.logException(TAG, "Failed to clean most played", throwable))
-        //        .onErrorComplete()
-        //        .subscribeOn(Schedulers.io())
-        //        .subscribe();
-        //
-        //Completable.timer(20, TimeUnit.SECONDS)
-        //        .andThen(Completable.defer(() -> LegacyUtils.deleteOldResources(this)))
-        //        .doOnError(throwable -> LogUtils.logException(TAG, "Failed to delete old resources", throwable))
-        //        .onErrorComplete()
-        //        .subscribeOn(Schedulers.io())
-        //        .subscribe();
+            SqlUtils.createActionableQuery(ShuttleApplication.this, cursor ->
+                            userSelectedArtwork.put(
+                                    cursor.getString(cursor.getColumnIndexOrThrow(CustomArtworkTable.COLUMN_KEY)),
+                                    new UserSelectedArtwork(
+                                            cursor.getInt(cursor.getColumnIndexOrThrow(CustomArtworkTable.COLUMN_TYPE)),
+                                            cursor.getString(cursor.getColumnIndexOrThrow(CustomArtworkTable.COLUMN_PATH)))
+                            ),
+                    query);
+        })
+                .doOnError(throwable -> LogUtils.logException(TAG, "Error updating user selected artwork", throwable))
+                .onErrorComplete()
+                .subscribeOn(Schedulers.io())
+                .subscribe();
+
+        Completable.timer(5, TimeUnit.SECONDS)
+                .andThen(Completable.defer(this::repairMediaStoreYearFromTags))
+                .doOnError(throwable -> LogUtils.logException(TAG, "Failed to update year from tags", throwable))
+                .onErrorComplete()
+                .subscribeOn(Schedulers.io())
+                .subscribe();
+
+        Completable.timer(10, TimeUnit.SECONDS)
+                .andThen(Completable.defer(this::cleanGenres))
+                .doOnError(throwable -> LogUtils.logException(TAG, "Failed to clean genres", throwable))
+                .onErrorComplete()
+                .subscribeOn(Schedulers.io())
+                .subscribe();
+
+        Completable.timer(15, TimeUnit.SECONDS)
+                .andThen(Completable.defer(this::cleanMostPlayedPlaylist))
+                .doOnError(throwable -> LogUtils.logException(TAG, "Failed to clean most played", throwable))
+                .onErrorComplete()
+                .subscribeOn(Schedulers.io())
+                .subscribe();
+
+        Completable.timer(20, TimeUnit.SECONDS)
+                .andThen(Completable.defer(() -> LegacyUtils.deleteOldResources(this)))
+                .doOnError(throwable -> LogUtils.logException(TAG, "Failed to delete old resources", throwable))
+                .onErrorComplete()
+                .subscribeOn(Schedulers.io())
+                .subscribe();
     }
 
     @Override
