@@ -8,7 +8,7 @@ object Dependencies {
 
     object Versions {
         const val nanoHttp = "2.3.1"
-        const val crashlytics = "2.9.5"
+        const val crashlytics = "2.9.9"
         const val dashClockApi = "2.0.0"
         const val fastScroll = "1.0.20"
         const val glide = "3.8.0-SNAPSHOT"
@@ -18,8 +18,8 @@ object Dependencies {
         const val streams = "1.2.1"
         const val butterknife = "8.8.1"
         const val butterknifeAnnotationProcessor = "8.8.1"
-        const val dagger = "2.18"
-        const val daggerAssistedInject = "0.3.1"
+        const val dagger = "2.21"
+        const val daggerAssistedInject = "0.3.2"
         const val expandableRecyclerView = "3.0.0-RC1"
         const val billing = "1.2"
     }
@@ -81,11 +81,10 @@ object Dependencies {
 
         object Versions {
             const val androidGradlePlugin = "3.3.1"
-            const val kotlin = "1.3.0"
+            const val kotlin = "1.3.21"
             const val ktx = "1.0.0"
-            const val dexcountGradlePlugin = "0.8.4"
+            const val dexcountGradlePlugin = "0.8.6"
             const val fabricGradlePlugin = "1.+"
-            const val playPublisher = "1.2.2"
             const val gradleVersions = "0.20.0"
             const val playServices = "4.2.0"
         }
@@ -94,7 +93,7 @@ object Dependencies {
         const val kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
         const val dexcount = "com.getkeepsafe.dexcount:dexcount-gradle-plugin:${Versions.dexcountGradlePlugin}"
         const val fabric = "io.fabric.tools:gradle:${Versions.fabricGradlePlugin}"
-        const val playPublisher = "com.github.triplet.gradle:play-publisher:${Versions.playPublisher}"
+        const val playPublisher = "com.github.triplet.play"
         const val gradleVersions = "com.github.ben-manes:gradle-versions-plugin:${Versions.gradleVersions}"
         const val playServices = "com.google.gms:google-services:${Versions.playServices}"
     }
@@ -105,7 +104,7 @@ object Dependencies {
             const val supportLib = "28.0.0"
             const val firebaseCore = "16.0.5"
             const val firebaseRemoteConfig = "16.1.0"
-            const val constraintLayout = "2.0.0-alpha2"
+            const val constraintLayout = "2.0.0-alpha3"
             const val chromeCastFramework = "16.1.0"
         }
 
@@ -128,7 +127,7 @@ object Dependencies {
 
         object Versions {
             const val haha = "2.0.4"
-            const val leakCanary = "1.6.2"
+            const val leakCanary = "1.6.3"
             const val okio = "2.1.0"
             const val okhttp = "3.11.0"
             const val retrofit = "2.4.0"
@@ -253,7 +252,6 @@ object Dependencies {
         const val kapt = "kotlin-kapt"
         const val dexCount = "com.getkeepsafe.dexcount"
         const val fabric = "io.fabric"
-        const val playPublisher = "com.github.triplet.play"
         const val gradleVersions = "com.github.ben-manes.versions"
         const val playServices = "com.google.gms.google-services"
     }
