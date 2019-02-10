@@ -411,10 +411,6 @@ public class MusicService extends MediaBrowserServiceCompat {
         analyticsManager.dropBreadcrumb(TAG, "onStartCommand() scheduling delayed shutdown");
         scheduleDelayedShutdown();
 
-        if (intent != null && intent.getBooleanExtra(MediaButtonCommand.FROM_MEDIA_BUTTON, false)) {
-            MediaButtonIntentReceiver.completeWakefulIntent(intent);
-        }
-
         return START_STICKY;
     }
 

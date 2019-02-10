@@ -129,7 +129,7 @@ class MediaSessionManager {
             @Override
             public boolean onMediaButtonEvent(Intent mediaButtonEvent) {
                 Log.e("MediaButtonReceiver", "OnMediaButtonEvent called");
-                MediaButtonIntentReceiver.MediaButtonReceiverHelper.onReceive(context, mediaButtonEvent, playbackSettingsManager);
+                MediaButtonIntentReceiver.handleIntent(context, mediaButtonEvent, playbackSettingsManager);
                 return true;
             }
 
