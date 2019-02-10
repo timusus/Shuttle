@@ -6,6 +6,7 @@ import android.preference.PreferenceManager
 import com.simplecity.amp_library.ShuttleApplication
 import com.simplecity.amp_library.di.app.activity.ActivityScope
 import com.simplecity.amp_library.playback.MusicService
+import com.simplecity.amp_library.services.ArtworkDownloadService
 import com.simplecity.amp_library.ui.screens.main.MainActivity
 import com.simplecity.amp_library.ui.screens.main.MainActivityModule
 import dagger.Module
@@ -36,4 +37,7 @@ abstract class AppModuleBinds {
 
     @ContributesAndroidInjector
     abstract fun musicServiceInjector(): MusicService
+
+    @ContributesAndroidInjector
+    abstract fun artworkServiceInjector(): ArtworkDownloadService
 }
