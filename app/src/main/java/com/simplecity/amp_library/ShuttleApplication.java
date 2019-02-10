@@ -1,9 +1,6 @@
 package com.simplecity.amp_library;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.Application;
-import android.app.Service;
 import android.content.ContentProviderOperation;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -43,9 +40,7 @@ import com.simplecity.amp_library.utils.extensions.GenreExtKt;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import dagger.android.AndroidInjector;
-import dagger.android.DispatchingAndroidInjector;
-import dagger.android.HasActivityInjector;
-import dagger.android.HasServiceInjector;
+import dagger.android.DaggerApplication;
 import io.fabric.sdk.android.Fabric;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
@@ -70,15 +65,9 @@ import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 import org.jaudiotagger.tag.TagOptionSingleton;
 
-public class ShuttleApplication extends Application implements HasActivityInjector, HasServiceInjector {
+public class ShuttleApplication extends DaggerApplication {
 
     private static final String TAG = "ShuttleApplication";
-
-    @Inject
-    DispatchingAndroidInjector<Activity> activityInjector;
-
-    @Inject
-    DispatchingAndroidInjector<Service> serviceInjector;
 
     private boolean isUpgraded;
 
@@ -206,13 +195,8 @@ public class ShuttleApplication extends Application implements HasActivityInject
     }
 
     @Override
-    public AndroidInjector<Activity> activityInjector() {
-        return activityInjector;
-    }
-
-    @Override
-    public AndroidInjector<Service> serviceInjector() {
-        return serviceInjector;
+    protected AndroidInjector<? extends dagger.android.DaggerApplication> applicationInjector() {
+        return DaggerAppComponent.builder().create(this);
     }
 
     public RefWatcher getRefWatcher() {
