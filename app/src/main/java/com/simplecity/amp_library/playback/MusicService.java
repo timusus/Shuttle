@@ -2,12 +2,16 @@ package com.simplecity.amp_library.playback;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -37,7 +41,6 @@ import com.simplecity.amp_library.services.Equalizer;
 import com.simplecity.amp_library.ui.screens.queue.QueueItem;
 import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.LogUtils;
-import com.simplecity.amp_library.utils.MediaButtonIntentReceiver;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.playlists.FavoritesPlaylistManager;
@@ -340,6 +343,23 @@ public class MusicService extends MediaBrowserServiceCompat {
         super.onDestroy();
     }
 
+    void fakeForegroundNotification() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String channelId = "channel_1";
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            NotificationChannel channel = notificationManager.getNotificationChannel(channelId);
+            if (channel == null) {
+                channel = new NotificationChannel(channelId, getString(R.string.app_name), NotificationManager.IMPORTANCE_DEFAULT);
+                channel.enableLights(false);
+                channel.enableVibration(false);
+                notificationManager.createNotificationChannel(channel);
+            }
+
+            Notification notification = new Notification.Builder(this, channelId).build();
+            startForeground(45, notification);
+        }
+    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         serviceStartId = startId;
@@ -355,25 +375,74 @@ public class MusicService extends MediaBrowserServiceCompat {
             if (action != null) {
                 switch (action) {
                     case ServiceCommand.NEXT:
+                        fakeForegroundNotification();
+
+                        // If the service is not already started:
+                        // - With queue: Force to next song, start playback, update notification, no ANR
+                        // - No queue: ANR
+
+                        // Possible solution: (A) Show the Shuttle notification, despite the fact that music isn't playing. Need to customise notification to allow for an empty queue (no current song)
+                        // We could try to generate a queue of random songs as well, but there's no guarantee the user has music on their device.
+
                         gotoNext(true);
+
                         break;
                     case ServiceCommand.PREV:
+                        fakeForegroundNotification();
+
+                        // If the service is not already started:
+                        // - With queue: ANR
+                        // - No queue: ANR
+
+                        // Possible solution: (A) Show the Shuttle notification, despite the fact that music isn't playing. Need to customise notification to allow for an empty queue (no current song)
+
                         previous(false);
-                        break;
-                    case ServiceCommand.TOGGLE_PLAYBACK:
-                        if (isPlaying()) {
-                            pause(intent.getBooleanExtra(MediaButtonCommand.FORCE_PREVIOUS, false));
-                        } else {
-                            play();
-                        }
+
                         break;
                     case ServiceCommand.PAUSE:
+                        fakeForegroundNotification();
+
+                        // If the service is not already started:
+                        // - With queue: ANR
+                        // - No queue: ANR
+
+                        // Possible solution: (A) Show the Shuttle notification, despite the fact that music isn't playing. Need to customise notification to allow for an empty queue (no current song)
+
                         pause(true);
                         break;
                     case ServiceCommand.PLAY:
+                    case ShortcutCommands.PLAY:
+                        fakeForegroundNotification();
+
+                        // If the service is not already started:
+                        // - No queue: ANR
+                        // - With queue: No ANR
+
+                        // Possible solution: (A) Show the Shuttle notification, despite the fact that music isn't playing. Need to customise notification to allow for an empty queue (no current song)
+
                         play();
                         break;
+                    case ServiceCommand.TOGGLE_PLAYBACK:
+                        fakeForegroundNotification();
+
+                        if (isPlaying()) {
+
+                            // It's not possible to be playing and the service not be started. No ANR
+
+                            pause(intent.getBooleanExtra(MediaButtonCommand.FORCE_PREVIOUS, false));
+                        } else {
+
+                            // Same as ServiceCommand.PLAY
+
+                            play();
+                        }
+                        break;
                     case ServiceCommand.STOP:
+                        fakeForegroundNotification();
+
+                        // If the service is already started & we're not playing: ANR
+                        // If the service is not already started: ANR
+
                         pause(false);
                         releaseServiceUiAndStop();
                         notificationStateHandler.removeCallbacksAndMessages(null);
@@ -381,25 +450,46 @@ public class MusicService extends MediaBrowserServiceCompat {
                         new Handler().postDelayed(() -> stopForegroundImpl(true, false), 150);
                         break;
                     case ServiceCommand.SHUFFLE:
+                        fakeForegroundNotification();
+
+                        // If the service is not already started: ANR
+
                         toggleShuffleMode();
                         break;
                     case ServiceCommand.REPEAT:
+                        fakeForegroundNotification();
+
+                        // If the service is not already started: ANR
+
                         toggleRepeat();
                         break;
                     case ServiceCommand.TOGGLE_FAVORITE:
+                        fakeForegroundNotification();
+
+                        // If the service is not already started: ANR
+
                         toggleFavorite();
                         break;
                     case ExternalIntents.PLAY_STATUS_REQUEST:
+                        fakeForegroundNotification();
+
+                        // If the service is not already started: ANR
+
                         notifyChange(ExternalIntents.PLAY_STATUS_RESPONSE);
                         break;
                     case ServiceCommand.SHUTDOWN:
+                        fakeForegroundNotification();
+
+                        // If the service is not already started: ANR
+
                         shutdownScheduled = false;
                         releaseServiceUiAndStop();
                         return START_NOT_STICKY;
-                    case ShortcutCommands.PLAY:
-                        play();
-                        break;
                     case ShortcutCommands.SHUFFLE_ALL:
+                        fakeForegroundNotification();
+
+                        // If service is not already started: ANR
+
                         queueManager.makeShuffleList();
                         playAutoShuffleList();
                         break;
