@@ -2,6 +2,7 @@ package com.simplecity.amp_library.playback.constants
 
 import android.appwidget.AppWidgetManager
 import android.content.Intent
+import android.preference.PreferenceManager
 import com.simplecity.amp_library.playback.MusicService
 import com.simplecity.amp_library.ui.widgets.WidgetProviderExtraLarge
 import com.simplecity.amp_library.ui.widgets.WidgetProviderLarge
@@ -19,22 +20,25 @@ class WidgetManager @Inject constructor(
 ) {
 
     fun processCommand(musicService: MusicService, intent: Intent, command: String) {
+
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(musicService)
+
         when (command) {
             WidgetProviderSmall.CMDAPPWIDGETUPDATE -> {
                 val appWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS)
-                widgetProviderSmall.update(musicService, appWidgetIds, true)
+                widgetProviderSmall.update(musicService, sharedPreferences, appWidgetIds, true)
             }
             WidgetProviderMedium.CMDAPPWIDGETUPDATE -> {
                 val appWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS)
-                widgetProviderMedium.update(musicService, appWidgetIds, true)
+                widgetProviderMedium.update(musicService, sharedPreferences, appWidgetIds, true)
             }
             WidgetProviderLarge.CMDAPPWIDGETUPDATE -> {
                 val appWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS)
-                widgetProviderLarge.update(musicService, appWidgetIds, true)
+                widgetProviderLarge.update(musicService, sharedPreferences, appWidgetIds, true)
             }
             WidgetProviderExtraLarge.CMDAPPWIDGETUPDATE -> {
                 val appWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS)
-                widgetProviderExtraLarge.update(musicService, appWidgetIds, true)
+                widgetProviderExtraLarge.update(musicService, sharedPreferences, appWidgetIds, true)
             }
         }
     }

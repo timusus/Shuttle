@@ -3,6 +3,7 @@ package com.simplecity.amp_library.ui.screens.widgets;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import com.simplecity.amp_library.ui.widgets.WidgetConfigureActivityLarge;
 import com.simplecity.amp_library.ui.widgets.WidgetConfigureActivityMedium;
 import com.simplecity.amp_library.ui.widgets.WidgetConfigureActivitySmall;
 import com.simplecity.amp_library.ui.common.BaseFragment;
+import dagger.android.support.AndroidSupportInjection;
 
 public class WidgetFragment extends BaseFragment {
 
@@ -26,6 +28,12 @@ public class WidgetFragment extends BaseFragment {
      * Empty constructor as per the fragment docs
      */
     public WidgetFragment() {
+    }
+
+    @Override
+    public void onAttachFragment(Fragment childFragment) {
+        AndroidSupportInjection.inject(this);
+        super.onAttachFragment(childFragment);
     }
 
     /**

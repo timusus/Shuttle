@@ -25,8 +25,7 @@ public class WidgetProviderExtraLarge extends BaseWidgetProvider {
     public static final String CMDAPPWIDGETUPDATE = "appwidgetupdate_extra_large";
 
     @Inject
-    public WidgetProviderExtraLarge(SharedPreferences sharedPreferences) {
-        super(sharedPreferences);
+    public WidgetProviderExtraLarge() {
     }
 
     @Override
@@ -50,7 +49,7 @@ public class WidgetProviderExtraLarge extends BaseWidgetProvider {
     }
 
     @Override
-    protected void initialiseWidget(Context context, int appWidgetId) {
+    protected void initialiseWidget(Context context, SharedPreferences sharedPreferences, int appWidgetId) {
         final Resources res = context.getResources();
         final RemoteViews views = new RemoteViews(context.getPackageName(), mLayoutId);
 
@@ -79,7 +78,7 @@ public class WidgetProviderExtraLarge extends BaseWidgetProvider {
     }
 
     @Override
-    public void update(MusicService service, int[] appWidgetIds, boolean updateArtwork) {
+    public void update(MusicService service, SharedPreferences sharedPreferences, int[] appWidgetIds, boolean updateArtwork) {
 
         if (appWidgetIds == null) {
             return;

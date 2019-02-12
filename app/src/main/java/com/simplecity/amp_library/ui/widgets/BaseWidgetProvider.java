@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.support.annotation.LayoutRes;
 import android.widget.RemoteViews;
 import com.bumptech.glide.Glide;
@@ -45,25 +46,25 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     public static final String ARG_WIDGET_SHOW_ARTWORK = "widget_show_artwork_";
     public static final String ARG_WIDGET_COLOR_FILTER = "widget_color_filter_";
 
-    public SharedPreferences sharedPreferences;
-
     @LayoutRes
     public int mLayoutId;
 
-    public BaseWidgetProvider(SharedPreferences sharedPreferences) {
-        this.sharedPreferences = sharedPreferences;
+    public abstract void update(MusicService service, SharedPreferences sharedPreferences, int[] appWidgetIds, boolean updateArtwork);
+
+    protected abstract void initialiseWidget(Context context, SharedPreferences sharedPreferences, int appWidgetId);
+
+    SharedPreferences getSharedPreferences(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context);
     }
-
-    public abstract void update(MusicService service, int[] appWidgetIds, boolean updateArtwork);
-
-    protected abstract void initialiseWidget(Context context, int appWidgetId);
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 
+        SharedPreferences sharedPreferences = getSharedPreferences(context);
+
         for (int appWidgetId : appWidgetIds) {
             mLayoutId = sharedPreferences.getInt(getLayoutIdString() + appWidgetId, getWidgetLayoutId());
-            initialiseWidget(context, appWidgetId);
+            initialiseWidget(context, sharedPreferences, appWidgetId);
         }
 
         // Send broadcast intent to any running MusicService so it can wrap around with an immediate update.
@@ -96,7 +97,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                     || InternalIntents.PLAY_STATE_CHANGED.equals(what)
                     || InternalIntents.SHUFFLE_CHANGED.equals(what)
                     || InternalIntents.REPEAT_CHANGED.equals(what)) {
-                update(service, getInstances(service), InternalIntents.META_CHANGED.equals(what));
+                update(service, getSharedPreferences(service), getInstances(service), InternalIntents.META_CHANGED.equals(what));
             }
         }
     }
