@@ -9,6 +9,7 @@ import com.simplecity.amp_library.playback.MusicService
 import com.simplecity.amp_library.services.ArtworkDownloadService
 import com.simplecity.amp_library.ui.screens.main.MainActivity
 import com.simplecity.amp_library.ui.screens.main.MainActivityModule
+import com.simplecity.amp_library.ui.screens.shortcut.ShortcutTrampolineActivity
 import com.simplecity.amp_library.ui.widgets.WidgetConfigureActivityExtraLarge
 import com.simplecity.amp_library.ui.widgets.WidgetConfigureActivityExtraLargeModule
 import com.simplecity.amp_library.ui.widgets.WidgetConfigureActivityLarge
@@ -52,6 +53,10 @@ abstract class AppModuleBinds {
 
     @ContributesAndroidInjector
     abstract fun mediaButtonIntentReceiverInjector(): MediaButtonIntentReceiver
+
+    @ActivityScope
+    @ContributesAndroidInjector
+    abstract fun shortcutTrampolineActivityInjector(): ShortcutTrampolineActivity
 
     @ActivityScope
     @ContributesAndroidInjector(modules = [WidgetConfigureActivitySmallModule::class])
