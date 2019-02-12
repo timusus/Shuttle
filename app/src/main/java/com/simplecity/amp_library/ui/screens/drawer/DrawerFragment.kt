@@ -100,7 +100,7 @@ class DrawerFragment : BaseFragment(), DrawerView, View.OnCreateContextMenuListe
 
         if (savedInstanceState != null) {
             selectedDrawerParent = savedInstanceState.getInt(STATE_SELECTED_DRAWER_PARENT, DrawerParent.Type.LIBRARY)
-            currentSelectedPlaylist = savedInstanceState.get(STATE_SELECTED_PLAYLIST) as Playlist
+            currentSelectedPlaylist = savedInstanceState.get(STATE_SELECTED_PLAYLIST) as Playlist?
         }
 
         backgroundPlaceholder = ContextCompat.getDrawable(context!!, R.drawable.ic_drawer_header_placeholder)
