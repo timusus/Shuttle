@@ -31,6 +31,7 @@ import com.simplecity.amp_library.ui.screens.genre.detail.GenreDetailFragment;
 import com.simplecity.amp_library.ui.screens.genre.detail.GenreDetailFragmentModule;
 import com.simplecity.amp_library.ui.screens.genre.list.GenreListFragment;
 import com.simplecity.amp_library.ui.screens.genre.list.GenreListFragmentModule;
+import com.simplecity.amp_library.ui.screens.lyrics.LyricsDialog;
 import com.simplecity.amp_library.ui.screens.miniplayer.MiniPlayerFragment;
 import com.simplecity.amp_library.ui.screens.nowplaying.PlayerFragment;
 import com.simplecity.amp_library.ui.screens.nowplaying.PlayerFragmentModule;
@@ -206,4 +207,8 @@ public abstract class MainActivityModule {
     @FragmentScope
     @ContributesAndroidInjector(modules = DialogFragmentModule.class)
     abstract TabChooserDialog tabChooseerDialogInjector();
+
+    @FragmentScope
+    @ContributesAndroidInjector(modules = DialogFragmentModule.class)
+    abstract LyricsDialog lyricsDialogInjector();
 }
