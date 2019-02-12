@@ -131,9 +131,8 @@ public class DeleteDialog extends DialogFragment implements SafManager.SafDialog
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
         AndroidSupportInjection.inject(this);
+        super.onCreate(savedInstanceState);
 
         deleteMessageId = getArguments().getInt(ARG_DELETE_MESSAGE_ID);
 

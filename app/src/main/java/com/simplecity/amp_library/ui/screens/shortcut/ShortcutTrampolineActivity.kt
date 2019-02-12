@@ -23,9 +23,8 @@ class ShortcutTrampolineActivity : AppCompatActivity() {
     @Inject lateinit var analyticsManager: AnalyticsManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
         AndroidInjection.inject(this)
+        super.onCreate(savedInstanceState)
 
         val action = intent.action
         when (action) {

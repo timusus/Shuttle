@@ -41,9 +41,8 @@ public abstract class BaseFragment extends BaseController {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
         AndroidSupportInjection.inject(this);
+        super.onCreate(savedInstanceState);
     }
 
     @Override

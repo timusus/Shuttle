@@ -81,9 +81,8 @@ public class MainActivity extends BaseActivity implements
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
         AndroidInjection.inject(this);
+        super.onCreate(savedInstanceState);
 
         analyticsManager.dropBreadcrumb(TAG, "onCreate()");
 

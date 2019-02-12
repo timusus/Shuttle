@@ -25,9 +25,8 @@ class ChangelogDialog : DialogFragment() {
     @Inject lateinit var settingsManager: SettingsManager
 
     override fun onAttach(context: Context?) {
-        super.onAttach(context)
-
         AndroidSupportInjection.inject(this)
+        super.onAttach(context)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

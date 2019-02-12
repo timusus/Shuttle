@@ -73,10 +73,9 @@ public class QCircleActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         AndroidInjection.inject(this);
-
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_qcircle);
 
         //Retrieve a view for the QuickCircle window.

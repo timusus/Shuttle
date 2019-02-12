@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.ui.screens.queue.pager;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -74,12 +75,16 @@ public class QueuePagerFragment extends BaseFragment implements
     }
 
     @Override
+    public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
+        super.onAttach(context);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         viewModelAdapter = new ViewModelAdapter();
-
-        AndroidSupportInjection.inject(this);
     }
 
     @Override

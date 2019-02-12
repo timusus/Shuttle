@@ -91,9 +91,8 @@ class DrawerFragment : BaseFragment(), DrawerView, View.OnCreateContextMenuListe
     // Lifecycle
 
     override fun onAttach(context: Context?) {
-        super.onAttach(context)
-
         AndroidSupportInjection.inject(this)
+        super.onAttach(context)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

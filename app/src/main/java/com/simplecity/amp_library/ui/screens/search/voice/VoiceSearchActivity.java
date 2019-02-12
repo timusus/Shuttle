@@ -49,9 +49,8 @@ public class VoiceSearchActivity extends BaseActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
         AndroidInjection.inject(this);
+        super.onCreate(savedInstanceState);
 
         intent = getIntent();
 

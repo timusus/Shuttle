@@ -25,9 +25,8 @@ class DeletePlaylistConfirmationDialog : DialogFragment() {
     @Inject lateinit var playlistsRepository: PlaylistsRepository
 
     override fun onAttach(context: Context?) {
-        super.onAttach(context)
-
         AndroidSupportInjection.inject(this)
+        super.onAttach(context)
 
         playlist = arguments!!.getSerializable(ARG_PLAYLIST) as Playlist
     }

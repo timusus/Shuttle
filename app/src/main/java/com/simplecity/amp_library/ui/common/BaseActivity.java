@@ -59,9 +59,8 @@ public abstract class BaseActivity extends AestheticActivity implements
 
     @CallSuper
     protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
         AndroidInjection.inject(this);
+        super.onCreate(savedInstanceState);
 
         Permiso.getInstance().setActivity(this);
 

@@ -129,9 +129,8 @@ class PlaylistDetailFragment :
     @Inject lateinit var playlistMenuHelper: PlaylistMenuHelper
 
     override fun onAttach(context: Context?) {
-        super.onAttach(context)
-
         AndroidSupportInjection.inject(this)
+        super.onAttach(context)
 
         playlist = arguments!!.getSerializable(ARG_PLAYLIST) as Playlist
 

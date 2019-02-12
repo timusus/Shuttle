@@ -52,9 +52,8 @@ class GenreListFragment :
     }
 
     override fun onAttach(context: Context?) {
-        super.onAttach(context)
-
         AndroidSupportInjection.inject(this)
+        super.onAttach(context)
 
         if (parentFragment is GenreClickListener) {
             genreClickListener = parentFragment as GenreClickListener?

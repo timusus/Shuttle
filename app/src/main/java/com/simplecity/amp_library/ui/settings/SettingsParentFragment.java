@@ -182,9 +182,8 @@ public class SettingsParentFragment extends BaseNavigationController implements
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-
             AndroidSupportInjection.inject(this);
+            super.onCreate(savedInstanceState);
 
             // Support Preferences
 

@@ -141,9 +141,8 @@ class GenreDetailFragment :
     private var isFirstLoad = true
 
     override fun onAttach(context: Context?) {
-        super.onAttach(context)
-
         AndroidSupportInjection.inject(this)
+        super.onAttach(context)
 
         genre = arguments!!.getSerializable(ARG_GENRE) as Genre
 
@@ -152,8 +151,6 @@ class GenreDetailFragment :
 
     override fun onCreate(icicle: Bundle?) {
         super.onCreate(icicle)
-
-        AndroidSupportInjection.inject(this)
 
         requestManager = Glide.with(this)
 

@@ -135,9 +135,8 @@ public class MusicService extends MediaBrowserServiceCompat {
     @SuppressLint("InlinedApi")
     @Override
     public void onCreate() {
-        super.onCreate();
-
         AndroidInjection.inject(this);
+        super.onCreate();
 
         queueManager = new QueueManager(
                 musicServiceCallbacks,

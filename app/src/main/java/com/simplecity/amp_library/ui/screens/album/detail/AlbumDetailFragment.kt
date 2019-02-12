@@ -120,9 +120,8 @@ class AlbumDetailFragment :
     private var isFirstLoad = true
 
     override fun onAttach(context: Context?) {
-        super.onAttach(context)
-
         AndroidSupportInjection.inject(this)
+        super.onAttach(context)
 
         album = arguments!!.getSerializable(ARG_ALBUM) as Album
     }

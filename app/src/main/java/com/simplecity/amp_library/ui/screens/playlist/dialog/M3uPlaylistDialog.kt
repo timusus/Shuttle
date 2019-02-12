@@ -39,9 +39,8 @@ class M3uPlaylistDialog : DialogFragment() {
     private var disposable: Disposable? = null
 
     override fun onAttach(context: Context?) {
-        super.onAttach(context)
-
         AndroidSupportInjection.inject(this)
+        super.onAttach(context)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

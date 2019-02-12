@@ -16,9 +16,8 @@ class UpgradeNagDialog : DialogFragment() {
     @Inject lateinit var settingsManager: SettingsManager
 
     override fun onAttach(context: Context?) {
-        super.onAttach(context)
-
         AndroidSupportInjection.inject(this)
+        super.onAttach(context)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

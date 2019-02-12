@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.ui.screens.main;
 
+import android.content.Context;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
@@ -100,6 +101,12 @@ public class MainController extends BaseNavigationController implements BackPres
 
     }
 
+    @Override
+    public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
+        super.onAttach(context);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -108,7 +115,6 @@ public class MainController extends BaseNavigationController implements BackPres
 
         ButterKnife.bind(this, rootView);
 
-        AndroidSupportInjection.inject(this);
 
         multiSheetView.setMultiSheetEventRelay(multiSheetEventRelay);
         multiSheetView.setMultiSheetSlideEventRelay(multiSheetSlideEventRelay);

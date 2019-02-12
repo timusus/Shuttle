@@ -75,9 +75,8 @@ public class MiniPlayerFragment extends BaseFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
         AndroidSupportInjection.inject(this);
+        super.onCreate(savedInstanceState);
     }
 
     @Override

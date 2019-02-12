@@ -94,9 +94,8 @@ class SuggestedFragment :
     // Lifecycle
 
     override fun onAttach(context: Context?) {
-        super.onAttach(context)
-
         AndroidSupportInjection.inject(this)
+        super.onAttach(context)
 
         if (parentFragment is SuggestedClickListener) {
             suggestedClickListener = parentFragment as SuggestedClickListener?

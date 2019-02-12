@@ -52,9 +52,8 @@ class PlaylistListFragment :
     // Lifecycle
 
     override fun onAttach(context: Context?) {
-        super.onAttach(context)
-
         AndroidSupportInjection.inject(this)
+        super.onAttach(context)
 
         if (parentFragment is PlaylistClickListener) {
             playlistClickListener = parentFragment as PlaylistClickListener?

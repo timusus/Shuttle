@@ -38,9 +38,8 @@ class InclExclDialog : DialogFragment() {
     private var disposable: Disposable? = null
 
     override fun onAttach(context: Context?) {
-        super.onAttach(context)
-
         AndroidSupportInjection.inject(this)
+        super.onAttach(context)
 
         type = arguments!!.getInt(ARG_TYPE)
     }

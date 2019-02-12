@@ -83,9 +83,8 @@ class AlbumArtistListFragment :
     }
 
     override fun onAttach(context: Context?) {
-        super.onAttach(context)
-
         AndroidSupportInjection.inject(this)
+        super.onAttach(context)
 
         val parentFragment = parentFragment
         if (parentFragment is AlbumArtistClickListener) {

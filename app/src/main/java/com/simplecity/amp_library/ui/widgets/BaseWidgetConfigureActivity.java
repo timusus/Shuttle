@@ -96,9 +96,8 @@ public abstract class BaseWidgetConfigureActivity extends BaseActivity implement
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
         AndroidInjection.inject(this);
+        super.onCreate(savedInstanceState);
 
         if (Aesthetic.isFirstTime(this)) {
             Aesthetic.get(this)

@@ -80,9 +80,8 @@ public class ArtworkDownloadService extends Service {
 
     @Override
     public void onCreate() {
-        super.onCreate();
-
         AndroidInjection.inject(this);
+        super.onCreate();
 
         notificationHelper = new NotificationHelper(this);
 

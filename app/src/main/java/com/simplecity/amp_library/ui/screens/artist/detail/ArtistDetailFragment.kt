@@ -200,16 +200,14 @@ class ArtistDetailFragment :
     }
 
     override fun onAttach(context: Context?) {
+        AndroidSupportInjection.inject(this)
         super.onAttach(context)
-
 
         albumArtist = arguments!!.getSerializable(ARG_ALBUM_ARTIST) as AlbumArtist
     }
 
     override fun onCreate(icicle: Bundle?) {
         super.onCreate(icicle)
-
-        AndroidSupportInjection.inject(this)
 
         presenter = presenterFactory.create(albumArtist)
 

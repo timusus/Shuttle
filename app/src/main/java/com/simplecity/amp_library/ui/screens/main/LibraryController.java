@@ -129,9 +129,8 @@ public class LibraryController extends BaseFragment implements
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
         AndroidSupportInjection.inject(this);
+        super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
 
