@@ -24,7 +24,7 @@ class DummyNotificationHelper {
     // See https://github.com/aosp-mirror/platform_frameworks_base/blob/e80b45506501815061b079dcb10bf87443bd385d/services/core/java/com/android/server/am/ActiveServices.java
     // (SERVICE_START_FOREGROUND_TIMEOUT = 10*1000)
     //
-    private static int NOTIFICATION_STOP_DELAY = 1250;
+    private static int NOTIFICATION_STOP_DELAY = 12500;
 
     @Nullable
     private Disposable dummyNotificationDisposable = null;
