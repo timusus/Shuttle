@@ -839,4 +839,8 @@
     <string name="saf_access_required_message">Shuttle requires permission to access these files. Please pick the directory containing your music.</string>
     <string name="saf_show_files_button">Show files</string>
 
+
+
+    <string name="notification_text_shuttle_running">Shuttle service running…</string>
+
 </resources>

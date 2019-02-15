@@ -2,16 +2,12 @@ package com.simplecity.amp_library.playback;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -104,6 +100,8 @@ public class MusicService extends MediaBrowserServiceCompat {
     private PackageValidator mPackageValidator;
 
     private PlaybackManager playbackManager;
+
+    private DummyNotificationHelper dummyNotificationHelper = new DummyNotificationHelper();
 
     @Inject
     Repository.SongsRepository songsRepository;
@@ -337,26 +335,11 @@ public class MusicService extends MediaBrowserServiceCompat {
 
         playbackManager.destroy();
 
+        dummyNotificationHelper.teardown(this);
+
         disposables.clear();
 
         super.onDestroy();
-    }
-
-    void fakeForegroundNotification() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            String channelId = "channel_1";
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            NotificationChannel channel = notificationManager.getNotificationChannel(channelId);
-            if (channel == null) {
-                channel = new NotificationChannel(channelId, getString(R.string.app_name), NotificationManager.IMPORTANCE_DEFAULT);
-                channel.enableLights(false);
-                channel.enableVibration(false);
-                notificationManager.createNotificationChannel(channel);
-            }
-
-            Notification notification = new Notification.Builder(this, channelId).build();
-            startForeground(45, notification);
-        }
     }
 
     @Override
@@ -374,7 +357,7 @@ public class MusicService extends MediaBrowserServiceCompat {
             if (action != null) {
                 switch (action) {
                     case ServiceCommand.NEXT:
-                        fakeForegroundNotification();
+                        dummyNotificationHelper.showDummyNotification(this);
 
                         // If the service is not already started:
                         // - With queue: Force to next song, start playback, update notification, no ANR
@@ -387,7 +370,7 @@ public class MusicService extends MediaBrowserServiceCompat {
 
                         break;
                     case ServiceCommand.PREV:
-                        fakeForegroundNotification();
+                        dummyNotificationHelper.showDummyNotification(this);
 
                         // If the service is not already started:
                         // - With queue: ANR
@@ -399,7 +382,7 @@ public class MusicService extends MediaBrowserServiceCompat {
 
                         break;
                     case ServiceCommand.PAUSE:
-                        fakeForegroundNotification();
+                        dummyNotificationHelper.showDummyNotification(this);
 
                         // If the service is not already started:
                         // - With queue: ANR
@@ -411,7 +394,7 @@ public class MusicService extends MediaBrowserServiceCompat {
                         break;
                     case ServiceCommand.PLAY:
                     case ShortcutCommands.PLAY:
-                        fakeForegroundNotification();
+                        dummyNotificationHelper.showDummyNotification(this);
 
                         // If the service is not already started:
                         // - No queue: ANR
@@ -422,7 +405,7 @@ public class MusicService extends MediaBrowserServiceCompat {
                         play();
                         break;
                     case ServiceCommand.TOGGLE_PLAYBACK:
-                        fakeForegroundNotification();
+                        dummyNotificationHelper.showDummyNotification(this);
 
                         if (isPlaying()) {
 
@@ -437,7 +420,7 @@ public class MusicService extends MediaBrowserServiceCompat {
                         }
                         break;
                     case ServiceCommand.STOP:
-                        fakeForegroundNotification();
+                        dummyNotificationHelper.showDummyNotification(this);
 
                         // If the service is already started & we're not playing: ANR
                         // If the service is not already started: ANR
@@ -449,35 +432,35 @@ public class MusicService extends MediaBrowserServiceCompat {
                         new Handler().postDelayed(() -> stopForegroundImpl(true, false), 150);
                         break;
                     case ServiceCommand.SHUFFLE:
-                        fakeForegroundNotification();
+                        dummyNotificationHelper.showDummyNotification(this);
 
                         // If the service is not already started: ANR
 
                         toggleShuffleMode();
                         break;
                     case ServiceCommand.REPEAT:
-                        fakeForegroundNotification();
+                        dummyNotificationHelper.showDummyNotification(this);
 
                         // If the service is not already started: ANR
 
                         toggleRepeat();
                         break;
                     case ServiceCommand.TOGGLE_FAVORITE:
-                        fakeForegroundNotification();
+                        dummyNotificationHelper.showDummyNotification(this);
 
                         // If the service is not already started: ANR
 
                         toggleFavorite();
                         break;
                     case ExternalIntents.PLAY_STATUS_REQUEST:
-                        fakeForegroundNotification();
+                        dummyNotificationHelper.showDummyNotification(this);
 
                         // If the service is not already started: ANR
 
                         notifyChange(ExternalIntents.PLAY_STATUS_RESPONSE);
                         break;
                     case ServiceCommand.SHUTDOWN:
-                        fakeForegroundNotification();
+                        dummyNotificationHelper.showDummyNotification(this);
 
                         // If the service is not already started: ANR
 
@@ -485,7 +468,7 @@ public class MusicService extends MediaBrowserServiceCompat {
                         releaseServiceUiAndStop();
                         return START_NOT_STICKY;
                     case ShortcutCommands.SHUFFLE_ALL:
-                        fakeForegroundNotification();
+                        dummyNotificationHelper.showDummyNotification(this);
 
                         // If service is not already started: ANR
 
@@ -1013,8 +996,18 @@ public class MusicService extends MediaBrowserServiceCompat {
             Song song = queueManager.getCurrentSong();
             if (song != null) {
                 Log.i(TAG, "startForeground called");
-                notificationHelper.startForeground(this, playlistsRepository, songsRepository, queueManager.getCurrentSong(), isPlaying(), playbackManager.getMediaSessionToken(), settingsManager,
-                        favoritesPlaylistManager);
+                if (notificationHelper.startForeground(
+                        this,
+                        playlistsRepository,
+                        songsRepository,
+                        queueManager.getCurrentSong(),
+                        isPlaying(),
+                        playbackManager.getMediaSessionToken(),
+                        settingsManager,
+                        favoritesPlaylistManager
+                )) {
+                    dummyNotificationHelper.setForegroundedByApp(true);
+                }
             } else {
                 Log.e(TAG, "startForeground should have been called, but song is null");
             }
@@ -1034,6 +1027,7 @@ public class MusicService extends MediaBrowserServiceCompat {
             notificationStateHandler.sendEmptyMessageDelayed(NotificationStateHandler.STOP_FOREGROUND, 1500);
         } else {
             stopForeground(removeNotification);
+            dummyNotificationHelper.setForegroundedByApp(false);
         }
     }
 

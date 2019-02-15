@@ -164,7 +164,7 @@ public class MusicNotificationHelper extends NotificationHelper {
                 }));
     }
 
-    public void startForeground(
+    public boolean startForeground(
             Service service,
             @NonNull Repository.PlaylistsRepository playlistsRepository,
             @NonNull Repository.SongsRepository songsRepository,
@@ -179,9 +179,11 @@ public class MusicNotificationHelper extends NotificationHelper {
             analyticsManager.dropBreadcrumb(TAG, "startForeground() called");
             Log.w(TAG, "service.startForeground called");
             service.startForeground(NOTIFICATION_ID, notification);
+            return true;
         } catch (RuntimeException e) {
             Log.e(TAG, "startForeground not called, error: " + e);
             LogUtils.logException(TAG, "Error starting foreground notification", e);
+            return false;
         }
     }
 
