@@ -152,7 +152,6 @@ object Dependencies {
             const val rxRelay = "2.0.0"
             const val rxBroadcast = "2.0.0"
             const val rxPrefs = "2.0.0"
-            const val traceur = "1.0.1"
             const val rxKotlin = "2.3.0"
         }
 
@@ -179,8 +178,6 @@ object Dependencies {
 
         // Rx Prefs - https://github.com/f2prateek/rx-preferences
         const val rxPrefs = "com.f2prateek.rx.preferences2:rx-preferences:${Versions.rxPrefs}"
-
-        const val traceur = "com.tspoon.traceur:traceur:${Versions.traceur}"
 
         const val rxKotlin = "io.reactivex.rxjava2:rxkotlin:${Versions.rxKotlin}"
     }
