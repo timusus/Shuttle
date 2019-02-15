@@ -1,7 +1,0 @@
-v2.0.3
-
-- Reinstated SD card file deletion (Lollipop+)
-- Added ability to set, remove, and navigate to a specified home directory when folder browsing
-- When a home directory is specified, the back button won't navigate past that directory
-- Fixed an issue where back button didn't work correctly when displaying folder browser in tabs
-- Added ability to batch remove songs from the queue
