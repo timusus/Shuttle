@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.http.HttpClient;
 import com.simplecity.amp_library.http.itunes.ItunesResult;
 import com.simplecity.amp_library.http.lastfm.LastFmResult;
@@ -55,7 +54,7 @@ public class Song implements
     public int discNumber;
     public boolean isPodcast;
     public String path;
-    public int bookMark;
+    public long bookMark;
 
     public String albumArtistName;
 
@@ -140,7 +139,7 @@ public class Song implements
 
         isPodcast = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.IS_PODCAST)) == 1;
 
-        bookMark = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.BOOKMARK));
+        bookMark = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.BOOKMARK));
 
         //Populate the artwork key & sort key properties if null.
         setSortKey();

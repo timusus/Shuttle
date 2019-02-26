@@ -540,13 +540,16 @@ public class PlaybackManager implements Playback.Callbacks {
     }
 
     private void saveBookmarkIfNeeded() {
-        if (queueManager.getCurrentSong() != null && queueManager.getCurrentSong().isPodcast) {
+        Song currentSong = queueManager.getCurrentSong();
+        if (currentSong != null && currentSong.isPodcast) {
             long pos = getSeekPosition();
             long duration = queueManager.getCurrentSong().duration;
             if (pos < 5000 || (pos + 5000) > duration) {
                 // If we're near the start or end, clear the bookmark
                 pos = 0;
             }
+
+            currentSong.bookMark = pos;
 
             try {
                 // Write 'pos' to the bookmark field
@@ -555,8 +558,11 @@ public class PlaybackManager implements Playback.Callbacks {
                 Uri uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, queueManager.getCurrentSong().id);
                 if (uri != null) {
                     context.getContentResolver().update(uri, values, null, null);
+                } else {
+                    Log.e(TAG, "Save bookmark failed (uri null)");
                 }
-            } catch (SQLiteException ignored) {
+            } catch (SQLiteException error) {
+                Log.e(TAG, "Save bookmark failed, error: " + error.getLocalizedMessage());
             }
         }
     }
