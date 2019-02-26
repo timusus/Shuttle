@@ -44,6 +44,7 @@ import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.StringUtils;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
+import hu.akarnokd.rxjava2.debug.RxJavaAssemblyTracking;
 import io.fabric.sdk.android.Fabric;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
@@ -154,6 +155,9 @@ public class ShuttleApplication extends Application {
         TagOptionSingleton.getInstance().setPadNumbers(true);
 
         SettingsManager.getInstance().incrementLaunchCount();
+
+        // Attach stack trace info about call site when RxJava throws an exception
+        RxJavaAssemblyTracking.enable();
 
         Completable.fromAction(() -> {
             Query query = new Query.Builder()

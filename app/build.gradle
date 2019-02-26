@@ -250,6 +250,7 @@ dependencies {
     implementation Dependencies.Rx.rxBindingAppCompat
     implementation Dependencies.Rx.rxImagePicker
     implementation Dependencies.Rx.rxJava
+    implementation Dependencies.Rx.rxJavaExtensions
     implementation Dependencies.Rx.rxRelay
     implementation Dependencies.Rx.rxBroadcast
     implementation Dependencies.Rx.rxPrefs
