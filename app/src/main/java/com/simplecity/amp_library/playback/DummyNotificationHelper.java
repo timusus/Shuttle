@@ -7,11 +7,14 @@ import android.app.Service;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import com.simplecity.amp_library.R;
+import com.simplecity.amp_library.utils.AnalyticsManager;
 import io.reactivex.Completable;
 import io.reactivex.disposables.Disposable;
 import java.util.concurrent.TimeUnit;
 
 class DummyNotificationHelper {
+
+    private static final String TAG = "DummyNotificationHelper";
 
     private static int NOTIFICATION_ID_DUMMY = 5;
 
@@ -30,10 +33,14 @@ class DummyNotificationHelper {
     private Disposable dummyNotificationDisposable = null;
 
     void setForegroundedByApp(boolean foregroundedByApp) {
+        AnalyticsManager.dropBreadcrumb(TAG, "setForegroundedByApp: " + foregroundedByApp);
         isForegroundedByApp = foregroundedByApp;
     }
 
     void showDummyNotification(Service service) {
+
+        AnalyticsManager.dropBreadcrumb(TAG, "showDummyNotification() called");
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (!isShowingDummyNotification) {
                 NotificationManager notificationManager = service.getSystemService(NotificationManager.class);
@@ -54,10 +61,14 @@ class DummyNotificationHelper {
                         .setSmallIcon(R.drawable.ic_stat_notification)
                         .build();
 
+                AnalyticsManager.dropBreadcrumb(TAG, "Showing dummy notification..");
                 notificationManager.notify(NOTIFICATION_ID_DUMMY, notification);
 
                 if (!isForegroundedByApp) {
+                    AnalyticsManager.dropBreadcrumb(TAG, "Starting dummy notification in foreground..");
                     service.startForeground(NOTIFICATION_ID_DUMMY, notification);
+                } else {
+                    AnalyticsManager.dropBreadcrumb(TAG, "Already foregrounded by app, not foregrounding dummy notification");
                 }
 
                 isShowingDummyNotification = true;
@@ -72,6 +83,8 @@ class DummyNotificationHelper {
 
     void teardown(Service service) {
 
+        AnalyticsManager.dropBreadcrumb(TAG, "teardown() called");
+
         removeDummyNotification(service);
 
         if (dummyNotificationDisposable != null) {
@@ -80,6 +93,8 @@ class DummyNotificationHelper {
     }
 
     private void removeDummyNotification(Service service) {
+        AnalyticsManager.dropBreadcrumb(TAG, "removeDummyNotification() called");
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (isShowingDummyNotification) {
 
@@ -88,9 +103,11 @@ class DummyNotificationHelper {
                 }
 
                 if (!isForegroundedByApp) {
+                    AnalyticsManager.dropBreadcrumb(TAG, "service.stopForeground() called");
                     service.stopForeground(true);
                 }
 
+                AnalyticsManager.dropBreadcrumb(TAG, "Cancelling dummy notification");
                 NotificationManager notificationManager = service.getSystemService(NotificationManager.class);
                 notificationManager.cancel(NOTIFICATION_ID_DUMMY);
 
