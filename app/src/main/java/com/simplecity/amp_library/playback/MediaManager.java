@@ -239,6 +239,7 @@ public class MediaManager {
         return null;
     }
 
+    @Nullable
     public Song getSong() {
         if (MusicServiceConnectionUtils.serviceBinder != null && MusicServiceConnectionUtils.serviceBinder.getService() != null) {
             return MusicServiceConnectionUtils.serviceBinder.getService().getSong();

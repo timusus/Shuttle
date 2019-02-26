@@ -720,9 +720,6 @@ public class MusicService extends MediaBrowserServiceCompat {
         switch (getShuffleMode()) {
             case QueueManager.ShuffleMode.OFF:
                 setShuffleMode(QueueManager.ShuffleMode.ON);
-                notifyChange(InternalIntents.SHUFFLE_CHANGED);
-                queueManager.makeShuffleList();
-                notifyChange(InternalIntents.QUEUE_CHANGED);
                 if (getRepeatMode() == QueueManager.RepeatMode.ONE) {
                     setRepeatMode(QueueManager.RepeatMode.ALL);
                 }
