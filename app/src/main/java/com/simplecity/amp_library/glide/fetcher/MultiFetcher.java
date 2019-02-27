@@ -116,6 +116,10 @@ public class MultiFetcher implements DataFetcher<InputStream> {
                 if (settingsManager.preferLastFM()) {
                     dataFetcher = new LastFmFetcher(artworkProvider);
                     inputStream = loadData(dataFetcher, priority);
+                    if (inputStream == null) {
+                        dataFetcher = new ItunesFetcher(artworkProvider);
+                        inputStream = loadData(dataFetcher, priority);
+                    }
                 } else {
                     dataFetcher = new ItunesFetcher(artworkProvider);
                     inputStream = loadData(dataFetcher, priority);
