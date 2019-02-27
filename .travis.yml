@@ -4,42 +4,114 @@ jdk: oraclejdk8
 
 sudo: required
 
-android:
-  components:
-  - tools
-  - platform-tools
-  - build-tools-28.0.3
-  - android-28
-  - extra-android-support
-  - extra-android-m2repository
-  - extra-google-m2repository
-  licenses:
-  - ".+"
-
-# Increase travis 'git depth' from default of 50, to 10000. Potential fix for commit count issue.
-git:
-  depth: 10000
-
-script:
-- if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then bash .travis/run_on_pull_requests; fi
-- if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash .travis/run_on_non_pull_requests; fi
-
-before_install:
-- yes | sdkmanager "platforms;android-28"
-- mkdir "$ANDROID_HOME/licenses" || true
-- echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
-- echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
-- echo y | android update sdk --no-ui --all --filter build-tools-28.0.3
-
 before_cache:
+# Do not cache a few Gradle files/directories (see https://docs.travis-ci.com/user/languages/java/#Caching)
 - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
 - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 
 cache:
   directories:
-  - "$HOME/.gradle/caches/"
-  - "$HOME/.gradle/wrapper/"
-  - "$HOME/.android/build-cache"
+  # Android SDK
+  - $HOME/android-sdk-dl
+  - $HOME/android-sdk
+  # Gradle dependencies
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/
+  # Android build cache (see http://tools.android.com/tech-docs/build-cache)
+  - $HOME/.android/build-cache
+language: android
+
+jdk: oraclejdk8
+
+sudo: required
+
+before_cache:
+# Do not cache a few Gradle files/directories (see https://docs.travis-ci.com/user/languages/java/#Caching)
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+  # Android SDK
+  - $HOME/android-sdk-dl
+  - $HOME/android-sdk
+  # Gradle dependencies
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/
+  # Android build cache (see http://tools.android.com/tech-docs/build-cache)
+  - $HOME/.android/build-cache
+
+install:
+# Download and unzip the Android SDK tools (if not already there thanks to the cache mechanism)
+# Latest version available here: https://developer.android.com/studio/#command-tools
+- if test ! -e $HOME/android-sdk-dl/sdk-tools.zip ; then curl https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip > $HOME/android-sdk-dl/sdk-tools.zip ; fi
+- unzip -qq -n $HOME/android-sdk-dl/sdk-tools.zip -d $HOME/android-sdk
+
+# Install or update Android SDK components (will not do anything if already up to date thanks to the cache mechanism)
+- echo y | $HOME/android-sdk/tools/bin/sdkmanager 'tools' > /dev/null
+- echo y | $HOME/android-sdk/tools/bin/sdkmanager 'platform-tools' > /dev/null
+- echo y | $HOME/android-sdk/tools/bin/sdkmanager 'build-tools;28.0.3' > /dev/null
+- echo y | $HOME/android-sdk/tools/bin/sdkmanager 'platforms;android-28' > /dev/null
+- echo y | $HOME/android-sdk/tools/bin/sdkmanager 'extras;google;m2repository' > /dev/null
+
+env:
+- ANDROID_HOME=$HOME/android-sdk
+
+script:
+- if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then bash .travis/run_on_pull_requests; fi
+- if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash .travis/run_on_non_pull_requests; fi
+
+deploy:
+
+# Github alpha/beta/release
+- provider: releases
+  api_key:
+    secure: y/DY5he0HhCR1M4B4eKuhjvcpNYDAKCg89g3Bw7YAla10sYS5EJch3QQorLzTdSSFZuuufaue5524ap4mNAyB1RClw5waDwSbmhk96xdVFGak6u1Hzc3yTb7YaFmLtmWY93kCcpXOHkqqf/M7QwG4FlilwKhTiEa6YcB+U78JA3pVx1TLTezW+E79wJkB6yGY0nlzRUYZG2z1IqpIE8Cgj56T2gpBHLfJCcPkcM56d4hhxrs+pWqkF0Y2pFtNI8CxzqQlGXYoakW/QEZ5GDCkuvwNro5RhJZx6Vr7uMBmh2Rq+xwIvnwA4ljXrl8pwJVwua/g7NvQGdWaEsWJkVaEOqARbDWs3OJlBvmGBMldkwnbBDHMzHD6BTDwum+qIllr1V5skIqib6xwPw8qPk40QpjldaHRvRwqqpjNrHJ4jc44LoUTrCS9HT0pXiUT2HBQPWGZ+fg7rMIS1x7psRFQ7bjz9T/AHYkAqTZC5BqfezHh19RZdco2p+1rHCWEOZnLUJi9IJtXdpNeCPdllwPIEra4+2RdCPV6ASXf7GhQX5e/NmdCMAAaABxgRH8wiycYeEYTySBeeNWAB7u3ctY+CKUHm77P21myJi7+oolW4LaZw4J/RcjFny26AYKVtPYXVJ8AwV/epdpxiiEciiCf2nujmVFpLqKXMIV7La9LCc=
+  file: app/build/outputs/apk/free/release/app-free-release.apk
+  file_glob: 'true'
+  skip_cleanup: true
+  on:
+    repo: timusus/Shuttle
+    tags: true
+    condition: $TRAVIS_TAG =~ beta || $TRAVIS_TAG =~ alpha || $TRAVIS_TAG =~ release || $TRAVIS_TAG =~ rollout
+
+# Play Store beta release
+- provider: script
+  script: ./gradlew publishApkFreeRelease publishApkPaidRelease
+  skip_cleanup: true
+  on:
+    repo: timusus/Shuttle
+    tags: true
+    condition: $TRAVIS_TAG =~ beta || $TRAVIS_TAG =~ alpha || $TRAVIS_TAG =~ release || $TRAVIS_TAG =~ rollout
+
+# Slack build notifications
+notifications:
+  slack:
+    rooms:
+    - shuttlemusicplayer:g90QK9lL6Hg5jfzegqjjNqqN
+    on_pull_requests: false
+    template:
+    - "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}: '%{commit_subject}'>) by %{author} %{result} in %{duration}."
+
+install:
+# Download and unzip the Android SDK tools (if not already there thanks to the cache mechanism)
+# Latest version available here: https://developer.android.com/studio/#command-tools
+- if test ! -e $HOME/android-sdk-dl/sdk-tools.zip ; then curl https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip > $HOME/android-sdk-dl/sdk-tools.zip ; fi
+- unzip -qq -n $HOME/android-sdk-dl/sdk-tools.zip -d $HOME/android-sdk
+
+# Install or update Android SDK components (will not do anything if already up to date thanks to the cache mechanism)
+- echo y | $HOME/android-sdk/tools/bin/sdkmanager 'tools' > /dev/null
+- echo y | $HOME/android-sdk/tools/bin/sdkmanager 'platform-tools' > /dev/null
+- echo y | $HOME/android-sdk/tools/bin/sdkmanager 'build-tools;28.0.3' > /dev/null
+- echo y | $HOME/android-sdk/tools/bin/sdkmanager 'platforms;android-28' > /dev/null
+- echo y | $HOME/android-sdk/tools/bin/sdkmanager 'extras;google;m2repository' > /dev/null
+
+env:
+- ANDROID_HOME=$HOME/android-sdk
+
+script:
+- if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then bash .travis/run_on_pull_requests; fi
+- if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash .travis/run_on_non_pull_requests; fi
 
 deploy:
 

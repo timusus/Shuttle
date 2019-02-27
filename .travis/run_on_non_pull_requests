@@ -10,4 +10,4 @@ tar xvf secrets.tar
 
 # For non pull-requests, build & test everything.
 
-./gradlew build
+./gradlew --no-daemon -parallel build
