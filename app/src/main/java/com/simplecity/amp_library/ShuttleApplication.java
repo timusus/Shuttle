@@ -105,6 +105,9 @@ public class ShuttleApplication extends Application {
 
         if (BuildConfig.DEBUG) {
             // enableStrictMode();
+
+            // Attach stack trace info about call site when RxJava throws an exception
+            RxJavaAssemblyTracking.enable();
         }
 
         appComponent = initDagger(this);
@@ -155,9 +158,6 @@ public class ShuttleApplication extends Application {
         TagOptionSingleton.getInstance().setPadNumbers(true);
 
         SettingsManager.getInstance().incrementLaunchCount();
-
-        // Attach stack trace info about call site when RxJava throws an exception
-        RxJavaAssemblyTracking.enable();
 
         Completable.fromAction(() -> {
             Query query = new Query.Builder()
