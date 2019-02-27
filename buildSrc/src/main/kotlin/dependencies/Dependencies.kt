@@ -80,7 +80,7 @@ object Dependencies {
             const val kotlin = "1.3.20"
             const val dexcountGradlePlugin = "0.8.2"
             const val fabricGradlePlugin = "1.+"
-            const val playPublisher = "1.2.2"
+            const val playPublisher = "2.1.0"
             const val gradleVersions = "0.20.0"
             const val playServices = "4.0.1"
         }
@@ -89,7 +89,7 @@ object Dependencies {
         const val kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
         const val dexcount = "com.getkeepsafe.dexcount:dexcount-gradle-plugin:${Versions.dexcountGradlePlugin}"
         const val fabric = "io.fabric.tools:gradle:${Versions.fabricGradlePlugin}"
-        const val playPublisher = "com.github.triplet.gradle:play-publisher:${Versions.playPublisher}"
+        const val playPublisher = "com.github.triplet.play"
         const val gradleVersions = "com.github.ben-manes:gradle-versions-plugin:${Versions.gradleVersions}"
         const val playServices = "com.google.gms:google-services:${Versions.playServices}"
     }
