@@ -4,41 +4,41 @@ jdk: oraclejdk8
 
 sudo: required
 
-android:
-  components:
-  - tools
-  - platform-tools
-  - build-tools-28.0.3
-  - android-28
-  - extra-android-support
-  - extra-android-m2repository
-  - extra-google-m2repository
-  licenses:
-  - ".+"
-
-# Increase travis 'git depth' from default of 50, to 10000. Potential fix for commit count issue.
-git:
-  depth: 10000
-
-script:
-- if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then bash .travis/run_on_pull_requests; fi
-- if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash .travis/run_on_non_pull_requests; fi
-
-before_install:
-- yes | sdkmanager "platforms;android-27"
-- mkdir "$ANDROID_HOME/licenses" || true
-- echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
-- echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
-
 before_cache:
+# Do not cache a few Gradle files/directories (see https://docs.travis-ci.com/user/languages/java/#Caching)
 - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
 - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 
 cache:
   directories:
-  - "$HOME/.gradle/caches/"
-  - "$HOME/.gradle/wrapper/"
-  - "$HOME/.android/build-cache"
+  # Android SDK
+  - $HOME/android-sdk-dl
+  - $HOME/android-sdk
+  # Gradle dependencies
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/
+  # Android build cache (see http://tools.android.com/tech-docs/build-cache)
+  - $HOME/.android/build-cache
+
+install:
+# Download and unzip the Android SDK tools (if not already there thanks to the cache mechanism)
+# Latest version available here: https://developer.android.com/studio/#command-tools
+- if test ! -e $HOME/android-sdk-dl/sdk-tools.zip ; then curl https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip > $HOME/android-sdk-dl/sdk-tools.zip ; fi
+- unzip -qq -n $HOME/android-sdk-dl/sdk-tools.zip -d $HOME/android-sdk
+
+# Install or update Android SDK components (will not do anything if already up to date thanks to the cache mechanism)
+- echo y | $HOME/android-sdk/tools/bin/sdkmanager 'tools' > /dev/null
+- echo y | $HOME/android-sdk/tools/bin/sdkmanager 'platform-tools' > /dev/null
+- echo y | $HOME/android-sdk/tools/bin/sdkmanager 'build-tools;28.0.3' > /dev/null
+- echo y | $HOME/android-sdk/tools/bin/sdkmanager 'platforms;android-28' > /dev/null
+- echo y | $HOME/android-sdk/tools/bin/sdkmanager 'extras;google;m2repository' > /dev/null
+
+env:
+- ANDROID_HOME=$HOME/android-sdk
+
+script:
+- if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then bash .travis/run_on_pull_requests; fi
+- if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash .travis/run_on_non_pull_requests; fi
 
 deploy:
 
