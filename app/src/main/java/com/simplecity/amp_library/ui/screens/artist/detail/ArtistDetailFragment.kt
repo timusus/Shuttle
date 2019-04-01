@@ -666,7 +666,7 @@ class ArtistDetailFragment :
 
         private const val ARG_ALBUM_ARTIST = "album_artist"
 
-        fun newInstance(albumArtist: AlbumArtist, transitionName: String): ArtistDetailFragment {
+        fun newInstance(albumArtist: AlbumArtist, transitionName: String?): ArtistDetailFragment {
             val args = Bundle()
             val fragment = ArtistDetailFragment()
             args.putSerializable(ARG_ALBUM_ARTIST, albumArtist)

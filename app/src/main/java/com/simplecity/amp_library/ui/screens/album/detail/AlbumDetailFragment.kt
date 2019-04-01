@@ -547,7 +547,7 @@ class AlbumDetailFragment :
 
         private const val ARG_ALBUM = "album"
 
-        fun newInstance(album: Album, transitionName: String): AlbumDetailFragment {
+        fun newInstance(album: Album, transitionName: String?): AlbumDetailFragment {
             val args = Bundle()
             val fragment = AlbumDetailFragment()
             args.putSerializable(ARG_ALBUM, album)
