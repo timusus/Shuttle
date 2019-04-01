@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.ParcelFileDescriptor;
 import android.support.v4.provider.DocumentFile;
 import com.simplecity.amp_library.model.TagUpdate;
+import io.reactivex.annotations.NonNull;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -53,8 +54,8 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
     private String commentText;
     private String genreText;
 
-    public TaggerTask() {
-
+    public TaggerTask(Context context) {
+        this.applicationContext = context.getApplicationContext();
     }
 
     public TaggerTask(Context context, boolean showAlbum, boolean showTrack, List<String> paths,

@@ -397,7 +397,7 @@ public class TaggerDialog extends DialogFragment {
                     }
                 };
 
-                TaggerTask taggerTask = new TaggerTask()
+                TaggerTask taggerTask = new TaggerTask(getContext())
                         .showAlbum(showAlbum)
                         .showTrack(showTrack)
                         .setPaths(originalSongPaths)
