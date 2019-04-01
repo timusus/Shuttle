@@ -15,7 +15,6 @@ import com.bumptech.glide.RequestManager
 import com.simplecity.amp_library.R
 import com.simplecity.amp_library.model.Playlist
 import com.simplecity.amp_library.model.Song
-import com.simplecity.amp_library.ui.screens.tagger.TaggerDialog
 import com.simplecity.amp_library.ui.adapters.SectionedAdapter
 import com.simplecity.amp_library.ui.common.BaseFragment
 import com.simplecity.amp_library.ui.dialog.DeleteDialog
@@ -26,9 +25,11 @@ import com.simplecity.amp_library.ui.modelviews.ShuffleView
 import com.simplecity.amp_library.ui.modelviews.SongView
 import com.simplecity.amp_library.ui.screens.playlist.dialog.CreatePlaylistDialog
 import com.simplecity.amp_library.ui.screens.songs.menu.SongMenuContract
+import com.simplecity.amp_library.ui.screens.tagger.TaggerDialog
 import com.simplecity.amp_library.ui.views.ContextualToolbar
 import com.simplecity.amp_library.utils.ContextualToolbarHelper
 import com.simplecity.amp_library.utils.LogUtils
+import com.simplecity.amp_library.utils.RingtoneManager
 import com.simplecity.amp_library.utils.SettingsManager
 import com.simplecity.amp_library.utils.extensions.share
 import com.simplecity.amp_library.utils.menu.song.SongMenuUtils
@@ -280,6 +281,13 @@ class SongListFragment :
         song.share(context!!)
     }
 
+    override fun presentRingtonePermissionDialog() {
+        RingtoneManager.getDialog(context!!).show()
+    }
+
+    override fun showRingtoneSetMessage() {
+        Toast.makeText(context, R.string.ringtone_set_new, Toast.LENGTH_SHORT).show()
+    }
 
     // SongView.ClickListener Implementation
 

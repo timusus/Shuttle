@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -68,6 +69,7 @@ import com.simplecity.amp_library.ui.views.SnowfallView;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetSlideEventRelay;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.PlaceholderProvider;
+import com.simplecity.amp_library.utils.RingtoneManager;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.StringUtils;
@@ -740,5 +742,15 @@ public class PlayerFragment extends BaseFragment implements
     @Override
     public void shareSong(@NotNull Song song) {
         ShareDialog.Companion.newInstance(song).show(getChildFragmentManager());
+    }
+
+    @Override
+    public void presentRingtonePermissionDialog() {
+        RingtoneManager.Companion.getDialog(getContext()).show();
+    }
+
+    @Override
+    public void showRingtoneSetMessage() {
+        Toast.makeText(getContext(), R.string.ringtone_set_new, Toast.LENGTH_SHORT).show();
     }
 }

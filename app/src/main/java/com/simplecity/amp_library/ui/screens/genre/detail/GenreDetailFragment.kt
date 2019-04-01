@@ -62,6 +62,7 @@ import com.simplecity.amp_library.utils.ContextualToolbarHelper
 import com.simplecity.amp_library.utils.Operators
 import com.simplecity.amp_library.utils.PlaceholderProvider
 import com.simplecity.amp_library.utils.ResourceUtils
+import com.simplecity.amp_library.utils.RingtoneManager
 import com.simplecity.amp_library.utils.SettingsManager
 import com.simplecity.amp_library.utils.ShuttleUtils
 import com.simplecity.amp_library.utils.StringUtils
@@ -505,6 +506,7 @@ class GenreDetailFragment :
         navigationController.pushViewController(fragment, "DetailFragment", transitions)
     }
 
+
     // GenreDetailView implementation
 
     override fun closeContextualToolbar() {
@@ -577,6 +579,7 @@ class GenreDetailFragment :
             .into(background)
     }
 
+
     // AlbumMenuContract.View Implementation
 
     override fun presentTagEditorDialog(album: Album) {
@@ -630,11 +633,21 @@ class GenreDetailFragment :
         song.share(context!!)
     }
 
+    override fun presentRingtonePermissionDialog() {
+        RingtoneManager.getDialog(context!!).show()
+    }
+
+    override fun showRingtoneSetMessage() {
+        Toast.makeText(context, R.string.ringtone_set_new, Toast.LENGTH_SHORT).show()
+    }
+
+
     // BaseFragment Implementation
 
     public override fun screenName(): String {
         return "GenreDetailFragment"
     }
+
 
     // Static
 

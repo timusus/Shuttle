@@ -686,7 +686,14 @@ public class FolderFragment extends BaseFragment implements
 
         @Override
         public void setRingtone(Song song) {
-            ringtoneManager.setRingtone(song);
+            if (RingtoneManager.Companion.requiresDialog(getContext())) {
+                RingtoneManager.Companion.getDialog(getContext()).show();
+            } else {
+                ringtoneManager.setRingtone(song, () -> {
+                    Toast.makeText(getContext(), R.string.ringtone_set_new, Toast.LENGTH_SHORT).show();
+                    return Unit.INSTANCE;
+                });
+            }
         }
 
         @Override

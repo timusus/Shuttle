@@ -34,6 +34,7 @@ import com.simplecity.amp_library.ui.screens.playlist.dialog.CreatePlaylistDialo
 import com.simplecity.amp_library.ui.screens.suggested.SuggestedPresenter.SuggestedData
 import com.simplecity.amp_library.ui.views.SuggestedDividerDecoration
 import com.simplecity.amp_library.utils.ArtworkDialog
+import com.simplecity.amp_library.utils.RingtoneManager
 import com.simplecity.amp_library.utils.SettingsManager
 import com.simplecity.amp_library.utils.ShuttleUtils
 import com.simplecity.amp_library.utils.extensions.share
@@ -328,6 +329,14 @@ class SuggestedFragment :
 
     override fun shareSong(song: Song) {
         song.share(context!!)
+    }
+
+    override fun presentRingtonePermissionDialog() {
+        RingtoneManager.getDialog(context!!).show()
+    }
+
+    override fun showRingtoneSetMessage() {
+        Toast.makeText(context, R.string.ringtone_set_new, Toast.LENGTH_SHORT).show()
     }
 
 

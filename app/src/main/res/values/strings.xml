@@ -34,8 +34,8 @@
     <string name="repeat_all_notif">Repeat all songs</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Set as ringtone</string>
-    <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\" set as phone ringtone.</string>
+    <!-- Toast after setting a song as phone ringtone.-->
+    <string name="ringtone_set_new">Ringtone set.</string>
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">Couldn\'t set ringtone</string>
     <!-- Toasts after adding song(s) to playlists -->

@@ -20,6 +20,10 @@ interface SongMenuContract {
 
         fun presentDeleteDialog(songs: List<Song>)
 
+        fun presentRingtonePermissionDialog()
+
+        fun showRingtoneSetMessage()
+
         fun shareSong(song: Song)
     }
 
