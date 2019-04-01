@@ -32,8 +32,7 @@
     <string name="repeat_all_notif">Répéter tous les titres</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Utiliser comme sonnerie</string>
-    <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set">\"<xliff:g id="name" example="Alarm Bell">%s</xliff:g>\" est utilisé comme sonnerie</string>
+    <!-- Toast after setting a song as phone ringtone.-->
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">Impossible de changer la sonnerie</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -115,7 +114,7 @@
     <string name="delete_album_artist_desc_multiple">Tous les titres des artistes suivant seront supprimés : <xliff:g id="album-artist">%s</xliff:g></string>
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">L\'album \"<xliff:g id="album">%s</xliff:g>\" sera définitivement supprimé de la carte SD.</string>
-    <!-- Delete confirmation dialog message when deleting albums -->
+    <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
     <string name="get_pro_button_play_store">Play Store</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">Toutes les musiques des albums suivant :<xliff:g id="album">%s</xliff:g> seront supprimées définitivement.</string>
@@ -196,7 +195,7 @@
     <string name="fav_title">Favoris</string>
     <!-- -->
     <string name="library_title">Bibliothèque</string>
-    <!-- -->
+    <!-- Lock Queue -->
     <!-- Library screen, menu item -->
     <string name="search_title">Rechercher</string>
     <string name="search_filter">Filtre</string>

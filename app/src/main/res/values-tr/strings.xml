@@ -5,9 +5,9 @@
     <string name="R.string.toast_no_document_provider">İzin isteği için kullanılabilir bir Döküman Sağlayıcı mevcut değil</string>
     <!-- Displayed when an M3U playlist is being saved, but it already exists -->
     <!-- Displayed when an M3U playlist save fails -->
-    <string name="playlist_save_failed">Şarkı listesi kaydedilemedi</string>
+    <string name="playlist_save_failed">Çalma listesi kaydedilemedi</string>
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
-    <string name="playlist_saved">Şarkı listesi <xliff:g id="path">%s</xliff:g> yoluna kaydedildi</string>
+    <string name="playlist_saved">Çalma listesi <xliff:g id="path">%s</xliff:g> konumuna kaydedildi</string>
     <!-- Displayed after a blacklist is deleted -->
     <string name="blacklist_deleted">Kara liste silindi</string>
     <!-- Displayed after a whitelist is deleted -->
@@ -32,21 +32,21 @@
     <string name="repeat_all_notif">Tüm şarkılar tekrarlanıyor</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Zil sesi olarak ayarla</string>
-    <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\" sesini zil sesi olarak ayarla.</string>
+    <!-- Toast after setting a song as phone ringtone.-->
+    <string name="ringtone_set_new">Zil sesi ayarlandı.</string>
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">Zil sesi ayarlanamadı</string>
     <!-- Toasts after adding song(s) to playlists -->
     <plurals name="NNNtrackstoplaylist">
-        <item quantity="one">Şarkı listesine 1 şarkı eklendi.</item>
-        <item quantity="other"><xliff:g example="27" id="number">%d</xliff:g> şarkılar şarkı listesine ekledi.</item>
+        <item quantity="one">Çalma listesine 1 şarkı eklendi.</item>
+        <item quantity="other">Çalma listesine <xliff:g example="27" id="number">%d</xliff:g> şarkı eklendi.</item>
     </plurals>
     <!-- Toast after selecting an empty playlist -->
-    <string name="emptyplaylist">Seçilen şarkı listesi boş.</string>
+    <string name="emptyplaylist">Seçilen çalma listesi boş.</string>
     <!-- -->
     <string name="initial_dir_set_message">" ba\u015flang\u0131\u00e7 \u200b\u200bdizini olarak ayarla"</string>
     <!-- Transient popup message shown after deleting a playlist -->
-    <string name="playlist_deleted_message">Şarkı listesi silindi.</string>
+    <string name="playlist_deleted_message">Çalma listesi silindi.</string>
     <!-- Transient popup message shown after renaming a playlist -->
     <string name="playlist_renamed_message">Liste yeniden adlandırıldı.</string>
     <!-- Toast confirming that song(s) was/were deleted. -->
@@ -75,7 +75,7 @@
     <!-- Displays when you need to choose which app to share the song with -->
     <string name="share_via">Şarkıyı paylaş:</string>
     <!-- Displayed when an M3U playlist is being saved-->
-    <string name="saving_playlist">Şarkı listesi kaydediliyor</string>
+    <string name="saving_playlist">Çalma listesi kaydediliyor</string>
     <!-- Displayed when whitelisting a folder, as the app gathers the songs-->
     <string name="gathering_songs">Şarkılar toplanıyor...</string>
     <!-- -->
@@ -106,7 +106,7 @@
     <!-- No internet connection warning -->
     <string name="connection_unavailable">İnternet bağlantısı bulunamadı</string>
     <!-- Prompt in dialog when creating a playlist. The user will enter the name of the playlist in a textfield underneath this prompt. -->
-    <string name="create_playlist_create_text_prompt">Şarkı listesi adı</string>
+    <string name="create_playlist_create_text_prompt">Çalma listesi adı</string>
     <!-- Text for the "cancel" button in the "delete" and "create playlist" confirmation dialogs -->
     <string name="cancel">İptal</string>
     <!-- Delete confirmation dialog when deleting an entire artist -->
@@ -115,7 +115,8 @@
     <string name="delete_album_artist_desc_multiple">Aşağıdaki albüm sanatçılarının tüm şarkıları:<xliff:g id="album-artist">%s</xliff:g> kalıcı olarak silinecek.</string>
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc"><xliff:g id="album">%s</xliff:g> albümde ki tüm şarkılar kalıcı olarak silinecek.</string>
-    <!-- Delete confirmation dialog message when deleting albums -->
+    <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
+    <string name="delete_songs_unknown">Seçilen şarkılar kalıcı olarak silinecek.</string>
     <string name="get_pro_button_play_store">Play Store</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">Aşağıdaki albümlerin tüm şarkıları:<xliff:g id="album">%s</xliff:g> kalıcı olarak silinecek.</string>
@@ -140,7 +141,7 @@
     <!-- "Set Ringtone" message -->
     <string name="dialog_message_set_ringtone">Shuttle, zil sesini ayarlamak için \'ayarları yazma\' izni gerektirir.\n\nİzin verdikten sonra zil sesini tekrar ayarlamayı deneyin.</string>
     <!-- Message displayed in dialog when attempting to add duplicates to playlist -->
-    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%1$s</xliff:g> - <xliff:g id="song">%2$s</xliff:g> zaten şarkı listesinde var. Yine de eklensin mi?</string>
+    <string name="dialog_message_playlist_add_duplicate"><xliff:g id="artist">%1$s</xliff:g> - <xliff:g id="song">%2$s</xliff:g> zaten çalma listesinde var. Yine de eklensin mi?</string>
     <!-- Checkbox text 'apply to all' -->
     <string name="dialog_checkbox_playlist_duplicate_apply_all">Tümüne uygula (<xliff:g id="number">%d</xliff:g>)</string>
     <!-- Title displayed in dialog when attempting to add duplicates to playlist -->
@@ -151,7 +152,7 @@
     <string name="dialog_button_playlist_duplicate_skip">Atla</string>
     <!-- Checkbox text 'always add duplicates' -->
     <string name="dialog_checkbox_playlist_duplicate_always_add">Tekrarlamaları her zaman ekle</string>
-    <string name="dialog_title_playlist_delete">Şarkı listesi silinsin mi?</string>
+    <string name="dialog_title_playlist_delete">Çalma listesi silinsin mi?</string>
     <string name="dialog_message_playlist_delete"><xliff:g id="playlist">%s</xliff:g> kalıcı olarak silinecek</string>
     <string name="dialog_button_delete">Sil</string>
     <!-- ## Widgets ## -->
@@ -176,7 +177,7 @@
     <!-- Menu item-->
     <string name="menu_add_to">Ekle...</string>
     <!-- Multi select menu item-->
-    <string name="menu_playlist">Şarkı listesi</string>
+    <string name="menu_playlist">Çalma listesi</string>
     <!-- Multi select menu item-->
     <string name="menu_queue">Sıra</string>
     <!-- Artist overflow menu item-->
@@ -184,7 +185,7 @@
     <!-- Context menu item -->
     <string name="new_playlist">Yeni</string>
     <!-- menu item to save the current list as a new playlist -->
-    <string name="save_as_playlist">Şarkı listesi olarak kaydet</string>
+    <string name="save_as_playlist">Çalma listesi olarak kaydet</string>
     <!-- Context menu item to remove the selected item from the playlist -->
     <!-- Context menu item to remove the selected item from the queue -->
     <string name="remove_from_queue">Kaldır</string>
@@ -196,7 +197,8 @@
     <string name="fav_title">Favoriler</string>
     <!-- -->
     <string name="library_title">Kitaplık</string>
-    <!-- -->
+    <!-- Lock Queue -->
+    <string name="menu_queue_swipe_enable">Kaydırmayı Etkinleştr</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Ara</string>
     <string name="search_filter">Filtre</string>
@@ -258,7 +260,7 @@
     <string name="pref_title_theme_black">Siyah</string>
     <string name="pref_group_palette">Renk Paleti</string>
     <string name="pref_title_palette">Albüm Kapağından Renkler Kullan</string>
-    <string name="pref_summary_palette">Etkinleştirilirse Shuttle, albüm kapağında ki en belirgin rengi algılar ve bunu uygulamanın tamamında \'ana renk\' olarak kullanır</string>
+    <string name="pref_summary_palette">Etkinleştirilirse, Shuttle albüm kapağında ki en belirgin rengi algılar ve bunu uygulamanın tamamında \'ana renk\' olarak kullanır</string>
     <string name="pref_title_palette_now_playing">Yalnızca \'Şimdi Çalınıyor\' Ekranında</string>
     <!--Settings title for whitelist/blacklist-->
     <string name="pref_title_blacklist">Beyaz/Kara Liste</string>
@@ -283,15 +285,15 @@
     <!-- Settings title for ignore embedded artwork checkbox (whether the app can use local artwork for the album art -->
     <string name="pref_title_ignore_embedded_art">Yerleşik albüm kapaklarını yoksay</string>
     <!-- Settings summary for the ignore folder artwork checkbox-->
-    <string name="pref_summary_ignore_embedded_art">İçerisinde yerleşik albüm kapağı olan müzik dosyalarında arama yapma</string>
+    <string name="pref_summary_ignore_embedded_art">İçerisinde yerleşik albüm kapağı olan müzik dosyaları için arama yapma</string>
     <!-- Settings title for ignore embedded artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_ignore_mediastore_art">Medya Depolama albüm kapağını yoksay</string>
+    <string name="pref_title_ignore_mediastore_art">Media Store albüm kapağını yoksay</string>
     <!-- Settings summary for the ignore folder artwork checkbox-->
-    <string name="pref_summary_ignore_mediastore_art">Android Medya Depolama yerleşik olan albüm kapaklarını bulmuş ve düşük çözünürlükte depolamış gibi mi görünüyor. Medya Depolamayı atlamak için bunu değiştirin (biraz daha yavaş albüm kapağı yüklemesi)</string>
+    <string name="pref_summary_ignore_mediastore_art">Android Media Store yerleşik olan albüm kapaklarınızı bulmuş ve düşük çözünürlükte depolamış gibi görünüyor. Media Store\'u atlamak için bunu değiştirin (biraz daha yavaş albüm kapağı yüklemesi)</string>
     <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_ignore_folder_art">Klasör albüm kapaklarını yoksay</string>
+    <string name="pref_title_ignore_folder_art">Klasör albüm kapağını yoksay</string>
     <!-- Settings summary for the embedded artwork checkbox-->
-    <string name="pref_summary_ignore_folder_art">Müzik dizinlerinde depolanmış albüm kapaklarında arama yapma</string>
+    <string name="pref_summary_ignore_folder_art">Müzik dizinlerinde depolanmış albüm kapakları için arama yapma</string>
     <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
     <string name="pref_title_prefer_lastfm">Last.fm albüm kapağını tercih et</string>
     <!-- Settings summary for the embedded artwork checkbox-->
@@ -309,7 +311,7 @@
     <!-- Settings summary for the delete artwork button -->
     <string name="pref_summary_delete_artwork">Cihazda bulunan sanatçı ve albüm kapaklarını sil</string>
     <!-- Shown when a user changes artwork source, and is prompted to delete existing artwork-->
-    <string name="pref_summary_change_artwork_source">Albüm kapağında ki değişiklikler daha önce alınan albüm kapakları için geçerli olmayacaktır. Albüm kapağını kaldırmak ister misiniz?</string>
+    <string name="pref_summary_change_artwork_source">Albüm kapağında ki değişiklikler daha önce alınan albüm kapakları için geçerli olmayacaktır. Albüm kapağını kaldırmak istiyor musunuz?</string>
     <!-- The 'remove' artwork confirmation button-->
     <string name="pref_button_remove_artwork">Kaldır</string>
     <!-- Settings title for the option to download artwork automatically-->
@@ -319,7 +321,7 @@
     <!-- Settings title for the download via Wi-Fi checkbox -->
     <string name="pref_title_download_wifi_only">Yalnızca Wi-Fi ile indir</string>
     <!-- Settings summary for the download via Wi-Fi checkbox -->
-    <string name="pref_summary_download_wifi_only">Sanatçı ve albüm kapakları yalnızca bir kablosuz bağlantı mevcutsa indirilir</string>
+    <string name="pref_summary_download_wifi_only">Sanatçı ve albüm kapakları yalnızca bir Wi-Fi bağlantısı varsa indirilecektir</string>
     <!-- Settings title for gmail style placeholders checkbox-->
     <string name="pref_title_placeholders">Gmail Tarzı Harf Görsellerini Kullan</string>
     <!-- Settings summary for gmail style placeholders checkbox-->
@@ -393,7 +395,7 @@ Bu seçenek işaretli değilse, Shuttle simgesi kullanılacaktır.</string>
     <string name="pref_title_headset_beep">Bip Sesini Atla</string>
     <string name="pref_summary_headset_beep">Kulaklık kontrolleriyle şarkı atlanırken bip sesi</string>
     <!-- Settings title for ignore playlist duplicates -->
-    <string name="pref_title_ignore_duplicates">Şarkı listesinde ki tekrarlamaları yoksay</string>
+    <string name="pref_title_ignore_duplicates">Çalma listesinde ki tekrarlamaları yoksay</string>
     <!-- Settings summary for ignore playlist duplicates -->
     <string name="pref_summary_ignore_duplicates">Bir şarkı listesine şarkıları eklerken tekrarlamaları atla, arama yapma ve önerme</string>
     <!-- Displayed on the settings page to choose the default main page -->
@@ -417,7 +419,7 @@ Bu seçenek işaretli değilse, Shuttle simgesi kullanılacaktır.</string>
     <!-- -->
     <string name="blacklist_description">Şarkılar, belirli bir şarkının seçenek (3 dikey nokta) tuşuna basarak \'kara liste\' seçeneği ile kara listeye eklenebilir.</string>
     <!-- -->
-    <string name="whitelist_description">Şarkılar, klasör tarayıcıdaki ayarlar düğmesine basarak, \'beyaz liste\' seçilerek beyaz listeye eklenebilir, ardından beyaz listeye eklemek istediğiniz klasörleri seçerek beyaz listeye eklenebilir.</string>
+    <string name="whitelist_description">Klasör tarayıcıdan ayarlar simgesine basarak, \'beyaz listeyi\' seçip ardından beyaz listeye eklemek istediğiniz klasörleri seçerek şarkıları beyaz listeye ekleyebilirsiniz.</string>
     <!-- ## Detail Activity - Info for artists/albums ## -->
     <!-- The viewpager tab title for the artist/album info -->
     <string name="info">Biyografi</string>
@@ -483,7 +485,7 @@ dosyalar</item>
     <!-- Songs screen title -->
     <string name="tracks_title">Şarkılar</string>
     <!-- Playlists screen title -->
-    <string name="playlists_title">Şarkı Listeleri</string>
+    <string name="playlists_title">Çalma listeleri</string>
     <!-- Genres screen title -->
     <string name="genres_title">Türler</string>
     <!-- Files title -->
@@ -525,15 +527,15 @@ dosyalar</item>
     <string name="custom">Özel</string>
     <!-- ## Empty list messages ## -->
     <!-- -->
-    <string name="empty_artists">Hiçbir sanatçı bulunamadı. Bazı şarkıları cihazınıza kopyalayın.</string>
+    <string name="empty_artists">Hiçbir sanatçı bulunamadı. Cihazınıza birkaç şarkı kopyalayın.</string>
     <!-- -->
-    <string name="empty_albums">Hiçbir albüm bulunamadı. Bazı şarkıları cihazınıza kopyalayın.</string>
+    <string name="empty_albums">Hiçbir albüm bulunamadı. Cihazınıza birkaç şarkı kopyalayın.</string>
     <!-- -->
     <string name="empty_genres">Hiçbir tür bulunamadı.</string>
     <!-- -->
-    <string name="empty_playlist">Bu şarkı listesi boş. Bir sanatçı, albüm veya şarkıya uzun basılı tutun \'Şarkı Listesine Ekle\' basın, ya da başlamak için + simgesini basın.</string>
+    <string name="empty_playlist">Bu çalma listesi boş. Bir sanatçıya, albüme veya şarkıya uzun basın ve \'çalma listesine ekle\' veya başlamak için + simgesine basın.</string>
     <!-- -->
-    <string name="empty_songlist">Hiçbir şarkı bulunamadı. Bazı şarkıları cihazınıza kopyalayın.</string>
+    <string name="empty_songlist">Hiçbir şarkı bulunamadı. Cihazınıza birkaç şarkı kopyalayın.</string>
     <!-- -->
     <string name="empty_suggested">Daha fazla müzik çalın ve öneriler burada görünecektir.</string>
     <string name="empty_search">Hiçbir arama sonucu bulunamadı.</string>
@@ -599,7 +601,7 @@ dosyalar</item>
     <!-- label underneath icon used to indicate sd card is mounted to your computer via USB -->
     <!-- ## Playlist creation ## -->
     <!-- Template for newly created playlist name -->
-    <string name="new_playlist_name_template">Yeni şarkı listesi <xliff:g id="number">%d</xliff:g></string>
+    <string name="new_playlist_name_template">Yeni çalma listesi <xliff:g id="number">%d</xliff:g></string>
     <!-- Button name when saving a playlist -->
     <string name="create_playlist_create_text">Kaydet</string>
     <!-- Button name when saving a playlist and the new playlist will overwrite an existing one -->
@@ -610,12 +612,12 @@ dosyalar</item>
     <!-- used in various places to indicate there is some number other than one songs for a given artist or album. -->
     <plurals name="Nsongs">
         <item quantity="one"><xliff:g id="count">%d</xliff:g> şarkı</item>
-        <item quantity="other"><xliff:g id="count">%d</xliff:g> şarkılar</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> şarkı</item>
     </plurals>
     <!-- Used in artists list view, indicates how many albums exist for a given artist. -->
     <plurals name="Nalbums">
         <item quantity="one">1 albüm</item>
-        <item quantity="other"><xliff:g id="COUNT">%d</xliff:g> albümler</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> albüm</item>
     </plurals>
     <!--## Miscellaneous ##-->
     <!-- Tag editor 'comment' field-->
@@ -694,7 +696,7 @@ dosyalar</item>
     <string name="iab_purchase_failed">Bir şeyler yanlış gitti. Lütfen daha sonra tekrar deneyin..</string>
     <string name="snackbar_rate_text">Shuttle kullanmaktan keyif aldınız mı?</string>
     <string name="snackbar_rate_action">Oy Verin!</string>
-    <string name="dialog_create_playlist_error">Şarkı listesi oluşturma hatası</string>
+    <string name="dialog_create_playlist_error">Çalma listesi oluşturma hatası</string>
     <!-- Artwork picker -->
     <string name="artwork_edit">Albüm kapağı seçin</string>
     <string name="artwork_type_media_store">Medya Depolama</string>
@@ -740,15 +742,15 @@ dosyalar</item>
     <!-- QuickLyric info dialog message-->
     <string name="quicklyric_info">QuickLyric,  Google Play Store\'da bulunan açık kaynak kodlu şarkı sözü bulma uygulamasıdır.\n\nKurulduktan sonra, Shuttle içerisinde ki \'QuickLyric\' düğmesine dokunduğunuzda sizi uygulama içindeki şarkı sözlerine yönlendirir.</string>
     <!-- "Playlist" Shortcut label. Max 10 characters.-->
-    <string name="shortcut_playlist_short_label">Şarkı listesi</string>
+    <string name="shortcut_playlist_short_label">Çalma listesi</string>
     <!-- "Playlist" Shortcut long label. Max 25 characters.-->
     <string name="shortcut_playlist_long_label">Favori Şarkı Listelerini Aç</string>
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
-    <string name="shortcut_playlist_disabled">Şarkı listesi kullanılabilir değil</string>
+    <string name="shortcut_playlist_disabled">Çalma listesi kullanılabilir değil</string>
     <!-- Displayed at the top of the album list, album shuffle mode-->
     <string name="shuffle_albums">Albüm karıştır</string>
     <!-- Storage Access Framework (Used when deleting files from SD CarD)-->
     <string name="saf_access_required_title">Depolama Erişimi Gerekli</string>
-    <string name="saf_access_required_message">Shuttle, bu dosyalara erişmek için izin gerektirir. Lütfen şarkılarınızın bulunduğu dizini seçin.</string>
+    <string name="saf_access_required_message">Shuttle, bu dosyalara erişim için izin istiyor. Lütfen şarkılarınızın bulunduğu dizini seçin.</string>
     <string name="saf_show_files_button">Dosyaları göster</string>
 </resources>

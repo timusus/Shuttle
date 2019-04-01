@@ -32,8 +32,7 @@
     <string name="repeat_all_notif">Az összes dal ismétlése.</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Beállítás csengőhangnak</string>
-    <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\" beállítás csengőhangnak.</string>
+    <!-- Toast after setting a song as phone ringtone.-->
     <!-- Toast if setting ringtone fails -->
     <!-- Toasts after adding song(s) to playlists -->
     <plurals name="NNNtrackstoplaylist">
@@ -114,7 +113,7 @@
     <string name="delete_album_artist_desc_multiple"><xliff:g id="album-artist">%s</xliff:g> előadótól minden dal törölve lesz.</string>
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">A teljes <xliff:g id="album">%s</xliff:g> album véglegesen törlésre kerül a memóriakártyáról.</string>
-    <!-- Delete confirmation dialog message when deleting albums -->
+    <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
     <string name="get_pro_button_play_store">Play Áruház</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">A következő albumok véglegesen törlésre kerülnek: <xliff:g id="album">%s</xliff:g></string>
@@ -185,7 +184,7 @@
     <string name="fav_title">Kedvencek</string>
     <!-- -->
     <string name="library_title">Saját könyvtár</string>
-    <!-- -->
+    <!-- Lock Queue -->
     <!-- Library screen, menu item -->
     <string name="search_title">Keresés</string>
     <string name="search_filter">Szűrés</string>

@@ -32,8 +32,7 @@
     <string name="repeat_all_notif">全ての曲をリピート再生します</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">着信音に設定</string>
-    <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\"を着信音に設定しました。</string>
+    <!-- Toast after setting a song as phone ringtone.-->
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\"を着信音に設定できませんでした。</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -113,7 +112,7 @@
     <string name="delete_album_artist_desc_multiple"><xliff:g id="album-artist">%s</xliff:g> からの曲を全て削除します。</string>
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">アルバム\"<xliff:g id="album">%s</xliff:g>\"を完全に削除します。</string>
-    <!-- Delete confirmation dialog message when deleting albums -->
+    <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
     <string name="get_pro_button_play_store">Playストア</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">アルバム:<xliff:g id="album">%s</xliff:g> を完全に削除します</string>
@@ -191,7 +190,7 @@
     <string name="fav_title">お気に入り</string>
     <!-- -->
     <string name="library_title">ライブラリ</string>
-    <!-- -->
+    <!-- Lock Queue -->
     <!-- Library screen, menu item -->
     <string name="search_title">検索</string>
     <string name="search_filter">フィルター</string>

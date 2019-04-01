@@ -32,8 +32,7 @@
     <string name="repeat_all_notif">循环播放</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">设为手机铃声</string>
-    <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set">已将<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\"设为铃声</string>
+    <!-- Toast after setting a song as phone ringtone.-->
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">无法设置铃声</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -115,7 +114,7 @@
     <string name="delete_album_artist_desc_multiple">将会永久删除来自下列歌手专辑「<xliff:g id="album-artist">%s</xliff:g>」的所有歌曲</string>
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">将会永久删除来自专辑「<xliff:g id="album">%s</xliff:g>」的所有歌曲</string>
-    <!-- Delete confirmation dialog message when deleting albums -->
+    <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
     <string name="get_pro_button_play_store">Play 商店</string>
     <string name="get_pro_button_amazon">亚马逊</string>
     <string name="delete_album_desc_multiple">将会永久删除来自下列专辑「<xliff:g id="album">%s</xliff:g>」的所有歌曲</string>
@@ -196,7 +195,7 @@
     <string name="fav_title">我的收藏</string>
     <!-- -->
     <string name="library_title">我的乐库</string>
-    <!-- -->
+    <!-- Lock Queue -->
     <!-- Library screen, menu item -->
     <string name="search_title">搜索</string>
     <string name="search_filter">过滤</string>

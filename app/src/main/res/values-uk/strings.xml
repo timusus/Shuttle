@@ -32,8 +32,7 @@
     <string name="repeat_all_notif">Повторювати всі пісні</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Поставити на дзвінок</string>
-    <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set"><xliff:g example="Alarm Bell" id="name">%s</xliff:g> обрано в якості рингтону.</string>
+    <!-- Toast after setting a song as phone ringtone.-->
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">Не можу встановити рингтон</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -119,7 +118,7 @@
     <string name="delete_album_artist_desc_multiple">Всі пісні поточного альбому артистів:<xliff:g id="album-artist">%s</xliff:g>будуть видалені назавжди.</string>
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">Усі пісні з альбому \"<xliff:g id="album">%s</xliff:g>\" буде назавжди видалено.</string>
-    <!-- Delete confirmation dialog message when deleting albums -->
+    <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
     <string name="get_pro_button_play_store">Play Store</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">Всі пісні з поточних альбомів:<xliff:g id="album">%s</xliff:g>буде назавжди видалено.</string>
@@ -193,7 +192,7 @@
     <string name="fav_title">Вибрані</string>
     <!-- -->
     <string name="library_title">Бібліотека</string>
-    <!-- -->
+    <!-- Lock Queue -->
     <!-- Library screen, menu item -->
     <string name="search_title">Пошук</string>
     <string name="search_filter">Фільтр</string>

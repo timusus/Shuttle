@@ -32,8 +32,7 @@
     <string name="repeat_all_notif">सभी गानें रिपीट करे</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">रिंगटोन के रूप में सेट करें</string>
-    <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\" फ़ोन रिंगटोन के रूप में सेट करें।</string>
+    <!-- Toast after setting a song as phone ringtone.-->
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">रिंगटोन सेट नहीं हुई ।</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -123,7 +122,7 @@
     <string name="delete_album_artist_desc_multiple">निम्न एल्बम कलाकारों द्वारा सभी गीत:<xliff:g id="album-artist">%s</xliff:g>स्थायी रूप से डिलीट दिए जाएंगे।</string>
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">एल्बम से सभी गाने <xliff:g id="album">%s</xliff:g> स्थायी रूप से डिलीट कर दिए जाएंगे।</string>
-    <!-- Delete confirmation dialog message when deleting albums -->
+    <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
     <string name="get_pro_button_play_store">प्ले स्टोर</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">निम्न एल्बमों से सभी गीत:<xliff:g id="album">%s</xliff:g>स्थायी रूप से डिलीट कर दिए जाएंगे।</string>
@@ -201,7 +200,7 @@
     <string name="fav_title">फेवरेट्स</string>
     <!-- -->
     <string name="library_title">लाइब्रेरी</string>
-    <!-- -->
+    <!-- Lock Queue -->
     <!-- Library screen, menu item -->
     <string name="search_title">सर्च</string>
     <string name="search_filter">फिल्टर</string>

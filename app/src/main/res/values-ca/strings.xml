@@ -32,8 +32,7 @@
     <string name="repeat_all_notif">Repetint totes les cançons.</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Utilitzar com a to de trucada</string>
-    <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set">"\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\"  definit com a to de trucada. "</string>
+    <!-- Toast after setting a song as phone ringtone.-->
     <!-- Toast if setting ringtone fails -->
     <!-- Toasts after adding song(s) to playlists -->
     <plurals name="NNNtrackstoplaylist">
@@ -110,7 +109,7 @@ cançons afegides a la cua.</item>
     <!-- Delete confirmation dialog message when deleting artists -->
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">Tot l\'àlbum <xliff:g id="album">%s</xliff:g> serà esborrat permanentment.</string>
-    <!-- Delete confirmation dialog message when deleting albums -->
+    <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
     <string name="get_pro_button_play_store">Play Store</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">Els següents àlbums: <xliff:g id="album">%s</xliff:g>Seran esborrats permanentment.</string>
@@ -174,7 +173,7 @@ cançons afegides a la cua.</item>
     <string name="fav_title">Favorits</string>
     <!-- -->
     <string name="library_title">Biblioteca</string>
-    <!-- -->
+    <!-- Lock Queue -->
     <!-- Library screen, menu item -->
     <string name="search_title">Cercar</string>
     <!-- Playlist context menu item to clear the selected playlist. -->

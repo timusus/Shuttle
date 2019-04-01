@@ -32,8 +32,7 @@
     <string name="repeat_all_notif">Abesti guztiak errepikatu</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Dei-doinu bezala ezarri</string>
-    <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\" dei-doinu bezala ezarria.</string>
+    <!-- Toast after setting a song as phone ringtone.-->
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">Ezin izan da dei-doinua ezarri</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -116,7 +115,7 @@ abesti ilarara gehituak.</item>
     <string name="delete_album_artist_desc_multiple">Hurrengo album artisten abestiak:<xliff:g id="album-artist">%s</xliff:g>betirako ezabatuak izango dira.</string>
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc"><xliff:g id="album">%s</xliff:g> albumaren abesti guztiak betirako ezabatuak izango dira.</string>
-    <!-- Delete confirmation dialog message when deleting albums -->
+    <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
     <string name="get_pro_button_play_store">Play Store</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">Hurrengo albumen kanta guztiak:<xliff:g id="album">%s</xliff:g>betirako ezabatuak izango dira.</string>
@@ -194,7 +193,7 @@ abesti ilarara gehituak.</item>
     <string name="fav_title">Gogokoak</string>
     <!-- -->
     <string name="library_title">Liburutegia</string>
-    <!-- -->
+    <!-- Lock Queue -->
     <!-- Library screen, menu item -->
     <string name="search_title">Bilatu</string>
     <string name="search_filter">Filtratu</string>

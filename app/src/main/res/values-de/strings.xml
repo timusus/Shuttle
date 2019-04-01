@@ -32,8 +32,7 @@
     <string name="repeat_all_notif">Alle Titel werden wiederholt.</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Als Klingelton verwenden</string>
-    <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set">\"<xliff:g id="name" example="Alarm Bell">%s</xliff:g>\" als Klingelton gesetzt.</string>
+    <!-- Toast after setting a song as phone ringtone.-->
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">Klingelton konnte nicht gespeichert werden</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -116,7 +115,7 @@
     <string name="delete_album_artist_desc_multiple">Alle Titel der folgenden Künstler<xliff:g id="album-artist">%s</xliff:g>werden endgültig gelöscht.</string>
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">Alle Titel des Albums <xliff:g id="album">%s</xliff:g> werden endgültig gelöscht.</string>
-    <!-- Delete confirmation dialog message when deleting albums -->
+    <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
     <string name="get_pro_button_play_store">Play Store</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">Alle Titel der folgenden Alben:<xliff:g id="album">%s</xliff:g>werden endgültig gelöscht.</string>
@@ -197,7 +196,7 @@
     <string name="fav_title">Favoriten</string>
     <!-- -->
     <string name="library_title">Bibliothek</string>
-    <!-- -->
+    <!-- Lock Queue -->
     <!-- Library screen, menu item -->
     <string name="search_title">Suche</string>
     <string name="search_filter">Filter</string>

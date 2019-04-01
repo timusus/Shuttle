@@ -32,8 +32,7 @@
     <string name="repeat_all_notif">모든 노래 반복</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">벨소리로 설정</string>
-    <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\" 이(가) 벨소리로 지정되었습니다.</string>
+    <!-- Toast after setting a song as phone ringtone.-->
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">벨소리로 설정할 수 없습니다</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -115,7 +114,7 @@
     <string name="delete_album_artist_desc_multiple">앨범 아티스트 <xliff:g id="album-artist">%s</xliff:g>의 모든 노래가 영구적으로 삭제됩니다.</string>
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">앨범 <xliff:g id="album">%s</xliff:g>의 모든 노래가 영구적으로 삭제됩니다.</string>
-    <!-- Delete confirmation dialog message when deleting albums -->
+    <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
     <string name="get_pro_button_play_store">Play 스토어</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">앨범 <xliff:g id="album">%s</xliff:g>의 모든 노래가 영구적으로 삭제됩니다.</string>
@@ -193,7 +192,7 @@
     <string name="fav_title">즐겨찾기</string>
     <!-- -->
     <string name="library_title">라이브러리</string>
-    <!-- -->
+    <!-- Lock Queue -->
     <!-- Library screen, menu item -->
     <string name="search_title">검색</string>
     <string name="search_filter">필터</string>

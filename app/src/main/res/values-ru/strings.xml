@@ -32,8 +32,7 @@
     <string name="repeat_all_notif">Повтор всех треков</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Поставить на звонок</string>
-    <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\" выбран как рингтон на звонок.</string>
+    <!-- Toast after setting a song as phone ringtone.-->
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">Невозможно поставить на звонок</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -122,7 +121,7 @@
     <string name="delete_album_artist_desc_multiple">Все песни следующих исполнителей:<xliff:g id="album-artist">%s</xliff:g> будут безвозвратно удалены</string>
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">Все песни из альбома <xliff:g id="album">%s</xliff:g> будут безвозвратно удалены.</string>
-    <!-- Delete confirmation dialog message when deleting albums -->
+    <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
     <string name="get_pro_button_play_store">Play Маркет</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">Следующие альбомы:<xliff:g id="album">%s</xliff:g> будут безвозвратно удалены.</string>
@@ -200,7 +199,7 @@
     <string name="fav_title">Избранное</string>
     <!-- -->
     <string name="library_title">Библиотека</string>
-    <!-- -->
+    <!-- Lock Queue -->
     <!-- Library screen, menu item -->
     <string name="search_title">Поиск</string>
     <string name="search_filter">Фильтр</string>

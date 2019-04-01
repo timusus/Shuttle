@@ -17,7 +17,7 @@
     <!-- Toast after turning single repeat on -->
     <!-- Toast after turning repeat all on -->
     <!-- Individual song context menu item -->
-    <!-- Toast after setting a song as phone ringtone -->
+    <!-- Toast after setting a song as phone ringtone.-->
     <!-- Toast if setting ringtone fails -->
     <!-- Toasts after adding song(s) to playlists -->
     <!-- Toast after selecting an empty playlist -->
@@ -50,7 +50,7 @@
     <!-- Delete confirmation dialog when deleting an entire artist -->
     <!-- Delete confirmation dialog message when deleting artists -->
     <!-- Delete confirmation dialog when deleting an entire album -->
-    <!-- Delete confirmation dialog message when deleting albums -->
+    <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
     <!-- Delete confirmation dialog when deleting a single song -->
     <!-- Delete confirmation dialog message title when deleting songs -->
     <!-- Toast shown when songs are successfully deleted -->
@@ -90,7 +90,7 @@
     <!-- Playing screen, menu item -->
     <string name="fav_title">Favourites</string>
     <!-- -->
-    <!-- -->
+    <!-- Lock Queue -->
     <!-- Library screen, menu item -->
     <!-- Playlist context menu item to clear the selected playlist. -->
     <!-- Playlist context menu item to edit the selected playlist -->

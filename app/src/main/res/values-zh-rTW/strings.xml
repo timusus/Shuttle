@@ -32,8 +32,7 @@
     <string name="repeat_all_notif">重複播放所有曲目</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">設為鈴聲</string>
-    <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set">已將「<xliff:g example="Alarm Bell" id="name">%s</xliff:g>」設為鈴聲</string>
+    <!-- Toast after setting a song as phone ringtone.-->
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">無法設定鈴聲</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -113,7 +112,7 @@
     <string name="delete_album_artist_desc_multiple">將會永久刪除來自下列演出者專輯「<xliff:g id="album-artist">%s</xliff:g>」的所有曲目</string>
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">將會永久刪除來自專輯「<xliff:g id="album">%s</xliff:g>」的所有曲目</string>
-    <!-- Delete confirmation dialog message when deleting albums -->
+    <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
     <string name="get_pro_button_play_store">Play 商店</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">將會永久刪除來自下列專輯「<xliff:g id="album">%s</xliff:g>」的所有曲目</string>
@@ -178,7 +177,7 @@
     <!-- Multi select menu item-->
     <string name="menu_queue">佇列</string>
     <!-- Artist overflow menu item-->
-    <string name="menu_album_shuffle">專輯隨機</string>
+    <string name="menu_album_shuffle">隨機播放專輯</string>
     <!-- Context menu item -->
     <string name="new_playlist">新增</string>
     <!-- menu item to save the current list as a new playlist -->
@@ -194,7 +193,7 @@
     <string name="fav_title">最愛</string>
     <!-- -->
     <string name="library_title">音樂庫</string>
-    <!-- -->
+    <!-- Lock Queue -->
     <!-- Library screen, menu item -->
     <string name="search_title">搜尋</string>
     <string name="search_filter">篩選器</string>
@@ -406,7 +405,7 @@
     <!-- Grid with cards ('view as' option) -->
     <string name="view_options_grid_card">格狀 (卡片)</string>
     <!-- Grid size (number of columns in grid view) -->
-    <string name="menu_grid_size">格狀數量</string>
+    <string name="menu_grid_size">網格數量</string>
     <!-- -->
     <string name="whitelist_title">白名單</string>
     <!-- -->
@@ -718,7 +717,7 @@
     <!-- Displayed in list of songs for multi-disc album. E.g "Disc 1)-->
     <string name="disc_number_label"><xliff:g id="number">%d</xliff:g> 張唱片</string>
     <!-- Search Filter-->
-    <string name="search_fuzzy">模糊</string>
+    <string name="search_fuzzy">模糊音</string>
     <string name="search_artists">演出者</string>
     <string name="search_albums">專輯</string>
     <!-- Changelog -->
@@ -731,7 +730,7 @@
     <!-- Shown when there are no lyrics -->
     <string name="no_lyrics">找不到內嵌歌詞</string>
     <!-- QuickLyric info dialog message-->
-    <string name="quicklyric_info">QuickLyric 是 Google Play 商店中的一款開放原始碼歌詞擷取工具。\n安裝完成後，在 Shuttle 按下「QuickLyric」選單即可啟動</string>
+    <string name="quicklyric_info">QuickLyric 是 Google Play 商店中的一款開放原始碼歌詞擷取工具\n安裝完成後，在 Shuttle 按下「QuickLyric」選單即可啟動</string>
     <!-- "Playlist" Shortcut label. Max 10 characters.-->
     <string name="shortcut_playlist_short_label">播放清單</string>
     <!-- "Playlist" Shortcut long label. Max 25 characters.-->
@@ -739,7 +738,7 @@
     <!-- "Playlist" Shortcut label disabled. Possibly shows if the playlist has been deleted.-->
     <string name="shortcut_playlist_disabled">播放清單無法使用</string>
     <!-- Displayed at the top of the album list, album shuffle mode-->
-    <string name="shuffle_albums">專輯隨機</string>
+    <string name="shuffle_albums">隨機播放專輯</string>
     <!-- Storage Access Framework (Used when deleting files from SD CarD)-->
     <string name="saf_access_required_title">儲存空間存取要求</string>
     <string name="saf_access_required_message">Shuttle 需要權限允許才能存取檔案。請選擇您的音樂所在的路徑。</string>

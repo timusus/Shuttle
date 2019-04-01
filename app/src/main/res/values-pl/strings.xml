@@ -32,8 +32,7 @@
     <string name="repeat_all_notif">Powtarzanie wszystkich utworów</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Ustaw jako dzwonek</string>
-    <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\" ustawiono jako dzwonek telefonu.</string>
+    <!-- Toast after setting a song as phone ringtone.-->
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">Nie można ustawić dzwonka</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -118,7 +117,7 @@
     <string name="delete_album_artist_desc_multiple">Zostaną usunięte wszystkie utwory następujących wykonawców albumów:<xliff:g id="album-artist">%s</xliff:g>.</string>
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">Wszystkie utwory z albumu „<xliff:g id="album">%s</xliff:g>” zostaną trwale usunięte.</string>
-    <!-- Delete confirmation dialog message when deleting albums -->
+    <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
     <string name="get_pro_button_play_store">Sklep Play</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">Zostaną usunięte wszystkie utwory z następujących albumów:<xliff:g id="album">%s</xliff:g>.</string>
@@ -196,7 +195,7 @@
     <string name="fav_title">Ulubione</string>
     <!-- -->
     <string name="library_title">Kolekcja</string>
-    <!-- -->
+    <!-- Lock Queue -->
     <!-- Library screen, menu item -->
     <string name="search_title">Wyszukaj</string>
     <string name="search_filter">Filtr</string>
