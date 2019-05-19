@@ -103,13 +103,6 @@ public class ShuttleApplication extends Application {
 
         instance = this;
 
-        if (BuildConfig.DEBUG) {
-            // enableStrictMode();
-
-            // Attach stack trace info about call site when RxJava throws an exception
-            RxJavaAssemblyTracking.enable();
-        }
-
         appComponent = initDagger(this);
 
         refWatcher = LeakCanary.install(this);
