@@ -314,7 +314,6 @@ public class SettingsManager extends BaseSettingsManager {
 
     // Artwork
 
-    public static final String KEY_PREFER_LAST_FM = "pref_prefer_lastfm";
     private static final String KEY_DOWNLOAD_AUTOMATICALLY = "pref_download_artwork_auto";
     private static final String KEY_USE_GMAIL_PLACEHOLDERS = "pref_placeholders";
     private static final String KEY_QUEUE_ARTWORK = "pref_artwork_queue";
@@ -327,10 +326,6 @@ public class SettingsManager extends BaseSettingsManager {
 
     public boolean canDownloadArtworkAutomatically() {
         return getBool(KEY_DOWNLOAD_AUTOMATICALLY, false);
-    }
-
-    public boolean preferLastFM() {
-        return getBool(KEY_PREFER_LAST_FM, true);
     }
 
     public boolean preferEmbeddedArtwork() {

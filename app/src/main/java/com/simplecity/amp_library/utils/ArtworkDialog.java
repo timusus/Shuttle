@@ -86,11 +86,8 @@ public class ArtworkDialog {
         if (userSelectedArtwork == null || userSelectedArtwork.type != ArtworkProvider.Type.TAG) {
             viewModels.add(new ArtworkView(ArtworkProvider.Type.TAG, artworkProvider, glideListener));
         }
-        if (userSelectedArtwork == null || userSelectedArtwork.type != ArtworkProvider.Type.LAST_FM) {
-            viewModels.add(new ArtworkView(ArtworkProvider.Type.LAST_FM, artworkProvider, glideListener));
-        }
-        if (userSelectedArtwork == null || userSelectedArtwork.type != ArtworkProvider.Type.ITUNES) {
-            viewModels.add(new ArtworkView(ArtworkProvider.Type.ITUNES, artworkProvider, glideListener));
+        if (userSelectedArtwork == null || userSelectedArtwork.type != ArtworkProvider.Type.REMOTE) {
+            viewModels.add(new ArtworkView(ArtworkProvider.Type.REMOTE, artworkProvider, glideListener));
         }
 
         //Dummy Folder ArtworkView - will be replaced or removed depending on availability of folder images

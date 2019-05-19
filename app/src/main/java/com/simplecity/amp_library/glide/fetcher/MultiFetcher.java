@@ -56,11 +56,8 @@ public class MultiFetcher implements DataFetcher<InputStream> {
                 case ArtworkProvider.Type.TAG:
                     dataFetcher = new TagFetcher(artworkProvider);
                     break;
-                case ArtworkProvider.Type.LAST_FM:
-                    dataFetcher = new LastFmFetcher(artworkProvider);
-                    break;
-                case ArtworkProvider.Type.ITUNES:
-                    dataFetcher = new ItunesFetcher(artworkProvider);
+                case ArtworkProvider.Type.REMOTE:
+                    dataFetcher = new RemoteFetcher(artworkProvider);
                     break;
             }
             inputStream = loadData(dataFetcher, priority);
@@ -106,17 +103,8 @@ public class MultiFetcher implements DataFetcher<InputStream> {
                     && ShuttleUtils.isOnline(true))) {
 
                 //Last FM
-                if (SettingsManager.getInstance().preferLastFM()) {
-                    dataFetcher = new LastFmFetcher(artworkProvider);
-                    inputStream = loadData(dataFetcher, priority);
-                    if (inputStream == null) {
-                        dataFetcher = new ItunesFetcher(artworkProvider);
-                        inputStream = loadData(dataFetcher, priority);
-                    }
-                } else {
-                    dataFetcher = new ItunesFetcher(artworkProvider);
-                    inputStream = loadData(dataFetcher, priority);
-                }
+                dataFetcher = new RemoteFetcher(artworkProvider);
+                inputStream = loadData(dataFetcher, priority);
             }
         }
         return inputStream;
