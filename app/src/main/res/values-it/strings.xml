@@ -35,7 +35,7 @@
     <!-- Toast after setting a song as phone ringtone -->
     <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\" impostata come suoneria.</string>
     <!-- Toast if setting ringtone fails -->
-    <string name="ringtone_set_failed">Non è possibile impostare la suoneria</string>
+    <string name="ringtone_set_failed">Impossibile impostare suoneria</string>
     <!-- Toasts after adding song(s) to playlists -->
     <plurals name="NNNtrackstoplaylist">
         <item quantity="one">Un brano aggiunto alla playlist.</item>
@@ -82,11 +82,18 @@
     <string name="get_pro_title">Aggiorna a Shuttle+</string>
     <!-- -->
     <string name="get_pro_message">Se ti piace utilizzare Shuttle considera l\'upgrade.
-\n\nCaratteristiche:
-\nMolti temi aggiuntivi
-\nModifica dei tag (supporto limitato su Android 4.4 KitKat)
-\nNavigazione delle cartelle
-\nSupporto a ChromeCast\n\nPermette inoltre di promuovere il futuro sviluppo dell\'applicazione.</string>
+
+        \n\nCaratteristiche:
+
+        \n•Molti temi aggiuntivi
+
+        \n•Modifica dei tag
+
+        \n•Navigazione delle cartelle
+
+        \n•Supporto a ChromeCast\n
+
+        \nPermette inoltre di promuovere il futuro sviluppo dell\'applicazione.</string>
     <!-- -->
     <string name="upgraded_title">Grazie</string>
     <string name="upgraded_message">Hai effettuato con successo l\'upgrade a Shuttle+. Ti ringrazio per il supporto.\n\nPer favore riavvia l\'app per attivare tutte le caratteristiche.</string>
@@ -114,7 +121,8 @@
     <string name="delete_album_artist_desc_multiple">Tutti i brani degli artisti seguenti:<xliff:g id="album-artist">%s</xliff:g>verranno cancellati definitivamente.</string>
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">Tutti i brani nell\'album <xliff:g id="album">%s</xliff:g> saranno eliminati definitivamente.</string>
-    <!-- Delete confirmation dialog message when deleting albums -->
+    <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
+    <string name="delete_songs_unknown">I brani selezionati verranno cancellati definitivamente.</string>
     <string name="get_pro_button_play_store">Play Store</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">Tutti i brani negli album <xliff:g id="album">%s</xliff:g>saranno eliminati definitivamente.</string>
@@ -291,10 +299,6 @@
     <string name="pref_title_ignore_folder_art">Ignora le illustrazioni nelle cartelle</string>
     <!-- Settings summary for the embedded artwork checkbox-->
     <string name="pref_summary_ignore_folder_art">Non cercare le illustrazioni memorizzate nelle cartelle musicali</string>
-    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_prefer_lastfm">Preferisci le illustrazioni di Last.fm</string>
-    <!-- Settings summary for the embedded artwork checkbox-->
-    <string name="pref_summary_prefer_lastfm">Seleziona questa opzione se preferisci che Shuttle cerchi le illustrazioni in Last.fm prima di cercare in iTunes. (Solo copertine degli album)</string>
     <!-- Settings title for Artwork settings heading -->
     <string name="pref_string_title_artwork">Illustrazioni</string>
     <!-- Settings title for the download artwork button -->
@@ -701,8 +705,6 @@
     <string name="artwork_edit">Scegli copertina</string>
     <string name="artwork_type_media_store">Media Store</string>
     <string name="artwork_type_tag">Tag</string>
-    <string name="artwork_type_lastfm">Last.FM</string>
-    <string name="artwork_type_itunes">iTunes</string>
     <string name="artwork_type_custom">Personalizzata</string>
     <string name="artwork_gallery">Galleria</string>
     <!-- Launcher Shortcuts -->
@@ -753,4 +755,5 @@
     <string name="saf_access_required_title">Accesso alla memoria richiesto</string>
     <string name="saf_access_required_message">Shuttle ha bisogno dell\'autorizzazione per accedere a questi file. Scegli la cartella contenente la tua musica.</string>
     <string name="saf_show_files_button">Mostra file</string>
+    <string name="notification_text_shuttle_running">Il servizio Shuttle è in esecuzione...</string>
 </resources>

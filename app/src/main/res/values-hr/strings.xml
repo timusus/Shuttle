@@ -117,7 +117,7 @@
     <string name="delete_album_artist_desc_multiple">Sve pjesme od sljedećih izvođača albuma:<xliff:g id="album-artist">%s</xliff:g>će biti trajno izbrisane.</string>
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">Sve pjesme iz albuma <xliff:g id="album">%s</xliff:g> će biti trajno izbrisane.</string>
-    <!-- Delete confirmation dialog message when deleting albums -->
+    <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
     <string name="get_pro_button_play_store">Play Trgovina</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">Sve pjesme iz sljedećih albuma:<xliff:g id="album">%s</xliff:g>će biti trajno izbrisane.</string>
@@ -291,10 +291,6 @@
     <string name="pref_title_ignore_folder_art">Ignoriraj omot albuma iz mape</string>
     <!-- Settings summary for the embedded artwork checkbox-->
     <string name="pref_summary_ignore_folder_art">Ne pretražuj omote spremljene u glazbenim direktorijima</string>
-    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_prefer_lastfm">Preferiraj omot albuma s Last.fm</string>
-    <!-- Settings summary for the embedded artwork checkbox-->
-    <string name="pref_summary_prefer_lastfm">Označite ovo ako preferirate da Shuttle prvo traži omote na Last.fm, prije nego što pretraži iTunes servere. (Samo omoti albuma)</string>
     <!-- Settings title for Artwork settings heading -->
     <string name="pref_string_title_artwork">Omoti</string>
     <!-- Settings title for the download artwork button -->
@@ -702,8 +698,6 @@ mapa</item>
     <string name="artwork_edit">Odaberi omot albuma</string>
     <string name="artwork_type_media_store">Media Store</string>
     <string name="artwork_type_tag">Oznaka</string>
-    <string name="artwork_type_lastfm">Last.FM</string>
-    <string name="artwork_type_itunes">iTunes</string>
     <string name="artwork_type_custom">Prilagođeno</string>
     <string name="artwork_gallery">Galerija</string>
     <!-- Launcher Shortcuts -->

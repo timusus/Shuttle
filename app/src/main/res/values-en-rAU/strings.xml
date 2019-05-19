@@ -63,7 +63,7 @@
     <!-- Delete confirmation dialog when deleting an entire artist -->
     <!-- Delete confirmation dialog message when deleting artists -->
     <!-- Delete confirmation dialog when deleting an entire album -->
-    <!-- Delete confirmation dialog message when deleting albums -->
+    <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
     <!-- Delete confirmation dialog when deleting a single song -->
     <!-- Delete confirmation dialog message title when deleting songs -->
     <!-- Toast shown when songs are successfully deleted -->
@@ -150,8 +150,6 @@
     <!-- Settings summary for the ignore folder artwork checkbox-->
     <!-- Settings title for ignore embedded artwork checkbox (whether the app can use local artwork for the album art -->
     <!-- Settings summary for the ignore folder artwork checkbox-->
-    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <!-- Settings summary for the embedded artwork checkbox-->
     <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
     <!-- Settings summary for the embedded artwork checkbox-->
     <!-- Settings title for Artwork settings heading -->

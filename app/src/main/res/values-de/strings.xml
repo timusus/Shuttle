@@ -116,7 +116,7 @@
     <string name="delete_album_artist_desc_multiple">Alle Titel der folgenden Künstler<xliff:g id="album-artist">%s</xliff:g>werden endgültig gelöscht.</string>
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">Alle Titel des Albums <xliff:g id="album">%s</xliff:g> werden endgültig gelöscht.</string>
-    <!-- Delete confirmation dialog message when deleting albums -->
+    <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
     <string name="get_pro_button_play_store">Play Store</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">Alle Titel der folgenden Alben:<xliff:g id="album">%s</xliff:g>werden endgültig gelöscht.</string>
@@ -293,10 +293,6 @@
     <string name="pref_title_ignore_folder_art">Im Ordner abgelegte Album-Cover ignorieren</string>
     <!-- Settings summary for the embedded artwork checkbox-->
     <string name="pref_summary_ignore_folder_art">In den Musikordnern gespeichterte Bilder nicht anzeigen</string>
-    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_prefer_lastfm">Last.fm Bildmaterial bevorzugen</string>
-    <!-- Settings summary for the embedded artwork checkbox-->
-    <string name="pref_summary_prefer_lastfm">Auswählen um Shuttle bevorzugt auf Last.fm nach Bildern suchen zu lassen -  erst danach wird auf iTunes Servern gesucht. (nur Album Bilder)</string>
     <!-- Settings title for Artwork settings heading -->
     <string name="pref_string_title_artwork">Bilder</string>
     <!-- Settings title for the download artwork button -->
@@ -706,8 +702,6 @@ Ordner</item>
     <string name="artwork_edit">Cover wählen</string>
     <string name="artwork_type_media_store">Media Store</string>
     <string name="artwork_type_tag">Tag</string>
-    <string name="artwork_type_lastfm">Last.FM</string>
-    <string name="artwork_type_itunes">iTunes</string>
     <string name="artwork_type_custom">Eigenes</string>
     <string name="artwork_gallery">Galerie</string>
     <!-- Launcher Shortcuts -->

@@ -113,7 +113,7 @@
     <string name="delete_album_artist_desc_multiple">Tất cả bài hát của nghệ sĩ này:<xliff:g id="album-artist">%s</xliff:g>sẽ bị xoá vĩnh viễn.</string>
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">Toàn bộ album \"<xliff:g id="album">%s</xliff:g>\" sẽ bị xoá vĩnh viễn.</string>
-    <!-- Delete confirmation dialog message when deleting albums -->
+    <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
     <string name="get_pro_button_play_store">CH Play</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">Những album này:<xliff:g id="album">%s</xliff:g>Sẽ bị xoá vĩnh viễn.</string>
@@ -286,10 +286,6 @@
     <string name="pref_title_ignore_folder_art">Bỏ qua ảnh bìa thư mục</string>
     <!-- Settings summary for the embedded artwork checkbox-->
     <string name="pref_summary_ignore_folder_art">Không tìm ảnh bìa chứa trong thư mục nhạc</string>
-    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_prefer_lastfm">Ưu tiên ảnh bìa Last.fm</string>
-    <!-- Settings summary for the embedded artwork checkbox-->
-    <string name="pref_summary_prefer_lastfm">Chọn mục này nếu bạn muốn Shuttle tìm ảnh bìa từ Last.fm trước khi tìm trong máy chủ iTunes. (Chỉ ảnh bìa album)</string>
     <!-- Settings title for Artwork settings heading -->
     <string name="pref_string_title_artwork">Ảnh bìa</string>
     <!-- Settings title for the download artwork button -->
@@ -684,8 +680,6 @@
     <string name="artwork_edit">Chọn ảnh bìa</string>
     <string name="artwork_type_media_store">Bộ nhớ đa phương tiện</string>
     <string name="artwork_type_tag">Thẻ</string>
-    <string name="artwork_type_lastfm">Last.FM</string>
-    <string name="artwork_type_itunes">iTunes</string>
     <string name="artwork_type_custom">Tuỳ biến</string>
     <string name="artwork_gallery">Bộ sưu tập</string>
     <!-- Launcher Shortcuts -->

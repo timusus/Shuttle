@@ -113,7 +113,7 @@
     <string name="delete_album_artist_desc_multiple"><xliff:g id="album-artist">%s</xliff:g> からの曲を全て削除します。</string>
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">アルバム\"<xliff:g id="album">%s</xliff:g>\"を完全に削除します。</string>
-    <!-- Delete confirmation dialog message when deleting albums -->
+    <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
     <string name="get_pro_button_play_store">Playストア</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">アルバム:<xliff:g id="album">%s</xliff:g> を完全に削除します</string>
@@ -287,10 +287,6 @@
     <string name="pref_title_ignore_folder_art">フォルダアートワークを無視</string>
     <!-- Settings summary for the embedded artwork checkbox-->
     <string name="pref_summary_ignore_folder_art">音楽フォルダのアートワークを検索しないようにします。</string>
-    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_prefer_lastfm">Last.fmのアートワークを優先</string>
-    <!-- Settings summary for the embedded artwork checkbox-->
-    <string name="pref_summary_prefer_lastfm">チェックすると、アルバムアートワークをiTunesサービスから探す前に、まずLast.fmから探すようにします。</string>
     <!-- Settings title for Artwork settings heading -->
     <string name="pref_string_title_artwork">アートワーク</string>
     <!-- Settings title for the download artwork button -->
@@ -692,8 +688,6 @@
     <string name="artwork_edit">アートワークを選択する</string>
     <string name="artwork_type_media_store">メデイアストア</string>
     <string name="artwork_type_tag">曲タグ</string>
-    <string name="artwork_type_lastfm">Last.FM</string>
-    <string name="artwork_type_itunes">iTunes</string>
     <string name="artwork_type_custom">カスタム</string>
     <string name="artwork_gallery">ギャラリー</string>
     <!-- Launcher Shortcuts -->

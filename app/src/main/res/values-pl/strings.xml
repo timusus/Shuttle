@@ -118,7 +118,7 @@
     <string name="delete_album_artist_desc_multiple">Zostaną usunięte wszystkie utwory następujących wykonawców albumów:<xliff:g id="album-artist">%s</xliff:g>.</string>
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">Wszystkie utwory z albumu „<xliff:g id="album">%s</xliff:g>” zostaną trwale usunięte.</string>
-    <!-- Delete confirmation dialog message when deleting albums -->
+    <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
     <string name="get_pro_button_play_store">Sklep Play</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">Zostaną usunięte wszystkie utwory z następujących albumów:<xliff:g id="album">%s</xliff:g>.</string>
@@ -292,10 +292,6 @@
     <string name="pref_title_ignore_folder_art">Ignorowanie obrazów w katalogach</string>
     <!-- Settings summary for the embedded artwork checkbox-->
     <string name="pref_summary_ignore_folder_art">Pomija wyszukiwanie obrazów umieszczonych w katalogach z utworami</string>
-    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_prefer_lastfm">Preferowanie obrazów Last.fm</string>
-    <!-- Settings summary for the embedded artwork checkbox-->
-    <string name="pref_summary_prefer_lastfm">W pierwszej kolejności wyszukuje obrazy okładek w serwisie Last.fm zamiast na serwerach iTunes</string>
     <!-- Settings title for Artwork settings heading -->
     <string name="pref_string_title_artwork">Obrazy</string>
     <!-- Settings title for the download artwork button -->
@@ -706,8 +702,6 @@ katalog</item>
     <string name="artwork_edit">Wybierz obraz</string>
     <string name="artwork_type_media_store">Media Store</string>
     <string name="artwork_type_tag">Znacznik</string>
-    <string name="artwork_type_lastfm">Last.FM</string>
-    <string name="artwork_type_itunes">iTunes</string>
     <string name="artwork_type_custom">Własny</string>
     <string name="artwork_gallery">Galeria</string>
     <!-- Launcher Shortcuts -->

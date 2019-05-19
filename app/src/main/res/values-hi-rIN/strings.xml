@@ -123,7 +123,7 @@
     <string name="delete_album_artist_desc_multiple">निम्न एल्बम कलाकारों द्वारा सभी गीत:<xliff:g id="album-artist">%s</xliff:g>स्थायी रूप से डिलीट दिए जाएंगे।</string>
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">एल्बम से सभी गाने <xliff:g id="album">%s</xliff:g> स्थायी रूप से डिलीट कर दिए जाएंगे।</string>
-    <!-- Delete confirmation dialog message when deleting albums -->
+    <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
     <string name="get_pro_button_play_store">प्ले स्टोर</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">निम्न एल्बमों से सभी गीत:<xliff:g id="album">%s</xliff:g>स्थायी रूप से डिलीट कर दिए जाएंगे।</string>
@@ -296,10 +296,6 @@
     <string name="pref_title_ignore_folder_art">फ़ोल्डर आर्टवर्क को अनदेखा करें</string>
     <!-- Settings summary for the embedded artwork checkbox-->
     <string name="pref_summary_ignore_folder_art">अपनी संगीत निर्देशिकाओं में संग्रहित आर्टवर्क के लिए खोज न करें</string>
-    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_prefer_lastfm">Last.fm आर्टवर्क को प्राथमिकता दें</string>
-    <!-- Settings summary for the embedded artwork checkbox-->
-    <string name="pref_summary_prefer_lastfm">यदि आप Shuttle को Last.fm पर आर्टवर्क की तलाश करना चाहते हैं, तो इस बॉक्स को चेक करें, पहले iTunes सर्वर खोजें (केवल एल्बम आर्टवर्क)</string>
     <!-- Settings title for Artwork settings heading -->
     <string name="pref_string_title_artwork">आर्टवर्क</string>
     <!-- Settings title for the download artwork button -->

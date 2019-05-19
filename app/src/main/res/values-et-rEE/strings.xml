@@ -115,7 +115,7 @@
     <string name="delete_album_artist_desc_multiple">Kõik nende artistide lood kustutatakse jäädavalt: <xliff:g id="album-artist">%s</xliff:g></string>
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">Kõik laulud albumist <xliff:g id="album">%s</xliff:g> kustutatakse lõplikult.</string>
-    <!-- Delete confirmation dialog message when deleting albums -->
+    <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
     <string name="get_pro_button_play_store">Play Pood</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">Kõik nende albumite lood kustutatakse jäädavalt: <xliff:g id="album">%s</xliff:g></string>
@@ -292,10 +292,6 @@
     <string name="pref_title_ignore_folder_art">Ignoreeri kaanepilte kaustas</string>
     <!-- Settings summary for the embedded artwork checkbox-->
     <string name="pref_summary_ignore_folder_art">Ära otsi kaanepilte oma muusika kaustadest</string>
-    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_prefer_lastfm">Eelista Last.fm pilte</string>
-    <!-- Settings summary for the embedded artwork checkbox-->
-    <string name="pref_summary_prefer_lastfm">Märgi see valik, kui soovid, et Shuttle otsiks kaanepilte esmalt teenusest Last.fm ning seejärel iTunes serveritest. (Ainult albumite kaanepildid)</string>
     <!-- Settings title for Artwork settings heading -->
     <string name="pref_string_title_artwork">Albumi kujundus</string>
     <!-- Settings title for the download artwork button -->
@@ -700,8 +696,6 @@ Kui see on välja lülitatud, siis kasutatakse Shuttle ikooni kohatäitena.</str
     <string name="artwork_edit">Vali kaanepilt</string>
     <string name="artwork_type_media_store">Failide asukoht</string>
     <string name="artwork_type_tag">Silt</string>
-    <string name="artwork_type_lastfm">Last.FM</string>
-    <string name="artwork_type_itunes">iTunes</string>
     <string name="artwork_type_custom">Kohandatud</string>
     <string name="artwork_gallery">Galerii</string>
     <!-- Launcher Shortcuts -->

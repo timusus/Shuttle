@@ -33,7 +33,6 @@
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">设为手机铃声</string>
     <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set">已将<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\"设为铃声</string>
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">无法设置铃声</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -115,7 +114,7 @@
     <string name="delete_album_artist_desc_multiple">将会永久删除来自下列歌手专辑「<xliff:g id="album-artist">%s</xliff:g>」的所有歌曲</string>
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">将会永久删除来自专辑「<xliff:g id="album">%s</xliff:g>」的所有歌曲</string>
-    <!-- Delete confirmation dialog message when deleting albums -->
+    <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
     <string name="get_pro_button_play_store">Play 商店</string>
     <string name="get_pro_button_amazon">亚马逊</string>
     <string name="delete_album_desc_multiple">将会永久删除来自下列专辑「<xliff:g id="album">%s</xliff:g>」的所有歌曲</string>
@@ -292,10 +291,6 @@
     <string name="pref_title_ignore_folder_art">略过文件封面</string>
     <!-- Settings summary for the embedded artwork checkbox-->
     <string name="pref_summary_ignore_folder_art">不使用文件夹中存放的专辑封面</string>
-    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_prefer_lastfm">封面优先使用Last.fm</string>
-    <!-- Settings summary for the embedded artwork checkbox-->
-    <string name="pref_summary_prefer_lastfm">使用以 Last.fm 搜寻的专辑封面优先於 iTunes</string>
     <!-- Settings title for Artwork settings heading -->
     <string name="pref_string_title_artwork">封面</string>
     <!-- Settings title for the download artwork button -->
@@ -696,8 +691,6 @@
     <string name="artwork_edit">选择封面</string>
     <string name="artwork_type_media_store">系统媒体库</string>
     <string name="artwork_type_tag">标签</string>
-    <string name="artwork_type_lastfm">Last.FM</string>
-    <string name="artwork_type_itunes">iTunes</string>
     <string name="artwork_type_custom">自定义</string>
     <string name="artwork_gallery">相册</string>
     <!-- Launcher Shortcuts -->
@@ -748,4 +741,10 @@
     <string name="saf_access_required_title">储存空间存取要求</string>
     <string name="saf_access_required_message">Shuttle 需要权限允许才能存取文件。请选择您的音乐所在的路径。</string>
     <string name="saf_show_files_button">显示文件</string>
+    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
+    <string name="pref_title_prefer_lastfm">封面优先使用Last.fm</string>
+    <!-- Settings summary for the embedded artwork checkbox-->
+    <string name="pref_summary_prefer_lastfm">使用以 Last.fm 搜寻的专辑封面优先於 iTunes</string>
+    <string name="artwork_type_lastfm">Last.FM</string>
+    <string name="artwork_type_itunes">iTunes</string>
 </resources>

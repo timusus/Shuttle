@@ -122,7 +122,7 @@
     <string name="delete_album_artist_desc_multiple">Все песни следующих исполнителей:<xliff:g id="album-artist">%s</xliff:g> будут безвозвратно удалены</string>
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">Все песни из альбома <xliff:g id="album">%s</xliff:g> будут безвозвратно удалены.</string>
-    <!-- Delete confirmation dialog message when deleting albums -->
+    <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
     <string name="get_pro_button_play_store">Play Маркет</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">Следующие альбомы:<xliff:g id="album">%s</xliff:g> будут безвозвратно удалены.</string>
@@ -296,10 +296,6 @@
     <string name="pref_title_ignore_folder_art">Игнорировать обложку из папки</string>
     <!-- Settings summary for the embedded artwork checkbox-->
     <string name="pref_summary_ignore_folder_art">Не искать обложку в ваших папках с музыкой</string>
-    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_prefer_lastfm">Предпочитать обложку с Last.fm</string>
-    <!-- Settings summary for the embedded artwork checkbox-->
-    <string name="pref_summary_prefer_lastfm">Поставьте галочку, если Вы хотите, что бы Shuttle сначала искал обложку на Last.fm, а потом — на iTunes (только для обложек альбомов)</string>
     <!-- Settings title for Artwork settings heading -->
     <string name="pref_string_title_artwork">Обложки</string>
     <!-- Settings title for the download artwork button -->
@@ -707,8 +703,6 @@
     <string name="artwork_edit">Выбрать обложку</string>
     <string name="artwork_type_media_store">Магазин музыки</string>
     <string name="artwork_type_tag">Тег</string>
-    <string name="artwork_type_lastfm">Last.FM</string>
-    <string name="artwork_type_itunes">iTunes</string>
     <string name="artwork_type_custom">Сбросить</string>
     <string name="artwork_gallery">Галерея</string>
     <!-- Launcher Shortcuts -->

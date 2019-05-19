@@ -115,7 +115,7 @@
     <string name="delete_album_artist_desc_multiple">앨범 아티스트 <xliff:g id="album-artist">%s</xliff:g>의 모든 노래가 영구적으로 삭제됩니다.</string>
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">앨범 <xliff:g id="album">%s</xliff:g>의 모든 노래가 영구적으로 삭제됩니다.</string>
-    <!-- Delete confirmation dialog message when deleting albums -->
+    <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
     <string name="get_pro_button_play_store">Play 스토어</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">앨범 <xliff:g id="album">%s</xliff:g>의 모든 노래가 영구적으로 삭제됩니다.</string>
@@ -288,10 +288,6 @@
     <string name="pref_title_ignore_folder_art">폴더 내 앨범아트 무시</string>
     <!-- Settings summary for the embedded artwork checkbox-->
     <string name="pref_summary_ignore_folder_art">음악 폴더에 저장된 앨범아트를 무시합니다.</string>
-    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_prefer_lastfm">Last.fm 앨범아트 우선 적용</string>
-    <!-- Settings summary for the embedded artwork checkbox-->
-    <string name="pref_summary_prefer_lastfm">iTunes 서버에서 앨범아트를 검색하기 전에 Last.fm에서 먼저 검색합니다. (앨범아트만 적용)</string>
     <!-- Settings title for Artwork settings heading -->
     <string name="pref_string_title_artwork">앨범아트</string>
     <!-- Settings title for the download artwork button -->
@@ -686,8 +682,6 @@
     <string name="artwork_edit">앨범아트 선택</string>
     <string name="artwork_type_media_store">미디어 저장소</string>
     <string name="artwork_type_tag">태그</string>
-    <string name="artwork_type_lastfm">Last.FM</string>
-    <string name="artwork_type_itunes">iTunes</string>
     <string name="artwork_type_custom">사용자 지정</string>
     <string name="artwork_gallery">갤러리</string>
     <!-- Launcher Shortcuts -->
