@@ -348,14 +348,6 @@ public class SettingsParentFragment extends BaseNavigationController implements
                 });
             }
 
-            SwitchPreferenceCompat preferLastFmArtworkPreference = (SwitchPreferenceCompat) findPreference(SettingsManager.KEY_PREFER_LAST_FM);
-            if (preferLastFmArtworkPreference != null) {
-                preferLastFmArtworkPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-                    settingsPresenter.changeArtworkPreferenceClicked(getContext());
-                    return true;
-                });
-            }
-
             // Headset/Bluetooth
 
             // Scrobbling

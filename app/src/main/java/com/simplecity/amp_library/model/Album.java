@@ -4,18 +4,17 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
-import com.simplecity.amp_library.http.HttpClient;
-import com.simplecity.amp_library.http.itunes.ItunesResult;
-import com.simplecity.amp_library.http.lastfm.LastFmResult;
 import com.simplecity.amp_library.utils.ArtworkUtils;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.StringUtils;
 import java.io.File;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-import retrofit2.Call;
 
 public class Album implements
         Serializable,
@@ -208,14 +207,16 @@ public class Album implements
         artworkKey = String.format("%s_%s", albumArtistName, name);
     }
 
+    @Nullable
     @Override
-    public Call<? extends LastFmResult> getLastFmArtwork() {
-        return HttpClient.getInstance().lastFmService.getLastFmAlbumResult(albumArtistName, name);
-    }
-
-    @Override
-    public Call<ItunesResult> getItunesArtwork() {
-        return HttpClient.getInstance().itunesService.getItunesAlbumResult(String.format("%s %s", albumArtistName, name));
+    public String getRemoteArtworkUrl() {
+        try {
+            return "https://artwork.shuttlemusicplayer.app/api/v1/artwork"
+                    + "?artist=" + URLEncoder.encode(albumArtistName, Charset.forName("UTF-8").toString())
+                    + "&album=" + URLEncoder.encode(name, Charset.forName("UTF-8").toString());
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        }
     }
 
     @Override

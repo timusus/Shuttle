@@ -69,12 +69,6 @@
             android:summary="@string/pref_summary_ignore_folder_art"
             android:title="@string/pref_title_ignore_folder_art"/>
 
-        <android.support.v7.preference.SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="pref_prefer_lastfm"
-            android:summary="@string/pref_summary_prefer_lastfm"
-            android:title="@string/pref_title_prefer_lastfm"/>
-
     </android.support.v7.preference.PreferenceCategory>
 
 </android.support.v7.preference.PreferenceScreen>

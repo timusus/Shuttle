@@ -327,10 +327,6 @@
     <string name="pref_title_ignore_folder_art">Ignore folder artwork</string>
     <!-- Settings summary for the embedded artwork checkbox-->
     <string name="pref_summary_ignore_folder_art">Don\'t search for artwork stored in your music directories</string>
-    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_prefer_lastfm">Prefer Last.fm artwork</string>
-    <!-- Settings summary for the embedded artwork checkbox-->
-    <string name="pref_summary_prefer_lastfm">Check this box if you\'d prefer Shuttle to look for artwork at Last.fm first, before searching iTunes servers. (Album artwork only)</string>
     <!-- Settings title for Artwork settings heading -->
     <string name="pref_string_title_artwork">Artwork</string>
     <!-- Settings title for the download artwork button -->
@@ -773,8 +769,7 @@
     <string name="artwork_edit">Choose artwork</string>
     <string name="artwork_type_media_store">Media Store</string>
     <string name="artwork_type_tag">Tag</string>
-    <string name="artwork_type_lastfm">Last.FM</string>
-    <string name="artwork_type_itunes">iTunes</string>
+    <string name="artwork_type_internet">Internet</string>
     <string name="artwork_type_custom">Custom</string>
     <string name="artwork_gallery">Gallery</string>
 

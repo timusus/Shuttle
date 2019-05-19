@@ -54,11 +54,8 @@ public class TypeFetcher implements DataFetcher<InputStream> {
             case ArtworkProvider.Type.TAG:
                 dataFetcher = new TagFetcher(artworkProvider);
                 break;
-            case ArtworkProvider.Type.LAST_FM:
-                dataFetcher = new LastFmFetcher(artworkProvider);
-                break;
-            case ArtworkProvider.Type.ITUNES:
-                dataFetcher = new ItunesFetcher(artworkProvider);
+            case ArtworkProvider.Type.REMOTE:
+                dataFetcher = new RemoteFetcher(artworkProvider);
                 break;
         }
         return loadData(dataFetcher, priority);

@@ -5,19 +5,18 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.data.Repository;
-import com.simplecity.amp_library.http.HttpClient;
-import com.simplecity.amp_library.http.itunes.ItunesResult;
-import com.simplecity.amp_library.http.lastfm.LastFmResult;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.StringUtils;
 import io.reactivex.Single;
 import java.io.File;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import retrofit2.Call;
 
 public class AlbumArtist implements
         Serializable,
@@ -126,14 +125,12 @@ public class AlbumArtist implements
 
     @Nullable
     @Override
-    public Call<? extends LastFmResult> getLastFmArtwork() {
-        return HttpClient.getInstance().lastFmService.getLastFmArtistResult(name);
-    }
-
-    @Nullable
-    @Override
-    public Call<ItunesResult> getItunesArtwork() {
-        return null;
+    public String getRemoteArtworkUrl() {
+        try {
+            return "https://artwork.shuttlemusicplayer.app/api/v1/artwork?artist=" + URLEncoder.encode(name, Charset.forName("UTF-8").toString());
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        }
     }
 
     @Nullable

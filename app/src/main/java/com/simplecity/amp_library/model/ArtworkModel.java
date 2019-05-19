@@ -26,10 +26,8 @@ public class ArtworkModel {
                 return context.getString(R.string.artwork_type_tag);
             case ArtworkProvider.Type.FOLDER:
                 return "Folder";
-            case ArtworkProvider.Type.LAST_FM:
-                return context.getString(R.string.artwork_type_lastfm);
-            case ArtworkProvider.Type.ITUNES:
-                return context.getString(R.string.artwork_type_itunes);
+            case ArtworkProvider.Type.REMOTE:
+                return context.getString(R.string.artwork_type_internet);
         }
         return null;
     }
