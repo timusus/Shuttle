@@ -13,15 +13,12 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.provider.DocumentFile;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
@@ -48,10 +45,6 @@ import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 
 public class TaggerDialog extends DialogFragment {
-
-    interface TextChangeListener {
-        void onTextChanged(boolean isDifferent);
-    }
 
     public static final String TAG = "TaggerDialog";
 
@@ -105,9 +98,6 @@ public class TaggerDialog extends DialogFragment {
     private String discTotal;
     private String lyrics;
     private String comment;
-
-    private TextChangeListener textChangeListener = isDifferent ->
-            materialDialog.getActionButton(DialogAction.POSITIVE).setEnabled(isDifferent);
 
     @Inject
     SettingsManager settingsManager;
@@ -171,15 +161,11 @@ public class TaggerDialog extends DialogFragment {
                 .title(R.string.edit_tags)
                 .customView(customView, false)
                 .positiveText(R.string.save)
-                .onPositive((dialog, which) ->
-                        saveTags())
+                .onPositive((dialog, which) -> saveTags())
                 .negativeText(R.string.close)
-                .onNegative((dialog, which) ->
-                        dismiss())
+                .onNegative((dialog, which) -> dismiss())
                 .autoDismiss(false)
                 .build();
-
-        materialDialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
 
         return materialDialog;
     }
@@ -292,51 +278,39 @@ public class TaggerDialog extends DialogFragment {
 
         titleEditText.setText(title);
         titleEditText.setSelection(titleEditText.getText().length());
-        titleEditText.addTextChangedListener(new CustomTextWatcher(titleEditText, textChangeListener));
 
         albumEditText.setText(albumName);
         albumEditText.setSelection(albumEditText.getText().length());
-        albumEditText.addTextChangedListener(new CustomTextWatcher(titleEditText, textChangeListener));
 
         artistEditText.setText(artistName);
         artistEditText.setSelection(artistEditText.getText().length());
-        artistEditText.addTextChangedListener(new CustomTextWatcher(artistEditText, textChangeListener));
 
         albumArtistEditText.setText(albumArtistName);
         albumArtistEditText.setSelection(albumArtistEditText.getText().length());
-        albumArtistEditText.addTextChangedListener(new CustomTextWatcher(albumArtistEditText, textChangeListener));
 
         genreEditText.setText(genre);
         genreEditText.setSelection(genreEditText.getText().length());
-        genreEditText.addTextChangedListener(new CustomTextWatcher(genreEditText, textChangeListener));
 
         yearEditText.setText(String.valueOf(year));
         yearEditText.setSelection(yearEditText.getText().length());
-        yearEditText.addTextChangedListener(new CustomTextWatcher(yearEditText, textChangeListener));
 
         trackEditText.setText(String.valueOf(track));
         trackEditText.setSelection(trackEditText.getText().length());
-        trackEditText.addTextChangedListener(new CustomTextWatcher(trackEditText, textChangeListener));
 
         trackTotalEditText.setText(String.valueOf(trackTotal));
         trackTotalEditText.setSelection(trackTotalEditText.getText().length());
-        trackTotalEditText.addTextChangedListener(new CustomTextWatcher(trackTotalEditText, textChangeListener));
 
         discEditText.setText(String.valueOf(disc));
         discEditText.setSelection(discEditText.getText().length());
-        discEditText.addTextChangedListener(new CustomTextWatcher(discEditText, textChangeListener));
 
         discTotalEditText.setText(String.valueOf(discTotal));
         discTotalEditText.setSelection(discTotalEditText.getText().length());
-        discTotalEditText.addTextChangedListener(new CustomTextWatcher(discTotalEditText, textChangeListener));
 
         lyricsEditText.setText(lyrics);
         lyricsEditText.setSelection(lyricsEditText.getText().length());
-        lyricsEditText.addTextChangedListener(new CustomTextWatcher(lyricsEditText, textChangeListener));
 
         commentEditText.setText(comment);
         commentEditText.setSelection(commentEditText.getText().length());
-        commentEditText.addTextChangedListener(new CustomTextWatcher(commentEditText, textChangeListener));
     }
 
     private void saveTags() {
@@ -449,32 +423,6 @@ public class TaggerDialog extends DialogFragment {
 
     public void show(FragmentManager fragmentManager) {
         show(fragmentManager, TAG);
-    }
-
-    private static class CustomTextWatcher implements TextWatcher {
-
-        private String originalText;
-        private TextChangeListener textChangeListener;
-
-        public CustomTextWatcher(EditText editText, TextChangeListener textChangeListener) {
-            this.originalText = editText.getText().toString();
-            this.textChangeListener = textChangeListener;
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            textChangeListener.onTextChanged(!s.toString().equals(originalText));
-        }
     }
 
     private TextInputLayout getParent(EditText editText) {
