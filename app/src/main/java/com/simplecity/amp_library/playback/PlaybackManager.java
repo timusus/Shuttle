@@ -514,8 +514,9 @@ public class PlaybackManager implements Playback.Callbacks {
             long duration = playback.getDuration();
             if (queueManager.repeatMode != QueueManager.RepeatMode.ONE && duration > 2000 && playback.getPosition() >= duration - 2000) {
                 next(true);
+            } else {
+                playback.start();
             }
-            playback.start();
 
             musicServiceCallbacks.cancelShutdown();
             musicServiceCallbacks.updateNotification();
