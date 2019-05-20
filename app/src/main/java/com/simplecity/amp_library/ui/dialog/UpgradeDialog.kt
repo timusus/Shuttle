@@ -1,6 +1,7 @@
 package com.simplecity.amp_library.ui.dialog
 
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.FragmentManager
@@ -10,11 +11,17 @@ import com.simplecity.amp_library.R
 import com.simplecity.amp_library.billing.BillingManager
 import com.simplecity.amp_library.constants.Config
 import com.simplecity.amp_library.utils.ShuttleUtils
+import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
 class UpgradeDialog : DialogFragment() {
 
     @Inject lateinit var billingManager: BillingManager
+
+    override fun onAttach(context: Context?) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return MaterialDialog.Builder(context!!)
