@@ -81,6 +81,8 @@ class CreatePlaylistDialog : DialogFragment() {
                 }
             ))
 
+        val activity = activity
+
         val builder = MaterialDialog.Builder(context!!)
             .customView(customView, false)
             .title(R.string.menu_playlist)
@@ -104,10 +106,14 @@ class CreatePlaylistDialog : DialogFragment() {
                                     uri = try {
                                         context!!.contentResolver.insert(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, values)
                                     } catch (e: IllegalArgumentException) {
-                                        Toast.makeText(context, R.string.dialog_create_playlist_error, Toast.LENGTH_LONG).show()
+                                        if (activity != null) {
+                                            Toast.makeText(activity, R.string.dialog_create_playlist_error, Toast.LENGTH_LONG).show()
+                                        }
                                         null
                                     } catch (e: NullPointerException) {
-                                        Toast.makeText(context, R.string.dialog_create_playlist_error, Toast.LENGTH_LONG).show()
+                                        if (activity != null) {
+                                            Toast.makeText(activity, R.string.dialog_create_playlist_error, Toast.LENGTH_LONG).show()
+                                        }
                                         null
                                     }
                                 }
@@ -117,12 +123,16 @@ class CreatePlaylistDialog : DialogFragment() {
 
                                     songsToAdd?.let {
                                         playlistManager.addToPlaylist(playlist, songsToAdd) {
+                                            if (activity != null) {
+                                                Toast.makeText(activity, activity.resources.getQuantityString(R.plurals.NNNtrackstoplaylist, it), Toast.LENGTH_LONG).show()
+                                            }
                                             (parentFragment as? OnSavePlaylistListener)?.onSave(playlist)
-                                                ?: throw IllegalStateException("CreatePlaylistDialog parent must implement OnSavePlaylistListener")
                                         }
                                     } ?: run {
+                                        if (activity != null) {
+                                            Toast.makeText(activity, activity.resources.getQuantityString(R.plurals.NNNtrackstoplaylist, 0), Toast.LENGTH_LONG).show()
+                                        }
                                         (parentFragment as? OnSavePlaylistListener)?.onSave(playlist)
-                                            ?: throw IllegalStateException("CreatePlaylistDialog parent must implement OnSavePlaylistListener")
                                     }
                                 }
                             },
