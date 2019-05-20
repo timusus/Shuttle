@@ -32,7 +32,8 @@
     <string name="repeat_all_notif">Répéter tous les titres</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Utiliser comme sonnerie</string>
-    <!-- Toast after setting a song as phone ringtone.-->
+    <!-- Toast after setting a song as phone ringtone -->
+    <string name="ringtone_set">\"<xliff:g id="name" example="Alarm Bell">%s</xliff:g>\" est utilisé comme sonnerie</string>
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">Impossible de changer la sonnerie</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -195,7 +196,7 @@
     <string name="fav_title">Favoris</string>
     <!-- -->
     <string name="library_title">Bibliothèque</string>
-    <!-- Lock Queue -->
+    <!-- -->
     <!-- Library screen, menu item -->
     <string name="search_title">Rechercher</string>
     <string name="search_filter">Filtre</string>
@@ -291,10 +292,6 @@
     <string name="pref_title_ignore_folder_art">Ignorer la pochette du dossier</string>
     <!-- Settings summary for the embedded artwork checkbox-->
     <string name="pref_summary_ignore_folder_art">Ne pas chercher une pochette dans les dossiers de musique</string>
-    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_prefer_lastfm">Préférer la pochette de Last.fm</string>
-    <!-- Settings summary for the embedded artwork checkbox-->
-    <string name="pref_summary_prefer_lastfm">Cocher cette case si vous préférez que Shuttle cherche une pochette sur Last.fm d\'abord, avant de chercher sur les serveurs iTunes. (Pochette d\'album uniquement)</string>
     <!-- Settings title for Artwork settings heading -->
     <string name="pref_string_title_artwork">Illustrations</string>
     <!-- Settings title for the download artwork button -->
@@ -702,8 +699,6 @@
     <string name="artwork_edit">Choisisser l\'illustration</string>
     <string name="artwork_type_media_store">Media Store</string>
     <string name="artwork_type_tag">Tag</string>
-    <string name="artwork_type_lastfm">Last.FM</string>
-    <string name="artwork_type_itunes">iTunes</string>
     <string name="artwork_type_custom">Personnalisé</string>
     <string name="artwork_gallery">Galerie</string>
     <!-- Launcher Shortcuts -->

@@ -32,7 +32,8 @@
     <string name="repeat_all_notif">重複播放所有曲目</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">設為鈴聲</string>
-    <!-- Toast after setting a song as phone ringtone.-->
+    <!-- Toast after setting a song as phone ringtone -->
+    <string name="ringtone_set">已將「<xliff:g example="Alarm Bell" id="name">%s</xliff:g>」設為鈴聲</string>
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">無法設定鈴聲</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -113,6 +114,7 @@
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">將會永久刪除來自專輯「<xliff:g id="album">%s</xliff:g>」的所有曲目</string>
     <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
+    <string name="delete_songs_unknown">將會永久刪除選取的曲目</string>
     <string name="get_pro_button_play_store">Play 商店</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">將會永久刪除來自下列專輯「<xliff:g id="album">%s</xliff:g>」的所有曲目</string>
@@ -193,7 +195,7 @@
     <string name="fav_title">最愛</string>
     <!-- -->
     <string name="library_title">音樂庫</string>
-    <!-- Lock Queue -->
+    <!-- -->
     <!-- Library screen, menu item -->
     <string name="search_title">搜尋</string>
     <string name="search_filter">篩選器</string>
@@ -289,10 +291,6 @@
     <string name="pref_title_ignore_folder_art">略過資料夾專輯封面</string>
     <!-- Settings summary for the embedded artwork checkbox-->
     <string name="pref_summary_ignore_folder_art">不使用資料夾中存放的專輯封面</string>
-    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_prefer_lastfm">優先使用 Last.fm 專輯封面</string>
-    <!-- Settings summary for the embedded artwork checkbox-->
-    <string name="pref_summary_prefer_lastfm">使用以 Last.fm 搜尋的專輯封面優先於 iTunes</string>
     <!-- Settings title for Artwork settings heading -->
     <string name="pref_string_title_artwork">專輯封面</string>
     <!-- Settings title for the download artwork button -->
@@ -691,8 +689,6 @@
     <string name="artwork_edit">選擇專輯封面</string>
     <string name="artwork_type_media_store">系統媒體庫</string>
     <string name="artwork_type_tag">標籤</string>
-    <string name="artwork_type_lastfm">Last.FM</string>
-    <string name="artwork_type_itunes">iTunes</string>
     <string name="artwork_type_custom">自訂</string>
     <string name="artwork_gallery">圖片庫</string>
     <!-- Launcher Shortcuts -->
@@ -743,4 +739,5 @@
     <string name="saf_access_required_title">儲存空間存取要求</string>
     <string name="saf_access_required_message">Shuttle 需要權限允許才能存取檔案。請選擇您的音樂所在的路徑。</string>
     <string name="saf_show_files_button">顯示檔案</string>
+    <string name="notification_text_shuttle_running">Shuttle 服務正在執行…</string>
 </resources>

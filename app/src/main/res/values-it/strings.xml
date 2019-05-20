@@ -32,8 +32,8 @@
     <string name="repeat_all_notif">Ripetizione di tutti i brani.</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Usa come suoneria</string>
-    <!-- Toast after setting a song as phone ringtone.-->
-    <string name="ringtone_set_new">Suoneria impostata</string>
+    <!-- Toast after setting a song as phone ringtone -->
+    <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\" impostata come suoneria.</string>
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">Impossibile impostare suoneria</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -203,8 +203,7 @@
     <string name="fav_title">Preferiti</string>
     <!-- -->
     <string name="library_title">Libreria</string>
-    <!-- Lock Queue -->
-    <string name="menu_queue_swipe_enable">Attiva swipe</string>
+    <!-- -->
     <!-- Library screen, menu item -->
     <string name="search_title">Cerca</string>
     <string name="search_filter">Filtro</string>

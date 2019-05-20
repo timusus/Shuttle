@@ -32,7 +32,8 @@
     <string name="repeat_all_notif">सभी गानें रिपीट करे</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">रिंगटोन के रूप में सेट करें</string>
-    <!-- Toast after setting a song as phone ringtone.-->
+    <!-- Toast after setting a song as phone ringtone -->
+    <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\" फ़ोन रिंगटोन के रूप में सेट करें।</string>
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">रिंगटोन सेट नहीं हुई ।</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -200,7 +201,7 @@
     <string name="fav_title">फेवरेट्स</string>
     <!-- -->
     <string name="library_title">लाइब्रेरी</string>
-    <!-- Lock Queue -->
+    <!-- -->
     <!-- Library screen, menu item -->
     <string name="search_title">सर्च</string>
     <string name="search_filter">फिल्टर</string>

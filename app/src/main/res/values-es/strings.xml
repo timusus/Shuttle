@@ -33,7 +33,8 @@
     <string name="repeat_all_notif">Repitiendo todas las canciones.</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Usar como tono de llamada</string>
-    <!-- Toast after setting a song as phone ringtone.-->
+    <!-- Toast after setting a song as phone ringtone -->
+    <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\" establecido como tono de llamada.</string>
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">No se pudo establecer como tono de llamada</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -105,6 +106,7 @@
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">El álbum \"<xliff:g id="album">%s</xliff:g>\" será eliminado permanentemente.</string>
     <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
+    <string name="delete_songs_unknown">Las canciones seleccionadas serán eliminadas permanentemente.</string>
     <string name="get_pro_button_play_store">Play Store</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">Todas las canciones de los siguientes álbumes:<xliff:g id="album">%s</xliff:g> serán eliminados permanentemente.</string>
@@ -185,7 +187,7 @@
     <string name="fav_title">Favoritos</string>
     <!-- -->
     <string name="library_title">Biblioteca</string>
-    <!-- Lock Queue -->
+    <!-- -->
     <!-- Library screen, menu item -->
     <string name="search_title">Buscar</string>
     <string name="search_filter">Filtrar</string>
@@ -281,10 +283,6 @@
     <string name="pref_title_ignore_folder_art">Ignorar carátulas en carpeta</string>
     <!-- Settings summary for the embedded artwork checkbox-->
     <string name="pref_summary_ignore_folder_art">No buscar carátulas almacenadas dentro de las carpetas de música</string>
-    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_prefer_lastfm">Preferir carátulas de Last.fm</string>
-    <!-- Settings summary for the embedded artwork checkbox-->
-    <string name="pref_summary_prefer_lastfm">Selecciona esta opción si prefieres que Shuttle busque las carátulas en Last.fm en lugar de los servidores de iTunes (Sólo aplica a las carátulas).</string>
     <!-- Settings title for Artwork settings heading -->
     <string name="pref_string_title_artwork">Carátula</string>
     <!-- Settings title for the download artwork button -->
@@ -690,8 +688,6 @@
     <string name="artwork_edit">Elegir carátula.</string>
     <string name="artwork_type_media_store">Media Store</string>
     <string name="artwork_type_tag">Etiqueta</string>
-    <string name="artwork_type_lastfm">Last.FM</string>
-    <string name="artwork_type_itunes">iTunes</string>
     <string name="artwork_type_custom">Personalizado</string>
     <string name="artwork_gallery">Galería</string>
     <!-- Launcher Shortcuts -->
@@ -742,4 +738,5 @@
     <string name="saf_access_required_title">Se requiere acceso de almacenamiento</string>
     <string name="saf_access_required_message">Shuttle requiere permiso para acceder a estos archivos. Por favor, elija el directorio que contiene su música.</string>
     <string name="saf_show_files_button">Mostrar archivos</string>
+    <string name="notification_text_shuttle_running">Shuttle se está ejecutando</string>
 </resources>

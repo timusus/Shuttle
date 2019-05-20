@@ -32,7 +32,8 @@
     <string name="repeat_all_notif">เล่นซ้ำทุกเพลง</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">ตั้งเป็นเสียงเรียกเข้า</string>
-    <!-- Toast after setting a song as phone ringtone.-->
+    <!-- Toast after setting a song as phone ringtone -->
+    <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\" ตั้งเป็นเสียงเรียกเข้า</string>
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">ไม่สามารถตั้งเป็นเสียงเรียกเข้าได้</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -191,7 +192,7 @@
     <string name="fav_title">รายการโปรด</string>
     <!-- -->
     <string name="library_title">ห้องสมุด</string>
-    <!-- Lock Queue -->
+    <!-- -->
     <!-- Library screen, menu item -->
     <string name="search_title">ค้นหา</string>
     <string name="search_filter">ตัวกรอง</string>

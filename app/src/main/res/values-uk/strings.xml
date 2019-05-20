@@ -32,7 +32,8 @@
     <string name="repeat_all_notif">Повторювати всі пісні</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Поставити на дзвінок</string>
-    <!-- Toast after setting a song as phone ringtone.-->
+    <!-- Toast after setting a song as phone ringtone -->
+    <string name="ringtone_set"><xliff:g example="Alarm Bell" id="name">%s</xliff:g> обрано в якості рингтону.</string>
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">Не можу встановити рингтон</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -192,7 +193,7 @@
     <string name="fav_title">Вибрані</string>
     <!-- -->
     <string name="library_title">Бібліотека</string>
-    <!-- Lock Queue -->
+    <!-- -->
     <!-- Library screen, menu item -->
     <string name="search_title">Пошук</string>
     <string name="search_filter">Фільтр</string>

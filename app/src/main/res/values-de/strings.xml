@@ -32,7 +32,8 @@
     <string name="repeat_all_notif">Alle Titel werden wiederholt.</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Als Klingelton verwenden</string>
-    <!-- Toast after setting a song as phone ringtone.-->
+    <!-- Toast after setting a song as phone ringtone -->
+    <string name="ringtone_set">\"<xliff:g id="name" example="Alarm Bell">%s</xliff:g>\" als Klingelton gesetzt.</string>
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">Klingelton konnte nicht gespeichert werden</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -196,7 +197,7 @@
     <string name="fav_title">Favoriten</string>
     <!-- -->
     <string name="library_title">Bibliothek</string>
-    <!-- Lock Queue -->
+    <!-- -->
     <!-- Library screen, menu item -->
     <string name="search_title">Suche</string>
     <string name="search_filter">Filter</string>

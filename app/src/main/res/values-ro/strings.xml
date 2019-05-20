@@ -32,7 +32,8 @@
     <string name="repeat_all_notif">Se repetă toate piesele.</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Folosește ca ton de apel</string>
-    <!-- Toast after setting a song as phone ringtone.-->
+    <!-- Toast after setting a song as phone ringtone -->
+    <string name="ringtone_set">„<xliff:g example="Alarm Bell" id="name">%s</xliff:g>” setat ca ton de apel.</string>
     <!-- Toast if setting ringtone fails -->
     <!-- Toasts after adding song(s) to playlists -->
     <plurals name="NNNtrackstoplaylist">
@@ -178,7 +179,7 @@
     <string name="fav_title">Favorite</string>
     <!-- -->
     <string name="library_title">Bibliotecă</string>
-    <!-- Lock Queue -->
+    <!-- -->
     <!-- Library screen, menu item -->
     <string name="search_title">Caută</string>
     <!-- Playlist context menu item to clear the selected playlist. -->

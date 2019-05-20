@@ -32,7 +32,8 @@
     <string name="repeat_all_notif">全ての曲をリピート再生します</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">着信音に設定</string>
-    <!-- Toast after setting a song as phone ringtone.-->
+    <!-- Toast after setting a song as phone ringtone -->
+    <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\"を着信音に設定しました。</string>
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\"を着信音に設定できませんでした。</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -190,7 +191,7 @@
     <string name="fav_title">お気に入り</string>
     <!-- -->
     <string name="library_title">ライブラリ</string>
-    <!-- Lock Queue -->
+    <!-- -->
     <!-- Library screen, menu item -->
     <string name="search_title">検索</string>
     <string name="search_filter">フィルター</string>

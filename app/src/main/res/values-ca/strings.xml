@@ -32,7 +32,8 @@
     <string name="repeat_all_notif">Repetint totes les cançons.</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Utilitzar com a to de trucada</string>
-    <!-- Toast after setting a song as phone ringtone.-->
+    <!-- Toast after setting a song as phone ringtone -->
+    <string name="ringtone_set">"\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\"  definit com a to de trucada. "</string>
     <!-- Toast if setting ringtone fails -->
     <!-- Toasts after adding song(s) to playlists -->
     <plurals name="NNNtrackstoplaylist">
@@ -173,7 +174,7 @@ cançons afegides a la cua.</item>
     <string name="fav_title">Favorits</string>
     <!-- -->
     <string name="library_title">Biblioteca</string>
-    <!-- Lock Queue -->
+    <!-- -->
     <!-- Library screen, menu item -->
     <string name="search_title">Cercar</string>
     <!-- Playlist context menu item to clear the selected playlist. -->

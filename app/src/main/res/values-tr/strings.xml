@@ -32,8 +32,8 @@
     <string name="repeat_all_notif">Tüm şarkılar tekrarlanıyor</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Zil sesi olarak ayarla</string>
-    <!-- Toast after setting a song as phone ringtone.-->
-    <string name="ringtone_set_new">Zil sesi ayarlandı.</string>
+    <!-- Toast after setting a song as phone ringtone -->
+    <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\" sesini zil sesi olarak ayarla.</string>
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">Zil sesi ayarlanamadı</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -197,8 +197,7 @@
     <string name="fav_title">Favoriler</string>
     <!-- -->
     <string name="library_title">Kitaplık</string>
-    <!-- Lock Queue -->
-    <string name="menu_queue_swipe_enable">Kaydırmayı Etkinleştr</string>
+    <!-- -->
     <!-- Library screen, menu item -->
     <string name="search_title">Ara</string>
     <string name="search_filter">Filtre</string>
@@ -294,10 +293,6 @@
     <string name="pref_title_ignore_folder_art">Klasör albüm kapağını yoksay</string>
     <!-- Settings summary for the embedded artwork checkbox-->
     <string name="pref_summary_ignore_folder_art">Müzik dizinlerinde depolanmış albüm kapakları için arama yapma</string>
-    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_prefer_lastfm">Last.fm albüm kapağını tercih et</string>
-    <!-- Settings summary for the embedded artwork checkbox-->
-    <string name="pref_summary_prefer_lastfm">iTunes sunucularında arama yapmadan önce Shuttle\'ın Last.fm\'de albüm kapağı aramasını istiyorsanız bu kutuyu işaretleyin. (Yalnızca albüm kapağı)</string>
     <!-- Settings title for Artwork settings heading -->
     <string name="pref_string_title_artwork">Albüm kapağı</string>
     <!-- Settings title for the download artwork button -->
@@ -701,8 +696,6 @@ dosyalar</item>
     <string name="artwork_edit">Albüm kapağı seçin</string>
     <string name="artwork_type_media_store">Medya Depolama</string>
     <string name="artwork_type_tag">Etiket</string>
-    <string name="artwork_type_lastfm">Last.FM</string>
-    <string name="artwork_type_itunes">iTunes</string>
     <string name="artwork_type_custom">Özel</string>
     <string name="artwork_gallery">Galeri</string>
     <!-- Launcher Shortcuts -->
@@ -753,4 +746,5 @@ dosyalar</item>
     <string name="saf_access_required_title">Depolama Erişimi Gerekli</string>
     <string name="saf_access_required_message">Shuttle, bu dosyalara erişim için izin istiyor. Lütfen şarkılarınızın bulunduğu dizini seçin.</string>
     <string name="saf_show_files_button">Dosyaları göster</string>
+    <string name="notification_text_shuttle_running">Shuttle servisi çalışıyor…</string>
 </resources>

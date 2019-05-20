@@ -32,7 +32,8 @@
     <string name="repeat_all_notif">Alle nummers herhalen</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Gebruiken als beltoon</string>
-    <!-- Toast after setting a song as phone ringtone.-->
+    <!-- Toast after setting a song as phone ringtone -->
+    <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\" ingesteld als beltoon.</string>
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">Kan beltoon niet instellen</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -114,6 +115,7 @@
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">Alle nummers van het album <xliff:g id="album">%s</xliff:g> worden permanent verwijderd.</string>
     <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
+    <string name="delete_songs_unknown">Geselecteerde nummers worden permanent verwijderd.</string>
     <string name="get_pro_button_play_store">Play Store</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">Alle nummers van de volgende albums:<xliff:g id="album">%s</xliff:g>worden permanent verwijderd.</string>
@@ -194,7 +196,7 @@
     <string name="fav_title">Favorieten</string>
     <!-- -->
     <string name="library_title">Bibliotheek</string>
-    <!-- Lock Queue -->
+    <!-- -->
     <!-- Library screen, menu item -->
     <string name="search_title">Zoeken</string>
     <string name="search_filter">Filter</string>
@@ -290,10 +292,6 @@
     <string name="pref_title_ignore_folder_art">Illustraties in mappen negeren</string>
     <!-- Settings summary for the embedded artwork checkbox-->
     <string name="pref_summary_ignore_folder_art">Niet zoeken naar albumillustraties die zijn opgeslagen in de muziekmappen.</string>
-    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_prefer_lastfm">Bij voorkeur Last.fm-illustraties</string>
-    <!-- Settings summary for the embedded artwork checkbox-->
-    <string name="pref_summary_prefer_lastfm">Aanvinken als je wil dat Shuttle voor albumillustraties eerst op Last.fm kijkt, voordat er gezocht wordt op iTunes-servers.</string>
     <!-- Settings title for Artwork settings heading -->
     <string name="pref_string_title_artwork">Illustraties</string>
     <!-- Settings title for the download artwork button -->
@@ -698,8 +696,6 @@ map "</item>
     <string name="artwork_edit">Illustraties kiezen</string>
     <string name="artwork_type_media_store">Media Store</string>
     <string name="artwork_type_tag">Label</string>
-    <string name="artwork_type_lastfm">Last.FM</string>
-    <string name="artwork_type_itunes">iTunes</string>
     <string name="artwork_type_custom">Aangepast</string>
     <string name="artwork_gallery">Galerij</string>
     <!-- Launcher Shortcuts -->
@@ -750,4 +746,5 @@ map "</item>
     <string name="saf_access_required_title">Toegang tot opslag nodig</string>
     <string name="saf_access_required_message">Shuttle heeft toestemming nodig voor toegang tot deze bestanden. Kies de map die jouw muziek bevat.</string>
     <string name="saf_show_files_button">Bestanden tonen</string>
+    <string name="notification_text_shuttle_running">Shuttle service draait…</string>
 </resources>

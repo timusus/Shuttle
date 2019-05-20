@@ -32,7 +32,8 @@
     <string name="repeat_all_notif">Repetir todas las canciones.</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Establecer como tono de llamada</string>
-    <!-- Toast after setting a song as phone ringtone.-->
+    <!-- Toast after setting a song as phone ringtone -->
+    <string name="ringtone_set"><xliff:g example="Alarm Bell" id="name">%s</xliff:g>\"  seleccionado como tono de llamada.</string>
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">No se ha podido establecer tono de llamada</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -181,7 +182,7 @@
     <string name="fav_title">Favoritos</string>
     <!-- -->
     <string name="library_title">Biblioteca</string>
-    <!-- Lock Queue -->
+    <!-- -->
     <!-- Library screen, menu item -->
     <string name="search_title">Buscar</string>
     <string name="search_filter">Filtrar</string>

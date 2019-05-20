@@ -32,7 +32,8 @@
     <string name="repeat_all_notif">Повторение на всички песни.</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Използване като мелодия на телефона</string>
-    <!-- Toast after setting a song as phone ringtone.-->
+    <!-- Toast after setting a song as phone ringtone -->
+    <string name="ringtone_set"><xliff:g example="Alarm Bell" id="name">%s</xliff:g> зададено като тон за звънене.</string>
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">Тонът на звънене не беше настроен</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -183,7 +184,7 @@
     <string name="fav_title">Любими</string>
     <!-- -->
     <string name="library_title">Библиотека</string>
-    <!-- Lock Queue -->
+    <!-- -->
     <!-- Library screen, menu item -->
     <string name="search_title">Търсене</string>
     <!-- Playlist context menu item to clear the selected playlist. -->

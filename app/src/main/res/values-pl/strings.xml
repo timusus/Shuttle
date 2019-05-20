@@ -32,7 +32,8 @@
     <string name="repeat_all_notif">Powtarzanie wszystkich utworów</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Ustaw jako dzwonek</string>
-    <!-- Toast after setting a song as phone ringtone.-->
+    <!-- Toast after setting a song as phone ringtone -->
+    <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\" ustawiono jako dzwonek telefonu.</string>
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">Nie można ustawić dzwonka</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -195,7 +196,7 @@
     <string name="fav_title">Ulubione</string>
     <!-- -->
     <string name="library_title">Kolekcja</string>
-    <!-- Lock Queue -->
+    <!-- -->
     <!-- Library screen, menu item -->
     <string name="search_title">Wyszukaj</string>
     <string name="search_filter">Filtr</string>
