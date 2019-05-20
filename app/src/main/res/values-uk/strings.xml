@@ -282,10 +282,6 @@
     <string name="pref_title_ignore_folder_art">Ігнорувати обкладинку папки</string>
     <!-- Settings summary for the embedded artwork checkbox-->
     <string name="pref_summary_ignore_folder_art">Не шукати обкладинки які розміщено в ваших музичних папках</string>
-    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_prefer_lastfm">Віддаю перевагу обкладинці Last.fm</string>
-    <!-- Settings summary for the embedded artwork checkbox-->
-    <string name="pref_summary_prefer_lastfm">Віддаю перевагу Shuttle для пошуку обкладинок на Last.fm, перед пошуком на сервері iTunes. (Тільки картинки обкладинок альбому)</string>
     <!-- Settings title for Artwork settings heading -->
     <string name="pref_string_title_artwork">Обкладинка</string>
     <!-- Settings title for the download artwork button -->
@@ -670,8 +666,6 @@
     <string name="artwork_edit">Оберіть обкладинку</string>
     <string name="artwork_type_media_store">Медія-крамничка</string>
     <string name="artwork_type_tag">Тег</string>
-    <string name="artwork_type_lastfm">Last.FM</string>
-    <string name="artwork_type_itunes">iTunes</string>
     <string name="artwork_type_custom">Своя</string>
     <string name="artwork_gallery">Галерея</string>
     <!-- Launcher Shortcuts -->

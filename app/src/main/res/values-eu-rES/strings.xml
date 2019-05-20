@@ -288,10 +288,6 @@ abesti ilarara gehituak.</item>
     <string name="pref_title_ignore_folder_art">Karpetako karatulak aintzat ez hartu</string>
     <!-- Settings summary for the embedded artwork checkbox-->
     <string name="pref_summary_ignore_folder_art">Ez bilatu karatulak zure musika karpetetan</string>
-    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_prefer_lastfm">Last.fm-ko karatulak priorizatu</string>
-    <!-- Settings summary for the embedded artwork checkbox-->
-    <string name="pref_summary_prefer_lastfm">Aktibatu aukera hau nahiago baduzun Shuttle-ek karatulak Last.fm-n bilatzea, iTunes-en zerbitzarietara jo baino lehen. (Album karatulak bakarrik)</string>
     <!-- Settings title for Artwork settings heading -->
     <string name="pref_string_title_artwork">Karatulak</string>
     <!-- Settings title for the download artwork button -->
@@ -687,8 +683,6 @@ karpeta</item>
     <string name="artwork_edit">Karatula aukeratu</string>
     <string name="artwork_type_media_store">Multimedia Biltegiraketa</string>
     <string name="artwork_type_tag">Etiketa</string>
-    <string name="artwork_type_lastfm">Last.FM</string>
-    <string name="artwork_type_itunes">iTunes</string>
     <string name="artwork_type_custom">Pertsonalizatua</string>
     <string name="artwork_gallery">Galeria</string>
     <!-- Launcher Shortcuts -->

@@ -300,10 +300,6 @@
     <string name="pref_title_ignore_folder_art">Ignora le illustrazioni nelle cartelle</string>
     <!-- Settings summary for the embedded artwork checkbox-->
     <string name="pref_summary_ignore_folder_art">Non cercare le illustrazioni memorizzate nelle cartelle musicali</string>
-    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_prefer_lastfm">Preferisci le illustrazioni di Last.fm</string>
-    <!-- Settings summary for the embedded artwork checkbox-->
-    <string name="pref_summary_prefer_lastfm">Seleziona questa opzione se preferisci che Shuttle cerchi le illustrazioni in Last.fm prima di cercare in iTunes. (Solo copertine degli album)</string>
     <!-- Settings title for Artwork settings heading -->
     <string name="pref_string_title_artwork">Illustrazioni</string>
     <!-- Settings title for the download artwork button -->
@@ -710,8 +706,6 @@
     <string name="artwork_edit">Scegli copertina</string>
     <string name="artwork_type_media_store">Media Store</string>
     <string name="artwork_type_tag">Tag</string>
-    <string name="artwork_type_lastfm">Last.FM</string>
-    <string name="artwork_type_itunes">iTunes</string>
     <string name="artwork_type_custom">Personalizzata</string>
     <string name="artwork_gallery">Galleria</string>
     <!-- Launcher Shortcuts -->
@@ -762,4 +756,5 @@
     <string name="saf_access_required_title">Accesso alla memoria richiesto</string>
     <string name="saf_access_required_message">Shuttle ha bisogno dell\'autorizzazione per accedere a questi file. Scegli la cartella contenente la tua musica.</string>
     <string name="saf_show_files_button">Mostra file</string>
+    <string name="notification_text_shuttle_running">Il servizio Shuttle è in esecuzione...</string>
 </resources>

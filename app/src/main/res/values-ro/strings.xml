@@ -266,10 +266,6 @@
     <string name="pref_title_ignore_folder_art">Ignoră coperțile din foldere</string>
     <!-- Settings summary for the embedded artwork checkbox-->
     <string name="pref_summary_ignore_folder_art">Nu căuta coperți stocate în directoarele tale de muzică</string>
-    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_prefer_lastfm">Alege coperți de pe Last.fm</string>
-    <!-- Settings summary for the embedded artwork checkbox-->
-    <string name="pref_summary_prefer_lastfm">Bifează această căsuță dacă preferi ca Shuttle să caute coperți pe Last.fm înainte de a căuta în serverele iTunes. (Doar pentru coperți de album)</string>
     <!-- Settings title for Artwork settings heading -->
     <string name="pref_string_title_artwork">Copertă</string>
     <!-- Settings title for the download artwork button -->

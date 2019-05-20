@@ -295,10 +295,6 @@
     <string name="pref_title_ignore_folder_art">फ़ोल्डर आर्टवर्क को अनदेखा करें</string>
     <!-- Settings summary for the embedded artwork checkbox-->
     <string name="pref_summary_ignore_folder_art">अपनी संगीत निर्देशिकाओं में संग्रहित आर्टवर्क के लिए खोज न करें</string>
-    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_prefer_lastfm">Last.fm आर्टवर्क को प्राथमिकता दें</string>
-    <!-- Settings summary for the embedded artwork checkbox-->
-    <string name="pref_summary_prefer_lastfm">यदि आप Shuttle को Last.fm पर आर्टवर्क की तलाश करना चाहते हैं, तो इस बॉक्स को चेक करें, पहले iTunes सर्वर खोजें (केवल एल्बम आर्टवर्क)</string>
     <!-- Settings title for Artwork settings heading -->
     <string name="pref_string_title_artwork">आर्टवर्क</string>
     <!-- Settings title for the download artwork button -->

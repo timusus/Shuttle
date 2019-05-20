@@ -261,10 +261,6 @@ cançons afegides a la cua.</item>
     <string name="pref_title_ignore_folder_art">Ignorar les caràtules dins les carpetes</string>
     <!-- Settings summary for the embedded artwork checkbox-->
     <string name="pref_summary_ignore_folder_art">No cercar caràtules dins dels directoris de música</string>
-    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_prefer_lastfm">Preferir caràtules de Last.fm</string>
-    <!-- Settings summary for the embedded artwork checkbox-->
-    <string name="pref_summary_prefer_lastfm">Marca aquesta casella si preferiries que Shuttle cerqués caràtules primer a Last.fm, abans de fer-ho en els servidors de iTunes. (Només per caràtules d\'àlbums)</string>
     <!-- Settings title for Artwork settings heading -->
     <string name="pref_string_title_artwork">Caràtules</string>
     <!-- Settings title for the download artwork button -->

@@ -290,10 +290,6 @@
     <string name="pref_title_ignore_folder_art">Ignoriraj omot albuma iz mape</string>
     <!-- Settings summary for the embedded artwork checkbox-->
     <string name="pref_summary_ignore_folder_art">Ne pretražuj omote spremljene u glazbenim direktorijima</string>
-    <!-- Settings title for ignore folder artwork checkbox (whether the app can use local artwork for the album art -->
-    <string name="pref_title_prefer_lastfm">Preferiraj omot albuma s Last.fm</string>
-    <!-- Settings summary for the embedded artwork checkbox-->
-    <string name="pref_summary_prefer_lastfm">Označite ovo ako preferirate da Shuttle prvo traži omote na Last.fm, prije nego što pretraži iTunes servere. (Samo omoti albuma)</string>
     <!-- Settings title for Artwork settings heading -->
     <string name="pref_string_title_artwork">Omoti</string>
     <!-- Settings title for the download artwork button -->
@@ -701,8 +697,6 @@ mapa</item>
     <string name="artwork_edit">Odaberi omot albuma</string>
     <string name="artwork_type_media_store">Media Store</string>
     <string name="artwork_type_tag">Oznaka</string>
-    <string name="artwork_type_lastfm">Last.FM</string>
-    <string name="artwork_type_itunes">iTunes</string>
     <string name="artwork_type_custom">Prilagođeno</string>
     <string name="artwork_gallery">Galerija</string>
     <!-- Launcher Shortcuts -->
