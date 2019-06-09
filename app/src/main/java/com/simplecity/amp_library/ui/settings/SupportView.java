@@ -8,7 +8,5 @@ public interface SupportView {
 
     void showFaq(Intent intent);
 
-    void showHelp(Intent intent);
-
     void showRate(Intent intent);
 }

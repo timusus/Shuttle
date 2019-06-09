@@ -25,7 +25,6 @@ public class SettingsManager extends BaseSettingsManager {
     // Support
     public static String KEY_PREF_CHANGELOG = "pref_changelog";
     public static String KEY_PREF_FAQ = "pref_faq";
-    public static String KEY_PREF_HELP = "pref_help";
     public static String KEY_PREF_RATE = "pref_rate";
     public static String KEY_PREF_RESTORE_PURCHASES = "pref_restore_purchases";
 

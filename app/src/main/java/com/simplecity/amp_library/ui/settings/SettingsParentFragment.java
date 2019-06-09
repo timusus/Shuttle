@@ -203,14 +203,6 @@ public class SettingsParentFragment extends BaseNavigationController implements
                 });
             }
 
-            Preference helpPreference = findPreference(SettingsManager.KEY_PREF_HELP);
-            if (helpPreference != null) {
-                helpPreference.setOnPreferenceClickListener(preference -> {
-                    supportPresenter.helpClicked();
-                    return true;
-                });
-            }
-
             Preference ratePreference = findPreference(SettingsManager.KEY_PREF_RATE);
             if (ratePreference != null) {
                 ratePreference.setOnPreferenceClickListener(preference -> {
@@ -490,11 +482,6 @@ public class SettingsParentFragment extends BaseNavigationController implements
 
         @Override
         public void showFaq(Intent intent) {
-            startActivity(intent);
-        }
-
-        @Override
-        public void showHelp(Intent intent) {
             startActivity(intent);
         }
 
