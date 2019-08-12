@@ -374,8 +374,8 @@ Desaktibatzen bada, Shuttle-en ikonoa erabiliko da bere ordez</string>
     <string name="pref_title_version">Bertsioa</string>
     <string name="pref_title_faq">FAQ</string>
     <string name="pref_summary_faq">Galdera bat daukazu? Sakatu hemen FAQ-a www.shuttlemusicplayer.com-en ikusteko</string>
-    <string name="pref_title_gplus">Laguntza lortu</string>
-    <string name="pref_summary_gplus">Shuttle-en erabiltzaile komunitate oso aktiboa dago Google+ plataforman. Galderak badituzu edota laguntza behar baduzu, hau da leku onena.</string>
+    <string name="pref_title_community">Laguntza lortu</string>
+    <string name="pref_summary_community">Shuttle-en erabiltzaile komunitate oso aktiboa dago Google+ plataforman. Galderak badituzu edota laguntza behar baduzu, hau da leku onena.</string>
     <string name="pref_title_rate">Eskerrak eman</string>
     <string name="pref_summary_rate">Shuttle gustokoa baduzu, mesedez pentsatu kritika bat idaztea.</string>
     <string name="pref_title_headset_beep">Soinua pasatzean</string>

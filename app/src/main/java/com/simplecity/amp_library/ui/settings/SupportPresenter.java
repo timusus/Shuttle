@@ -46,7 +46,7 @@ public class SupportPresenter extends Presenter<SupportView> {
     }
 
     public void helpClicked() {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/communities/112365043563095486408"));
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://discordapp.com/channels/499448243491569673"));
         SupportView supportView = getView();
         if (supportView != null) {
             supportView.showHelp(intent);

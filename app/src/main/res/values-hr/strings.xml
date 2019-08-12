@@ -382,8 +382,8 @@ Ako nije označeno, Shuttle ikona će se koristiti kao sličica</string>
     <string name="pref_title_version">Verzija</string>
     <string name="pref_title_faq">Često postavljana pitanja</string>
     <string name="pref_summary_faq">Imate pitanja? Trebate pomoč? Pritisnite ovdje kako bi pričitali FAQ @ www.shuttlemusicplayer.com</string>
-    <string name="pref_title_gplus">Pronađite pomoć</string>
-    <string name="pref_summary_gplus">Postoji vrlo aktivna zajednica Shuttleovih korisnika na Google+. Ako imate pitanja ili trebate pomoć, to je najbolje mjesto za provjeriti.</string>
+    <string name="pref_title_community">Pronađite pomoć</string>
+    <string name="pref_summary_community">Postoji vrlo aktivna zajednica Shuttleovih korisnika na Google+. Ako imate pitanja ili trebate pomoć, to je najbolje mjesto za provjeriti.</string>
     <string name="pref_title_rate">Recite hvala</string>
     <string name="pref_summary_rate">Ako vam se sviđa Shuttle, molimo ostavite osvrt.</string>
     <string name="pref_title_headset_beep">Zvučni signal</string>

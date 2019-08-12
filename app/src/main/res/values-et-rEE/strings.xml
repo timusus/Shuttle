@@ -382,8 +382,8 @@ Kui see on välja lülitatud, siis kasutatakse Shuttle ikooni kohatäitena.</str
     <string name="pref_title_version">Versioon</string>
     <string name="pref_title_faq">KKK</string>
     <string name="pref_summary_faq">On sul küsimus? Vajad abi? Vajuta siia, et näha www.shuttlemusicplayer.com KKK sektsiooni</string>
-    <string name="pref_title_gplus">Hangi abi</string>
-    <string name="pref_summary_gplus">Google Plusis on väga aktiivne Shuttle kasutajate kogukond. Kui sul on küsimusi või kui vajad abi, siis see on parim koht, kuhu minna.</string>
+    <string name="pref_title_community">Hangi abi</string>
+    <string name="pref_summary_community">Google Plusis on väga aktiivne Shuttle kasutajate kogukond. Kui sul on küsimusi või kui vajad abi, siis see on parim koht, kuhu minna.</string>
     <string name="pref_title_rate">Ütle \"aitäh\"</string>
     <string name="pref_summary_rate">Kui sulle meeldib Shuttle, palun kaalu arvustuse kirjutamist.</string>
     <string name="pref_title_headset_beep">Piiks vahelejätmisel</string>

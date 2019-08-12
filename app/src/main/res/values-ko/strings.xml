@@ -375,8 +375,8 @@
     <string name="pref_title_version">버전</string>
     <string name="pref_title_faq">FAQ</string>
     <string name="pref_summary_faq">질문이 있거나 도움이 필요하십니까? 여기를 누르시면 www.shuttlemusicplayer.com의 FAQ 페이지로 이동합니다</string>
-    <string name="pref_title_gplus">지원 요청</string>
-    <string name="pref_summary_gplus">Google+의 Shuttle 사용자 커뮤니티입니다. 매우 활성화되어 있어 도움이 필요할 때 가장 좋은 곳입니다.</string>
+    <string name="pref_title_community">지원 요청</string>
+    <string name="pref_summary_community">Google+의 Shuttle 사용자 커뮤니티입니다. 매우 활성화되어 있어 도움이 필요할 때 가장 좋은 곳입니다.</string>
     <string name="pref_title_rate">감사 표하기</string>
     <string name="pref_summary_rate">Shuttle이 마음에 드신다면 리뷰를 남겨 주세요.</string>
     <string name="pref_title_headset_beep">건너뛸 때 비프음</string>

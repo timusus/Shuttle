@@ -383,8 +383,8 @@
     <string name="pref_title_version">当前版本</string>
     <string name="pref_title_faq">常见问题</string>
     <string name="pref_summary_faq">有问题或需要协助吗？请按这里查询常见问题 www.shuttlemusicplayer.com</string>
-    <string name="pref_title_gplus">取得帮助</string>
-    <string name="pref_summary_gplus">我们在 Google+ 上有个非常活跃的 Shuttle 社群，若您有任何问题或需要协助，您可拜访这个好地方</string>
+    <string name="pref_title_community">取得帮助</string>
+    <string name="pref_summary_community">我们在 Google+ 上有个非常活跃的 Shuttle 社群，若您有任何问题或需要协助，您可拜访这个好地方</string>
     <string name="pref_title_rate">感谢评分</string>
     <string name="pref_summary_rate">若您喜欢 Shuttle，您可给予评价</string>
     <string name="pref_title_headset_beep">耳机跳歌提醒</string>
