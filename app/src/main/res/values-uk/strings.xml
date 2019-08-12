@@ -367,8 +367,8 @@
     <string name="pref_title_version">Версія</string>
     <string name="pref_title_faq">Допомога</string>
     <string name="pref_summary_faq">Маєте питання? Потрібна допомога? Натисніть тут щоб переглянути статті \"питання-відповідь\" @ www.shuttlemusicplayer.com</string>
-    <string name="pref_title_gplus">Отримати</string>
-    <string name="pref_summary_gplus">В нас є дуже активна спільнота користувачів Shuttle в Google+. Якщо ви маєте якісь питання чи вам потрібна допомога, пишіть нам.</string>
+    <string name="pref_title_community">Отримати</string>
+    <string name="pref_summary_community">В нас є дуже активна спільнота користувачів Shuttle в Google+. Якщо ви маєте якісь питання чи вам потрібна допомога, пишіть нам.</string>
     <string name="pref_title_rate">Подякувати</string>
     <string name="pref_summary_rate">Якщо Вам подобається Shuttle, будь ласка залиште відгук</string>
     <!-- Settings title for ignore playlist duplicates -->

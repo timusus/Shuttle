@@ -393,8 +393,8 @@
     <string name="pref_title_version">Versione</string>
     <string name="pref_title_faq">FAQ</string>
     <string name="pref_summary_faq">Hai una domanda da fare? Hai bisogno d\'aiuto? Clicca qui per leggere le FAQ su www.shuttlemusicplayer.com</string>
-    <string name="pref_title_gplus">Ottieni aiuto</string>
-    <string name="pref_summary_gplus">C\'è una comunità molto attiva di utenti di Shuttle su Google+. Se hai domande o hai bisogno di aiuto, questo è il miglior posto dove andare.</string>
+    <string name="pref_title_community">Ottieni aiuto</string>
+    <string name="pref_summary_community">C\'è una comunità molto attiva di utenti di Shuttle su Google+. Se hai domande o hai bisogno di aiuto, questo è il miglior posto dove andare.</string>
     <string name="pref_title_rate">Ringrazia</string>
     <string name="pref_summary_rate">Se ti piace utilizzare Shuttle, per favore scrivi una recensione.</string>
     <string name="pref_title_headset_beep">Bip al salto</string>

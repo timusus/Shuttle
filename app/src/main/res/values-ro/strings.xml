@@ -350,8 +350,8 @@
     <string name="pref_title_version">Versiunea</string>
     <string name="pref_title_faq">Întrebări Frecvente</string>
     <string name="pref_summary_faq">Ai o întrebare? Ai nevoie de ajutor? Click aici pentru a vedea întrebările frecvente pe www.shuttlemusicplayer.com</string>
-    <string name="pref_title_gplus">Ajutor</string>
-    <string name="pref_summary_gplus">Aceasta este o comunitate foarte activă de utilizatori Shuttle pe Google+. Dacă ai întrebari sau ai nevoie de ajutor, acesta este cel mai bun loc.</string>
+    <string name="pref_title_community">Ajutor</string>
+    <string name="pref_summary_community">Aceasta este o comunitate foarte activă de utilizatori Shuttle pe Google+. Dacă ai întrebari sau ai nevoie de ajutor, acesta este cel mai bun loc.</string>
     <string name="pref_title_rate">Spune mulțumesc</string>
     <string name="pref_summary_rate">Dacă îți place Shuttle, lasă o recenzie.</string>
     <!-- Settings title for ignore playlist duplicates -->

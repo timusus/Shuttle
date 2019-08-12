@@ -344,8 +344,8 @@ Si està desmarcat, s\'emprarà l\'icona de Shuttle.</string>
     <string name="pref_title_version">Versió</string>
     <string name="pref_title_faq">FAQ</string>
     <string name="pref_summary_faq">Tens cap pregunta? Necessites ajuda? Clica aquí per veure les FAQ @www.shuttlemusicplayer.com</string>
-    <string name="pref_title_gplus">Rebre ajuda</string>
-    <string name="pref_summary_gplus">Existeix una comunitat molt activa d\'usuaris de Shuttle a Google+. Si tens cap pregunta o necessites ajuda, aquest és el millor lloc on anar.</string>
+    <string name="pref_title_community">Rebre ajuda</string>
+    <string name="pref_summary_community">Existeix una comunitat molt activa d\'usuaris de Shuttle a Google+. Si tens cap pregunta o necessites ajuda, aquest és el millor lloc on anar.</string>
     <string name="pref_title_rate">Dóna les gràcies</string>
     <string name="pref_summary_rate">Si t\'agrada Shuttle, sisplau considera fer-ne una ressenya.</string>
     <!-- Settings title for ignore playlist duplicates -->

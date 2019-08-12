@@ -383,8 +383,8 @@ Bu seçenek işaretli değilse, Shuttle simgesi kullanılacaktır.</string>
     <string name="pref_title_version">Sürüm</string>
     <string name="pref_title_faq">SSS</string>
     <string name="pref_summary_faq">Bir sorunuz mu var? Yardıma mı ihtiyacınız var? SSS leri görmek için buraya tıklayın @ www.shuttlemusicplayer.com</string>
-    <string name="pref_title_gplus">Yardım Alın</string>
-    <string name="pref_summary_gplus">Shuttle kullanıcıların çok aktif bir Google+ topluluğu vardır. Sorularınız varsa veya yardıma ihtiyacınız varsa, burası uğramanız gereken en doğru yerdir.</string>
+    <string name="pref_title_community">Yardım Alın</string>
+    <string name="pref_summary_community">Shuttle kullanıcıların çok aktif bir Google+ topluluğu vardır. Sorularınız varsa veya yardıma ihtiyacınız varsa, burası uğramanız gereken en doğru yerdir.</string>
     <string name="pref_title_rate">Teşekkür Et</string>
     <string name="pref_summary_rate">Eğer Shuttle\'ı beğendiyseniz, lütfen bir yorum bırakmayı düşünün.</string>
     <string name="pref_title_headset_beep">Bip Sesini Atla</string>

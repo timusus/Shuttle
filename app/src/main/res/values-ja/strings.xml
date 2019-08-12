@@ -377,8 +377,8 @@
     <string name="pref_title_version">バージョン</string>
     <string name="pref_title_faq">よくある質問</string>
     <string name="pref_summary_faq">質問や手助けが必要な場合はwww.shuttlemusicplayer.comでよくある質問を確認できます。</string>
-    <string name="pref_title_gplus">ヘルプを表示</string>
-    <string name="pref_summary_gplus">Google+のShuttleコミュニティーは活発に活動が行われています。ご質問や手助けが必要な場合、こちらを利用することをお勧めします。</string>
+    <string name="pref_title_community">ヘルプを表示</string>
+    <string name="pref_summary_community">Google+のShuttleコミュニティーは活発に活動が行われています。ご質問や手助けが必要な場合、こちらを利用することをお勧めします。</string>
     <string name="pref_title_rate">お礼のメッセージを送信</string>
     <string name="pref_summary_rate">Shuttleが気に入りましたら是非レビューをお願いします。</string>
     <string name="pref_title_headset_beep">スキップしたらビープ音を鳴らす</string>

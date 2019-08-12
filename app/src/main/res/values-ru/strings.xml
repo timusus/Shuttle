@@ -387,8 +387,8 @@
     <string name="pref_title_version">Версия</string>
     <string name="pref_title_faq">Часто задаваемые вопросы</string>
     <string name="pref_summary_faq">Есть вопросы? Нужна помощь? Нажмите сюда для просмотра FAQ на www.shuttlemusicplayer.com</string>
-    <string name="pref_title_gplus">Получить помощь</string>
-    <string name="pref_summary_gplus">На Google+ есть очень активное сообщество пользователей Shuttle. Если Вы имеете вопросы или нуждаетесь в помощи, это лучшее место, куда следует обратиться.</string>
+    <string name="pref_title_community">Получить помощь</string>
+    <string name="pref_summary_community">На Google+ есть очень активное сообщество пользователей Shuttle. Если Вы имеете вопросы или нуждаетесь в помощи, это лучшее место, куда следует обратиться.</string>
     <string name="pref_title_rate">Поблагодарить</string>
     <string name="pref_summary_rate">Если Вам нравится Shuttle, оставьте отзыв, пожалуйста.</string>
     <string name="pref_title_headset_beep">Звук при пропуске</string>
