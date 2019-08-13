@@ -42,6 +42,8 @@ public abstract class BaseActivity extends AestheticActivity implements
         ServiceConnection,
         BillingManager.BillingUpdatesListener {
 
+    private Boolean bindInFlight = false;
+
     @Nullable
     private MusicServiceConnectionUtils.ServiceToken token;
 
@@ -142,7 +144,18 @@ public abstract class BaseActivity extends AestheticActivity implements
     }
 
     void bindService() {
-        MusicServiceConnectionUtils.bindToService(getLifecycle(), this, analyticsManager, this, serviceToken -> token = serviceToken);
+        if (!bindInFlight) {
+            bindInFlight = true;
+            MusicServiceConnectionUtils.bindToService(
+                    getLifecycle(),
+                    this,
+                    analyticsManager,
+                    this, serviceToken -> {
+                        token = serviceToken;
+                        this.bindInFlight = false;
+                    }
+            );
+        }
     }
 
     void unbindService() {
