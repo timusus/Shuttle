@@ -37,6 +37,7 @@ class FavoritesPlaylistManager @Inject constructor(
             .filter { playlist -> playlist.type == Type.FAVORITES }
             .switchIfEmpty(Maybe.fromCallable { createFavoritePlaylist() }.toObservable())
             .firstOrError()
+            .doOnError { throwable -> LogUtils.logException(TAG, "getFavoritesPlaylist failed", throwable) }
     }
 
     fun isFavorite(song: Song?): Observable<Boolean> {
