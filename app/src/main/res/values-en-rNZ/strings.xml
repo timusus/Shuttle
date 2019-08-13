@@ -17,7 +17,7 @@
     <!-- Toast after turning single repeat on -->
     <!-- Toast after turning repeat all on -->
     <!-- Individual song context menu item -->
-    <!-- Toast after setting a song as phone ringtone -->
+    <!-- Toast after setting a song as phone ringtone.-->
     <!-- Toast if setting ringtone fails -->
     <!-- Toasts after adding song(s) to playlists -->
     <!-- Toast after selecting an empty playlist -->
@@ -90,7 +90,7 @@
     <!-- Playing screen, menu item -->
     <string name="fav_title">Favourites</string>
     <!-- -->
-    <!-- -->
+    <!-- Lock Queue -->
     <!-- Library screen, menu item -->
     <!-- Playlist context menu item to clear the selected playlist. -->
     <!-- Playlist context menu item to edit the selected playlist -->

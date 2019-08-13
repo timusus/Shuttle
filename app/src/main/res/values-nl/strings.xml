@@ -32,8 +32,8 @@
     <string name="repeat_all_notif">Alle nummers herhalen</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Gebruiken als beltoon</string>
-    <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\" ingesteld als beltoon.</string>
+    <!-- Toast after setting a song as phone ringtone.-->
+    <string name="ringtone_set_new">Beltoon ingesteld.</string>
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">Kan beltoon niet instellen</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -196,7 +196,9 @@
     <string name="fav_title">Favorieten</string>
     <!-- -->
     <string name="library_title">Bibliotheek</string>
-    <!-- -->
+    <!-- Lock Queue -->
+    <string name="menu_queue_swipe_enable">Swipen inschakelen</string>
+    <string name="menu_queue_swipe_disable">Swipen uitschakelen</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Zoeken</string>
     <string name="search_filter">Filter</string>
@@ -382,8 +384,6 @@ Indien uitgeschakeld wordt het Shuttle-icoon als plaatshouder gebruikt</string>
     <string name="pref_title_version">Versie</string>
     <string name="pref_title_faq">FAQ</string>
     <string name="pref_summary_faq">Heb je een vraag of hulp nodig? Klik hier om de FAQ te zien op www.shuttlemusicplayer.com</string>
-    <string name="pref_title_community">Hulp krijgen</string>
-    <string name="pref_summary_community">Er is een actieve gemeenschap van Shuttle-gebruikers op Google+. Als je vragen hebt of hulp nodig hebt, is dit de beste plek om naar toe te gaan.</string>
     <string name="pref_title_rate">Zeg bedankt</string>
     <string name="pref_summary_rate">Als je Shuttle leuk vindt, overweeg dan om een beoordeling achter te laten.</string>
     <string name="pref_title_headset_beep">Beep bij skippen</string>

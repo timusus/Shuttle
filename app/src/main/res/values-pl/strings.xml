@@ -32,8 +32,7 @@
     <string name="repeat_all_notif">Powtarzanie wszystkich utworów</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Ustaw jako dzwonek</string>
-    <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\" ustawiono jako dzwonek telefonu.</string>
+    <!-- Toast after setting a song as phone ringtone.-->
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">Nie można ustawić dzwonka</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -196,7 +195,7 @@
     <string name="fav_title">Ulubione</string>
     <!-- -->
     <string name="library_title">Kolekcja</string>
-    <!-- -->
+    <!-- Lock Queue -->
     <!-- Library screen, menu item -->
     <string name="search_title">Wyszukaj</string>
     <string name="search_filter">Filtr</string>
@@ -382,8 +381,6 @@ Po wyłączeniu, jako obraz zastępczy będzie używana ikona programu.</string>
     <string name="pref_title_version">Wersja</string>
     <string name="pref_title_faq">Wyświetl pytania</string>
     <string name="pref_summary_faq">Przechodzi do sekcji najczęstszych pytań na stronie www.shuttlemusicplayer.com</string>
-    <string name="pref_title_community">Uzyskaj pomoc</string>
-    <string name="pref_summary_community">W społeczności Google+ jest bardzo aktywna grupa użytkowników odtwarzacza Shuttle. Jest to najlepsze miejsce, aby uzyskać poszukiwaną odpowiedź lub pomoc.</string>
     <string name="pref_title_rate">Podziękuj</string>
     <string name="pref_summary_rate">Umożliwia zostawienie opinii na temat programu.</string>
     <string name="pref_title_headset_beep">Sygnał pomijania</string>

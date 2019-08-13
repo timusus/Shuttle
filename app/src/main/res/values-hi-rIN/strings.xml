@@ -32,8 +32,7 @@
     <string name="repeat_all_notif">सभी गानें रिपीट करे</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">रिंगटोन के रूप में सेट करें</string>
-    <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\" फ़ोन रिंगटोन के रूप में सेट करें।</string>
+    <!-- Toast after setting a song as phone ringtone.-->
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">रिंगटोन सेट नहीं हुई ।</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -201,7 +200,7 @@
     <string name="fav_title">फेवरेट्स</string>
     <!-- -->
     <string name="library_title">लाइब्रेरी</string>
-    <!-- -->
+    <!-- Lock Queue -->
     <!-- Library screen, menu item -->
     <string name="search_title">सर्च</string>
     <string name="search_filter">फिल्टर</string>
@@ -386,8 +385,6 @@
     <string name="pref_title_version">संस्करण</string>
     <string name="pref_title_faq">FAQ</string>
     <string name="pref_summary_faq">एक सवाल है? मदद चाहिए? पूछे जाने वाले प्रश्न देखने के लिए यहां क्लिक करें @ www.shuttlemusicplayer.com</string>
-    <string name="pref_title_community">मदद लें</string>
-    <string name="pref_summary_community">Google+ पर शटल उपयोगकर्ताओं का एक बहुत ही सक्रिय समुदाय है यदि आपके पास कोई सवाल है या सहायता की आवश्यकता है, तो यह जाने का सबसे अच्छा स्थान है।</string>
     <string name="pref_summary_rate">यदि आप Shuttle पसंद करते हैं, तो रिव्यू छोड़ने पर विचार करें।</string>
     <string name="pref_title_headset_beep">स्किप करने पर बीप</string>
     <string name="pref_summary_headset_beep">हेडसेट नियंत्रण के माध्यम से गाना स्किप करते समय बीप करें</string>

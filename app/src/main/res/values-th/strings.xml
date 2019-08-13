@@ -32,8 +32,7 @@
     <string name="repeat_all_notif">เล่นซ้ำทุกเพลง</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">ตั้งเป็นเสียงเรียกเข้า</string>
-    <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\" ตั้งเป็นเสียงเรียกเข้า</string>
+    <!-- Toast after setting a song as phone ringtone.-->
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">ไม่สามารถตั้งเป็นเสียงเรียกเข้าได้</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -192,7 +191,7 @@
     <string name="fav_title">รายการโปรด</string>
     <!-- -->
     <string name="library_title">ห้องสมุด</string>
-    <!-- -->
+    <!-- Lock Queue -->
     <!-- Library screen, menu item -->
     <string name="search_title">ค้นหา</string>
     <string name="search_filter">ตัวกรอง</string>
@@ -372,8 +371,6 @@
     <string name="pref_title_version">รุ่น</string>
     <string name="pref_title_faq">คำถามที่พบบ่อย</string>
     <string name="pref_summary_faq">มีคำถาม? ต้องการความช่วยเหลือ? คลิกที่นี่เพื่อดูคำถามที่พบบ่อย @ www.shuttlemusicplayer.com</string>
-    <string name="pref_title_community">ขอความช่วยเหลือ</string>
-    <string name="pref_summary_community">ชุมชนผู้ใช้ Shuttle ในชุมชน Google+ มีการใช้งานเป็นอย่างมาก หากคุณมีคำถามหรือต้องการความช่วยเหลือนี่เป็นสถานที่ที่ดีที่สุด</string>
     <string name="pref_title_rate">พูดขอบคุณ</string>
     <string name="pref_summary_rate">ถ้าคุณชอบ Shuttle โปรดพิจารณาออกความคิดเห็น</string>
     <string name="pref_title_headset_beep">เสียงเตือนเมื่อข้าม</string>

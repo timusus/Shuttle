@@ -32,8 +32,7 @@
     <string name="repeat_all_notif">Repetir todas las canciones.</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Establecer como tono de llamada</string>
-    <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set"><xliff:g example="Alarm Bell" id="name">%s</xliff:g>\"  seleccionado como tono de llamada.</string>
+    <!-- Toast after setting a song as phone ringtone.-->
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">No se ha podido establecer tono de llamada</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -182,7 +181,7 @@
     <string name="fav_title">Favoritos</string>
     <!-- -->
     <string name="library_title">Biblioteca</string>
-    <!-- -->
+    <!-- Lock Queue -->
     <!-- Library screen, menu item -->
     <string name="search_title">Buscar</string>
     <string name="search_filter">Filtrar</string>
@@ -369,8 +368,6 @@ Si no está seleccionado, se usará el icono de Shuttle en su lugar</string>
     <string name="pref_title_version">Versión</string>
     <string name="pref_title_faq">FAQ</string>
     <string name="pref_summary_faq">¿Tienes una pregunta? ¿Necesitas ayuda? Haz click aquí para ver el FAQ en www.shuttlemusicplayer.com</string>
-    <string name="pref_title_community">Conseguir ayuda</string>
-    <string name="pref_summary_community">Esta es una comunidad muy activa de usuarios de Shuttle en Google+. Si usted tiene preguntas o necesita ayuda, este es el mejor lugar al que acudir.</string>
     <string name="pref_title_rate">Da las gracias</string>
     <string name="pref_summary_rate">Si te gusta Shuttle, por favor considera dejar una crítica.</string>
     <string name="pref_title_headset_beep">Pitar al pasar</string>

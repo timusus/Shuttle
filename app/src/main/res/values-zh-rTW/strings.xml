@@ -32,8 +32,8 @@
     <string name="repeat_all_notif">重複播放所有曲目</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">設為鈴聲</string>
-    <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set">已將「<xliff:g example="Alarm Bell" id="name">%s</xliff:g>」設為鈴聲</string>
+    <!-- Toast after setting a song as phone ringtone.-->
+    <string name="ringtone_set_new">已設為鈴聲</string>
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">無法設定鈴聲</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -195,7 +195,9 @@
     <string name="fav_title">最愛</string>
     <!-- -->
     <string name="library_title">音樂庫</string>
-    <!-- -->
+    <!-- Lock Queue -->
+    <string name="menu_queue_swipe_enable">啟用捲動</string>
+    <string name="menu_queue_swipe_disable">停用捲動</string>
     <!-- Library screen, menu item -->
     <string name="search_title">搜尋</string>
     <string name="search_filter">篩選器</string>
@@ -380,8 +382,6 @@
     <string name="pref_title_version">版本</string>
     <string name="pref_title_faq">常見問題</string>
     <string name="pref_summary_faq">有問題或需要協助嗎？請按這裡查詢常見問題 www.shuttlemusicplayer.com</string>
-    <string name="pref_title_community">取得支援</string>
-    <string name="pref_summary_community">我們在 Google+ 上有個非常活躍的 Shuttle 社群，若您有任何問題或需要協助，您可拜訪這個好地方</string>
     <string name="pref_title_rate">感謝與評分</string>
     <string name="pref_summary_rate">若您喜歡 Shuttle，您可給予評價</string>
     <string name="pref_title_headset_beep">略過提醒</string>

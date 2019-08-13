@@ -32,8 +32,7 @@
     <string name="repeat_all_notif">Az összes dal ismétlése.</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Beállítás csengőhangnak</string>
-    <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\" beállítás csengőhangnak.</string>
+    <!-- Toast after setting a song as phone ringtone.-->
     <!-- Toast if setting ringtone fails -->
     <!-- Toasts after adding song(s) to playlists -->
     <plurals name="NNNtrackstoplaylist">
@@ -185,7 +184,7 @@
     <string name="fav_title">Kedvencek</string>
     <!-- -->
     <string name="library_title">Saját könyvtár</string>
-    <!-- -->
+    <!-- Lock Queue -->
     <!-- Library screen, menu item -->
     <string name="search_title">Keresés</string>
     <string name="search_filter">Szűrés</string>
@@ -361,8 +360,6 @@ segítségével
     <string name="pref_title_version">Verzió</string>
     <string name="pref_title_faq">GYIK</string>
     <string name="pref_summary_faq">Kérdése van? Segítségre van szüksége? GYIK a www.shuttlemusicplayer.com -on</string>
-    <string name="pref_title_community">Segítség</string>
-    <string name="pref_summary_community">Aktív közösség foglalkozik a Shuttle-el a Google+-on. Ha kérdése van vagy segítségre van szüksége ez a legjobb hely ahova fordulhat.</string>
     <string name="pref_title_rate">Mondjon köszönetet</string>
     <string name="pref_summary_rate">Ha tetszik a Shuttle, kérem hagyjon róla egy értékelést</string>
     <!-- Settings title for ignore playlist duplicates -->

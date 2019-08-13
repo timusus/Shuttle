@@ -32,8 +32,7 @@
     <string name="repeat_all_notif">Se repetă toate piesele.</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Folosește ca ton de apel</string>
-    <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set">„<xliff:g example="Alarm Bell" id="name">%s</xliff:g>” setat ca ton de apel.</string>
+    <!-- Toast after setting a song as phone ringtone.-->
     <!-- Toast if setting ringtone fails -->
     <!-- Toasts after adding song(s) to playlists -->
     <plurals name="NNNtrackstoplaylist">
@@ -179,7 +178,7 @@
     <string name="fav_title">Favorite</string>
     <!-- -->
     <string name="library_title">Bibliotecă</string>
-    <!-- -->
+    <!-- Lock Queue -->
     <!-- Library screen, menu item -->
     <string name="search_title">Caută</string>
     <!-- Playlist context menu item to clear the selected playlist. -->
@@ -350,8 +349,6 @@
     <string name="pref_title_version">Versiunea</string>
     <string name="pref_title_faq">Întrebări Frecvente</string>
     <string name="pref_summary_faq">Ai o întrebare? Ai nevoie de ajutor? Click aici pentru a vedea întrebările frecvente pe www.shuttlemusicplayer.com</string>
-    <string name="pref_title_community">Ajutor</string>
-    <string name="pref_summary_community">Aceasta este o comunitate foarte activă de utilizatori Shuttle pe Google+. Dacă ai întrebari sau ai nevoie de ajutor, acesta este cel mai bun loc.</string>
     <string name="pref_title_rate">Spune mulțumesc</string>
     <string name="pref_summary_rate">Dacă îți place Shuttle, lasă o recenzie.</string>
     <!-- Settings title for ignore playlist duplicates -->

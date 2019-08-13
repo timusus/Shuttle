@@ -32,8 +32,7 @@
     <string name="repeat_all_notif">Repetindo todas as músicas</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Usar como toque</string>
-    <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\" selecionada como toque de chamadas.</string>
+    <!-- Toast after setting a song as phone ringtone.-->
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">Não foi possível usar como toque</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -117,6 +116,7 @@ músicas adicionadas à fila.</item>
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">Todas as músicas do álbum <xliff:g id="album">%s</xliff:g> serão permanentemente apagadas.</string>
     <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
+    <string name="delete_songs_unknown">As músicas selecionadas serão deletadas permanentemente.</string>
     <string name="get_pro_button_play_store">Play Store</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">Os álbuns a seguir:<xliff:g id="album">%s</xliff:g>Serão permanentemente apagados.</string>
@@ -197,7 +197,7 @@ músicas adicionadas à fila.</item>
     <string name="fav_title">Favoritos</string>
     <!-- -->
     <string name="library_title">Biblioteca</string>
-    <!-- -->
+    <!-- Lock Queue -->
     <!-- Library screen, menu item -->
     <string name="search_title">Pesquisar</string>
     <string name="search_filter">Filtro</string>
@@ -383,8 +383,6 @@ Se estiver desmarcado, o ícone do Shuttle será usado como uma capa</string>
     <string name="pref_title_version">Versão</string>
     <string name="pref_title_faq">Perguntas frequentes</string>
     <string name="pref_summary_faq">Tem alguma pergunta? Precisa de ajuda? Clique aqui para ver as perguntas frequentes em www.shuttlemusicplayer.com</string>
-    <string name="pref_title_community">Pedir ajuda</string>
-    <string name="pref_summary_community">Há uma comunidade bastante ativa de usuários do Shuttle no Google+. Se você tiver perguntas ou precisa de ajuda, lá é o melhor lugar para ir.</string>
     <string name="pref_title_rate">Diga obrigado</string>
     <string name="pref_summary_rate">Se você gosta do Shuttle, considere deixar um comentário.</string>
     <string name="pref_title_headset_beep">Fazer Beep ao Pular</string>
@@ -696,6 +694,7 @@ pastas</item>
     <string name="artwork_edit">Escolher capas</string>
     <string name="artwork_type_media_store">Media Store</string>
     <string name="artwork_type_tag">Tag</string>
+    <string name="artwork_type_internet">Internet</string>
     <string name="artwork_type_custom">Customizado</string>
     <string name="artwork_gallery">Galeria</string>
     <!-- Launcher Shortcuts -->
@@ -746,4 +745,5 @@ pastas</item>
     <string name="saf_access_required_title">Acesso de armazenamento necessário</string>
     <string name="saf_access_required_message">O Shuttle requer permissão para acessar esses arquivos. Escolha o diretório que contém sua música.</string>
     <string name="saf_show_files_button">Mostrar arquivos</string>
+    <string name="notification_text_shuttle_running">Serviço do Shuttle em execução...</string>
 </resources>

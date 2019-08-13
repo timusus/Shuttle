@@ -32,8 +32,7 @@
     <string name="repeat_all_notif">Korda kõiki laule</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Kasuta helinana</string>
-    <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\" seatud mobiili helinaks.</string>
+    <!-- Toast after setting a song as phone ringtone.-->
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">Ei saanud helinat muuta</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -116,6 +115,7 @@
     <!-- Delete confirmation dialog when deleting an entire album -->
     <string name="delete_album_desc">Kõik laulud albumist <xliff:g id="album">%s</xliff:g> kustutatakse lõplikult.</string>
     <!-- Delete confirmation dialog when deleting songs from unknown album/artist or songs whose name is unknown. -->
+    <string name="delete_songs_unknown">Valitud lood kustutatakse jäädavalt.</string>
     <string name="get_pro_button_play_store">Play Pood</string>
     <string name="get_pro_button_amazon">Amazon</string>
     <string name="delete_album_desc_multiple">Kõik nende albumite lood kustutatakse jäädavalt: <xliff:g id="album">%s</xliff:g></string>
@@ -196,7 +196,7 @@
     <string name="fav_title">Lemmikud</string>
     <!-- -->
     <string name="library_title">Kogu</string>
-    <!-- -->
+    <!-- Lock Queue -->
     <!-- Library screen, menu item -->
     <string name="search_title">Otsi</string>
     <string name="search_filter">Filtrid</string>
@@ -382,8 +382,6 @@ Kui see on välja lülitatud, siis kasutatakse Shuttle ikooni kohatäitena.</str
     <string name="pref_title_version">Versioon</string>
     <string name="pref_title_faq">KKK</string>
     <string name="pref_summary_faq">On sul küsimus? Vajad abi? Vajuta siia, et näha www.shuttlemusicplayer.com KKK sektsiooni</string>
-    <string name="pref_title_community">Hangi abi</string>
-    <string name="pref_summary_community">Google Plusis on väga aktiivne Shuttle kasutajate kogukond. Kui sul on küsimusi või kui vajad abi, siis see on parim koht, kuhu minna.</string>
     <string name="pref_title_rate">Ütle \"aitäh\"</string>
     <string name="pref_summary_rate">Kui sulle meeldib Shuttle, palun kaalu arvustuse kirjutamist.</string>
     <string name="pref_title_headset_beep">Piiks vahelejätmisel</string>
@@ -696,6 +694,7 @@ Kui see on välja lülitatud, siis kasutatakse Shuttle ikooni kohatäitena.</str
     <string name="artwork_edit">Vali kaanepilt</string>
     <string name="artwork_type_media_store">Failide asukoht</string>
     <string name="artwork_type_tag">Silt</string>
+    <string name="artwork_type_internet">Internet</string>
     <string name="artwork_type_custom">Kohandatud</string>
     <string name="artwork_gallery">Galerii</string>
     <!-- Launcher Shortcuts -->
@@ -746,4 +745,5 @@ Kui see on välja lülitatud, siis kasutatakse Shuttle ikooni kohatäitena.</str
     <string name="saf_access_required_title">Vajalik on ligipääs salvestusmeediale</string>
     <string name="saf_access_required_message">Shuttle vajab neile failidelel ligipääsemiseks õiguseid. Palun märgi kaust, milles on sinu muusika.</string>
     <string name="saf_show_files_button">Näita faile</string>
+    <string name="notification_text_shuttle_running">Shuttle teenus töötab...</string>
 </resources>

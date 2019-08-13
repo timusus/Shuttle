@@ -32,8 +32,7 @@
     <string name="repeat_all_notif">Lặp lại tất cả bài hát</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Dùng làm nhạc chuông</string>
-    <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\" được đặt làm nhạc chuông.</string>
+    <!-- Toast after setting a song as phone ringtone.-->
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">Không thể đặt làm nhạc chuông</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -191,7 +190,7 @@
     <string name="fav_title">Yêu thích</string>
     <!-- -->
     <string name="library_title">Thư viện</string>
-    <!-- -->
+    <!-- Lock Queue -->
     <!-- Library screen, menu item -->
     <string name="search_title">Tìm kiếm</string>
     <string name="search_filter">Lọc</string>
@@ -371,8 +370,6 @@
     <string name="pref_title_version">Phiên bản</string>
     <string name="pref_title_faq">FAQ</string>
     <string name="pref_summary_faq">Bạn có câu hỏi? Cần giúp dỡ? Chạm vào đây để xem FAQ @ www.shuttlemusicplayer.com</string>
-    <string name="pref_title_community">Nhận giúp đỡ</string>
-    <string name="pref_summary_community">Có một cộng đồng người dùng Shuttle rất năng động trên Google+. Nếu bạn có câu hỏi hay cần giúp đỡ gì đó, đấy chính là nơi tốt nhất.</string>
     <string name="pref_title_rate">Nói cảm ơn</string>
     <string name="pref_summary_rate">Nếu bạn thích Shuttle, hãy xem xét để lại một đánh giá</string>
     <string name="pref_title_headset_beep">Beep khi bỏ qua</string>

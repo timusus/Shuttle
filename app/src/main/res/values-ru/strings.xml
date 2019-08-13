@@ -32,8 +32,7 @@
     <string name="repeat_all_notif">Повтор всех треков</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Поставить на звонок</string>
-    <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\" выбран как рингтон на звонок.</string>
+    <!-- Toast after setting a song as phone ringtone.-->
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">Невозможно поставить на звонок</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -200,7 +199,7 @@
     <string name="fav_title">Избранное</string>
     <!-- -->
     <string name="library_title">Библиотека</string>
-    <!-- -->
+    <!-- Lock Queue -->
     <!-- Library screen, menu item -->
     <string name="search_title">Поиск</string>
     <string name="search_filter">Фильтр</string>
@@ -387,8 +386,6 @@
     <string name="pref_title_version">Версия</string>
     <string name="pref_title_faq">Часто задаваемые вопросы</string>
     <string name="pref_summary_faq">Есть вопросы? Нужна помощь? Нажмите сюда для просмотра FAQ на www.shuttlemusicplayer.com</string>
-    <string name="pref_title_community">Получить помощь</string>
-    <string name="pref_summary_community">На Google+ есть очень активное сообщество пользователей Shuttle. Если Вы имеете вопросы или нуждаетесь в помощи, это лучшее место, куда следует обратиться.</string>
     <string name="pref_title_rate">Поблагодарить</string>
     <string name="pref_summary_rate">Если Вам нравится Shuttle, оставьте отзыв, пожалуйста.</string>
     <string name="pref_title_headset_beep">Звук при пропуске</string>

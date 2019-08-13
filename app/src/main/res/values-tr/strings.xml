@@ -32,8 +32,8 @@
     <string name="repeat_all_notif">Tüm şarkılar tekrarlanıyor</string>
     <!-- Individual song context menu item -->
     <string name="ringtone_menu">Zil sesi olarak ayarla</string>
-    <!-- Toast after setting a song as phone ringtone -->
-    <string name="ringtone_set">\"<xliff:g example="Alarm Bell" id="name">%s</xliff:g>\" sesini zil sesi olarak ayarla.</string>
+    <!-- Toast after setting a song as phone ringtone.-->
+    <string name="ringtone_set_new">Zil sesi ayarlandı.</string>
     <!-- Toast if setting ringtone fails -->
     <string name="ringtone_set_failed">Zil sesi ayarlanamadı</string>
     <!-- Toasts after adding song(s) to playlists -->
@@ -197,7 +197,9 @@
     <string name="fav_title">Favoriler</string>
     <!-- -->
     <string name="library_title">Kitaplık</string>
-    <!-- -->
+    <!-- Lock Queue -->
+    <string name="menu_queue_swipe_enable">Kaydırmayı Etkinleştr</string>
+    <string name="menu_queue_swipe_disable">Kaydırmayı D.Dışı Bırak</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Ara</string>
     <string name="search_filter">Filtre</string>
@@ -383,8 +385,6 @@ Bu seçenek işaretli değilse, Shuttle simgesi kullanılacaktır.</string>
     <string name="pref_title_version">Sürüm</string>
     <string name="pref_title_faq">SSS</string>
     <string name="pref_summary_faq">Bir sorunuz mu var? Yardıma mı ihtiyacınız var? SSS leri görmek için buraya tıklayın @ www.shuttlemusicplayer.com</string>
-    <string name="pref_title_community">Yardım Alın</string>
-    <string name="pref_summary_community">Shuttle kullanıcıların çok aktif bir Google+ topluluğu vardır. Sorularınız varsa veya yardıma ihtiyacınız varsa, burası uğramanız gereken en doğru yerdir.</string>
     <string name="pref_title_rate">Teşekkür Et</string>
     <string name="pref_summary_rate">Eğer Shuttle\'ı beğendiyseniz, lütfen bir yorum bırakmayı düşünün.</string>
     <string name="pref_title_headset_beep">Bip Sesini Atla</string>
@@ -696,6 +696,7 @@ dosyalar</item>
     <string name="artwork_edit">Albüm kapağı seçin</string>
     <string name="artwork_type_media_store">Medya Depolama</string>
     <string name="artwork_type_tag">Etiket</string>
+    <string name="artwork_type_internet">İnternet</string>
     <string name="artwork_type_custom">Özel</string>
     <string name="artwork_gallery">Galeri</string>
     <!-- Launcher Shortcuts -->
