@@ -302,24 +302,22 @@ public class SafManager {
         public void onActivityResult(int requestCode, int resultCode, Intent data) {
             super.onActivityResult(requestCode, resultCode, data);
             SafResultListener listener = getListener();
-            switch (requestCode) {
-                case DOCUMENT_TREE_REQUEST_CODE:
-                    if (resultCode == Activity.RESULT_OK) {
-                        Uri treeUri = data.getData();
-                        if (treeUri != null) {
-                            getContext().getContentResolver().takePersistableUriPermission(treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                            settingsManager.setDocumentTreeUri(data.getData().toString());
-                            if (listener != null) {
-                                listener.onResult(treeUri);
-                            }
-                        }
-                    } else {
+            if (requestCode == DOCUMENT_TREE_REQUEST_CODE) {
+                if (resultCode == Activity.RESULT_OK) {
+                    Uri treeUri = data.getData();
+                    if (treeUri != null) {
+                        getContext().getContentResolver().takePersistableUriPermission(treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                        settingsManager.setDocumentTreeUri(data.getData().toString());
                         if (listener != null) {
-                            listener.onResult(null);
+                            listener.onResult(treeUri);
                         }
                     }
-                    dismiss();
-                    break;
+                } else {
+                    if (listener != null) {
+                        listener.onResult(null);
+                    }
+                }
+                dismiss();
             }
         }
     }
