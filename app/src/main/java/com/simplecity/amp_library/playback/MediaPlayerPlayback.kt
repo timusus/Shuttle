@@ -15,6 +15,7 @@ import com.simplecity.amp_library.model.Song
 import com.simplecity.amp_library.utils.LogUtils
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import java.io.File
 
 internal class MediaPlayerPlayback(context: Context) : LocalPlayback(context), MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener {
 
@@ -113,7 +114,7 @@ internal class MediaPlayerPlayback(context: Context) : LocalPlayback(context), M
                     val uri = Uri.parse(path)
                     mediaPlayer.setDataSource(context, uri)
                 } else {
-                    mediaPlayer.setDataSource(path)
+                    mediaPlayer.setDataSource(Uri.fromFile(File(path)).toString())
                 }
 
                 mediaPlayer.setAudioAttributes(
