@@ -257,6 +257,7 @@ dependencies {
     implementation Dependencies.Rx.rxBroadcast
     implementation Dependencies.Rx.rxPrefs
     implementation Dependencies.Rx.rxKotlin
+    implementation Dependencies.Rx.rxDogTag
 
     // External libs
     implementation Dependencies.nanoHttp

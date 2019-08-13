@@ -39,6 +39,7 @@ import com.simplecity.amp_library.utils.StringUtils;
 import com.simplecity.amp_library.utils.extensions.GenreExtKt;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
+import com.uber.rxdogtag.RxDogTag;
 import dagger.android.AndroidInjector;
 import dagger.android.DaggerApplication;
 import io.fabric.sdk.android.Fabric;
@@ -100,6 +101,9 @@ public class ShuttleApplication extends DaggerApplication {
             // You should not init your app in this process.
             return;
         }
+
+        // Todo: Remove for production builds. Useful for tracking down crashes in beta.
+        RxDogTag.install();
 
         if (BuildConfig.DEBUG) {
             // enableStrictMode();

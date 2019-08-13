@@ -156,6 +156,7 @@ object Dependencies {
             const val rxBroadcast = "2.0.0"
             const val rxPrefs = "2.0.0"
             const val rxKotlin = "2.3.0"
+            const val rxDogTag = "0.2.0"
         }
 
         // RxJava - https://git.io/vihv0 (ReactiveX)
@@ -183,6 +184,8 @@ object Dependencies {
         const val rxPrefs = "com.f2prateek.rx.preferences2:rx-preferences:${Versions.rxPrefs}"
 
         const val rxKotlin = "io.reactivex.rxjava2:rxkotlin:${Versions.rxKotlin}"
+
+        const val rxDogTag = "com.uber.rxdogtag:rxdogtag:${Versions.rxDogTag}"
     }
 
     object Testing {
