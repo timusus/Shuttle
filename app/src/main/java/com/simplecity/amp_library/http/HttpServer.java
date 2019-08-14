@@ -17,11 +17,11 @@ public class HttpServer {
 
     private NanoServer server;
 
-    String audioFileToServe;
-    byte[] imageBytesToServe;
+    private String audioFileToServe;
+    private byte[] imageBytesToServe;
 
-    FileInputStream audioInputStream;
-    ByteArrayInputStream imageInputStream;
+    private FileInputStream audioInputStream;
+    private ByteArrayInputStream imageInputStream;
 
     private boolean isStarted = false;
 

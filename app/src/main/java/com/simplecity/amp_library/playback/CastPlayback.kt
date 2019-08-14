@@ -41,6 +41,8 @@ class CastPlayback(context: Context, castSession: CastSession) : Playback {
 
     private var currentSong: Song? = null
 
+    private var playerState: Int? = MediaStatus.PLAYER_STATE_UNKNOWN;
+
     // remoteMediaClient.isPlaying() returns true momentarily after it is paused, so we use this to track whether
     // it really is playing, based on calls to play(), pause(), stop() and load()
     private var isMeantToBePlaying = false
@@ -225,30 +227,33 @@ class CastPlayback(context: Context, castSession: CastSession) : Playback {
     override val resumeWhenSwitched: Boolean = true
 
     private fun updatePlaybackState() {
-        val status = remoteMediaClient.playerState
-        val idleReason = remoteMediaClient.idleReason
-
-        // Convert the remote playback states to media playback states.
-        when (status) {
-            MediaStatus.PLAYER_STATE_IDLE -> {
-                Log.d(TAG, "onRemoteMediaPlayerStatusUpdated... IDLE")
-                if (idleReason == MediaStatus.IDLE_REASON_FINISHED) {
-                    currentPosition = 0L
-                    callbacks?.onTrackEnded(this, false)
+        val playerState = remoteMediaClient.playerState
+        if (playerState != this.playerState) {
+            // Convert the remote playback states to media playback states.
+            when (playerState) {
+                MediaStatus.PLAYER_STATE_IDLE -> {
+                    val idleReason = remoteMediaClient.idleReason
+                    Log.d(TAG, "onRemoteMediaPlayerStatusUpdated... IDLE, reason: $idleReason")
+                    if (idleReason == MediaStatus.IDLE_REASON_FINISHED) {
+                        currentPosition = 0L
+                        Log.i(TAG, "Calling onTrackEnded")
+                        callbacks?.onTrackEnded(this, false)
+                    }
+                }
+                MediaStatus.PLAYER_STATE_PLAYING -> {
+                    Log.d(TAG, "onRemoteMediaPlayerStatusUpdated.. PLAYING")
+                    callbacks?.onPlayStateChanged(this)
+                }
+                MediaStatus.PLAYER_STATE_PAUSED -> {
+                    Log.d(TAG, "onRemoteMediaPlayerStatusUpdated.. PAUSED")
+                    callbacks?.onPlayStateChanged(this)
+                }
+                else -> {
+                    Log.d(TAG, "State default : $playerState")
                 }
             }
-            MediaStatus.PLAYER_STATE_PLAYING -> {
-                Log.d(TAG, "onRemoteMediaPlayerStatusUpdated.. PLAYING")
-                callbacks?.onPlayStateChanged(this)
-            }
-            MediaStatus.PLAYER_STATE_PAUSED -> {
-                Log.d(TAG, "onRemoteMediaPlayerStatusUpdated.. PAUSED")
-                callbacks?.onPlayStateChanged(this)
-            }
-            else -> {
-                Log.d(TAG, "State default : $status")
-            }
         }
+        this.playerState = playerState
     }
 
     companion object {
