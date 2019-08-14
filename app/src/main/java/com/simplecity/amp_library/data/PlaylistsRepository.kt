@@ -9,13 +9,13 @@ import com.simplecity.amp_library.R
 import com.simplecity.amp_library.data.Repository.SongsRepository
 import com.simplecity.amp_library.model.Playlist
 import com.simplecity.amp_library.model.Playlist.Type
-import com.simplecity.amp_library.sql.SqlUtils
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils
+import com.simplecity.amp_library.utils.LogUtils
 import com.simplecity.amp_library.utils.playlists.PlaylistManager
-import com.simplecity.amp_library.utils.playlists.PlaylistManager.PlaylistIds
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
+import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import java.util.Collections
 import javax.inject.Inject
@@ -26,14 +26,20 @@ class PlaylistsRepository @Inject constructor(
     private val context: Context
 ) : Repository.PlaylistsRepository {
 
-
     private var playlistsSubscription: Disposable? = null
     private val playlistsRelay = BehaviorRelay.create<List<Playlist>>()
 
     override fun getPlaylists(): Observable<List<Playlist>> {
         if (playlistsSubscription == null || playlistsSubscription?.isDisposed == true) {
-            playlistsSubscription = SqlBriteUtils.createObservableList<Playlist>(context, { Playlist(context, it) }, Playlist.getQuery())
-                .subscribe(playlistsRelay)
+            playlistsSubscription = SqlBriteUtils.createObservableList(
+                context,
+                { cursor -> Playlist(context, cursor) },
+                Playlist.getQuery()
+            )
+                .subscribe(
+                    playlistsRelay,
+                    Consumer { error -> LogUtils.logException(TAG, "Failed to get playlists", error) }
+                )
         }
         return playlistsRelay.subscribeOn(Schedulers.io())
     }

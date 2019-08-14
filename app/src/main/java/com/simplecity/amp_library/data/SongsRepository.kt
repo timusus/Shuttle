@@ -16,12 +16,14 @@ import com.simplecity.amp_library.model.Song
 import com.simplecity.amp_library.sql.providers.PlayCountTable
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils
 import com.simplecity.amp_library.utils.ComparisonUtils
+import com.simplecity.amp_library.utils.LogUtils
 import com.simplecity.amp_library.utils.SettingsManager
 import com.simplecity.amp_library.utils.StringUtils
 import com.simplecity.amp_library.utils.playlists.PlaylistManager
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.disposables.Disposable
+import io.reactivex.functions.Consumer
 import io.reactivex.functions.Function3
 import io.reactivex.schedulers.Schedulers
 import java.util.ArrayList
@@ -46,7 +48,10 @@ open class SongsRepository @Inject constructor(
     override fun getAllSongs(): Observable<List<Song>> {
         if (allSongsSubscription == null || allSongsSubscription?.isDisposed == true) {
             allSongsSubscription = SqlBriteUtils.createObservableList<Song>(context, { Song(it) }, Song.getQuery())
-                .subscribe(allSongsRelay)
+                .subscribe(
+                    allSongsRelay,
+                    Consumer { error -> LogUtils.logException(PlaylistsRepository.TAG, "Failed to get all songs", error) }
+                )
         }
 
         return allSongsRelay
