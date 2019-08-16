@@ -660,13 +660,14 @@ public class FolderFragment extends BaseFragment implements
     FolderMenuUtils.Callbacks callbacks = new FolderMenuUtils.Callbacks() {
 
         @Override
-        public void onQueueItemsInserted(int numSongs) {
-            // Todo: Implement
+        public void onSongsAddedToQueue(int numSongs) {
+            Toast.makeText(getContext(), getContext().getResources().getQuantityString(R.plurals.NNNtrackstoqueue, numSongs, numSongs), Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onPlaybackFailed() {
-            // Todo: Implement
+            // Todo: Improve error message
+            Toast.makeText(getContext(), R.string.emptyplaylist, Toast.LENGTH_SHORT).show();
         }
 
         @Override
