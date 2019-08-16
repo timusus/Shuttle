@@ -336,6 +336,8 @@ public class PlaybackManager implements Playback.Callbacks {
 
         disposables.add(songsRepository.getSongs(predicate)
                 .firstOrError()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(songs -> {
                     if (!songs.isEmpty() && queueManager.getCurrentSong() != null) {
                         load(queueManager.getCurrentSong(), playWhenReady, (long) 0, null);
