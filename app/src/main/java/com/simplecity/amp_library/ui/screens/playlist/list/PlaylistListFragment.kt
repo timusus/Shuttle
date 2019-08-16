@@ -153,7 +153,7 @@ class PlaylistListFragment :
     }
 
     override fun onSongsAddedToQueue(numSongs: Int) {
-        Toast.makeText(context, context!!.resources.getQuantityString(R.plurals.NNNtrackstoqueue, numSongs), Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, context!!.resources.getQuantityString(R.plurals.NNNtrackstoqueue, numSongs, numSongs), Toast.LENGTH_SHORT).show()
     }
 
 
