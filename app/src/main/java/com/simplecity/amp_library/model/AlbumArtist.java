@@ -127,7 +127,7 @@ public class AlbumArtist implements
     @Override
     public String getRemoteArtworkUrl() {
         try {
-            return "https://artwork.shuttlemusicplayer.app/api/v1/artwork?artist=" + URLEncoder.encode(name, Charset.forName("UTF-8").toString());
+            return "https://artwork.shuttlemusicplayer.app/api/v1/artwork?artist=" + URLEncoder.encode(name, Charset.forName("UTF-8").name());
         } catch (UnsupportedEncodingException e) {
             return null;
         }
