@@ -17,7 +17,6 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
-import java.util.Collections
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -71,15 +70,11 @@ class PlaylistsRepository @Inject constructor(
                         songsRepository.getSongs(playlist)
                             .first(emptyList())
                             .flatMapObservable { songs ->
-                                if (playlist.type == Playlist.Type.USER_CREATED
-                                    || playlist.type == Playlist.Type.RECENTLY_ADDED
-                                    || !songs.isEmpty()
+                                if (playlist.type != Type.USER_CREATED && playlist.type != Type.FAVORITES && songs.isEmpty()
                                 ) {
-                                    songsRepository.getSongs(playlist)
-                                        .first(Collections.emptyList())
-                                        .flatMapObservable { Observable.just(playlist) }
-                                } else {
                                     Observable.empty()
+                                } else {
+                                    Observable.just(playlist)
                                 }
                             }
                     }
