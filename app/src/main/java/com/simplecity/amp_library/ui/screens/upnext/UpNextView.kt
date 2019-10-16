@@ -6,8 +6,8 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.support.v4.graphics.drawable.DrawableCompat
-import android.support.v4.util.Pair
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.util.Pair
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator

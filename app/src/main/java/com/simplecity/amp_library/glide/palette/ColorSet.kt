@@ -3,7 +3,7 @@ package com.simplecity.amp_library.glide.palette
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.support.annotation.WorkerThread
+import androidx.annotation.WorkerThread
 import com.simplecity.amp_library.utils.color.BitmapPaletteProcessor
 import com.simplecity.amp_library.utils.color.ColorHelper
 

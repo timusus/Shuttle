@@ -2,7 +2,7 @@ package com.simplecity.amp_library.billing;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;

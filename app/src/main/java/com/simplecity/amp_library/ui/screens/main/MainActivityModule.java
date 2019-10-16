@@ -1,6 +1,6 @@
 package com.simplecity.amp_library.ui.screens.main;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import com.simplecity.amp_library.billing.BillingManager;
 import com.simplecity.amp_library.di.app.activity.ActivityModule;
 import com.simplecity.amp_library.di.app.activity.ActivityScope;

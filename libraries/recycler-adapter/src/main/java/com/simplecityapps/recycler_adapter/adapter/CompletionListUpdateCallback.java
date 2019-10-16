@@ -1,6 +1,6 @@
 package com.simplecityapps.recycler_adapter.adapter;
 
-import android.support.v7.util.ListUpdateCallback;
+import androidx.recyclerview.widget.ListUpdateCallback;
 
 /**
  * A custom {@link ListUpdateCallback} with an additional onComplete() methods, used for notifying when the

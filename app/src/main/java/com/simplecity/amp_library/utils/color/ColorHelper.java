@@ -19,11 +19,11 @@ package com.simplecity.amp_library.utils.color;
 import android.app.Notification;
 import android.content.Context;
 import android.graphics.Color;
-import android.support.annotation.ColorInt;
-import android.support.annotation.FloatRange;
-import android.support.annotation.IntRange;
-import android.support.annotation.NonNull;
-import android.support.v4.util.Pair;
+import androidx.annotation.ColorInt;
+import androidx.annotation.FloatRange;
+import androidx.annotation.IntRange;
+import androidx.annotation.NonNull;
+import androidx.core.util.Pair;
 import android.util.Log;
 
 /**
@@ -219,7 +219,7 @@ public class ColorHelper {
     }
 
     /**
-     * Framework copy of functions needed from android.support.v4.graphics.ColorUtils.
+     * Framework copy of functions needed from androidx.core.graphics.ColorUtils.
      */
     private static class ColorUtilsFromCompat {
         private static final double XYZ_WHITE_REFERENCE_X = 95.047;

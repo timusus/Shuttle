@@ -2,7 +2,7 @@ package com.simplecity.amp_library.ui.screens.shortcut
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.simplecity.amp_library.playback.MusicService
 import com.simplecity.amp_library.playback.constants.ShortcutCommands
 import com.simplecity.amp_library.ui.screens.main.MainActivity

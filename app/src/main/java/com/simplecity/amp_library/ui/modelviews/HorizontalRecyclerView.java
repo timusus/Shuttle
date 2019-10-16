@@ -1,7 +1,7 @@
 package com.simplecity.amp_library.ui.modelviews;
 
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
@@ -11,7 +11,7 @@ import com.simplecityapps.recycler_adapter.recyclerview.BaseViewHolder;
 import io.reactivex.disposables.Disposable;
 import java.util.List;
 
-import static android.support.v7.widget.LinearLayoutManager.HORIZONTAL;
+import static androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL;
 import static com.simplecity.amp_library.R.layout.recycler_header;
 import static com.simplecity.amp_library.ui.adapters.ViewType.HORIZONTAL_RECYCLERVIEW;
 

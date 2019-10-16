@@ -1,8 +1,8 @@
 package com.simplecity.amp_library.ui.views.recyclerview;
 
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.ItemTouchHelper;
 
 public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
 

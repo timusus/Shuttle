@@ -1,6 +1,6 @@
 package com.simplecity.amp_library.ui.screens.artist.detail
 
-import android.support.v4.util.Pair
+import androidx.core.util.Pair
 import com.simplecity.amp_library.data.Repository.SongsRepository
 import com.simplecity.amp_library.model.Album
 import com.simplecity.amp_library.model.AlbumArtist

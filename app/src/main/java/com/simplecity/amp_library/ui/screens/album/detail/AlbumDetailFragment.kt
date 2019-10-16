@@ -6,11 +6,11 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.support.v4.app.SharedElementCallback
-import android.support.v4.view.ViewCompat
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.PopupMenu
-import android.support.v7.widget.Toolbar
+import androidx.core.app.SharedElementCallback
+import androidx.core.view.ViewCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.appcompat.widget.PopupMenu
+import androidx.appcompat.widget.Toolbar
 import android.transition.Transition
 import android.view.LayoutInflater
 import android.view.MenuItem

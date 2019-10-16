@@ -1,7 +1,7 @@
 package com.simplecity.amp_library.utils.menu.playlist
 
-import android.support.v7.widget.PopupMenu
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.widget.PopupMenu
+import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import com.simplecity.amp_library.R
 import com.simplecity.amp_library.model.Playlist

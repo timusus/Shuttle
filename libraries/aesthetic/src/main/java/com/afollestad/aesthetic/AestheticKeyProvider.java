@@ -1,6 +1,6 @@
 package com.afollestad.aesthetic;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 /** @author Aidan Follestad (afollestad) */
 @SuppressWarnings("WeakerAccess")

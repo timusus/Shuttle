@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v7.preference.PreferenceScreen
+<androidx.preference.PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.preference.PreferenceCategory
+    <androidx.preference.PreferenceCategory
         android:title="@string/pref_category_navigation">
 
-        <android.support.v7.preference.Preference
+        <androidx.preference.Preference
             android:key="pref_tab_chooser"
             android:summary="@string/pref_summary_choose_tabs"
             android:title="@string/pref_title_choose_tabs"/>
 
-        <android.support.v7.preference.Preference
+        <androidx.preference.Preference
             android:dialogTitle="@string/select_default_page"
             android:entries="@array/pref_default_page_entries"
             android:entryValues="@array/pref_default_page_entries"
@@ -19,36 +19,36 @@
             android:summary="@string/pref_summary_default_page"
             android:title="@string/pref_title_default_page"/>
 
-    </android.support.v7.preference.PreferenceCategory>
+    </androidx.preference.PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory
+    <androidx.preference.PreferenceCategory
         android:key="display_group"
         android:title="@string/pref_category_other">
 
-        <android.support.v7.preference.SwitchPreferenceCompat
+        <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="pref_screen_on"
             android:summary="@string/pref_summary_screen_on"
             android:title="@string/pref_title_screen_on"/>
 
-        <android.support.v7.preference.SwitchPreferenceCompat
+        <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="pref_show_lockscreen_artwork"
             android:summary="@string/pref_summary_lockscreen"
             android:title="@string/pref_title_lockscreen"/>
 
-        <android.support.v7.preference.SwitchPreferenceCompat
+        <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="pref_ignore_duplicates"
             android:summary="@string/pref_summary_ignore_duplicates"
             android:title="@string/pref_title_ignore_duplicates"/>
 
-        <android.support.v7.preference.SwitchPreferenceCompat
+        <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="pref_display_remaining_time"
             android:summary="@string/pref_summary_display_remaining_time"
             android:title="@string/pref_title_display_remaining_time"/>
 
-    </android.support.v7.preference.PreferenceCategory>
+    </androidx.preference.PreferenceCategory>
 
-</android.support.v7.preference.PreferenceScreen>
+</androidx.preference.PreferenceScreen>

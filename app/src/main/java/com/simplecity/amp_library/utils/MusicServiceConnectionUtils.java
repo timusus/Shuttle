@@ -1,6 +1,6 @@
 package com.simplecity.amp_library.utils;
 
-import android.arch.lifecycle.Lifecycle;
+import androidx.lifecycle.Lifecycle;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
