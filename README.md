@@ -3,7 +3,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE.md)
 [![API](https://img.shields.io/badge/API-16%2B-green.svg?style=flat)](https://android-arsenal.com/api?level=16)
 [![Build Status](https://travis-ci.org/timusus/Shuttle.svg?branch=dev)](https://travis-ci.org/timusus/Shuttle)
-[![Discord Chat](https://img.shields.io/discord/308323056592486420.svg?logo=discord&label=Discord&colorA=2C2F33&colorB=7289DA)](https://discordapp.com/channels/499448243491569673)
+[![Discord Chat](https://img.shields.io/discord/308323056592486420.svg?logo=discord&label=Discord&colorA=2C2F33&colorB=7289DA)](https://discord.gg/4Z5EU7K)
 [![Slack invite](http://shuttle-slack-inviter.herokuapp.com/badge.svg)](http://shuttle-slack-inviter.herokuapp.com)
 
 Shuttle is an open source, local music player for Android.
