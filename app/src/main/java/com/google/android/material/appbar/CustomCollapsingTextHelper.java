@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package android.support.design.widget;
+package com.google.android.material.appbar;
 
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
