@@ -2,6 +2,8 @@ package com.simplecity.amp_library.ui.dialog;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +45,16 @@ public class ChangelogDialog {
 
                 ViewUtils.fadeOut(progressBar, ()
                         -> ViewUtils.fadeIn(webView, null));
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                if (intent.resolveActivity(context.getPackageManager()) != null) {
+                    context.startActivity(intent);
+                    return true;
+                }
+                return false;
             }
         });
 
