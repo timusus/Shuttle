@@ -336,6 +336,7 @@ public class MusicService extends MediaBrowserServiceCompat {
         playbackManager.destroy();
 
         dummyNotificationHelper.teardown(this);
+        notificationHelper.tearDown();
 
         disposables.clear();
 

@@ -3,6 +3,8 @@ package com.simplecity.amp_library.ui.dialog
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.FragmentManager
@@ -47,6 +49,15 @@ class ChangelogDialog : DialogFragment() {
                 super.onPageFinished(view, url)
 
                 ViewUtils.fadeOut(progressBar) { ViewUtils.fadeIn(webView, null) }
+            }
+
+            override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                if (intent.resolveActivity(context!!.packageManager) != null) {
+                    context?.startActivity(intent)
+                    return true
+                }
+                return false
             }
         }
 
