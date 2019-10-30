@@ -109,7 +109,8 @@ public class Playlist implements Serializable {
         // Check if there are any podcasts
         Query query = new Query.Builder()
                 .uri(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)
-                .projection(new String[] { "count(*)", "is_podcast=1" })
+                .projection(new String[] { "count(*)", MediaStore.Audio.Media.IS_PODCAST})
+                .selection(MediaStore.Audio.Media.IS_PODCAST + "=1")
                 .build();
 
         return SqlUtils.createSingleQuery(ShuttleApplication.getInstance(), cursor -> new Playlist(
