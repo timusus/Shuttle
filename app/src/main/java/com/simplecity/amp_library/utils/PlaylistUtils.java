@@ -283,7 +283,7 @@ public class PlaylistUtils {
                             if (progressDialog != null && progressDialog.isShowing()) {
                                 progressDialog.dismiss();
                             }
-                            addToPlaylist(context, playlist, songs, insertCallback);
+                            PermissionUtils.RequestStoragePermissions(() -> addToPlaylist(context, playlist, songs, insertCallback));
                         },
                         error -> LogUtils.logException(TAG, "Error getting songs for file object", error)
                 );
@@ -607,8 +607,7 @@ public class PlaylistUtils {
     }
 
     public static void createPlaylistDialog(final Context context, List<Song> songs, UnsafeAction insertCallback) {
-        createPlaylistDialog(context, playlistId ->
-                addToPlaylist(context, playlistId, songs, insertCallback));
+        createPlaylistDialog(context, playlistId -> PermissionUtils.RequestStoragePermissions(() -> addToPlaylist(context, playlistId, songs, insertCallback)));
     }
 
     public static void createFileObjectPlaylistDialog(final Context context, List<BaseFileObject> fileObjects, UnsafeAction insertCallback) {

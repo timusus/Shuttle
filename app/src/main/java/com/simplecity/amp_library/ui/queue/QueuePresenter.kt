@@ -11,6 +11,7 @@ import com.simplecity.amp_library.playback.MediaManager
 import com.simplecity.amp_library.playback.constants.InternalIntents
 import com.simplecity.amp_library.ui.presenters.Presenter
 import com.simplecity.amp_library.ui.queue.QueueContract.View
+import com.simplecity.amp_library.utils.PermissionUtils
 import com.simplecity.amp_library.utils.PlaylistUtils
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Single
@@ -57,7 +58,9 @@ constructor(internal var mediaManager: MediaManager) : Presenter<View>(), QueueC
 
     override fun saveQueue(context: Context, item: MenuItem) {
         val playlist = item.intent.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist
-        PlaylistUtils.addToPlaylist(context, playlist, mediaManager.getQueue().toSongs(), null)
+        PermissionUtils.RequestStoragePermissions {
+            PlaylistUtils.addToPlaylist(context, playlist, mediaManager.getQueue().toSongs(), null)
+        }
     }
 
     override fun clearQueue() {

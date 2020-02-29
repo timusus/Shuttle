@@ -116,7 +116,9 @@ class ArtistDetailPresenter constructor(private val mediaManager: MediaManager, 
 
     fun playlistSelected(context: Context, item: MenuItem, insertCallback: UnsafeAction) {
         val playlist = item.intent.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist
-        PlaylistUtils.addToPlaylist(context, playlist, songs, insertCallback)
+        PermissionUtils.RequestStoragePermissions {
+            PlaylistUtils.addToPlaylist(context, playlist, songs, insertCallback)
+        }
     }
 
     fun songClicked(song: Song) {

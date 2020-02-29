@@ -254,7 +254,9 @@ class QueueFragment : BaseFragment(), QueueContract.View {
                 return@OnMenuItemClickListener true
             }
             Defs.PLAYLIST_SELECTED -> {
-                queuePresenter.saveQueue(context!!, item)
+                PermissionUtils.RequestStoragePermissions {
+                    queuePresenter.saveQueue(context!!, item)
+                }
                 return@OnMenuItemClickListener true
             }
         }

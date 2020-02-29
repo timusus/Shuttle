@@ -12,6 +12,7 @@ import com.simplecity.amp_library.rx.UnsafeAction;
 import com.simplecity.amp_library.rx.UnsafeConsumer;
 import com.simplecity.amp_library.sql.databases.InclExclHelper;
 import com.simplecity.amp_library.utils.LogUtils;
+import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -49,7 +50,7 @@ public class MenuUtils {
 
     // Todo: Remove context requirement
     public static void addToPlaylist(Context context, Playlist playlist, List<Song> songs, UnsafeAction insertCallback) {
-        PlaylistUtils.addToPlaylist(context, playlist, songs, insertCallback);
+        PermissionUtils.RequestStoragePermissions(() -> PlaylistUtils.addToPlaylist(context, playlist, songs, insertCallback));
     }
 
     public static void addToQueue(MediaManager mediaManager, List<Song> songs, @NonNull UnsafeConsumer<String> onComplete) {
@@ -127,9 +128,7 @@ public class MenuUtils {
     public static Disposable addToPlaylist(Context context, Playlist playlist, Single<List<Song>> single, UnsafeAction insertCallback) {
         return single.observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        songs -> {
-                            PlaylistUtils.addToPlaylist(context, playlist, songs, insertCallback);
-                        },
+                        songs -> PermissionUtils.RequestStoragePermissions(() -> PlaylistUtils.addToPlaylist(context, playlist, songs, insertCallback)),
                         throwable -> LogUtils.logException(TAG, "Error adding to playlist", throwable)
                 );
     }
