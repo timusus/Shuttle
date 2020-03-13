@@ -81,7 +81,9 @@ public abstract class BaseActivity extends AestheticActivity implements
             public void onRationaleRequested(Permiso.IOnRationaleProvided callback, String... permissions) {
                 callback.onRationaleProvided();
             }
-        }, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WAKE_LOCK);
+        }, Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.WAKE_LOCK);
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
     }

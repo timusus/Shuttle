@@ -238,7 +238,6 @@ dependencies {
     implementation Dependencies.Square.sqlBrite
     debugImplementation Dependencies.Square.haha
     debugImplementation Dependencies.Square.leakCanaryDebug
-    releaseImplementation Dependencies.Square.leakCanaryRel
 
     // Projects
     implementation project(Dependencies.Projects.navigation)

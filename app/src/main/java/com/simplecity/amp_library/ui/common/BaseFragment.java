@@ -9,12 +9,10 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.ui.screens.drawer.NavigationEventRelay;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
 import com.simplecity.amp_library.utils.AnalyticsManager;
-import com.squareup.leakcanary.RefWatcher;
 import dagger.android.support.AndroidSupportInjection;
 import java.lang.reflect.Field;
 import javax.inject.Inject;
@@ -111,8 +109,6 @@ public abstract class BaseFragment extends BaseController {
     public void onDestroy() {
 
         super.onDestroy();
-        RefWatcher refWatcher = ((ShuttleApplication) getContext().getApplicationContext()).getRefWatcher();
-        refWatcher.watch(this);
     }
 
     public MediaManager getMediaManager() {

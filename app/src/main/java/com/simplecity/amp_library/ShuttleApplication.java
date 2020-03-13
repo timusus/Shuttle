@@ -37,8 +37,6 @@ import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.StringUtils;
 import com.simplecity.amp_library.utils.extensions.GenreExtKt;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
 import com.uber.rxdogtag.RxDogTag;
 import dagger.android.AndroidInjector;
 import dagger.android.DaggerApplication;
@@ -72,8 +70,6 @@ public class ShuttleApplication extends DaggerApplication {
 
     private boolean isUpgraded;
 
-    private RefWatcher refWatcher;
-
     public HashMap<String, UserSelectedArtwork> userSelectedArtwork = new HashMap<>();
 
     private static Logger jaudioTaggerLogger1 = Logger.getLogger("org.jaudiotagger.audio");
@@ -96,12 +92,6 @@ public class ShuttleApplication extends DaggerApplication {
                 .create(this)
                 .inject(this);
 
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            // This process is dedicated to LeakCanary for heap analysis.
-            // You should not init your app in this process.
-            return;
-        }
-
         // Todo: Remove for production builds. Useful for tracking down crashes in beta.
         RxDogTag.install();
 
@@ -109,7 +99,6 @@ public class ShuttleApplication extends DaggerApplication {
             // enableStrictMode();
         }
 
-        refWatcher = LeakCanary.install(this);
         // workaround to fix InputMethodManager leak as suggested by LeakCanary lib
         InputMethodManagerLeaks.fixFocusedViewLeak(this);
 
@@ -201,10 +190,6 @@ public class ShuttleApplication extends DaggerApplication {
     @Override
     protected AndroidInjector<? extends dagger.android.DaggerApplication> applicationInjector() {
         return DaggerAppComponent.builder().create(this);
-    }
-
-    public RefWatcher getRefWatcher() {
-        return this.refWatcher;
     }
 
     @Override

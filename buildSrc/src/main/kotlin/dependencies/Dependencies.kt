@@ -11,7 +11,7 @@ object Dependencies {
         const val crashlytics = "2.9.9"
         const val dashClockApi = "2.0.0"
         const val fastScroll = "1.0.20"
-        const val glide = "3.8.0-SNAPSHOT"
+        const val glide = "3.8.0"
         const val glideOkhttp = "1.4.0@aar"
         const val materialDialogs = "0.9.6.0"
         const val permiso = "0.3.0"
@@ -127,7 +127,7 @@ object Dependencies {
 
         object Versions {
             const val haha = "2.0.4"
-            const val leakCanary = "1.6.3"
+            const val leakCanary = "2.2"
             const val okio = "2.1.0"
             const val okhttp = "3.11.0"
             const val retrofit = "2.4.0"
@@ -137,7 +137,6 @@ object Dependencies {
 
         const val haha = "com.squareup.haha:haha:${Versions.haha}"
         const val leakCanaryDebug = "com.squareup.leakcanary:leakcanary-android:${Versions.leakCanary}"
-        const val leakCanaryRel = "com.squareup.leakcanary:leakcanary-android-no-op:${Versions.leakCanary}"
         const val okio = "com.squareup.okio:okio:${Versions.okio}"
         const val okhttp = "com.squareup.okhttp3:okhttp:${Versions.okhttp}"
         const val retrofit = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
