@@ -36,7 +36,6 @@ import com.simplecity.amp_library.model.Album
 import com.simplecity.amp_library.model.ArtworkProvider
 import com.simplecity.amp_library.model.Playlist
 import com.simplecity.amp_library.model.Song
-import com.simplecity.amp_library.ui.screens.tagger.TaggerDialog
 import com.simplecity.amp_library.ui.common.BaseFragment
 import com.simplecity.amp_library.ui.common.TransitionListenerAdapter
 import com.simplecity.amp_library.ui.dialog.DeleteDialog
@@ -51,6 +50,7 @@ import com.simplecity.amp_library.ui.screens.playlist.dialog.CreatePlaylistDialo
 import com.simplecity.amp_library.ui.screens.playlist.dialog.DeletePlaylistConfirmationDialog
 import com.simplecity.amp_library.ui.screens.playlist.dialog.M3uPlaylistDialog
 import com.simplecity.amp_library.ui.screens.playlist.dialog.RenamePlaylistDialog
+import com.simplecity.amp_library.ui.screens.tagger.TaggerDialog
 import com.simplecity.amp_library.ui.views.ContextualToolbar
 import com.simplecity.amp_library.ui.views.ContextualToolbarHost
 import com.simplecity.amp_library.ui.views.recyclerview.ItemTouchHelperCallback
@@ -413,8 +413,20 @@ class PlaylistDetailFragment :
         }
 
         setItemsDisposable = adapter.setItems(viewModels, object : CompletionListUpdateCallbackAdapter() {
-            override fun onComplete() {
-                recyclerView?.scheduleLayoutAnimation()
+            override fun onInserted(position: Int, count: Int) {
+                adapter.notifyItemRangeInserted(position, count)
+            }
+
+            override fun onRemoved(position: Int, count: Int) {
+                adapter.notifyItemRangeRemoved(position, count)
+            }
+
+            override fun onMoved(fromPosition: Int, toPosition: Int) {
+                adapter.notifyItemMoved(fromPosition, toPosition)
+            }
+
+            override fun onChanged(position: Int, count: Int, payload: Any?) {
+                adapter.notifyItemRangeChanged(position, count, payload)
             }
         })
     }
@@ -555,13 +567,11 @@ class PlaylistDetailFragment :
         }
     }
 
-
     // BaseDetailFragment Implementation
 
     override fun screenName(): String {
         return "PlaylistDetailFragment"
     }
-
 
     // PlaylistDetailView implementation
 
@@ -570,7 +580,6 @@ class PlaylistDetailFragment :
             contextualToolbarHelper!!.finish()
         }
     }
-
 
     // SongMenuContract.View Implementation
 
@@ -610,7 +619,6 @@ class PlaylistDetailFragment :
         Toast.makeText(context, R.string.ringtone_set_new, Toast.LENGTH_SHORT).show()
     }
 
-
     // PlaylistMenuContract.View Implementation
 
     override fun onPlaybackFailed() {
@@ -633,7 +641,6 @@ class PlaylistDetailFragment :
     override fun presentDeletePlaylistDialog(playlist: Playlist) {
         DeletePlaylistConfirmationDialog.newInstance(playlist).show(childFragmentManager)
     }
-
 
     // Static
 
