@@ -1,5 +1,11 @@
 package com.simplecity.amp_library.utils;
 
+import android.annotation.SuppressLint;
+import android.database.ContentObserver;
+import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
+import android.provider.MediaStore;
 import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.annimon.stream.function.Predicate;
@@ -17,6 +23,8 @@ import com.squareup.sqlbrite2.BriteDatabase;
 import com.squareup.sqlbrite2.SqlBrite;
 import io.reactivex.Observable;
 import io.reactivex.ObservableTransformer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.Nullable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
@@ -67,6 +75,26 @@ public class DataManager {
 
     private DataManager() {
 
+        ShuttleApplication.getInstance()
+                .getContentResolver()
+                .registerContentObserver(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, true, new ContentObserver(new Handler(Looper.getMainLooper())) {
+                    @Override
+                    public void onChange(boolean selfChange) {
+                        onChange(selfChange, null);
+                    }
+
+                    @SuppressLint("CheckResult")
+                    @Override
+                    public void onChange(boolean selfChange, @Nullable Uri uri) {
+                        SqlBriteUtils.createObservableList(ShuttleApplication.getInstance(), Playlist::new, Playlist.getQuery())
+                                .first(Collections.emptyList())
+                                .subscribeOn(AndroidSchedulers.mainThread())
+                                .subscribe(
+                                        playlists -> playlistsRelay.accept(playlists),
+                                        throwable -> LogUtils.logException(TAG, "Failed to update playlist relay", throwable)
+                                );
+                    }
+                });
     }
 
     public Observable<List<Song>> getAllSongsRelay() {
