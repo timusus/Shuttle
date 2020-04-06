@@ -171,34 +171,6 @@ public class ShuttleApplication extends Application {
                 .onErrorComplete()
                 .subscribeOn(Schedulers.io())
                 .subscribe();
-
-        Completable.timer(5, TimeUnit.SECONDS)
-                .andThen(Completable.defer(this::repairMediaStoreYearFromTags))
-                .doOnError(throwable -> LogUtils.logException(TAG, "Failed to update year from tags", throwable))
-                .onErrorComplete()
-                .subscribeOn(Schedulers.io())
-                .subscribe();
-
-        Completable.timer(10, TimeUnit.SECONDS)
-                .andThen(Completable.defer(this::cleanGenres))
-                .doOnError(throwable -> LogUtils.logException(TAG, "Failed to clean genres", throwable))
-                .onErrorComplete()
-                .subscribeOn(Schedulers.io())
-                .subscribe();
-
-        Completable.timer(15, TimeUnit.SECONDS)
-                .andThen(Completable.defer(this::cleanMostPlayedPlaylist))
-                .doOnError(throwable -> LogUtils.logException(TAG, "Failed to clean most played", throwable))
-                .onErrorComplete()
-                .subscribeOn(Schedulers.io())
-                .subscribe();
-
-        Completable.timer(20, TimeUnit.SECONDS)
-                .andThen(Completable.defer(LegacyUtils::deleteOldResources))
-                .doOnError(throwable -> LogUtils.logException(TAG, "Failed to delete old resources", throwable))
-                .onErrorComplete()
-                .subscribeOn(Schedulers.io())
-                .subscribe();
     }
 
     public RefWatcher getRefWatcher() {
