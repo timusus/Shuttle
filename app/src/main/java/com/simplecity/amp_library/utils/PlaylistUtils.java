@@ -236,6 +236,7 @@ public class PlaylistUtils {
         return DataManager.getInstance()
                 .getPlaylistsRelay()
                 .take(autoUpdate ? Long.MAX_VALUE : 1)
+                .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(playlists -> {
                     if (subMenu != null) {
                         subMenu.clear();
@@ -249,8 +250,7 @@ public class PlaylistUtils {
                 })
                 .ignoreElements()
                 .doOnError(throwable -> LogUtils.logException(TAG, "createUpdatingPlaylistMenu failed", throwable))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+                .subscribeOn(Schedulers.io());
     }
 
     /**
@@ -402,10 +402,14 @@ public class PlaylistUtils {
 
         Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlist.id);
         if (uri != null) {
-            ShuttleApplication.getInstance().getContentResolver().bulkInsert(uri, contentValues);
-            PlaylistUtils.showPlaylistToast(context, songs.size());
-            if (insertCallback != null) {
-                insertCallback.run();
+            try {
+                ShuttleApplication.getInstance().getContentResolver().bulkInsert(uri, contentValues);
+                PlaylistUtils.showPlaylistToast(context, songs.size());
+                if (insertCallback != null) {
+                    insertCallback.run();
+                }
+            } catch (SecurityException e) {
+                LogUtils.logException(TAG, "Failed to insert playlist items", e);
             }
         }
     }

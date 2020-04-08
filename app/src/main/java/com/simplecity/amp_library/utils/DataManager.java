@@ -283,7 +283,9 @@ public class DataManager {
             playlistsSubscription = SqlBriteUtils.createObservableList(ShuttleApplication.getInstance(), Playlist::new, Playlist.getQuery())
                     .subscribe(playlistsRelay, error -> LogUtils.logException(TAG, "getPlaylistRelay threw error", error));
         }
-        return playlistsRelay.subscribeOn(Schedulers.io()).map(ArrayList::new);
+        return playlistsRelay
+                .distinctUntilChanged()
+                .subscribeOn(Schedulers.io()).map(ArrayList::new);
     }
 
     public Observable<List<Song>> getFavoriteSongsRelay() {
