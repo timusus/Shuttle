@@ -4,7 +4,6 @@ import org.jetbrains.annotations.Nullable
 buildscript {
     repositories {
         jcenter()
-        maven { url 'https://maven.fabric.io/public' }
         maven { url "https://jitpack.io" }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
         maven { url "https://maven.google.com" }
@@ -13,7 +12,6 @@ buildscript {
     dependencies {
         classpath Dependencies.Plugins.android
         classpath Dependencies.Plugins.dexcount
-        classpath Dependencies.Plugins.fabric
     }
 }
 
@@ -27,10 +25,8 @@ plugins {
 }
 
 apply plugin: Dependencies.BuildPlugins.dexCount
-apply plugin: Dependencies.BuildPlugins.fabric
 
 repositories {
-    maven { url 'https://maven.fabric.io/public' }
     maven { url "https://jitpack.io" }
     maven { url 'http://oss.sonatype.org/content/repositories/snapshots' }
     mavenCentral()
@@ -225,8 +221,6 @@ dependencies {
     implementation Dependencies.Google.prefCompatv14
     implementation Dependencies.Google.recyclerView
     implementation Dependencies.Google.supportv4
-    implementation Dependencies.Google.firebaseCore
-    implementation Dependencies.Google.firebaseRemoteConfig
     implementation Dependencies.Google.constraintLayout
     implementation Dependencies.Google.chromeCastFramework
 
@@ -282,10 +276,6 @@ dependencies {
 
     compileOnly Dependencies.daggerAssistedInject
     kapt Dependencies.daggerAssistedInjectProcessor
-
-    implementation(Dependencies.crashlytics) {
-        transitive = true
-    }
 
     // Testing
     testImplementation Dependencies.Testing.junit
@@ -351,5 +341,3 @@ play {
     track = getPlayStoreTrack()
     serviceAccountCredentials = file('../deployment_keys.json')
 }
-
-apply plugin: Dependencies.BuildPlugins.playServices

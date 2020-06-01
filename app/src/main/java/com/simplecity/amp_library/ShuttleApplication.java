@@ -16,11 +16,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.core.CrashlyticsCore;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.simplecity.amp_library.data.Repository;
 import com.simplecity.amp_library.di.app.DaggerAppComponent;
 import com.simplecity.amp_library.model.Genre;
@@ -42,7 +37,6 @@ import com.squareup.leakcanary.RefWatcher;
 import com.uber.rxdogtag.RxDogTag;
 import dagger.android.AndroidInjector;
 import dagger.android.DaggerApplication;
-import io.fabric.sdk.android.Fabric;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
@@ -112,21 +106,6 @@ public class ShuttleApplication extends DaggerApplication {
         refWatcher = LeakCanary.install(this);
         // workaround to fix InputMethodManager leak as suggested by LeakCanary lib
         InputMethodManagerLeaks.fixFocusedViewLeak(this);
-
-        //Crashlytics
-        CrashlyticsCore crashlyticsCore = new CrashlyticsCore.Builder()
-                .disabled(BuildConfig.DEBUG)
-                .build();
-
-        Fabric.with(this,
-                new Crashlytics.Builder()
-                        .core(crashlyticsCore)
-                        .answers(new Answers())
-                        .build());
-
-        // Firebase
-        FirebaseApp.initializeApp(this);
-        FirebaseAnalytics.getInstance(this);
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         // we cannot call setDefaultValues for multiple fragment based XML preference

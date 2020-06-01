@@ -18,7 +18,6 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserServiceCompat;
 import android.util.Log;
 import android.widget.Toast;
-import com.crashlytics.android.Crashlytics;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.androidauto.MediaIdHelper;
@@ -1014,7 +1013,7 @@ public class MusicService extends MediaBrowserServiceCompat {
                 Log.e(TAG, "startForeground should have been called, but song is null");
             }
         } catch (NullPointerException | ConcurrentModificationException e) {
-            Crashlytics.log("startForegroundImpl error: " + e.getMessage());
+
         }
     }
 

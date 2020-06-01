@@ -14,7 +14,6 @@ import android.view.View
 import android.widget.CheckBox
 import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
-import com.crashlytics.android.Crashlytics
 import com.simplecity.amp_library.R
 import com.simplecity.amp_library.data.SongsRepository
 import com.simplecity.amp_library.interfaces.FileType
@@ -200,7 +199,7 @@ class PlaylistManager @Inject constructor(
                             id = java.lang.Long.parseLong(uri.lastPathSegment!!)
                         }
                     } catch (e: NullPointerException) {
-                        Crashlytics.log("Failed to create playlist: " + e.message)
+
                     }
 
                 }
@@ -210,7 +209,7 @@ class PlaylistManager @Inject constructor(
         if (id != -1L) {
             playlist = Playlist(Playlist.Type.USER_CREATED, id, name, true, false, true, true, true)
         } else {
-            Crashlytics.log(String.format("Failed to create playlist. Name: %s, id: %d", name, id))
+
         }
 
         return playlist

@@ -2,16 +2,26 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/shuttle.iml" filepath="$PROJECT_DIR$/shuttle.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Shuttle.iml" filepath="$PROJECT_DIR$/Shuttle.iml" group="Shuttle" />
+      <module fileurl="file://$PROJECT_DIR$/app/Shuttle-app.iml" filepath="$PROJECT_DIR$/app/Shuttle-app.iml" group="Shuttle/app" />
+      <module fileurl="file://$PROJECT_DIR$/buildSrc/Shuttle-buildSrc.iml" filepath="$PROJECT_DIR$/buildSrc/Shuttle-buildSrc.iml" group="Shuttle/buildSrc" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/Shuttle-libraries.iml" filepath="$PROJECT_DIR$/libraries/Shuttle-libraries.iml" group="Shuttle/libraries" />
       <module fileurl="file://$PROJECT_DIR$/libraries/aesthetic/aesthetic.iml" filepath="$PROJECT_DIR$/libraries/aesthetic/aesthetic.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/buildSrc/buildSrc.iml" filepath="$PROJECT_DIR$/buildSrc/buildSrc.iml" />
       <module fileurl="file://$PROJECT_DIR$/libraries/ccl/ccl.iml" filepath="$PROJECT_DIR$/libraries/ccl/ccl.iml" />
       <module fileurl="file://$PROJECT_DIR$/libraries/glidepalette/glidepalette.iml" filepath="$PROJECT_DIR$/libraries/glidepalette/glidepalette.iml" />
       <module fileurl="file://$PROJECT_DIR$/libraries/libraries.iml" filepath="$PROJECT_DIR$/libraries/libraries.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/aesthetic/libraries-aesthetic.iml" filepath="$PROJECT_DIR$/libraries/aesthetic/libraries-aesthetic.iml" group="Shuttle/libraries/aesthetic" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/ccl/libraries-ccl.iml" filepath="$PROJECT_DIR$/libraries/ccl/libraries-ccl.iml" group="Shuttle/libraries/ccl" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/glidepalette/libraries-glidepalette.iml" filepath="$PROJECT_DIR$/libraries/glidepalette/libraries-glidepalette.iml" group="Shuttle/libraries/glidepalette" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/multisheetview/libraries-multisheetview.iml" filepath="$PROJECT_DIR$/libraries/multisheetview/libraries-multisheetview.iml" group="Shuttle/libraries/multisheetview" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/navigation/libraries-navigation.iml" filepath="$PROJECT_DIR$/libraries/navigation/libraries-navigation.iml" group="Shuttle/libraries/navigation" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/recycler-adapter/libraries-recycler-adapter.iml" filepath="$PROJECT_DIR$/libraries/recycler-adapter/libraries-recycler-adapter.iml" group="Shuttle/libraries/recycler-adapter" />
       <module fileurl="file://$PROJECT_DIR$/libraries/multisheetview/multisheetview.iml" filepath="$PROJECT_DIR$/libraries/multisheetview/multisheetview.iml" />
       <module fileurl="file://$PROJECT_DIR$/libraries/navigation/navigation.iml" filepath="$PROJECT_DIR$/libraries/navigation/navigation.iml" />
       <module fileurl="file://$PROJECT_DIR$/libraries/recycler-adapter/recycler-adapter.iml" filepath="$PROJECT_DIR$/libraries/recycler-adapter/recycler-adapter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shuttle.iml" filepath="$PROJECT_DIR$/shuttle.iml" />
     </modules>
   </component>
 </project>

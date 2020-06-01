@@ -19,7 +19,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.crashlytics.android.Crashlytics;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.utils.SettingsManager;
 import dagger.android.support.AndroidSupportInjection;
@@ -228,7 +227,7 @@ public class SafManager {
                 }
             }
         } catch (NoSuchMethodError e) {
-            Crashlytics.log("getExtSdCardPaths() failed. " + e.getMessage());
+
         }
         return paths;
     }
