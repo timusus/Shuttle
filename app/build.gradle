@@ -207,11 +207,10 @@ android {
 
 dependencies {
 
-    implementation fileTree(include: '*.jar', dir: 'libs')
+    implementation 'com.github.AdrienPoupa:jaudiotagger:2.2.3'
 
     // Kotlin
     implementation Dependencies.kotlin
-//    implementation Dependencies.ktx
 
     // Google libs
     implementation Dependencies.Google.cardView
