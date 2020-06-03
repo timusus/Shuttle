@@ -1,6 +1,5 @@
 package com.simplecity.amp_library.ui.views;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -9,11 +8,6 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
-import com.simplecity.amp_library.BuildConfig;
-import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.utils.AnalyticsManager;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,19 +68,10 @@ public class SnowfallView extends View {
     /** Used to delay snowfall */
     final Handler snowHandler = new Handler();
 
-    /** Used to determine if we let it snow */
-    final FirebaseRemoteConfig remoteConfig;
-
     public SnowfallView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         snowPaint.setColor(Color.WHITE);
         snowPaint.setStyle(Paint.Style.FILL);
-
-        remoteConfig = FirebaseRemoteConfig.getInstance();
-        remoteConfig.setDefaults(R.xml.remote_config_defaults);
-        remoteConfig.setConfigSettings(new FirebaseRemoteConfigSettings.Builder()
-                .setDeveloperModeEnabled(BuildConfig.DEBUG)
-                .build());
     }
 
     @Override
@@ -134,16 +119,7 @@ public class SnowfallView extends View {
     }
 
     private void fetchSnowConfig() {
-        remoteConfig.fetch().addOnCompleteListener((Activity) getContext(), task -> {
-            if (task.isSuccessful()) {
-                remoteConfig.activateFetched();
-                if (remoteConfig.getBoolean(LET_IT_SNOW)) {
-                    snowHandler.removeCallbacksAndMessages(null);
-                    snowHandler.postDelayed(this::generateSnow, SNOWFALL_DELAY);
-                    AnalyticsManager.didSnow();
-                }
-            }
-        });
+
     }
 
     void generateSnow() {

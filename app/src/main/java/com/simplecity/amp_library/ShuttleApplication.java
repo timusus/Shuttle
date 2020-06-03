@@ -17,13 +17,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.android.libraries.cast.companionlibrary.cast.CastConfiguration;
 import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.simplecity.amp_library.constants.Config;
 import com.simplecity.amp_library.dagger.component.AppComponent;
 import com.simplecity.amp_library.dagger.component.DaggerAppComponent;
@@ -38,14 +33,11 @@ import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
 import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.InputMethodManagerLeaks;
-import com.simplecity.amp_library.utils.LegacyUtils;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.StringUtils;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
-import hu.akarnokd.rxjava2.debug.RxJavaAssemblyTracking;
-import io.fabric.sdk.android.Fabric;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
@@ -108,21 +100,6 @@ public class ShuttleApplication extends Application {
         refWatcher = LeakCanary.install(this);
         // workaround to fix InputMethodManager leak as suggested by LeakCanary lib
         InputMethodManagerLeaks.fixFocusedViewLeak(this);
-
-        //Crashlytics
-        CrashlyticsCore crashlyticsCore = new CrashlyticsCore.Builder()
-                .disabled(BuildConfig.DEBUG)
-                .build();
-
-        Fabric.with(this,
-                new Crashlytics.Builder()
-                        .core(crashlyticsCore)
-                        .answers(new Answers())
-                        .build());
-
-        // Firebase
-        FirebaseApp.initializeApp(this);
-        FirebaseAnalytics.getInstance(this);
 
         VideoCastManager.initialize(this,
                 new CastConfiguration.Builder(Config.CHROMECAST_APP_ID)

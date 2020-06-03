@@ -29,6 +29,7 @@ import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
+import org.jaudiotagger.tag.images.Artwork;
 
 public class ArtworkUtils {
 
@@ -160,7 +161,7 @@ public class ArtworkUtils {
                 if (audioFIle != null) {
                     Tag tag = audioFIle.getTag();
                     if (tag != null) {
-                        org.jaudiotagger.tag.datatype.Artwork artwork = tag.getFirstArtwork();
+                        Artwork artwork = tag.getFirstArtwork();
                         if (artwork != null) {
                             inputStream = new ByteArrayInputStream(artwork.getBinaryData());
                         }
