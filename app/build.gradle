@@ -26,7 +26,6 @@ apply plugin: Dependencies.BuildPlugins.dexCount
 
 repositories {
     maven { url "https://jitpack.io" }
-    maven { url 'http://oss.sonatype.org/content/repositories/snapshots' }
     mavenCentral()
 }
 
