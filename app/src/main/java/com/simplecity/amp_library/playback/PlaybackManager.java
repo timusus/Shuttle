@@ -18,7 +18,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 import com.annimon.stream.function.Predicate;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.android.libraries.cast.companionlibrary.cast.exceptions.CastException;
 import com.google.android.libraries.cast.companionlibrary.cast.exceptions.NoConnectionException;
 import com.google.android.libraries.cast.companionlibrary.cast.exceptions.TransientNetworkDisconnectionException;
@@ -432,7 +431,7 @@ public class PlaybackManager {
                 }
             } catch (Exception e) {
                 Log.e(TAG, "Error: " + e.getMessage());
-                CrashlyticsCore.getInstance().log("setNextTrack() with id failed. error: " + e.getLocalizedMessage());
+                Log.e(TAG, "setNextTrack() with id failed. error: " + e.getLocalizedMessage());
             }
         } else {
             try {
@@ -441,7 +440,7 @@ public class PlaybackManager {
                 }
             } catch (Exception e) {
                 Log.e(TAG, "Error: " + e.getMessage());
-                CrashlyticsCore.getInstance().log("setNextTrack() failed with null id. error: " + e.getLocalizedMessage());
+                Log.e(TAG, "setNextTrack() failed with null id. error: " + e.getLocalizedMessage());
             }
         }
     }

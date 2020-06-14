@@ -61,5 +61,20 @@
       <option name="name" value="maven5" />
       <option name="url" value="http://oss.sonatype.org/content/repositories/snapshots" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="$USER_HOME$/Android/Sdk/extras/android/m2repository" />
+      <option name="name" value="$USER_HOME$/Android/Sdk/extras/android/m2repository" />
+      <option name="url" value="file:$USER_HOME$/Android/Sdk/extras/android/m2repository" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="$USER_HOME$/Android/Sdk/extras/m2repository" />
+      <option name="name" value="$USER_HOME$/Android/Sdk/extras/m2repository" />
+      <option name="url" value="file:$USER_HOME$/Android/Sdk/extras/m2repository" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="$USER_HOME$/Android/Sdk/extras/google/m2repository" />
+      <option name="name" value="$USER_HOME$/Android/Sdk/extras/google/m2repository" />
+      <option name="url" value="file:$USER_HOME$/Android/Sdk/extras/google/m2repository" />
+    </remote-repository>
   </component>
 </project>

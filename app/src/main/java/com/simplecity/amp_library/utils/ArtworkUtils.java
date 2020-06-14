@@ -160,7 +160,7 @@ public class ArtworkUtils {
                 if (audioFIle != null) {
                     Tag tag = audioFIle.getTag();
                     if (tag != null) {
-                        org.jaudiotagger.tag.datatype.Artwork artwork = tag.getFirstArtwork();
+                        org.jaudiotagger.tag.images.Artwork artwork = tag.getFirstArtwork();
                         if (artwork != null) {
                             inputStream = new ByteArrayInputStream(artwork.getBinaryData());
                         }
