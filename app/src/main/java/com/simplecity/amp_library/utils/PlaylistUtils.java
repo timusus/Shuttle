@@ -34,7 +34,6 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
-import com.crashlytics.android.Crashlytics;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.interfaces.FileType;
@@ -466,7 +465,7 @@ public class PlaylistUtils {
                                 id = Long.parseLong(uri.getLastPathSegment());
                             }
                         } catch (NullPointerException e) {
-                            Crashlytics.log("Failed to create playlist: " + e.getMessage());
+                            Log.e(TAG, "Failed to create playlist: " + e.getMessage());
                         }
                     }
                 } finally {
@@ -478,7 +477,7 @@ public class PlaylistUtils {
         if (id != -1) {
             playlist = new Playlist(Playlist.Type.USER_CREATED, id, name, true, false, true, true, true);
         } else {
-            Crashlytics.log(String.format("Failed to create playlist. Name: %s, id: %d", name, id));
+            Log.e(TAG, String.format("Failed to create playlist. Name: %s, id: %d", name, id));
         }
 
         return playlist;

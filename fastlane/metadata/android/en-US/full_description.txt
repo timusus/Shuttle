@@ -1,0 +1,16 @@
+Shuttle is an open source, local music player for Android.
+Features:
+- Local playback only (based on the MediaStore)
+- Built in equalizer
+- Sleep timer
+- Folder browser
+- Scrobbling
+- Widgets
+- Theming
+- Album-artist support
+- Artwork scraping (Last.FM & iTunes)
+- Tag editing
+- Folder browsing
+- Chromecast
+- Additional theme options
+- Additional artwork editing options
