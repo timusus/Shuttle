@@ -76,7 +76,7 @@ object Dependencies {
     object Plugins {
 
         object Versions {
-            const val androidGradlePlugin = "3.3.1"
+            const val androidGradlePlugin = "4.0.0"
             const val kotlin = "1.3.20"
             const val dexcountGradlePlugin = "0.8.2"
             const val fabricGradlePlugin = "1.+"

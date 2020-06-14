@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="Shuttle.app" target="1.8" />
+      <module name="Shuttle.buildSrc" target="1.8" />
+      <module name="Shuttle.libraries.aesthetic" target="1.7" />
+      <module name="Shuttle.libraries.ccl" target="1.7" />
+      <module name="Shuttle.libraries.glidepalette" target="1.7" />
+      <module name="Shuttle.libraries.multisheetview" target="1.8" />
+      <module name="Shuttle.libraries.navigation" target="1.7" />
+      <module name="Shuttle.libraries.recycler-adapter" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
