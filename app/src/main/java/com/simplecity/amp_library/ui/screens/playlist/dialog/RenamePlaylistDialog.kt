@@ -5,8 +5,8 @@ import android.app.Dialog
 import android.content.ContentValues
 import android.os.Bundle
 import android.provider.MediaStore
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.FragmentManager
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater

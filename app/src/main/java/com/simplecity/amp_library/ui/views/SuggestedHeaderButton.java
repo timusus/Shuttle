@@ -3,7 +3,7 @@ package com.simplecity.amp_library.ui.views;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.util.AttributeSet;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.ColorIsDarkState;
@@ -13,7 +13,7 @@ import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.utils.ResourceUtils;
 import io.reactivex.disposables.Disposable;
 
-public class SuggestedHeaderButton extends android.support.v7.widget.AppCompatTextView {
+public class SuggestedHeaderButton extends androidx.appcompat.widget.AppCompatTextView {
 
     private Disposable aestheticDisposable;
 

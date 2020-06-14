@@ -1,7 +1,7 @@
 package com.simplecity.amp_library.ui.screens.drawer;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.jakewharton.rxrelay2.PublishRelay;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.utils.SettingsManager;

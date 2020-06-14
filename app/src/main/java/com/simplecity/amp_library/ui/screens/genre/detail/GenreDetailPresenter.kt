@@ -1,7 +1,7 @@
 package com.simplecity.amp_library.ui.screens.genre.detail
 
 import android.content.Context
-import android.support.v4.util.Pair
+import androidx.core.util.Pair
 import com.simplecity.amp_library.model.Album
 import com.simplecity.amp_library.model.Genre
 import com.simplecity.amp_library.model.Song

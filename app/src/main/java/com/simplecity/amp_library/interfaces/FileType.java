@@ -1,6 +1,6 @@
 package com.simplecity.amp_library.interfaces;
 
-import android.support.annotation.IntDef;
+import androidx.annotation.IntDef;
 
 @IntDef({ FileType.PARENT, FileType.FOLDER, FileType.FILE })
 public @interface FileType {

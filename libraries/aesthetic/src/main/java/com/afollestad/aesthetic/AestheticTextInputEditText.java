@@ -4,7 +4,7 @@ import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
 import static com.afollestad.aesthetic.Util.resolveResId;
 
 import android.content.Context;
-import android.support.design.widget.TextInputEditText;
+import com.google.android.material.textfield.TextInputEditText;
 import android.util.AttributeSet;
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;

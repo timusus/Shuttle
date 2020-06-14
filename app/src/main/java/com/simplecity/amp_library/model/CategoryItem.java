@@ -2,8 +2,8 @@ package com.simplecity.amp_library.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.StringRes;
-import android.support.v4.app.Fragment;
+import androidx.annotation.StringRes;
+import androidx.fragment.app.Fragment;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ui.screens.album.list.AlbumListFragment;
 import com.simplecity.amp_library.ui.screens.artist.list.AlbumArtistListFragment;

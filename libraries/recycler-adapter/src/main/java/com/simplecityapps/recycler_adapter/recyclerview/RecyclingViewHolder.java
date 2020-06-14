@@ -1,6 +1,6 @@
 package com.simplecityapps.recycler_adapter.recyclerview;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
 public interface RecyclingViewHolder {
 

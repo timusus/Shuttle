@@ -2,7 +2,7 @@ package com.simplecity.amp_library.sql;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.support.annotation.WorkerThread;
+import androidx.annotation.WorkerThread;
 import android.util.Log;
 import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.model.Query;

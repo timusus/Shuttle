@@ -1,7 +1,7 @@
 package com.simplecity.amp_library.glide.utils;
 
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.View;
 import com.bumptech.glide.request.animation.GlideAnimation.ViewAdapter;
 

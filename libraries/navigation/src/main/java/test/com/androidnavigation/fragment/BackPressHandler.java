@@ -1,6 +1,6 @@
 package test.com.androidnavigation.fragment;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import test.com.androidnavigation.base.NavigationController;
 

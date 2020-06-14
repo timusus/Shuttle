@@ -1,7 +1,7 @@
 package com.simplecity.amp_library.utils.menu.queue
 
-import android.support.v7.widget.PopupMenu
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.widget.PopupMenu
+import androidx.appcompat.widget.Toolbar
 import com.simplecity.amp_library.R
 import com.simplecity.amp_library.ui.screens.queue.QueueItem
 import com.simplecity.amp_library.ui.screens.queue.toSongs

@@ -3,9 +3,9 @@ package com.simplecity.amp_library.ui.screens.playlist.dialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.simplecity.amp_library.R
 import com.simplecity.amp_library.data.Repository.PlaylistsRepository

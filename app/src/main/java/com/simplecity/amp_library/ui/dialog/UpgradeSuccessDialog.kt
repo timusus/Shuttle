@@ -3,7 +3,7 @@ package com.simplecity.amp_library.ui.dialog
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
+import androidx.fragment.app.DialogFragment
 import com.afollestad.materialdialogs.MaterialDialog
 import com.simplecity.amp_library.R
 import com.simplecity.amp_library.ui.screens.main.MainActivity

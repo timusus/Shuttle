@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.UriPermission;
 import android.net.Uri;
 import android.os.Build;
-import android.support.v4.provider.DocumentFile;
+import androidx.documentfile.provider.DocumentFile;
 import android.util.Log;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.Crashlytics;

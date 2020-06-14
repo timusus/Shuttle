@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.internal.ForegroundLinearLayout
+<com.google.android.material.internal.ForegroundLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="56dp"
@@ -51,5 +51,5 @@
 
     <include layout="@layout/overflow_button"/>
 
-</android.support.design.internal.ForegroundLinearLayout>
+</com.google.android.material.internal.ForegroundLinearLayout>
 

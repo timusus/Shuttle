@@ -1,6 +1,6 @@
 package com.simplecity.amp_library.ui.views.multisheet;
 
-import android.support.design.widget.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.jakewharton.rxrelay2.BehaviorRelay;
 import com.simplecity.multisheetview.ui.view.MultiSheetView.Sheet;
 import io.reactivex.Observable;

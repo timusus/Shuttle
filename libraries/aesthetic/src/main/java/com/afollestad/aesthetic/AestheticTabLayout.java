@@ -2,8 +2,8 @@ package com.afollestad.aesthetic;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.support.annotation.ColorInt;
-import android.support.design.widget.TabLayout;
+import androidx.annotation.ColorInt;
+import com.google.android.material.tabs.TabLayout;
 import android.util.AttributeSet;
 
 import io.reactivex.Observable;

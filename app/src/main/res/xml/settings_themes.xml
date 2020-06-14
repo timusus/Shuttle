@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v7.preference.PreferenceScreen
+<androidx.preference.PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.v7.preference.PreferenceCategory
+    <androidx.preference.PreferenceCategory
         android:title="@string/pref_string_title_themes">
 
         <Preference
@@ -13,39 +13,39 @@
             android:summary="@string/pref_summary_base_theme"
             android:title="@string/pref_title_base_theme"/>
 
-        <android.support.v7.preference.Preference
+        <androidx.preference.Preference
             android:key="pref_theme_primary_color"
             android:summary="@string/pref_summary_theme_pick_color"
             android:title="@string/pref_title_theme_pick_color"/>
 
-        <android.support.v7.preference.Preference
+        <androidx.preference.Preference
             android:key="pref_theme_accent_color"
             android:summary="@string/pref_summary_theme_pick_accent_color"
             android:title="@string/pref_title_theme_pick_accent_color"/>
 
-        <android.support.v7.preference.SwitchPreferenceCompat
+        <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="pref_nav_bar"
             android:summary="@string/pref_summary_tinted_nav"
             android:title="@string/pref_title_tinted_nav"
             app:defaultValue="false"/>
 
-    </android.support.v7.preference.PreferenceCategory>
+    </androidx.preference.PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory
+    <androidx.preference.PreferenceCategory
         android:title="@string/pref_group_palette">
 
-        <android.support.v7.preference.SwitchPreferenceCompat
+        <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="pref_theme_use_palette"
             android:summary="@string/pref_summary_palette"
             android:title="@string/pref_title_palette"/>
 
-        <android.support.v7.preference.SwitchPreferenceCompat
+        <androidx.preference.SwitchPreferenceCompat
             android:dependency="pref_theme_use_palette"
             android:key="pref_theme_use_palette_now_playing"
             android:title="@string/pref_title_palette_now_playing"/>
 
-    </android.support.v7.preference.PreferenceCategory>
+    </androidx.preference.PreferenceCategory>
 
-</android.support.v7.preference.PreferenceScreen>
+</androidx.preference.PreferenceScreen>

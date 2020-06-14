@@ -1,6 +1,6 @@
 package com.simplecity.amp_library.ui.screens.nowplaying;
 
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import com.simplecity.amp_library.di.app.activity.fragment.FragmentModule;
 import com.simplecity.amp_library.di.app.activity.fragment.FragmentScope;
 import dagger.Binds;

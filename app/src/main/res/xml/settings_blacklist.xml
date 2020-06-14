@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v7.preference.PreferenceScreen
+<androidx.preference.PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.preference.PreferenceCategory
+    <androidx.preference.PreferenceCategory
         android:title="@string/blacklist_title">
 
-        <android.support.v7.preference.Preference
+        <androidx.preference.Preference
             android:key="pref_blacklist_view"
             android:summary="@string/blacklist_description"
             android:title="@string/pref_title_view_blacklist"/>
 
-    </android.support.v7.preference.PreferenceCategory>
+    </androidx.preference.PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory
+    <androidx.preference.PreferenceCategory
         android:title="@string/whitelist_title">
 
-        <android.support.v7.preference.Preference
+        <androidx.preference.Preference
             android:key="pref_whitelist_view"
             android:summary="@string/whitelist_description"
             android:title="@string/pref_title_view_whitelist"/>
-    </android.support.v7.preference.PreferenceCategory>
+    </androidx.preference.PreferenceCategory>
 
-</android.support.v7.preference.PreferenceScreen>
+</androidx.preference.PreferenceScreen>

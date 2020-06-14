@@ -5,7 +5,7 @@ import static com.afollestad.aesthetic.AutoSwitchMode.OFF;
 import static com.afollestad.aesthetic.AutoSwitchMode.ON;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
-import android.support.annotation.IntDef;
+import androidx.annotation.IntDef;
 import java.lang.annotation.Retention;
 
 /** @author Aidan Follestad (afollestad) */

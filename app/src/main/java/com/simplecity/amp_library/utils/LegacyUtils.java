@@ -1,7 +1,7 @@
 package com.simplecity.amp_library.utils;
 
 import android.os.Environment;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import com.simplecity.amp_library.ShuttleApplication;
 import io.reactivex.Completable;
 import java.io.File;

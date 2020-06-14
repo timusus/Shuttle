@@ -225,6 +225,7 @@ dependencies {
     implementation Dependencies.Google.prefCompatv14
     implementation Dependencies.Google.recyclerView
     implementation Dependencies.Google.supportv4
+    implementation Dependencies.Google.legacySupport
     implementation Dependencies.Google.firebaseCore
     implementation Dependencies.Google.firebaseRemoteConfig
     implementation Dependencies.Google.constraintLayout

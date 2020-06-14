@@ -2,8 +2,8 @@ package com.simplecity.amp_library.ui.screens.artist.list
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.PopupMenu
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.appcompat.widget.PopupMenu
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
