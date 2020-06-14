@@ -77,7 +77,6 @@ class MultiPlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnCompleti
 
                 mediaPlayer.prepare();
             } catch (final Exception e) {
-                Log.e(TAG, "setDataSource failed: " + e.getLocalizedMessage());
                 Log.e(TAG, "setDataSourceImpl failed. Path: [" + path + "] error: " + e.getLocalizedMessage());
                 return false;
             }
@@ -96,7 +95,6 @@ class MultiPlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnCompleti
                 Log.e(TAG, "Next media player is current one, continuing");
             } catch (IllegalStateException e) {
                 Log.e(TAG, "Media player not initialized!");
-                Log.e(TAG, "setNextDataSource failed for. Media player not intitialized.");
                 return;
             }
             if (nextMediaPlayer != null) {
@@ -121,7 +119,6 @@ class MultiPlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnCompleti
                     }
                 }
             } else {
-                Log.e(TAG, "setDataSourceImpl failed for path: [" + path + "]. Setting next media player to null");
                 Log.e(TAG, "setDataSourceImpl failed for path: [" + path + "]. Setting next media player to null");
                 if (nextMediaPlayer != null) {
                     nextMediaPlayer.release();
@@ -153,7 +150,6 @@ class MultiPlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnCompleti
                 currentMediaPlayer.reset();
             } catch (IllegalStateException e) {
                 Log.e(TAG, "Error stopping MultiPlayer: " + e.getLocalizedMessage());
-                Log.e(TAG, "stop() failed. Error: " + e.getLocalizedMessage());
             }
             isInitialized = false;
         }

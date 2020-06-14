@@ -430,7 +430,6 @@ public class PlaybackManager {
                     player.setNextDataSource(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI + "/" + nextSong.id);
                 }
             } catch (Exception e) {
-                Log.e(TAG, "Error: " + e.getMessage());
                 Log.e(TAG, "setNextTrack() with id failed. error: " + e.getLocalizedMessage());
             }
         } else {
@@ -439,7 +438,6 @@ public class PlaybackManager {
                     player.setNextDataSource(null);
                 }
             } catch (Exception e) {
-                Log.e(TAG, "Error: " + e.getMessage());
                 Log.e(TAG, "setNextTrack() failed with null id. error: " + e.getLocalizedMessage());
             }
         }
