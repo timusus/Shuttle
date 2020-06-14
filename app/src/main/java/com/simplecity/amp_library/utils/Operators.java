@@ -67,7 +67,7 @@ public class Operators {
             AlbumArtist albumArtist = album.getAlbumArtist();
 
             //Check if there's already an equivalent album-artist in our albumArtistMap
-            AlbumArtist oldAlbumArtist = albumArtistMap.get(albumArtist.name);
+            AlbumArtist oldAlbumArtist = albumArtistMap.get(albumArtist.name.toLowerCase());
             if (oldAlbumArtist != null) {
 
                 //Add this album to the album artist's albums
@@ -75,7 +75,7 @@ public class Operators {
                     oldAlbumArtist.albums.add(album);
                 }
             } else {
-                albumArtistMap.put(albumArtist.name, albumArtist);
+                albumArtistMap.put(albumArtist.name.toLowerCase(), albumArtist);
             }
         }
 
