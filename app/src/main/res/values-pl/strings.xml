@@ -9,9 +9,9 @@
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
     <string name="playlist_saved">Zapisano listę odtwarzania do pliku <xliff:g id="path">%s</xliff:g></string>
     <!-- Displayed after a blacklist is deleted -->
-    <string name="blacklist_deleted">Usunięto listę pomijanych</string>
+    <string name="excludes_deleted">Usunięto listę pomijanych</string>
     <!-- Displayed after a whitelist is deleted -->
-    <string name="whitelist_deleted">Usunięto listę uwzględnianych</string>
+    <string name="includes_deleted">Usunięto listę uwzględnianych</string>
     <!-- Displayed when a folder couldn't be deleted-->
     <string name="delete_folder_failed">Błąd usuwania katalogu.\n\nTen katalog może być zabezpieczony przed zapisem.</string>
     <!-- Displayed when a file couldn't be deleted -->
@@ -261,15 +261,15 @@
     <string name="pref_summary_palette">Wykrywa główny kolor obrazu i używa go jako kolor pierwszoplanowy aplikacji.</string>
     <string name="pref_title_palette_now_playing">Tylko na ekranie „odtwarzane”</string>
     <!--Settings title for whitelist/blacklist-->
-    <string name="pref_title_blacklist">Listy pomijanych/uwzględnianych</string>
+    <string name="pref_title_excludes">Listy pomijanych/uwzględnianych</string>
     <!--Settings title for viewing blacklist-->
-    <string name="pref_title_view_blacklist">Wyświetl/edytuj listę pomijanych</string>
+    <string name="pref_title_view_excludes">Wyświetl/edytuj listę pomijanych</string>
     <!--Settings title for clearing blacklist-->
-    <string name="pref_title_clear_blacklist">Wyczyść</string>
+    <string name="pref_title_clear_excludes">Wyczyść</string>
     <!--Settings title for viewing whitelist-->
-    <string name="pref_title_view_whitelist">Wyświetl/edytuj listę uwzględnianych</string>
+    <string name="pref_title_view_includes">Wyświetl/edytuj listę uwzględnianych</string>
     <!--Settings title for clearing whitelist-->
-    <string name="pref_title_clear_whitelist">Wyczyść</string>
+    <string name="pref_title_clear_includes">Wyczyść</string>
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">Kadrowanie okładki albumu</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -407,13 +407,13 @@ Po wyłączeniu, jako obraz zastępczy będzie używana ikona programu.</string>
     <!-- Grid size (number of columns in grid view) -->
     <string name="menu_grid_size">Rozmiar siatki</string>
     <!-- -->
-    <string name="whitelist_title">Lista uwzględnianych</string>
+    <string name="includes_title">Lista uwzględnianych</string>
     <!-- -->
-    <string name="blacklist_title">Lista pomijanych</string>
+    <string name="excludes_title">Lista pomijanych</string>
     <!-- -->
-    <string name="blacklist_description">Aby dodać utwory do listy, proszę nacisnąć przycisk menu podręcznego (kona z 3 pionowymi kropkami) utworu i wybrać polecenie „Lista pomijanych”.</string>
+    <string name="exclude_description">Aby dodać utwory do listy, proszę nacisnąć przycisk menu podręcznego (kona z 3 pionowymi kropkami) utworu i wybrać polecenie „Lista pomijanych”.</string>
     <!-- -->
-    <string name="whitelist_description">Aby dodać utwory do listy, proszę nacisnąć przycisk ustawień w przeglądarce katalogów, wybrać polecenie „Lista uwzględnianych” i wybrać katalogi, które mają znaleźć się na liście.</string>
+    <string name="include_description">Aby dodać utwory do listy, proszę nacisnąć przycisk ustawień w przeglądarce katalogów, wybrać polecenie „Lista uwzględnianych” i wybrać katalogi, które mają znaleźć się na liście.</string>
     <!-- ## Detail Activity - Info for artists/albums ## -->
     <!-- The viewpager tab title for the artist/album info -->
     <string name="info">Biografia</string>
@@ -626,7 +626,7 @@ katalog</item>
     <!-- Chromecast button for choosing which Chromecast device to play on -->
     <string name="media_route_menu_title">Odtwarzaj na&#8230;</string>
     <!-- Action bar button text for saving a selected items to whitelist -->
-    <string name="save_whitelist">Zapisz listę uwzględnianych</string>
+    <string name="save_includes">Zapisz listę uwzględnianych</string>
     <!-- DashClock Extension Description -->
     <string name="extension_description">Wyświetla informacje o utworze</string>
     <!-- Week Selector title -->
@@ -680,8 +680,8 @@ katalog</item>
     <!-- Accessibility 'show lyrics' -->
     <string name="pref_summary_restore_purchases">Przywraca zakupioną płatną wersję programu.</string>
     <string name="pref_title_restore_purchases">Przywróć zakupy</string>
-    <string name="blacklist_empty">Na liście pomijanych nie ma żadnego utworu!</string>
-    <string name="whitelist_empty">Na liście uwzględnianych nie ma żadnego katalogu!</string>
+    <string name="excludes_empty">Na liście pomijanych nie ma żadnego utworu!</string>
+    <string name="includes_empty">Na liście uwzględnianych nie ma żadnego katalogu!</string>
     <string name="dialog_song_info_title">Informacje o utworze</string>
     <string name="song_info_path">Ścieżka</string>
     <string name="song_info_file_size">Rozmiar pliku</string>

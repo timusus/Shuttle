@@ -9,9 +9,9 @@
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
     <string name="playlist_saved">Плейлистът е запазен в <xliff:g id="path">%s</xliff:g></string>
     <!-- Displayed after a blacklist is deleted -->
-    <string name="blacklist_deleted">Черният списък е изтрит</string>
+    <string name="excludes_deleted">Черният списък е изтрит</string>
     <!-- Displayed after a whitelist is deleted -->
-    <string name="whitelist_deleted">Белият списък е изтрит</string>
+    <string name="includes_deleted">Белият списък е изтрит</string>
     <!-- Displayed when a folder couldn't be deleted-->
     <string name="delete_folder_failed">Грешка при изтриването на папката.\n\nПапката може да разполага със защита от запис.</string>
     <!-- Displayed when a file couldn't be deleted -->
@@ -242,15 +242,15 @@
     <string name="pref_title_theme_light">Светла тема</string>
     <string name="pref_title_theme_black">Черно</string>
     <!--Settings title for whitelist/blacklist-->
-    <string name="pref_title_blacklist">Черен/бял списък</string>
+    <string name="pref_title_excludes">Черен/бял списък</string>
     <!--Settings title for viewing blacklist-->
-    <string name="pref_title_view_blacklist">Преглед/Редакция на черния списък</string>
+    <string name="pref_title_view_excludes">Преглед/Редакция на черния списък</string>
     <!--Settings title for clearing blacklist-->
-    <string name="pref_title_clear_blacklist">Изчисти черния списък</string>
+    <string name="pref_title_clear_excludes">Изчисти черния списък</string>
     <!--Settings title for viewing whitelist-->
-    <string name="pref_title_view_whitelist">Преглед/Редакция на белия списък</string>
+    <string name="pref_title_view_includes">Преглед/Редакция на белия списък</string>
     <!--Settings title for clearing whitelist-->
-    <string name="pref_title_clear_whitelist">Изчисти белия списък</string>
+    <string name="pref_title_clear_includes">Изчисти белия списък</string>
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">Подрежи обложката на албума</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -384,13 +384,13 @@
     <!-- Grid size (number of columns in grid view) -->
     <string name="menu_grid_size">Размер на мрежата</string>
     <!-- -->
-    <string name="whitelist_title">Бял списък</string>
+    <string name="includes_title">Бял списък</string>
     <!-- -->
-    <string name="blacklist_title">Черен списък</string>
+    <string name="excludes_title">Черен списък</string>
     <!-- -->
-    <string name="blacklist_description">Можете да добавяте песни към черния списък чрез бутона за опции (3 вертикални точки) към съответната песен, избирайки опцията \"Добави към черния списък\".</string>
+    <string name="exclude_description">Можете да добавяте песни към черния списък чрез бутона за опции (3 вертикални точки) към съответната песен, избирайки опцията \"Добави към черния списък\".</string>
     <!-- -->
-    <string name="whitelist_description">Можете да добавяте песни към белия списък чрез бутона за настройки във мениджъра на папките, използвайки \"ограничаване на музикалната библиотека\", след което избирайки папките, които желаете да включите във белия списък.</string>
+    <string name="include_description">Можете да добавяте песни към белия списък чрез бутона за настройки във мениджъра на папките, използвайки \"ограничаване на музикалната библиотека\", след което избирайки папките, които желаете да включите във белия списък.</string>
     <!-- ## Detail Activity - Info for artists/albums ## -->
     <!-- The viewpager tab title for the artist/album info -->
     <string name="info">Информация</string>
@@ -580,7 +580,7 @@
     <!-- Chromecast button for choosing which Chromecast device to play on -->
     <string name="media_route_menu_title">Изпълни при&#8230;</string>
     <!-- Action bar button text for saving a selected items to whitelist -->
-    <string name="save_whitelist">Запази белия списък</string>
+    <string name="save_includes">Запази белия списък</string>
     <!-- DashClock Extension Description -->
     <string name="extension_description">Показва информация за песента</string>
     <!-- Week Selector title -->
@@ -631,8 +631,8 @@
     <!-- Accessibility 'show lyrics' -->
     <string name="pref_summary_restore_purchases">Ако сте надстроили Shuttle, но все още се показва като безплатната версия, докоснете тук.</string>
     <string name="pref_title_restore_purchases">Възстанови покупките</string>
-    <string name="blacklist_empty">Няма песни в черния списък!</string>
-    <string name="whitelist_empty">Няма папки в белия списък!</string>
+    <string name="excludes_empty">Няма песни в черния списък!</string>
+    <string name="includes_empty">Няма папки в белия списък!</string>
     <string name="dialog_song_info_title">Инфо за песента</string>
     <string name="song_info_path">Местополож.</string>
     <string name="song_info_file_size">Размер на файла</string>

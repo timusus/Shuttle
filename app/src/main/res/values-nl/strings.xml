@@ -9,9 +9,9 @@
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
     <string name="playlist_saved">Afspeellijst opgeslagen in <xliff:g id="path">%s</xliff:g></string>
     <!-- Displayed after a blacklist is deleted -->
-    <string name="blacklist_deleted">Blacklist verwijderd</string>
+    <string name="excludes_deleted">Blacklist verwijderd</string>
     <!-- Displayed after a whitelist is deleted -->
-    <string name="whitelist_deleted">Whitelist verwijderd</string>
+    <string name="includes_deleted">Whitelist verwijderd</string>
     <!-- Displayed when a folder couldn't be deleted-->
     <string name="delete_folder_failed">Fout bij verwijderen map.\n\nDeze map heeft waarschijnlijk schrijfbescherming.</string>
     <!-- Displayed when a file couldn't be deleted -->
@@ -261,15 +261,15 @@
     <string name="pref_summary_palette">Indien ingeschakeld, zal Shuttle de meest prominente kleur uit de illustraties herkennen, en deze gebruiken als \'primaire kleur\' in de hele app.</string>
     <string name="pref_title_palette_now_playing">Alleen op scherm \'Speelt nu\'</string>
     <!--Settings title for whitelist/blacklist-->
-    <string name="pref_title_blacklist">White/blacklist</string>
+    <string name="pref_title_excludes">White/blacklist</string>
     <!--Settings title for viewing blacklist-->
-    <string name="pref_title_view_blacklist">Blacklist bekijken/bewerken</string>
+    <string name="pref_title_view_excludes">Blacklist bekijken/bewerken</string>
     <!--Settings title for clearing blacklist-->
-    <string name="pref_title_clear_blacklist">Legen</string>
+    <string name="pref_title_clear_excludes">Legen</string>
     <!--Settings title for viewing whitelist-->
-    <string name="pref_title_view_whitelist">Whitelist bekijken/bewerken</string>
+    <string name="pref_title_view_includes">Whitelist bekijken/bewerken</string>
     <!--Settings title for clearing whitelist-->
-    <string name="pref_title_clear_whitelist">Legen</string>
+    <string name="pref_title_clear_includes">Legen</string>
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">Albumhoes bijsnijden</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -407,13 +407,13 @@ Indien uitgeschakeld wordt het Shuttle-icoon als plaatshouder gebruikt</string>
     <!-- Grid size (number of columns in grid view) -->
     <string name="menu_grid_size">Rooster grootte</string>
     <!-- -->
-    <string name="whitelist_title">Whitelist</string>
+    <string name="includes_title">Whitelist</string>
     <!-- -->
-    <string name="blacklist_title">Blacklist</string>
+    <string name="excludes_title">Blacklist</string>
     <!-- -->
-    <string name="blacklist_description">Nummers kunnen aan de blacklist worden toegevoegd door \'Blacklist\' te kiezen in het overloopmenu (3 verticale stippen) bij een nummer.</string>
+    <string name="exclude_description">Nummers kunnen aan de blacklist worden toegevoegd door \'Blacklist\' te kiezen in het overloopmenu (3 verticale stippen) bij een nummer.</string>
     <!-- -->
-    <string name="whitelist_description">Nummers kunnen aan de whitelist worden toegevoegd door in de mapbrowser op de instellingenknop te drukken, \'Whitelist\' te kiezen, en dan de mappen te kiezen die je in de whitelist wil hebben.</string>
+    <string name="include_description">Nummers kunnen aan de whitelist worden toegevoegd door in de mapbrowser op de instellingenknop te drukken, \'Whitelist\' te kiezen, en dan de mappen te kiezen die je in de whitelist wil hebben.</string>
     <!-- ## Detail Activity - Info for artists/albums ## -->
     <!-- The viewpager tab title for the artist/album info -->
     <string name="info">Biografie</string>
@@ -620,7 +620,7 @@ map "</item>
     <!-- Chromecast button for choosing which Chromecast device to play on -->
     <string name="media_route_menu_title">Afspelen op&#8230;</string>
     <!-- Action bar button text for saving a selected items to whitelist -->
-    <string name="save_whitelist">Whitelist opslaan</string>
+    <string name="save_includes">Whitelist opslaan</string>
     <!-- DashClock Extension Description -->
     <string name="extension_description">Geeft nummerinformatie weer</string>
     <!-- Week Selector title -->
@@ -674,8 +674,8 @@ map "</item>
     <!-- Accessibility 'show lyrics' -->
     <string name="pref_summary_restore_purchases">Als je Shuttle al hebt geüpgraded, met zegt dat je de gratis versie hebt, druk hier.</string>
     <string name="pref_title_restore_purchases">Herstel aankopen</string>
-    <string name="blacklist_empty">Je hebt geen nummers geblacklist!</string>
-    <string name="whitelist_empty">Je hebt geen mappen gewhitelist!</string>
+    <string name="excludes_empty">Je hebt geen nummers geblacklist!</string>
+    <string name="includes_empty">Je hebt geen mappen gewhitelist!</string>
     <string name="dialog_song_info_title">Nummer info</string>
     <string name="song_info_path">Pad</string>
     <string name="song_info_file_size">Bestandsgrootte</string>

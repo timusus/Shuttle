@@ -34,7 +34,7 @@
     <android.support.v7.preference.PreferenceScreen
         android:icon="@drawable/ic_view_list_24dp"
         android:key="pref_blacklist"
-        android:title="@string/pref_title_blacklist"/>
+        android:title="@string/pref_title_excludes"/>
 
     <android.support.v7.preference.Preference
         android:icon="@drawable/ic_add_circle_outline_24dp"

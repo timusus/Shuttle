@@ -9,9 +9,9 @@
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
     <string name="playlist_saved">La llista de reproducció s\'ha guardat a <xliff:g id="path">%s</xliff:g></string>
     <!-- Displayed after a blacklist is deleted -->
-    <string name="blacklist_deleted">"Llista negra eliminada "</string>
+    <string name="excludes_deleted">"Llista negra eliminada "</string>
     <!-- Displayed after a whitelist is deleted -->
-    <string name="whitelist_deleted">Llista permitida eliminada</string>
+    <string name="includes_deleted">Llista permitida eliminada</string>
     <!-- Displayed when a folder couldn't be deleted-->
     <string name="delete_folder_failed">Error en eliminar la carpeta. \n\nAquesta carpeta podria estar protegida contra escriptura.</string>
     <!-- Displayed when a file couldn't be deleted -->
@@ -232,15 +232,15 @@ cançons afegides a la cua.</item>
     <string name="pref_title_theme_light">Clar</string>
     <string name="pref_title_theme_black">Negre</string>
     <!--Settings title for whitelist/blacklist-->
-    <string name="pref_title_blacklist">Llista negra/permesa</string>
+    <string name="pref_title_excludes">Llista negra/permesa</string>
     <!--Settings title for viewing blacklist-->
-    <string name="pref_title_view_blacklist">Veure/Editar llista negra</string>
+    <string name="pref_title_view_excludes">Veure/Editar llista negra</string>
     <!--Settings title for clearing blacklist-->
-    <string name="pref_title_clear_blacklist">Netejar</string>
+    <string name="pref_title_clear_excludes">Netejar</string>
     <!--Settings title for viewing whitelist-->
-    <string name="pref_title_view_whitelist">Veure/Editar llista permesa</string>
+    <string name="pref_title_view_includes">Veure/Editar llista permesa</string>
     <!--Settings title for clearing whitelist-->
-    <string name="pref_title_clear_whitelist">Netejar</string>
+    <string name="pref_title_clear_includes">Netejar</string>
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">Retallar caràtula</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -364,13 +364,13 @@ Si està desmarcat, s\'emprarà l\'icona de Shuttle.</string>
     <string name="view_options_grid_card">Targetes</string>
     <!-- Grid size (number of columns in grid view) -->
     <!-- -->
-    <string name="whitelist_title">Llista permesa</string>
+    <string name="includes_title">Llista permesa</string>
     <!-- -->
-    <string name="blacklist_title">Llista negra</string>
+    <string name="excludes_title">Llista negra</string>
     <!-- -->
-    <string name="blacklist_description">Pots afegir cançons a la llista negra prement els 3 punts verticals en una determinada cançó i seleccionant \"llista negra\".</string>
+    <string name="exclude_description">Pots afegir cançons a la llista negra prement els 3 punts verticals en una determinada cançó i seleccionant \"llista negra\".</string>
     <!-- -->
-    <string name="whitelist_description">Pots afegir cançons a la llista permesa prement el botó de configuració en l\'explorador de carpetes, seleccionant \"restringir llibreria musical\" i després escollint les carpetes que vols incluir a la llista permesa.</string>
+    <string name="include_description">Pots afegir cançons a la llista permesa prement el botó de configuració en l\'explorador de carpetes, seleccionant \"restringir llibreria musical\" i després escollint les carpetes que vols incluir a la llista permesa.</string>
     <!-- ## Detail Activity - Info for artists/albums ## -->
     <!-- The viewpager tab title for the artist/album info -->
     <string name="info">Biografia</string>
@@ -556,7 +556,7 @@ carpeta</item>
     <!-- Chromecast button for choosing which Chromecast device to play on -->
     <string name="media_route_menu_title">Reproduir a&#8230;</string>
     <!-- Action bar button text for saving a selected items to whitelist -->
-    <string name="save_whitelist">Guardar a la llista permesa</string>
+    <string name="save_includes">Guardar a la llista permesa</string>
     <!-- DashClock Extension Description -->
     <string name="extension_description">Mostra informació de la cançó</string>
     <!-- Week Selector title -->
@@ -594,8 +594,8 @@ carpeta</item>
     <!-- Accessibility 'show lyrics' -->
     <string name="pref_summary_restore_purchases">Si ja has comprat Shuttle+ però encara es mostra la versió gratuïta, clica aquí.</string>
     <string name="pref_title_restore_purchases">Restaurar compres</string>
-    <string name="blacklist_empty">No has afegit cap cançó a la llista negra!</string>
-    <string name="whitelist_empty">No has afegit cap carpeta a la llista permesa!</string>
+    <string name="excludes_empty">No has afegit cap cançó a la llista negra!</string>
+    <string name="includes_empty">No has afegit cap carpeta a la llista permesa!</string>
     <string name="dialog_song_info_title">Informació de la cançó</string>
     <string name="song_info_path">Ruta</string>
     <string name="song_info_file_size">Mida de l\'arxiu</string>

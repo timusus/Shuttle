@@ -9,9 +9,9 @@
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
     <string name="playlist_saved">Çalma listesi <xliff:g id="path">%s</xliff:g> konumuna kaydedildi</string>
     <!-- Displayed after a blacklist is deleted -->
-    <string name="blacklist_deleted">Kara liste silindi</string>
+    <string name="excludes_deleted">Kara liste silindi</string>
     <!-- Displayed after a whitelist is deleted -->
-    <string name="whitelist_deleted">Beyaz liste silindi</string>
+    <string name="includes_deleted">Beyaz liste silindi</string>
     <!-- Displayed when a folder couldn't be deleted-->
     <string name="delete_folder_failed">Klasör silme hatası.\n\nBu klasör yazmaya karşı korumalı olabilir.</string>
     <!-- Displayed when a file couldn't be deleted -->
@@ -262,15 +262,15 @@
     <string name="pref_summary_palette">Etkinleştirilirse, Shuttle albüm kapağında ki en belirgin rengi algılar ve bunu uygulamanın tamamında \'ana renk\' olarak kullanır</string>
     <string name="pref_title_palette_now_playing">Yalnızca \'Şimdi Çalınıyor\' Ekranında</string>
     <!--Settings title for whitelist/blacklist-->
-    <string name="pref_title_blacklist">Beyaz/Kara Liste</string>
+    <string name="pref_title_excludes">Beyaz/Kara Liste</string>
     <!--Settings title for viewing blacklist-->
-    <string name="pref_title_view_blacklist">Kara Listeyi Görüntüle/Düzenle</string>
+    <string name="pref_title_view_excludes">Kara Listeyi Görüntüle/Düzenle</string>
     <!--Settings title for clearing blacklist-->
-    <string name="pref_title_clear_blacklist">Temizle</string>
+    <string name="pref_title_clear_excludes">Temizle</string>
     <!--Settings title for viewing whitelist-->
-    <string name="pref_title_view_whitelist">Beyaz Listeyi Görüntüle/Düzenle</string>
+    <string name="pref_title_view_includes">Beyaz Listeyi Görüntüle/Düzenle</string>
     <!--Settings title for clearing whitelist-->
-    <string name="pref_title_clear_whitelist">Temizle</string>
+    <string name="pref_title_clear_includes">Temizle</string>
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">Albüm Kapağını Kırp</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -408,13 +408,13 @@ Bu seçenek işaretli değilse, Shuttle simgesi kullanılacaktır.</string>
     <!-- Grid size (number of columns in grid view) -->
     <string name="menu_grid_size">Kılavuz boyutu</string>
     <!-- -->
-    <string name="whitelist_title">Beyaz liste</string>
+    <string name="includes_title">Beyaz liste</string>
     <!-- -->
-    <string name="blacklist_title">Kara liste</string>
+    <string name="excludes_title">Kara liste</string>
     <!-- -->
-    <string name="blacklist_description">Şarkılar, belirli bir şarkının seçenek (3 dikey nokta) tuşuna basarak \'kara liste\' seçeneği ile kara listeye eklenebilir.</string>
+    <string name="exclude_description">Şarkılar, belirli bir şarkının seçenek (3 dikey nokta) tuşuna basarak \'kara liste\' seçeneği ile kara listeye eklenebilir.</string>
     <!-- -->
-    <string name="whitelist_description">Klasör tarayıcıdan ayarlar simgesine basarak, \'beyaz listeyi\' seçip ardından beyaz listeye eklemek istediğiniz klasörleri seçerek şarkıları beyaz listeye ekleyebilirsiniz.</string>
+    <string name="include_description">Klasör tarayıcıdan ayarlar simgesine basarak, \'beyaz listeyi\' seçip ardından beyaz listeye eklemek istediğiniz klasörleri seçerek şarkıları beyaz listeye ekleyebilirsiniz.</string>
     <!-- ## Detail Activity - Info for artists/albums ## -->
     <!-- The viewpager tab title for the artist/album info -->
     <string name="info">Biyografi</string>
@@ -620,7 +620,7 @@ dosyalar</item>
     <!-- Chromecast button for choosing which Chromecast device to play on -->
     <string name="media_route_menu_title">Çalınan&#8230;</string>
     <!-- Action bar button text for saving a selected items to whitelist -->
-    <string name="save_whitelist">Beyaz Listeyi Kaydet</string>
+    <string name="save_includes">Beyaz Listeyi Kaydet</string>
     <!-- DashClock Extension Description -->
     <string name="extension_description">Şarkı bilgisini görüntüler</string>
     <!-- Week Selector title -->
@@ -674,8 +674,8 @@ dosyalar</item>
     <!-- Accessibility 'show lyrics' -->
     <string name="pref_summary_restore_purchases">Shuttle\'ı zaten yükselttiyseniz ancak hala ücretsiz sürüm olarak görünüyorsa, bu tuşa basın.</string>
     <string name="pref_title_restore_purchases">Satın Almayı Geri Yükle</string>
-    <string name="blacklist_empty">Herhangi bir şarkı kara listede değil!</string>
-    <string name="whitelist_empty">Herhangi bir klasör beyaz listede değil!</string>
+    <string name="excludes_empty">Herhangi bir şarkı kara listede değil!</string>
+    <string name="includes_empty">Herhangi bir klasör beyaz listede değil!</string>
     <string name="dialog_song_info_title">Şarkı Bilgisi</string>
     <string name="song_info_path">Yol</string>
     <string name="song_info_file_size">Dosya Boyutu</string>

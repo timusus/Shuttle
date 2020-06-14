@@ -9,9 +9,9 @@
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
     <string name="playlist_saved">प्लेलिस्ट सेव की जा चुकी है</string>
     <!-- Displayed after a blacklist is deleted -->
-    <string name="blacklist_deleted">ब्लैकलिस्ट हटाई गई</string>
+    <string name="excludes_deleted">ब्लैकलिस्ट हटाई गई</string>
     <!-- Displayed after a whitelist is deleted -->
-    <string name="whitelist_deleted">व्हाइलिस्ट हटाई गई</string>
+    <string name="includes_deleted">व्हाइलिस्ट हटाई गई</string>
     <!-- Displayed when a folder couldn't be deleted-->
     <string name="delete_folder_failed">फ़ोल्डर डिलीट नहीं हुआ है।\n\nयह फ़ोल्डर राइट प्रोटेक्टेड हो सकता है।</string>
     <!-- Displayed when a file couldn't be deleted -->
@@ -266,15 +266,15 @@
     <string name="pref_summary_palette">यदि सक्षम हो, तो Shuttle आपकी कलाकृति में सबसे प्रमुख रंग का पता लगाएगा, और इसे पूरे एप्लिकेशन में \'प्राथमिक रंग\' के रूप में प्रयोग करेगा</string>
     <string name="pref_title_palette_now_playing">केवल \'अभी प्लेयिंग\' स्क्रीन पर</string>
     <!--Settings title for whitelist/blacklist-->
-    <string name="pref_title_blacklist">व्हाइट/ब्लैकलिस्ट</string>
+    <string name="pref_title_excludes">व्हाइट/ब्लैकलिस्ट</string>
     <!--Settings title for viewing blacklist-->
-    <string name="pref_title_view_blacklist">देखें/सुधारें ब्लैकलिस्ट</string>
+    <string name="pref_title_view_excludes">देखें/सुधारें ब्लैकलिस्ट</string>
     <!--Settings title for clearing blacklist-->
-    <string name="pref_title_clear_blacklist">क्लियर</string>
+    <string name="pref_title_clear_excludes">क्लियर</string>
     <!--Settings title for viewing whitelist-->
-    <string name="pref_title_view_whitelist">श्वेतसूची देखें/एडिट करें</string>
+    <string name="pref_title_view_includes">श्वेतसूची देखें/एडिट करें</string>
     <!--Settings title for clearing whitelist-->
-    <string name="pref_title_clear_whitelist">क्लियर</string>
+    <string name="pref_title_clear_includes">क्लियर</string>
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">क्रॉप एल्बम आर्ट</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -409,13 +409,13 @@
     <!-- Grid size (number of columns in grid view) -->
     <string name="menu_grid_size">ग्रिड साइज</string>
     <!-- -->
-    <string name="whitelist_title">व्हाइटलिस्ट</string>
+    <string name="includes_title">व्हाइटलिस्ट</string>
     <!-- -->
-    <string name="blacklist_title">ब्लैकलिस्ट</string>
+    <string name="excludes_title">ब्लैकलिस्ट</string>
     <!-- -->
-    <string name="blacklist_description">एक विशेष गीत से अतिप्रवाह (3 ऊर्ध्वाधर बिंदु) दबाकर और \'ब्लैकलिस्ट\' का चयन करके गीत को ब्लैकलिस्ट में जोड़ा जा सकता है।</string>
+    <string name="exclude_description">एक विशेष गीत से अतिप्रवाह (3 ऊर्ध्वाधर बिंदु) दबाकर और \'ब्लैकलिस्ट\' का चयन करके गीत को ब्लैकलिस्ट में जोड़ा जा सकता है।</string>
     <!-- -->
-    <string name="whitelist_description">फ़ोल्डर-ब्राउज़र से सेटिंग्स बटन दबाकर व्हाइटलिस्ट में गीत जोड़ा जा सकता है, \'व्हाइटलिस्ट\' का चयन करने के बाद, फिर वे व्हाइटलिस्ट में शामिल करने वाले फ़ोल्डर चुनना।</string>
+    <string name="include_description">फ़ोल्डर-ब्राउज़र से सेटिंग्स बटन दबाकर व्हाइटलिस्ट में गीत जोड़ा जा सकता है, \'व्हाइटलिस्ट\' का चयन करने के बाद, फिर वे व्हाइटलिस्ट में शामिल करने वाले फ़ोल्डर चुनना।</string>
     <!-- ## Detail Activity - Info for artists/albums ## -->
     <!-- The viewpager tab title for the artist/album info -->
     <string name="info">बायोग्राफी</string>
@@ -610,7 +610,7 @@
     <string name="comment">कमेंट</string>
     <!-- Chromecast button for choosing which Chromecast device to play on -->
     <!-- Action bar button text for saving a selected items to whitelist -->
-    <string name="save_whitelist">व्हाइटलिस्ट को सेव करें</string>
+    <string name="save_includes">व्हाइटलिस्ट को सेव करें</string>
     <!-- DashClock Extension Description -->
     <string name="extension_description">गानों की जानकारी प्रदर्शित करता है</string>
     <!-- Week Selector title -->

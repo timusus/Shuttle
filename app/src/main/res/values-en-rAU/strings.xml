@@ -7,9 +7,9 @@
     <string name="playlist_save_failed">Couldn\'t save playlist</string>
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
     <!-- Displayed after a blacklist is deleted -->
-    <string name="blacklist_deleted">Blacklist deleted</string>
+    <string name="excludes_deleted">Blacklist deleted</string>
     <!-- Displayed after a whitelist is deleted -->
-    <string name="whitelist_deleted">Whitelist deleted</string>
+    <string name="includes_deleted">Whitelist deleted</string>
     <!-- Displayed when a folder couldn't be deleted-->
     <!-- Displayed when a file couldn't be deleted -->
     <!-- Displayed when a folder couldn't be renamed-->

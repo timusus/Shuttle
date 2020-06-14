@@ -10,10 +10,10 @@
     <string name="playlist_save_failed">Couldn\'t save playlist</string>
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
     <string name="playlist_saved">Playlist saved to <xliff:g id="path">%s</xliff:g></string>
-    <!-- Displayed after a blacklist is deleted -->
-    <string name="blacklist_deleted">Blacklist deleted</string>
-    <!-- Displayed after a whitelist is deleted -->
-    <string name="whitelist_deleted">Whitelist deleted</string>
+    <!-- Displayed after a excludes is deleted -->
+    <string name="excludes_deleted">Excludes deleted</string>
+    <!-- Displayed after a includes is deleted -->
+    <string name="includes_deleted">Includes deleted</string>
     <!-- Displayed when a folder couldn't be deleted-->
     <string name="delete_folder_failed">Error deleting folder.\n\nThis folder might be write protected.</string>
     <!-- Displayed when a file couldn't be deleted -->
@@ -87,7 +87,7 @@
     <string name="share_via">Share song via:</string>
     <!-- Displayed when an M3U playlist is being saved-->
     <string name="saving_playlist">Saving playlist</string>
-    <!-- Displayed when whitelisting a folder, as the app gathers the songs-->
+    <!-- Displayed when adding a folder to includes, as the app gathers the songs-->
     <string name="gathering_songs">Gathering songs…</string>
     <!-- -->
     <string name="get_pro_title">Upgrade to Shuttle+</string>
@@ -292,17 +292,17 @@
     <string name="pref_summary_palette">If enabled, Shuttle will detect the most prominent color in your artwork, and use that as the \'primary color\' throughout the app</string>
     <string name="pref_title_palette_now_playing">Only on \'Now Playing\' Screen</string>
 
-    <!--Settings title for whitelist/blacklist-->
-    <string name="pref_title_blacklist">White/Blacklist</string>
-    <!--Settings title for viewing blacklist-->
-    <string name="pref_title_view_blacklist">View/Edit Blacklist</string>
-    <!--Settings title for clearing blacklist-->
-    <string name="pref_title_clear_blacklist">Clear</string>
-    <!--Settings title for viewing whitelist-->
-    <string name="pref_title_view_whitelist">View/Edit Whitelist</string>
-    <!--Settings title for clearing whitelist-->
-    <string name="pref_title_clear_whitelist">Clear</string>
-    <!-- Context menu item to remove the selected item from the blacklist -->
+    <!--Settings title for include/exclude-->
+    <string name="pref_title_excludes">Include/Exclude</string>
+    <!--Settings title for viewing Excluded-->
+    <string name="pref_title_view_excludes">View/Edit Excluded</string>
+    <!--Settings title for clearing excluded-->
+    <string name="pref_title_clear_excludes">Clear</string>
+    <!--Settings title for viewing included-->
+    <string name="pref_title_view_includes">View/Edit Included</string>
+    <!--Settings title for clearing included-->
+    <string name="pref_title_clear_includes">Clear</string>
+
     <string name="pref_title_crop_album_art">Crop Album Art</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
     <string name="pref_summary_crop_album_art">Crops album art to take up all of the available space in the \'now playing\' screen</string>
@@ -446,13 +446,13 @@
     <string name="menu_grid_size">Grid size</string>
 
     <!-- -->
-    <string name="whitelist_title">Whitelist</string>
+    <string name="includes_title">Included</string>
     <!-- -->
-    <string name="blacklist_title">Blacklist</string>
+    <string name="excludes_title">Excluded</string>
     <!-- -->
-    <string name="blacklist_description">Songs can be added to the blacklist by pressing the overflow (3 vertical dots) from a particular song, and selecting \'blacklist\'.</string>
+    <string name="exclude_description">Songs can be excluded by pressing the overflow (3 vertical dots) from a particular song, and selecting \'exclude\'.</string>
     <!-- -->
-    <string name="whitelist_description">Songs can be added to the whitelist by pressing the settings button from the folder-browser, selecting \'whitelist\', then choosing the folders you wish to include in the whitelist.</string>
+    <string name="include_description">Songs can be included by pressing the settings button from the folder-browser, selecting \'include\', then choosing the folders you wish to include.</string>
 
     <!-- ## Detail Activity - Info for artists/albums ## -->
     <!-- The viewpager tab title for the artist/album info -->
@@ -682,8 +682,8 @@
     <string name="comment">Comment</string>
     <!-- Chromecast button for choosing which Chromecast device to play on -->
     <string name="media_route_menu_title">Play on&#8230;</string>
-    <!-- Action bar button text for saving a selected items to whitelist -->
-    <string name="save_whitelist">Save Whitelist</string>
+    <!-- Action bar button text for saving a selected items to includes -->
+    <string name="save_includes">Save Includes</string>
     <!-- DashClock Extension Description -->
     <string name="extension_description">Displays song information</string>
     <!-- Week Selector title -->
@@ -743,8 +743,8 @@
 
     <string name="pref_summary_restore_purchases">If you\'ve already upgraded Shuttle, but it\'s still showing up as the free version, press this.</string>
     <string name="pref_title_restore_purchases">Restore Purchases</string>
-    <string name="blacklist_empty">You haven\'t blacklisted any songs!</string>
-    <string name="whitelist_empty">You haven\'t whitelisted any folders!</string>
+    <string name="excludes_empty">You haven\'t excluded any songs!</string>
+    <string name="includes_empty">You haven\'t included any folders!</string>
     <string name="dialog_song_info_title">Song Info</string>
     <string name="song_info_path">Path</string>
     <string name="song_info_file_size">File Size</string>

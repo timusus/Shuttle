@@ -40,7 +40,7 @@ public class InclExclDialog {
                 .title(getTitleResId(type))
                 .customView(view, false)
                 .positiveText(R.string.close)
-                .negativeText(R.string.pref_title_clear_whitelist)
+                .negativeText(R.string.pref_title_clear_includes)
                 .onNegative((materialDialog, dialogAction) -> {
                     InclExclHelper.deleteAllItems(type);
                     Toast.makeText(context, getItemsDeletedResId(type), Toast.LENGTH_SHORT).show();
@@ -78,15 +78,15 @@ public class InclExclDialog {
     }
 
     private static int getTitleResId(@InclExclItem.Type int type) {
-        return type == InclExclItem.Type.INCLUDE ? R.string.whitelist_title : R.string.blacklist_title;
+        return type == InclExclItem.Type.INCLUDE ? R.string.includes_title : R.string.excludes_title;
     }
 
     private static int getItemsEmptyResId(@InclExclItem.Type int type) {
-        return type == InclExclItem.Type.INCLUDE ? R.string.whitelist_empty : R.string.blacklist_empty;
+        return type == InclExclItem.Type.INCLUDE ? R.string.includes_empty : R.string.excludes_empty;
     }
 
     private static int getItemsDeletedResId(@InclExclItem.Type int type) {
-        return type == InclExclItem.Type.INCLUDE ? R.string.whitelist_deleted : R.string.blacklist_deleted;
+        return type == InclExclItem.Type.INCLUDE ? R.string.includes_deleted : R.string.excludes_deleted;
     }
 
     private static Observable<List<ViewModel>> getItems(@InclExclItem.Type int type, InclExclView.ClickListener listener) {
