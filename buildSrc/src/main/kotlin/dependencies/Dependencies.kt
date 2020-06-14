@@ -11,7 +11,7 @@ object Dependencies {
         const val crashlytics = "2.9.9"
         const val dashClockApi = "2.0.0"
         const val fastScroll = "1.0.20"
-        const val glide = "3.8.0-SNAPSHOT"
+        const val glide = "3.8.0"
         const val glideOkhttp = "1.4.0@aar"
         const val materialDialogs = "0.9.6.0"
         const val permiso = "0.3.0"
