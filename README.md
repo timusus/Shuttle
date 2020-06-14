@@ -1,5 +1,4 @@
 ### Shuttle Music Player
-# Without Trackers!
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE.md)
 [![API](https://img.shields.io/badge/API-16%2B-green.svg?style=flat)](https://android-arsenal.com/api?level=16)
@@ -7,8 +6,6 @@
 [![Slack invite](http://shuttle-slack-inviter.herokuapp.com/badge.svg)](http://shuttle-slack-inviter.herokuapp.com)
 
 Shuttle is an open source, local music player for Android.
-
-# Just download the source code and build your own tracker-free version!
 
 The free version includes an option to upgrade via an IAP, which unlocks the features otherwise available in Shuttle+.
 
