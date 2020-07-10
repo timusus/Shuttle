@@ -23,7 +23,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class Song implements
@@ -361,8 +361,8 @@ public class Song implements
     public String getRemoteArtworkUrl() {
         try {
             return "https://artwork.shuttlemusicplayer.app/api/v1/artwork"
-                    + "?artist=" + URLEncoder.encode(albumArtistName, Charset.forName("UTF-8").toString())
-                    + "&album=" + URLEncoder.encode(albumName, Charset.forName("UTF-8").toString());
+                    + "?artist=" + URLEncoder.encode(albumArtistName, StandardCharsets.UTF_8.name())
+                    + "&album=" + URLEncoder.encode(albumName, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             return null;
         }
