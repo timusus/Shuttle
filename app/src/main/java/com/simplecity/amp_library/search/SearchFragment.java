@@ -39,7 +39,6 @@ import com.simplecity.amp_library.ui.adapters.ViewType;
 import com.simplecity.amp_library.ui.detail.album.AlbumDetailFragment;
 import com.simplecity.amp_library.ui.detail.artist.ArtistDetailFragment;
 import com.simplecity.amp_library.ui.dialog.DeleteDialog;
-import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.ui.fragments.BaseFragment;
 import com.simplecity.amp_library.ui.modelviews.AlbumArtistView;
 import com.simplecity.amp_library.ui.modelviews.AlbumView;
@@ -348,11 +347,6 @@ public class SearchFragment extends BaseFragment implements
         inputMethodManager.hideSoftInputFromWindow(rootView.getWindowToken(), 0);
         String transitionName = ViewCompat.getTransitionName(transitionView);
         searchView.getHandler().postDelayed(() -> pushDetailFragment(AlbumDetailFragment.newInstance(album, transitionName), transitionView), 50);
-    }
-
-    @Override
-    public void showUpgradeDialog() {
-        UpgradeDialog.getUpgradeDialog(getActivity()).show();
     }
 
     void pushDetailFragment(Fragment fragment, @Nullable View transitionView) {

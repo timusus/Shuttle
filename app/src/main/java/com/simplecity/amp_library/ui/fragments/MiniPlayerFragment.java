@@ -241,10 +241,5 @@ public class MiniPlayerFragment extends BaseFragment {
 
             rootView.setContentDescription(getString(R.string.btn_now_playing, song.name, song.artistName));
         }
-
-        @Override
-        public void showUpgradeDialog(MaterialDialog dialog) {
-            dialog.show();
-        }
     };
 }

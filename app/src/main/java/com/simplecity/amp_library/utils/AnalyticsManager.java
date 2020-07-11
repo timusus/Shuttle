@@ -38,21 +38,6 @@ public class AnalyticsManager {
         Answers.getInstance().logCustom(new CustomEvent("Changelog Viewed"));
     }
 
-    public static void logUpgrade(@UpgradeType String upgradeType) {
-        if (!analyticsEnabled()) {
-            return;
-        }
-
-        Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "0");
-        bundle.putLong(FirebaseAnalytics.Param.QUANTITY, 0);
-        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, upgradeType);
-        bundle.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, "upgrade");
-
-        FirebaseAnalytics.getInstance(ShuttleApplication.getInstance())
-                .logEvent(FirebaseAnalytics.Event.PRESENT_OFFER, bundle);
-    }
-
     public static void logScreenName(Activity activity, String name) {
         if (!analyticsEnabled()) {
             return;
@@ -60,14 +45,6 @@ public class AnalyticsManager {
 
         CrashlyticsCore.getInstance().log(String.format("Screen: %s", name));
         FirebaseAnalytics.getInstance(ShuttleApplication.getInstance()).setCurrentScreen(activity, name, null);
-    }
-
-    public static void setIsUpgraded() {
-        if (!analyticsEnabled()) {
-            return;
-        }
-
-        FirebaseAnalytics.getInstance(ShuttleApplication.getInstance()).setUserProperty("Upgraded", String.valueOf(ShuttleUtils.isUpgraded()));
     }
 
     public static void logInitialTheme(ThemeUtils.Theme theme) {

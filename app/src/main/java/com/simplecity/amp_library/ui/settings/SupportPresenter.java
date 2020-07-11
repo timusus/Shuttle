@@ -27,7 +27,7 @@ public class SupportPresenter extends Presenter<SupportView> {
     private void setAppVersion() {
         SupportView supportView = getView();
         if (supportView != null) {
-            supportView.setVersion("Shuttle Music Player " + BuildConfig.VERSION_NAME + (ShuttleUtils.isUpgraded() ? " (Upgraded)" : " (Free)"));
+            supportView.setVersion("Shuttle Music Player");
         }
     }
 

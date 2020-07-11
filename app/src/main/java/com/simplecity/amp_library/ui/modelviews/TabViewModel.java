@@ -65,12 +65,6 @@ public class TabViewModel extends BaseViewModel<TabViewModel.ViewHolder> {
 
         holder.textView.setText(holder.itemView.getContext().getString(categoryItem.getTitleResId()));
         holder.checkBox.setChecked(categoryItem.isChecked);
-
-        if (categoryItem.type == CategoryItem.Type.FOLDERS && !ShuttleUtils.isUpgraded()) {
-            holder.checkBox.setAlpha(0.4f);
-        } else {
-            holder.checkBox.setAlpha(1.0f);
-        }
     }
 
     @Override

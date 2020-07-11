@@ -23,8 +23,6 @@ interface QueueContract {
         fun onRemovedFromQueue(queueItem: QueueItem)
 
         fun onRemovedFromQueue(queueItems: List<QueueItem>)
-
-        fun showUpgradeDialog()
     }
 
     interface Presenter {

@@ -36,9 +36,4 @@
         android:key="pref_blacklist"
         android:title="@string/pref_title_excludes"/>
 
-    <android.support.v7.preference.Preference
-        android:icon="@drawable/ic_add_circle_outline_24dp"
-        android:key="pref_upgrade"
-        android:title="@string/get_pro_title"/>
-
 </android.support.v7.preference.PreferenceScreen>

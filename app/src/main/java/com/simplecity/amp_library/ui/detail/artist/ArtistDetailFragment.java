@@ -49,7 +49,6 @@ import com.simplecity.amp_library.tagger.TaggerDialog;
 import com.simplecity.amp_library.ui.detail.album.AlbumDetailFragment;
 import com.simplecity.amp_library.ui.dialog.BiographyDialog;
 import com.simplecity.amp_library.ui.dialog.DeleteDialog;
-import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
 import com.simplecity.amp_library.ui.fragments.BaseFragment;
 import com.simplecity.amp_library.ui.fragments.TransitionListenerAdapter;
@@ -691,11 +690,6 @@ public class ArtistDetailFragment extends BaseFragment implements
     @Override
     public void showBioDialog() {
         BiographyDialog.getArtistBiographyDialog(getContext(), albumArtist.name).show();
-    }
-
-    @Override
-    public void showUpgradeDialog() {
-        UpgradeDialog.getUpgradeDialog(getActivity()).show();
     }
 
     @Override

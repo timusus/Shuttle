@@ -206,17 +206,6 @@ public class SettingsParentFragment extends BaseNavigationController implements
                 });
             }
 
-            Preference restorePurchasesPreference = findPreference(SettingsManager.KEY_PREF_RESTORE_PURCHASES);
-            if (restorePurchasesPreference != null) {
-                if (ShuttleUtils.isAmazonBuild() || ShuttleUtils.isUpgraded()) {
-                    restorePurchasesPreference.setVisible(false);
-                }
-                restorePurchasesPreference.setOnPreferenceClickListener(preference -> {
-                    settingsPresenter.restorePurchasesClicked(getActivity());
-                    return true;
-                });
-            }
-
             // Display
 
             Preference chooseTabsPreference = findPreference(SettingsManager.KEY_PREF_TAB_CHOOSER);
@@ -368,14 +357,6 @@ public class SettingsParentFragment extends BaseNavigationController implements
                     return true;
                 });
             }
-
-            // Upgrade preference
-            Preference upgradePreference = findPreference(SettingsManager.KEY_PREF_UPGRADE);
-            if (upgradePreference != null) {
-                if (ShuttleUtils.isUpgraded()) {
-                    upgradePreference.setVisible(false);
-                }
-            }
         }
 
         @Override
@@ -424,9 +405,6 @@ public class SettingsParentFragment extends BaseNavigationController implements
                         break;
                     case "pref_blacklist":
                         getNavigationController().pushViewController(SettingsFragment.newInstance(R.xml.settings_blacklist), "BlacklistSettings");
-                        break;
-                    case "pref_upgrade":
-                        settingsPresenter.upgradeClicked();
                         break;
                 }
             }
@@ -502,11 +480,6 @@ public class SettingsParentFragment extends BaseNavigationController implements
 
         @Override
         public void showChangelog(MaterialDialog dialog) {
-            dialog.show();
-        }
-
-        @Override
-        public void showUpgradeDialog(MaterialDialog dialog) {
             dialog.show();
         }
 

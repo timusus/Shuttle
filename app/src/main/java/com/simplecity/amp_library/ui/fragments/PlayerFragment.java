@@ -585,11 +585,6 @@ public class PlayerFragment extends BaseFragment implements
     }
 
     @Override
-    public void showUpgradeDialog(MaterialDialog dialog) {
-        dialog.show();
-    }
-
-    @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.favorite:
@@ -609,7 +604,7 @@ public class PlayerFragment extends BaseFragment implements
                 goToGenre();
                 return true;
             case R.id.editTags:
-                presenter.editTagsClicked(getActivity());
+                presenter.editTagsClicked();
                 return true;
             case R.id.songInfo:
                 presenter.songInfoClicked(getContext());
