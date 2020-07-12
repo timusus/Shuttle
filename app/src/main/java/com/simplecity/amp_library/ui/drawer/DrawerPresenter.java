@@ -58,9 +58,8 @@ public class DrawerPresenter extends Presenter<DrawerView> {
                 addDisposable(playlistsModel.getPlaylistsObservable()
                         .observeOn(AndroidSchedulers.mainThread())
                         // Delay the subscription so we're not querying data while the app is launching
-                        .delaySubscription(Observable.timer(1500, TimeUnit.MILLISECONDS))
-                        // after all, clear all playlist item
-                        // to avoid memory leak in static var DrawerParent.playlistsParent
+                        .delaySubscription(1500, TimeUnit.MILLISECONDS)
+                        // Clear all playlist item to avoid memory leak in static var DrawerParent.playlistsParent
                         .doFinally(() -> drawerView.setPlaylistItems(Collections.emptyList()))
                         .subscribe(
                                 drawerView::setPlaylistItems,
