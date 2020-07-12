@@ -27,7 +27,7 @@ public class SupportPresenter extends Presenter<SupportView> {
     private void setAppVersion() {
         SupportView supportView = getView();
         if (supportView != null) {
-            supportView.setVersion("Shuttle Music Player");
+            supportView.setVersion("Shuttle Music Player " + BuildConfig.VERSION_NAME);
         }
     }
 
@@ -41,7 +41,7 @@ public class SupportPresenter extends Presenter<SupportView> {
     }
 
     public void helpClicked() {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/communities/112365043563095486408"));
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://discord.gg/4Z5EU7K"));
         SupportView supportView = getView();
         if (supportView != null) {
             supportView.showHelp(intent);
