@@ -6,7 +6,6 @@ import com.simplecity.amp_library.model.Song
 import com.simplecity.amp_library.tagger.TaggerDialog
 import com.simplecity.amp_library.ui.dialog.BiographyDialog
 import com.simplecity.amp_library.ui.dialog.DeleteDialog
-import com.simplecity.amp_library.ui.dialog.UpgradeDialog
 import com.simplecity.amp_library.ui.fragments.BaseFragment
 import com.simplecity.amp_library.utils.ArtworkDialog
 import io.reactivex.Single
@@ -50,10 +49,6 @@ class AlbumArtistMenuCallbacksAdapter(val fragment: BaseFragment, val disposable
 
     override fun showArtworkChooser(albumArtist: AlbumArtist) {
         ArtworkDialog.build(fragment.context, albumArtist).show()
-    }
-
-    override fun showUpgradeDialog() {
-        UpgradeDialog.getUpgradeDialog(fragment.activity!!).show()
     }
 
     override fun showToast(message: String) {

@@ -9,9 +9,9 @@
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
     <string name="playlist_saved">Playlist gespeichert unter <xliff:g id="path">%s</xliff:g></string>
     <!-- Displayed after a blacklist is deleted -->
-    <string name="blacklist_deleted">Blacklist gelöscht</string>
+    <string name="excludes_deleted">Blacklist gelöscht</string>
     <!-- Displayed after a whitelist is deleted -->
-    <string name="whitelist_deleted">Whitelist gelöscht</string>
+    <string name="includes_deleted">Whitelist gelöscht</string>
     <!-- Displayed when a folder couldn't be deleted-->
     <string name="delete_folder_failed">Fehler beim Löschen des Ordners.\n\nDer Ordner ist möglicherweise schreibgeschützt.</string>
     <!-- Displayed when a file couldn't be deleted -->
@@ -262,15 +262,15 @@
     <string name="pref_summary_palette">Shuttle wird die markanteste Farbe im Cover als Hauptfarbe in der App verwenden.</string>
     <string name="pref_title_palette_now_playing">Nur auf \'Aktuell Gespielt\'-Bildschirm</string>
     <!--Settings title for whitelist/blacklist-->
-    <string name="pref_title_blacklist">White-/Blacklist</string>
+    <string name="pref_title_excludes">White-/Blacklist</string>
     <!--Settings title for viewing blacklist-->
-    <string name="pref_title_view_blacklist">Zeige/Bearbeite Blacklist</string>
+    <string name="pref_title_view_excludes">Zeige/Bearbeite Blacklist</string>
     <!--Settings title for clearing blacklist-->
-    <string name="pref_title_clear_blacklist">Leeren</string>
+    <string name="pref_title_clear_excludes">Leeren</string>
     <!--Settings title for viewing whitelist-->
-    <string name="pref_title_view_whitelist">Zeige/Bearbeite Whitelist</string>
+    <string name="pref_title_view_includes">Zeige/Bearbeite Whitelist</string>
     <!--Settings title for clearing whitelist-->
-    <string name="pref_title_clear_whitelist">Leeren</string>
+    <string name="pref_title_clear_includes">Leeren</string>
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">Albencover zuschneiden</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -414,13 +414,13 @@
     <!-- Grid size (number of columns in grid view) -->
     <string name="menu_grid_size">Gittergröße</string>
     <!-- -->
-    <string name="whitelist_title">Whitelist</string>
+    <string name="includes_title">Whitelist</string>
     <!-- -->
-    <string name="blacklist_title">Blacklist</string>
+    <string name="excludes_title">Blacklist</string>
     <!-- -->
-    <string name="blacklist_description">Titel zur Blacklist hinzufügen: Tippe auf die 3 Punkte neben dem Songtitel und wähle: \"Zur Blacklist hinzufügen\".</string>
+    <string name="exclude_description">Titel zur Blacklist hinzufügen: Tippe auf die 3 Punkte neben dem Songtitel und wähle: \"Zur Blacklist hinzufügen\".</string>
     <!-- -->
-    <string name="whitelist_description">Titel können zur Whitelist hinzugefügt werden, indem du den Einstellungs-Button im Dateibrowser anklickst, dort auf \"Whitelist\" klickst und dann die gewünschten Ordner zum Hinzufügen zur Whitelist auswählst.</string>
+    <string name="include_description">Titel können zur Whitelist hinzugefügt werden, indem du den Einstellungs-Button im Dateibrowser anklickst, dort auf \"Whitelist\" klickst und dann die gewünschten Ordner zum Hinzufügen zur Whitelist auswählst.</string>
     <!-- ## Detail Activity - Info for artists/albums ## -->
     <!-- The viewpager tab title for the artist/album info -->
     <string name="info">Biografie</string>
@@ -626,7 +626,7 @@ Ordner</item>
     <!-- Chromecast button for choosing which Chromecast device to play on -->
     <string name="media_route_menu_title">Wiedergabe von&#8230;</string>
     <!-- Action bar button text for saving a selected items to whitelist -->
-    <string name="save_whitelist">Whitelist speichern</string>
+    <string name="save_includes">Whitelist speichern</string>
     <!-- DashClock Extension Description -->
     <string name="extension_description">Zeigt Titelinformationen</string>
     <!-- Week Selector title -->
@@ -680,8 +680,8 @@ Ordner</item>
     <!-- Accessibility 'show lyrics' -->
     <string name="pref_summary_restore_purchases">Klicke hier, wenn Shuttle trotz Upgrade noch als Gratis-Version angezeigt wird.</string>
     <string name="pref_title_restore_purchases">Käufe wiederherstellen</string>
-    <string name="blacklist_empty">Du hast keine Titel in deiner Blacklist!</string>
-    <string name="whitelist_empty">Du hast keine Ordner in deiner Whitelist!</string>
+    <string name="excludes_empty">Du hast keine Titel in deiner Blacklist!</string>
+    <string name="includes_empty">Du hast keine Ordner in deiner Whitelist!</string>
     <string name="dialog_song_info_title">Titel-Info</string>
     <string name="song_info_path">Pfad</string>
     <string name="song_info_file_size">Dateigröße</string>

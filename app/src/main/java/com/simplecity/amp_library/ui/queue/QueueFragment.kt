@@ -23,7 +23,6 @@ import com.simplecity.amp_library.model.Song
 import com.simplecity.amp_library.playback.MediaManager.Defs
 import com.simplecity.amp_library.tagger.TaggerDialog
 import com.simplecity.amp_library.ui.dialog.DeleteDialog
-import com.simplecity.amp_library.ui.dialog.UpgradeDialog
 import com.simplecity.amp_library.ui.fragments.BaseFragment
 import com.simplecity.amp_library.ui.modelviews.SelectableViewModel
 import com.simplecity.amp_library.ui.modelviews.SubheaderView
@@ -237,10 +236,6 @@ class QueueFragment : BaseFragment(), QueueContract.View {
                 }
             }
         }
-
-        override fun showUpgradeDialog(dialog: MaterialDialog) {
-            dialog.show()
-        }
     }
 
     private var toolbarListener = Toolbar.OnMenuItemClickListener { item ->
@@ -393,9 +388,6 @@ class QueueFragment : BaseFragment(), QueueContract.View {
         }
     }
 
-    override fun showUpgradeDialog() {
-        UpgradeDialog.getUpgradeDialog(activity!!).show()
-    }
 
     // Static
 

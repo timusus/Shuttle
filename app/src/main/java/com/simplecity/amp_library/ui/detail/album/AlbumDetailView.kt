@@ -16,8 +16,6 @@ interface AlbumDetailView {
 
     fun showBioDialog()
 
-    fun showUpgradeDialog()
-
     @JvmSuppressWildcards
     fun showCreatePlaylistDialog(songs: List<Song>)
 

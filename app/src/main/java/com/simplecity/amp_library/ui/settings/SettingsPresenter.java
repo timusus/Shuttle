@@ -15,15 +15,13 @@ import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
-import com.simplecity.amp_library.billing.BillingManager;
 import com.simplecity.amp_library.model.CategoryItem;
 import com.simplecity.amp_library.model.InclExclItem;
 import com.simplecity.amp_library.services.ArtworkDownloadService;
-import com.simplecity.amp_library.ui.activities.BaseActivity;
 import com.simplecity.amp_library.ui.dialog.ChangelogDialog;
 import com.simplecity.amp_library.ui.dialog.InclExclDialog;
 import com.simplecity.amp_library.ui.dialog.TabChooserDialog;
-import com.simplecity.amp_library.ui.presenters.PurchasePresenter;
+import com.simplecity.amp_library.ui.presenters.Presenter;
 import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.ColorPalette;
 import com.simplecity.amp_library.utils.SettingsManager;
@@ -33,11 +31,11 @@ import io.reactivex.schedulers.Schedulers;
 import java.util.List;
 import javax.inject.Inject;
 
-public class SettingsPresenter extends PurchasePresenter<SettingsView> {
+public class SettingsPresenter extends Presenter<SettingsView> {
 
     @Inject
-    public SettingsPresenter(Activity activity) {
-        super(activity);
+    public SettingsPresenter() {
+        super();
     }
 
     // Support Preferences
@@ -48,15 +46,6 @@ public class SettingsPresenter extends PurchasePresenter<SettingsView> {
         SettingsView settingsView = getView();
         if (settingsView != null) {
             settingsView.showChangelog(ChangelogDialog.getChangelogDialog(context));
-        }
-    }
-
-    public void restorePurchasesClicked(Activity activity) {
-        if (activity instanceof BaseActivity) {
-            BillingManager billingManager = ((BaseActivity) activity).getBillingManager();
-            if (billingManager != null) {
-                billingManager.restorePurchases();
-            }
         }
     }
 
@@ -145,7 +134,7 @@ public class SettingsPresenter extends PurchasePresenter<SettingsView> {
             settingsView.showPrimaryColorDialog(
                     new ColorChooserDialog.Builder(context, R.string.pref_title_theme_pick_color)
                             .customColors(ColorPalette.getPrimaryColors(), ColorPalette.getPrimaryColorsSub())
-                            .allowUserColorInput(ShuttleUtils.isUpgraded())
+                            .allowUserColorInput(true)
                             .allowUserColorInputAlpha(false)
                             .dynamicButtonColor(false)
                             .preselect(Aesthetic.get(context).colorPrimary().blockingFirst())

@@ -10,7 +10,6 @@ import com.simplecity.amp_library.model.Song
 import com.simplecity.amp_library.playback.MediaManager
 import com.simplecity.amp_library.playback.MediaManager.Defs
 import com.simplecity.amp_library.utils.PlaylistUtils
-import com.simplecity.amp_library.utils.ShuttleUtils
 import com.simplecity.amp_library.utils.extensions.getSongsSingle
 import com.simplecity.amp_library.utils.menu.MenuUtils
 import io.reactivex.Single
@@ -36,8 +35,6 @@ object AlbumMenuUtils {
         fun showAlbumInfo(album: Album)
 
         fun showArtworkChooser(album: Album)
-
-        fun showUpgradeDialog()
 
         fun showToast(message: String)
     }
@@ -106,11 +103,7 @@ object AlbumMenuUtils {
                     return@OnMenuItemClickListener true
                 }
                 R.id.editTags -> {
-                    if (ShuttleUtils.isUpgraded()) {
-                        callbacks.showTagEditor(album)
-                    } else {
-                        callbacks.showUpgradeDialog()
-                    }
+                    callbacks.showTagEditor(album)
                     return@OnMenuItemClickListener true
                 }
                 R.id.info -> {

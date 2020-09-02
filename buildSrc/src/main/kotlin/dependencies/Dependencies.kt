@@ -3,10 +3,8 @@ package dependencies
 object Dependencies {
 
     const val minSdk = 21
-    const val targetSdk = 28
-    const val compileSdk = 28
-
-    const val buildTools = "28.0.3"
+    const val targetSdk = 29
+    const val compileSdk = 29
 
     object Versions {
         const val nanoHttp = "2.3.1"
@@ -23,7 +21,6 @@ object Dependencies {
         const val dagger = "2.16"
         const val daggerAnnotationProcessor = "2.16"
         const val expandableRecyclerView = "3.0.0-RC1"
-        const val billing = "1.1"
     }
 
     // Kotlin
@@ -69,16 +66,12 @@ object Dependencies {
     // Expandable Recycler View - https://github.com/thoughtbot/expandable-recycler-view
     const val expandableRecyclerView = "com.bignerdranch.android:expandablerecyclerview:${Versions.expandableRecyclerView}"
 
-    // In app purchases
-    const val billing = "com.android.billingclient:billing:${Versions.billing}"
-
-
     object Plugins {
 
         object Versions {
-            const val androidGradlePlugin = "3.3.1"
+            const val androidGradlePlugin = "4.0.0"
             const val kotlin = "1.3.20"
-            const val dexcountGradlePlugin = "0.8.2"
+            const val dexcountGradlePlugin = "1.0.3"
             const val fabricGradlePlugin = "1.+"
             const val playPublisher = "2.1.0"
             const val gradleVersions = "0.20.0"

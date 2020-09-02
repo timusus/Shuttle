@@ -43,7 +43,7 @@
 
     <item
         android:id="@+id/blacklist"
-        android:title="@string/blacklist_title" />
+        android:title="@string/excludes_title" />
 
     <item
         android:id="@+id/delete"

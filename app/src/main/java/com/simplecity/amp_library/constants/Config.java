@@ -14,7 +14,4 @@ public final class Config {
     public static final String PACKAGE_NAME_PRO = "com.simplecity.amp_pro";
 
     public static final String CHROMECAST_APP_ID = "73341C53";
-
-    // IAP
-    public static final String SKU_PREMIUM = "id_upgrade_to_pro";
 }

@@ -9,9 +9,9 @@
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
     <string name="playlist_saved">บันทึกเพลย์ลิสต์ไปที่ <xliff:g id="path">%s</xliff:g></string>
     <!-- Displayed after a blacklist is deleted -->
-    <string name="blacklist_deleted">ลบบัญชีดำแล้ว</string>
+    <string name="excludes_deleted">ลบบัญชีดำแล้ว</string>
     <!-- Displayed after a whitelist is deleted -->
-    <string name="whitelist_deleted">ลบรายการที่อนุญาตแล้ว</string>
+    <string name="includes_deleted">ลบรายการที่อนุญาตแล้ว</string>
     <!-- Displayed when a folder couldn't be deleted-->
     <string name="delete_folder_failed">เกิดข้อผิดพลาดในการลบโฟลเดอร์\n\nโฟลเดอร์นี้อาจมีป้องกันการเขียนไว้</string>
     <!-- Displayed when a file couldn't be deleted -->
@@ -256,15 +256,15 @@
     <string name="pref_summary_palette">หากเปิดใช้งาน Shuttle จะตรวจจับสีที่โดดเด่นที่สุดในผลงานศิลปะของคุณและใช้เป็นสีหลักตลอดทั้งแอป</string>
     <string name="pref_title_palette_now_playing">เฉพาะบนหน้าจอ \'กำลังเล่น\'</string>
     <!--Settings title for whitelist/blacklist-->
-    <string name="pref_title_blacklist">รายการที่อนุญาต/บัญชีดำ</string>
+    <string name="pref_title_excludes">รายการที่อนุญาต/บัญชีดำ</string>
     <!--Settings title for viewing blacklist-->
-    <string name="pref_title_view_blacklist">ดู/แก้ไขบัญชีดำ</string>
+    <string name="pref_title_view_excludes">ดู/แก้ไขบัญชีดำ</string>
     <!--Settings title for clearing blacklist-->
-    <string name="pref_title_clear_blacklist">ล้าง</string>
+    <string name="pref_title_clear_excludes">ล้าง</string>
     <!--Settings title for viewing whitelist-->
-    <string name="pref_title_view_whitelist">ดู/แก้ไขรายการที่อนุญาต</string>
+    <string name="pref_title_view_includes">ดู/แก้ไขรายการที่อนุญาต</string>
     <!--Settings title for clearing whitelist-->
-    <string name="pref_title_clear_whitelist">ล้าง</string>
+    <string name="pref_title_clear_includes">ล้าง</string>
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">ครอบตัดอัลบั้ม</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -397,13 +397,13 @@
     <!-- Grid size (number of columns in grid view) -->
     <string name="menu_grid_size">ขนาดตาราง</string>
     <!-- -->
-    <string name="whitelist_title">รายการที่อนุญาต</string>
+    <string name="includes_title">รายการที่อนุญาต</string>
     <!-- -->
-    <string name="blacklist_title">บัญชีดำ</string>
+    <string name="excludes_title">บัญชีดำ</string>
     <!-- -->
-    <string name="blacklist_description">สามารถเพิ่มเพลงลงในบัญชีดำได้โดยกดปุ่ม overflow (3 จุดในแนวตั้ง) จากเพลงหนึ่ง ๆ และเลือก \'บัญชีดำ\'</string>
+    <string name="exclude_description">สามารถเพิ่มเพลงลงในบัญชีดำได้โดยกดปุ่ม overflow (3 จุดในแนวตั้ง) จากเพลงหนึ่ง ๆ และเลือก \'บัญชีดำ\'</string>
     <!-- -->
-    <string name="whitelist_description">คุณสามารถเพิ่มเพลงลงในรายการที่อนุญาตพิเศษได้โดยการกดปุ่มตั้งค่าจากเบราเซอร์โฟลเดอร์เลือก \'รายการที่อนุญาตพิเศษ\' จากนั้นเลือกโฟลเดอร์ที่คุณต้องการรวมไว้ในรายการที่อนุญาตพิเศษ</string>
+    <string name="include_description">คุณสามารถเพิ่มเพลงลงในรายการที่อนุญาตพิเศษได้โดยการกดปุ่มตั้งค่าจากเบราเซอร์โฟลเดอร์เลือก \'รายการที่อนุญาตพิเศษ\' จากนั้นเลือกโฟลเดอร์ที่คุณต้องการรวมไว้ในรายการที่อนุญาตพิเศษ</string>
     <!-- ## Detail Activity - Info for artists/albums ## -->
     <!-- The viewpager tab title for the artist/album info -->
     <string name="info">ชีวประวัติ</string>
@@ -603,7 +603,7 @@
     <!-- Chromecast button for choosing which Chromecast device to play on -->
     <string name="media_route_menu_title">เล่นบน&#8230;</string>
     <!-- Action bar button text for saving a selected items to whitelist -->
-    <string name="save_whitelist">บันทึกรายการที่อนุญาต</string>
+    <string name="save_includes">บันทึกรายการที่อนุญาต</string>
     <!-- DashClock Extension Description -->
     <string name="extension_description">แสดงข้อมูลเพลง</string>
     <!-- Week Selector title -->
@@ -657,8 +657,8 @@
     <!-- Accessibility 'show lyrics' -->
     <string name="pref_summary_restore_purchases">ถ้าคุณได้อัปเกรด Shuttle แล้ว แต่ยังคงปรากฏเป็นเวอร์ชันฟรีให้กดปุ่มนี้</string>
     <string name="pref_title_restore_purchases">คืนค่าการซื้อ</string>
-    <string name="blacklist_empty">คุณยังไม่ได้ใส่รายการเพลงไว้ในบัญชีดำ!</string>
-    <string name="whitelist_empty">คุณยังไม่ได้เพิ่มโฟลเดอร์ใดๆ ไว้ในรายการที่อนุญาตพิเศษ!</string>
+    <string name="excludes_empty">คุณยังไม่ได้ใส่รายการเพลงไว้ในบัญชีดำ!</string>
+    <string name="includes_empty">คุณยังไม่ได้เพิ่มโฟลเดอร์ใดๆ ไว้ในรายการที่อนุญาตพิเศษ!</string>
     <string name="dialog_song_info_title">ข้อมูลเพลง</string>
     <string name="song_info_path">เส้นทาง</string>
     <string name="song_info_file_size">ขนาดไฟล์</string>

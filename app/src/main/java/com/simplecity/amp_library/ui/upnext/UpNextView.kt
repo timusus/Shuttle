@@ -135,10 +135,6 @@ class UpNextView constructor(context: Context, attrs: AttributeSet? = null, defS
                 (repeatButton as? RepeatButton)?.setRepeatMode(repeatMode)
             }
 
-            override fun showUpgradeDialog(dialog: MaterialDialog) {
-                dialog.show()
-            }
-
             override fun trackInfoChanged(song: Song?) {
                 super.trackInfoChanged(song)
 

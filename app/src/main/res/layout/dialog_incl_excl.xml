@@ -20,6 +20,6 @@
         android:minHeight="64dp"
         android:textSize="16sp"
         android:visibility="gone"
-        tools:text="@string/blacklist_empty"/>
+        tools:text="@string/excludes_empty"/>
 
 </FrameLayout>

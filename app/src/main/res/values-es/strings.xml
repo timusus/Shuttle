@@ -9,10 +9,10 @@
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
     <string name="playlist_saved">Lista de reproducción guardada en <xliff:g id="path">%s</xliff:g></string>
     <!-- Displayed after a blacklist is deleted -->
-    <string name="blacklist_deleted">"Lista negra borrada
+    <string name="excludes_deleted">"Lista negra borrada
 "</string>
     <!-- Displayed after a whitelist is deleted -->
-    <string name="whitelist_deleted">Lista blanca borrada</string>
+    <string name="includes_deleted">Lista blanca borrada</string>
     <!-- Displayed when a folder couldn't be deleted-->
     <string name="delete_folder_failed">Error al borrar carpeta.\n\nEsta carpeta podría estar protegida contra escritura.</string>
     <!-- Displayed when a file couldn't be deleted -->
@@ -252,15 +252,15 @@
     <string name="pref_summary_palette">Si se activa, Shuttle detectará el color más prominente en el álbum y usará este color como el \"color primario\" en la aplicación</string>
     <string name="pref_title_palette_now_playing">Sólo en la pantalla de \"Escuchando ahora\"</string>
     <!--Settings title for whitelist/blacklist-->
-    <string name="pref_title_blacklist">Lista Negra/Lista Blanca</string>
+    <string name="pref_title_excludes">Lista Negra/Lista Blanca</string>
     <!--Settings title for viewing blacklist-->
-    <string name="pref_title_view_blacklist">Ver/editar lista negra</string>
+    <string name="pref_title_view_excludes">Ver/editar lista negra</string>
     <!--Settings title for clearing blacklist-->
-    <string name="pref_title_clear_blacklist">Limpiar</string>
+    <string name="pref_title_clear_excludes">Limpiar</string>
     <!--Settings title for viewing whitelist-->
-    <string name="pref_title_view_whitelist">Ver/editar lista blanca</string>
+    <string name="pref_title_view_includes">Ver/editar lista blanca</string>
     <!--Settings title for clearing whitelist-->
-    <string name="pref_title_clear_whitelist">Limpiar</string>
+    <string name="pref_title_clear_includes">Limpiar</string>
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">Recortar Carátula</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -399,13 +399,13 @@
     <!-- Grid size (number of columns in grid view) -->
     <string name="menu_grid_size">Cuadrícula</string>
     <!-- -->
-    <string name="whitelist_title">Lista Blanca</string>
+    <string name="includes_title">Lista Blanca</string>
     <!-- -->
-    <string name="blacklist_title">Lista Negra</string>
+    <string name="excludes_title">Lista Negra</string>
     <!-- -->
-    <string name="blacklist_description">Pueden añadirse canciones a la Lista Negra presionando el menú (3 puntos verticales) desde cada canción y seleccionando \'Lista Negra\'</string>
+    <string name="exclude_description">Pueden añadirse canciones a la Lista Negra presionando el menú (3 puntos verticales) desde cada canción y seleccionando \'Lista Negra\'</string>
     <!-- -->
-    <string name="whitelist_description">Las canciones se pueden agregar a la lista blanca pulsando el botón de configuración desde el explorador de carpetas, seleccionando \"Lista blanca\" y seleccionando las carpetas que desea incluir en la Lista blanca.</string>
+    <string name="include_description">Las canciones se pueden agregar a la lista blanca pulsando el botón de configuración desde el explorador de carpetas, seleccionando \"Lista blanca\" y seleccionando las carpetas que desea incluir en la Lista blanca.</string>
     <!-- ## Detail Activity - Info for artists/albums ## -->
     <!-- The viewpager tab title for the artist/album info -->
     <string name="info">Biografía</string>
@@ -612,7 +612,7 @@
     <!-- Chromecast button for choosing which Chromecast device to play on -->
     <string name="media_route_menu_title">Reproducir en&#8230;</string>
     <!-- Action bar button text for saving a selected items to whitelist -->
-    <string name="save_whitelist">Guardar Lista Blanca</string>
+    <string name="save_includes">Guardar Lista Blanca</string>
     <!-- DashClock Extension Description -->
     <string name="extension_description">Muestra información de la canción</string>
     <!-- Week Selector title -->
@@ -666,8 +666,8 @@
     <!-- Accessibility 'show lyrics' -->
     <string name="pref_summary_restore_purchases">Si ya ha realizado la actualización de Shuttle, pero sigue apareciendo como la versión gratuita, pulse aquí.</string>
     <string name="pref_title_restore_purchases">Restaurar compras</string>
-    <string name="blacklist_empty">¡No tienes canciones en la lista negra! ¡Hurra!</string>
-    <string name="whitelist_empty">¡No tienes carpetas en la lista blanca!</string>
+    <string name="excludes_empty">¡No tienes canciones en la lista negra! ¡Hurra!</string>
+    <string name="includes_empty">¡No tienes carpetas en la lista blanca!</string>
     <string name="dialog_song_info_title">Info de la canción</string>
     <string name="song_info_path">Ruta</string>
     <string name="song_info_file_size">Tamaño del archivo</string>

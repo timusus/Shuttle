@@ -76,11 +76,11 @@
 
     <item
         android:id="@+id/whitelist"
-        android:title="@string/whitelist_title"/>
+        android:title="@string/includes_title"/>
 
     <item
         android:id="@+id/blacklist"
-        android:title="@string/blacklist_title"/>
+        android:title="@string/excludes_title"/>
 
     <item
         android:id="@+id/show_filenames"
