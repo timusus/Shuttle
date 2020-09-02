@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.text.TextUtils;
 import android.util.Log;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.simplecity.amp_library.playback.constants.PlayerHandler;
 import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
@@ -78,8 +77,7 @@ class MultiPlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnCompleti
 
                 mediaPlayer.prepare();
             } catch (final Exception e) {
-                Log.e(TAG, "setDataSource failed: " + e.getLocalizedMessage());
-                CrashlyticsCore.getInstance().log("setDataSourceImpl failed. Path: [" + path + "] error: " + e.getLocalizedMessage());
+                Log.e(TAG, "setDataSourceImpl failed. Path: [" + path + "] error: " + e.getLocalizedMessage());
                 return false;
             }
             mediaPlayer.setOnCompletionListener(this);
@@ -97,7 +95,6 @@ class MultiPlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnCompleti
                 Log.e(TAG, "Next media player is current one, continuing");
             } catch (IllegalStateException e) {
                 Log.e(TAG, "Media player not initialized!");
-                CrashlyticsCore.getInstance().log("setNextDataSource failed for. Media player not intitialized.");
                 return;
             }
             if (nextMediaPlayer != null) {
@@ -115,7 +112,7 @@ class MultiPlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnCompleti
                     currentMediaPlayer.setNextMediaPlayer(nextMediaPlayer);
                 } catch (Exception e) {
                     Log.e(TAG, "setNextDataSource failed - failed to call setNextMediaPlayer on currentMediaPlayer. Error: " + e.getLocalizedMessage());
-                    CrashlyticsCore.getInstance().log("setNextDataSource failed - failed to call setNextMediaPlayer on currentMediaPlayer. Error: " + e.getLocalizedMessage());
+                    Log.e(TAG, "setNextDataSource failed - failed to call setNextMediaPlayer on currentMediaPlayer. Error: " + e.getLocalizedMessage());
                     if (nextMediaPlayer != null) {
                         nextMediaPlayer.release();
                         nextMediaPlayer = null;
@@ -123,7 +120,6 @@ class MultiPlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnCompleti
                 }
             } else {
                 Log.e(TAG, "setDataSourceImpl failed for path: [" + path + "]. Setting next media player to null");
-                CrashlyticsCore.getInstance().log("setDataSourceImpl failed for path: [" + path + "]. Setting next media player to null");
                 if (nextMediaPlayer != null) {
                     nextMediaPlayer.release();
                     nextMediaPlayer = null;
@@ -143,7 +139,7 @@ class MultiPlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnCompleti
             try {
                 currentMediaPlayer.start();
             } catch (RuntimeException e) {
-                CrashlyticsCore.getInstance().log("MusicService.start() failed. Exception: " + e.toString());
+                Log.e(TAG, "MusicService.start() failed. Exception: " + e.toString());
             }
         }
     }
@@ -154,7 +150,6 @@ class MultiPlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnCompleti
                 currentMediaPlayer.reset();
             } catch (IllegalStateException e) {
                 Log.e(TAG, "Error stopping MultiPlayer: " + e.getLocalizedMessage());
-                CrashlyticsCore.getInstance().log("stop() failed. Error: " + e.getLocalizedMessage());
             }
             isInitialized = false;
         }

@@ -4,16 +4,13 @@ import org.jetbrains.annotations.Nullable
 buildscript {
     repositories {
         jcenter()
-        maven { url 'https://maven.fabric.io/public' }
         maven { url "https://jitpack.io" }
-        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
         maven { url "https://maven.google.com" }
         mavenCentral()
     }
     dependencies {
         classpath Dependencies.Plugins.android
         classpath Dependencies.Plugins.dexcount
-        classpath Dependencies.Plugins.fabric
     }
 }
 
@@ -26,12 +23,9 @@ apply plugin: Dependencies.BuildPlugins.kotlin
 apply plugin: Dependencies.BuildPlugins.kotlinAndroidExtensions
 apply plugin: Dependencies.BuildPlugins.kapt
 apply plugin: Dependencies.BuildPlugins.dexCount
-apply plugin: Dependencies.BuildPlugins.fabric
 
 repositories {
-    maven { url 'https://maven.fabric.io/public' }
     maven { url "https://jitpack.io" }
-    maven { url 'http://oss.sonatype.org/content/repositories/snapshots' }
     mavenCentral()
 }
 
@@ -103,7 +97,6 @@ android {
             signingConfig signingConfigs.release
 
             buildConfigField("String", "LASTFM_API_KEY", "\"${getProperty(getProperties('../private.properties'), 'LASTFM_API_KEY')}\"")
-            manifestPlaceholders = [CRASHLYTICS_API_KEY: "${getProperty(getProperties('../private.properties'), 'CRASHLYTICS_API_KEY')}"]
         }
     }
 
@@ -210,7 +203,7 @@ android {
 
 dependencies {
 
-    implementation fileTree(include: '*.jar', dir: 'libs')
+    implementation 'com.github.AdrienPoupa:jaudiotagger:2.2.3'
 
     // Kotlin
     implementation Dependencies.kotlin
@@ -223,8 +216,6 @@ dependencies {
     implementation Dependencies.Google.prefCompatv14
     implementation Dependencies.Google.recyclerView
     implementation Dependencies.Google.supportv4
-    implementation Dependencies.Google.firebaseCore
-    implementation Dependencies.Google.firebaseRemoteConfig
     implementation Dependencies.Google.constraintLayout
     implementation Dependencies.Google.chromecast
 
@@ -275,10 +266,6 @@ dependencies {
 
     implementation Dependencies.dagger
     kapt Dependencies.daggerAnnotationProcessor
-
-    implementation(Dependencies.crashlytics) {
-        transitive = true
-    }
 
     // Testing
     testImplementation Dependencies.Testing.junit
@@ -344,5 +331,3 @@ play {
     track = getPlayStoreTrack()
     serviceAccountCredentials = file('../deployment_keys.json')
 }
-
-apply plugin: Dependencies.BuildPlugins.playServices

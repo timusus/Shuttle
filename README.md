@@ -1,4 +1,4 @@
-### Shuttle Music Player
+### Shuttle Music Player (FOSS version)
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE.md)
 [![API](https://img.shields.io/badge/API-16%2B-green.svg?style=flat)](https://android-arsenal.com/api?level=16)
