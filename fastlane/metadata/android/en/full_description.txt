@@ -1,0 +1,25 @@
+Shuttle is an open source, local music player for Android.
+Features:
+- Local playback only (based on the MediaStore)
+- Built in equalizer
+- Sleep timer
+- Folder browser
+- Scrobbling
+- Widgets
+- Theming
+- Album-artist support
+- Artwork scraping (Last.FM & iTunes)
+- Tag editing
+- Folder browsing
+- Chromecast
+- Additional theme options
+- Additional artwork editing options
+
+History:
+Shuttle started some time in early 2012, as a project to learn Java (and programming in general). Initially, it was based off of the Random Music Player sample project by Google. I clearly recall how happy I was when I managed to wrangle that project to play a song of my choosing!
+After lots of blog reading and trial and error, I eventually stumbled upon Googles Default Music Player. At the time I had no idea what I was doing, but for better or worse, I made a habit of not copying classes, but writing the code out myself. This tedious process lasted a while, but it was my way of trying to ensure I understood what was going on when I copied a class into my app.
+Initially, Shuttle was relased as AMP (another.music.player). A patent troll threatened legal action if I didn't change the name (don't want a native Android app getting confused with an audio codec!) and I was naive enough to comply - and so the name was changed.
+As I developed Shuttle, I received a lot of really positive feedback from reddit (/r/android). I continued to work on customisation of holo-based themes and looked on in awe as Shuttle ticked over to install number 10.
+I eventually discovered Cyanogenmod, and the then-famous Apollo Music Player, which seemed to solve a few problems I wasn't able to solve myself. I discovered the beautiful thing that is open source software, and found out that someone else had already solved these problems for me, and I was allowed to copy them! That someone else was Andrew Neal, the developer of Apollo Music Player. Initially via email, then to hangouts and now on Slack, Andrew unwittingly became my mentor. I attribute a large portion of Shuttle's success to both Andrew and his app Apollo.
+Shuttle continued to gain momentum over the years. Holo was phased out and something post-Holo-pre-Material came in. I celebrated 500,000 downloads with an actual cake sometime in 2014. I got a job as an Android developer.. Glide came out, RXJava became popular and Material design came in.
+I've continued to work on Shuttle at times daily, at the least weekly, ever since its initial release. It's come a hell of a long way since day one. It is my proudest accomplishment. It now has almost 4 million downloads!
