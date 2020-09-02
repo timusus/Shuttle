@@ -54,8 +54,8 @@ android {
         minSdkVersion Dependencies.minSdk
         targetSdkVersion Dependencies.targetSdk
 
-        versionName Config.versionName
-        versionCode 5000
+        versionName "2.0.17"
+        versionCode 5001
 
         resConfigs "en", "zh-rCN", "fr", "de", "ko", "it", "ru", "nl", "tr", "pl", "ro", "hu", "hi-rIN", "uk", "bg-rBG", "en-rGB", "et-rEE", "vi", "pt-rBR", "es", "en-rNZ", "zh-rTW", "es-rES", "ca", "hr", "en-rAU", "eu-rES", "th", "ja"
 
