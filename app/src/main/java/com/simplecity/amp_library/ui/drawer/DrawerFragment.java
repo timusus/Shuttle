@@ -307,11 +307,6 @@ public class DrawerFragment extends BaseFragment implements
                 });
     }
 
-    @Override
-    public void showUpgradeDialog(MaterialDialog dialog) {
-        dialog.show();
-    }
-
     PlayerViewAdapter playerViewAdapter = new PlayerViewAdapter() {
         @Override
         public void trackInfoChanged(@Nullable Song song) {
@@ -344,11 +339,6 @@ public class DrawerFragment extends BaseFragment implements
                 trackNameView.setVisibility(View.VISIBLE);
                 artistNameView.setVisibility(View.VISIBLE);
             }
-        }
-
-        @Override
-        public void showUpgradeDialog(MaterialDialog dialog) {
-            dialog.show();
         }
     };
 

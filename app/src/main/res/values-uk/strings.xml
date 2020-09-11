@@ -9,9 +9,9 @@
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
     <string name="playlist_saved">Плейлист збережений в <xliff:g id="path">%s</xliff:g></string>
     <!-- Displayed after a blacklist is deleted -->
-    <string name="blacklist_deleted">Чорний список видалено</string>
+    <string name="excludes_deleted">Чорний список видалено</string>
     <!-- Displayed after a whitelist is deleted -->
-    <string name="whitelist_deleted">Білий список видалено</string>
+    <string name="includes_deleted">Білий список видалено</string>
     <!-- Displayed when a folder couldn't be deleted-->
     <string name="delete_folder_failed">Помилка видалення теки.\n\nМожливо, для теки встановлено захист від запису.</string>
     <!-- Displayed when a file couldn't be deleted -->
@@ -252,15 +252,15 @@
     <string name="pref_title_theme_light">Світла</string>
     <string name="pref_title_theme_black">Чорний</string>
     <!--Settings title for whitelist/blacklist-->
-    <string name="pref_title_blacklist">Білий/чорний список</string>
+    <string name="pref_title_excludes">Білий/чорний список</string>
     <!--Settings title for viewing blacklist-->
-    <string name="pref_title_view_blacklist">Перегляд/редагування чорного списку</string>
+    <string name="pref_title_view_excludes">Перегляд/редагування чорного списку</string>
     <!--Settings title for clearing blacklist-->
-    <string name="pref_title_clear_blacklist">Очистити</string>
+    <string name="pref_title_clear_excludes">Очистити</string>
     <!--Settings title for viewing whitelist-->
-    <string name="pref_title_view_whitelist">Перегляд/редагування білого списку</string>
+    <string name="pref_title_view_includes">Перегляд/редагування білого списку</string>
     <!--Settings title for clearing whitelist-->
-    <string name="pref_title_clear_whitelist">Очистити</string>
+    <string name="pref_title_clear_includes">Очистити</string>
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">Обрізати обкладинку альбома</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -389,13 +389,13 @@
     <string name="view_options_grid_card">Сітка: картки</string>
     <!-- Grid size (number of columns in grid view) -->
     <!-- -->
-    <string name="whitelist_title">Білий список</string>
+    <string name="includes_title">Білий список</string>
     <!-- -->
-    <string name="blacklist_title">Чорний список</string>
+    <string name="excludes_title">Чорний список</string>
     <!-- -->
-    <string name="blacklist_description">"Треки можна додавати в чорний список за допомогою кнопки overflow (3 вертикальні крапки) "</string>
+    <string name="exclude_description">"Треки можна додавати в чорний список за допомогою кнопки overflow (3 вертикальні крапки) "</string>
     <!-- -->
-    <string name="whitelist_description">Треки можна додати до білого списку шляхом натискання кнопки \"налаштування\" з файлового браузера, та вибрати \'білий список\', а потім обрати теки які ви хочете включити до білий список.</string>
+    <string name="include_description">Треки можна додати до білого списку шляхом натискання кнопки \"налаштування\" з файлового браузера, та вибрати \'білий список\', а потім обрати теки які ви хочете включити до білий список.</string>
     <!-- ## Detail Activity - Info for artists/albums ## -->
     <!-- The viewpager tab title for the artist/album info -->
     <string name="info">Біографія</string>
@@ -591,7 +591,7 @@
     <!-- Chromecast button for choosing which Chromecast device to play on -->
     <string name="media_route_menu_title">Відтворити&#8230;</string>
     <!-- Action bar button text for saving a selected items to whitelist -->
-    <string name="save_whitelist">Зберегти білий список</string>
+    <string name="save_includes">Зберегти білий список</string>
     <!-- DashClock Extension Description -->
     <string name="extension_description">Показує інформацію про трек</string>
     <!-- Week Selector title -->
@@ -645,8 +645,8 @@
     <!-- Accessibility 'show lyrics' -->
     <string name="pref_summary_restore_purchases">Якщо ви оновились до Shuttle+, а він досі відображається як безкоштовна версія, натисніть тут.</string>
     <string name="pref_title_restore_purchases">Відновити покупки</string>
-    <string name="blacklist_empty">Жодного треку не додано в чорний список!</string>
-    <string name="whitelist_empty">Жодної теки не додано в білий список!</string>
+    <string name="excludes_empty">Жодного треку не додано в чорний список!</string>
+    <string name="includes_empty">Жодної теки не додано в білий список!</string>
     <string name="dialog_song_info_title">Про трек</string>
     <string name="song_info_path">Доріжка</string>
     <string name="song_info_file_size">Розмір файлу</string>

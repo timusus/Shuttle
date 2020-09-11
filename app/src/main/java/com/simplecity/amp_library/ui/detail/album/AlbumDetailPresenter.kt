@@ -10,7 +10,6 @@ import com.simplecity.amp_library.rx.UnsafeAction
 import com.simplecity.amp_library.ui.presenters.Presenter
 import com.simplecity.amp_library.utils.PermissionUtils
 import com.simplecity.amp_library.utils.PlaylistUtils
-import com.simplecity.amp_library.utils.ShuttleUtils
 import com.simplecity.amp_library.utils.sorting.SortManager
 import io.reactivex.android.schedulers.AndroidSchedulers
 
@@ -72,11 +71,7 @@ class AlbumDetailPresenter constructor(private val mediaManager: MediaManager, p
     }
 
     fun editTags() {
-        if (!ShuttleUtils.isUpgraded()) {
-            view?.showUpgradeDialog()
-        } else {
-            view?.showTaggerDialog()
-        }
+        view?.showTaggerDialog()
     }
 
     fun editArtwork() {

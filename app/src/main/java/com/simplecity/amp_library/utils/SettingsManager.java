@@ -26,7 +26,6 @@ public class SettingsManager extends BaseSettingsManager {
     public static String KEY_PREF_FAQ = "pref_faq";
     public static String KEY_PREF_HELP = "pref_help";
     public static String KEY_PREF_RATE = "pref_rate";
-    public static String KEY_PREF_RESTORE_PURCHASES = "pref_restore_purchases";
 
     // Display
     public static String KEY_PREF_TAB_CHOOSER = "pref_tab_chooser";
@@ -54,9 +53,6 @@ public class SettingsManager extends BaseSettingsManager {
 
     // Playback
     public static String KEY_PREF_REMEMBER_SHUFFLE = "pref_remember_shuffle";
-
-    // Upgrade
-    public static String KEY_PREF_UPGRADE = "pref_upgrade";
 
     // Whether the 'rate' snackbar has been seen during this session
     public boolean hasSeenRateSnackbar = false;
@@ -443,12 +439,6 @@ public class SettingsManager extends BaseSettingsManager {
         setInt(KEY_DEFAULT_PAGE, type);
     }
 
-    // Legacy Upgrade Preference
-    private static final String KEY_UPGRADED = "pref_theme_gold";
-
-    public boolean getIsLegacyUpgraded() {
-        return getBool(KEY_UPGRADED, false);
-    }
 
     // Recently added
 

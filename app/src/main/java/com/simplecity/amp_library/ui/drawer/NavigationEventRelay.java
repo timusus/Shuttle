@@ -14,12 +14,7 @@ public class NavigationEventRelay {
     static NavigationEvent equalizerSelectedEvent = new NavigationEvent(NavigationEvent.Type.EQUALIZER_SELECTED);
     static NavigationEvent settingsSelectedEvent = new NavigationEvent(NavigationEvent.Type.SETTINGS_SELECTED);
     static NavigationEvent supportSelectedEvent = new NavigationEvent(NavigationEvent.Type.SUPPORT_SELECTED);
-    static NavigationEvent foldersSelectedEvent = new NavigationEvent(NavigationEvent.Type.FOLDERS_SELECTED) {
-        @Override
-        public boolean isActionable() {
-            return ShuttleUtils.isUpgraded();
-        }
-    };
+    static NavigationEvent foldersSelectedEvent = new NavigationEvent(NavigationEvent.Type.FOLDERS_SELECTED);
 
     private PublishRelay<NavigationEvent> relay = PublishRelay.create();
 

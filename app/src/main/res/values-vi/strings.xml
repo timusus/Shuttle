@@ -9,9 +9,9 @@
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
     <string name="playlist_saved">Danh sách được lưu vào <xliff:g id="path">%s</xliff:g></string>
     <!-- Displayed after a blacklist is deleted -->
-    <string name="blacklist_deleted">Đã xoá danh sách đen</string>
+    <string name="excludes_deleted">Đã xoá danh sách đen</string>
     <!-- Displayed after a whitelist is deleted -->
-    <string name="whitelist_deleted">Đã xoá danh sách trắng</string>
+    <string name="includes_deleted">Đã xoá danh sách trắng</string>
     <!-- Displayed when a folder couldn't be deleted-->
     <string name="delete_folder_failed">Lỗi khi xoá thư mục.\n\nThư mục này có thể được bảo vệ chống ghi.</string>
     <!-- Displayed when a file couldn't be deleted -->
@@ -255,15 +255,15 @@
     <string name="pref_summary_palette">Nếu được chọn, Shuttle sẽ phát hiện màu nổi bật nhất trong ảnh bìa và dùng nó làm màu chủ đạo cho ứng dụng</string>
     <string name="pref_title_palette_now_playing">Chỉ trong màn hình \'Đang phát\'</string>
     <!--Settings title for whitelist/blacklist-->
-    <string name="pref_title_blacklist">Danh sách trắng/đen</string>
+    <string name="pref_title_excludes">Danh sách trắng/đen</string>
     <!--Settings title for viewing blacklist-->
-    <string name="pref_title_view_blacklist">Xem/Sửa danh sách đen</string>
+    <string name="pref_title_view_excludes">Xem/Sửa danh sách đen</string>
     <!--Settings title for clearing blacklist-->
-    <string name="pref_title_clear_blacklist">Xoá</string>
+    <string name="pref_title_clear_excludes">Xoá</string>
     <!--Settings title for viewing whitelist-->
-    <string name="pref_title_view_whitelist">Xem/Sửa danh sách trắng</string>
+    <string name="pref_title_view_includes">Xem/Sửa danh sách trắng</string>
     <!--Settings title for clearing whitelist-->
-    <string name="pref_title_clear_whitelist">Xoá</string>
+    <string name="pref_title_clear_includes">Xoá</string>
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">Cắt ảnh album</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -396,13 +396,13 @@
     <!-- Grid size (number of columns in grid view) -->
     <string name="menu_grid_size">Cỡ lưới</string>
     <!-- -->
-    <string name="whitelist_title">Danh sách trắng</string>
+    <string name="includes_title">Danh sách trắng</string>
     <!-- -->
-    <string name="blacklist_title">Danh sách đen</string>
+    <string name="excludes_title">Danh sách đen</string>
     <!-- -->
-    <string name="blacklist_description">Bài hát có thể thêm vào danh sách đen bằng cách chạm 3 dấu chấm bên cạnh bài hát, và chọn \'danh sách đen\'.</string>
+    <string name="exclude_description">Bài hát có thể thêm vào danh sách đen bằng cách chạm 3 dấu chấm bên cạnh bài hát, và chọn \'danh sách đen\'.</string>
     <!-- -->
-    <string name="whitelist_description">Bài hát có thể được thêm vào danh sách trắng bằng cách chọn nút thiết lập từ trình duyệt thư mục, và chọn \'giới hạn thư viện nhạc\', sau đó chọn thư mục bạn muốn có trong danh sách trắng.</string>
+    <string name="include_description">Bài hát có thể được thêm vào danh sách trắng bằng cách chọn nút thiết lập từ trình duyệt thư mục, và chọn \'giới hạn thư viện nhạc\', sau đó chọn thư mục bạn muốn có trong danh sách trắng.</string>
     <!-- ## Detail Activity - Info for artists/albums ## -->
     <!-- The viewpager tab title for the artist/album info -->
     <string name="info">Tiểu sử</string>
@@ -604,7 +604,7 @@
     <!-- Chromecast button for choosing which Chromecast device to play on -->
     <string name="media_route_menu_title">Phát trên&#8230;</string>
     <!-- Action bar button text for saving a selected items to whitelist -->
-    <string name="save_whitelist">Lưu danh sách trắng</string>
+    <string name="save_includes">Lưu danh sách trắng</string>
     <!-- DashClock Extension Description -->
     <string name="extension_description">Hiển thị thông tin bài hát</string>
     <!-- Week Selector title -->
@@ -658,8 +658,8 @@
     <!-- Accessibility 'show lyrics' -->
     <string name="pref_summary_restore_purchases">Nếu bạn đã nâng cấp Shuttle rồi nhưng vẫn hiện là bản miễn phí, hãy chạm vào đây.</string>
     <string name="pref_title_restore_purchases">Phục hồi mua hàng</string>
-    <string name="blacklist_empty">Bạn chưa đưa bài hát nào vào danh sách đen cả</string>
-    <string name="whitelist_empty">Bạn chưa đưa thư mục nào vào danh sách trắng cả!</string>
+    <string name="excludes_empty">Bạn chưa đưa bài hát nào vào danh sách đen cả</string>
+    <string name="includes_empty">Bạn chưa đưa thư mục nào vào danh sách trắng cả!</string>
     <string name="dialog_song_info_title">Thông tin bài hát</string>
     <string name="song_info_path">Đường dẫn</string>
     <string name="song_info_file_size">Kích thước</string>

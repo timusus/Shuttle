@@ -195,25 +195,6 @@ public final class ShuttleUtils {
         return netInfo != null && netInfo.isConnectedOrConnecting() && !wifiOnly;
     }
 
-    public static boolean isUpgraded() {
-
-        if (ShuttleApplication.getInstance().getIsUpgraded()) {
-            return true;
-        }
-
-        if (SettingsManager.getInstance().getIsLegacyUpgraded()) {
-            return true;
-        }
-
-        try {
-            return ShuttleApplication.getInstance().getPackageName().equals(Config.PACKAGE_NAME_PRO);
-        } catch (Exception ignored) {
-        }
-
-        //If something goes wrong, assume the user has the pro version
-        return true;
-    }
-
     /**
      * @return true if device is running API >= 23
      */

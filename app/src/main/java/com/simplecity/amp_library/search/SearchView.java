@@ -28,6 +28,4 @@ public interface SearchView {
     void goToArtist(AlbumArtist albumArtist, View transitionView);
 
     void goToAlbum(Album album, View transitionView);
-
-    void showUpgradeDialog();
 }

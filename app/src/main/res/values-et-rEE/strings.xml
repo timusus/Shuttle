@@ -9,9 +9,9 @@
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
     <string name="playlist_saved">Playlist salvestati <xliff:g id="path">%s</xliff:g></string>
     <!-- Displayed after a blacklist is deleted -->
-    <string name="blacklist_deleted">Must nimekiri kustutatud</string>
+    <string name="excludes_deleted">Must nimekiri kustutatud</string>
     <!-- Displayed after a whitelist is deleted -->
-    <string name="whitelist_deleted">Valge nimekiri kustutatud</string>
+    <string name="includes_deleted">Valge nimekiri kustutatud</string>
     <!-- Displayed when a folder couldn't be deleted-->
     <string name="delete_folder_failed">Viga kausta kustutamisel.\n\nSee kaust võib olla kirjutuskaitstud.</string>
     <!-- Displayed when a file couldn't be deleted -->
@@ -261,15 +261,15 @@
     <string name="pref_summary_palette">Kui see valik on sisse lülitatud, siis valib Shuttle kaanepildilt kõige silmapaistvama värvi ning kasutab seda peamise värvina kogu rakenduses.</string>
     <string name="pref_title_palette_now_playing">Ainult ekraanil \'praegu mängib\'</string>
     <!--Settings title for whitelist/blacklist-->
-    <string name="pref_title_blacklist">Must/valge nimekiri</string>
+    <string name="pref_title_excludes">Must/valge nimekiri</string>
     <!--Settings title for viewing blacklist-->
-    <string name="pref_title_view_blacklist">Vaata/Muuda musta nimekirja</string>
+    <string name="pref_title_view_excludes">Vaata/Muuda musta nimekirja</string>
     <!--Settings title for clearing blacklist-->
-    <string name="pref_title_clear_blacklist">Tühjenda</string>
+    <string name="pref_title_clear_excludes">Tühjenda</string>
     <!--Settings title for viewing whitelist-->
-    <string name="pref_title_view_whitelist">Vaata/Muuda valget nimekirja</string>
+    <string name="pref_title_view_includes">Vaata/Muuda valget nimekirja</string>
     <!--Settings title for clearing whitelist-->
-    <string name="pref_title_clear_whitelist">Tühenda</string>
+    <string name="pref_title_clear_includes">Tühenda</string>
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">Lõika kaanepilti</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -407,13 +407,13 @@ Kui see on välja lülitatud, siis kasutatakse Shuttle ikooni kohatäitena.</str
     <!-- Grid size (number of columns in grid view) -->
     <string name="menu_grid_size">Ruudustiku suurus</string>
     <!-- -->
-    <string name="whitelist_title">Valge nimekiri</string>
+    <string name="includes_title">Valge nimekiri</string>
     <!-- -->
-    <string name="blacklist_title">Must nimekiri</string>
+    <string name="excludes_title">Must nimekiri</string>
     <!-- -->
-    <string name="blacklist_description">Laulusid saab lisada musta nimekirja vajutades seadete märki (kolm täppi) kindla laulu peal ja valides \"must nimekiri\"</string>
+    <string name="exclude_description">Laulusid saab lisada musta nimekirja vajutades seadete märki (kolm täppi) kindla laulu peal ja valides \"must nimekiri\"</string>
     <!-- -->
-    <string name="whitelist_description">Laule saab lisada valgesse nimekirja vajutades seadete nuppu kaustasirvijas ning valides \"piira muusikakogu\" ning siis valides kaustad, mida kaasata valgesse nimekirja.</string>
+    <string name="include_description">Laule saab lisada valgesse nimekirja vajutades seadete nuppu kaustasirvijas ning valides \"piira muusikakogu\" ning siis valides kaustad, mida kaasata valgesse nimekirja.</string>
     <!-- ## Detail Activity - Info for artists/albums ## -->
     <!-- The viewpager tab title for the artist/album info -->
     <string name="info">Info</string>
@@ -620,7 +620,7 @@ Kui see on välja lülitatud, siis kasutatakse Shuttle ikooni kohatäitena.</str
     <!-- Chromecast button for choosing which Chromecast device to play on -->
     <string name="media_route_menu_title">Mängi&#8230; peal</string>
     <!-- Action bar button text for saving a selected items to whitelist -->
-    <string name="save_whitelist">Salvesta valge nimekiri</string>
+    <string name="save_includes">Salvesta valge nimekiri</string>
     <!-- DashClock Extension Description -->
     <string name="extension_description">Kuvab loo teavet</string>
     <!-- Week Selector title -->
@@ -674,8 +674,8 @@ Kui see on välja lülitatud, siis kasutatakse Shuttle ikooni kohatäitena.</str
     <!-- Accessibility 'show lyrics' -->
     <string name="pref_summary_restore_purchases">Kui sa oled ostnud Shuttle tasulise versiooni, aga ikka näidatakse tasuta versiooni, siis vajuta siia.</string>
     <string name="pref_title_restore_purchases">Taasta ostud</string>
-    <string name="blacklist_empty">Sa pole ühtegi lugu musta nimekirja kandnud!</string>
-    <string name="whitelist_empty">Sa pole ühtegi kausta valgesse nimekirja kandnud!</string>
+    <string name="excludes_empty">Sa pole ühtegi lugu musta nimekirja kandnud!</string>
+    <string name="includes_empty">Sa pole ühtegi kausta valgesse nimekirja kandnud!</string>
     <string name="dialog_song_info_title">Loo info</string>
     <string name="song_info_path">Asukoht</string>
     <string name="song_info_file_size">Failisuurus</string>

@@ -23,31 +23,6 @@ public class DialogUtils {
         return new MaterialDialog.Builder(context);
     }
 
-    /**
-     * Displays the popup dialog recommending the user try the paid version
-     */
-    public static void showUpgradeNagDialog(final Context context, MaterialDialog.SingleButtonCallback listener) {
-
-        //If we're in the free version, the app has been launched more than 15 times,
-        //The message hasn't been read before, display the 'upgrade to pro' dialog.
-        if (!ShuttleUtils.isUpgraded()
-                && SettingsManager.getInstance().getLaunchCount() > 15
-                && !SettingsManager.getInstance().getNagMessageRead()) {
-
-            MaterialDialog.Builder builder = getBuilder(context)
-                    .title(context.getResources().getString(R.string.get_pro_title))
-                    .content(context.getResources().getString(R.string.get_pro_message))
-                    .positiveText(R.string.btn_upgrade)
-                    .onPositive(listener)
-                    .negativeText(R.string.get_pro_button_no);
-
-            builder.show();
-            SettingsManager.getInstance().setNagMessageRead();
-
-            AnalyticsManager.logUpgrade(AnalyticsManager.UpgradeType.NAG);
-        }
-    }
-
     public static void showWeekSelectorDialog(final Context context) {
 
         @SuppressLint("InflateParams")

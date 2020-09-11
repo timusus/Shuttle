@@ -53,11 +53,7 @@ public class TabChooserDialog {
 
             @Override
             public void onFolderChecked(TabViewModel tabViewModel, TabViewModel.ViewHolder viewHolder) {
-                if (!ShuttleUtils.isUpgraded()) {
-                    viewHolder.checkBox.setChecked(false);
-                    tabViewModel.categoryItem.isChecked = false;
-                    UpgradeDialog.getUpgradeDialog(activity).show();
-                }
+
             }
         };
 

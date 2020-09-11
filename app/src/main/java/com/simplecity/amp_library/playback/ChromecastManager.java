@@ -57,11 +57,9 @@ class ChromecastManager {
     }
 
     void init() {
-        if (ShuttleUtils.isUpgraded()) {
-            castManager = VideoCastManager.getInstance();
-            setupCastListener();
-            castManager.addVideoCastConsumer(castConsumer);
-        }
+        castManager = VideoCastManager.getInstance();
+        setupCastListener();
+        castManager.addVideoCastConsumer(castConsumer);
 
         if (castManager != null && castManager.isConnected()) {
             updatePlaybackLocation(PlaybackManager.PlaybackLocation.REMOTE);

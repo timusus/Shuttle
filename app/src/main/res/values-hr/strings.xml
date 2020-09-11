@@ -9,9 +9,9 @@
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
     <string name="playlist_saved">Popis naslova je spremljen u <xliff:g id="path">%s</xliff:g></string>
     <!-- Displayed after a blacklist is deleted -->
-    <string name="blacklist_deleted">Crna lista je izbrisana</string>
+    <string name="excludes_deleted">Crna lista je izbrisana</string>
     <!-- Displayed after a whitelist is deleted -->
-    <string name="whitelist_deleted">Bijela lista je izbrisana</string>
+    <string name="includes_deleted">Bijela lista je izbrisana</string>
     <!-- Displayed when a folder couldn't be deleted-->
     <string name="delete_folder_failed">Pogreška pri brisanju mape.\n\nOva mapa je možda zaštićena.</string>
     <!-- Displayed when a file couldn't be deleted -->
@@ -260,15 +260,15 @@
     <string name="pref_summary_palette">Ako je omogućeno, Shuttle će prepoznati najbolju boju iz vašeg omota, te će ju koristiti kao primarnu boju aplikacije</string>
     <string name="pref_title_palette_now_playing">Samo na zaslonu reprodukcije</string>
     <!--Settings title for whitelist/blacklist-->
-    <string name="pref_title_blacklist">Bijela/Crna lista</string>
+    <string name="pref_title_excludes">Bijela/Crna lista</string>
     <!--Settings title for viewing blacklist-->
-    <string name="pref_title_view_blacklist">Prikaži/uredi crnu listu</string>
+    <string name="pref_title_view_excludes">Prikaži/uredi crnu listu</string>
     <!--Settings title for clearing blacklist-->
-    <string name="pref_title_clear_blacklist">Očisti</string>
+    <string name="pref_title_clear_excludes">Očisti</string>
     <!--Settings title for viewing whitelist-->
-    <string name="pref_title_view_whitelist">Prikaži/uredi bijelu listu</string>
+    <string name="pref_title_view_includes">Prikaži/uredi bijelu listu</string>
     <!--Settings title for clearing whitelist-->
-    <string name="pref_title_clear_whitelist">Očisti</string>
+    <string name="pref_title_clear_includes">Očisti</string>
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">Obreži omot albuma</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -407,13 +407,13 @@ Ako nije označeno, Shuttle ikona će se koristiti kao sličica</string>
     <!-- Grid size (number of columns in grid view) -->
     <string name="menu_grid_size">Veličina rešetke</string>
     <!-- -->
-    <string name="whitelist_title">Bijela lista</string>
+    <string name="includes_title">Bijela lista</string>
     <!-- -->
-    <string name="blacklist_title">Crna lista</string>
+    <string name="excludes_title">Crna lista</string>
     <!-- -->
-    <string name="blacklist_description">Pjesme mogu biti dodane na crnu listu pritiskom na overflow (3 vertikalne točkice) iz neke pjesme, te odabirom \'crna lista\'.</string>
+    <string name="exclude_description">Pjesme mogu biti dodane na crnu listu pritiskom na overflow (3 vertikalne točkice) iz neke pjesme, te odabirom \'crna lista\'.</string>
     <!-- -->
-    <string name="whitelist_description">Pjesme mogu biti dodane na whitelist pritiskom na gumb postavki u pregledniku mapa, odabirom \'whitelist\', pa odabirom mape koju želite uključiti u whitelist.</string>
+    <string name="include_description">Pjesme mogu biti dodane na whitelist pritiskom na gumb postavki u pregledniku mapa, odabirom \'whitelist\', pa odabirom mape koju želite uključiti u whitelist.</string>
     <!-- ## Detail Activity - Info for artists/albums ## -->
     <!-- The viewpager tab title for the artist/album info -->
     <string name="info">Biografija</string>
@@ -622,7 +622,7 @@ mapa</item>
     <!-- Chromecast button for choosing which Chromecast device to play on -->
     <string name="media_route_menu_title">Reproduciraj na&#8230;</string>
     <!-- Action bar button text for saving a selected items to whitelist -->
-    <string name="save_whitelist">Spremi bijelu listu</string>
+    <string name="save_includes">Spremi bijelu listu</string>
     <!-- DashClock Extension Description -->
     <string name="extension_description">Prikazuje informacije o pjesmi</string>
     <!-- Week Selector title -->
@@ -676,8 +676,8 @@ mapa</item>
     <!-- Accessibility 'show lyrics' -->
     <string name="pref_summary_restore_purchases">Ako ste nadogradili Shuttle+, ali se svejedno  prikazuje kao besplatna verzija, pritisnite ovo.</string>
     <string name="pref_title_restore_purchases">Vrati kupovine</string>
-    <string name="blacklist_empty">Niste dodali još nijednu pjesmu na crnu listu!</string>
-    <string name="whitelist_empty">Niste dodali nijednu mapu na bijelu listu!</string>
+    <string name="excludes_empty">Niste dodali još nijednu pjesmu na crnu listu!</string>
+    <string name="includes_empty">Niste dodali nijednu mapu na bijelu listu!</string>
     <string name="dialog_song_info_title">Informacije o pjesmi</string>
     <string name="song_info_path">Put</string>
     <string name="song_info_file_size">Veličina datoteke</string>

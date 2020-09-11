@@ -9,9 +9,9 @@
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
     <string name="playlist_saved">Плей-лист сохранён в <xliff:g id="path">%s</xliff:g></string>
     <!-- Displayed after a blacklist is deleted -->
-    <string name="blacklist_deleted">Чёрный список был удалён</string>
+    <string name="excludes_deleted">Чёрный список был удалён</string>
     <!-- Displayed after a whitelist is deleted -->
-    <string name="whitelist_deleted">Белый список был удалён</string>
+    <string name="includes_deleted">Белый список был удалён</string>
     <!-- Displayed when a folder couldn't be deleted-->
     <string name="delete_folder_failed">Ошибка удаления папки.\n\nВозможно, для папки установлена защита от записи.</string>
     <!-- Displayed when a file couldn't be deleted -->
@@ -265,15 +265,15 @@
     <string name="pref_summary_palette">Если включено, Shuttle обнаружит более заметный цвет из обложки и будет использовать его в качестве основного во всём приложении</string>
     <string name="pref_title_palette_now_playing">Только на экране Сейчас играет</string>
     <!--Settings title for whitelist/blacklist-->
-    <string name="pref_title_blacklist">Белый/чёрный список</string>
+    <string name="pref_title_excludes">Белый/чёрный список</string>
     <!--Settings title for viewing blacklist-->
-    <string name="pref_title_view_blacklist">Смотреть/редактировать чёрный список</string>
+    <string name="pref_title_view_excludes">Смотреть/редактировать чёрный список</string>
     <!--Settings title for clearing blacklist-->
-    <string name="pref_title_clear_blacklist">Очистить</string>
+    <string name="pref_title_clear_excludes">Очистить</string>
     <!--Settings title for viewing whitelist-->
-    <string name="pref_title_view_whitelist">Смотреть/редактировать белый список</string>
+    <string name="pref_title_view_includes">Смотреть/редактировать белый список</string>
     <!--Settings title for clearing whitelist-->
-    <string name="pref_title_clear_whitelist">Очистить</string>
+    <string name="pref_title_clear_includes">Очистить</string>
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">Обрезать обложки альбомов</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -412,13 +412,13 @@
     <!-- Grid size (number of columns in grid view) -->
     <string name="menu_grid_size">Размер сетки</string>
     <!-- -->
-    <string name="whitelist_title">Белый список</string>
+    <string name="includes_title">Белый список</string>
     <!-- -->
-    <string name="blacklist_title">Чёрный список</string>
+    <string name="excludes_title">Чёрный список</string>
     <!-- -->
-    <string name="blacklist_description">Песни можно добавить в чёрный список, нажав три точки справа от песни и выбрав \'Чёрный список\'</string>
+    <string name="exclude_description">Песни можно добавить в чёрный список, нажав три точки справа от песни и выбрав \'Чёрный список\'</string>
     <!-- -->
-    <string name="whitelist_description">Песни можно добавить в белый список, нажав кнопку настроек при просмотре папок и выбрав \'Белый список\'. Затем нужно выбрать папки, которые вы хотите включить в белый список</string>
+    <string name="include_description">Песни можно добавить в белый список, нажав кнопку настроек при просмотре папок и выбрав \'Белый список\'. Затем нужно выбрать папки, которые вы хотите включить в белый список</string>
     <!-- ## Detail Activity - Info for artists/albums ## -->
     <!-- The viewpager tab title for the artist/album info -->
     <string name="info">Биография</string>
@@ -627,7 +627,7 @@
     <!-- Chromecast button for choosing which Chromecast device to play on -->
     <string name="media_route_menu_title">Воспроизвести в&#8230;</string>
     <!-- Action bar button text for saving a selected items to whitelist -->
-    <string name="save_whitelist">Сохранить белый список</string>
+    <string name="save_includes">Сохранить белый список</string>
     <!-- DashClock Extension Description -->
     <string name="extension_description">Показывает информацию о песне</string>
     <!-- Week Selector title -->
@@ -681,8 +681,8 @@
     <!-- Accessibility 'show lyrics' -->
     <string name="pref_summary_restore_purchases">Если Вы уже приобрели Shuttle, но он до сих пор отображается бесплатной версией, нажмите здесь.</string>
     <string name="pref_title_restore_purchases">Восстановить покупки</string>
-    <string name="blacklist_empty">Вы не внесли в чёрный список ни одной песни!</string>
-    <string name="whitelist_empty">Вы не внесли в белый список ни одной песни!</string>
+    <string name="excludes_empty">Вы не внесли в чёрный список ни одной песни!</string>
+    <string name="includes_empty">Вы не внесли в белый список ни одной песни!</string>
     <string name="dialog_song_info_title">Информация</string>
     <string name="song_info_path">Путь</string>
     <string name="song_info_file_size">Размер файла</string>

@@ -649,7 +649,7 @@ public class PlaybackManager {
                     Log.e(TAG, e.toString());
                 }
                 if (goToIdle) {
-                    if (ShuttleUtils.isUpgraded() && chromecastManager.castManager != null) {
+                    if (chromecastManager.castManager != null) {
                         HttpServer.getInstance().stop();
                     }
                     setIsSupposedToBePlaying(false, false);

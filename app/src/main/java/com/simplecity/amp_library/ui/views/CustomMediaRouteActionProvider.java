@@ -25,9 +25,6 @@ public class CustomMediaRouteActionProvider extends MediaRouteActionProvider {
 
     public void setActivity(@NonNull Activity activity) {
         this.activity = activity;
-        if (customMediaRouteButton != null) {
-            customMediaRouteButton.setActivity(activity);
-        }
     }
 
     @Nullable
@@ -49,8 +46,6 @@ public class CustomMediaRouteActionProvider extends MediaRouteActionProvider {
         }
 
         customMediaRouteButton = new CustomMediaRouteButton(getContext());
-        customMediaRouteButton.setActivity(activity);
-        customMediaRouteButton.setAlpha(ShuttleUtils.isUpgraded() ? 1.0f : 0.5f);
         customMediaRouteButton.setRouteSelector(selector);
         customMediaRouteButton.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,

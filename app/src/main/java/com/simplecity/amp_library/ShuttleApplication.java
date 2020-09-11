@@ -30,10 +30,8 @@ import com.simplecity.amp_library.sql.SqlUtils;
 import com.simplecity.amp_library.sql.databases.CustomArtworkTable;
 import com.simplecity.amp_library.sql.providers.PlayCountTable;
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
-import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.InputMethodManagerLeaks;
-import com.simplecity.amp_library.utils.LegacyUtils;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.StringUtils;
@@ -71,8 +69,6 @@ public class ShuttleApplication extends Application {
     public static synchronized ShuttleApplication getInstance() {
         return instance;
     }
-
-    private boolean isUpgraded;
 
     public static final double VOLUME_INCREMENT = 0.05;
 
@@ -180,15 +176,6 @@ public class ShuttleApplication extends Application {
 
         }
         return "unknown";
-    }
-
-    public void setIsUpgraded(boolean isUpgraded) {
-        this.isUpgraded = isUpgraded;
-        AnalyticsManager.setIsUpgraded();
-    }
-
-    public boolean getIsUpgraded() {
-        return isUpgraded || BuildConfig.DEBUG;
     }
 
     public static File getDiskCacheDir(String uniqueName) {

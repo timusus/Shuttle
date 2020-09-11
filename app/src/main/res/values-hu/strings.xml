@@ -9,9 +9,9 @@
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
     <string name="playlist_saved">Lejátszási lista elmentve<xliff:g id="path">%s</xliff:g> néven. .</string>
     <!-- Displayed after a blacklist is deleted -->
-    <string name="blacklist_deleted">Feketelista törölve</string>
+    <string name="excludes_deleted">Feketelista törölve</string>
     <!-- Displayed after a whitelist is deleted -->
-    <string name="whitelist_deleted">Kivételek törölve</string>
+    <string name="includes_deleted">Kivételek törölve</string>
     <!-- Displayed when a folder couldn't be deleted-->
     <string name="delete_folder_failed">Hiba a mappa törlésekor. Lehet, hogy írásvédett.</string>
     <!-- Displayed when a file couldn't be deleted -->
@@ -244,15 +244,15 @@
     <string name="pref_title_theme_light">Világos</string>
     <string name="pref_title_theme_black">Fekete</string>
     <!--Settings title for whitelist/blacklist-->
-    <string name="pref_title_blacklist">Kivételek/Feketelista</string>
+    <string name="pref_title_excludes">Kivételek/Feketelista</string>
     <!--Settings title for viewing blacklist-->
-    <string name="pref_title_view_blacklist">Feketelista megtekintése/szerkesztése</string>
+    <string name="pref_title_view_excludes">Feketelista megtekintése/szerkesztése</string>
     <!--Settings title for clearing blacklist-->
-    <string name="pref_title_clear_blacklist">Törlés</string>
+    <string name="pref_title_clear_excludes">Törlés</string>
     <!--Settings title for viewing whitelist-->
-    <string name="pref_title_view_whitelist">Kivételek megtekintése/szerkesztése</string>
+    <string name="pref_title_view_includes">Kivételek megtekintése/szerkesztése</string>
     <!--Settings title for clearing whitelist-->
-    <string name="pref_title_clear_whitelist">Törlés</string>
+    <string name="pref_title_clear_includes">Törlés</string>
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">Albumborító képének vágása</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -382,13 +382,13 @@ segítségével
     <!-- Grid size (number of columns in grid view) -->
     <string name="menu_grid_size">Rács mérete</string>
     <!-- -->
-    <string name="whitelist_title">Kivételek</string>
+    <string name="includes_title">Kivételek</string>
     <!-- -->
-    <string name="blacklist_title">Feketelista</string>
+    <string name="excludes_title">Feketelista</string>
     <!-- -->
-    <string name="blacklist_description">Egy dalt úgy adhat a feketelistához, hogy a kiválasztott dalnál rányom a 3 pontot ábrázoló ikonra, és kiválasztja a feketelista opciót</string>
+    <string name="exclude_description">Egy dalt úgy adhat a feketelistához, hogy a kiválasztott dalnál rányom a 3 pontot ábrázoló ikonra, és kiválasztja a feketelista opciót</string>
     <!-- -->
-    <string name="whitelist_description">Egy dalt úgy adhat a kivételekhez, hogy a kiválasztott dalnál rányom a 3 pontot ábrázoló ikonra, és kiválasztja a kivételek opciót</string>
+    <string name="include_description">Egy dalt úgy adhat a kivételekhez, hogy a kiválasztott dalnál rányom a 3 pontot ábrázoló ikonra, és kiválasztja a kivételek opciót</string>
     <!-- ## Detail Activity - Info for artists/albums ## -->
     <!-- The viewpager tab title for the artist/album info -->
     <string name="info">Életrajz</string>
@@ -586,7 +586,7 @@ segítségével
     <!-- Chromecast button for choosing which Chromecast device to play on -->
     <string name="media_route_menu_title">Lejátszás a(z)&#8230;</string>
     <!-- Action bar button text for saving a selected items to whitelist -->
-    <string name="save_whitelist">Kivételek mentése</string>
+    <string name="save_includes">Kivételek mentése</string>
     <!-- DashClock Extension Description -->
     <string name="extension_description">Dal információk</string>
     <!-- Week Selector title -->
@@ -637,8 +637,8 @@ segítségével
     <!-- Accessibility 'show lyrics' -->
     <string name="pref_summary_restore_purchases">Ha már megvásárolta a Shuttle-t de még mindig az ingyenes változatként működik, koppintson ide</string>
     <string name="pref_title_restore_purchases">Vásárlások visszaállítása</string>
-    <string name="blacklist_empty">Nem tett feketelistára egy dalt sem!</string>
-    <string name="whitelist_empty">Még nem tett a kivételek közé egy mappát sem.</string>
+    <string name="excludes_empty">Nem tett feketelistára egy dalt sem!</string>
+    <string name="includes_empty">Még nem tett a kivételek közé egy mappát sem.</string>
     <string name="dialog_song_info_title">Információ</string>
     <string name="song_info_path">Útvonal</string>
     <string name="song_info_file_size">Fájl méret</string>

@@ -34,12 +34,7 @@ public class DrawerParent implements Parent<DrawerChild> {
     static DrawerParent equalizerParent = new DrawerParent(Type.EQUALIZER, R.string.equalizer, R.drawable.ic_equalizer_24dp, NavigationEventRelay.equalizerSelectedEvent, false);
     static DrawerParent settingsParent = new DrawerParent(DrawerParent.Type.SETTINGS, R.string.settings, R.drawable.ic_settings_24dp, NavigationEventRelay.settingsSelectedEvent, false);
     static DrawerParent supportParent = new DrawerParent(DrawerParent.Type.SUPPORT, R.string.pref_title_support, R.drawable.ic_help_24dp, NavigationEventRelay.supportSelectedEvent, false);
-    static DrawerParent folderParent = new DrawerParent(DrawerParent.Type.FOLDERS, R.string.folders_title, R.drawable.ic_folder_multiple_24dp, NavigationEventRelay.foldersSelectedEvent, true) {
-        @Override
-        public boolean isSelectable() {
-            return ShuttleUtils.isUpgraded();
-        }
-    };
+    static DrawerParent folderParent = new DrawerParent(DrawerParent.Type.FOLDERS, R.string.folders_title, R.drawable.ic_folder_multiple_24dp, NavigationEventRelay.foldersSelectedEvent, true);
 
     public @interface Type {
         int LIBRARY = 0;
@@ -154,12 +149,6 @@ public class DrawerParent implements Parent<DrawerChild> {
         } else {
             holder.itemView.setActivated(false);
             holder.icon.setAlpha(0.6f);
-        }
-
-        if (type == DrawerParent.Type.FOLDERS && !ShuttleUtils.isUpgraded()) {
-            holder.itemView.setAlpha(0.4f);
-        } else {
-            holder.itemView.setAlpha(1.0f);
         }
 
         if (type == DrawerParent.Type.PLAYLISTS) {

@@ -16,19 +16,10 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.afollestad.aesthetic.AestheticActivity;
-import com.android.billingclient.api.BillingClient;
-import com.android.billingclient.api.Purchase;
 import com.greysonparrelli.permiso.Permiso;
-import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.ShuttleApplication;
-import com.simplecity.amp_library.billing.BillingManager;
-import com.simplecity.amp_library.constants.Config;
 import com.simplecity.amp_library.playback.constants.InternalIntents;
-import com.simplecity.amp_library.ui.dialog.UpgradeDialog;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
-
-import java.util.List;
 
 import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
 
@@ -36,9 +27,6 @@ public abstract class BaseActivity extends AestheticActivity implements ServiceC
 
     @Nullable
     private MusicServiceConnectionUtils.ServiceToken token;
-
-    @Nullable
-    private BillingManager billingManager;
 
     @CallSuper
     protected void onCreate(final Bundle savedInstanceState) {
@@ -63,29 +51,6 @@ public abstract class BaseActivity extends AestheticActivity implements ServiceC
             }
         }, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WAKE_LOCK);
 
-        billingManager = new BillingManager(this, new BillingManager.BillingUpdatesListener() {
-            @Override
-            public void onPurchasesUpdated(List<Purchase> purchases) {
-                for (Purchase purchase : purchases) {
-                    if (purchase.getSku().equals(Config.SKU_PREMIUM)) {
-                        ShuttleApplication.getInstance().setIsUpgraded(true);
-                    }
-                }
-            }
-
-            @Override
-            public void onPremiumPurchaseCompleted() {
-                ShuttleApplication.getInstance().setIsUpgraded(true);
-                UpgradeDialog.getUpgradeSuccessDialog(BaseActivity.this).show();
-            }
-
-            @Override
-            public void onPremiumPurchaseRestored() {
-                ShuttleApplication.getInstance().setIsUpgraded(true);
-                Toast.makeText(BaseActivity.this, R.string.iab_purchase_restored, Toast.LENGTH_SHORT).show();
-            }
-        });
-
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
     }
 
@@ -99,10 +64,6 @@ public abstract class BaseActivity extends AestheticActivity implements ServiceC
         }
 
         Permiso.getInstance().setActivity(this);
-
-        if (billingManager != null && billingManager.getBillingClientResponseCode() == BillingClient.BillingResponse.OK) {
-            billingManager.queryPurchases();
-        }
     }
 
     @Override
@@ -115,16 +76,7 @@ public abstract class BaseActivity extends AestheticActivity implements ServiceC
     protected void onDestroy() {
         unbindService();
 
-        if (billingManager != null) {
-            billingManager.destroy();
-        }
-
         super.onDestroy();
-    }
-
-    @Nullable
-    public BillingManager getBillingManager() {
-        return billingManager;
     }
 
     void bindService() {

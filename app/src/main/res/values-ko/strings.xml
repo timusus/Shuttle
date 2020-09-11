@@ -9,9 +9,9 @@
     <!-- Displayed when an M3U playlist is saved, %s will be the path -->
     <string name="playlist_saved">재생 목록이 <xliff:g id="path">%s</xliff:g>에 저장되었습니다.</string>
     <!-- Displayed after a blacklist is deleted -->
-    <string name="blacklist_deleted">블랙리스트가 삭제되었습니다.</string>
+    <string name="excludes_deleted">블랙리스트가 삭제되었습니다.</string>
     <!-- Displayed after a whitelist is deleted -->
-    <string name="whitelist_deleted">화이트리스트가 삭제되었습니다.</string>
+    <string name="includes_deleted">화이트리스트가 삭제되었습니다.</string>
     <!-- Displayed when a folder couldn't be deleted-->
     <string name="delete_folder_failed">폴더를 삭제할 수 없습니다.\n\n폴더가 쓰기 보호되어 있을 수 있습니다.</string>
     <!-- Displayed when a file couldn't be deleted -->
@@ -257,15 +257,15 @@
     <string name="pref_summary_palette">활성화하면 Shuttle에서 가장 두드러진 색상을 찾아, 앱의 \'주 색상\'으로 사용합니다.</string>
     <string name="pref_title_palette_now_playing">\'지금 재생 중\' 화면에서만</string>
     <!--Settings title for whitelist/blacklist-->
-    <string name="pref_title_blacklist">화이트리스트/블랙리스트</string>
+    <string name="pref_title_excludes">화이트리스트/블랙리스트</string>
     <!--Settings title for viewing blacklist-->
-    <string name="pref_title_view_blacklist">블랙리스트 보기/편집</string>
+    <string name="pref_title_view_excludes">블랙리스트 보기/편집</string>
     <!--Settings title for clearing blacklist-->
-    <string name="pref_title_clear_blacklist">비우기</string>
+    <string name="pref_title_clear_excludes">비우기</string>
     <!--Settings title for viewing whitelist-->
-    <string name="pref_title_view_whitelist">화이트리스트 보기/편집</string>
+    <string name="pref_title_view_includes">화이트리스트 보기/편집</string>
     <!--Settings title for clearing whitelist-->
-    <string name="pref_title_clear_whitelist">비우기</string>
+    <string name="pref_title_clear_includes">비우기</string>
     <!-- Context menu item to remove the selected item from the blacklist -->
     <string name="pref_title_crop_album_art">앨범아트 자르기</string>
     <!--Settings message for cropping album art on the Playing Activity screen-->
@@ -400,13 +400,13 @@
     <!-- Grid size (number of columns in grid view) -->
     <string name="menu_grid_size">격자 크기</string>
     <!-- -->
-    <string name="whitelist_title">화이트리스트</string>
+    <string name="includes_title">화이트리스트</string>
     <!-- -->
-    <string name="blacklist_title">블랙리스트</string>
+    <string name="excludes_title">블랙리스트</string>
     <!-- -->
-    <string name="blacklist_description">특정 노래의 메뉴를 연 후, \'블랙리스트\'를 선택하여 노래를 블랙리스트에 추가할 수 있습니다.</string>
+    <string name="exclude_description">특정 노래의 메뉴를 연 후, \'블랙리스트\'를 선택하여 노래를 블랙리스트에 추가할 수 있습니다.</string>
     <!-- -->
-    <string name="whitelist_description">폴더 브라우저에서 메뉴를 연 후, \'화이트리스트\'를 선택하여 화이트리스트에 추가하고 싶은 폴더를 선택하면 노래를 화이트리스트에 추가할 수 있습니다.</string>
+    <string name="include_description">폴더 브라우저에서 메뉴를 연 후, \'화이트리스트\'를 선택하여 화이트리스트에 추가하고 싶은 폴더를 선택하면 노래를 화이트리스트에 추가할 수 있습니다.</string>
     <!-- ## Detail Activity - Info for artists/albums ## -->
     <!-- The viewpager tab title for the artist/album info -->
     <string name="info">아티스트 정보</string>
@@ -606,7 +606,7 @@
     <!-- Chromecast button for choosing which Chromecast device to play on -->
     <string name="media_route_menu_title">&#8230;에서 재생</string>
     <!-- Action bar button text for saving a selected items to whitelist -->
-    <string name="save_whitelist">화이트리스트 저장</string>
+    <string name="save_includes">화이트리스트 저장</string>
     <!-- DashClock Extension Description -->
     <string name="extension_description">음악 정보 표시</string>
     <!-- Week Selector title -->
@@ -660,8 +660,8 @@
     <!-- Accessibility 'show lyrics' -->
     <string name="pref_summary_restore_purchases">Shuttle을 구매했는데도 무료 버전이 나타난다면 여기를 누르십시오.</string>
     <string name="pref_title_restore_purchases">구매 기록 복원</string>
-    <string name="blacklist_empty">블랙리스트에 추가한 노래가 없습니다!</string>
-    <string name="whitelist_empty">화이트리스트에 추가한 폴더가 없습니다!</string>
+    <string name="excludes_empty">블랙리스트에 추가한 노래가 없습니다!</string>
+    <string name="includes_empty">화이트리스트에 추가한 폴더가 없습니다!</string>
     <string name="dialog_song_info_title">노래 정보</string>
     <string name="song_info_path">경로</string>
     <string name="song_info_file_size">파일 크기</string>

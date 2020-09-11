@@ -523,7 +523,7 @@ public class FolderFragment extends BaseFragment implements
                 .filter(viewModel -> viewModel instanceof FolderView)
                 .forEach(viewModel -> ((FolderView) viewModel).setShowWhitelist(show));
         adapter.notifyItemRangeChanged(0, adapter.getItemCount(), 0);
-        contextualToolbar.setTitle(R.string.whitelist_title);
+        contextualToolbar.setTitle(R.string.includes_title);
     }
 
     private void showBlacklist(boolean show) {
@@ -535,7 +535,7 @@ public class FolderFragment extends BaseFragment implements
                 .filter(viewModel -> viewModel instanceof FolderView)
                 .forEach(viewModel -> ((FolderView) viewModel).setShowBlacklist(show));
         adapter.notifyItemRangeChanged(0, adapter.getItemCount(), 0);
-        contextualToolbar.setTitle(R.string.blacklist_title);
+        contextualToolbar.setTitle(R.string.excludes_title);
     }
 
     @Override
