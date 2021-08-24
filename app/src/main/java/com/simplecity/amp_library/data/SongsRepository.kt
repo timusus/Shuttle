@@ -28,6 +28,7 @@ import io.reactivex.functions.Function3
 import io.reactivex.schedulers.Schedulers
 import java.util.ArrayList
 import java.util.Arrays
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -194,15 +195,21 @@ open class SongsRepository @Inject constructor(
 
                     // Filter out excluded paths
                     if (!exclItems.isEmpty()) {
+                        val exclSongPaths = exclItems
+                            .map { it.path.toLowerCase(Locale.ROOT) }
+                            .toHashSet()
                         result = songs
-                            .filterNot { song -> exclItems.any { exclItem -> StringUtils.containsIgnoreCase(song.path, exclItem.path) } }
+                            .filterNot { it.path.toLowerCase(Locale.ROOT) in exclSongPaths }
                             .toList()
                     }
 
                     // Filter out non-included paths
                     if (!inclItems.isEmpty()) {
+                        val inclSongPaths = inclItems
+                            .map { it.path.toLowerCase(Locale.ROOT) }
+                            .toHashSet()
                         result = result
-                            .filter { song -> inclItems.any { inclItem -> StringUtils.containsIgnoreCase(song.path, inclItem.path) } }
+                            .filter { it.path.toLowerCase(Locale.ROOT) in inclSongPaths }
                             .toList()
                     }
 
