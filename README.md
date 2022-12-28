@@ -15,6 +15,13 @@ Shuttle comes in two flavours:
 
 The free version includes an option to upgrade via an IAP, which unlocks the features otherwise available in Shuttle+.
 
+##### Status
+
+Shuttle is no longer actively maintained. The successor, S2 is under active development here:
+https://github.com/timusus/Shuttle2
+
+The codebase in this repository is very old and unwieldy. The foundations were written when I was first learning java, around 10 years ago. It has become too much of a maintenance burden to try to keep up-to-date, so I've decided to archive the repository.
+
 
 ##### Features
 
@@ -27,14 +34,9 @@ The free version includes an option to upgrade via an IAP, which unlocks the fea
 - Theming
 - Album-artist support
 - Artwork scraping (Last.FM & iTunes)
-
-##### Paid features:
-
 - Tag editing
 - Folder browsing
 - Chromecast
-- Additional theme options
-- Additional artwork editing options
 
 
 #### Contributing:
@@ -56,7 +58,7 @@ I eventually discovered Cyanogenmod, and the then-famous Apollo Music Player, wh
 
 Shuttle continued to gain momentum over the years. Holo was phased out and something post-Holo-pre-Material came in. I celebrated 500,000 downloads with an actual cake sometime in 2014. I got a job as an Android developer.. Glide came out, RXJava became popular and Material design came in.
 
-I've continued to work on Shuttle at times daily, at the least weekly, ever since its initial release. It's come a hell of a long way since day one. It is my proudest accomplishment. It now has almost 4 million downloads!
+I've continued to work on Shuttle at times daily, at the least weekly, ever since its initial release. It's come a hell of a long way since day one. It is my proudest accomplishment. It now has about 5 million downloads!
 
 #### Motivation for Open Source:
 
