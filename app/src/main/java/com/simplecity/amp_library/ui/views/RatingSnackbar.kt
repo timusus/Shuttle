@@ -1,8 +1,8 @@
 package com.simplecity.amp_library.ui.views
 
 import android.graphics.Color
-import android.support.design.widget.BaseTransientBottomBar
-import android.support.design.widget.Snackbar
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 import android.view.View
 import android.widget.TextView
 import com.simplecity.amp_library.R
@@ -38,7 +38,7 @@ class RatingSnackbar(
                     })
                 snackbar.show()
 
-                val snackbarText = snackbar.view.findViewById<TextView>(android.support.design.R.id.snackbar_text)
+                val snackbarText = snackbar.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
                 snackbarText?.setTextColor(Color.WHITE)
 
                 analyticsManager.logRateShown()

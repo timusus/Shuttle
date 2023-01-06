@@ -6,7 +6,7 @@ import static com.afollestad.aesthetic.Util.resolveResId;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.support.v7.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatButton;
 import android.util.AttributeSet;
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;

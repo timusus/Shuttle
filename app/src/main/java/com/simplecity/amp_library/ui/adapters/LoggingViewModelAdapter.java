@@ -1,6 +1,6 @@
 package com.simplecity.amp_library.ui.adapters;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.simplecityapps.recycler_adapter.adapter.CompletionListUpdateCallback;

@@ -2,8 +2,8 @@ package com.simplecity.amp_library.ui.views;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.v7.app.MediaRouteActionProvider;
-import android.support.v7.app.MediaRouteButton;
+import androidx.mediarouter.app.MediaRouteActionProvider;
+import androidx.mediarouter.app.MediaRouteButton;
 import android.util.AttributeSet;
 import com.afollestad.aesthetic.ActiveInactiveColors;
 import com.afollestad.aesthetic.Aesthetic;

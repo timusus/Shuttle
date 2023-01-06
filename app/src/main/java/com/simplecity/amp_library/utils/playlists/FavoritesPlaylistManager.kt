@@ -3,7 +3,7 @@ package com.simplecity.amp_library.utils.playlists
 import android.content.ContentValues
 import android.content.Context
 import android.provider.MediaStore
-import android.support.v4.util.Pair
+import androidx.core.util.Pair
 import com.simplecity.amp_library.R
 import com.simplecity.amp_library.data.PlaylistsRepository
 import com.simplecity.amp_library.data.SongsRepository

@@ -1,7 +1,7 @@
 package com.simplecity.amp_library.ui.settings;
 
 import android.content.Intent;
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.simplecity.amp_library.ui.views.PurchaseView;

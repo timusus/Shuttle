@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <android.support.v7.preference.PreferenceCategory
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <androidx.preference.PreferenceCategory
         android:key="support_group"
         android:title="@string/pref_title_support">
 
-        <android.support.v7.preference.Preference
+        <androidx.preference.Preference
             android:key="pref_version"
             android:title="@string/pref_title_version"/>
 
-        <android.support.v7.preference.Preference
+        <androidx.preference.Preference
             android:key="pref_changelog"
             android:title="@string/pref_title_changelog"/>
 
-        <android.support.v7.preference.Preference
+        <androidx.preference.Preference
             android:key="pref_faq"
             android:summary="@string/pref_summary_faq"
             android:title="@string/pref_title_faq"/>
 
-        <android.support.v7.preference.Preference
+        <androidx.preference.Preference
             android:key="pref_help"
             android:summary="@string/pref_summary_community"
             android:title="@string/pref_title_community"/>
 
-        <android.support.v7.preference.Preference
+        <androidx.preference.Preference
             android:key="pref_rate"
             android:summary="@string/pref_summary_rate"
             android:title="@string/pref_title_rate"/>
 
-        <android.support.v7.preference.Preference
+        <androidx.preference.Preference
             android:key="pref_restore_purchases"
             android:summary="@string/pref_summary_restore_purchases"
             android:title="@string/pref_title_restore_purchases"/>
 
-    </android.support.v7.preference.PreferenceCategory>
-</android.support.v7.preference.PreferenceScreen>
+    </androidx.preference.PreferenceCategory>
+</androidx.preference.PreferenceScreen>

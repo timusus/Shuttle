@@ -3,8 +3,8 @@ package com.simplecity.amp_library.ui.dialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.FragmentManager
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.android.billingclient.api.BillingClient
 import com.simplecity.amp_library.R

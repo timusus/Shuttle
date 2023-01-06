@@ -48,7 +48,7 @@
             android:textColor="@color/white"
             android:textSize="18sp"/>
 
-        <android.support.v4.widget.Space
+        <androidx.legacy.widget.Space
             android:layout_width="match_parent"
             android:layout_height="16dp"/>
 
@@ -59,7 +59,7 @@
             android:layout_gravity="center"
             android:gravity="center">
 
-            <android.support.v7.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/quickLyricButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -77,7 +77,7 @@
                 android:textSize="16sp"
                 app:backgroundTint="@color/md_deep_orange_A200"/>
 
-            <android.support.v4.widget.Space
+            <androidx.legacy.widget.Space
                 android:layout_width="16dp"
                 android:layout_height="wrap_content"/>
 

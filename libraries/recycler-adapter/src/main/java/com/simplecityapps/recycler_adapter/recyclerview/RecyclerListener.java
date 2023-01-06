@@ -1,6 +1,6 @@
 package com.simplecityapps.recycler_adapter.recyclerview;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * A custom RecyclerListener that calls recycle() on the ViewHolder, if it implements {@link RecyclingViewHolder}

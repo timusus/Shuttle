@@ -3,7 +3,7 @@ package com.afollestad.aesthetic;
 import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.AttributeSet;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;

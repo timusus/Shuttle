@@ -1,13 +1,13 @@
 package com.afollestad.aesthetic;
 
 import android.content.Context;
-import android.support.annotation.RestrictTo;
-import android.support.v4.view.LayoutInflaterFactory;
+import androidx.annotation.RestrictTo;
+import androidx.core.view.LayoutInflaterFactory;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 import static com.afollestad.aesthetic.Util.resolveResId;
 
 /** @author Aidan Follestad (afollestad) */
@@ -21,21 +21,21 @@ final class InflationInterceptor implements LayoutInflaterFactory {
 
     switch (name) {
       case "ImageView":
-      case "android.support.v7.widget.AppCompatImageView":
+      case "androidx.appcompat.widget.AppCompatImageView":
         view = new AestheticImageView(context, attrs);
         break;
       case "ImageButton":
-      case "android.support.v7.widget.AppCompatImageButton":
+      case "androidx.appcompat.widget.AppCompatImageButton":
         view = new AestheticImageButton(context, attrs);
         break;
-      case "android.support.v4.widget.DrawerLayout":
+      case "androidx.drawerlayout.widget.DrawerLayout":
         view = new AestheticDrawerLayout(context, attrs);
         break;
       case "Toolbar":
-      case "android.support.v7.widget.Toolbar":
+      case "androidx.appcompat.widget.Toolbar":
         view = new AestheticToolbar(context, attrs);
         break;
-      case "android.support.v7.widget.AppCompatTextView":
+      case "androidx.appcompat.widget.AppCompatTextView":
       case "TextView":
         if (viewId == R.id.snackbar_text) {
           view = null;
@@ -48,7 +48,7 @@ final class InflationInterceptor implements LayoutInflaterFactory {
         }
         break;
       case "Button":
-      case "android.support.v7.widget.AppCompatButton":
+      case "androidx.appcompat.widget.AppCompatButton":
         if (viewId == android.R.id.button1
             || viewId == android.R.id.button2
             || viewId == android.R.id.button3) {
@@ -59,25 +59,25 @@ final class InflationInterceptor implements LayoutInflaterFactory {
           view = new AestheticButton(context, attrs);
         }
         break;
-      case "android.support.v7.widget.AppCompatCheckBox":
+      case "androidx.appcompat.widget.AppCompatCheckBox":
       case "CheckBox":
         view = new AestheticCheckBox(context, attrs);
         break;
-      case "android.support.v7.widget.AppCompatRadioButton":
+      case "androidx.appcompat.widget.AppCompatRadioButton":
       case "RadioButton":
         view = new AestheticRadioButton(context, attrs);
         break;
-      case "android.support.v7.widget.AppCompatEditText":
+      case "androidx.appcompat.widget.AppCompatEditText":
       case "EditText":
         view = new AestheticEditText(context, attrs);
         break;
       case "Switch":
         view = new AestheticSwitch(context, attrs);
         break;
-      case "android.support.v7.widget.SwitchCompat":
+      case "androidx.appcompat.widget.SwitchCompat":
         view = new AestheticSwitchCompat(context, attrs);
         break;
-      case "android.support.v7.widget.AppCompatSeekBar":
+      case "androidx.appcompat.widget.AppCompatSeekBar":
       case "SeekBar":
         view = new AestheticSeekBar(context, attrs);
         break;
@@ -85,14 +85,14 @@ final class InflationInterceptor implements LayoutInflaterFactory {
       case "me.zhanghai.android.materialprogressbar.MaterialProgressBar":
         view = new AestheticProgressBar(context, attrs);
         break;
-      case "android.support.v7.view.menu.ActionMenuItemView":
+      case "androidx.appcompat.view.menu.ActionMenuItemView":
         view = new AestheticActionMenuItemView(context, attrs);
         break;
 
-      case "android.support.v7.widget.RecyclerView":
+      case "androidx.recyclerview.widget.RecyclerView":
         view = new AestheticRecyclerView(context, attrs);
         break;
-      case "android.support.v4.widget.NestedScrollView":
+      case "androidx.core.widget.NestedScrollView":
         view = new AestheticNestedScrollView(context, attrs);
         break;
       case "ListView":
@@ -101,38 +101,38 @@ final class InflationInterceptor implements LayoutInflaterFactory {
       case "ScrollView":
         view = new AestheticScrollView(context, attrs);
         break;
-      case "android.support.v4.view.ViewPager":
+      case "androidx.viewpager.widget.ViewPager":
         view = new AestheticViewPager(context, attrs);
         break;
 
       case "Spinner":
-      case "android.support.v7.widget.AppCompatSpinner":
+      case "androidx.appcompat.widget.AppCompatSpinner":
         view = new AestheticSpinner(context, attrs);
         break;
 
-      case "android.support.design.widget.TextInputLayout":
+      case "com.google.android.material.textfield.TextInputLayout":
         view = new AestheticTextInputLayout(context, attrs);
         break;
-      case "android.support.design.widget.TextInputEditText":
+      case "com.google.android.material.textfield.TextInputEditText":
         view = new AestheticTextInputEditText(context, attrs);
         break;
 
-      case "android.support.v7.widget.CardView":
+      case "androidx.cardview.widget.CardView":
         view = new AestheticCardView(context, attrs);
         break;
-      case "android.support.design.widget.TabLayout":
+      case "com.google.android.material.tabs.TabLayout":
         view = new AestheticTabLayout(context, attrs);
         break;
-      case "android.support.design.widget.NavigationView":
+      case "com.google.android.material.navigation.NavigationView":
         view = new AestheticNavigationView(context, attrs);
         break;
-      case "android.support.design.widget.BottomNavigationView":
+      case "com.google.android.material.bottomnavigation.BottomNavigationView":
         view = new AestheticBottomNavigationView(context, attrs);
         break;
-      case "android.support.design.widget.FloatingActionButton":
+      case "com.google.android.material.floatingactionbutton.FloatingActionButton":
         view = new AestheticFab(context, attrs);
         break;
-      case "android.support.design.widget.CoordinatorLayout":
+      case "androidx.coordinatorlayout.widget.CoordinatorLayout":
         view = new AestheticCoordinatorLayout(context, attrs);
         break;
     }

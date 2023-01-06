@@ -1,6 +1,6 @@
 package com.github.florent37.glidepalette;
 
-import android.support.v4.util.Pair;
+import androidx.core.util.Pair;
 import android.view.View;
 import android.widget.TextView;
 

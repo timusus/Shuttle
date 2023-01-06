@@ -16,8 +16,8 @@ object Dependencies {
         const val materialDialogs = "0.9.6.0"
         const val permiso = "0.3.0"
         const val streams = "1.2.1"
-        const val butterknife = "8.8.1"
-        const val butterknifeAnnotationProcessor = "8.8.1"
+        const val butterknife = "10.2.0"
+        const val butterknifeAnnotationProcessor = "10.2.0"
         const val dagger = "2.21"
         const val daggerAssistedInject = "0.3.2"
         const val expandableRecyclerView = "3.0.0-RC1"
@@ -104,22 +104,23 @@ object Dependencies {
             const val supportLib = "28.0.0"
             const val firebaseCore = "16.0.5"
             const val firebaseRemoteConfig = "16.1.0"
-            const val constraintLayout = "2.0.0-alpha3"
+            const val constraintLayout = "1.1.0"
             const val chromeCastFramework = "16.1.0"
         }
 
-        const val cardView = "com.android.support:cardview-v7:${Versions.supportLib}"
-        const val design = "com.android.support:design:${Versions.supportLib}"
-        const val palette = "com.android.support:palette-v7:${Versions.supportLib}"
-        const val recyclerView = "com.android.support:recyclerview-v7:${Versions.supportLib}"
-        const val supportv4 = "com.android.support:support-v4:${Versions.supportLib}"
+        const val cardView = "androidx.cardview:cardview:1.0.0"
+        const val design = "com.google.android.material:material:1.0.0"
+        const val palette = "androidx.palette:palette:1.0.0"
+        const val recyclerView = "androidx.recyclerview:recyclerview:1.0.0"
+        const val supportv4 = "androidx.legacy:legacy-support-v4:1.0.0"
         const val firebaseCore = "com.google.firebase:firebase-core:${Versions.firebaseCore}"
         const val firebaseRemoteConfig = "com.google.firebase:firebase-config:${Versions.firebaseRemoteConfig}"
-        const val appcompat = "com.android.support:appcompat-v7:${Versions.supportLib}"
-        const val mediarouter = "com.android.support:mediarouter-v7:${Versions.supportLib}"
-        const val constraintLayout = "com.android.support.constraint:constraint-layout:${Versions.constraintLayout}"
-        const val prefCompat = "com.android.support:preference-v7:${Versions.supportLib}"
-        const val prefCompatv14 = "com.android.support:preference-v14:${Versions.supportLib}"
+        const val appcompat = "androidx.appcompat:appcompat:1.0.0"
+        const val mediarouter = "androidx.mediarouter:mediarouter:1.0.0"
+        const val constraintLayout = "androidx.constraintlayout:constraintlayout:${Versions.constraintLayout}"
+        const val prefCompat = "androidx.preference:preference:1.0.0"
+        const val prefCompatv14 = "androidx.legacy:legacy-preference-v14:1.0.0"
+        const val legacySupport = "androidx.legacy:legacy-support-v13:1.0.0"
         const val chromeCastFramework = "com.google.android.gms:play-services-cast-framework:${Versions.chromeCastFramework}"
     }
 
@@ -192,7 +193,7 @@ object Dependencies {
 
         object Versions {
             const val junit = "4.12"
-            const val espressoCore = "3.0.0"
+            const val espressoCore = "3.1.0"
             const val assertj = "3.9.0"
 
             // Mockito version restriction -- PowerMock does not fully support Mockito2 yet.
@@ -209,7 +210,7 @@ object Dependencies {
         const val junit = "junit:junit:${Versions.junit}"
 
         // Espresso
-        const val espresso = "com.android.support.test.espresso:espresso-core:${Versions.espressoCore}"
+        const val espresso = "androidx.test.espresso:espresso-core:${Versions.espressoCore}"
 
         // Mockito - https://github.com/mockito/mockito
         const val mockito = "org.mockito:mockito-core:${Versions.mockito}"

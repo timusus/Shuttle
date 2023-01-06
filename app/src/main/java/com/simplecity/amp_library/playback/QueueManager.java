@@ -1,7 +1,7 @@
 package com.simplecity.amp_library.playback;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.data.Repository;
 import com.simplecity.amp_library.model.Song;

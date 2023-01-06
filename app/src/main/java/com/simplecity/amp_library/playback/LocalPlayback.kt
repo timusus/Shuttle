@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.media.AudioManager
-import android.support.annotation.CallSuper
+import androidx.annotation.CallSuper
 import android.util.Log
 import com.simplecity.amp_library.playback.Playback.Callbacks
 import com.simplecity.amp_library.playback.constants.MediaButtonCommand

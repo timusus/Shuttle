@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -18,14 +18,14 @@
         app:popupTheme="?attr/toolbar_popup_theme"
         app:theme="?attr/toolbar_theme"/>
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/buttonContainer"
         android:layout_below="@+id/tabs"/>
 
-    <android.support.design.widget.TabLayout
+    <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <android.support.v7.widget.AppCompatCheckBox
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/checkBox1"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
@@ -63,7 +63,7 @@
                 android:gravity="center_vertical"
                 android:textColor="@color/black"/>
 
-            <android.support.v7.widget.AppCompatCheckBox
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/checkBox2"
                 android:tag=":aesthetic_ignore"
                 android:layout_width="0dp"

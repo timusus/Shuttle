@@ -1,8 +1,8 @@
 package com.afollestad.aesthetic;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 /** @author Aidan Follestad (afollestad) */
 public class AestheticActivity extends AppCompatActivity implements AestheticKeyProvider {

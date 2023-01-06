@@ -1,11 +1,11 @@
 package com.simplecity.amp_library.ui.views;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.widget.TooltipCompat;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.appcompat.widget.TooltipCompat;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.ImageView;

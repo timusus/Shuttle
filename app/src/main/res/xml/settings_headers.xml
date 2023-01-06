@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.preference.PreferenceScreen
+    <androidx.preference.PreferenceScreen
         android:icon="@drawable/ic_tv_24dp"
         android:key="pref_display"
         android:title="@string/pref_title_display"/>
 
-    <android.support.v7.preference.PreferenceScreen
+    <androidx.preference.PreferenceScreen
         android:icon="@drawable/ic_palette_24dp"
         android:key="pref_themes"
         android:title="@string/pref_string_title_themes"/>
 
-    <android.support.v7.preference.PreferenceScreen
+    <androidx.preference.PreferenceScreen
         android:icon="@drawable/ic_image_24dp"
         android:key="pref_artwork"
         android:title="@string/pref_string_title_artwork"/>
 
-    <android.support.v7.preference.PreferenceScreen
+    <androidx.preference.PreferenceScreen
         android:icon="@drawable/ic_play_circle_outline_24dp"
         android:key="pref_playback"
         android:title="@string/pref_title_playback"/>
 
-    <android.support.v7.preference.PreferenceScreen
+    <androidx.preference.PreferenceScreen
         android:icon="@drawable/ic_headset_24dp"
         android:key="pref_headset"
         android:title="@string/pref_title_headset_bluetooth"/>
 
-    <android.support.v7.preference.PreferenceScreen
+    <androidx.preference.PreferenceScreen
         android:icon="@drawable/ic_settings_scrobbling"
         android:key="pref_scrobbling"
         android:title="@string/pref_title_scrobbling"/>
 
-    <android.support.v7.preference.PreferenceScreen
+    <androidx.preference.PreferenceScreen
         android:icon="@drawable/ic_view_list_24dp"
         android:key="pref_blacklist"
         android:title="@string/pref_title_blacklist"/>
 
-    <android.support.v7.preference.Preference
+    <androidx.preference.Preference
         android:icon="@drawable/ic_add_circle_outline_24dp"
         android:key="pref_upgrade"
         android:title="@string/get_pro_title"/>
 
-</android.support.v7.preference.PreferenceScreen>
+</androidx.preference.PreferenceScreen>

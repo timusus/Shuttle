@@ -2,7 +2,7 @@ package com.simplecity.amp_library.utils;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.v4.util.ArrayMap;
+import androidx.collection.ArrayMap;
 import java.util.Map;
 
 public class TypefaceManager {
