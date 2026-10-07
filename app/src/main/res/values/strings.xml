@@ -798,12 +798,7 @@
 
     <string name="notification_text_shuttle_running">Shuttle service running…</string>
 
-    <string name="dev_message_title">A message from the developer</string>
-    <string name="dev_message_body_intro">Thank you for using Shuttle.\n\nI started Shuttle in 2012 as my first Android app, and I\'m still making Android apps today. Shuttle\'s last real update was in 2020 (2.0.17). This one keeps it working on new versions of Android, and it will be the last.\n\nI\'ve rebuilt Shuttle from scratch as Shuttle Music. It\'s a separate app because Google Play has no way to move you across, or to give Shuttle+ owners a paid app for free. Shuttle Music has the equaliser many of you asked for, and iOS versions are on the way.\n\nI\'ve also made Shuttle Podcasts.</string>
-    <string name="dev_message_sale">Shuttle Music Pro is 50%% off until %1$s.</string>
-    <string name="dev_message_signoff">— Tim</string>
     <string name="dev_message_button_music">Get the new Shuttle Music</string>
-    <string name="dev_message_button_podcasts">Shuttle Podcasts</string>
-    <string name="dev_message_button_dismiss">Not now</string>
+    <string name="dev_message_button_dismiss">Close</string>
 
 </resources>

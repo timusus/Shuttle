@@ -1,7 +1,5 @@
 {
   "enabled": false,
-  "saleEndEpochMillis": 0,
   "title": "A message from the developer",
-  "body": "Thank you for using Shuttle.\n\nI started Shuttle in 2012 as my first Android app, and I'm still making Android apps today. Shuttle's last real update was in 2020 (2.0.17). This one keeps it working on new versions of Android, and it will be the last.\n\nI've rebuilt Shuttle from scratch as Shuttle Music. It's a separate app because Google Play has no way to move you across, or to give Shuttle+ owners a paid app for free. Shuttle Music has the equaliser many of you asked for, and iOS versions are on the way.\n\nI've also made Shuttle Podcasts.",
-  "saleText": "Shuttle Music Pro is 50% off until {date}."
+  "body": "Thank you for using Shuttle.\n\nI started Shuttle in 2012 as my first Android app, and I'm still making Android apps today. Shuttle's last real update was in 2020 (2.0.17). This one keeps it working on new versions of Android, and it will be the last.\n\nI've rebuilt Shuttle from scratch as Shuttle Music. It's a separate app because Google Play has no way to move you across, or to give Shuttle+ owners a paid app for free. Shuttle Music has the equaliser many of you asked for, and iOS versions are on the way.\n\n\u2014 Tim"
 }

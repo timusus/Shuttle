@@ -351,7 +351,7 @@ public class MainActivity extends BaseCastActivity implements
     }
 
     private void showDeveloperMessage(DeveloperMessageConfig config) {
-        if (!config.enabled
+        if (!config.isShowable()
                 || dialogShownThisLaunch
                 || SettingsManager.getInstance().getDeveloperMessageShown()
                 || isFinishing()

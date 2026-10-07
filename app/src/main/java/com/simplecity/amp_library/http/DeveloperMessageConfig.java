@@ -25,8 +25,8 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 /**
- * Remote switch for the once-only developer message. Format: {"enabled": false, "saleEndEpochMillis": 0, "title": "", "body": "", "saleText": ""}.
- * The text fields are optional plain text; blank means use the bundled strings.
+ * Remote switch for the once-only developer message. Format: {"enabled": false, "title": "", "body": ""}.
+ * Title and body are plain text, and both are required for the dialog to show.
  */
 public class DeveloperMessageConfig {
 
@@ -49,12 +49,8 @@ public class DeveloperMessageConfig {
     @SerializedName("enabled")
     public boolean enabled = false;
 
-    @SerializedName("saleEndEpochMillis")
-    public long saleEndEpochMillis = 0;
-
     public static final int MAX_TITLE = 100;
     public static final int MAX_BODY = 4000;
-    public static final int MAX_SALE_TEXT = 300;
 
     @SerializedName("title")
     public String title;
@@ -62,11 +58,15 @@ public class DeveloperMessageConfig {
     @SerializedName("body")
     public String body;
 
-    @SerializedName("saleText")
-    public String saleText;
-
     private static final Pattern EDGE_WHITESPACE =
             Pattern.compile("^[\\s\\p{Z}\\u200B\\uFEFF]+|[\\s\\p{Z}\\u200B\\uFEFF]+$");
+
+    /**
+     * True when the message is switched on and has a non-blank title and body.
+     */
+    public boolean isShowable() {
+        return enabled && clean(title, MAX_TITLE) != null && clean(body, MAX_BODY) != null;
+    }
 
     /**
      * Strips ASCII and Unicode whitespace (no-break, zero-width, BOM) from both ends and caps the
