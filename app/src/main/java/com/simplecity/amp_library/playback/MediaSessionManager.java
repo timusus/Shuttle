@@ -33,12 +33,15 @@ import com.simplecity.amp_library.utils.SettingsManager;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import java.util.ArrayList;
 import java.util.List;
 import kotlin.Unit;
 
 public class MediaSessionManager {
 
     private static final String TAG = "MediaSessionManager";
+
+    private static final int MAX_SESSION_QUEUE_SIZE = 100;
 
     private Context context;
 
@@ -239,7 +242,12 @@ public class MediaSessionManager {
 
                 mediaSession.setPlaybackState(playbackState);
 
-                mediaSession.setQueue(QueueItemKt.toMediaSessionQueueItems(queueManager.getCurrentPlaylist()));
+                // Publish a window around the current song: the whole queue of a large library overflows the binder
+                // transaction limit (TransactionTooLargeException).
+                List<QueueItem> queue = queueManager.getCurrentPlaylist();
+                int windowStart = Math.max(0, Math.min(queueManager.queuePosition - MAX_SESSION_QUEUE_SIZE / 2, queue.size() - MAX_SESSION_QUEUE_SIZE));
+                int windowEnd = Math.min(queue.size(), windowStart + MAX_SESSION_QUEUE_SIZE);
+                mediaSession.setQueue(QueueItemKt.toMediaSessionQueueItems(new ArrayList<>(queue.subList(windowStart, windowEnd))));
                 mediaSession.setQueueTitle(context.getString(R.string.menu_queue));
 
                 if (SettingsManager.getInstance().showLockscreenArtwork() || CarHelper.isCarUiMode(context)) {

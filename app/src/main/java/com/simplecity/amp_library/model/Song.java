@@ -139,7 +139,11 @@ public class Song implements
 
         isPodcast = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.IS_PODCAST)) == 1;
 
-        bookMark = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.BOOKMARK));
+        // Not every query projects the bookmark; reading column -1 throws IllegalStateException.
+        int bookmarkColumn = cursor.getColumnIndex(MediaStore.Audio.Media.BOOKMARK);
+        if (bookmarkColumn != -1) {
+            bookMark = cursor.getInt(bookmarkColumn);
+        }
 
         //Populate the artwork key & sort key properties if null.
         setSortKey();

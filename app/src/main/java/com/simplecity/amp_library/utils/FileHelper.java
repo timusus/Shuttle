@@ -2,9 +2,10 @@ package com.simplecity.amp_library.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.media.MediaPlayer;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.Log;
 import androidx.annotation.WorkerThread;
 import android.text.TextUtils;
 import com.annimon.stream.Stream;
@@ -178,15 +179,24 @@ public class FileHelper {
     }
 
     public static long getDuration(Context context, BaseFileObject baseFileObject) {
-        int duration = 0;
+        long duration = 0;
         if (baseFileObject != null && !TextUtils.isEmpty(baseFileObject.path)) {
-            Uri uri = Uri.parse(baseFileObject.path);
-            if (uri != null) {
-                MediaPlayer mediaPlayer = MediaPlayer.create(context, uri);
-                if (mediaPlayer != null) {
-                    duration = mediaPlayer.getDuration();
-                    mediaPlayer.reset();
-                    mediaPlayer.release();
+            // MediaMetadataRetriever reads the duration from the file's metadata. MediaPlayer threw
+            // IllegalStateException from getDuration() for files it couldn't play.
+            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+            try {
+                retriever.setDataSource(context, Uri.parse(baseFileObject.path));
+                String value = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+                if (value != null) {
+                    duration = Long.parseLong(value);
+                }
+            } catch (RuntimeException e) {
+                // setDataSource() throws IllegalArgumentException or a bare RuntimeException for a file it can't open
+                Log.w(TAG, "Couldn't read duration of " + baseFileObject.path + ": " + e);
+            } finally {
+                try {
+                    retriever.release();
+                } catch (IOException ignored) {
                 }
             }
         }

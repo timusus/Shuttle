@@ -316,6 +316,8 @@ public class PlayerFragment extends BaseFragment implements
                     .ofType(SeekBarProgressChangeEvent.class)
                     .filter(SeekBarProgressChangeEvent::fromUser)
                     .debounce(15, TimeUnit.MILLISECONDS)
+                    .onBackpressureLatest()
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             seekBarChangeEvent -> presenter.seekTo(seekBarChangeEvent.progress()),
                             error -> LogUtils.logException(TAG, "Error receiving seekbar progress", error))

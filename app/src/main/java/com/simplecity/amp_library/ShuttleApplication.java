@@ -38,6 +38,8 @@ import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.StringUtils;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
+import io.reactivex.exceptions.UndeliverableException;
+import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.Schedulers;
 import java.io.File;
 import java.io.IOException;
@@ -83,6 +85,17 @@ public class ShuttleApplication extends Application {
         super.onCreate();
 
         instance = this;
+
+        // Errors RxJava can't deliver because the subscriber has already gone (e.g. a debounce timer's
+        // MissingBackpressureException after the screen was closed) would otherwise crash the app. Log them instead;
+        // anything else (such as a missing onError handler) still crashes.
+        RxJavaPlugins.setErrorHandler(throwable -> {
+            if (throwable instanceof UndeliverableException) {
+                Log.w(TAG, "Undeliverable RxJava error", throwable.getCause());
+                return;
+            }
+            Thread.currentThread().getUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), throwable);
+        });
 
         appComponent = initDagger(this);
 

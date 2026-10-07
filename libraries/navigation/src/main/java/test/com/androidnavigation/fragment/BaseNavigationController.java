@@ -94,6 +94,12 @@ public abstract class BaseNavigationController extends BaseController
 
     @Override
     public void pushViewController(@NonNull Fragment fragment, @Nullable String tag, @Nullable List<Pair<View, String>> sharedElements) {
+        // Pushes are often posted with a delay, and can land after the activity has saved its state or gone away;
+        // committing then throws IllegalStateException. The navigation is dropped, as the user has left the screen.
+        if (!isAdded() || getChildFragmentManager().isStateSaved()) {
+            return;
+        }
+
         FragmentTransaction fragmentTransaction = getChildFragmentManager()
                 .beginTransaction();
 

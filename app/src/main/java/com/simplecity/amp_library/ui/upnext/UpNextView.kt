@@ -226,6 +226,8 @@ class UpNextView constructor(context: Context, attrs: AttributeSet? = null, defS
                     .ofType(SeekBarProgressChangeEvent::class.java)
                     .filter { it.fromUser() }
                     .debounce(15, TimeUnit.MILLISECONDS)
+                    .onBackpressureLatest()
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ seekBarChangeEvent -> playerPresenter.seekTo(seekBarChangeEvent.progress()) },
                         { error -> LogUtils.logException(TAG, "Error receiving seekbar progress", error) })
             )
