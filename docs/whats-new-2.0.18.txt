@@ -1,7 +1,9 @@
 Thank you for using Shuttle.
 
-I started Shuttle in 2012 as my first Android app. Its last real update was in 2020 (2.0.17). This one keeps it working on new versions of Android, and it will be the last.
+I started Shuttle in 2012 as my first Android app. Its last update was in 2020. This one keeps it working on new Android versions, and it will be the last.
 
-I've rebuilt Shuttle from scratch as Shuttle Music. It's a separate app because Google Play has no way to move you across, or to give Shuttle+ owners a paid app for free. Shuttle Music has the equaliser many of you asked for, and iOS versions are on the way.
+I've rebuilt Shuttle as Shuttle Music. It's a separate app because Google Play can't move you across, or give Shuttle+ owners a paid app for free. It has the equaliser many of you asked for, and iOS is on the way.
 
-— Tim
+Get Shuttle Music: https://play.google.com/store/apps/details?id=com.simplecityapps.shuttle
+
+Tim
