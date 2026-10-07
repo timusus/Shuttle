@@ -1,15 +1,12 @@
 import dependencies.Dependencies
 
-apply plugin: Dependencies.BuildPlugins.gradleVersions
-
 buildscript {
     repositories {
-        jcenter()
         google()
+        mavenCentral()
     }
     dependencies {
         classpath Dependencies.Plugins.android
-        classpath Dependencies.Plugins.gradleVersions
         classpath Dependencies.Plugins.playServices
         classpath Dependencies.Plugins.kotlin
     }
@@ -17,9 +14,9 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
         google()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        mavenCentral()
         maven { url "https://jitpack.io" }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
 }

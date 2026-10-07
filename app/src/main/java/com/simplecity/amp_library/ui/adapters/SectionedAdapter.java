@@ -1,6 +1,6 @@
 package com.simplecity.amp_library.ui.adapters;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import com.simplecity.amp_library.ui.modelviews.SectionedView;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;
 import com.simplecityapps.recycler_adapter.model.ViewModel;

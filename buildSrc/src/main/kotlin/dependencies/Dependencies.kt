@@ -3,12 +3,11 @@ package dependencies
 object Dependencies {
 
     const val minSdk = 21
-    const val targetSdk = 29
-    const val compileSdk = 29
+    const val targetSdk = 36
+    const val compileSdk = 36
 
     object Versions {
         const val nanoHttp = "2.3.1"
-        const val crashlytics = "2.9.4"
         const val dashClockApi = "2.0.0"
         const val fastScroll = "1.0.20"
         const val glide = "3.8.0"
@@ -16,22 +15,19 @@ object Dependencies {
         const val materialDialogs = "0.9.6.0"
         const val permiso = "0.3.0"
         const val streams = "1.2.0"
-        const val butterknife = "8.8.1"
-        const val butterknifeAnnotationProcessor = "8.8.1"
-        const val dagger = "2.16"
-        const val daggerAnnotationProcessor = "2.16"
+        const val butterknife = "10.2.3"
+        const val butterknifeAnnotationProcessor = "10.2.3"
+        const val dagger = "2.56.2"
+        const val daggerAnnotationProcessor = "2.56.2"
         const val expandableRecyclerView = "3.0.0-RC1"
     }
 
     // Kotlin
 
-    const val kotlin = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Plugins.Versions.kotlin}"
+    const val kotlin = "org.jetbrains.kotlin:kotlin-stdlib:${Plugins.Versions.kotlin}"
 
     // NanoHttp - https://github.com/NanoHttpd/nanohttpd (Various)
     const val nanoHttp = "org.nanohttpd:nanohttpd-webserver:${Versions.nanoHttp}"
-
-    // Crashlytics - https://fabric.io/kits/android/crashlytics
-    const val crashlytics = "com.crashlytics.sdk.android:crashlytics:${Versions.crashlytics}"
 
     // Dashclock - https://git.io/vix9g (Roman Nurik)
     const val dashClockApi = "com.google.android.apps.dashclock:dashclock-api:${Versions.dashClockApi}"
@@ -69,54 +65,51 @@ object Dependencies {
     object Plugins {
 
         object Versions {
-            const val androidGradlePlugin = "4.0.0"
-            const val kotlin = "1.3.20"
-            const val dexcountGradlePlugin = "1.0.3"
-            const val fabricGradlePlugin = "1.+"
-            const val playPublisher = "2.1.0"
-            const val gradleVersions = "0.20.0"
-            const val playServices = "4.0.1"
+            const val androidGradlePlugin = "8.9.3"
+            const val kotlin = "2.1.21"
+            const val playServices = "4.4.2"
         }
 
         const val android = "com.android.tools.build:gradle:${Versions.androidGradlePlugin}"
         const val kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
-        const val dexcount = "com.getkeepsafe.dexcount:dexcount-gradle-plugin:${Versions.dexcountGradlePlugin}"
-        const val fabric = "io.fabric.tools:gradle:${Versions.fabricGradlePlugin}"
-        const val playPublisher = "com.github.triplet.play"
-        const val gradleVersions = "com.github.ben-manes:gradle-versions-plugin:${Versions.gradleVersions}"
         const val playServices = "com.google.gms:google-services:${Versions.playServices}"
     }
 
     object Google {
 
         object Versions {
-            const val supportLib = "27.1.0"
-            const val firebaseCore = "16.0.1"
-            const val firebaseRemoteConfig = "16.0.0"
+            const val appcompat = "1.7.0"
+            const val cardView = "1.0.0"
+            const val material = "1.12.0"
+            const val palette = "1.0.0"
+            const val preference = "1.2.1"
+            const val recyclerView = "1.3.2"
+            const val legacySupportV4 = "1.0.0"
+            const val firebaseBom = "33.7.0"
             const val chromecast = "15.0.1"
-            const val constraintLayout = "1.1.0-beta5"
+            const val mediaRouter = "1.7.0"
+            const val constraintLayout = "2.1.4"
         }
 
-        const val cardView = "com.android.support:cardview-v7:${Versions.supportLib}"
-        const val design = "com.android.support:design:${Versions.supportLib}"
-        const val palette = "com.android.support:palette-v7:${Versions.supportLib}"
-        const val recyclerView = "com.android.support:recyclerview-v7:${Versions.supportLib}"
-        const val supportv4 = "com.android.support:support-v4:${Versions.supportLib}"
-        const val firebaseCore = "com.google.firebase:firebase-core:${Versions.firebaseCore}"
-        const val firebaseRemoteConfig = "com.google.firebase:firebase-config:${Versions.firebaseRemoteConfig}"
-        const val appcompat = "com.android.support:appcompat-v7:${Versions.supportLib}"
-        const val mediarouter = "com.android.support:mediarouter-v7:${Versions.supportLib}"
+        const val cardView = "androidx.cardview:cardview:${Versions.cardView}"
+        const val design = "com.google.android.material:material:${Versions.material}"
+        const val palette = "androidx.palette:palette:${Versions.palette}"
+        const val recyclerView = "androidx.recyclerview:recyclerview:${Versions.recyclerView}"
+        const val supportv4 = "androidx.legacy:legacy-support-v4:${Versions.legacySupportV4}"
+        const val firebaseBom = "com.google.firebase:firebase-bom:${Versions.firebaseBom}"
+        const val firebaseCore = "com.google.firebase:firebase-analytics"
+        const val firebaseRemoteConfig = "com.google.firebase:firebase-config"
+        const val appcompat = "androidx.appcompat:appcompat:${Versions.appcompat}"
+        const val mediarouter = "androidx.mediarouter:mediarouter:${Versions.mediaRouter}"
         const val chromecast = "com.google.android.gms:play-services-cast:${Versions.chromecast}"
-        const val constraintLayout = "com.android.support.constraint:constraint-layout:${Versions.constraintLayout}"
-        const val prefCompat = "com.android.support:preference-v7:${Versions.supportLib}"
-        const val prefCompatv14 = "com.android.support:preference-v14:${Versions.supportLib}"
+        const val constraintLayout = "androidx.constraintlayout:constraintlayout:${Versions.constraintLayout}"
+        const val prefCompat = "androidx.preference:preference:${Versions.preference}"
     }
 
     object Square {
 
         object Versions {
-            const val haha = "2.0.4"
-            const val leakCanary = "1.5.4"
+            const val leakCanary = "2.14"
             const val okio = "1.14.1"
             const val okhttp = "3.10.0"
             const val retrofit = "2.4.0"
@@ -124,9 +117,8 @@ object Dependencies {
             const val sqlBrite = "2.0.0"
         }
 
-        const val haha = "com.squareup.haha:haha:${Versions.haha}"
+        // LeakCanary 2 is debug-only and installs itself automatically
         const val leakCanaryDebug = "com.squareup.leakcanary:leakcanary-android:${Versions.leakCanary}"
-        const val leakCanaryRel = "com.squareup.leakcanary:leakcanary-android-no-op:${Versions.leakCanary}"
         const val okio = "com.squareup.okio:okio:${Versions.okio}"
         const val okhttp = "com.squareup.okhttp3:okhttp:${Versions.okhttp}"
         const val retrofit = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
@@ -184,7 +176,7 @@ object Dependencies {
 
         object Versions {
             const val junit = "4.12"
-            const val espressoCore = "3.0.0"
+            const val espressoCore = "3.6.1"
             const val assertj = "3.9.0"
 
             // Mockito version restriction -- PowerMock does not fully support Mockito2 yet.
@@ -201,7 +193,7 @@ object Dependencies {
         const val junit = "junit:junit:${Versions.junit}"
 
         // Espresso
-        const val espresso = "com.android.support.test.espresso:espresso-core:${Versions.espressoCore}"
+        const val espresso = "androidx.test.espresso:espresso-core:${Versions.espressoCore}"
 
         // Mockito - https://github.com/mockito/mockito
         const val mockito = "org.mockito:mockito-core:${Versions.mockito}"
@@ -244,13 +236,7 @@ object Dependencies {
         const val androidApplication = "com.android.application"
         const val androidLibrary = "com.android.library"
         const val kotlin = "kotlin-android"
-        const val kotlinAndroidExtensions = "kotlin-android-extensions"
         const val kapt = "kotlin-kapt"
-        const val dexCount = "com.getkeepsafe.dexcount"
-        const val fabric = "io.fabric"
-        const val playPublisher = "com.github.triplet.play"
-        const val gradleVersions = "com.github.ben-manes.versions"
         const val playServices = "com.google.gms.google-services"
     }
 }
-

@@ -1,6 +1,6 @@
 package com.simplecity.amp_library.glide.palette;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import com.bumptech.glide.load.engine.Resource;
 
 public class ColorSetResource implements Resource<ColorSet> {

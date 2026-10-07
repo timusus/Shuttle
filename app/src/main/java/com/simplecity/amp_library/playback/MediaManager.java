@@ -1,8 +1,8 @@
 package com.simplecity.amp_library.playback;
 
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;

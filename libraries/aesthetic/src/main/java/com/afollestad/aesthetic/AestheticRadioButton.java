@@ -4,7 +4,7 @@ import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
 import static com.afollestad.aesthetic.Util.resolveResId;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatRadioButton;
+import androidx.appcompat.widget.AppCompatRadioButton;
 import android.util.AttributeSet;
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;

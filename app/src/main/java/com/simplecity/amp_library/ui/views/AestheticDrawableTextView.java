@@ -2,8 +2,8 @@ package com.simplecity.amp_library.ui.views;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.widget.AppCompatTextView;
+import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.appcompat.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.Rx;

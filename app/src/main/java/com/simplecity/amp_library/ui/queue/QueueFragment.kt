@@ -2,11 +2,11 @@ package com.simplecity.amp_library.ui.queue
 
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.PopupMenu
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
-import android.support.v7.widget.helper.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.appcompat.widget.PopupMenu
+import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,12 +49,6 @@ import com.simplecityapps.recycler_adapter.recyclerview.RecyclerListener
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.fragment_queue.contextualToolbar
-import kotlinx.android.synthetic.main.fragment_queue.line1
-import kotlinx.android.synthetic.main.fragment_queue.line2
-import kotlinx.android.synthetic.main.fragment_queue.recyclerView
-import kotlinx.android.synthetic.main.fragment_queue.statusBarView
-import kotlinx.android.synthetic.main.fragment_queue.toolbar
 import java.util.ArrayList
 import javax.inject.Inject
 
@@ -420,3 +414,11 @@ class QueueFragment : BaseFragment(), QueueContract.View {
         }
     }
 }
+
+// Replacements for the removed kotlinx synthetics.
+private val androidx.fragment.app.Fragment.toolbar: com.simplecity.amp_library.ui.views.NonClickableToolbar get() = view!!.findViewById(R.id.toolbar)
+private val androidx.fragment.app.Fragment.contextualToolbar: View get() = view!!.findViewById(R.id.contextualToolbar)
+private val androidx.fragment.app.Fragment.line1: android.widget.TextView get() = view!!.findViewById(R.id.line1)
+private val androidx.fragment.app.Fragment.line2: android.widget.TextView get() = view!!.findViewById(R.id.line2)
+private val androidx.fragment.app.Fragment.recyclerView: com.simplecity.amp_library.ui.views.AestheticFastScrollRecyclerView get() = view!!.findViewById(R.id.recyclerView)
+private val androidx.fragment.app.Fragment.statusBarView: com.simplecity.amp_library.ui.views.ThemedStatusBarView get() = view!!.findViewById(R.id.statusBarView)

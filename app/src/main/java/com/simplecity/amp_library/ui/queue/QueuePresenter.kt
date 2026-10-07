@@ -57,7 +57,7 @@ constructor(internal var mediaManager: MediaManager) : Presenter<View>(), QueueC
     }
 
     override fun saveQueue(context: Context, item: MenuItem) {
-        val playlist = item.intent.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist
+        val playlist = item.intent!!.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist
         PermissionUtils.RequestStoragePermissions {
             PlaylistUtils.addToPlaylist(context, playlist, mediaManager.getQueue().toSongs(), null)
         }

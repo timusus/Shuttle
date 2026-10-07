@@ -2,7 +2,7 @@ package com.simplecity.amp_library.utils.extensions
 
 import android.content.Context
 import android.content.Intent
-import android.support.v4.content.FileProvider
+import androidx.core.content.FileProvider
 import com.simplecity.amp_library.R
 import com.simplecity.amp_library.model.Song
 import com.simplecity.amp_library.utils.LogUtils

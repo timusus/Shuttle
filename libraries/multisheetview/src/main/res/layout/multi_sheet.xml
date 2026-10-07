@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:parentTag="android.support.design.widget.CoordinatorLayout">
+    tools:parentTag="androidx.coordinatorlayout.widget.CoordinatorLayout">
 
     <FrameLayout
         android:id="@+id/mainContainer"
@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/bottom_sheet_peek_1_height"/>
 
-        <android.support.design.widget.CoordinatorLayout
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/sheet1Coordinator"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -56,6 +56,6 @@
                     android:layout_height="@dimen/bottom_sheet_peek_2_height"/>
 
             </FrameLayout>
-        </android.support.design.widget.CoordinatorLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </FrameLayout>
 </merge>

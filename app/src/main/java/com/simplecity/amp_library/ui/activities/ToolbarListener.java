@@ -1,6 +1,6 @@
 package com.simplecity.amp_library.ui.activities;
 
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 
 //Todo: Better name
 public interface ToolbarListener {

@@ -10,9 +10,9 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 import com.bumptech.glide.Glide;
@@ -71,7 +71,7 @@ public class MusicNotificationHelper extends NotificationHelper {
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setContentTitle(song.name)
                 .setContentText(song.artistName + " - " + song.albumName)
-                .setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle()
+                .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
                         .setShowActionsInCompactView(0, 1, 2)
                         .setMediaSession(mediaSessionToken))
                 .addAction(
@@ -95,7 +95,7 @@ public class MusicNotificationHelper extends NotificationHelper {
                         MusicService.retrievePlaybackAction(context, ServiceCommand.TOGGLE_FAVORITE)
                 )
                 .setShowWhen(false)
-                .setVisibility(android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC);
+                .setVisibility(androidx.core.app.NotificationCompat.VISIBILITY_PUBLIC);
 
         if (bitmap != null) {
             builder.setLargeIcon(bitmap);

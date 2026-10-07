@@ -3,9 +3,9 @@ package com.afollestad.aesthetic;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.support.annotation.ColorInt;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.ColorInt;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import androidx.core.content.ContextCompat;
 import android.util.AttributeSet;
 
 import io.reactivex.Observable;
@@ -158,7 +158,7 @@ public class AestheticBottomNavigationView extends BottomNavigationView {
             .subscribe(
                 new Consumer<State>() {
                   @Override
-                  public void accept(@android.support.annotation.NonNull State state) {
+                  public void accept(@androidx.annotation.NonNull State state) {
                     onState(state);
                   }
                 },

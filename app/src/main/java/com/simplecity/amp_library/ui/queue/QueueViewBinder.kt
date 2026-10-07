@@ -141,7 +141,7 @@ class QueueViewBinder(var queueItem: QueueItem, private val requestManager: Requ
 
             if (requiresSubstring) {
                 string = if (!TextUtils.isEmpty(string)) {
-                    string.substring(0, 1).toUpperCase()
+                    string.substring(0, 1).uppercase()
                 } else {
                     ""
                 }

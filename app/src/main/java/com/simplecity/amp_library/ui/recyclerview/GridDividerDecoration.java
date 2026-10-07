@@ -2,8 +2,8 @@ package com.simplecity.amp_library.ui.recyclerview;
 
 import android.content.res.Resources;
 import android.graphics.Rect;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import com.simplecity.amp_library.utils.ResourceUtils;
 import com.simplecityapps.recycler_adapter.adapter.ViewModelAdapter;

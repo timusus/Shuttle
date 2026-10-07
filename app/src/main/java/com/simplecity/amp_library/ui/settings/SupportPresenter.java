@@ -2,7 +2,7 @@ package com.simplecity.amp_library.ui.settings;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.ui.presenters.Presenter;

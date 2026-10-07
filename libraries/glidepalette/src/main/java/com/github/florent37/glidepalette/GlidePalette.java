@@ -1,7 +1,7 @@
 package com.github.florent37.glidepalette;
 
 import android.graphics.Bitmap;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
 

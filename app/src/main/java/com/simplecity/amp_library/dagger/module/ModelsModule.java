@@ -1,6 +1,6 @@
 package com.simplecity.amp_library.dagger.module;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import com.simplecity.amp_library.model.PlaylistsModel;
 import dagger.Module;
 import dagger.Provides;

@@ -1,7 +1,7 @@
 package com.simplecity.amp_library.ui.detail.genre
 
 import android.content.Context
-import android.support.v4.util.Pair
+import androidx.core.util.Pair
 import android.view.MenuItem
 import com.simplecity.amp_library.model.Album
 import com.simplecity.amp_library.model.Genre
@@ -138,7 +138,7 @@ class GenreDetailPresenter constructor(private val mediaManager: MediaManager, p
     }
 
     fun playlistSelected(context: Context, item: MenuItem, insertCallback: UnsafeAction) {
-        val playlist = item.intent.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist
+        val playlist = item.intent!!.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist
         PermissionUtils.RequestStoragePermissions {
             PlaylistUtils.addToPlaylist(context, playlist, songs, insertCallback)
         }

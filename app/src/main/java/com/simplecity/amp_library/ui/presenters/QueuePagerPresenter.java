@@ -2,7 +2,7 @@ package com.simplecity.amp_library.ui.presenters;
 
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.bumptech.glide.RequestManager;

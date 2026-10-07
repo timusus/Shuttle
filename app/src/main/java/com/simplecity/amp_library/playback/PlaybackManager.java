@@ -12,13 +12,12 @@ import android.media.AudioManager;
 import android.net.Uri;
 import android.os.HandlerThread;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 import com.annimon.stream.function.Predicate;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.android.libraries.cast.companionlibrary.cast.exceptions.CastException;
 import com.google.android.libraries.cast.companionlibrary.cast.exceptions.NoConnectionException;
 import com.google.android.libraries.cast.companionlibrary.cast.exceptions.TransientNetworkDisconnectionException;
@@ -432,7 +431,7 @@ public class PlaybackManager {
                 }
             } catch (Exception e) {
                 Log.e(TAG, "Error: " + e.getMessage());
-                CrashlyticsCore.getInstance().log("setNextTrack() with id failed. error: " + e.getLocalizedMessage());
+                android.util.Log.w("Shuttle", "setNextTrack() with id failed. error: " + e.getLocalizedMessage());
             }
         } else {
             try {
@@ -441,7 +440,7 @@ public class PlaybackManager {
                 }
             } catch (Exception e) {
                 Log.e(TAG, "Error: " + e.getMessage());
-                CrashlyticsCore.getInstance().log("setNextTrack() failed with null id. error: " + e.getLocalizedMessage());
+                android.util.Log.w("Shuttle", "setNextTrack() failed with null id. error: " + e.getLocalizedMessage());
             }
         }
     }

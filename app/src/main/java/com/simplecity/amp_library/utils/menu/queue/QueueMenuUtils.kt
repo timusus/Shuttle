@@ -1,7 +1,7 @@
 package com.simplecity.amp_library.utils.menu.queue
 
-import android.support.v7.widget.PopupMenu
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.widget.PopupMenu
+import androidx.appcompat.widget.Toolbar
 import com.simplecity.amp_library.R
 import com.simplecity.amp_library.model.Playlist
 import com.simplecity.amp_library.playback.MediaManager.Defs
@@ -34,7 +34,7 @@ object QueueMenuUtils {
                     return@OnMenuItemClickListener true
                 }
                 Defs.PLAYLIST_SELECTED -> {
-                    callbacks.playlistSelected(item.intent.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist, queueItems.map { it.toSongs() })
+                    callbacks.playlistSelected(item.intent!!.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist, queueItems.map { it.toSongs() })
                     closeCab()
                     return@OnMenuItemClickListener true
                 }
@@ -65,7 +65,7 @@ object QueueMenuUtils {
                     return@OnMenuItemClickListener true
                 }
                 Defs.PLAYLIST_SELECTED -> {
-                    callbacks.playlistSelected(item.intent.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist, queueItem.song)
+                    callbacks.playlistSelected(item.intent!!.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist, queueItem.song)
                     return@OnMenuItemClickListener true
                 }
                 R.id.addToQueue -> {

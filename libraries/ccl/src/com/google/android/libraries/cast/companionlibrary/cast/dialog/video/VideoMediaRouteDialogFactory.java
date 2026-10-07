@@ -16,8 +16,8 @@
 
 package com.google.android.libraries.cast.companionlibrary.cast.dialog.video;
 
-import android.support.annotation.NonNull;
-import android.support.v7.app.MediaRouteDialogFactory;
+import androidx.annotation.NonNull;
+import androidx.mediarouter.app.MediaRouteDialogFactory;
 
 /**
  * A factory for the MediaRoute Dialog.

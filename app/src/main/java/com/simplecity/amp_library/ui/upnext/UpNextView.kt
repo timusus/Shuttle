@@ -6,8 +6,8 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.support.v4.graphics.drawable.DrawableCompat
-import android.support.v4.util.Pair
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.util.Pair
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -45,17 +45,6 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
-import kotlinx.android.synthetic.main.up_next_view.view.arrowImageView
-import kotlinx.android.synthetic.main.up_next_view.view.buttonContainer
-import kotlinx.android.synthetic.main.up_next_view.view.nextButton
-import kotlinx.android.synthetic.main.up_next_view.view.playPauseView
-import kotlinx.android.synthetic.main.up_next_view.view.prevButton
-import kotlinx.android.synthetic.main.up_next_view.view.queuePositionTextView
-import kotlinx.android.synthetic.main.up_next_view.view.queueTextView
-import kotlinx.android.synthetic.main.up_next_view.view.repeatButton
-import kotlinx.android.synthetic.main.up_next_view.view.seekBar
-import kotlinx.android.synthetic.main.up_next_view.view.shuffleButton
-import kotlinx.android.synthetic.main.up_next_view.view.textContainer
 import java.util.concurrent.TimeUnit
 
 class UpNextView constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : LinearLayout(context, attrs, defStyleAttr) {
@@ -390,3 +379,16 @@ class UpNextView constructor(context: Context, attrs: AttributeSet? = null, defS
         }
     }
 }
+
+// Replacements for the removed kotlinx synthetics. Landscape-only views are null in portrait.
+private val View.arrowImageView: android.widget.ImageView get() = findViewById(R.id.arrowImageView)
+private val View.queueTextView: android.widget.TextView get() = findViewById(R.id.queueTextView)
+private val View.queuePositionTextView: android.widget.TextView get() = findViewById(R.id.queuePositionTextView)
+private val View.buttonContainer: View? get() = findViewById(R.id.buttonContainer)
+private val View.textContainer: View? get() = findViewById(R.id.textContainer)
+private val View.shuffleButton: View? get() = findViewById(R.id.shuffleButton)
+private val View.repeatButton: View? get() = findViewById(R.id.repeatButton)
+private val View.prevButton: com.simplecity.amp_library.ui.views.RepeatingImageButton? get() = findViewById(R.id.prevButton)
+private val View.nextButton: com.simplecity.amp_library.ui.views.RepeatingImageButton? get() = findViewById(R.id.nextButton)
+private val View.playPauseView: com.simplecity.amp_library.ui.views.PlayPauseView? get() = findViewById(R.id.playPauseView)
+private val View.seekBar: com.simplecity.amp_library.ui.views.SizableSeekBar? get() = findViewById(R.id.seekBar)

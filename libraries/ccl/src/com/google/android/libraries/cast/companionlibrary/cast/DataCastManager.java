@@ -36,7 +36,7 @@ import com.google.android.libraries.cast.companionlibrary.cast.exceptions.Transi
 import com.google.android.libraries.cast.companionlibrary.utils.LogUtils;
 
 import android.content.Context;
-import android.support.v7.media.MediaRouter.RouteInfo;
+import androidx.mediarouter.media.MediaRouter.RouteInfo;
 import android.text.TextUtils;
 
 import java.io.IOException;

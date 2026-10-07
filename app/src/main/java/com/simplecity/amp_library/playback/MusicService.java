@@ -12,13 +12,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.support.v4.media.MediaBrowserCompat;
-import android.support.v4.media.MediaBrowserServiceCompat;
+import androidx.media.MediaBrowserServiceCompat;
 import android.util.Log;
 import android.widget.Toast;
-import com.crashlytics.android.Crashlytics;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.androidauto.MediaIdHelper;
 import com.simplecity.amp_library.androidauto.PackageValidator;
@@ -926,7 +925,7 @@ public class MusicService extends MediaBrowserServiceCompat {
                 Log.e(TAG, "startForeground should have been called, but song is null");
             }
         } catch (NullPointerException | ConcurrentModificationException e) {
-            Crashlytics.log("startForegroundImpl error: " + e.getMessage());
+            android.util.Log.w("Shuttle", "startForegroundImpl error: " + e.getMessage());
             Log.e(TAG, "startForeground should have been called, but an exfeption occured: " + e);
         }
     }

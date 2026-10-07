@@ -5,7 +5,7 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.annotation.WorkerThread;
+import androidx.annotation.WorkerThread;
 import android.text.TextUtils;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.model.BaseFileObject;

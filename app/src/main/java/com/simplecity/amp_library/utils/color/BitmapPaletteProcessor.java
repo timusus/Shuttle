@@ -18,8 +18,8 @@ package com.simplecity.amp_library.utils.color;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.support.v4.util.Pair;
-import android.support.v7.graphics.Palette;
+import androidx.core.util.Pair;
+import androidx.palette.graphics.Palette;
 import java.util.List;
 
 /**

@@ -1,6 +1,6 @@
 package com.simplecity.amp_library.glide.preloader;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.ListPreloader;
 import com.bumptech.glide.ListPreloader.PreloadModelProvider;
 import com.bumptech.glide.ListPreloader.PreloadSizeProvider;
@@ -14,10 +14,10 @@ import com.bumptech.glide.ListPreloader.PreloadSizeProvider;
  * <p> Must be added as a listener to the {@link RecyclerView} using
  * {@link RecyclerView#addOnScrollListener(RecyclerView.OnScrollListener)}, or have its
  * corresponding methods called from another
- * {@link android.support.v7.widget.RecyclerView.OnScrollListener} to function. </p>
+ * {@link androidx.recyclerview.widget.RecyclerView.OnScrollListener} to function. </p>
  *
- * <p> This class only works with {@link android.support.v7.widget.LinearLayoutManager} and
- * subclasses of {@link android.support.v7.widget.LinearLayoutManager}. </p>
+ * <p> This class only works with {@link androidx.recyclerview.widget.LinearLayoutManager} and
+ * subclasses of {@link androidx.recyclerview.widget.LinearLayoutManager}. </p>
  *
  * @param <T> The type of the model being displayed in the {@link RecyclerView}.
  */

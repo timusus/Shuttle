@@ -2,8 +2,8 @@ package com.simplecity.amp_library.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.annimon.stream.Optional;
 import com.simplecity.amp_library.model.Playlist;

@@ -1,12 +1,12 @@
 package com.simplecity.amp_library.glide.preloader;
 
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
 /**
- * Converts {@link android.support.v7.widget.RecyclerView.OnScrollListener} events to
+ * Converts {@link androidx.recyclerview.widget.RecyclerView.OnScrollListener} events to
  * {@link AbsListView} scroll events.
  * <p>
  * <p>Requires that the the recycler view be using a {@link LinearLayoutManager} subclass.

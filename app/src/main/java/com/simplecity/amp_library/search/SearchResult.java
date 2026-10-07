@@ -1,6 +1,6 @@
 package com.simplecity.amp_library.search;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.AlbumArtist;
 import com.simplecity.amp_library.model.Song;

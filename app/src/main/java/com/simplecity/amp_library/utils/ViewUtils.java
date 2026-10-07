@@ -3,7 +3,7 @@ package com.simplecity.amp_library.utils;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.View;
 import com.simplecity.amp_library.rx.UnsafeAction;
 

@@ -10,16 +10,13 @@ import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.preference.PreferenceManager;
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.android.libraries.cast.companionlibrary.cast.CastConfiguration;
 import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
 import com.google.firebase.FirebaseApp;
@@ -40,9 +37,6 @@ import com.simplecity.amp_library.utils.InputMethodManagerLeaks;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.StringUtils;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
-import io.fabric.sdk.android.Fabric;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
@@ -77,7 +71,6 @@ public class ShuttleApplication extends Application {
 
     public static final double VOLUME_INCREMENT = 0.05;
 
-    private RefWatcher refWatcher;
 
     public HashMap<String, UserSelectedArtwork> userSelectedArtwork = new HashMap<>();
 
@@ -90,34 +83,18 @@ public class ShuttleApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            // This process is dedicated to LeakCanary for heap analysis.
-            // You should not init your app in this process.
-            return;
-        }
-
         instance = this;
 
         appComponent = initDagger(this);
 
-        refWatcher = LeakCanary.install(this);
         // workaround to fix InputMethodManager leak as suggested by LeakCanary lib
         InputMethodManagerLeaks.fixFocusedViewLeak(this);
 
-        //Crashlytics
-        CrashlyticsCore crashlyticsCore = new CrashlyticsCore.Builder()
-                .disabled(BuildConfig.DEBUG)
-                .build();
-
-        Fabric.with(this,
-                new Crashlytics.Builder()
-                        .core(crashlyticsCore)
-                        .answers(new Answers())
-                        .build());
-
         // Firebase
-        FirebaseApp.initializeApp(this);
-        FirebaseAnalytics.getInstance(this);
+        // Debug builds have no Firebase config (see app/build.gradle)
+        if (FirebaseApp.initializeApp(this) != null) {
+            FirebaseAnalytics.getInstance(this);
+        }
 
         VideoCastManager.initialize(this,
                 new CastConfiguration.Builder(Config.CHROMECAST_APP_ID)
@@ -166,10 +143,6 @@ public class ShuttleApplication extends Application {
                 .onErrorComplete()
                 .subscribeOn(Schedulers.io())
                 .subscribe();
-    }
-
-    public RefWatcher getRefWatcher() {
-        return this.refWatcher;
     }
 
     @Override

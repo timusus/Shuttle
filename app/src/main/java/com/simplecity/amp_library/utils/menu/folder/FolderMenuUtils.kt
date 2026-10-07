@@ -2,8 +2,8 @@ package com.simplecity.amp_library.utils.menu.folder
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.annotation.StringRes
-import android.support.v7.widget.PopupMenu
+import androidx.annotation.StringRes
+import androidx.appcompat.widget.PopupMenu
 import android.view.LayoutInflater
 import android.widget.EditText
 import android.widget.Toast
@@ -196,7 +196,7 @@ object FolderMenuUtils {
                 Defs.PLAYLIST_SELECTED -> {
                     MenuUtils.addToPlaylist(
                         context,
-                        menuItem.intent.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist,
+                        menuItem.intent!!.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist,
                         getSongsForFolderObject(folderObject),
                         { callbacks.onPlaylistItemsInserted() })
                     return@OnMenuItemClickListener true
@@ -248,7 +248,7 @@ object FolderMenuUtils {
                     getSongForFile(fileObject).subscribe({ song ->
                         MenuUtils.addToPlaylist(
                             context,
-                            menuItem.intent.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist,
+                            menuItem.intent!!.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist,
                             listOf(song),
                             { callbacks.onPlaylistItemsInserted() })
                     }, errorHandler)

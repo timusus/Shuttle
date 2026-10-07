@@ -1,9 +1,9 @@
 package com.simplecity.amp_library.ui.views.multisheet;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import android.util.AttributeSet;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.ui.drawer.DrawerLockManager;

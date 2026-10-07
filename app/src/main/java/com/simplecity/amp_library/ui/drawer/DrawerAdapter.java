@@ -1,6 +1,6 @@
 package com.simplecity.amp_library.ui.drawer;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import com.bignerdranch.expandablerecyclerview.ExpandableRecyclerAdapter;

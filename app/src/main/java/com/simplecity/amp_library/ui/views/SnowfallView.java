@@ -6,9 +6,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Handler;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.simplecity.amp_library.BuildConfig;
@@ -75,18 +76,22 @@ public class SnowfallView extends View {
     final Handler snowHandler = new Handler();
 
     /** Used to determine if we let it snow */
-    final FirebaseRemoteConfig remoteConfig;
+    @Nullable
+    FirebaseRemoteConfig remoteConfig = null;
 
     public SnowfallView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         snowPaint.setColor(Color.WHITE);
         snowPaint.setStyle(Paint.Style.FILL);
 
-        remoteConfig = FirebaseRemoteConfig.getInstance();
-        remoteConfig.setDefaults(R.xml.remote_config_defaults);
-        remoteConfig.setConfigSettings(new FirebaseRemoteConfigSettings.Builder()
-                .setDeveloperModeEnabled(BuildConfig.DEBUG)
-                .build());
+        // Debug builds have no Firebase config (see app/build.gradle)
+        if (!isInEditMode() && !FirebaseApp.getApps(context).isEmpty()) {
+            remoteConfig = FirebaseRemoteConfig.getInstance();
+            remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults);
+            remoteConfig.setConfigSettingsAsync(new FirebaseRemoteConfigSettings.Builder()
+                    .setMinimumFetchIntervalInSeconds(BuildConfig.DEBUG ? 0 : 43200)
+                    .build());
+        }
     }
 
     @Override
@@ -134,9 +139,11 @@ public class SnowfallView extends View {
     }
 
     private void fetchSnowConfig() {
-        remoteConfig.fetch().addOnCompleteListener((Activity) getContext(), task -> {
+        if (remoteConfig == null) {
+            return;
+        }
+        remoteConfig.fetchAndActivate().addOnCompleteListener((Activity) getContext(), task -> {
             if (task.isSuccessful()) {
-                remoteConfig.activateFetched();
                 if (remoteConfig.getBoolean(LET_IT_SNOW)) {
                     snowHandler.removeCallbacksAndMessages(null);
                     snowHandler.postDelayed(this::generateSnow, SNOWFALL_DELAY);

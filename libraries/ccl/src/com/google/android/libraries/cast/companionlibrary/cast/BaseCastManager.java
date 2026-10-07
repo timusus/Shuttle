@@ -54,14 +54,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
-import android.support.annotation.IntDef;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.MediaRouteActionProvider;
-import android.support.v7.app.MediaRouteButton;
-import android.support.v7.app.MediaRouteDialogFactory;
-import android.support.v7.media.MediaRouteSelector;
-import android.support.v7.media.MediaRouter;
-import android.support.v7.media.MediaRouter.RouteInfo;
+import androidx.annotation.IntDef;
+import androidx.core.view.MenuItemCompat;
+import androidx.mediarouter.app.MediaRouteActionProvider;
+import androidx.mediarouter.app.MediaRouteButton;
+import androidx.mediarouter.app.MediaRouteDialogFactory;
+import androidx.mediarouter.media.MediaRouteSelector;
+import androidx.mediarouter.media.MediaRouter;
+import androidx.mediarouter.media.MediaRouter.RouteInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -379,7 +379,7 @@ public abstract class BaseCastManager
      * Adds and wires up the Media Router cast button. It returns a reference to the Media Router
      * menu item if the caller needs such reference. It is assumed that the enclosing
      * {@link android.app.Activity} inherits (directly or indirectly) from
-     * {@link android.support.v7.app.AppCompatActivity}.
+     * {@link androidx.appcompat.app.AppCompatActivity}.
      *
      * @param menu Menu reference
      * @param menuResourceId The resource id of the cast button in the xml menu descriptor file
@@ -396,12 +396,12 @@ public abstract class BaseCastManager
     }
 
     /**
-     * Adds and wires up the {@link android.support.v7.app.MediaRouteButton} instance that is passed
+     * Adds and wires up the {@link androidx.mediarouter.app.MediaRouteButton} instance that is passed
      * as an argument. This requires that
      * <ul>
      * <li>The enclosing {@link android.app.Activity} inherits (directly or indirectly) from
-     * {@link android.support.v4.app.FragmentActivity}</li>
-     * <li>User adds the {@link android.support.v7.app.MediaRouteButton} to the layout and passes a
+     * {@link androidx.fragment.app.FragmentActivity}</li>
+     * <li>User adds the {@link androidx.mediarouter.app.MediaRouteButton} to the layout and passes a
      * reference to that instance to this method</li>
      * <li>User is in charge of controlling the visibility of this button. However, this library
      * makes it easier to do so: use the callback <code>onCastAvailabilityChanged(boolean)</code>
@@ -500,7 +500,7 @@ public abstract class BaseCastManager
 
     /**
      * Stops the process of cast discovery by removing the registered
-     * {@link android.support.v7.media.MediaRouter.Callback}
+     * {@link androidx.mediarouter.media.MediaRouter.Callback}
      */
     public final void stopCastDiscovery() {
         mMediaRouter.removeCallback(mMediaRouterCallback);
@@ -567,7 +567,7 @@ public abstract class BaseCastManager
     }
 
     /**
-     * Returns the {@link android.support.v7.media.MediaRouter.RouteInfo} corresponding to the
+     * Returns the {@link androidx.mediarouter.media.MediaRouter.RouteInfo} corresponding to the
      * selected route.
      */
     public final RouteInfo getRouteInfo() {
@@ -575,7 +575,7 @@ public abstract class BaseCastManager
     }
 
     /**
-     * Sets the {@link android.support.v7.media.MediaRouter.RouteInfo} corresponding to the
+     * Sets the {@link androidx.mediarouter.media.MediaRouter.RouteInfo} corresponding to the
      * selected route.
      */
     public final void setRouteInfo(RouteInfo routeInfo) {

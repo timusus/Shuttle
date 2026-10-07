@@ -3,9 +3,6 @@ package com.simplecity.amp_library.utils;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.CustomEvent;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.ShuttleApplication;
@@ -35,7 +32,6 @@ public class AnalyticsManager {
 
         FirebaseAnalytics.getInstance(ShuttleApplication.getInstance())
                 .logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-        Answers.getInstance().logCustom(new CustomEvent("Changelog Viewed"));
     }
 
     public static void logScreenName(Activity activity, String name) {
@@ -43,7 +39,7 @@ public class AnalyticsManager {
             return;
         }
 
-        CrashlyticsCore.getInstance().log(String.format("Screen: %s", name));
+        android.util.Log.w("Shuttle", String.format("Screen: %s", name));
         FirebaseAnalytics.getInstance(ShuttleApplication.getInstance()).setCurrentScreen(activity, name, null);
     }
 
@@ -108,6 +104,6 @@ public class AnalyticsManager {
             return;
         }
 
-        CrashlyticsCore.getInstance().log(String.format("%s | %s", tag, breadCrumb));
+        android.util.Log.w("Shuttle", String.format("%s | %s", tag, breadCrumb));
     }
 }

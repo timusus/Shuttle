@@ -10,7 +10,7 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
-import android.support.annotation.LayoutRes;
+import androidx.annotation.LayoutRes;
 import android.widget.RemoteViews;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;

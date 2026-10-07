@@ -3,7 +3,7 @@ package com.afollestad.aesthetic;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
-import android.support.v7.view.menu.ActionMenuItemView;
+import androidx.appcompat.view.menu.ActionMenuItemView;
 import android.util.AttributeSet;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;

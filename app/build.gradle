@@ -1,41 +1,30 @@
 import dependencies.Dependencies
-import org.jetbrains.annotations.Nullable
-
-buildscript {
-    repositories {
-        jcenter()
-        maven { url 'https://maven.fabric.io/public' }
-        maven { url "https://jitpack.io" }
-        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-        maven { url "https://maven.google.com" }
-        mavenCentral()
-    }
-    dependencies {
-        classpath Dependencies.Plugins.android
-        classpath Dependencies.Plugins.dexcount
-        classpath Dependencies.Plugins.fabric
-    }
-}
 
 plugins {
-    id("com.github.triplet.play") version "2.1.0"
+    id("com.android.application")
+    id("kotlin-android")
+    id("kotlin-kapt")
 }
 
-apply plugin: Dependencies.BuildPlugins.androidApplication
-apply plugin: Dependencies.BuildPlugins.kotlin
-apply plugin: Dependencies.BuildPlugins.kotlinAndroidExtensions
-apply plugin: Dependencies.BuildPlugins.kapt
-apply plugin: Dependencies.BuildPlugins.dexCount
-apply plugin: Dependencies.BuildPlugins.fabric
+apply plugin: Dependencies.BuildPlugins.playServices
+
+// The committed google-services.json files are stubs without a project_id and the debug application ids have no
+// Firebase client, so Firebase is only processed for release variants and only when a real config is present
+// (any app/**/google-services.json containing a project_id). Otherwise the build still succeeds, without Firebase.
+def hasFirebaseConfig = fileTree(dir: projectDir, include: 'src/**/google-services.json').files.any { it.text.contains('"project_id"') } ||
+        file('google-services.json').with { it.exists() && it.text.contains('"project_id"') }
+tasks.configureEach { task ->
+    if (task.name ==~ /process.*GoogleServices/ && (task.name.contains('Debug') || !hasFirebaseConfig)) {
+        task.enabled = false
+    }
+}
 
 repositories {
-    maven { url 'https://maven.fabric.io/public' }
     maven { url "https://jitpack.io" }
-    maven { url 'http://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     mavenCentral()
 }
 
-@Nullable
 def getProperties(String fileName) {
     final Properties properties = new Properties()
     def file = file(fileName)
@@ -45,14 +34,17 @@ def getProperties(String fileName) {
     return properties
 }
 
-static def getProperty(@Nullable Properties properties, String name) {
+static def getProperty(Properties properties, String name) {
     return properties.getProperty(name) ?: "$name missing"
 }
 
+// Release signing is read from an optional keystore.properties in the repo root (store, alias, storePass, pass).
+// When it is absent the release variants still configure and build, but unsigned.
+def hasKeystore = file('../keystore.properties').exists()
+def keystoreProperties = getProperties('../keystore.properties')
+
 android {
-    dexOptions {
-        jumboMode = true
-    }
+    namespace 'com.simplecity.amp_library'
 
     compileSdkVersion Dependencies.compileSdk
 
@@ -61,27 +53,26 @@ android {
         targetSdkVersion Dependencies.targetSdk
 
         versionName Config.versionName
-        versionCode 5000
+        versionCode 5900
 
         resConfigs "en", "zh-rCN", "fr", "de", "ko", "it", "ru", "nl", "tr", "pl", "ro", "hu", "hi-rIN", "uk", "bg-rBG", "en-rGB", "et-rEE", "vi", "pt-rBR", "es", "en-rNZ", "zh-rTW", "es-rES", "ca", "hr", "en-rAU", "eu-rES", "th", "ja"
 
         renderscriptTargetApi 23
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         // This API key is provided for convenience. Please go to https://www.last.fm/api/account/create and create your own.
         buildConfigField("String", "LASTFM_API_KEY", "\"${getProperty(getProperties('../public.properties'), 'LASTFM_API_KEY')}\"")
-
-        manifestPlaceholders = [CRASHLYTICS_API_KEY: "dummy-key"]
     }
 
     signingConfigs {
-        release {
-            Properties properties = getProperties('../keystore.properties')
-            storeFile file(getProperty(properties, 'store'))
-            keyAlias getProperty(properties, 'alias')
-            storePassword getProperty(properties, 'storePass')
-            keyPassword getProperty(properties, 'pass')
+        if (hasKeystore) {
+            release {
+                storeFile file(getProperty(keystoreProperties, 'store'))
+                keyAlias getProperty(keystoreProperties, 'alias')
+                storePassword getProperty(keystoreProperties, 'storePass')
+                keyPassword getProperty(keystoreProperties, 'pass')
+            }
         }
     }
 
@@ -89,7 +80,6 @@ android {
 
         debug {
             applicationIdSuffix ".debug"
-            ext.enableCrashlytics = false
         }
 
         release {
@@ -100,10 +90,11 @@ android {
             // For further optimisation, use 'proguard-android-optimize.txt' instead of 'proguard-android.txt'.
             // Last time I checked, it reduced by another ~5000 methods.
             proguardFiles getDefaultProguardFile('proguard-android.txt'), file('proguard-rules.pro')
-            signingConfig signingConfigs.release
+            if (hasKeystore) {
+                signingConfig signingConfigs.release
+            }
 
             buildConfigField("String", "LASTFM_API_KEY", "\"${getProperty(getProperties('../private.properties'), 'LASTFM_API_KEY')}\"")
-            manifestPlaceholders = [CRASHLYTICS_API_KEY: "${getProperty(getProperties('../private.properties'), 'CRASHLYTICS_API_KEY')}"]
         }
     }
 
@@ -113,14 +104,8 @@ android {
         def names = variant.flavors*.name
         def buildTypes = variant.buildType*.name
 
-        def debugFilters = ["paid", "free", 'amazonPaid', "amazonFree"]
+        def debugFilters = ["amazonPaid", "amazonFree"]
         def relFilters = ["dev"]
-
-        if (System.getenv("TRAVIS")) {
-            relFilters << "dev"
-            relFilters << "amazonPaid"
-            relFilters << "amazonFree"
-        }
 
         def filter = { name -> names.contains(name) }
         def debugIgnore = buildTypes.contains("debug") && debugFilters.stream().anyMatch(filter)
@@ -129,20 +114,19 @@ android {
         setIgnore(debugIgnore || releaseIgnore)
     }
 
-    // Set the version code for release builds
-    applicationVariants.all { variant ->
-        if (variant.buildType.name == "release") {
-            def newVersionCode = generateVersionCode()
-            variant.outputs.all { output ->
-                output.setVersionCodeOverride(newVersionCode)
-            }
-        }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
-    // Used to enable Java8 features
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
+    buildFeatures {
+        buildConfig true
+        renderScript true
+        aidl true
     }
 
     flavorDimensions "all"
@@ -198,13 +182,15 @@ android {
         amazonFree.java.srcDirs = ['src/free/java']
     }
 
-    lintOptions {
-        ignore 'ExtraTranslation', 'MissingTranslation'
+    lint {
+        disable 'ExtraTranslation', 'MissingTranslation'
         abortOnError false
     }
 
-    packagingOptions {
-        exclude 'META-INF/rxjava.properties'
+    packaging {
+        resources {
+            excludes += 'META-INF/rxjava.properties'
+        }
     }
 }
 
@@ -216,17 +202,19 @@ dependencies {
     implementation Dependencies.kotlin
 
     // Google libs
+    implementation Dependencies.Google.appcompat
     implementation Dependencies.Google.cardView
     implementation Dependencies.Google.design
     implementation Dependencies.Google.palette
     implementation Dependencies.Google.prefCompat
-    implementation Dependencies.Google.prefCompatv14
     implementation Dependencies.Google.recyclerView
     implementation Dependencies.Google.supportv4
+    implementation platform(Dependencies.Google.firebaseBom)
     implementation Dependencies.Google.firebaseCore
     implementation Dependencies.Google.firebaseRemoteConfig
     implementation Dependencies.Google.constraintLayout
     implementation Dependencies.Google.chromecast
+    implementation Dependencies.Google.mediarouter
 
     // Square libs
     implementation Dependencies.Square.okio
@@ -234,9 +222,7 @@ dependencies {
     implementation Dependencies.Square.retrofit
     implementation Dependencies.Square.retrofitGson
     implementation Dependencies.Square.sqlBrite
-    debugImplementation Dependencies.Square.haha
     debugImplementation Dependencies.Square.leakCanaryDebug
-    releaseImplementation Dependencies.Square.leakCanaryRel
 
     // Projects
     implementation project(Dependencies.Projects.navigation)
@@ -260,7 +246,6 @@ dependencies {
 
     // External libs
     implementation Dependencies.nanoHttp
-    implementation Dependencies.dashClockApi
     implementation Dependencies.fastScroll
     implementation Dependencies.glide
     implementation Dependencies.glideOkhttp
@@ -276,10 +261,6 @@ dependencies {
     implementation Dependencies.dagger
     kapt Dependencies.daggerAnnotationProcessor
 
-    implementation(Dependencies.crashlytics) {
-        transitive = true
-    }
-
     // Testing
     testImplementation Dependencies.Testing.junit
     testImplementation Dependencies.Testing.mockito
@@ -287,62 +268,5 @@ dependencies {
     testImplementation Dependencies.Testing.powermockjunit
     testImplementation Dependencies.Testing.robolectric
     testImplementation Dependencies.Testing.assertj
-    androidTestImplementation(Dependencies.Testing.espresso) {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    }
+    androidTestImplementation(Dependencies.Testing.espresso)
 }
-
-configurations.all {
-    resolutionStrategy {
-        eachDependency { details ->
-            // Force all of the primary support libraries to use the same version.
-            if (details.requested.group == 'com.android.support'
-                    && details.requested.name != 'multidex'
-                    && details.requested.name != 'multidex-instrumentation') {
-                details.useVersion Dependencies.Google.Versions.supportLib
-            }
-        }
-    }
-}
-
-class Globals {
-    static int versionCode = -1
-}
-
-static int generateVersionCode() {
-    if (Globals.versionCode == -1) {
-        def versionCode = 5000
-        if (System.getenv("TRAVIS_BUILD_NUMBER")) {
-            def travisBuildNumber = System.getenv("TRAVIS_BUILD_NUMBER").toInteger()
-            println "Travis build number: $travisBuildNumber"
-            versionCode += travisBuildNumber
-        }
-        println "Version code: $versionCode"
-        Globals.versionCode = versionCode
-        return versionCode
-    }
-    return Globals.versionCode
-}
-
-static String getPlayStoreTrack() {
-    def track = 'alpha'
-    if (System.getenv("TRAVIS_TAG")) {
-        String branch = System.getenv("TRAVIS_TAG").toString()
-        if (branch.contains('alpha')) {
-            track = 'alpha'
-        } else if (branch.contains('beta')) {
-            track = 'beta'
-        } else if (branch.contains('release')) {
-            track = 'production'
-        }
-    }
-    println "Play store track: $track"
-    return track
-}
-
-play {
-    track = getPlayStoreTrack()
-    serviceAccountCredentials = file('../deployment_keys.json')
-}
-
-apply plugin: Dependencies.BuildPlugins.playServices

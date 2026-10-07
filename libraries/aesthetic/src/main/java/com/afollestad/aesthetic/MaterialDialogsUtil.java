@@ -1,7 +1,7 @@
 package com.afollestad.aesthetic;
 
 import android.content.res.ColorStateList;
-import android.support.annotation.RestrictTo;
+import androidx.annotation.RestrictTo;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -11,7 +11,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function4;
 
-import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 
 /**
  * Handles auto theming of dialogs from my Material Dialogs library, using the ThemeSingleton class.

@@ -168,6 +168,7 @@ class MediaIdHelper {
                         { completion(mutableListOf(), 0) }
                     )
             }
+            else -> Unit
         }
     }
 

@@ -1,8 +1,8 @@
 package com.simplecity.amp_library.utils.menu.album
 
 import android.content.Context
-import android.support.v7.widget.PopupMenu
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.widget.PopupMenu
+import androidx.appcompat.widget.Toolbar
 import com.simplecity.amp_library.R
 import com.simplecity.amp_library.model.Album
 import com.simplecity.amp_library.model.Playlist
@@ -57,7 +57,7 @@ object AlbumMenuUtils {
                 Defs.PLAYLIST_SELECTED -> {
                     MenuUtils.addToPlaylist(
                         context,
-                        item.intent.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist,
+                        item.intent!!.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist,
                         selectedAlbums.getSongsSingle(),
                         { callbacks.onPlaylistItemsInserted() })
                     return@OnMenuItemClickListener true
@@ -95,7 +95,7 @@ object AlbumMenuUtils {
                     return@OnMenuItemClickListener true
                 }
                 Defs.PLAYLIST_SELECTED -> {
-                    MenuUtils.addToPlaylist(context, item.intent.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist, album.songsSingle) { callbacks.onPlaylistItemsInserted() }
+                    MenuUtils.addToPlaylist(context, item.intent!!.getSerializableExtra(PlaylistUtils.ARG_PLAYLIST) as Playlist, album.songsSingle) { callbacks.onPlaylistItemsInserted() }
                     return@OnMenuItemClickListener true
                 }
                 R.id.addToQueue -> {

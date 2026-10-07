@@ -1,7 +1,7 @@
 package com.afollestad.aesthetic;
 
 import android.content.res.ColorStateList;
-import android.support.annotation.ColorInt;
+import androidx.annotation.ColorInt;
 
 /** @author Aidan Follestad (afollestad) */
 @SuppressWarnings("WeakerAccess")

@@ -2,7 +2,7 @@ package com.simplecity.amp_library.utils.menu;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.MenuItem;
 import com.simplecity.amp_library.model.InclExclItem;
 import com.simplecity.amp_library.model.Playlist;

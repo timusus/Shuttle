@@ -3,11 +3,18 @@ import dependencies.Dependencies
 apply plugin: Dependencies.BuildPlugins.androidLibrary
 
 android {
+    namespace 'com.google.android.libraries.cast.companionlibrary'
+
     compileSdkVersion Dependencies.compileSdk
 
     defaultConfig {
         minSdkVersion Dependencies.minSdk
         targetSdkVersion Dependencies.targetSdk
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     sourceSets {
@@ -18,7 +25,7 @@ android {
         }
     }
 
-    lintOptions {
+    lint {
         abortOnError false
     }
 }

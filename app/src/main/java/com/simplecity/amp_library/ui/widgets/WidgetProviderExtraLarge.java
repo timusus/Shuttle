@@ -3,7 +3,7 @@ package com.simplecity.amp_library.ui.widgets;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Environment;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.view.View;
 import android.widget.RemoteViews;
 import com.simplecity.amp_library.R;

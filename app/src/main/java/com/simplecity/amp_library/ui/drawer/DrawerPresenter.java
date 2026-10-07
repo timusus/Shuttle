@@ -1,7 +1,7 @@
 package com.simplecity.amp_library.ui.drawer;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import com.simplecity.amp_library.model.Playlist;
 import com.simplecity.amp_library.model.PlaylistsModel;
 import com.simplecity.amp_library.ui.presenters.Presenter;

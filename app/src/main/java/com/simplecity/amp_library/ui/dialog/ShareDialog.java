@@ -3,7 +3,7 @@ package com.simplecity.amp_library.ui.dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.support.v4.content.FileProvider;
+import androidx.core.content.FileProvider;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;

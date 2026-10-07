@@ -1,7 +1,7 @@
 package com.simplecity.amp_library.utils;
 
 import android.graphics.Typeface;
-import android.support.v4.util.ArrayMap;
+import androidx.collection.ArrayMap;
 import com.simplecity.amp_library.ShuttleApplication;
 import java.util.Map;
 

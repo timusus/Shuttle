@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.internal.ForegroundLinearLayout
+<com.google.android.material.internal.ForegroundLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -38,4 +38,4 @@
         android:layout_marginRight="16dp"
         android:clickable="false"/>
 
-</android.support.design.internal.ForegroundLinearLayout>
+</com.google.android.material.internal.ForegroundLinearLayout>

@@ -1,6 +1,6 @@
 package com.simplecity.amp_library.ui.drawer;
 
-import android.support.v4.widget.DrawerLayout;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 public interface DrawerProvider {
 

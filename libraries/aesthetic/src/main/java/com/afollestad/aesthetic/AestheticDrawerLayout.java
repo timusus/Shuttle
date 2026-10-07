@@ -3,10 +3,10 @@ package com.afollestad.aesthetic;
 import static com.afollestad.aesthetic.Rx.onErrorLogAndRethrow;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.graphics.drawable.DrawerArrowDrawable;
+import androidx.annotation.NonNull;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.graphics.drawable.DrawerArrowDrawable;
 import android.util.AttributeSet;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;

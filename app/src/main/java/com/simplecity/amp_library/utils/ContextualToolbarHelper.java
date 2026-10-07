@@ -1,6 +1,6 @@
 package com.simplecity.amp_library.utils;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import com.annimon.stream.Stream;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;

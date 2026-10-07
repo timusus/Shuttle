@@ -4,8 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.support.design.widget.BaseTransientBottomBar;
-import android.support.design.widget.Snackbar;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.NumberPicker;
@@ -73,7 +73,7 @@ public class DialogUtils {
                         });
                 snackbar.show();
 
-                TextView snackbarText = snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
+                TextView snackbarText = snackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);
                 if (snackbarText != null) {
                     snackbarText.setTextColor(Color.WHITE);
                 }

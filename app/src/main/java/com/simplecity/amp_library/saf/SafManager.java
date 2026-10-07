@@ -8,17 +8,16 @@ import android.content.UriPermission;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.provider.DocumentFile;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.documentfile.provider.DocumentFile;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.crashlytics.android.Crashlytics;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.utils.SettingsManager;
@@ -221,7 +220,7 @@ public class SafManager {
                 }
             }
         } catch (NoSuchMethodError e) {
-            Crashlytics.log("getExtSdCardPaths() failed. " + e.getMessage());
+            android.util.Log.w("Shuttle", "getExtSdCardPaths() failed. " + e.getMessage());
         }
         return paths;
     }

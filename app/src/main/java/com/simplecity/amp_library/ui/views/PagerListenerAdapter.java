@@ -1,6 +1,6 @@
 package com.simplecity.amp_library.ui.views;
 
-import android.support.v4.view.ViewPager;
+import androidx.viewpager.widget.ViewPager;
 
 public abstract class PagerListenerAdapter implements ViewPager.OnPageChangeListener {
 
