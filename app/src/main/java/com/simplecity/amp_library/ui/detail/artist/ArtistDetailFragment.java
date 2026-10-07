@@ -210,8 +210,7 @@ public class ArtistDetailFragment extends BaseFragment implements
         toolbar.setNavigationOnClickListener(v -> getNavigationController().popViewController());
 
         if (ShuttleUtils.canDrawBehindStatusBar()) {
-            toolbar.getLayoutParams().height = (int) (ActionBarUtils.getActionBarHeight(getContext()) + ActionBarUtils.getStatusBarHeight(getContext()));
-            toolbar.setPadding(toolbar.getPaddingLeft(), (int) (toolbar.getPaddingTop() + ActionBarUtils.getStatusBarHeight(getContext())), toolbar.getPaddingRight(), toolbar.getPaddingBottom());
+            ActionBarUtils.bindToolbarInset(toolbar);
         }
 
         setupToolbarMenu(toolbar);

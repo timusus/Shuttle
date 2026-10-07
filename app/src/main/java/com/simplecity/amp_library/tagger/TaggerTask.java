@@ -3,6 +3,7 @@ package com.simplecity.amp_library.tagger;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.ParcelFileDescriptor;
+import android.util.Log;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.TagUpdate;
 import java.io.File;
@@ -20,6 +21,8 @@ import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 
 public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
+
+    private static final String TAG = "TaggerTask";
 
     public interface TagCompletionListener {
         void onSuccess();
@@ -140,12 +143,13 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
                     AudioFileIO.write(audioFile);
 
                     if (temp != null) {
-                        // "wt" truncates, so a shorter file doesn't keep the old file's trailing bytes
-                        ParcelFileDescriptor pfd = ShuttleApplication.getInstance().getContentResolver().openFileDescriptor(writeUri, "wt");
-                        if (pfd != null) {
-                            FileOutputStream fileOutputStream = new FileOutputStream(pfd.getFileDescriptor());
-                            TaggerUtils.copyFile(temp, fileOutputStream);
-                            pfd.close();
+                        try {
+                            writeBack(temp, writeUri);
+                        } catch (IOException e) {
+                            // The original may now be truncated: keep the temp copy, the only good one.
+                            tempFiles.remove(temp);
+                            Log.e(TAG, "Failed to write tagged file back, temp copy kept at " + temp, e);
+                            throw e;
                         }
                         if (temp.delete()) {
                             tempFiles.remove(temp);
@@ -170,6 +174,26 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
         }
 
         return success;
+    }
+
+    private static void writeBack(File temp, Uri writeUri) throws IOException {
+        IOException failure = null;
+        for (int attempt = 0; attempt < 2; attempt++) {
+            try {
+                // "wt" truncates, so a shorter file doesn't keep the old file's trailing bytes
+                ParcelFileDescriptor pfd = ShuttleApplication.getInstance().getContentResolver().openFileDescriptor(writeUri, "wt");
+                if (pfd == null) {
+                    throw new IOException("Couldn't open " + writeUri);
+                }
+                try (ParcelFileDescriptor fd = pfd) {
+                    TaggerUtils.copyFile(temp, new FileOutputStream(fd.getFileDescriptor()));
+                }
+                return;
+            } catch (IOException e) {
+                failure = e;
+            }
+        }
+        throw failure;
     }
 
     @Override

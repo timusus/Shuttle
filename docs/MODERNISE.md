@@ -113,7 +113,7 @@ Other
 
 ## Owner items
 
-0. **Developer message dialog: done** (`DeveloperMessageDialog`, shown once from `MainActivity`, replaces the changelog on that launch). Set `SALE_END_EPOCH_MILLIS` in `DeveloperMessageDialog.java` before release (0 hides the sale line). Play release notes draft: `docs/whats-new-2.0.18.txt`.
+0. **Developer message dialog: done** (`DeveloperMessageDialog`, shown once from `MainActivity`, replaces the changelog on that launch). Set `SALE_END_EPOCH_MILLIS` in `DeveloperMessageDialog.java` before release (0 hides the sale line). Play release notes draft: `docs/whats-new-2.0.18.txt` (its sale line mirrors the dialog's: fill in the end date, or delete the line if no sale runs).
 1. `keystore.properties` in the repo root with `store`, `alias`, `storePass` and `pass`, plus the keystore. The current file is incomplete, so release tasks fail with a message.
 2. `private.properties` with `LASTFM_API_KEY`.
 3. Confirm that Chromecast receiver id `73341C53` is still registered.

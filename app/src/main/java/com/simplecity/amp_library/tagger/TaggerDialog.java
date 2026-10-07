@@ -391,6 +391,8 @@ public class TaggerDialog extends DialogFragment {
      */
     @SuppressLint("NewApi")
     private void requestMediaStoreWrite() {
+        // Stop a second tap launching a second request while this one is in flight
+        setSaveEnabled(false);
         disposables.add(TaggerUtils.getMediaStoreUris(originalSongPaths)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -400,16 +402,24 @@ public class TaggerDialog extends DialogFragment {
                     }
                     if (uris.size() != originalSongPaths.size()) {
                         // Not every file is in the MediaStore, so we can't get write access to it.
+                        setSaveEnabled(true);
                         Toast.makeText(getContext(), R.string.tag_error, Toast.LENGTH_LONG).show();
                         return;
                     }
                     PendingIntent pendingIntent = MediaStore.createWriteRequest(requireContext().getContentResolver(), uris);
                     writeRequestLauncher.launch(new IntentSenderRequest.Builder(pendingIntent.getIntentSender()).build());
-                }, error -> LogUtils.logException(TAG, "Failed to request write access", error)));
+                }, error -> {
+                    setSaveEnabled(true);
+                    LogUtils.logException(TAG, "Failed to request write access", error);
+                }));
     }
 
     private void onMediaStoreWriteResult(boolean approved) {
         if (!approved) {
+            setSaveEnabled(true);
+            if (getContext() != null) {
+                Toast.makeText(getContext(), R.string.tag_error, Toast.LENGTH_LONG).show();
+            }
             return;
         }
         // The grant is for these uris; look them up again rather than holding them across a possible recreation.
@@ -419,8 +429,19 @@ public class TaggerDialog extends DialogFragment {
                 .subscribe(uris -> {
                     if (isAdded() && uris.size() == originalSongPaths.size()) {
                         runTaggerTask(uris);
+                    } else {
+                        setSaveEnabled(true);
                     }
-                }, error -> LogUtils.logException(TAG, "Failed to save tags", error)));
+                }, error -> {
+                    setSaveEnabled(true);
+                    LogUtils.logException(TAG, "Failed to save tags", error);
+                }));
+    }
+
+    private void setSaveEnabled(boolean enabled) {
+        if (materialDialog != null) {
+            materialDialog.getActionButton(DialogAction.POSITIVE).setEnabled(enabled);
+        }
     }
 
     /**

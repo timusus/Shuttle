@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.WindowCompat;
+import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -42,6 +43,7 @@ import com.simplecity.amp_library.utils.ActionBarUtils;
 import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
+import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ThemeUtils;
@@ -155,11 +157,14 @@ public class MainActivity extends BaseCastActivity implements
         if (mainContainer != null) {
             mainContainer.setPadding(bars.left, 0, bars.right, bars.bottom);
         }
-        navigationView.setPadding(bars.left, 0, 0, 0);
+        // The drawer sits on the start edge, which is the right in RTL
+        boolean rtl = ViewCompat.getLayoutDirection(navigationView) == ViewCompat.LAYOUT_DIRECTION_RTL;
+        navigationView.setPadding(rtl ? 0 : bars.left, 0, rtl ? bars.right : 0, 0);
 
         DrawerFragment drawerFragment = (DrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navDrawerFragment);
         if (drawerFragment != null) {
             drawerFragment.setBottomInset(bars.bottom);
+            drawerFragment.setTopInset(bars.top);
         }
     }
 
@@ -297,6 +302,10 @@ public class MainActivity extends BaseCastActivity implements
     private void showChangelogDialog() {
         // The one-off developer message replaces the changelog for this version.
         if (!SettingsManager.getInstance().getDeveloperMessageShown()) {
+            if (!PermissionUtils.hasStoragePermission(this)) {
+                // The storage prompt may be covering the screen (and a denial finishes the activity): try again next launch
+                return;
+            }
             if (!getSupportFragmentManager().isStateSaved()) {
                 new DeveloperMessageDialog().show(getSupportFragmentManager());
                 SettingsManager.getInstance().setDeveloperMessageShown();

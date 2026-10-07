@@ -40,7 +40,6 @@ public abstract class BaseActivity extends AestheticActivity implements ServiceC
             public void onPermissionResult(Permiso.ResultSet resultSet) {
                 if (resultSet.areAllPermissionsGranted()) {
                     bindService();
-                    PermissionUtils.requestNotificationPermissionOnce(BaseActivity.this);
                 } else {
                     Toast.makeText(BaseActivity.this, "Permission check failed", Toast.LENGTH_LONG).show();
                     finish();
@@ -66,6 +65,11 @@ public abstract class BaseActivity extends AestheticActivity implements ServiceC
         }
 
         Permiso.getInstance().setActivity(this);
+
+        // Not nested in the storage request's callback: asked on a later resume, once storage is granted
+        if (PermissionUtils.hasStoragePermission(this)) {
+            PermissionUtils.requestNotificationPermissionOnce(this);
+        }
     }
 
     @Override

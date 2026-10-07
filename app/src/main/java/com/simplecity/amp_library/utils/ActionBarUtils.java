@@ -2,6 +2,10 @@ package com.simplecity.amp_library.utils;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.view.View;
+import android.view.ViewGroup;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Helpers for the {@link android.app.ActionBar}
@@ -21,8 +25,50 @@ public final class ActionBarUtils {
      */
     private static int statusBarInset = -1;
 
+    private static final List<Runnable> insetListeners = new ArrayList<>();
+
     public static void setStatusBarInset(int inset) {
+        if (statusBarInset == inset) {
+            return;
+        }
         statusBarInset = inset;
+        for (Runnable listener : new ArrayList<>(insetListeners)) {
+            listener.run();
+        }
+    }
+
+    /**
+     * Sizes a toolbar that draws behind the status bar: action bar height plus the status bar inset as height, and the
+     * inset added to its top padding. Re-applied whenever the inset changes (e.g. rotation on a cutout device) while
+     * the toolbar is attached. Main thread only.
+     */
+    public static void bindToolbarInset(final View toolbar) {
+        final int basePaddingTop = toolbar.getPaddingTop();
+        final Runnable apply = () -> {
+            int statusBarHeight = (int) getStatusBarHeight(toolbar.getContext());
+            ViewGroup.LayoutParams params = toolbar.getLayoutParams();
+            if (params != null) {
+                params.height = (int) getActionBarHeight(toolbar.getContext()) + statusBarHeight;
+            }
+            toolbar.setPadding(toolbar.getPaddingLeft(), basePaddingTop + statusBarHeight, toolbar.getPaddingRight(), toolbar.getPaddingBottom());
+            toolbar.requestLayout();
+        };
+        apply.run();
+        toolbar.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+            @Override
+            public void onViewAttachedToWindow(View v) {
+                insetListeners.add(apply);
+                apply.run();
+            }
+
+            @Override
+            public void onViewDetachedFromWindow(View v) {
+                insetListeners.remove(apply);
+            }
+        });
+        if (toolbar.isAttachedToWindow()) {
+            insetListeners.add(apply);
+        }
     }
 
     /* This class is never initialized */

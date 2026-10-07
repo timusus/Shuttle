@@ -66,10 +66,10 @@ public class DeveloperMessageDialog extends DialogFragment {
         }
         String query = "id=" + packageName + "&referrer=" + REFERRER;
         try {
-            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?" + query)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?" + query)));
         } catch (ActivityNotFoundException e) {
             try {
-                context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?" + query)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?" + query)));
             } catch (ActivityNotFoundException ignored) {
                 // No store or browser installed.
             }

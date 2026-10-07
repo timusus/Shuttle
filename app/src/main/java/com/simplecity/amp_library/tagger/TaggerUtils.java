@@ -240,21 +240,25 @@ public class TaggerUtils {
         }
     }
 
+    /**
+     * Copies the whole of sourceFile into the stream (which the caller closes), syncs, and verifies the written length matches.
+     */
     static void copyFile(File sourceFile, FileOutputStream outputStream) throws IOException {
-
-        FileChannel source = null;
-        FileChannel destination = null;
-
-        try {
-            source = new FileInputStream(sourceFile).getChannel();
-            destination = outputStream.getChannel();
-            destination.transferFrom(source, 0, source.size());
-        } finally {
-            if (source != null) {
-                source.close();
+        try (FileInputStream in = new FileInputStream(sourceFile)) {
+            byte[] buffer = new byte[64 * 1024];
+            int read;
+            while ((read = in.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, read);
             }
-            if (destination != null) {
-                destination.close();
+            outputStream.flush();
+            try {
+                outputStream.getFD().sync();
+            } catch (IOException ignored) {
+                // Some content provider descriptors can't be synced
+            }
+            long written = outputStream.getChannel().size();
+            if (written != sourceFile.length()) {
+                throw new IOException("Short write: " + written + " of " + sourceFile.length() + " bytes");
             }
         }
     }

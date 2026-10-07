@@ -64,6 +64,8 @@ public class DrawerFragment extends BaseFragment implements
 
     private View rootView;
 
+    private int topInset = 0;
+
     @BindView(R.id.line1)
     TextView trackNameView;
 
@@ -142,6 +144,35 @@ public class DrawerFragment extends BaseFragment implements
     /**
      * Keeps the last drawer item clear of the navigation bar when the window is drawn edge-to-edge.
      */
+    public void setTopInset(int topInset) {
+        this.topInset = topInset;
+        applyTopInset();
+    }
+
+    /**
+     * The header's top padding stands in for the status bar. 40dp is the designed minimum; on edge-to-edge windows
+     * (API 35+) grow it, and the header with it, when the real inset is larger.
+     */
+    private void applyTopInset() {
+        if (rootView == null) {
+            return;
+        }
+        View content = rootView.findViewById(R.id.drawer_header_content);
+        if (content == null) {
+            return;
+        }
+        float density = getResources().getDisplayMetrics().density;
+        int basePadding = (int) (40 * density);
+        int extra = Math.max(0, topInset - basePadding);
+        content.setPadding(content.getPaddingLeft(), basePadding + extra, content.getPaddingRight(), content.getPaddingBottom());
+        View header = (View) content.getParent();
+        ViewGroup.LayoutParams params = header.getLayoutParams();
+        if (params != null) {
+            params.height = getResources().getDimensionPixelSize(R.dimen.drawer_header_height) + extra;
+            header.setLayoutParams(params);
+        }
+    }
+
     public void setBottomInset(int bottomInset) {
         if (recyclerView != null) {
             recyclerView.setPadding(recyclerView.getPaddingLeft(), recyclerView.getPaddingTop(), recyclerView.getPaddingRight(), bottomInset);
@@ -155,6 +186,7 @@ public class DrawerFragment extends BaseFragment implements
             rootView = inflater.inflate(R.layout.fragment_drawer, container, false);
 
             ButterKnife.bind(this, rootView);
+            applyTopInset();
 
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         }

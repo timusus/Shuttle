@@ -6,6 +6,6 @@ I've rebuilt Shuttle from scratch as Shuttle Music. It's a separate app because 
 
 I've also made Shuttle Podcasts.
 
-Shuttle Music Pro is 50% off for a limited time.
+Shuttle Music Pro is 50% off until <sale end date>.
 
 — Tim

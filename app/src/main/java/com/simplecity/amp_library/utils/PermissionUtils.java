@@ -13,6 +13,8 @@ public class PermissionUtils {
 
     private static final String KEY_NOTIFICATION_PERMISSION_REQUESTED = "notification_permission_requested";
 
+    private static boolean notificationRequestPending = false;
+
     private PermissionUtils() {
 
     }
@@ -73,11 +75,16 @@ public class PermissionUtils {
                 || ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        prefs.edit().putBoolean(KEY_NOTIFICATION_PERMISSION_REQUESTED, true).apply();
+        if (notificationRequestPending) {
+            return;
+        }
+        notificationRequestPending = true;
         Permiso.getInstance().requestPermissions(new Permiso.IOnPermissionResult() {
             @Override
             public void onPermissionResult(Permiso.ResultSet resultSet) {
-                // Nothing to do either way
+                // Answered (granted or denied): don't ask again
+                notificationRequestPending = false;
+                prefs.edit().putBoolean(KEY_NOTIFICATION_PERMISSION_REQUESTED, true).apply();
             }
 
             @Override

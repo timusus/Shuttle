@@ -42,6 +42,14 @@ class DummyNotificationHelper {
 
         AnalyticsManager.dropBreadcrumb(TAG, "showDummyNotification() called");
 
+        if (isForegroundedByApp) {
+            // The media notification is already keeping us in the foreground, which satisfies startForegroundService()
+            AnalyticsManager.dropBreadcrumb(TAG, "Already foregrounded by app, skipping dummy notification");
+            return;
+        }
+
+        final boolean alreadyShowing = isShowingDummyNotification;
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager notificationManager = service.getSystemService(NotificationManager.class);
             if (!isShowingDummyNotification) {
@@ -65,28 +73,27 @@ class DummyNotificationHelper {
                     .build();
 
             // Every startForegroundService() must be followed by startForeground(), even if the dummy notification is
-            // already showing (the service may have left the foreground since).
-            if (!isForegroundedByApp) {
-                AnalyticsManager.dropBreadcrumb(TAG, "Starting dummy notification in foreground..");
-                try {
-                    service.startForeground(NOTIFICATION_ID_DUMMY, notification);
-                } catch (IllegalStateException e) {
-                    // Started with startService() and the app went to the background before we got here. The command
-                    // still runs; there's just no foreground.
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && e instanceof ForegroundServiceStartNotAllowedException) {
-                        AnalyticsManager.dropBreadcrumb(TAG, "startForeground() not allowed: " + e);
-                        return;
-                    }
-                    throw e;
+            // already showing (the service may have left the foreground since). Same id, so no duplicate.
+            AnalyticsManager.dropBreadcrumb(TAG, "Starting dummy notification in foreground..");
+            try {
+                service.startForeground(NOTIFICATION_ID_DUMMY, notification);
+            } catch (IllegalStateException e) {
+                // Started with startService() and the app went to the background before we got here. The command
+                // still runs; there's just no foreground.
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && e instanceof ForegroundServiceStartNotAllowedException) {
+                    AnalyticsManager.dropBreadcrumb(TAG, "startForeground() not allowed: " + e);
+                    return;
                 }
-            } else {
-                AnalyticsManager.dropBreadcrumb(TAG, "Already foregrounded by app, showing dummy notification without foregrounding");
-                notificationManager.notify(NOTIFICATION_ID_DUMMY, notification);
+                throw e;
             }
 
             isShowingDummyNotification = true;
         }
 
+        if (alreadyShowing && dummyNotificationDisposable != null && !dummyNotificationDisposable.isDisposed()) {
+            // Already showing with its removal timer running
+            return;
+        }
         if (dummyNotificationDisposable != null) {
             dummyNotificationDisposable.dispose();
         }
