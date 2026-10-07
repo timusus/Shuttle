@@ -97,8 +97,11 @@ object PlaylistMenuUtils {
             }
             R.id.deletePlaylist -> {
                 callbacks.showDeleteConfirmationDialog(playlist) {
-                    playlist.delete()
-                    callbacks.onPlaylistDeleted()
+                    if (playlist.delete()) {
+                        callbacks.onPlaylistDeleted()
+                    } else {
+                        callbacks.showToast(R.string.playlist_save_failed)
+                    }
                 }
                 return true
             }

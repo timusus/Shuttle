@@ -1,10 +1,13 @@
 package com.simplecity.amp_library.tagger;
 
 import android.annotation.TargetApi;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.UriPermission;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.MediaStore;
 import androidx.documentfile.provider.DocumentFile;
 import android.util.Log;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -17,8 +20,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import io.reactivex.Single;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TaggerUtils {
 
@@ -27,6 +33,46 @@ public class TaggerUtils {
     //This class is never instantiated
     private TaggerUtils() {
 
+    }
+
+    /**
+     * Looks up the MediaStore uri of each path, in the same order. Paths that aren't in the MediaStore are left out, so
+     * callers should compare sizes.
+     */
+    static Single<List<Uri>> getMediaStoreUris(List<String> paths) {
+        return Single.fromCallable(() -> {
+            Map<String, Long> ids = new HashMap<>();
+            // Stay well under SQLite's bound-argument limit
+            int chunkSize = 500;
+            for (int start = 0; start < paths.size(); start += chunkSize) {
+                List<String> chunk = paths.subList(start, Math.min(paths.size(), start + chunkSize));
+                StringBuilder selection = new StringBuilder(MediaStore.Audio.Media.DATA + " IN (");
+                for (int i = 0; i < chunk.size(); i++) {
+                    selection.append(i == 0 ? "?" : ",?");
+                }
+                selection.append(")");
+                try (Cursor cursor = ShuttleApplication.getInstance().getContentResolver().query(
+                        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                        new String[] { MediaStore.Audio.Media._ID, MediaStore.Audio.Media.DATA },
+                        selection.toString(),
+                        chunk.toArray(new String[0]),
+                        null)) {
+                    if (cursor != null) {
+                        while (cursor.moveToNext()) {
+                            ids.put(cursor.getString(1), cursor.getLong(0));
+                        }
+                    }
+                }
+            }
+            List<Uri> uris = new ArrayList<>();
+            for (String path : paths) {
+                Long id = ids.get(path);
+                if (id != null) {
+                    uris.add(ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id));
+                }
+            }
+            return uris;
+        });
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

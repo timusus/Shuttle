@@ -15,6 +15,7 @@ import com.simplecity.amp_library.sql.providers.PlayCountTable;
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
 import com.simplecity.amp_library.utils.ComparisonUtils;
 import com.simplecity.amp_library.utils.DataManager;
+import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import io.reactivex.Observable;
@@ -163,20 +164,34 @@ public class Playlist implements Serializable {
                 .firstOrError();
     }
 
+    /**
+     * @return false if the playlist couldn't be deleted. From API 29 MediaStore refuses to delete playlists this app
+     * doesn't own.
+     */
     public boolean delete() {
         Uri uri = ContentUris.withAppendedId(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, id);
-        if (uri != null) {
+        try {
             return ShuttleApplication.getInstance().getContentResolver().delete(uri, null, null) > 0;
+        } catch (IllegalArgumentException | SecurityException e) {
+            LogUtils.logException(TAG, "Failed to delete playlist", e);
+            return false;
         }
-        return false;
     }
 
     public void removeSong(@NonNull Song song, @Nullable UnsafeConsumer<Boolean> success) {
         PlaylistUtils.removeFromPlaylist(this, song, success);
     }
 
+    /**
+     * @return false if the song couldn't be moved. From API 29 MediaStore refuses to edit playlists this app doesn't own.
+     */
     public boolean moveSong(int from, int to) {
-        return MediaStore.Audio.Playlists.Members.moveItem(ShuttleApplication.getInstance().getContentResolver(), id, from, to);
+        try {
+            return MediaStore.Audio.Playlists.Members.moveItem(ShuttleApplication.getInstance().getContentResolver(), id, from, to);
+        } catch (IllegalArgumentException | SecurityException e) {
+            LogUtils.logException(TAG, "Failed to move playlist item", e);
+            return false;
+        }
     }
 
     public Observable<List<Song>> getSongsObservable() {

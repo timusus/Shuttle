@@ -3,7 +3,6 @@ package com.simplecity.amp_library.utils;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -400,17 +399,30 @@ public class PlaylistUtils {
         }
 
         Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlist.id);
-        if (uri != null) {
+        Context appContext = context.getApplicationContext();
+        // The insert is slow for big playlists, so keep it off the main thread.
+        Single.fromCallable(() -> {
             try {
                 ShuttleApplication.getInstance().getContentResolver().bulkInsert(uri, contentValues);
-                PlaylistUtils.showPlaylistToast(context, songs.size());
-                if (insertCallback != null) {
-                    insertCallback.run();
-                }
-            } catch (SecurityException e) {
+                return true;
+            } catch (IllegalArgumentException | SecurityException e) {
+                // From API 29 MediaStore refuses writes to playlists this app doesn't own.
                 LogUtils.logException(TAG, "Failed to insert playlist items", e);
+                return false;
             }
-        }
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(inserted -> {
+                    if (inserted) {
+                        PlaylistUtils.showPlaylistToast(appContext, songs.size());
+                        if (insertCallback != null) {
+                            insertCallback.run();
+                        }
+                    } else {
+                        Toast.makeText(appContext, R.string.playlist_save_failed, Toast.LENGTH_SHORT).show();
+                    }
+                }, error -> LogUtils.logException(TAG, "Failed to insert playlist items", error));
     }
 
     private static String getApplyCheckboxString(Context context, int count) {
@@ -734,16 +746,30 @@ public class PlaylistUtils {
 
                     String name = editText.getText().toString();
                     if (name.length() > 0) {
-                        ContentResolver resolver = context.getContentResolver();
+                        Context appContext = context.getApplicationContext();
                         ContentValues values = new ContentValues(1);
                         values.put(MediaStore.Audio.Playlists.NAME, name);
-                        resolver.update(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
-                                values,
-                                MediaStore.Audio.Playlists._ID + "=?",
-                                new String[] { Long.valueOf(playlist.id).toString() }
-                        );
-                        playlist.name = name;
-                        Toast.makeText(context, R.string.playlist_renamed_message, Toast.LENGTH_SHORT).show();
+                        Single.fromCallable(() -> {
+                            try {
+                                return appContext.getContentResolver().update(
+                                        ContentUris.withAppendedId(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, playlist.id), values, null, null) > 0;
+                            } catch (IllegalArgumentException | SecurityException e) {
+                                // From API 29 MediaStore refuses to rename a playlist this app doesn't own, or whose
+                                // backing file can't be renamed.
+                                LogUtils.logException(TAG, "Failed to rename playlist", e);
+                                return false;
+                            }
+                        })
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(renamed -> {
+                                    if (renamed) {
+                                        playlist.name = name;
+                                        Toast.makeText(appContext, R.string.playlist_renamed_message, Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(appContext, R.string.playlist_save_failed, Toast.LENGTH_SHORT).show();
+                                    }
+                                }, error -> LogUtils.logException(TAG, "Failed to rename playlist", error));
                     }
                 })
                 .negativeText(R.string.cancel);

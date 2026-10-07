@@ -19,6 +19,7 @@ import com.afollestad.aesthetic.AestheticActivity;
 import com.greysonparrelli.permiso.Permiso;
 import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
+import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 
 import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
@@ -39,6 +40,7 @@ public abstract class BaseActivity extends AestheticActivity implements ServiceC
             public void onPermissionResult(Permiso.ResultSet resultSet) {
                 if (resultSet.areAllPermissionsGranted()) {
                     bindService();
+                    PermissionUtils.requestNotificationPermissionOnce(BaseActivity.this);
                 } else {
                     Toast.makeText(BaseActivity.this, "Permission check failed", Toast.LENGTH_LONG).show();
                     finish();
@@ -49,7 +51,7 @@ public abstract class BaseActivity extends AestheticActivity implements ServiceC
             public void onRationaleRequested(Permiso.IOnRationaleProvided callback, String... permissions) {
                 callback.onRationaleProvided();
             }
-        }, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WAKE_LOCK);
+        }, PermissionUtils.storagePermission());
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
     }

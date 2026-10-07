@@ -10,13 +10,23 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"/>
     <!-- ## End 'Protection-Normal' permissions ## -->
 
     <!-- ## 'Special' permissions ##-->
     <!-- Used to set ringtone-->
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
-    <!-- Used to read mediastore db, caching artwork etc. -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!-- Read the music library: READ_MEDIA_AUDIO from API 33, READ_EXTERNAL_STORAGE before that (see PermissionUtils) -->
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32"/>
+    <!-- Direct file writes (tag edits, deletes, artwork) up to API 29; from 30 these go through MediaStore requests -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="29"/>
+    <!-- Media notification (API 33+); playback works without it -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <!-- ## End 'Special' permissions ##-->
 
     <application

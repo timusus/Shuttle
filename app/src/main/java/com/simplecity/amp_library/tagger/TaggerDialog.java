@@ -3,10 +3,16 @@ package com.simplecity.amp_library.tagger;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.IntentSenderRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import com.google.android.material.textfield.TextInputLayout;
 import androidx.fragment.app.DialogFragment;
@@ -32,6 +38,9 @@ import com.simplecity.amp_library.utils.CustomMediaScanner;
 import com.simplecity.amp_library.utils.DialogUtils;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -68,6 +77,11 @@ public class TaggerDialog extends DialogFragment {
 
     List<String> originalSongPaths = new ArrayList<>();
     private List<DocumentFile> documentFiles = new ArrayList<>();
+
+    private final CompositeDisposable disposables = new CompositeDisposable();
+
+    private final ActivityResultLauncher<IntentSenderRequest> writeRequestLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartIntentSenderForResult(), result -> onMediaStoreWriteResult(result.getResultCode() == Activity.RESULT_OK));
 
     private boolean showAlbum = true;
     private boolean showTrack = true;
@@ -330,6 +344,10 @@ public class TaggerDialog extends DialogFragment {
     }
 
     private void saveTags() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            requestMediaStoreWrite();
+            return;
+        }
 
         ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage(getString(R.string.tag_editor_check_permission));
@@ -350,64 +368,8 @@ public class TaggerDialog extends DialogFragment {
             }
 
             if (hasPermission) {
-
-                final ProgressDialog saveProgressDialog = new ProgressDialog(getContext());
-                saveProgressDialog.setMessage(getResources().getString(R.string.saving_tags));
-                saveProgressDialog.setMax(originalSongPaths.size());
-                saveProgressDialog.setIndeterminate(false);
-                saveProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                saveProgressDialog.setCancelable(false);
-                saveProgressDialog.show();
-
-                TaggerTask.TagCompletionListener listener = new TaggerTask.TagCompletionListener() {
-                    @Override
-                    public void onSuccess() {
-
-                        CustomMediaScanner.scanFiles(originalSongPaths, null);
-
-                        if (getContext() != null && isResumed()) {
-                            saveProgressDialog.dismiss();
-
-                            dismiss();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure() {
-
-                        if (getContext() != null && isResumed()) {
-                            saveProgressDialog.dismiss();
-                            Toast.makeText(getContext(), R.string.tag_error, Toast.LENGTH_LONG).show();
-                            dismiss();
-                        }
-                    }
-
-                    @Override
-                    public void onProgress(int progress) {
-                        saveProgressDialog.setProgress(progress);
-                    }
-                };
-
-                TaggerTask taggerTask = new TaggerTask()
-                        .showAlbum(showAlbum)
-                        .showTrack(showTrack)
-                        .setPaths(originalSongPaths)
-                        .setDocumentfiles(documentFiles)
-                        .title(titleEditText.getText().toString())
-                        .album(albumEditText.getText().toString())
-                        .artist(artistEditText.getText().toString())
-                        .albumArtist(albumArtistEditText.getText().toString())
-                        .year(yearEditText.getText().toString())
-                        .track(trackEditText.getText().toString())
-                        .trackTotal(trackTotalEditText.getText().toString())
-                        .disc(discEditText.getText().toString())
-                        .discTotal(discTotalEditText.getText().toString())
-                        .lyrics(lyricsEditText.getText().toString())
-                        .comment(commentEditText.getText().toString())
-                        .genre(genreEditText.getText().toString())
-                        .listener(listener)
-                        .build();
-                taggerTask.execute();
+                // Empty when no file needs SAF: they are then written directly.
+                runTaggerTask(Stream.of(documentFiles).map(DocumentFile::getUri).toList());
             } else {
                 TaggerUtils.showChooseDocumentDialog(getContext(), (dialog1, which1) -> {
                     Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
@@ -421,6 +383,114 @@ public class TaggerDialog extends DialogFragment {
             }
         });
         task.execute();
+    }
+
+    /**
+     * From API 30 the app can't write other apps' media files directly; ask the user to approve a MediaStore write
+     * request, then tag through the granted uris.
+     */
+    @SuppressLint("NewApi")
+    private void requestMediaStoreWrite() {
+        disposables.add(TaggerUtils.getMediaStoreUris(originalSongPaths)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(uris -> {
+                    if (!isAdded()) {
+                        return;
+                    }
+                    if (uris.size() != originalSongPaths.size()) {
+                        // Not every file is in the MediaStore, so we can't get write access to it.
+                        Toast.makeText(getContext(), R.string.tag_error, Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    PendingIntent pendingIntent = MediaStore.createWriteRequest(requireContext().getContentResolver(), uris);
+                    writeRequestLauncher.launch(new IntentSenderRequest.Builder(pendingIntent.getIntentSender()).build());
+                }, error -> LogUtils.logException(TAG, "Failed to request write access", error)));
+    }
+
+    private void onMediaStoreWriteResult(boolean approved) {
+        if (!approved) {
+            return;
+        }
+        // The grant is for these uris; look them up again rather than holding them across a possible recreation.
+        disposables.add(TaggerUtils.getMediaStoreUris(originalSongPaths)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(uris -> {
+                    if (isAdded() && uris.size() == originalSongPaths.size()) {
+                        runTaggerTask(uris);
+                    }
+                }, error -> LogUtils.logException(TAG, "Failed to save tags", error)));
+    }
+
+    /**
+     * @param writeUris uris to write each file back through (see {@link TaggerTask#setWriteUris(List)}), or empty to
+     * write the files directly.
+     */
+    private void runTaggerTask(List<Uri> writeUris) {
+        final ProgressDialog saveProgressDialog = new ProgressDialog(getContext());
+        saveProgressDialog.setMessage(getResources().getString(R.string.saving_tags));
+        saveProgressDialog.setMax(originalSongPaths.size());
+        saveProgressDialog.setIndeterminate(false);
+        saveProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        saveProgressDialog.setCancelable(false);
+        saveProgressDialog.show();
+
+        TaggerTask.TagCompletionListener listener = new TaggerTask.TagCompletionListener() {
+            @Override
+            public void onSuccess() {
+
+                CustomMediaScanner.scanFiles(originalSongPaths, null);
+
+                if (getContext() != null && isResumed()) {
+                    saveProgressDialog.dismiss();
+
+                    dismiss();
+                }
+            }
+
+            @Override
+            public void onFailure() {
+
+                if (getContext() != null && isResumed()) {
+                    saveProgressDialog.dismiss();
+                    Toast.makeText(getContext(), R.string.tag_error, Toast.LENGTH_LONG).show();
+                    dismiss();
+                }
+            }
+
+            @Override
+            public void onProgress(int progress) {
+                saveProgressDialog.setProgress(progress);
+            }
+        };
+
+        TaggerTask taggerTask = new TaggerTask()
+                .showAlbum(showAlbum)
+                .showTrack(showTrack)
+                .setPaths(originalSongPaths)
+                .setWriteUris(writeUris)
+                .title(titleEditText.getText().toString())
+                .album(albumEditText.getText().toString())
+                .artist(artistEditText.getText().toString())
+                .albumArtist(albumArtistEditText.getText().toString())
+                .year(yearEditText.getText().toString())
+                .track(trackEditText.getText().toString())
+                .trackTotal(trackTotalEditText.getText().toString())
+                .disc(discEditText.getText().toString())
+                .discTotal(discTotalEditText.getText().toString())
+                .lyrics(lyricsEditText.getText().toString())
+                .comment(commentEditText.getText().toString())
+                .genre(genreEditText.getText().toString())
+                .listener(listener)
+                .build();
+        taggerTask.execute();
+    }
+
+    @Override
+    public void onDestroy() {
+        disposables.clear();
+        super.onDestroy();
     }
 
     @Override

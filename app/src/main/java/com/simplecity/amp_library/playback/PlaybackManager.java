@@ -31,6 +31,7 @@ import com.simplecity.amp_library.ui.queue.QueueItemKt;
 import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.LogUtils;
+import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import com.simplecity.amp_library.utils.SleepTimer;
@@ -165,7 +166,7 @@ public class PlaybackManager {
     }
 
     public void reloadQueue() {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (!PermissionUtils.hasStoragePermission(context)) {
             return;
         }
 
@@ -229,7 +230,7 @@ public class PlaybackManager {
     }
 
     public void playAutoShuffleList() {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+        if (PermissionUtils.hasStoragePermission(context)) {
             disposables.add(DataManager.getInstance().getSongsRelay()
                     .firstOrError()
                     .subscribeOn(Schedulers.io())

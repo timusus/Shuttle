@@ -1,8 +1,8 @@
 package com.simplecity.amp_library.tagger;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.ParcelFileDescriptor;
-import androidx.documentfile.provider.DocumentFile;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.TagUpdate;
 import java.io.File;
@@ -35,7 +35,7 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
     private boolean showTrack;
 
     private List<String> paths;
-    private List<DocumentFile> documentFiles;
+    private List<Uri> writeUris;
     private List<File> tempFiles = new ArrayList<>();
 
     private String titleText;
@@ -56,7 +56,7 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
     }
 
     public TaggerTask(boolean showAlbum, boolean showTrack, List<String> paths,
-            List<DocumentFile> documentFiles, String titleText, String albumText,
+            List<Uri> writeUris, String titleText, String albumText,
             String artistText, String albumArtistText, String yearText, String trackText,
             String trackTotalText, String discText, String discTotalText, String lyricsText,
             String commentText, String genreText,
@@ -65,7 +65,7 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
         this.showAlbum = showAlbum;
         this.showTrack = showTrack;
         this.paths = paths;
-        this.documentFiles = documentFiles;
+        this.writeUris = writeUris;
         this.titleText = titleText;
         this.albumText = albumText;
         this.artistText = artistText;
@@ -86,10 +86,11 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
 
         boolean success = false;
 
-        boolean requiresPermission = TaggerUtils.requiresPermission(paths);
-
         for (int i = 0; i < paths.size(); i++) {
             final String path = paths.get(i);
+            // Files we can't write directly (SD card via SAF, or anything on API 30+ via MediaStore) are tagged as a
+            // temp copy, then written back through this uri.
+            final Uri writeUri = writeUris != null && i < writeUris.size() ? writeUris.get(i) : null;
             try {
 
                 File orig = new File(path);
@@ -123,7 +124,7 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
                 File temp = null;
                 if (tagUpdate.hasChanged()) {
 
-                    if (TaggerUtils.requiresPermission(paths)) {
+                    if (writeUri != null) {
                         temp = new File(ShuttleApplication.getInstance().getFilesDir(), orig.getName());
                         tempFiles.add(temp);
                         TaggerUtils.copyFile(orig, temp);
@@ -138,20 +139,16 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
                     tagUpdate.updateTag(tag);
                     AudioFileIO.write(audioFile);
 
-                    if (requiresPermission && temp != null) {
-                        DocumentFile documentFile = documentFiles.get(i);
-                        if (documentFile != null) {
-                            ParcelFileDescriptor pfd = ShuttleApplication.getInstance().getContentResolver().openFileDescriptor(documentFile.getUri(), "w");
-                            if (pfd != null) {
-                                FileOutputStream fileOutputStream = new FileOutputStream(pfd.getFileDescriptor());
-                                TaggerUtils.copyFile(temp, fileOutputStream);
-                                pfd.close();
-                            }
-                            if (temp.delete()) {
-                                if (tempFiles.contains(temp)) {
-                                    tempFiles.remove(temp);
-                                }
-                            }
+                    if (temp != null) {
+                        // "wt" truncates, so a shorter file doesn't keep the old file's trailing bytes
+                        ParcelFileDescriptor pfd = ShuttleApplication.getInstance().getContentResolver().openFileDescriptor(writeUri, "wt");
+                        if (pfd != null) {
+                            FileOutputStream fileOutputStream = new FileOutputStream(pfd.getFileDescriptor());
+                            TaggerUtils.copyFile(temp, fileOutputStream);
+                            pfd.close();
+                        }
+                        if (temp.delete()) {
+                            tempFiles.remove(temp);
                         }
                     }
                 }
@@ -202,8 +199,11 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
         return this;
     }
 
-    public TaggerTask setDocumentfiles(List<DocumentFile> documentFiles) {
-        this.documentFiles = documentFiles;
+    /**
+     * @param writeUris for each path, the uri to write the tagged file back through, or null to write the file directly.
+     */
+    public TaggerTask setWriteUris(List<Uri> writeUris) {
+        this.writeUris = writeUris;
         return this;
     }
 
@@ -283,7 +283,7 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
     }
 
     public TaggerTask build() {
-        return new TaggerTask(showAlbum, showTrack, paths, documentFiles, titleText,
+        return new TaggerTask(showAlbum, showTrack, paths, writeUris, titleText,
                 albumText, artistText, albumArtistText, yearText, trackText, trackTotalText,
                 discText, discTotalText, lyricsText, commentText, genreText,
                 tagCompletionListener);

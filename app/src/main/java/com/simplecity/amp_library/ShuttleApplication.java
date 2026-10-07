@@ -33,6 +33,7 @@ import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
 import com.simplecity.amp_library.utils.DataManager;
 import com.simplecity.amp_library.utils.InputMethodManagerLeaks;
 import com.simplecity.amp_library.utils.LogUtils;
+import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.StringUtils;
 import io.reactivex.Completable;
@@ -191,7 +192,7 @@ public class ShuttleApplication extends Application {
     @NonNull
     private Completable cleanMostPlayedPlaylist() {
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (!PermissionUtils.hasStoragePermission(this)) {
             return Completable.complete();
         }
 
@@ -234,7 +235,7 @@ public class ShuttleApplication extends Application {
     @NonNull
     private Completable cleanGenres() {
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (!PermissionUtils.hasStoragePermission(this)) {
             return Completable.complete();
         }
 
@@ -263,7 +264,7 @@ public class ShuttleApplication extends Application {
     @NonNull
     private Completable repairMediaStoreYearFromTags() {
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (!PermissionUtils.hasStoragePermission(this)) {
             return Completable.complete();
         }
 
