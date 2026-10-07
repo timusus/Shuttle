@@ -330,8 +330,8 @@ public class MainActivity extends BaseCastActivity implements
                         return; // Cancelled or superseded.
                     }
                     developerMessageCall = null;
-                    // Only a definite "off" stops refetching this process; once shown, the shown flag stops it.
-                    developerMessageFetched = !config.enabled;
+                    // Only a config that can't show stops refetching this process; once shown, the shown flag stops it.
+                    developerMessageFetched = !config.isShowable();
                     showDeveloperMessage(config);
                 });
             }
