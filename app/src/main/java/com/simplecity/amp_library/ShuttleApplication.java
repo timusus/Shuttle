@@ -19,8 +19,6 @@ import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
 import com.google.android.libraries.cast.companionlibrary.cast.CastConfiguration;
 import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.simplecity.amp_library.constants.Config;
 import com.simplecity.amp_library.dagger.component.AppComponent;
 import com.simplecity.amp_library.dagger.component.DaggerAppComponent;
@@ -89,12 +87,6 @@ public class ShuttleApplication extends Application {
 
         // workaround to fix InputMethodManager leak as suggested by LeakCanary lib
         InputMethodManagerLeaks.fixFocusedViewLeak(this);
-
-        // Firebase
-        // Debug builds have no Firebase config (see app/build.gradle)
-        if (FirebaseApp.initializeApp(this) != null) {
-            FirebaseAnalytics.getInstance(this);
-        }
 
         VideoCastManager.initialize(this,
                 new CastConfiguration.Builder(Config.CHROMECAST_APP_ID)

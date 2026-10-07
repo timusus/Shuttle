@@ -21,8 +21,6 @@ import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.ui.activities.BaseCastActivity;
 import com.simplecity.amp_library.ui.views.CustomMediaRouteActionProvider;
 import com.simplecity.amp_library.ui.views.multisheet.MultiSheetEventRelay;
-import com.simplecity.amp_library.utils.AnalyticsManager;
-import java.lang.reflect.Field;
 import javax.inject.Inject;
 import test.com.androidnavigation.fragment.BaseController;
 
@@ -38,6 +36,9 @@ public abstract class BaseFragment extends BaseController {
 
     @Inject
     protected MediaManager mediaManager;
+
+    // The animation resource this fragment was last given in onCreateAnimation()
+    private int lastNextAnim;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,14 +56,10 @@ public abstract class BaseFragment extends BaseController {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-        AnalyticsManager.logScreenName(getActivity(), screenName());
-    }
-
-    @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+
+        // Remember the animation this fragment was given, so its children can hold for as long as it runs.
+        lastNextAnim = nextAnim;
 
         /*
          * When a fragment transaction is performed on a parent fragment containing nested children,
@@ -88,25 +85,23 @@ public abstract class BaseFragment extends BaseController {
     }
 
     /**
-     * Attempt to get the resource ID of the next animation that
-     * will be applied to the given fragment.
-     *
      * @param fragment the parent fragment
-     * @param defValue default animation value
-     * @return the duration of the parent fragment's animation
+     * @param defValue default animation duration
+     * @return the duration of the animation last handed to the parent fragment, if it is a {@link BaseFragment}
      */
     private static long getNextAnimationDuration(Fragment fragment, long defValue) {
+        if (!(fragment instanceof BaseFragment) || fragment.getContext() == null) {
+            return defValue;
+        }
+        int nextAnimResource = ((BaseFragment) fragment).lastNextAnim;
+        if (nextAnimResource == 0) {
+            return defValue;
+        }
         try {
-            // Attempt to get the resource ID of the next animation that
-            // will be applied to the given fragment.
-            Field nextAnimField = Fragment.class.getDeclaredField("mNextAnim");
-            nextAnimField.setAccessible(true);
-            int nextAnimResource = nextAnimField.getInt(fragment);
-            Animation nextAnim = AnimationUtils.loadAnimation(fragment.getActivity(), nextAnimResource);
-
-            // ...and if it can be loaded, return that animation's duration
-            return (nextAnim == null) ? defValue : nextAnim.getDuration();
-        } catch (NoSuchFieldException | IllegalAccessException | Resources.NotFoundException ignored) {
+            Animation nextAnim = AnimationUtils.loadAnimation(fragment.getContext(), nextAnimResource);
+            return nextAnim.getDuration();
+        } catch (Resources.NotFoundException e) {
+            // The resource is an Animator, not an Animation
             return defValue;
         }
     }

@@ -90,8 +90,6 @@ public class MainActivity extends BaseCastActivity implements
                     .colorAccentRes(theme.accentColor)
                     .colorStatusBarAuto()
                     .apply();
-
-            AnalyticsManager.logInitialTheme(theme);
         }
 
         setContentView(R.layout.activity_main);

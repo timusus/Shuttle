@@ -41,8 +41,6 @@ public class SettingsPresenter extends Presenter<SettingsView> {
     // Support Preferences
 
     void changelogClicked(Context context) {
-        AnalyticsManager.logChangelogViewed();
-
         SettingsView settingsView = getView();
         if (settingsView != null) {
             settingsView.showChangelog(ChangelogDialog.getChangelogDialog(context));

@@ -17,10 +17,12 @@
 
 # Add any project specific keep options here:
 
-# Allow obfuscation of android.support.v7.internal.view.menu.**
-# to avoid problem on Samsung 4.2.2 devices with appcompat v21
-# see https://code.google.com/p/android/issues/detail?id=78377
--keep class !android.support.v7.internal.view.menu.**,android.support.** {*;}
+# AndroidX, Material and androidx.media ship their own consumer rules, and AAPT2 keeps classes named in layouts,
+# menus and the manifest, so no blanket androidx keep is needed. Reflection-specific rules live with the code
+# that reflects (see libraries/aesthetic/consumer-rules.pro).
+
+# MediaSessionCompat / MediaBrowserServiceCompat callbacks are parcelled across processes
+-keep class android.support.v4.media.** { *; }
 
 # Custom MediaRouteActionProvider, referenced via menu action view class
 -keep class com.simplecity.amp_library.ui.views.CustomMediaRouteActionProvider { *; }
@@ -107,6 +109,3 @@
 # Retrolambda
 -dontwarn java.lang.invoke.*
 -dontwarn **$$Lambda$*
-
-# Keep MaterialDialogs ThemeSingleton, so we can access it via reflection, from Aesthetic
--keep class com.afollestad.materialdialogs.internal.** { *; }

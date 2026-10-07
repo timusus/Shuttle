@@ -57,7 +57,6 @@ public class DialogUtils {
                         .setDuration(15000)
                         .setAction(R.string.snackbar_rate_action, v -> {
                             ShuttleUtils.openShuttleLink(activity, ShuttleApplication.getInstance().getPackageName(), activity.getPackageManager());
-                            AnalyticsManager.logRateClicked();
                         })
                         .addCallback(new Snackbar.Callback() {
                             @Override
@@ -77,8 +76,6 @@ public class DialogUtils {
                 if (snackbarText != null) {
                     snackbarText.setTextColor(Color.WHITE);
                 }
-
-                AnalyticsManager.logRateShown();
             }
 
             SettingsManager.getInstance().hasSeenRateSnackbar = true;

@@ -6,19 +6,6 @@ plugins {
     id("kotlin-kapt")
 }
 
-apply plugin: Dependencies.BuildPlugins.playServices
-
-// The committed google-services.json files are stubs without a project_id and the debug application ids have no
-// Firebase client, so Firebase is only processed for release variants and only when a real config is present
-// (any app/**/google-services.json containing a project_id). Otherwise the build still succeeds, without Firebase.
-def hasFirebaseConfig = fileTree(dir: projectDir, include: 'src/**/google-services.json').files.any { it.text.contains('"project_id"') } ||
-        file('google-services.json').with { it.exists() && it.text.contains('"project_id"') }
-tasks.configureEach { task ->
-    if (task.name ==~ /process.*GoogleServices/ && (task.name.contains('Debug') || !hasFirebaseConfig)) {
-        task.enabled = false
-    }
-}
-
 repositories {
     maven { url "https://jitpack.io" }
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
@@ -38,10 +25,31 @@ static def getProperty(Properties properties, String name) {
     return properties.getProperty(name) ?: "$name missing"
 }
 
-// Release signing is read from an optional keystore.properties in the repo root (store, alias, storePass, pass).
-// When it is absent the release variants still configure and build, but unsigned.
-def hasKeystore = file('../keystore.properties').exists()
+// Release signing is read from keystore.properties in the repo root (store, alias, storePass, pass). Debug builds
+// do not need it; any release packaging task fails up front if it is missing or incomplete.
 def keystoreProperties = getProperties('../keystore.properties')
+def keystoreProblem = null
+if (!file('../keystore.properties').exists()) {
+    keystoreProblem = "keystore.properties is missing from the repo root"
+} else {
+    def missingKeys = ['store', 'alias', 'storePass', 'pass'].findAll { !keystoreProperties.getProperty(it) }
+    if (!missingKeys.isEmpty()) {
+        keystoreProblem = "keystore.properties has no value for: ${missingKeys.join(', ')}"
+    } else if (!file(keystoreProperties.getProperty('store')).exists()) {
+        keystoreProblem = "the keystore '${keystoreProperties.getProperty('store')}' named in keystore.properties does not exist (paths are relative to app/)"
+    }
+}
+def hasKeystore = keystoreProblem == null
+
+gradle.taskGraph.whenReady { graph ->
+    if (!hasKeystore) {
+        def releaseTasks = graph.allTasks.findAll { it.project == project && it.name ==~ /^(assemble|bundle|package|sign|install)\w*Release$/ }
+        if (!releaseTasks.isEmpty()) {
+            throw new GradleException("Cannot build a signed release (${releaseTasks*.name.join(', ')}): $keystoreProblem. " +
+                    "Provide keystore.properties with store, alias, storePass and pass.")
+        }
+    }
+}
 
 android {
     namespace 'com.simplecity.amp_library'
@@ -209,9 +217,6 @@ dependencies {
     implementation Dependencies.Google.prefCompat
     implementation Dependencies.Google.recyclerView
     implementation Dependencies.Google.supportv4
-    implementation platform(Dependencies.Google.firebaseBom)
-    implementation Dependencies.Google.firebaseCore
-    implementation Dependencies.Google.firebaseRemoteConfig
     implementation Dependencies.Google.constraintLayout
     implementation Dependencies.Google.chromecast
     implementation Dependencies.Google.mediarouter

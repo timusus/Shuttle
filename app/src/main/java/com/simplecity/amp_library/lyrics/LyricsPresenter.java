@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import com.cantrowitz.rxbroadcast.RxBroadcast;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Query;
-import com.simplecity.amp_library.model.Song;
 import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.playback.constants.InternalIntents;
 import com.simplecity.amp_library.sql.SqlUtils;
@@ -46,27 +45,6 @@ class LyricsPresenter extends Presenter<LyricsView> {
         addDisposable(RxBroadcast.fromBroadcast(ShuttleApplication.getInstance(), new IntentFilter(InternalIntents.META_CHANGED))
                 .toFlowable(BackpressureStrategy.LATEST)
                 .subscribe(intent -> updateLyrics(), error -> LogUtils.logException(TAG, "Error receiving meta changed", error)));
-    }
-
-    void downloadOrLaunchQuickLyric() {
-        LyricsView lyricsView = getView();
-        if (lyricsView != null) {
-            if (QuickLyricUtils.isQLInstalled()) {
-                Song song = mediaManager.getSong();
-                if (song != null) {
-                    lyricsView.launchQuickLyric(song);
-                }
-            } else {
-                lyricsView.downloadQuickLyric();
-            }
-        }
-    }
-
-    void showQuickLyricInfoDialog() {
-        LyricsView lyricsView = getView();
-        if (lyricsView != null) {
-            lyricsView.showQuickLyricInfoDialog();
-        }
     }
 
     private void updateLyrics() {
@@ -122,7 +100,6 @@ class LyricsPresenter extends Presenter<LyricsView> {
             if (lyricsView != null) {
                 lyricsView.updateLyrics(lyrics);
                 lyricsView.showNoLyricsView(TextUtils.isEmpty(lyrics));
-                lyricsView.showQuickLyricInfoButton(!QuickLyricUtils.isQLInstalled());
             }
         }, error -> LogUtils.logException(TAG, "Error getting lyrics", error)));
     }

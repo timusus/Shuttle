@@ -7,7 +7,6 @@ buildscript {
     }
     dependencies {
         classpath Dependencies.Plugins.android
-        classpath Dependencies.Plugins.playServices
         classpath Dependencies.Plugins.kotlin
     }
 }

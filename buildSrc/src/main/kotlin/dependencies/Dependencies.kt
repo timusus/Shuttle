@@ -67,12 +67,10 @@ object Dependencies {
         object Versions {
             const val androidGradlePlugin = "8.9.3"
             const val kotlin = "2.1.21"
-            const val playServices = "4.4.2"
         }
 
         const val android = "com.android.tools.build:gradle:${Versions.androidGradlePlugin}"
         const val kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
-        const val playServices = "com.google.gms:google-services:${Versions.playServices}"
     }
 
     object Google {
@@ -85,7 +83,6 @@ object Dependencies {
             const val preference = "1.2.1"
             const val recyclerView = "1.3.2"
             const val legacySupportV4 = "1.0.0"
-            const val firebaseBom = "33.7.0"
             const val chromecast = "15.0.1"
             const val mediaRouter = "1.7.0"
             const val constraintLayout = "2.1.4"
@@ -96,9 +93,6 @@ object Dependencies {
         const val palette = "androidx.palette:palette:${Versions.palette}"
         const val recyclerView = "androidx.recyclerview:recyclerview:${Versions.recyclerView}"
         const val supportv4 = "androidx.legacy:legacy-support-v4:${Versions.legacySupportV4}"
-        const val firebaseBom = "com.google.firebase:firebase-bom:${Versions.firebaseBom}"
-        const val firebaseCore = "com.google.firebase:firebase-analytics"
-        const val firebaseRemoteConfig = "com.google.firebase:firebase-config"
         const val appcompat = "androidx.appcompat:appcompat:${Versions.appcompat}"
         const val mediarouter = "androidx.mediarouter:mediarouter:${Versions.mediaRouter}"
         const val chromecast = "com.google.android.gms:play-services-cast:${Versions.chromecast}"
@@ -237,6 +231,5 @@ object Dependencies {
         const val androidLibrary = "com.android.library"
         const val kotlin = "kotlin-android"
         const val kapt = "kotlin-kapt"
-        const val playServices = "com.google.gms.google-services"
     }
 }

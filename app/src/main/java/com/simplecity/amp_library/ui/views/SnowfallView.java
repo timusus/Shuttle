@@ -1,22 +1,17 @@
 package com.simplecity.amp_library.ui.views;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Handler;
+import android.os.Looper;
 import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
-import com.simplecity.amp_library.BuildConfig;
-import com.simplecity.amp_library.R;
-import com.simplecity.amp_library.utils.AnalyticsManager;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
@@ -31,9 +26,6 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 public class SnowfallView extends View {
 
     private static final String TAG = SnowfallView.class.getSimpleName();
-
-    /** The Remote Config key used to determine if it snows */
-    private static final String LET_IT_SNOW = "let_it_snow";
 
     /** Forecast a <= 10% chance of snowing */
     private static final float LUCKY = 0.1f;
@@ -73,25 +65,12 @@ public class SnowfallView extends View {
     /** Used to randomly generate snowflake params */
     private final Random snowRng = new SecureRandom();
     /** Used to delay snowfall */
-    final Handler snowHandler = new Handler();
-
-    /** Used to determine if we let it snow */
-    @Nullable
-    FirebaseRemoteConfig remoteConfig = null;
+    final Handler snowHandler = new Handler(Looper.getMainLooper());
 
     public SnowfallView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         snowPaint.setColor(Color.WHITE);
         snowPaint.setStyle(Paint.Style.FILL);
-
-        // Debug builds have no Firebase config (see app/build.gradle)
-        if (!isInEditMode() && !FirebaseApp.getApps(context).isEmpty()) {
-            remoteConfig = FirebaseRemoteConfig.getInstance();
-            remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults);
-            remoteConfig.setConfigSettingsAsync(new FirebaseRemoteConfigSettings.Builder()
-                    .setMinimumFetchIntervalInSeconds(BuildConfig.DEBUG ? 0 : 43200)
-                    .build());
-        }
     }
 
     @Override
@@ -139,18 +118,17 @@ public class SnowfallView extends View {
     }
 
     private void fetchSnowConfig() {
-        if (remoteConfig == null) {
-            return;
+        if (isSnowSeason(Calendar.getInstance())) {
+            snowHandler.removeCallbacksAndMessages(null);
+            snowHandler.postDelayed(this::generateSnow, SNOWFALL_DELAY);
         }
-        remoteConfig.fetchAndActivate().addOnCompleteListener((Activity) getContext(), task -> {
-            if (task.isSuccessful()) {
-                if (remoteConfig.getBoolean(LET_IT_SNOW)) {
-                    snowHandler.removeCallbacksAndMessages(null);
-                    snowHandler.postDelayed(this::generateSnow, SNOWFALL_DELAY);
-                    AnalyticsManager.didSnow();
-                }
-            }
-        });
+    }
+
+    /** It snows from December 20th to January 5th inclusive. */
+    static boolean isSnowSeason(Calendar calendar) {
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        return (month == Calendar.DECEMBER && day >= 20) || (month == Calendar.JANUARY && day <= 5);
     }
 
     void generateSnow() {

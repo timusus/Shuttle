@@ -10,6 +10,7 @@ android {
     defaultConfig {
         minSdkVersion Dependencies.minSdk
         targetSdkVersion Dependencies.targetSdk
+        consumerProguardFiles 'consumer-rules.pro'
     }
 
     buildTypes {
