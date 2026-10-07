@@ -361,7 +361,7 @@ public class MainActivity extends BaseCastActivity implements
                 || !PermissionUtils.hasStoragePermission(this)) {
             return;
         }
-        DeveloperMessageDialog.newInstance(config.saleEndEpochMillis).show(getSupportFragmentManager());
+        DeveloperMessageDialog.newInstance(config).show(getSupportFragmentManager());
         dialogShownThisLaunch = true;
         SettingsManager.getInstance().setDeveloperMessageShown();
     }

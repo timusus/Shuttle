@@ -24,7 +24,8 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 /**
- * Remote switch for the once-only developer message. Format: {"enabled": false, "saleEndEpochMillis": 0}
+ * Remote switch for the once-only developer message. Format: {"enabled": false, "saleEndEpochMillis": 0, "title": "", "body": "", "saleText": ""}.
+ * The text fields are optional plain text; blank means use the bundled strings.
  */
 public class DeveloperMessageConfig {
 
@@ -49,6 +50,33 @@ public class DeveloperMessageConfig {
 
     @SerializedName("saleEndEpochMillis")
     public long saleEndEpochMillis = 0;
+
+    public static final int MAX_TITLE = 100;
+    public static final int MAX_BODY = 4000;
+    public static final int MAX_SALE_TEXT = 300;
+
+    @SerializedName("title")
+    public String title;
+
+    @SerializedName("body")
+    public String body;
+
+    @SerializedName("saleText")
+    public String saleText;
+
+    /**
+     * Trims the value and caps its length. Returns null when it is null or blank.
+     */
+    public static String clean(String value, int maxLength) {
+        if (value == null) {
+            return null;
+        }
+        String trimmed = value.trim();
+        if (trimmed.isEmpty()) {
+            return null;
+        }
+        return trimmed.length() > maxLength ? trimmed.substring(0, maxLength).trim() : trimmed;
+    }
 
     /**
      * Starts the fetch and returns the call so the caller can cancel it.
