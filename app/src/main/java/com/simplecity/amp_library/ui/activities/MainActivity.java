@@ -87,6 +87,12 @@ public class MainActivity extends BaseCastActivity implements
 
     private Call developerMessageCall;
 
+    // Once per process: a completed fetch (success or failure) is not repeated on later resumes.
+    private static boolean developerMessageFetched;
+
+    // A dialog already showed this launch; the developer message waits for a later launch.
+    private boolean dialogShownThisLaunch;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -324,6 +330,7 @@ public class MainActivity extends BaseCastActivity implements
                         return; // Cancelled or superseded.
                     }
                     developerMessageCall = null;
+                    developerMessageFetched = true;
                     showDeveloperMessage(config);
                 });
             }
@@ -333,6 +340,9 @@ public class MainActivity extends BaseCastActivity implements
                 runOnUiThread(() -> {
                     if (developerMessageCall == holder[0]) {
                         developerMessageCall = null;
+                        if (!holder[0].isCanceled()) {
+                            developerMessageFetched = true;
+                        }
                     }
                 });
             }
@@ -344,6 +354,7 @@ public class MainActivity extends BaseCastActivity implements
 
     private void showDeveloperMessage(DeveloperMessageConfig config) {
         if (!config.enabled
+                || dialogShownThisLaunch
                 || SettingsManager.getInstance().getDeveloperMessageShown()
                 || isFinishing()
                 || isDestroyed()
@@ -353,8 +364,8 @@ public class MainActivity extends BaseCastActivity implements
             return;
         }
         DeveloperMessageDialog.newInstance(config.saleEndEpochMillis).show(getSupportFragmentManager());
+        dialogShownThisLaunch = true;
         SettingsManager.getInstance().setDeveloperMessageShown();
-        SettingsManager.getInstance().setVersionCode();
     }
 
     private void cancelDeveloperMessageFetch() {
@@ -365,13 +376,8 @@ public class MainActivity extends BaseCastActivity implements
     }
 
     private void showChangelogDialog() {
-        // The one-off developer message replaces the changelog for this version.
-        if (!SettingsManager.getInstance().getDeveloperMessageShown()) {
-            if (!PermissionUtils.hasStoragePermission(this)) {
-                // The storage prompt may be covering the screen (and a denial finishes the activity): try again next launch
-                return;
-            }
-            fetchDeveloperMessageConfig();
+        if (!PermissionUtils.hasStoragePermission(this)) {
+            // The storage prompt may be covering the screen (and a denial finishes the activity): try again next launch
             return;
         }
 
@@ -383,9 +389,16 @@ public class MainActivity extends BaseCastActivity implements
         if (storedVersionCode != -1 && storedVersionCode < BuildConfig.VERSION_CODE) {
             if (SettingsManager.getInstance().getShowChangelogOnLaunch()) {
                 ChangelogDialog.getChangelogDialog(this).show();
+                dialogShownThisLaunch = true;
             }
         }
         SettingsManager.getInstance().setVersionCode();
+
+        // The one-off developer message, if the remote config enables it, shows on a launch without a changelog.
+        if (!dialogShownThisLaunch && !developerMessageFetched
+                && !SettingsManager.getInstance().getDeveloperMessageShown()) {
+            fetchDeveloperMessageConfig();
+        }
     }
 
     @Override

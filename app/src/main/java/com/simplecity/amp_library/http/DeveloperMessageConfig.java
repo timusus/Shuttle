@@ -2,6 +2,7 @@ package com.simplecity.amp_library.http;
 
 import androidx.annotation.NonNull;
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import okhttp3.Call;
@@ -32,8 +33,10 @@ public class DeveloperMessageConfig {
         void onFailure();
     }
 
+    @SerializedName("enabled")
     public boolean enabled = false;
 
+    @SerializedName("saleEndEpochMillis")
     public long saleEndEpochMillis = 0;
 
     /**

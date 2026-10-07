@@ -80,6 +80,7 @@
 # Application classes that will be serialized/deserialized over Gson
 -keep class com.simplecity.amp_library.http.itunes.** { *; }
 -keep class com.simplecity.amp_library.http.lastfm.** { *; }
+-keep class com.simplecity.amp_library.http.DeveloperMessageConfig { *; }
 # Prevent proguard from stripping interface information from TypeAdapterFactory,
 # JsonSerializer, JsonDeserializer instances (so they can be used in @JsonAdapter)
 -keep class * implements com.google.gson.TypeAdapterFactory
