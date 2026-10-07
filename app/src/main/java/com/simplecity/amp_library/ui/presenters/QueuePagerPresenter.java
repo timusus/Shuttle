@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.bumptech.glide.RequestManager;
-import com.cantrowitz.rxbroadcast.RxBroadcast;
+import com.simplecity.amp_library.utils.RxBroadcast;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.playback.constants.InternalIntents;

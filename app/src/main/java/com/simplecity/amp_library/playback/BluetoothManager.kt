@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothA2dp
 import android.bluetooth.BluetoothHeadset
 import android.content.BroadcastReceiver
 import android.content.Context
+import androidx.core.content.ContextCompat
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
@@ -73,7 +74,8 @@ class BluetoothManager(
             }
         }
 
-        context.registerReceiver(bluetoothReceiver, filter)
+        // Sent by the Bluetooth stack, which is not the system uid
+        ContextCompat.registerReceiver(context, bluetoothReceiver, filter, ContextCompat.RECEIVER_EXPORTED)
     }
 
     fun unregisterBluetoothReceiver(context: Context) {
@@ -91,7 +93,8 @@ class BluetoothManager(
         }
         val intentFilter = IntentFilter()
         intentFilter.addAction(ExternalIntents.PLAY_STATUS_REQUEST)
-        context.registerReceiver(a2dpReceiver, intentFilter)
+        // Play status requests come from other apps
+        ContextCompat.registerReceiver(context, a2dpReceiver, intentFilter, ContextCompat.RECEIVER_EXPORTED)
     }
 
     fun unregisterA2dpServiceListener(context: Context) {

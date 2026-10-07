@@ -2,6 +2,7 @@ package com.simplecity.amp_library.playback
 
 import android.content.BroadcastReceiver
 import android.content.Context
+import androidx.core.content.ContextCompat
 import android.content.Intent
 import android.content.IntentFilter
 import android.media.AudioManager
@@ -37,7 +38,8 @@ class HeadsetManager(private val playbackManager: PlaybackManager) {
             }
         }
 
-        context.registerReceiver(headsetReceiver, filter)
+        // System broadcast
+        ContextCompat.registerReceiver(context, headsetReceiver, filter, ContextCompat.RECEIVER_EXPORTED)
     }
 
     fun unregisterHeadsetPlugReceiver(context: Context) {

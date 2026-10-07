@@ -1,6 +1,7 @@
 package com.simplecity.amp_library.playback;
 
 import android.annotation.SuppressLint;
+import androidx.core.content.ContextCompat;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -132,7 +133,8 @@ public class MusicService extends MediaBrowserServiceCompat {
         intentFilter.addAction(ServiceCommand.SHUFFLE_ACTION);
         intentFilter.addAction(ServiceCommand.REPEAT_ACTION);
         intentFilter.addAction(ExternalIntents.PLAY_STATUS_REQUEST);
-        registerReceiver(intentReceiver, intentFilter);
+        // Exported: other apps (AVRCP, Tasker, legacy integrations) send these commands and the play status request.
+        ContextCompat.registerReceiver(this, intentReceiver, intentFilter, ContextCompat.RECEIVER_EXPORTED);
 
         // Initialize the delayed shutdown intent
         Intent shutdownIntent = new Intent(this, MusicService.class);
@@ -476,7 +478,8 @@ public class MusicService extends MediaBrowserServiceCompat {
             intentFilter.addAction(Intent.ACTION_MEDIA_EJECT);
             intentFilter.addAction(Intent.ACTION_MEDIA_MOUNTED);
             intentFilter.addDataScheme("file");
-            registerReceiver(unmountReceiver, intentFilter);
+            // System broadcast
+            ContextCompat.registerReceiver(this, unmountReceiver, intentFilter, ContextCompat.RECEIVER_EXPORTED);
         }
     }
 

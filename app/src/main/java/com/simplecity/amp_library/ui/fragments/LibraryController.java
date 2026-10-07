@@ -28,7 +28,7 @@ import butterknife.Unbinder;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.ViewBackgroundAction;
 import com.annimon.stream.Stream;
-import com.cantrowitz.rxbroadcast.RxBroadcast;
+import com.simplecity.amp_library.utils.RxBroadcast;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.ActivityModule;

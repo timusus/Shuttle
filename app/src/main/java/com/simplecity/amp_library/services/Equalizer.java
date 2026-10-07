@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import androidx.core.content.ContextCompat;
 import android.media.audiofx.AudioEffect;
 import android.media.audiofx.BassBoost;
 import android.media.audiofx.Virtualizer;
@@ -43,7 +44,8 @@ public class Equalizer {
         IntentFilter audioFilter = new IntentFilter();
         audioFilter.addAction(ACTION_OPEN_EQUALIZER_SESSION);
         audioFilter.addAction(ACTION_CLOSE_EQUALIZER_SESSION);
-        context.registerReceiver(mAudioSessionReceiver, audioFilter);
+        // Only this app sends these actions
+        ContextCompat.registerReceiver(context, mAudioSessionReceiver, audioFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
 
         saveDefaults();
     }

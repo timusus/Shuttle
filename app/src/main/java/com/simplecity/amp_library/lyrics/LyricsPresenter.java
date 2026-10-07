@@ -6,7 +6,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import androidx.annotation.NonNull;
 import android.text.TextUtils;
-import com.cantrowitz.rxbroadcast.RxBroadcast;
+import com.simplecity.amp_library.utils.RxBroadcast;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Query;
 import com.simplecity.amp_library.playback.MediaManager;

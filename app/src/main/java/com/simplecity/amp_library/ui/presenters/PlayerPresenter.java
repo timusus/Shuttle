@@ -3,7 +3,7 @@ package com.simplecity.amp_library.ui.presenters;
 import android.content.Context;
 import android.content.IntentFilter;
 import androidx.annotation.NonNull;
-import com.cantrowitz.rxbroadcast.RxBroadcast;
+import com.simplecity.amp_library.utils.RxBroadcast;
 import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.lyrics.LyricsDialog;
 import com.simplecity.amp_library.model.Song;

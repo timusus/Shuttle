@@ -130,7 +130,6 @@ object Dependencies {
             const val rxJava = "2.1.9"
             const val rxJavaExtensions = "0.20.6"
             const val rxRelay = "2.0.0"
-            const val rxBroadcast = "2.0.0"
             const val rxPrefs = "2.0.0"
             const val rxKotlin = "2.3.0"
         }
@@ -157,7 +156,6 @@ object Dependencies {
         const val rxRelay = "com.jakewharton.rxrelay2:rxrelay:${Versions.rxRelay}"
 
         // Rx Receivers - https://github.com/f2prateek/rx-receivers
-        const val rxBroadcast = "com.cantrowitz:rxbroadcast:${Versions.rxBroadcast}"
 
         // Rx Prefs - https://github.com/f2prateek/rx-preferences
         const val rxPrefs = "com.f2prateek.rx.preferences2:rx-preferences:${Versions.rxPrefs}"
