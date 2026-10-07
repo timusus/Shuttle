@@ -1,5 +1,7 @@
 package com.simplecity.amp_library.tagger;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.ParcelFileDescriptor;
@@ -88,6 +90,7 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
     protected Boolean doInBackground(Object... params) {
 
         boolean success = false;
+        boolean failed = false;
 
         for (int i = 0; i < paths.size(); i++) {
             final String path = paths.get(i);
@@ -97,6 +100,9 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
             try {
 
                 File orig = new File(path);
+                if (writeUri != null) {
+                    restoreKeptBackup(path, writeUri);
+                }
                 AudioFile audioFile = AudioFileIO.read(orig);
                 Tag tag = audioFile.getTag();
                 if (tag == null) {
@@ -128,7 +134,8 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
                 if (tagUpdate.hasChanged()) {
 
                     if (writeUri != null) {
-                        temp = new File(ShuttleApplication.getInstance().getFilesDir(), orig.getName());
+                        temp = new File(ShuttleApplication.getInstance().getFilesDir(),
+                                "tagger-backup-" + System.currentTimeMillis() + "-" + i + "-" + orig.getName());
                         tempFiles.add(temp);
                         TaggerUtils.copyFile(orig, temp);
 
@@ -143,17 +150,18 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
                     AudioFileIO.write(audioFile);
 
                     if (temp != null) {
+                        // From here the temp copy may be the only good one: the cleanup in finally must not touch it.
+                        tempFiles.remove(temp);
                         try {
                             writeBack(temp, writeUri);
                         } catch (IOException e) {
-                            // The original may now be truncated: keep the temp copy, the only good one.
-                            tempFiles.remove(temp);
+                            // The original may now be truncated: keep the temp copy and remember where it is.
+                            rememberBackup(path, temp);
                             Log.e(TAG, "Failed to write tagged file back, temp copy kept at " + temp, e);
                             throw e;
                         }
-                        if (temp.delete()) {
-                            tempFiles.remove(temp);
-                        }
+                        forgetBackup(path);
+                        temp.delete();
                     }
                 }
 
@@ -161,6 +169,7 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
                 success = true;
             } catch (CannotWriteException | IOException | CannotReadException | InvalidAudioFrameException | TagException | ReadOnlyFileException e) {
                 e.printStackTrace();
+                failed = true;
             } finally {
                 //Try to clean up our temp files
                 if (tempFiles != null && tempFiles.size() != 0) {
@@ -173,7 +182,38 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
             }
         }
 
-        return success;
+        return success && !failed;
+    }
+
+    private static SharedPreferences backupIndex() {
+        return ShuttleApplication.getInstance().getSharedPreferences("tagger_backups", Context.MODE_PRIVATE);
+    }
+
+    private static void rememberBackup(String path, File backup) {
+        backupIndex().edit().putString(path, backup.getAbsolutePath()).commit();
+    }
+
+    private static void forgetBackup(String path) {
+        backupIndex().edit().remove(path).commit();
+    }
+
+    /**
+     * If an earlier write-back for this file failed, the original may be damaged: write the kept good copy back first.
+     * Throws if that fails, so we don't edit the damaged file.
+     */
+    private static void restoreKeptBackup(String path, Uri writeUri) throws IOException {
+        String backupPath = backupIndex().getString(path, null);
+        if (backupPath == null) {
+            return;
+        }
+        File backup = new File(backupPath);
+        if (!backup.exists()) {
+            forgetBackup(path);
+            return;
+        }
+        writeBack(backup, writeUri);
+        forgetBackup(path);
+        backup.delete();
     }
 
     private static void writeBack(File temp, Uri writeUri) throws IOException {
@@ -189,8 +229,9 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
                     TaggerUtils.copyFile(temp, new FileOutputStream(fd.getFileDescriptor()));
                 }
                 return;
-            } catch (IOException e) {
-                failure = e;
+            } catch (Exception e) {
+                // Includes RuntimeExceptions such as SecurityException from the content provider
+                failure = e instanceof IOException ? (IOException) e : new IOException(e);
             }
         }
         throw failure;

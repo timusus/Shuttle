@@ -81,7 +81,7 @@ public class TaggerDialog extends DialogFragment {
     private final CompositeDisposable disposables = new CompositeDisposable();
 
     private final ActivityResultLauncher<IntentSenderRequest> writeRequestLauncher =
-            registerForActivityResult(new ActivityResultContracts.StartIntentSenderForResult(), result -> onMediaStoreWriteResult(result.getResultCode() == Activity.RESULT_OK));
+            registerForActivityResult(new ActivityResultContracts.StartIntentSenderForResult(), result -> onMediaStoreWriteResult(result.getResultCode()));
 
     private boolean showAlbum = true;
     private boolean showTrack = true;
@@ -414,10 +414,11 @@ public class TaggerDialog extends DialogFragment {
                 }));
     }
 
-    private void onMediaStoreWriteResult(boolean approved) {
-        if (!approved) {
+    private void onMediaStoreWriteResult(int resultCode) {
+        if (resultCode != Activity.RESULT_OK) {
             setSaveEnabled(true);
-            if (getContext() != null) {
+            // A plain cancel of the consent dialog isn't an error
+            if (resultCode != Activity.RESULT_CANCELED && getContext() != null) {
                 Toast.makeText(getContext(), R.string.tag_error, Toast.LENGTH_LONG).show();
             }
             return;
