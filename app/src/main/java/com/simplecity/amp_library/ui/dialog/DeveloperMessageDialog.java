@@ -22,14 +22,22 @@ public class DeveloperMessageDialog extends DialogFragment {
 
     private static final String TAG = "DeveloperMessageDialog";
 
-    /**
-     * Sale end time (epoch millis). Owner sets this before release; 0 hides the line.
-     */
-    public static final long SALE_END_EPOCH_MILLIS = 0L;
+    private static final String ARG_SALE_END_EPOCH_MILLIS = "sale_end_epoch_millis";
 
     private static final String REFERRER = "utm_source%3Dshuttle_legacy%26utm_medium%3Ddialog";
     private static final String PACKAGE_MUSIC = "com.simplecityapps.shuttle";
     private static final String PACKAGE_PODCASTS = "com.simplecityapps.shuttle.podcasts";
+
+    /**
+     * @param saleEndEpochMillis sale end time from the remote config; the sale line shows only while now is before it (0 hides it).
+     */
+    public static DeveloperMessageDialog newInstance(long saleEndEpochMillis) {
+        DeveloperMessageDialog dialog = new DeveloperMessageDialog();
+        Bundle args = new Bundle();
+        args.putLong(ARG_SALE_END_EPOCH_MILLIS, saleEndEpochMillis);
+        dialog.setArguments(args);
+        return dialog;
+    }
 
     public void show(FragmentManager fragmentManager) {
         show(fragmentManager, TAG);
@@ -40,9 +48,11 @@ public class DeveloperMessageDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Context context = requireContext();
 
+        long saleEnd = getArguments() != null ? getArguments().getLong(ARG_SALE_END_EPOCH_MILLIS, 0) : 0;
+
         StringBuilder message = new StringBuilder(getString(R.string.dev_message_body_intro));
-        if (SALE_END_EPOCH_MILLIS > 0 && System.currentTimeMillis() < SALE_END_EPOCH_MILLIS) {
-            String date = DateFormat.getDateInstance(DateFormat.MEDIUM).format(new Date(SALE_END_EPOCH_MILLIS));
+        if (saleEnd > 0 && System.currentTimeMillis() < saleEnd) {
+            String date = DateFormat.getDateInstance(DateFormat.MEDIUM).format(new Date(saleEnd));
             message.append("\n\n").append(getString(R.string.dev_message_sale, date));
         }
         message.append("\n\n").append(getString(R.string.dev_message_signoff));

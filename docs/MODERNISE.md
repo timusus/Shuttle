@@ -113,7 +113,7 @@ Other
 
 ## Owner items
 
-0. **Developer message dialog: done** (`DeveloperMessageDialog`, shown once from `MainActivity`, replaces the changelog on that launch). Set `SALE_END_EPOCH_MILLIS` in `DeveloperMessageDialog.java` before release (0 hides the sale line). Play release notes draft: `docs/whats-new-2.0.18.txt` (its sale line mirrors the dialog's: fill in the end date, or delete the line if no sale runs).
+0. **Developer message dialog: done** (`DeveloperMessageDialog`, shown once from `MainActivity`, replaces the changelog on that launch). **Remote-gated**: the app fetches `https://shuttlemusicplayer.com/legacy/developer-message.json` (5s timeouts) and shows the dialog only if the file returns HTTP 200 with `"enabled": true`, storage permission is granted and it hasn't been shown. Any failure means no dialog, retried on a later launch. Format: `{"enabled": false, "saleEndEpochMillis": 0}`. `docs/developer-message.json` is the file to upload (currently off). To switch on: upload it with `enabled: true` and, for a sale, `saleEndEpochMillis` set to the end time in epoch millis (0 hides the sale line; the line also hides once that time passes). Turning it off again only affects users who haven't seen it yet; anyone who has seen it won't see it again. Play release notes draft: `docs/whats-new-2.0.18.txt` (its sale line mirrors the dialog's: fill in the end date, or delete the line if no sale runs).
 1. `keystore.properties` in the repo root with `store`, `alias`, `storePass` and `pass`, plus the keystore. The current file is incomplete, so release tasks fail with a message.
 2. `private.properties` with `LASTFM_API_KEY`.
 3. Confirm that Chromecast receiver id `73341C53` is still registered.

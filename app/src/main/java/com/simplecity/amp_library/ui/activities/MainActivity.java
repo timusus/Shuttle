@@ -16,6 +16,7 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.Lifecycle;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
@@ -34,6 +35,7 @@ import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.playback.constants.ShortcutCommands;
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
 import com.simplecity.amp_library.ui.dialog.ChangelogDialog;
+import com.simplecity.amp_library.http.DeveloperMessageConfig;
 import com.simplecity.amp_library.ui.dialog.DeveloperMessageDialog;
 import com.simplecity.amp_library.ui.drawer.DrawerFragment;
 import com.simplecity.amp_library.ui.drawer.DrawerProvider;
@@ -56,6 +58,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import kotlin.Unit;
+import okhttp3.Call;
 import test.com.androidnavigation.fragment.BackPressHandler;
 import test.com.androidnavigation.fragment.BackPressListener;
 
@@ -81,6 +84,8 @@ public class MainActivity extends BaseCastActivity implements
     MediaManager mediaManager;
 
     private final CompositeDisposable disposables = new CompositeDisposable();
+
+    private Call developerMessageCall;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -195,12 +200,15 @@ public class MainActivity extends BaseCastActivity implements
     protected void onPause() {
         super.onPause();
 
+        cancelDeveloperMessageFetch();
+
         AnalyticsManager.dropBreadcrumb(TAG, "onPause()");
     }
 
     @Override
     protected void onDestroy() {
         disposables.clear();
+        cancelDeveloperMessageFetch();
 
         super.onDestroy();
 
@@ -299,6 +307,63 @@ public class MainActivity extends BaseCastActivity implements
         return id;
     }
 
+    /**
+     * Shows the developer message only if the remote config says it is enabled. At most one fetch is in flight; it is
+     * cancelled on pause, and a failed fetch simply retries on a later resume.
+     */
+    private void fetchDeveloperMessageConfig() {
+        if (developerMessageCall != null) {
+            return;
+        }
+        Call[] holder = new Call[1];
+        DeveloperMessageConfig.Listener listener = new DeveloperMessageConfig.Listener() {
+            @Override
+            public void onConfig(@NonNull DeveloperMessageConfig config) {
+                runOnUiThread(() -> {
+                    if (developerMessageCall != holder[0]) {
+                        return; // Cancelled or superseded.
+                    }
+                    developerMessageCall = null;
+                    showDeveloperMessage(config);
+                });
+            }
+
+            @Override
+            public void onFailure() {
+                runOnUiThread(() -> {
+                    if (developerMessageCall == holder[0]) {
+                        developerMessageCall = null;
+                    }
+                });
+            }
+        };
+        // Assign before the callback can run on the main thread (runOnUiThread posts, and we are on the main thread).
+        holder[0] = DeveloperMessageConfig.fetch(listener);
+        developerMessageCall = holder[0];
+    }
+
+    private void showDeveloperMessage(DeveloperMessageConfig config) {
+        if (!config.enabled
+                || SettingsManager.getInstance().getDeveloperMessageShown()
+                || isFinishing()
+                || isDestroyed()
+                || !getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)
+                || getSupportFragmentManager().isStateSaved()
+                || !PermissionUtils.hasStoragePermission(this)) {
+            return;
+        }
+        DeveloperMessageDialog.newInstance(config.saleEndEpochMillis).show(getSupportFragmentManager());
+        SettingsManager.getInstance().setDeveloperMessageShown();
+        SettingsManager.getInstance().setVersionCode();
+    }
+
+    private void cancelDeveloperMessageFetch() {
+        if (developerMessageCall != null) {
+            developerMessageCall.cancel();
+            developerMessageCall = null;
+        }
+    }
+
     private void showChangelogDialog() {
         // The one-off developer message replaces the changelog for this version.
         if (!SettingsManager.getInstance().getDeveloperMessageShown()) {
@@ -306,11 +371,7 @@ public class MainActivity extends BaseCastActivity implements
                 // The storage prompt may be covering the screen (and a denial finishes the activity): try again next launch
                 return;
             }
-            if (!getSupportFragmentManager().isStateSaved()) {
-                new DeveloperMessageDialog().show(getSupportFragmentManager());
-                SettingsManager.getInstance().setDeveloperMessageShown();
-                SettingsManager.getInstance().setVersionCode();
-            }
+            fetchDeveloperMessageConfig();
             return;
         }
 
