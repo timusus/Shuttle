@@ -29,6 +29,7 @@ import com.simplecity.amp_library.playback.MediaManager;
 import com.simplecity.amp_library.playback.constants.ShortcutCommands;
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
 import com.simplecity.amp_library.ui.dialog.ChangelogDialog;
+import com.simplecity.amp_library.ui.dialog.DeveloperMessageDialog;
 import com.simplecity.amp_library.ui.drawer.DrawerProvider;
 import com.simplecity.amp_library.ui.drawer.NavigationEventRelay;
 import com.simplecity.amp_library.ui.fragments.MainController;
@@ -247,6 +248,16 @@ public class MainActivity extends BaseCastActivity implements
     }
 
     private void showChangelogDialog() {
+        // The one-off developer message replaces the changelog for this version.
+        if (!SettingsManager.getInstance().getDeveloperMessageShown()) {
+            if (!getSupportFragmentManager().isStateSaved()) {
+                new DeveloperMessageDialog().show(getSupportFragmentManager());
+                SettingsManager.getInstance().setDeveloperMessageShown();
+                SettingsManager.getInstance().setVersionCode();
+            }
+            return;
+        }
+
         int storedVersionCode = SettingsManager.getInstance().getStoredVersionCode();
 
         // If we've stored a version code in the past, and it's lower than the current version code,

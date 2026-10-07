@@ -406,6 +406,16 @@ public class SettingsManager extends BaseSettingsManager {
         return getInt(KEY_VERSION_CODE, -1);
     }
 
+    private static final String KEY_DEVELOPER_MESSAGE_SHOWN = "developer_message_shown";
+
+    public void setDeveloperMessageShown() {
+        setBool(KEY_DEVELOPER_MESSAGE_SHOWN, true);
+    }
+
+    public boolean getDeveloperMessageShown() {
+        return getBool(KEY_DEVELOPER_MESSAGE_SHOWN, false);
+    }
+
     private static final String KEY_CHANGELOG_SHOW_ON_LAUNCH = "show_on_launch";
 
     public void setShowChangelogOnLaunch(boolean showOnLaunch) {
