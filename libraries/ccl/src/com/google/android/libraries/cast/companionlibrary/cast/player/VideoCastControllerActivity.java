@@ -107,6 +107,16 @@ public class VideoCastControllerActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cast_activity);
+        if (android.os.Build.VERSION.SDK_INT >= 35) {
+            // Drawn edge-to-edge when targeting SDK 35+: keep the controls clear of the system bars.
+            androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content), (v, windowInsets) -> {
+                androidx.core.graphics.Insets bars = windowInsets.getInsets(
+                        androidx.core.view.WindowInsetsCompat.Type.systemBars()
+                                | androidx.core.view.WindowInsetsCompat.Type.displayCutout());
+                v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
+                return androidx.core.view.WindowInsetsCompat.CONSUMED;
+            });
+        }
         loadAndSetupViews();
         mCastManager = VideoCastManager.getInstance();
         mImmersive = mCastManager.getCastConfiguration().isCastControllerImmersive();

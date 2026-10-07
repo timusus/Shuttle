@@ -15,6 +15,16 @@ public final class ActionBarUtils {
             android.R.attr.actionBarSize
     };
 
+    /**
+     * The top system bar / display cutout inset reported by the window, or -1 if not known. Only recorded when the app
+     * is forced edge-to-edge (API 35+), where it can differ from the status_bar_height resource.
+     */
+    private static int statusBarInset = -1;
+
+    public static void setStatusBarInset(int inset) {
+        statusBarInset = inset;
+    }
+
     /* This class is never initialized */
     private ActionBarUtils() {
     }
@@ -33,6 +43,9 @@ public final class ActionBarUtils {
      * @return The height of the StatusBar
      */
     public static float getStatusBarHeight(Context context) {
+        if (statusBarInset >= 0) {
+            return statusBarInset;
+        }
         int result = 0;
         int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0) {

@@ -139,6 +139,15 @@ public class DrawerFragment extends BaseFragment implements
         adapter = new DrawerAdapter(drawerParents);
     }
 
+    /**
+     * Keeps the last drawer item clear of the navigation bar when the window is drawn edge-to-edge.
+     */
+    public void setBottomInset(int bottomInset) {
+        if (recyclerView != null) {
+            recyclerView.setPadding(recyclerView.getPaddingLeft(), recyclerView.getPaddingTop(), recyclerView.getPaddingRight(), bottomInset);
+        }
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 

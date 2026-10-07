@@ -59,7 +59,7 @@ Branch `modernise-release`, from tag `v2.0.17-release` (live on Play as versionC
 
 ## Not done (ranked)
 
-1. **Edge-to-edge** (enforced at target 35+, opt-out ignored at 36): no inset handling yet. Toolbars and bottom sheets will sit under the status and navigation bars. Needs `ViewCompat.setOnApplyWindowInsetsListener` padding on the main activity root, the toolbar container, the multisheet/mini player and the settings and detail screens. **M**
+1. **Edge-to-edge** (code done, not device-tested): on API 35+ `MainActivity` pads `mainContainer` by the system bar/cutout bottom and side insets, feeds the top inset to `ActionBarUtils.getStatusBarHeight` (used by the status bar views and detail toolbars), pads the drawer list and sets nav bar icon contrast; the cast controller pads its root. API <35 behaviour is unchanged. Needs a check on an API 35/36 emulator (library, player, settings, drawer, landscape). **S**
 2. **`MultiPlayer.setDataSource` / `prepare()` runs on the main thread** (ANR on slow storage). The open/play pipeline in `PlaybackManager` relies on it being synchronous, so moving it is a playback refactor that needs device testing. **M**
 3. **sqlbrite `BriteContentResolver` IllegalArgumentException:** cause not identified (likely a projection column or playlist uri that MediaStore rejects on newer APIs). Needs the Play stack trace. **S-M**
 4. `TaggerDialog`, `DrawerFragment` and the album, artist, genre and playlist detail fragments still pass Serializable models in their arguments. These are single models, so the TransactionTooLarge risk is small. **S**

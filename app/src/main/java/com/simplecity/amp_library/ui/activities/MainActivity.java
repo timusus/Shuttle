@@ -10,7 +10,10 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.MediaStore;
 import androidx.annotation.NonNull;
+import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
@@ -18,6 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import com.afollestad.aesthetic.Aesthetic;
+import com.afollestad.aesthetic.Rx;
 import com.greysonparrelli.permiso.Permiso;
 import com.simplecity.amp_library.BuildConfig;
 import com.simplecity.amp_library.R;
@@ -30,9 +34,11 @@ import com.simplecity.amp_library.playback.constants.ShortcutCommands;
 import com.simplecity.amp_library.sql.sqlbrite.SqlBriteUtils;
 import com.simplecity.amp_library.ui.dialog.ChangelogDialog;
 import com.simplecity.amp_library.ui.dialog.DeveloperMessageDialog;
+import com.simplecity.amp_library.ui.drawer.DrawerFragment;
 import com.simplecity.amp_library.ui.drawer.DrawerProvider;
 import com.simplecity.amp_library.ui.drawer.NavigationEventRelay;
 import com.simplecity.amp_library.ui.fragments.MainController;
+import com.simplecity.amp_library.utils.ActionBarUtils;
 import com.simplecity.amp_library.utils.AnalyticsManager;
 import com.simplecity.amp_library.utils.LogUtils;
 import com.simplecity.amp_library.utils.MusicServiceConnectionUtils;
@@ -40,6 +46,7 @@ import com.simplecity.amp_library.utils.PlaylistUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ThemeUtils;
 import io.reactivex.Single;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
@@ -70,6 +77,8 @@ public class MainActivity extends BaseCastActivity implements
 
     @Inject
     MediaManager mediaManager;
+
+    private final CompositeDisposable disposables = new CompositeDisposable();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,8 +113,19 @@ public class MainActivity extends BaseCastActivity implements
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
             drawerLayout.setOnApplyWindowInsetsListener((view, windowInsets) -> {
                 navigationView.dispatchApplyWindowInsets(windowInsets);
+                if (Build.VERSION.SDK_INT >= 35) {
+                    applyEdgeToEdgeInsets(WindowInsetsCompat.toWindowInsetsCompat(windowInsets, view));
+                }
                 return windowInsets.replaceSystemWindowInsets(0, 0, 0, 0);
             });
+        }
+
+        if (Build.VERSION.SDK_INT >= 35) {
+            // The window is always drawn edge-to-edge on API 35+. Match the system bar icons to the theme.
+            disposables.add(Aesthetic.get(this).isDark()
+                    .compose(Rx.distinctToMainThread())
+                    .subscribe(isDark -> WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView())
+                            .setAppearanceLightNavigationBars(!isDark), throwable -> { }));
         }
 
         if (savedInstanceState == null) {
@@ -116,6 +136,31 @@ public class MainActivity extends BaseCastActivity implements
         }
 
         handleIntent(getIntent());
+    }
+
+    /**
+     * Targeting SDK 35+, the window is drawn behind the system bars. The top inset is picked up by the status bar views
+     * and toolbars through {@link ActionBarUtils#getStatusBarHeight}. The bottom and side insets pad the main container so
+     * the mini player and bottom content stay clear of the navigation bar and display cutout.
+     */
+    private void applyEdgeToEdgeInsets(WindowInsetsCompat insets) {
+        Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+
+        if (bars.top != (int) ActionBarUtils.getStatusBarHeight(this)) {
+            ActionBarUtils.setStatusBarInset(bars.top);
+            drawerLayout.requestLayout();
+        }
+
+        View mainContainer = findViewById(R.id.mainContainer);
+        if (mainContainer != null) {
+            mainContainer.setPadding(bars.left, 0, bars.right, bars.bottom);
+        }
+        navigationView.setPadding(bars.left, 0, 0, 0);
+
+        DrawerFragment drawerFragment = (DrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navDrawerFragment);
+        if (drawerFragment != null) {
+            drawerFragment.setBottomInset(bars.bottom);
+        }
     }
 
     @Override
@@ -150,6 +195,8 @@ public class MainActivity extends BaseCastActivity implements
 
     @Override
     protected void onDestroy() {
+        disposables.clear();
+
         super.onDestroy();
 
         AnalyticsManager.dropBreadcrumb(TAG, "onDestroy()");

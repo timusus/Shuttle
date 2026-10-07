@@ -23,6 +23,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.view.LayoutInflaterCompat;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
 import androidx.appcompat.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -234,13 +235,7 @@ public final class Util {
   static void setLightStatusBarCompat(@NonNull AppCompatActivity activity, boolean lightMode) {
     final View view = activity.getWindow().getDecorView();
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      int flags = view.getSystemUiVisibility();
-      if (lightMode) {
-        flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-      } else {
-        flags &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-      }
-      view.setSystemUiVisibility(flags);
+      WindowCompat.getInsetsController(activity.getWindow(), view).setAppearanceLightStatusBars(lightMode);
     }
   }
 
