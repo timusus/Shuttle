@@ -12,6 +12,7 @@ import java.security.KeyStore;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
@@ -64,18 +65,32 @@ public class DeveloperMessageConfig {
     @SerializedName("saleText")
     public String saleText;
 
+    private static final Pattern EDGE_WHITESPACE =
+            Pattern.compile("^[\\s\\p{Z}\\u200B\\uFEFF]+|[\\s\\p{Z}\\u200B\\uFEFF]+$");
+
     /**
-     * Trims the value and caps its length. Returns null when it is null or blank.
+     * Strips ASCII and Unicode whitespace (no-break, zero-width, BOM) from both ends and caps the
+     * length without splitting a surrogate pair. Returns null when it is null or blank.
      */
     public static String clean(String value, int maxLength) {
         if (value == null) {
             return null;
         }
-        String trimmed = value.trim();
+        String trimmed = EDGE_WHITESPACE.matcher(value).replaceAll("");
         if (trimmed.isEmpty()) {
             return null;
         }
-        return trimmed.length() > maxLength ? trimmed.substring(0, maxLength).trim() : trimmed;
+        if (trimmed.length() > maxLength) {
+            int end = maxLength;
+            if (Character.isHighSurrogate(trimmed.charAt(end - 1))) {
+                end--;
+            }
+            trimmed = EDGE_WHITESPACE.matcher(trimmed.substring(0, end)).replaceAll("");
+            if (trimmed.isEmpty()) {
+                return null;
+            }
+        }
+        return trimmed;
     }
 
     /**
