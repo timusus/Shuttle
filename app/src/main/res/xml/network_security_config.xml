@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Older system stores lack ISRG Root X2 / Root YE, which sign the Let's Encrypt chain of shuttlemusicplayer.com. -->
+    <domain-config>
+        <domain includeSubdomains="true">shuttlemusicplayer.com</domain>
+        <trust-anchors>
+            <certificates src="system"/>
+            <certificates src="@raw/isrg_root_x2"/>
+            <certificates src="@raw/isrg_root_ye"/>
+        </trust-anchors>
+    </domain-config>
+</network-security-config>
