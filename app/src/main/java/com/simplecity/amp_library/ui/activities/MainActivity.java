@@ -330,7 +330,8 @@ public class MainActivity extends BaseCastActivity implements
                         return; // Cancelled or superseded.
                     }
                     developerMessageCall = null;
-                    developerMessageFetched = true;
+                    // Only a definite "off" stops refetching this process; once shown, the shown flag stops it.
+                    developerMessageFetched = !config.enabled;
                     showDeveloperMessage(config);
                 });
             }
@@ -340,9 +341,6 @@ public class MainActivity extends BaseCastActivity implements
                 runOnUiThread(() -> {
                     if (developerMessageCall == holder[0]) {
                         developerMessageCall = null;
-                        if (!holder[0].isCanceled()) {
-                            developerMessageFetched = true;
-                        }
                     }
                 });
             }
