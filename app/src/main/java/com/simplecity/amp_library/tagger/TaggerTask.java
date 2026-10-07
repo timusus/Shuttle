@@ -12,7 +12,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
@@ -29,10 +32,15 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
     public interface TagCompletionListener {
         void onSuccess();
 
-        void onFailure();
+        /**
+         * @param writtenPaths the files that were changed before the failure, so they can still be rescanned.
+         */
+        void onFailure(List<String> writtenPaths);
 
         void onProgress(int progress);
     }
+
+    private static final String BACKUP_PREFIX = "tagger-backup-";
 
     private TagCompletionListener tagCompletionListener;
 
@@ -42,6 +50,7 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
     private List<String> paths;
     private List<Uri> writeUris;
     private List<File> tempFiles = new ArrayList<>();
+    private List<String> writtenPaths = new ArrayList<>();
 
     private String titleText;
     private String albumText;
@@ -92,6 +101,8 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
         boolean success = false;
         boolean failed = false;
 
+        sweepBackups();
+
         for (int i = 0; i < paths.size(); i++) {
             final String path = paths.get(i);
             // Files we can't write directly (SD card via SAF, or anything on API 30+ via MediaStore) are tagged as a
@@ -100,8 +111,8 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
             try {
 
                 File orig = new File(path);
-                if (writeUri != null) {
-                    restoreKeptBackup(path, writeUri);
+                if (writeUri != null && restoreKeptBackup(path, writeUri)) {
+                    writtenPaths.add(path);
                 }
                 AudioFile audioFile = AudioFileIO.read(orig);
                 Tag tag = audioFile.getTag();
@@ -135,7 +146,7 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
 
                     if (writeUri != null) {
                         temp = new File(ShuttleApplication.getInstance().getFilesDir(),
-                                "tagger-backup-" + System.currentTimeMillis() + "-" + i + "-" + orig.getName());
+                                BACKUP_PREFIX + System.currentTimeMillis() + "-" + i + "-" + orig.getName());
                         tempFiles.add(temp);
                         TaggerUtils.copyFile(orig, temp);
 
@@ -152,11 +163,11 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
                     if (temp != null) {
                         // From here the temp copy may be the only good one: the cleanup in finally must not touch it.
                         tempFiles.remove(temp);
+                        // Remember it before the original is truncated, so a kill mid-write still gets it restored.
+                        rememberBackup(path, temp);
                         try {
                             writeBack(temp, writeUri);
                         } catch (IOException e) {
-                            // The original may now be truncated: keep the temp copy and remember where it is.
-                            rememberBackup(path, temp);
                             Log.e(TAG, "Failed to write tagged file back, temp copy kept at " + temp, e);
                             throw e;
                         }
@@ -166,8 +177,12 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
                 }
 
                 publishProgress(i);
+                if (!writtenPaths.contains(path)) {
+                    writtenPaths.add(path);
+                }
                 success = true;
-            } catch (CannotWriteException | IOException | CannotReadException | InvalidAudioFrameException | TagException | ReadOnlyFileException e) {
+            } catch (CannotWriteException | IOException | CannotReadException | InvalidAudioFrameException | TagException | ReadOnlyFileException | RuntimeException e) {
+                // jaudiotagger can also throw RuntimeExceptions on malformed files
                 e.printStackTrace();
                 failed = true;
             } finally {
@@ -189,8 +204,10 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
         return ShuttleApplication.getInstance().getSharedPreferences("tagger_backups", Context.MODE_PRIVATE);
     }
 
-    private static void rememberBackup(String path, File backup) {
-        backupIndex().edit().putString(path, backup.getAbsolutePath()).commit();
+    private static void rememberBackup(String path, File backup) throws IOException {
+        if (!backupIndex().edit().putString(path, backup.getAbsolutePath()).commit()) {
+            throw new IOException("Couldn't record backup " + backup);
+        }
     }
 
     private static void forgetBackup(String path) {
@@ -198,22 +215,70 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
     }
 
     /**
+     * Drops index entries whose backup is gone, and deletes backups no entry refers to (left by earlier versions).
+     */
+    private static void sweepBackups() {
+        SharedPreferences index = backupIndex();
+        Set<String> referenced = new HashSet<>();
+        SharedPreferences.Editor editor = index.edit();
+        for (Map.Entry<String, ?> entry : index.getAll().entrySet()) {
+            Object backupPath = entry.getValue();
+            if (backupPath instanceof String && new File((String) backupPath).exists()) {
+                referenced.add((String) backupPath);
+            } else {
+                editor.remove(entry.getKey());
+            }
+        }
+        editor.commit();
+
+        File[] files = ShuttleApplication.getInstance().getFilesDir().listFiles((dir, name) -> name.startsWith(BACKUP_PREFIX));
+        if (files != null) {
+            for (File file : files) {
+                if (!referenced.contains(file.getAbsolutePath())) {
+                    file.delete();
+                }
+            }
+        }
+    }
+
+    /**
      * If an earlier write-back for this file failed, the original may be damaged: write the kept good copy back first.
      * Throws if that fails, so we don't edit the damaged file.
+     *
+     * @return true if the file was restored from the backup.
      */
-    private static void restoreKeptBackup(String path, Uri writeUri) throws IOException {
+    private static boolean restoreKeptBackup(String path, Uri writeUri) throws IOException {
         String backupPath = backupIndex().getString(path, null);
         if (backupPath == null) {
-            return;
+            return false;
         }
         File backup = new File(backupPath);
         if (!backup.exists()) {
             forgetBackup(path);
-            return;
+            return false;
+        }
+        if (!isDamaged(new File(path), backup)) {
+            // The file is intact (the write-back finished, or something else has replaced it since): keep it.
+            forgetBackup(path);
+            backup.delete();
+            return false;
         }
         writeBack(backup, writeUri);
         forgetBackup(path);
         backup.delete();
+        return true;
+    }
+
+    private static boolean isDamaged(File file, File backup) {
+        if (file.length() < backup.length()) {
+            return true;
+        }
+        try {
+            AudioFileIO.read(file);
+            return false;
+        } catch (Exception e) {
+            return true;
+        }
     }
 
     private static void writeBack(File temp, Uri writeUri) throws IOException {
@@ -244,7 +309,7 @@ public class TaggerTask extends AsyncTask<Object, Integer, Boolean> {
             if (success) {
                 tagCompletionListener.onSuccess();
             } else {
-                tagCompletionListener.onFailure();
+                tagCompletionListener.onFailure(writtenPaths);
             }
         }
     }

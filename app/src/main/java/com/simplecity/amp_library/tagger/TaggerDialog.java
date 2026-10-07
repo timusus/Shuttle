@@ -472,7 +472,11 @@ public class TaggerDialog extends DialogFragment {
             }
 
             @Override
-            public void onFailure() {
+            public void onFailure(List<String> writtenPaths) {
+
+                if (!writtenPaths.isEmpty()) {
+                    CustomMediaScanner.scanFiles(writtenPaths, null);
+                }
 
                 if (getContext() != null && isResumed()) {
                     saveProgressDialog.dismiss();
