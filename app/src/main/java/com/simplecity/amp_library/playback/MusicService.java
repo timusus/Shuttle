@@ -141,7 +141,7 @@ public class MusicService extends MediaBrowserServiceCompat {
         shutdownIntent.setAction(ServiceCommand.SHUTDOWN);
 
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        this.shutdownIntent = PendingIntent.getService(this, 0, shutdownIntent, 0);
+        this.shutdownIntent = PendingIntent.getService(this, 0, shutdownIntent, PendingIntent.FLAG_IMMUTABLE);
 
         // Listen for the idle state
         AnalyticsManager.dropBreadcrumb(TAG, "onCreate(), scheduling delayed shutdown");
@@ -300,11 +300,16 @@ public class MusicService extends MediaBrowserServiceCompat {
 
             AnalyticsManager.dropBreadcrumb(TAG, String.format("onStartCommand() Action: %s, Command: %s", action, cmd));
 
-            if (MediaButtonCommand.NEXT.equals(cmd) || ServiceCommand.NEXT_ACTION.equals(action)) {
+            if (action != null && !ServiceCommand.SHUTDOWN.equals(action)) {
+                // Widgets, media buttons and shortcuts start us with startForegroundService(), which must be followed by
+                // startForeground() on every path, whatever the command turns out to be. The activities' plain start
+                // has no action, and the shutdown alarm may not foreground from the background.
                 dummyNotificationHelper.showDummyNotification(this);
+            }
+
+            if (MediaButtonCommand.NEXT.equals(cmd) || ServiceCommand.NEXT_ACTION.equals(action)) {
                 gotoNext(true);
             } else if (MediaButtonCommand.PREVIOUS.equals(cmd) || ServiceCommand.PREV_ACTION.equals(action)) {
-                dummyNotificationHelper.showDummyNotification(this);
                 if (getSeekPosition() < 2000) {
                     previous();
                 } else {
@@ -312,7 +317,6 @@ public class MusicService extends MediaBrowserServiceCompat {
                     play();
                 }
             } else if (MediaButtonCommand.TOGGLE_PAUSE.equals(cmd) || ServiceCommand.TOGGLE_PAUSE_ACTION.equals(action)) {
-                dummyNotificationHelper.showDummyNotification(this);
                 if (isPlaying()) {
                     AnalyticsManager.dropBreadcrumb(TAG, "Pausing due to media button or service command");
                     pause();
@@ -320,14 +324,11 @@ public class MusicService extends MediaBrowserServiceCompat {
                     play();
                 }
             } else if (MediaButtonCommand.PAUSE.equals(cmd) || ServiceCommand.PAUSE_ACTION.equals(action)) {
-                dummyNotificationHelper.showDummyNotification(this);
                 AnalyticsManager.dropBreadcrumb(TAG, "Pausing due to media button or service command (2)");
                 pause();
             } else if (MediaButtonCommand.PLAY.equals(cmd)) {
-                dummyNotificationHelper.showDummyNotification(this);
                 play();
             } else if (ServiceCommand.STOP_ACTION.equals(action) || MediaButtonCommand.STOP.equals(action)) {
-                dummyNotificationHelper.showDummyNotification(this);
                 AnalyticsManager.dropBreadcrumb(TAG, "Pausing due to media button or service stop command");
                 pause();
                 releaseServiceUiAndStop();
@@ -335,16 +336,12 @@ public class MusicService extends MediaBrowserServiceCompat {
                 //For some reason, the notification will only fuck off if this call is delayed.
                 new Handler().postDelayed(() -> stopForegroundImpl(true, false), 150);
             } else if (ServiceCommand.SHUFFLE_ACTION.equals(action)) {
-                dummyNotificationHelper.showDummyNotification(this);
                 toggleShuffleMode();
             } else if (ServiceCommand.REPEAT_ACTION.equals(action)) {
-                dummyNotificationHelper.showDummyNotification(this);
                 toggleRepeat();
             } else if (MediaButtonCommand.TOGGLE_FAVORITE.equals(action) || ServiceCommand.TOGGLE_FAVORITE.equals(action)) {
-                dummyNotificationHelper.showDummyNotification(this);
                 toggleFavorite();
             } else if (ExternalIntents.PLAY_STATUS_REQUEST.equals(action)) {
-                dummyNotificationHelper.showDummyNotification(this);
                 notifyChange(ExternalIntents.PLAY_STATUS_RESPONSE);
             } else if (ServiceCommand.SHUTDOWN.equals(action)) {
                 shutdownScheduled = false;
@@ -355,11 +352,9 @@ public class MusicService extends MediaBrowserServiceCompat {
             if (action != null) {
                 switch (action) {
                     case ShortcutCommands.PLAY:
-                        dummyNotificationHelper.showDummyNotification(this);
                         play();
                         break;
                     case ShortcutCommands.SHUFFLE_ALL:
-                        dummyNotificationHelper.showDummyNotification(this);
                         queueManager.makeShuffleList();
                         playAutoShuffleList();
                         break;
@@ -909,7 +904,7 @@ public class MusicService extends MediaBrowserServiceCompat {
         Intent intent = new Intent(action);
         intent.setComponent(serviceName);
 
-        return PendingIntent.getService(context, 0, intent, 0);
+        return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
     }
 
     /**

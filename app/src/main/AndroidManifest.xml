@@ -164,6 +164,7 @@
         <service
             android:name=".playback.MusicService"
             android:exported="true"
+            android:foregroundServiceType="mediaPlayback"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.media.browse.MediaBrowserService"/>

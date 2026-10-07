@@ -56,7 +56,7 @@ public class ArtworkDownloadService extends Service {
         final ComponentName serviceName = new ComponentName(this, ArtworkDownloadService.class);
         Intent intent = new Intent(ACTION_CANCEL);
         intent.setComponent(serviceName);
-        PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
         return new NotificationCompat.Builder(this, NotificationHelper.NOTIFICATION_CHANNEL_ID)
                 .setContentTitle(getResources().getString(R.string.notif_downloading_art))

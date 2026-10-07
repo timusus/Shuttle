@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.playback;
 
+import android.app.ForegroundServiceStartNotAllowedException;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -42,8 +43,8 @@ class DummyNotificationHelper {
         AnalyticsManager.dropBreadcrumb(TAG, "showDummyNotification() called");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager notificationManager = service.getSystemService(NotificationManager.class);
             if (!isShowingDummyNotification) {
-                NotificationManager notificationManager = service.getSystemService(NotificationManager.class);
                 NotificationChannel channel = notificationManager.getNotificationChannel(CHANNEL_ID);
                 if (channel == null) {
                     channel = new NotificationChannel(CHANNEL_ID, service.getString(R.string.app_name), NotificationManager.IMPORTANCE_DEFAULT);
@@ -55,24 +56,35 @@ class DummyNotificationHelper {
                     notificationManager.createNotificationChannel(channel);
                 }
 
-                Notification notification = new Notification.Builder(service, CHANNEL_ID)
-                        .setContentTitle(service.getString(R.string.app_name))
-                        .setContentText(service.getString(R.string.notification_text_shuttle_running))
-                        .setSmallIcon(R.drawable.ic_stat_notification)
-                        .build();
-
-                AnalyticsManager.dropBreadcrumb(TAG, "Showing dummy notification..");
-                notificationManager.notify(NOTIFICATION_ID_DUMMY, notification);
-
-                if (!isForegroundedByApp) {
-                    AnalyticsManager.dropBreadcrumb(TAG, "Starting dummy notification in foreground..");
-                    service.startForeground(NOTIFICATION_ID_DUMMY, notification);
-                } else {
-                    AnalyticsManager.dropBreadcrumb(TAG, "Already foregrounded by app, not foregrounding dummy notification");
-                }
-
-                isShowingDummyNotification = true;
             }
+
+            Notification notification = new Notification.Builder(service, CHANNEL_ID)
+                    .setContentTitle(service.getString(R.string.app_name))
+                    .setContentText(service.getString(R.string.notification_text_shuttle_running))
+                    .setSmallIcon(R.drawable.ic_stat_notification)
+                    .build();
+
+            // Every startForegroundService() must be followed by startForeground(), even if the dummy notification is
+            // already showing (the service may have left the foreground since).
+            if (!isForegroundedByApp) {
+                AnalyticsManager.dropBreadcrumb(TAG, "Starting dummy notification in foreground..");
+                try {
+                    service.startForeground(NOTIFICATION_ID_DUMMY, notification);
+                } catch (IllegalStateException e) {
+                    // Started with startService() and the app went to the background before we got here. The command
+                    // still runs; there's just no foreground.
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && e instanceof ForegroundServiceStartNotAllowedException) {
+                        AnalyticsManager.dropBreadcrumb(TAG, "startForeground() not allowed: " + e);
+                        return;
+                    }
+                    throw e;
+                }
+            } else {
+                AnalyticsManager.dropBreadcrumb(TAG, "Already foregrounded by app, showing dummy notification without foregrounding");
+                notificationManager.notify(NOTIFICATION_ID_DUMMY, notification);
+            }
+
+            isShowingDummyNotification = true;
         }
 
         if (dummyNotificationDisposable != null) {

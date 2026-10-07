@@ -1,5 +1,6 @@
 package com.simplecity.amp_library.utils;
 
+import android.app.ForegroundServiceStartNotAllowedException;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -231,7 +232,18 @@ public class MediaButtonIntentReceiver extends WakefulBroadcastReceiver {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             AnalyticsManager.dropBreadcrumb(TAG, "Service started. (foreground) Command: " + command);
-            context.startForegroundService(intent);
+            try {
+                context.startForegroundService(intent);
+            } catch (IllegalStateException e) {
+                // API 31+ only lets media buttons start a foreground service while our media session is active (the
+                // system then routes the button to the session instead). A stray button press from the background is
+                // dropped rather than crashing.
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && e instanceof ForegroundServiceStartNotAllowedException) {
+                    LogUtils.logException(TAG, "Media button couldn't start the service", e);
+                    return;
+                }
+                throw e;
+            }
         } else {
             AnalyticsManager.dropBreadcrumb(TAG, "Service started. (wakeful) Command: " + command);
             startWakefulService(context, intent);

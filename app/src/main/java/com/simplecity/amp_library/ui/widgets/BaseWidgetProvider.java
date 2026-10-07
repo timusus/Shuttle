@@ -101,7 +101,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
     public static void setupButtons(Context context, RemoteViews views, int appWidgetId, int rootViewId) {
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(rootViewId, pendingIntent);
 
         pendingIntent = getPendingIntent(context, appWidgetId, new Intent(ServiceCommand.TOGGLE_PAUSE_ACTION));
@@ -123,9 +123,9 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     private static PendingIntent getPendingIntent(Context context, int appWidgetId, Intent intent) {
         intent.setComponent(new ComponentName(context, MusicService.class));
         if (ShuttleUtils.hasOreo()) {
-            return PendingIntent.getForegroundService(context, appWidgetId, intent, 0);
+            return PendingIntent.getForegroundService(context, appWidgetId, intent, PendingIntent.FLAG_IMMUTABLE);
         } else {
-            return PendingIntent.getService(context, appWidgetId, intent, 0);
+            return PendingIntent.getService(context, appWidgetId, intent, PendingIntent.FLAG_IMMUTABLE);
         }
     }
 

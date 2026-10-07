@@ -33,8 +33,15 @@ class ResumingServiceManager(val lifecycle: Lifecycle) : LifecycleObserver {
                     .subscribeBy(
                             onSuccess = {
                                 AnalyticsManager.dropBreadcrumb("ResumingServiceManager", "Starting service after 300ms delay")
-                                context.startService(intent)
-                                completion?.invoke()
+                                try {
+                                    context.startService(intent)
+                                    completion?.invoke()
+                                } catch (e: IllegalStateException) {
+                                    // "Not allowed to start service: app is in background". The process can still be
+                                    // ranked as background just after the activity resumes, or the activity was left
+                                    // during the delay. Skip it: the activity binds again on its next resume.
+                                    LogUtils.logException("ResumingServiceManager", "Couldn't start service", e)
+                                }
                             }
 
                     ).addTo(disposable)
