@@ -21,8 +21,8 @@ import android.util.Log;
 import android.widget.Toast;
 import com.simplecity.amp_library.R;
 import com.simplecity.amp_library.androidauto.MediaIdHelper;
-import com.simplecity.amp_library.androidauto.PackageValidator;
 import com.simplecity.amp_library.model.Song;
+import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.notifications.MusicNotificationHelper;
 import com.simplecity.amp_library.playback.constants.ExternalIntents;
 import com.simplecity.amp_library.playback.constants.InternalIntents;
@@ -91,8 +91,6 @@ public class MusicService extends MediaBrowserServiceCompat {
 
     private CompositeDisposable disposables = new CompositeDisposable();
 
-    private PackageValidator mPackageValidator;
-
     private DummyNotificationHelper dummyNotificationHelper = new DummyNotificationHelper();
 
     @SuppressLint("InlinedApi")
@@ -101,8 +99,6 @@ public class MusicService extends MediaBrowserServiceCompat {
         super.onCreate();
 
         AnalyticsManager.dropBreadcrumb(TAG, "onCreate()");
-
-        mPackageValidator = new PackageValidator(this);
 
         queueManager = new QueueManager(musicServiceCallbacks);
 
@@ -168,30 +164,22 @@ public class MusicService extends MediaBrowserServiceCompat {
     @Nullable
     @Override
     public BrowserRoot onGetRoot(@NonNull String clientPackageName, int clientUid, @Nullable Bundle rootHints) {
-        // To ensure you are not allowing any arbitrary app to browse your app's contents, you
-        // need to check the origin:
-        if (!mPackageValidator.isCallerAllowed(this, clientPackageName, clientUid)) {
-            // If the request comes from an untrusted package, return an empty browser root.
-            // If you return null, then the media browser will not be able to connect and
-            // no further calls will be made to other media browsing methods.
-            Log.i(TAG, String.format("OnGetRoot: Browsing NOT ALLOWED for unknown caller. Returning empty browser root so all apps can use MediaController.%s", clientPackageName));
-            return new MediaBrowserServiceCompat.BrowserRoot("EMPTY_ROOT", null);
-        }
+        // Any caller may browse: a certificate allowlist rejects current Android Auto builds.
         return new BrowserRoot("media:/root/", null);
     }
 
     @Override
     public void onLoadChildren(@NonNull String parentMediaId, @NonNull Result<List<MediaBrowserCompat.MediaItem>> result) {
-        if ("EMPTY_ROOT".equals(parentMediaId)) {
+        // Without storage permission the library never loads, so answer now rather than hang.
+        if (!PermissionUtils.hasStoragePermission(this)) {
             result.sendResult(new ArrayList<>());
-        } else {
-            result.detach();
-            // if music library is ready, return immediately
-            new MediaIdHelper().getChildren(parentMediaId, mediaItems -> {
-                result.sendResult(mediaItems);
-                return Unit.INSTANCE;
-            });
+            return;
         }
+        result.detach();
+        new MediaIdHelper().getChildren(parentMediaId, mediaItems -> {
+            result.sendResult(mediaItems);
+            return Unit.INSTANCE;
+        });
     }
 
     @Override
