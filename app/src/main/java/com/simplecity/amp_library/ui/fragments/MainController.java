@@ -276,6 +276,11 @@ public class MainController extends BaseNavigationController implements BackPres
     // to help ascertain the cause of a crash.
     @Override
     public void pushViewController(@NonNull Fragment fragment, @Nullable String tag, @Nullable List<Pair<View, String>> sharedElements) {
+        // Delayed pushes can land after the state is saved, where commit() throws IllegalStateException.
+        if (!isAdded() || getChildFragmentManager().isStateSaved()) {
+            return;
+        }
+
         FragmentTransaction fragmentTransaction = getChildFragmentManager()
                 .beginTransaction();
 
