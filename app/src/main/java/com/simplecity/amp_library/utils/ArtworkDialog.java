@@ -52,7 +52,6 @@ public class ArtworkDialog {
         RecyclerView recyclerView = customView.findViewById(R.id.recyclerView);
         recyclerView.addItemDecoration(new SpacesItemDecoration(16));
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setHasFixedSize(true);
         recyclerView.setItemViewCacheSize(0);
         recyclerView.setRecyclerListener(new RecyclerListener());
 
