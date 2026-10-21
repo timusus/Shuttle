@@ -1,6 +1,7 @@
 package com.simplecity.amp_library.playback;
 
 import android.annotation.SuppressLint;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -185,6 +186,30 @@ public class MediaSessionManager {
                 updateMediaSession(intent.getAction());
             }
         }));
+    }
+
+    // Android Auto shows this error prominently, telling the user how to unblock an otherwise empty library.
+    void showPermissionError() {
+        Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+        Bundle extras = new Bundle();
+        if (launchIntent != null) {
+            extras.putParcelable("android.media.extras.ERROR_RESOLUTION_ACTION_INTENT",
+                    PendingIntent.getActivity(context, 0, launchIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT));
+            extras.putString("android.media.extras.ERROR_RESOLUTION_ACTION_LABEL", context.getString(R.string.auto_open_shuttle));
+        }
+        mediaSession.setActive(true);
+        mediaSession.setPlaybackState(new PlaybackStateCompat.Builder()
+                .setState(PlaybackStateCompat.STATE_ERROR, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0f)
+                .setErrorMessage(PlaybackStateCompat.ERROR_CODE_AUTHENTICATION_EXPIRED, context.getString(R.string.auto_permission_required))
+                .setExtras(extras)
+                .build());
+    }
+
+    void clearPermissionError() {
+        PlaybackStateCompat current = mediaSession.getController().getPlaybackState();
+        if (current != null && current.getState() == PlaybackStateCompat.STATE_ERROR) {
+            updateMediaSession(InternalIntents.PLAY_STATE_CHANGED);
+        }
     }
 
     private void updateMediaSession(final String action) {

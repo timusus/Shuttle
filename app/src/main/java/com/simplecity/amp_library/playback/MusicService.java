@@ -172,9 +172,11 @@ public class MusicService extends MediaBrowserServiceCompat {
     public void onLoadChildren(@NonNull String parentMediaId, @NonNull Result<List<MediaBrowserCompat.MediaItem>> result) {
         // Without storage permission the library never loads, so answer now rather than hang.
         if (!PermissionUtils.hasStoragePermission(this)) {
+            playbackManager.setLibraryAccessDenied(true);
             result.sendResult(new ArrayList<>());
             return;
         }
+        playbackManager.setLibraryAccessDenied(false);
         result.detach();
         new MediaIdHelper().getChildren(parentMediaId, mediaItems -> {
             result.sendResult(mediaItems);

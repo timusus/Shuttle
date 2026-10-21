@@ -801,4 +801,6 @@
     <string name="dev_message_button_music">Get the new Shuttle Music</string>
     <string name="dev_message_button_dismiss">Close</string>
 
+    <string name="auto_permission_required">Open Shuttle on your phone and allow access to your music</string>
+    <string name="auto_open_shuttle">Open Shuttle</string>
 </resources>

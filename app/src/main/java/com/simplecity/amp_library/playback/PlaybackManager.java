@@ -267,6 +267,14 @@ public class PlaybackManager {
         return mediaSessionManager.getSessionToken();
     }
 
+    void setLibraryAccessDenied(boolean denied) {
+        if (denied) {
+            mediaSessionManager.showPermissionError();
+        } else {
+            mediaSessionManager.clearPermissionError();
+        }
+    }
+
     public boolean hasTrackEndedMessage() {
         return playerHandler.hasMessages(PlayerHandler.TRACK_ENDED);
     }
