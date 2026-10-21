@@ -989,6 +989,8 @@ public class MusicService extends MediaBrowserServiceCompat {
         if (currentSong != null) {
             intent.putExtras(getExtras(currentSong));
         }
+        // Implicit broadcasts never reach our RECEIVER_NOT_EXPORTED receivers (so the media session never updated).
+        intent.setPackage(getPackageName());
         sendBroadcast(intent);
 
         widgetManager.notifyChange(this, action);
