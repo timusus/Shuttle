@@ -99,7 +99,8 @@ public abstract class BaseActivity extends AestheticActivity implements ServiceC
     @Override
     @CallSuper
     public void onServiceConnected(ComponentName name, IBinder service) {
-        sendBroadcast(new Intent(InternalIntents.SERVICE_CONNECTED));
+        // Implicit broadcasts don't reach RECEIVER_NOT_EXPORTED receivers on Android 14+.
+        sendBroadcast(new Intent(InternalIntents.SERVICE_CONNECTED).setPackage(getPackageName()));
     }
 
     @Override

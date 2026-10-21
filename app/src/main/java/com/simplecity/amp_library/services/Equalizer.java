@@ -374,6 +374,8 @@ public class Equalizer {
             Intent intent = new Intent(Equalizer.ACTION_CLOSE_EQUALIZER_SESSION);
             intent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, audioSessionId);
             intent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, context.getPackageName());
+            // Implicit broadcasts don't reach RECEIVER_NOT_EXPORTED receivers on Android 14+.
+            intent.setPackage(context.getPackageName());
             context.sendBroadcast(intent);
         } else {
             Intent intent = new Intent(AudioEffect.ACTION_CLOSE_AUDIO_EFFECT_CONTROL_SESSION);
@@ -395,6 +397,10 @@ public class Equalizer {
         intent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, audioSessionId);
         intent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, context.getPackageName());
         intent.setAction(internal ? Equalizer.ACTION_OPEN_EQUALIZER_SESSION : AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION);
+        if (internal) {
+            // Implicit broadcasts don't reach RECEIVER_NOT_EXPORTED receivers on Android 14+.
+            intent.setPackage(context.getPackageName());
+        }
         context.sendBroadcast(intent);
     }
 }
