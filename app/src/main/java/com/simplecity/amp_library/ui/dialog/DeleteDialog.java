@@ -302,17 +302,32 @@ public class DeleteDialog extends DialogFragment implements SafManager.SafDialog
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(songs -> {
-                    if (songs.isEmpty()) {
+                    if (!isAdded()) {
+                        return;
+                    }
+                    List<Song> deletable = Stream.of(songs).filter(song -> song.id > 0).toList();
+                    List<Uri> uris = Stream.of(deletable)
+                            .map(song -> song.id)
+                            .distinct()
+                            .map(id -> ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id))
+                            .toList();
+                    if (uris.isEmpty()) {
                         showResultToast(0);
                         dismissAllowingStateLoss();
                         return;
                     }
-                    List<Uri> uris = Stream.of(songs)
-                            .map(song -> ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, song.id))
-                            .toList();
-                    PendingIntent pendingIntent = MediaStore.createDeleteRequest(requireContext().getContentResolver(), uris);
+                    PendingIntent pendingIntent;
+                    try {
+                        pendingIntent = MediaStore.createDeleteRequest(requireContext().getContentResolver(), uris);
+                    } catch (IllegalArgumentException | SecurityException e) {
+                        // MediaProvider rejects the whole request if any item is missing or isn't one of its audio rows.
+                        LogUtils.logException(TAG, "Failed to create MediaStore delete request", e);
+                        showResultToast(0);
+                        dismissAllowingStateLoss();
+                        return;
+                    }
                     viewModel.songsForMediaStoreDeletion.clear();
-                    viewModel.songsForMediaStoreDeletion.addAll(songs);
+                    viewModel.songsForMediaStoreDeletion.addAll(deletable);
                     deleteRequestLauncher.launch(new IntentSenderRequest.Builder(pendingIntent.getIntentSender()).build());
                 }, error -> {
                     LogUtils.logException(TAG, "Failed to request deletion", error);
