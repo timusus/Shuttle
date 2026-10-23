@@ -188,6 +188,8 @@ public class MainActivity extends BaseCastActivity implements
         AnalyticsManager.dropBreadcrumb(TAG, "onCreate()");
 
         showChangelogDialog();
+
+        PermissionUtils.requestBluetoothConnectForExistingUsersOnce(this);
     }
 
     @Override

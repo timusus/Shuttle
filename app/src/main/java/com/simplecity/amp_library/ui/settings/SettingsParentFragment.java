@@ -30,6 +30,7 @@ import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.dagger.module.ActivityModule;
 import com.simplecity.amp_library.ui.drawer.DrawerLockManager;
 import com.simplecity.amp_library.ui.drawer.MiniPlayerLockManager;
+import com.simplecity.amp_library.utils.PermissionUtils;
 import com.simplecity.amp_library.utils.SettingsManager;
 import com.simplecity.amp_library.utils.ShuttleUtils;
 import io.reactivex.disposables.Disposable;
@@ -255,6 +256,20 @@ public class SettingsParentFragment extends BaseNavigationController implements
                 tintNavBarColorPreference.setOnPreferenceChangeListener((preference, newValue) -> {
                     settingsPresenter.tintNavBarClicked(getContext(), (Boolean) newValue);
                     return true;
+                });
+            }
+
+            SwitchPreferenceCompat bluetoothConnectPreference = (SwitchPreferenceCompat) findPreference("pref_bluetooth_connect");
+            if (bluetoothConnectPreference != null) {
+                bluetoothConnectPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                    if (!(Boolean) newValue || !PermissionUtils.needsBluetoothConnectPermission(getContext())) {
+                        return true;
+                    }
+                    // Reject the change now; the switch is turned on only if the permission is granted
+                    PermissionUtils.requestBluetoothConnect(
+                            () -> bluetoothConnectPreference.setChecked(true),
+                            () -> Toast.makeText(getContext(), R.string.pref_bluetooth_connect_permission_denied, Toast.LENGTH_LONG).show());
+                    return false;
                 });
             }
 

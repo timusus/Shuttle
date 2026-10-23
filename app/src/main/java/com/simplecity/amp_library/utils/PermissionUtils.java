@@ -14,6 +14,7 @@ public class PermissionUtils {
     private static final String KEY_NOTIFICATION_PERMISSION_REQUESTED = "notification_permission_requested";
 
     private static boolean notificationRequestPending = false;
+    private static boolean bluetoothRequestPending = false;
 
     private PermissionUtils() {
 
@@ -60,6 +61,62 @@ public class PermissionUtils {
 
     public static void RequestStoragePermissions(final PermissionCallback callback) {
         simplePermissionRequest(callback, storagePermission());
+    }
+
+    /**
+     * BLUETOOTH_CONNECT is a runtime permission from API 31, and without it the A2DP/headset connection broadcasts
+     * behind "resume on Bluetooth connect" are not delivered.
+     */
+    public static boolean needsBluetoothConnectPermission(Context context) {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+                && ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED;
+    }
+
+    public static void requestBluetoothConnect(Runnable onGranted, Runnable onDenied) {
+        Permiso.getInstance().requestPermissions(new Permiso.IOnPermissionResult() {
+            @Override
+            public void onPermissionResult(Permiso.ResultSet resultSet) {
+                if (resultSet.areAllPermissionsGranted()) {
+                    onGranted.run();
+                } else {
+                    onDenied.run();
+                }
+            }
+
+            @Override
+            public void onRationaleRequested(Permiso.IOnRationaleProvided callback, String... permissions) {
+                callback.onRationaleProvided();
+            }
+        }, Manifest.permission.BLUETOOTH_CONNECT);
+    }
+
+    /**
+     * For users who enabled "resume on Bluetooth connect" before it needed BLUETOOTH_CONNECT: asks once, and switches
+     * the setting off if refused. Waits for the storage and notification prompts so they never stack.
+     */
+    public static void requestBluetoothConnectForExistingUsersOnce(Context context) {
+        SettingsManager settings = SettingsManager.getInstance();
+        if (!needsBluetoothConnectPermission(context)
+                || !settings.getBluetoothResumeConnect()
+                || settings.getBluetoothConnectPermissionAsked()
+                || bluetoothRequestPending
+                || !hasStoragePermission(context)) {
+            return;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                && !PreferenceManager.getDefaultSharedPreferences(context).getBoolean(KEY_NOTIFICATION_PERMISSION_REQUESTED, false)
+                && ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        bluetoothRequestPending = true;
+        requestBluetoothConnect(() -> {
+            bluetoothRequestPending = false;
+            settings.setBluetoothConnectPermissionAsked();
+        }, () -> {
+            bluetoothRequestPending = false;
+            settings.setBluetoothConnectPermissionAsked();
+            settings.setBluetoothResumeConnect(false);
+        });
     }
 
     /**

@@ -358,6 +358,8 @@
     <string name="pref_summary_bluetooth_disconnect">Pauses playback when bluetooth is disconnected</string>
     <!-- Settings summary for the bluetooth resume on connect -->
     <string name="pref_summary_bluetooth_connect">Resumes playback when bluetooth is connected</string>
+    <!-- Shown when the nearby devices permission needed for resume on bluetooth connect is denied -->
+    <string name="pref_bluetooth_connect_permission_denied">Resuming on Bluetooth connect needs the Nearby devices permission</string>
     <!-- Settings title for the scrobbling heading -->
     <string name="pref_title_scrobbling">Scrobbling</string>
     <!-- Settings title for Simple Last.fm scrobbler -->

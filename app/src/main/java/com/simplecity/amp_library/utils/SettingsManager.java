@@ -278,6 +278,20 @@ public class SettingsManager extends BaseSettingsManager {
         return getBool(KEY_BLUETOOTH_RESUME_CONNECT, false);
     }
 
+    public void setBluetoothResumeConnect(boolean enabled) {
+        setBool(KEY_BLUETOOTH_RESUME_CONNECT, enabled);
+    }
+
+    private static final String KEY_BLUETOOTH_CONNECT_PERMISSION_ASKED = "bluetooth_connect_permission_asked";
+
+    public boolean getBluetoothConnectPermissionAsked() {
+        return getBool(KEY_BLUETOOTH_CONNECT_PERMISSION_ASKED, false);
+    }
+
+    public void setBluetoothConnectPermissionAsked() {
+        setBool(KEY_BLUETOOTH_CONNECT_PERMISSION_ASKED, true);
+    }
+
     // Themes
 
     public boolean getUsePalette() {
