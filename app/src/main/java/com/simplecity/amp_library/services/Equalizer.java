@@ -245,55 +245,63 @@ public class Equalizer {
             return;
         }
 
-        final int numBands = temp.getNumEqualizerBands();
-        final int numPresets = temp.getNumEqualizerPresets();
-        SharedPreferences.Editor editor = mPrefs.edit();
-        editor.putString("equalizer.number_of_presets", String.valueOf(numPresets)).apply();
-        editor.putString("equalizer.number_of_bands", String.valueOf(numBands)).apply();
+        // Some devices' effect engines fail parameter reads ("AudioEffect: set/get parameter error"); start without
+        // defaults rather than crash the service. The editor is applied once so a failure leaves no partial defaults.
+        try {
+            final int numBands = temp.getNumEqualizerBands();
+            final int numPresets = temp.getNumEqualizerPresets();
+            SharedPreferences.Editor editor = mPrefs.edit();
+            editor.putString("equalizer.number_of_presets", String.valueOf(numPresets));
+            editor.putString("equalizer.number_of_bands", String.valueOf(numBands));
 
-        // range
-        short[] rangeShortArr = temp.equalizer.getBandLevelRange();
+            // range
+            short[] rangeShortArr = temp.equalizer.getBandLevelRange();
 
-        editor.putString("equalizer.band_level_range", rangeShortArr[0] + ";" + rangeShortArr[1]).apply();
+            editor.putString("equalizer.band_level_range", rangeShortArr[0] + ";" + rangeShortArr[1]);
 
-        // center freqs
-        StringBuilder centerFreqs = new StringBuilder();
-        // audiofx.global.centerfreqs
-        for (short i = 0; i < numBands; i++) {
-            centerFreqs.append(temp.equalizer.getCenterFreq(i));
-            centerFreqs.append(";");
-        }
-        centerFreqs.deleteCharAt(centerFreqs.length() - 1);
-        editor.putString("equalizer.center_freqs", centerFreqs.toString()).apply();
-
-        // populate preset names
-        StringBuilder presetNames = new StringBuilder();
-        for (int i = 0; i < numPresets; i++) {
-            String presetName = temp.equalizer.getPresetName((short) i);
-            presetNames.append(presetName);
-            presetNames.append("|");
-
-            // populate preset band values
-            StringBuilder presetBands = new StringBuilder();
-            try {
-                temp.equalizer.usePreset((short) i);
-            } catch (RuntimeException e) {
-                Log.e(TAG, "equalizer.usePreset() failed");
+            // center freqs
+            StringBuilder centerFreqs = new StringBuilder();
+            // audiofx.global.centerfreqs
+            for (short i = 0; i < numBands; i++) {
+                centerFreqs.append(temp.equalizer.getCenterFreq(i));
+                centerFreqs.append(";");
             }
+            centerFreqs.deleteCharAt(centerFreqs.length() - 1);
+            editor.putString("equalizer.center_freqs", centerFreqs.toString());
 
-            for (int j = 0; j < numBands; j++) {
-                // loop through preset bands
-                presetBands.append(temp.equalizer.getBandLevel((short) j));
-                presetBands.append(";");
+            // populate preset names
+            StringBuilder presetNames = new StringBuilder();
+            for (int i = 0; i < numPresets; i++) {
+                String presetName = temp.equalizer.getPresetName((short) i);
+                presetNames.append(presetName);
+                presetNames.append("|");
+
+                // populate preset band values
+                StringBuilder presetBands = new StringBuilder();
+                try {
+                    temp.equalizer.usePreset((short) i);
+                } catch (RuntimeException e) {
+                    Log.e(TAG, "equalizer.usePreset() failed");
+                }
+
+                for (int j = 0; j < numBands; j++) {
+                    // loop through preset bands
+                    presetBands.append(temp.equalizer.getBandLevel((short) j));
+                    presetBands.append(";");
+                }
+                presetBands.deleteCharAt(presetBands.length() - 1);
+                editor.putString("equalizer.preset." + i, presetBands.toString());
             }
-            presetBands.deleteCharAt(presetBands.length() - 1);
-            editor.putString("equalizer.preset." + i, presetBands.toString()).apply();
+            if (presetNames.length() != 0) {
+                presetNames.deleteCharAt(presetNames.length() - 1);
+                editor.putString("equalizer.preset_names", presetNames.toString());
+            }
+            editor.apply();
+        } catch (RuntimeException e) {
+            Log.e(TAG, "Failed to read equalizer defaults", e);
+        } finally {
+            temp.release();
         }
-        if (presetNames.length() != 0) {
-            presetNames.deleteCharAt(presetNames.length() - 1);
-            editor.putString("equalizer.preset_names", presetNames.toString()).apply();
-        }
-        temp.release();
     }
 
     /**
