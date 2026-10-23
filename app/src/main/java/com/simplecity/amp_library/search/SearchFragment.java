@@ -122,6 +122,13 @@ public class SearchFragment extends BaseFragment implements
     @Nullable
     private Disposable setDataDisposable;
 
+    // Back can pop this fragment before the delayed pop runs; popping again would find no NavigationController.
+    private final Runnable popRunnable = () -> {
+        if (isAdded()) {
+            getNavigationController().popViewController();
+        }
+    };
+
     public static SearchFragment newInstance(String query) {
         Bundle args = new Bundle();
         args.putString(ARG_QUERY, query);
@@ -191,9 +198,12 @@ public class SearchFragment extends BaseFragment implements
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
+                if (!isAdded()) {
+                    return false;
+                }
                 InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(rootView.getWindowToken(), 0);
-                searchView.getHandler().postDelayed(() -> getNavigationController().popViewController(), 150);
+                searchView.postDelayed(popRunnable, 150);
                 return false;
             }
         });
@@ -232,6 +242,8 @@ public class SearchFragment extends BaseFragment implements
 
     @Override
     public void onDestroyView() {
+        searchView.removeCallbacks(popRunnable);
+
         super.onDestroyView();
 
         if (setDataDisposable != null) {
@@ -338,7 +350,7 @@ public class SearchFragment extends BaseFragment implements
         InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(rootView.getWindowToken(), 0);
         String transitionName = ViewCompat.getTransitionName(transitionView);
-        searchView.getHandler().postDelayed(() -> pushDetailFragment(ArtistDetailFragment.newInstance(albumArtist, transitionName), transitionView), 50);
+        searchView.postDelayed(() -> pushDetailFragment(ArtistDetailFragment.newInstance(albumArtist, transitionName), transitionView), 50);
     }
 
     @Override
@@ -346,10 +358,13 @@ public class SearchFragment extends BaseFragment implements
         InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(rootView.getWindowToken(), 0);
         String transitionName = ViewCompat.getTransitionName(transitionView);
-        searchView.getHandler().postDelayed(() -> pushDetailFragment(AlbumDetailFragment.newInstance(album, transitionName), transitionView), 50);
+        searchView.postDelayed(() -> pushDetailFragment(AlbumDetailFragment.newInstance(album, transitionName), transitionView), 50);
     }
 
     void pushDetailFragment(Fragment fragment, @Nullable View transitionView) {
+        if (!isAdded()) {
+            return;
+        }
 
         List<Pair<View, String>> transitions = new ArrayList<>();
 
