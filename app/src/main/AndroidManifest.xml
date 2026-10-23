@@ -183,7 +183,6 @@
                 <action
                     android:name="android.intent.action.MEDIA_BUTTON"
                     android:priority="999"/>
-                <action android:name="android.media.AUDIO_BECOMING_NOISY"/>
                 <action
                     android:name="android.intent.action.HEADSET_PLUG"
                     android:priority="999"/>

@@ -73,9 +73,7 @@ public class MediaButtonIntentReceiver extends WakefulBroadcastReceiver {
 
             final String intentAction = intent.getAction();
 
-            if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intentAction) && PlaybackSettingsManager.INSTANCE.getPauseOnHeadsetDisconnect()) {
-                startService(context, MediaButtonCommand.PAUSE);
-            } else if (Intent.ACTION_MEDIA_BUTTON.equals(intentAction)) {
+            if (Intent.ACTION_MEDIA_BUTTON.equals(intentAction)) {
                 final KeyEvent event = intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
                 if (event == null) {
                     return;
