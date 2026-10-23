@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.MediaStore;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
@@ -116,6 +117,8 @@ public class MainActivity extends BaseCastActivity implements
         }
 
         setContentView(R.layout.activity_main);
+
+        getOnBackPressedDispatcher().addCallback(this, backPressedCallback);
 
         Permiso.getInstance().setActivity(this);
 
@@ -399,22 +402,25 @@ public class MainActivity extends BaseCastActivity implements
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            if (!backPressListeners.isEmpty()) {
-                for (int i = backPressListeners.size() - 1; i >= 0; i--) {
-                    BackPressListener backPressListener = backPressListeners.get(i);
-                    if (backPressListener.consumeBackPress()) {
-                        return;
-                    }
+    // At targetSdk 36 the system no longer calls onBackPressed(), so back handling has to go through the dispatcher.
+    private final OnBackPressedCallback backPressedCallback = new OnBackPressedCallback(true) {
+        @Override
+        public void handleOnBackPressed() {
+            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return;
+            }
+            for (int i = backPressListeners.size() - 1; i >= 0; i--) {
+                if (backPressListeners.get(i).consumeBackPress()) {
+                    return;
                 }
             }
-            super.onBackPressed();
+            // Nothing consumed it: let the default handling (fragment back stack, then finish) run.
+            setEnabled(false);
+            getOnBackPressedDispatcher().onBackPressed();
+            setEnabled(true);
         }
-    }
+    };
 
     @Override
     public void toolbarAttached(Toolbar toolbar) {

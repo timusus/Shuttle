@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -115,6 +116,20 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
 
         setContentView(R.layout.activity_widget_config);
 
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (pager.getCurrentItem() == 0) {
+                    // First step: fall through to the default handling, which finishes the activity.
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                    setEnabled(true);
+                } else {
+                    pager.setCurrentItem(pager.getCurrentItem() - 1);
+                }
+            }
+        });
+
         Bundle extras = this.getIntent().getExtras();
         if (extras != null) {
             appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
@@ -164,17 +179,6 @@ public abstract class BaseWidgetConfigure extends BaseActivity implements
         updateWidgetUI();
     }
 
-    @Override
-    public void onBackPressed() {
-        if (pager.getCurrentItem() == 0) {
-            // If the user is currently looking at the first step, allow the system to handle the
-            // Back button. This calls finish() on this activity and pops the back stack.
-            super.onBackPressed();
-        } else {
-            // Otherwise, select the previous step.
-            pager.setCurrentItem(pager.getCurrentItem() - 1);
-        }
-    }
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
