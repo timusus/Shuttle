@@ -2276,7 +2276,8 @@ public class VideoCastManager extends BaseCastManager
             Intent contentIntent = new Intent(mContext, mTargetActivity);
             contentIntent.putExtra(VideoCastManager.EXTRA_MEDIA, mediaWrapper);
             return PendingIntent
-                    .getActivity(mContext, 0, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    .getActivity(mContext, 0, contentIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         } catch (TransientNetworkDisconnectionException | NoConnectionException e) {
             LOGE(TAG,
                     "getCastControllerPendingIntent(): Failed to get the remote media information");

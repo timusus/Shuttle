@@ -386,7 +386,8 @@ public class VideoCastNotificationService extends Service {
         intent.setPackage(getPackageName());
         intent.putExtra(EXTRA_FORWARD_STEP_MS, (int) millis);
         PendingIntent pendingIntent = PendingIntent
-                .getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                .getBroadcast(this, 0, intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         int iconResourceId = R.drawable.ic_notification_forward_48dp;
         if (millis == TEN_SECONDS_MILLIS) {
             iconResourceId = R.drawable.ic_notification_forward10_48dp;
@@ -408,7 +409,8 @@ public class VideoCastNotificationService extends Service {
         intent.setPackage(getPackageName());
         intent.putExtra(EXTRA_FORWARD_STEP_MS, (int)-millis);
         PendingIntent pendingIntent = PendingIntent
-                .getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                .getBroadcast(this, 0, intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         int iconResourceId = R.drawable.ic_notification_rewind_48dp;
         if (millis == TEN_SECONDS_MILLIS) {
             iconResourceId = R.drawable.ic_notification_rewind10_48dp;
@@ -431,7 +433,7 @@ public class VideoCastNotificationService extends Service {
             Intent intent = new Intent(this, VideoIntentReceiver.class);
             intent.setAction(ACTION_PLAY_NEXT);
             intent.setPackage(getPackageName());
-            pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+            pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
             iconResourceId = R.drawable.ic_notification_skip_next_48dp;
         }
 
@@ -451,7 +453,7 @@ public class VideoCastNotificationService extends Service {
             Intent intent = new Intent(this, VideoIntentReceiver.class);
             intent.setAction(ACTION_PLAY_PREV);
             intent.setPackage(getPackageName());
-            pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+            pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
             iconResourceId = R.drawable.ic_notification_skip_prev_48dp;
         }
 
@@ -476,7 +478,7 @@ public class VideoCastNotificationService extends Service {
         Intent intent = new Intent(this, VideoIntentReceiver.class);
         intent.setAction(ACTION_TOGGLE_PLAYBACK);
         intent.setPackage(getPackageName());
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
         return new NotificationCompat.Action.Builder(pauseOrPlayResourceId,
                 getString(pauseOrPlayTextResourceId), pendingIntent).build();
     }
@@ -489,7 +491,7 @@ public class VideoCastNotificationService extends Service {
         Intent intent = new Intent(this, VideoIntentReceiver.class);
         intent.setAction(ACTION_STOP);
         intent.setPackage(getPackageName());
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
         return new NotificationCompat.Action.Builder(R.drawable.ic_notification_disconnect_24dp,
                 getString(R.string.ccl_disconnect), pendingIntent).build();
     }
@@ -509,7 +511,8 @@ public class VideoCastNotificationService extends Service {
         if (stackBuilder.getIntentCount() > 1) {
             stackBuilder.editIntentAt(1).putExtra(VideoCastManager.EXTRA_MEDIA, mediaWrapper);
         }
-        return stackBuilder.getPendingIntent(NOTIFICATION_ID, PendingIntent.FLAG_UPDATE_CURRENT);
+        return stackBuilder.getPendingIntent(NOTIFICATION_ID,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
 
     /*
