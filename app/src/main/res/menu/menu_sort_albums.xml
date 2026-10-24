@@ -21,12 +21,12 @@
                 <item
                     android:id="@+id/sort_album_artist_name"
                     android:title="@string/sort_artist_name"/>
-                <item
-                    android:id="@+id/sort_album_ascending"
-                    android:checkable="true"
-                    android:checked="true"
-                    android:title="@string/sort_ascending"/>
             </group>
+            <item
+                android:id="@+id/sort_album_ascending"
+                android:checkable="true"
+                android:checked="true"
+                android:title="@string/sort_ascending"/>
         </menu>
     </item>
 
