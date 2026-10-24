@@ -89,7 +89,13 @@ public class MediaSessionManager {
 
             @Override
             public void onSkipToPrevious() {
-                playbackManager.previous();
+                // Match the in-app and notification button: past 2 s, previous restarts the song.
+                if (playbackManager.getSeekPosition() < 2000) {
+                    playbackManager.previous();
+                } else {
+                    playbackManager.seekTo(0);
+                    playbackManager.play();
+                }
             }
 
             @Override
