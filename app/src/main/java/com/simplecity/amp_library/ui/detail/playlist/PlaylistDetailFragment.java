@@ -197,8 +197,12 @@ public class PlaylistDetailFragment extends BaseFragment implements
 
             @Override
             public void removeSong(@NotNull Song song) {
-                // The item stays in the adapter; the playlist's content observer reloads the list once MediaStore updates.
-                playlist.removeSong(song, null);
+                // The members observer doesn't fire for an .m3u rewrite, so reload once the removal lands.
+                playlist.removeSong(song, success -> {
+                    if (success && isAdded()) {
+                        presenter.loadData();
+                    }
+                });
             }
         };
     }
