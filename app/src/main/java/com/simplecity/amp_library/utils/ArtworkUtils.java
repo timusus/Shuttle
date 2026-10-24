@@ -92,7 +92,7 @@ public class ArtworkUtils {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 95, out);
             return new ByteArrayInputStream(out.toByteArray());
         } catch (IOException | SecurityException e) {
-            Log.e(TAG, "getFolderThumbnail failed: " + e.toString());
+            Log.d(TAG, "getFolderThumbnail failed: " + e.toString());
             return null;
         }
     }
