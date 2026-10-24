@@ -18,6 +18,8 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <!-- Read the music library: READ_MEDIA_AUDIO from API 33, READ_EXTERNAL_STORAGE before that (see PermissionUtils) -->
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>
+    <!-- Folder artwork (folder.jpg etc.) is an image file, hidden from the app on API 33+ without this -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
     <!-- Runtime permission (API 31+), asked only from users of "resume on Bluetooth connect" -->
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
     <uses-permission

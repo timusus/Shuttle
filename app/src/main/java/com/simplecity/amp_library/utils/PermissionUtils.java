@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import androidx.core.content.ContextCompat;
+import com.bumptech.glide.Glide;
 import com.greysonparrelli.permiso.Permiso;
 
 public class PermissionUtils {
@@ -15,6 +16,7 @@ public class PermissionUtils {
 
     private static boolean notificationRequestPending = false;
     private static boolean bluetoothRequestPending = false;
+    private static boolean imagesRequestPending = false;
 
     private PermissionUtils() {
 
@@ -117,6 +119,51 @@ public class PermissionUtils {
             settings.setBluetoothConnectPermissionAsked();
             settings.setBluetoothResumeConnect(false);
         });
+    }
+
+    /**
+     * Asks once for READ_MEDIA_IMAGES (API 33+), which folder artwork needs to read folder.jpg and friends. Optional:
+     * the library loads without it. Waits for the storage, notification and Bluetooth prompts so they never stack.
+     */
+    public static void requestImagesPermissionOnce(Context context) {
+        SettingsManager settings = SettingsManager.getInstance();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
+                || settings.ignoreFolderArtwork()
+                || settings.getImagesPermissionAsked()
+                || imagesRequestPending
+                || notificationRequestPending
+                || bluetoothRequestPending
+                || !hasStoragePermission(context)
+                || ContextCompat.checkSelfPermission(context, Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        if (!PreferenceManager.getDefaultSharedPreferences(context).getBoolean(KEY_NOTIFICATION_PERMISSION_REQUESTED, false)
+                && ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        if (needsBluetoothConnectPermission(context)
+                && settings.getBluetoothResumeConnect()
+                && !settings.getBluetoothConnectPermissionAsked()) {
+            return;
+        }
+        imagesRequestPending = true;
+        Context appContext = context.getApplicationContext();
+        Permiso.getInstance().requestPermissions(new Permiso.IOnPermissionResult() {
+            @Override
+            public void onPermissionResult(Permiso.ResultSet resultSet) {
+                imagesRequestPending = false;
+                settings.setImagesPermissionAsked();
+                if (resultSet.areAllPermissionsGranted()) {
+                    // Drops the placeholders cached while the folder artwork was unreadable
+                    Glide.get(appContext).clearMemory();
+                }
+            }
+
+            @Override
+            public void onRationaleRequested(Permiso.IOnRationaleProvided callback, String... permissions) {
+                callback.onRationaleProvided();
+            }
+        }, Manifest.permission.READ_MEDIA_IMAGES);
     }
 
     /**
