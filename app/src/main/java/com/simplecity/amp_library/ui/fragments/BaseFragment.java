@@ -115,6 +115,9 @@ public abstract class BaseFragment extends BaseController {
     protected void setupCastMenu(Menu menu) {
         if (getActivity() instanceof BaseCastActivity) {
             BaseCastManager castManager = ((BaseCastActivity) getActivity()).castManager;
+            if (castManager == null) {
+                return;
+            }
             castManager.addMediaRouterButton(menu, R.id.media_route_menu_item);
 
             MenuItem mediaRouteMenuItem = menu.findItem(R.id.media_route_menu_item);
