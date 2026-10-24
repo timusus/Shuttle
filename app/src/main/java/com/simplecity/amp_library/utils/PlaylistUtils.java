@@ -633,36 +633,69 @@ public class PlaylistUtils {
      * A negative songId removes every entry.
      */
     private static int rewritePlaylistWithout(long playlistId, long songId) {
-        ContentResolver resolver = ShuttleApplication.getInstance().getContentResolver();
-        StringBuilder body = new StringBuilder("#EXTM3U\n");
-        int removed = 0;
-        try (Cursor cursor = resolver.query(
+        List<String> paths = new ArrayList<>();
+        List<Long> ids = new ArrayList<>();
+        if (!readPlaylistEntries(playlistId, ids, paths)) {
+            return 0;
+        }
+        List<String> kept = new ArrayList<>();
+        for (int i = 0; i < ids.size(); i++) {
+            if (songId >= 0 && ids.get(i) != songId) {
+                kept.add(paths.get(i));
+            }
+        }
+        int removed = paths.size() - kept.size();
+        if (removed == 0 || !writePlaylist(playlistId, kept)) {
+            return 0;
+        }
+        return removed;
+    }
+
+    /**
+     * Same .m3u rewrite as {@link #rewritePlaylistWithout}, for reordering: MediaProvider refuses
+     * Members.moveItem from API 30. Positions are indexes into the playlist's songs.
+     */
+    public static boolean rewritePlaylistMoved(long playlistId, int from, int to) {
+        List<String> paths = new ArrayList<>();
+        if (!readPlaylistEntries(playlistId, new ArrayList<>(), paths)
+                || from < 0 || to < 0 || from >= paths.size() || to >= paths.size()) {
+            return false;
+        }
+        paths.add(to, paths.remove(from));
+        return writePlaylist(playlistId, paths);
+    }
+
+    private static boolean readPlaylistEntries(long playlistId, List<Long> ids, List<String> paths) {
+        try (Cursor cursor = ShuttleApplication.getInstance().getContentResolver().query(
                 MediaStore.Audio.Playlists.Members.getContentUri("external", playlistId),
                 new String[] { MediaStore.Audio.Playlists.Members.AUDIO_ID, MediaStore.Audio.Playlists.Members.DATA },
                 null, null, MediaStore.Audio.Playlists.Members.PLAY_ORDER)) {
             if (cursor == null) {
-                return 0;
+                return false;
             }
             while (cursor.moveToNext()) {
-                if (songId < 0 || cursor.getLong(0) == songId) {
-                    removed++;
-                } else {
-                    body.append(cursor.getString(1)).append("\n");
-                }
+                ids.add(cursor.getLong(0));
+                paths.add(cursor.getString(1));
             }
+            return true;
         }
-        if (removed == 0) {
-            return 0;
+    }
+
+    private static boolean writePlaylist(long playlistId, List<String> paths) {
+        StringBuilder body = new StringBuilder("#EXTM3U\n");
+        for (String path : paths) {
+            body.append(path).append("\n");
         }
-        try (OutputStream outputStream = resolver.openOutputStream(ContentUris.withAppendedId(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, playlistId), "wt")) {
+        Uri uri = ContentUris.withAppendedId(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, playlistId);
+        try (OutputStream outputStream = ShuttleApplication.getInstance().getContentResolver().openOutputStream(uri, "wt")) {
             if (outputStream == null) {
-                return 0;
+                return false;
             }
             outputStream.write(body.toString().getBytes(StandardCharsets.UTF_8));
-            return removed;
+            return true;
         } catch (IOException | SecurityException e) {
             LogUtils.logException(TAG, "Failed to rewrite playlist", e);
-            return 0;
+            return false;
         }
     }
 

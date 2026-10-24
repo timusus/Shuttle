@@ -187,11 +187,14 @@ public class Playlist implements Serializable {
      */
     public boolean moveSong(int from, int to) {
         try {
-            return MediaStore.Audio.Playlists.Members.moveItem(ShuttleApplication.getInstance().getContentResolver(), id, from, to);
+            if (MediaStore.Audio.Playlists.Members.moveItem(ShuttleApplication.getInstance().getContentResolver(), id, from, to)) {
+                return true;
+            }
         } catch (IllegalArgumentException | SecurityException e) {
             LogUtils.logException(TAG, "Failed to move playlist item", e);
-            return false;
         }
+        // From API 30 moveItem throws or fails, so rewrite the .m3u instead.
+        return android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R && PlaylistUtils.rewritePlaylistMoved(id, from, to);
     }
 
     public Observable<List<Song>> getSongsObservable() {
