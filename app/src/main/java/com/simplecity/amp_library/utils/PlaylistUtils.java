@@ -447,7 +447,9 @@ public class PlaylistUtils {
      */
     public static void clearPlaylist(long playlistId) {
         final Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlistId);
-        ShuttleApplication.getInstance().getContentResolver().delete(uri, null, null);
+        if (ShuttleApplication.getInstance().getContentResolver().delete(uri, null, null) == 0 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            rewritePlaylistWithout(playlistId, -1);
+        }
     }
 
     @Nullable
@@ -628,8 +630,8 @@ public class PlaylistUtils {
     /**
      * From API 30 MediaProvider ignores member deletes (returns 0) but re-reads a playlist's .m3u when its owner
      * rewrites it. Returns the number of entries removed; 0 if the playlist isn't ours to write.
+     * A negative songId removes every entry.
      */
-    @WorkerThread
     private static int rewritePlaylistWithout(long playlistId, long songId) {
         ContentResolver resolver = ShuttleApplication.getInstance().getContentResolver();
         StringBuilder body = new StringBuilder("#EXTM3U\n");
@@ -642,7 +644,7 @@ public class PlaylistUtils {
                 return 0;
             }
             while (cursor.moveToNext()) {
-                if (cursor.getLong(0) == songId) {
+                if (songId < 0 || cursor.getLong(0) == songId) {
                     removed++;
                 } else {
                     body.append(cursor.getString(1)).append("\n");
