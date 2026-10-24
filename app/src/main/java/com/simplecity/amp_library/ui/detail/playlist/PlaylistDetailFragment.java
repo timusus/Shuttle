@@ -197,14 +197,8 @@ public class PlaylistDetailFragment extends BaseFragment implements
 
             @Override
             public void removeSong(@NotNull Song song) {
-                ViewModel songView = Stream.of(adapter.items).filter(value -> value instanceof SongView && ((SongView) value).song == song).findFirst().orElse(null);
-                int index = adapter.items.indexOf(songView);
-                playlist.removeSong(song, success -> {
-                    if (!success) {
-                        // Playlist removal failed, re-insert adapter item
-                        adapter.addItem(index, songView);
-                    }
-                });
+                // The item stays in the adapter; the playlist's content observer reloads the list once MediaStore updates.
+                playlist.removeSong(song, null);
             }
         };
     }

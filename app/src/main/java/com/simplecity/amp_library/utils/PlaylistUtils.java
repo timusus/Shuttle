@@ -3,12 +3,14 @@ package com.simplecity.amp_library.utils;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import androidx.annotation.NonNull;
@@ -54,6 +56,8 @@ import io.reactivex.schedulers.Schedulers;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -602,6 +606,9 @@ public class PlaylistUtils {
             if (playlist.id >= 0) {
                 final Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlist.id);
                 numTracksRemoved = ShuttleApplication.getInstance().getContentResolver().delete(uri, MediaStore.Audio.Playlists.Members.AUDIO_ID + "=" + song.id, null);
+                if (numTracksRemoved == 0 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    numTracksRemoved = rewritePlaylistWithout(playlist.id, song.id);
+                }
             }
             return numTracksRemoved;
         })
@@ -616,6 +623,45 @@ public class PlaylistUtils {
                         },
                         error -> LogUtils.logException(TAG, "PlaylistUtils: Error Removing from favorites", error)
                 );
+    }
+
+    /**
+     * From API 30 MediaProvider ignores member deletes (returns 0) but re-reads a playlist's .m3u when its owner
+     * rewrites it. Returns the number of entries removed; 0 if the playlist isn't ours to write.
+     */
+    @WorkerThread
+    private static int rewritePlaylistWithout(long playlistId, long songId) {
+        ContentResolver resolver = ShuttleApplication.getInstance().getContentResolver();
+        StringBuilder body = new StringBuilder("#EXTM3U\n");
+        int removed = 0;
+        try (Cursor cursor = resolver.query(
+                MediaStore.Audio.Playlists.Members.getContentUri("external", playlistId),
+                new String[] { MediaStore.Audio.Playlists.Members.AUDIO_ID, MediaStore.Audio.Playlists.Members.DATA },
+                null, null, MediaStore.Audio.Playlists.Members.PLAY_ORDER)) {
+            if (cursor == null) {
+                return 0;
+            }
+            while (cursor.moveToNext()) {
+                if (cursor.getLong(0) == songId) {
+                    removed++;
+                } else {
+                    body.append(cursor.getString(1)).append("\n");
+                }
+            }
+        }
+        if (removed == 0) {
+            return 0;
+        }
+        try (OutputStream outputStream = resolver.openOutputStream(ContentUris.withAppendedId(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, playlistId), "wt")) {
+            if (outputStream == null) {
+                return 0;
+            }
+            outputStream.write(body.toString().getBytes(StandardCharsets.UTF_8));
+            return removed;
+        } catch (IOException | SecurityException e) {
+            LogUtils.logException(TAG, "Failed to rewrite playlist", e);
+            return 0;
+        }
     }
 
     public static void showPlaylistToast(Context context, int numTracksAdded) {
