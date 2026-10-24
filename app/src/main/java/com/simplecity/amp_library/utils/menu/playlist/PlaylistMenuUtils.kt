@@ -30,6 +30,8 @@ object PlaylistMenuUtils {
 
         fun showDeleteConfirmationDialog(playlist: Playlist, onDelete: () -> Unit)
 
+        fun requestPlaylistDeletion(playlist: Playlist)
+
         fun onPlaylistDeleted()
     }
 
@@ -100,7 +102,7 @@ object PlaylistMenuUtils {
                     if (playlist.delete()) {
                         callbacks.onPlaylistDeleted()
                     } else {
-                        callbacks.showToast(R.string.playlist_save_failed)
+                        callbacks.requestPlaylistDeletion(playlist)
                     }
                 }
                 return true
