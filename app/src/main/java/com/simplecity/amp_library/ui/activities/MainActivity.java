@@ -190,7 +190,6 @@ public class MainActivity extends BaseCastActivity implements
         showChangelogDialog();
 
         PermissionUtils.requestBluetoothConnectForExistingUsersOnce(this);
-        PermissionUtils.requestImagesPermissionOnce(this);
     }
 
     @Override

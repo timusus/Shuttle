@@ -292,16 +292,6 @@ public class SettingsManager extends BaseSettingsManager {
         setBool(KEY_BLUETOOTH_CONNECT_PERMISSION_ASKED, true);
     }
 
-    private static final String KEY_IMAGES_PERMISSION_ASKED = "images_permission_asked";
-
-    public boolean getImagesPermissionAsked() {
-        return getBool(KEY_IMAGES_PERMISSION_ASKED, false);
-    }
-
-    public void setImagesPermissionAsked() {
-        setBool(KEY_IMAGES_PERMISSION_ASKED, true);
-    }
-
     // Themes
 
     public boolean getUsePalette() {
