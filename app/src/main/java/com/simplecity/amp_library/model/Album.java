@@ -1,5 +1,7 @@
 package com.simplecity.amp_library.model;
 
+import android.content.ContentUris;
+import android.provider.MediaStore;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
@@ -232,7 +234,11 @@ public class Album implements
     @Nullable
     @Override
     public InputStream getFolderArtwork() {
-        return ArtworkUtils.getFolderArtwork(getArtworkPath());
+        InputStream folderArtwork = ArtworkUtils.getFolderArtwork(getArtworkPath());
+        if (folderArtwork == null) {
+            folderArtwork = ArtworkUtils.getFolderThumbnail(ContentUris.withAppendedId(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, id));
+        }
+        return folderArtwork;
     }
 
     @Override

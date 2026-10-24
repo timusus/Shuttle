@@ -379,7 +379,11 @@ public class Song implements
 
     @Override
     public InputStream getFolderArtwork() {
-        return ArtworkUtils.getFolderArtwork(path);
+        InputStream folderArtwork = ArtworkUtils.getFolderArtwork(path);
+        if (folderArtwork == null) {
+            folderArtwork = ArtworkUtils.getFolderThumbnail(ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id));
+        }
+        return folderArtwork;
     }
 
     @Override

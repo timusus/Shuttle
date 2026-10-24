@@ -2,8 +2,11 @@ package com.simplecity.amp_library.utils;
 
 import android.content.ContentUris;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
+import android.util.Size;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
@@ -13,6 +16,7 @@ import com.simplecity.amp_library.ShuttleApplication;
 import com.simplecity.amp_library.model.Album;
 import com.simplecity.amp_library.model.Song;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -71,6 +75,26 @@ public class ArtworkUtils {
             }
         }
         return fileInputStream;
+    }
+
+    /**
+     * MediaProvider can read a folder image next to the audio without READ_MEDIA_IMAGES; the app itself can't list it.
+     */
+    @WorkerThread
+    @Nullable
+    public static InputStream getFolderThumbnail(@NonNull Uri mediaUri) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            return null;
+        }
+        try {
+            Bitmap bitmap = ShuttleApplication.getInstance().getContentResolver().loadThumbnail(mediaUri, new Size(1024, 1024), null);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 95, out);
+            return new ByteArrayInputStream(out.toByteArray());
+        } catch (IOException | SecurityException e) {
+            Log.e(TAG, "getFolderThumbnail failed: " + e.toString());
+            return null;
+        }
     }
 
     /**
