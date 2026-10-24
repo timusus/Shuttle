@@ -61,7 +61,7 @@ android {
         targetSdkVersion Dependencies.targetSdk
 
         versionName Config.versionName
-        versionCode 5903
+        versionCode 5904
 
         resConfigs "en", "zh-rCN", "fr", "de", "ko", "it", "ru", "nl", "tr", "pl", "ro", "hu", "hi-rIN", "uk", "bg-rBG", "en-rGB", "et-rEE", "vi", "pt-rBR", "es", "en-rNZ", "zh-rTW", "es-rES", "ca", "hr", "en-rAU", "eu-rES", "th", "ja"
 
